@@ -1,16 +1,28 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-import locale from 'element-ui/lib/locale/lang/en'
+// import locale from 'element-ui/lib/locale/lang/en'
 import App from './App'
 import router from './router'
 import store from './store'
 import '@/icons' // icon
-import '@/permission' // 权限
+import './errorLog'// error
+import '@/permission' // permission
 
-Vue.use(ElementUI, { locale })
+import * as filters from './filters'
+
+// mock
+import './mock' // simulation data
+
+// Vue.use(ElementUI, { locale })
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 new Vue({
   el: '#app',

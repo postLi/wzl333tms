@@ -19,30 +19,47 @@ export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
   {
-    path: '/',
+    path: '',
     component: Layout,
     redirect: '/dashboard',
-    name: 'Dashboard',
-    hidden: true,
-    children: [{ path: 'dashboard', component: _import('dashboard/index') }]
+    noDropdown: true,
+    icon: 'shouce',
+    children: [{
+      path: 'dashboard', name: '首页', icon: 'dashboard', component: _import('dashboard/index'),
+      meta: { title: '首页', noCache: true }
+    }]
   }
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  mode: 'history', // 后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
 
 export const asyncRouterMap = [
   {
+    path: '/company',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '公司管理',
+    icon: 'zonghe',
+    children: [
+      { path: 'myinfo', icon: 'information', hidden: true, name: '个人中心', component: _import('company/myinfo/index'), meta: { title: '个人中心', noCache: true }}
+    ]
+  },
+  {
     path: '/example',
     component: Layout,
     redirect: 'noredirect',
-    name: 'Example',
+    name: '实例',
     icon: 'zujian',
     children: [
-      { path: 'index', name: 'Form', icon: 'zonghe', component: _import('page/form') }
+      { path: 'index', name: '表单', icon: 'zonghe', component: _import('page/form'), meta: { title: '实例', noCache: true },
+        children: [{
+          path: 'index2', name: '表格2', component: _import('table/index'), meta: { role: ['admin'], title: '表格2', noCache: true }
+        }]
+      }
     ]
   },
 
@@ -52,7 +69,9 @@ export const asyncRouterMap = [
     redirect: '/table/index',
     icon: 'tubiao',
     noDropdown: true,
-    children: [{ path: 'index', name: 'Table', component: _import('table/index'), meta: { role: ['admin'] }}]
+    children: [{
+      path: 'index', name: '表格', component: _import('table/index'), meta: { role: ['admin'], title: '表格', noCache: true }
+    }]
   },
 
   { path: '*', redirect: '/404', hidden: true }

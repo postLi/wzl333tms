@@ -9,6 +9,13 @@ body {
 
 html {
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+body{
+  overflow: hidden;
+  height: 100%;
 }
 
 *,
@@ -28,6 +35,24 @@ a:hover {
   cursor: pointer;
   color: inherit;
   text-decoration: none;
+}
+
+::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  border-radius: 6px;
+   -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  background: #bbb;
+}
+::-webkit-scrollbar-thumb:hover{
+  background: rgb(68, 67, 67);
+}
+::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  background: #EDEDED;
 }
 
 .clearfix {
@@ -53,6 +78,9 @@ a:hover {
 }
 
 //main-container全局样式
+#app{
+  height: 100%;
+}
 .app-main{
   min-height: 100%
 }
