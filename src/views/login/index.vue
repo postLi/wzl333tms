@@ -91,7 +91,7 @@ export default {
     height: 100vh;
     background-color: $bg;
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+      box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
     }
     input {

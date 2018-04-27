@@ -40,15 +40,5 @@ export default {
     right: 15px;
   }
 }
-#app .sidebar-menu{
-  .el-menu-item, .el-submenu__title{
-    height: 44px;
-    line-height: 44px;
-  }
-
-  .el-submenu .el-menu-item{
-    min-width: 100%;
-  }
-}
 
 </style>

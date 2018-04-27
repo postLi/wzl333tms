@@ -35,6 +35,16 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+#app .sidebar-menu{
+  .el-menu-item, .el-submenu__title{
+    height: 44px;
+    line-height: 44px;
+  }
+
+  .el-submenu .el-menu-item{
+    min-width: 100%;
+  }
+}
 #app .el-menu--collapse .sidebar-nav{
   .el-menu-item{
     position: relative;
@@ -46,13 +56,18 @@ export default {
     position: absolute;
     left: 0;
     width: 100%;
-    top: 34px;
+    top: 14px;
     text-align: center;
     line-height: 22px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .el-menu-item, .el-submenu__title{
     min-height: 44px;
+    height: auto;
   }
+  
 }
 .svg-icon {
   margin-right: 10px;

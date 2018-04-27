@@ -45,7 +45,7 @@ export const asyncRouterMap = [
     name: '公司管理',
     icon: 'zonghe',
     children: [
-      { path: 'myinfo', icon: 'information', hidden: true, name: '个人中心', component: _import('company/myinfo/index'), meta: { title: '个人中心', noCache: true }}
+      { path: 'myinfo', icon: 'information', hidden: false, name: '个人中心', component: _import('company/myinfo/index'), meta: { title: '个人中心', noCache: true }}
     ]
   },
   {
