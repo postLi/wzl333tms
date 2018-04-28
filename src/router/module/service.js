@@ -2,15 +2,15 @@ import Layout from '@/views/layout/Layout'
 const _import = require('../_import_' + process.env.NODE_ENV)
 
 export default {
-  path: '/example',
+  path: '/service',
   component: Layout,
-  redirect: 'noredirect',
-  name: '实例',
+  redirect: '/service/index',
+  name: '客服管理',
   icon: 'zujian',
   children: [
-    { path: 'index', name: '表单', icon: 'zonghe', component: _import('page/form'), meta: { title: '实例', noCache: true },
+    { path: '/service/index', name: '客服反馈', icon: 'zonghe', component: _import('service/index'), meta: { title: '客服反馈', noCache: true },
       children: [{
-        path: 'index2', name: '表格2', component: _import('table/index'), meta: { role: ['admin'], title: '表格2', noCache: true }
+        path: '/service/index/longtime', name: '延时处理', component: _import('table/index'), meta: { role: ['admin'], title: '延时处理', noCache: true }
       }]
     }
   ]

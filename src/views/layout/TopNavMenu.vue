@@ -1,15 +1,22 @@
 <template>
   <div class="page-top-nav">
-      <el-submenu  v-for="(menu, index) in menus" :key="index" :index="menu.name">
-        <template class="page-top-subnav" slot="title">{{menu.name}}</template>
-        <el-menu-item v-for="(submenu, subindex) in menu.childrens" :key="subindex" :index="menu.name">{{submenu.name}}</el-menu-item>
-      </el-submenu>
+      <template v-for="(menu, index) in permission_routers">
+         <el-menu-item :key="index" :index="menu.path" v-if="!menu.hidden">
+          {{menu.name}}
+        </el-menu-item>
+      </template>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'TopNavMenu',
+  computed: {
+    ...mapGetters([
+      'permission_routers'
+    ])
+  },
   data () {
     return {
       menus: [{
@@ -116,9 +123,18 @@ export default {
 
 
 <style lang="scss">
-  #app .page-top-nav .el-submenu__title{
+  #app .page-top-nav .el-menu-item{
     height: 50px;
     line-height: 50px;
+    color: #fff;
+
+    &.is-active{
+      background: #307AA6;
+    }
+
+    &:hover{
+      background: #307AA6;
+    }
   }
   #app .page-top-nav .el-submenu>.el-menu{
     top: 52px;

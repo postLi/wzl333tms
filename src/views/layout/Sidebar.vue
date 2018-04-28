@@ -2,7 +2,7 @@
   <el-menu class="sidebar-menu" mode="vertical" theme="dark" :default-active="$route.path" :collapse="!sidebar.opened">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     
-    <sidebar-item :routes='permission_routers'></sidebar-item>
+    <sidebar-item :routes='sidebarRouters'></sidebar-item>
   </el-menu>
 </template>
 
@@ -15,7 +15,8 @@ export default {
   components: { SidebarItem, Hamburger },
   computed: {
     ...mapGetters([
-            'sidebar',
+      'sidebar',
+      'sidebarRouters',
       'permission_routers'
     ])
   },
@@ -30,6 +31,11 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 #app .sidebar-menu{
   min-height: 100%;
+  .router-link-exact-active{
+    .el-menu-item{
+      color: #20a0ff;
+    }
+  }
 }
 .sidebar-container{
   padding-top: 50px;
