@@ -12,7 +12,6 @@ import '@/permission' // permission
 import * as filters from './filters'
 
 // mock
-import './mock' // simulation data
 
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
