@@ -6,6 +6,16 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 /* layout */
 import Layout from '../views/layout/Layout'
 
+// ========================引入各个版块类别================
+// 公司
+import Company from './module/company'
+// 财务
+import Finance from './module/finance'
+// 客服
+import Service from './module/service'
+// 运营
+import Operation from './module/operation'
+
 Vue.use(Router)
 
  /**
@@ -38,41 +48,9 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  {
-    path: '/company',
-    component: Layout,
-    redirect: 'noredirect',
-    name: '公司管理',
-    icon: 'zonghe',
-    children: [
-      { path: 'myinfo', icon: 'information', hidden: false, name: '个人中心', component: _import('company/myinfo/index'), meta: { title: '个人中心', noCache: true }}
-    ]
-  },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: 'noredirect',
-    name: '实例',
-    icon: 'zujian',
-    children: [
-      { path: 'index', name: '表单', icon: 'zonghe', component: _import('page/form'), meta: { title: '实例', noCache: true },
-        children: [{
-          path: 'index2', name: '表格2', component: _import('table/index'), meta: { role: ['admin'], title: '表格2', noCache: true }
-        }]
-      }
-    ]
-  },
-
-  {
-    path: '/table',
-    component: Layout,
-    redirect: '/table/index',
-    icon: 'tubiao',
-    noDropdown: true,
-    children: [{
-      path: 'index', name: '表格', component: _import('table/index'), meta: { role: ['admin'], title: '表格', noCache: true }
-    }]
-  },
-
+  Company,
+  Finance,
+  Service,
+  Operation,
   { path: '*', redirect: '/404', hidden: true }
 ]
