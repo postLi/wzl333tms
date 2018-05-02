@@ -54,6 +54,7 @@ export default {
   },
   computed: {
     visitedViews() {
+      console.log('this.$store.state.tagsView.visitedViews', Array.from(this.$store.state.tagsView.visitedViews))
       return this.$store.state.tagsView.visitedViews
     }
   },
@@ -94,7 +95,8 @@ export default {
       this.$store.dispatch('addVisitedViews', route)
     },
     moveToCurrentTag() {
-      const tags = this.$refs.tag
+      // 因为首页为固定标签，所以初始页面时，this.$refs.tag还未传入任何值，为undefined，需要给个默认的值 []
+      const tags = this.$refs.tag || []
       this.$nextTick(() => {
         for (const tag of tags) {
           if (tag.to === this.$route.path) {
@@ -153,6 +155,7 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
+    background: #fff;
 
     .el-icon-arrow-down{
       cursor: pointer;
@@ -160,7 +163,7 @@ export default {
     }
 
     &:hover{
-      background: rgba(0, 0, 0, .2);
+      background: #eee;
 
       .contextmenu-box{
         display: block;

@@ -1,3 +1,4 @@
+// @import "~element-ui/packages/theme-chalk/src/index";
 @import './element-ui.scss';
 @import './mixin.scss';
 body {
@@ -16,6 +17,13 @@ html {
 body{
   overflow: hidden;
   height: 100%;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  body{
+    overflow-x: scroll;
+  }
 }
 
 *,
@@ -80,6 +88,7 @@ a:hover {
 //main-container全局样式
 #app{
   height: 100%;
+  min-width: 800px;
 }
 .app-main{
   min-height: 100%

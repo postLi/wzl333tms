@@ -43,6 +43,10 @@ export default {
         code: 20000,
         data: userMap[token]
       }
+      /* return {
+        code: 50001,
+        data: 'cuo wu'
+      } */
       return user
     } else {
       return false

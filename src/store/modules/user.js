@@ -5,6 +5,7 @@ const user = {
   state: {
     token: getToken(),
     name: '',
+    username: '',
     company: '',
     avatar: '',
     roles: [],
@@ -17,6 +18,9 @@ const user = {
     },
     SET_NAME: (state, name) => {
       state.name = name
+    },
+    SET_USERNAME: (state, username) => {
+      state.username = username
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -41,6 +45,7 @@ const user = {
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
+          commit('SET_USERNAME', username)
           resolve()
         }).catch(error => {
           reject(error)

@@ -24,7 +24,7 @@
             <router-link to="/company/myinfo">
             <el-button :round="false" type="primary" icon="information">我的信息</el-button>
             </router-link>
-            <el-button type="primary" icon="view">锁定屏幕</el-button>
+            <el-button type="primary" @click="lockScreen" icon="view">锁定屏幕</el-button>
             <el-button type="primary" :round="false" @click="logout" icon="circle-close">退出登录</el-button>
           </el-button-group>
         </el-col>
@@ -52,6 +52,9 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()  // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    lockScreen () {
+      this.$store.dispatch('LockScreen')
     }
   }
 }

@@ -1,5 +1,10 @@
 <template>
   <el-menu class="sidebar-menu" mode="vertical" theme="dark" :default-active="$route.path" :collapse="!sidebar.opened">
+    <div class="sidebar-userinfo clearfix">
+      <img :src="avatar" alt="">
+      <span>{{ name }}</span><br><span>{{ company }}</span>
+    </div>
+    <SidebarMenuSearch :searchItem="sidebarRouters" />
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     
     <sidebar-item :routes='sidebarRouters'></sidebar-item>
@@ -9,15 +14,19 @@
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
+import SidebarMenuSearch from './SidebarMenuSearch'
 import Hamburger from '@/components/Hamburger'
 
 export default {
-  components: { SidebarItem, Hamburger },
+  components: { SidebarItem, Hamburger, SidebarMenuSearch },
   computed: {
     ...mapGetters([
       'sidebar',
       'sidebarRouters',
-      'permission_routers'
+      'permission_routers',
+      'avatar',
+      'name',
+      'company'
     ])
   },
   methods: {
@@ -40,6 +49,28 @@ export default {
 .sidebar-container{
   padding-top: 50px;
   border-radius: 0;
+
+  .sidebar-userinfo{
+    img{
+      float: left;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+    span{
+      display: inline-block;
+      width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      color: #eee;
+      line-height: 25px;
+    }
+  }
+
   .hamburger-container{
     position: absolute;
     top: 10px;

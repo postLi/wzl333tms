@@ -73,8 +73,7 @@ export default {
   .el-menu-item, .el-submenu__title{
     min-height: 44px;
     height: auto;
-  }
-  
+  }  
 }
 .svg-icon {
   margin-right: 10px;
