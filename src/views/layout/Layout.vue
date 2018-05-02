@@ -62,7 +62,7 @@ export default {
                     display: block;
                 }
             }
-            .sidebar-userinfo{
+            .sidebar-userinfo, .sidebar-menu-search{
                 display: none;
             }
         }

@@ -52,6 +52,7 @@ export default {
           this.$store.dispatch('Login', this.form).then(() => {
             this.loading = false
             this.$store.dispatch('UnLockScreen')
+            this.form.password = ''
           }).catch(() => {
             this.loading = false
           })

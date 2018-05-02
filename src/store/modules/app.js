@@ -6,7 +6,7 @@ const app = {
       opened: !+Cookies.get('sidebarStatus')
     },
     lockScreen: {
-      opened: !+Cookies.get('lockScreenStatus')
+      opened: !!+Cookies.get('lockScreenStatus')
     }
   },
   mutations: {
@@ -31,14 +31,14 @@ const app = {
     // 锁定 屏幕
     LockScreen({ commit }) {
       return new Promise(resolve => {
-        commit('TOGGLE_LOCKSCREEN', 0)
+        commit('TOGGLE_LOCKSCREEN', 1)
       })
     },
 
     // 解锁 屏幕
     UnLockScreen({ commit }) {
       return new Promise(resolve => {
-        commit('TOGGLE_LOCKSCREEN', 1)
+        commit('TOGGLE_LOCKSCREEN', 0)
       })
     }
   }
