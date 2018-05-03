@@ -20,12 +20,12 @@
 
         <el-form-item prop="username">
           <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="on"
-                     placeholder="账号"></el-input>
+                     placeholder="账号" clearable></el-input>
         </el-form-item>
 
         <el-form-item prop="password">
           <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-                     placeholder="密码"></el-input>
+                     placeholder="密码" clearable></el-input>
         </el-form-item>
 
         <el-form-item class="login">

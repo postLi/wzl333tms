@@ -13,6 +13,7 @@ import '@/permission' // permission
 import * as filters from './filters'
 
 // mock
+import './mock/'
 
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
