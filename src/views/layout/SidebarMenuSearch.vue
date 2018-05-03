@@ -7,7 +7,7 @@
       placeholder="搜索菜单"
       :trigger-on-focus="false"
       @select="handleSelect"
-      suffix-icon="el-icon-date"
+      suffix-icon="el-icon-search"
       popper-class="sidebar-menu-pop"
     >
     </el-autocomplete>

@@ -159,7 +159,7 @@ export default {
   }
   .tags-view-more{
     width: 50px;
-    height: 34px;
+    height: 33px;
     text-align: center;
     position: absolute;
     right: 0;
@@ -168,7 +168,7 @@ export default {
 
     .el-icon-arrow-down{
       cursor: pointer;
-      line-height: 34px;
+      line-height: 33px;
     }
 
     &:hover{
@@ -228,7 +228,7 @@ export default {
 
     position: absolute;
     right: 2px;
-    top: 34px;
+    top: 33px;
 
     display: none;
 

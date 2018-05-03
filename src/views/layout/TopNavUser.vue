@@ -4,7 +4,7 @@
       ref="popoveruser"
       placement="bottom-end"
       :popper-options="{'preventOverflow.padding': 0}"
-      width="330"
+      width="360"
       popper-class="popoveruser"
       trigger="hover">
       <el-row>
@@ -22,10 +22,10 @@
         <el-col class="popover-btns" :span="24">
           <el-button-group>
             <router-link to="/company/myinfo">
-            <el-button :round="false" type="primary" icon="information">我的信息</el-button>
+            <el-button type="primary" icon="el-icon-info">我的信息</el-button>
             </router-link>
-            <el-button type="primary" @click="lockScreen" icon="view">锁定屏幕</el-button>
-            <el-button type="primary" :round="false" @click="logout" icon="circle-close">退出登录</el-button>
+            <el-button type="primary" @click="lockScreen" icon="el-icon-news">锁定屏幕</el-button>
+            <el-button type="primary" @click="logout" icon="el-icon-circle-close-outline">退出登录</el-button>
           </el-button-group>
         </el-col>
       </el-row>

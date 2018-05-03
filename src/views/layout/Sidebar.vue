@@ -1,5 +1,14 @@
 <template>
-  <el-menu class="sidebar-menu" mode="vertical" theme="dark" :default-active="$route.path" :select="openMenu" :collapse="!sidebar.opened">
+  <el-menu 
+  class="sidebar-menu" 
+  mode="vertical" 
+  theme="dark" 
+  background-color="#324056"
+  text-color="#BFCBD9"
+  active-text-color="#ffd04b"
+  :default-active="$route.path" 
+  :select="openMenu" 
+  :collapse="!sidebar.opened">
     <div class="sidebar-userinfo clearfix">
       <img :src="avatar" alt="">
       <span>{{ name }}</span><br><span>{{ company }}</span>
