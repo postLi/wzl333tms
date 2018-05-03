@@ -1,5 +1,5 @@
 <template>
-  <el-menu class="sidebar-menu" mode="vertical" theme="dark" :default-active="$route.path" :collapse="!sidebar.opened">
+  <el-menu class="sidebar-menu" mode="vertical" theme="dark" :default-active="$route.path" :select="openMenu" :collapse="!sidebar.opened">
     <div class="sidebar-userinfo clearfix">
       <img :src="avatar" alt="">
       <span>{{ name }}</span><br><span>{{ company }}</span>
@@ -32,6 +32,9 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
+    },
+    openMenu () {
+
     }
   }
 }

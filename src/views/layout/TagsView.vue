@@ -58,9 +58,13 @@ export default {
     }
   },
   watch: {
-    $route() {
-      this.addViewTags()
-      this.moveToCurrentTag()
+    $route(newpath, oldpath) {
+      // 如果新的路径是三级路径以上，则不进行加入
+      if(/^(\/[^/]*){1,2}$/.test(newpath.fullPath)){
+        this.addViewTags()
+        this.moveToCurrentTag()
+      }
+      
     },
     visible(value) {
       if (value) {

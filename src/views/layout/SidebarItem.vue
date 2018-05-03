@@ -15,7 +15,9 @@
 
       <el-submenu :index="item.name" v-if="!item.noDropdown&&!item.hidden&&item.children&&item.children.length" :key="item.name">
         <template slot="title">
+          <router-link :to="item.path" :key="item.name">
           <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.name}}</span>
+          </router-link>
         </template>
         <template v-for="child in item.children" v-if='!child.hidden'>
           <sidebar-item class='menu-indent' v-if='child.children&&child.children.length>0' :routes='[child]' :key="child.name"> </sidebar-item>
@@ -50,6 +52,7 @@ export default {
 
   .el-submenu .el-menu-item{
     min-width: 100%;
+    padding-left: 60px !important;
   }
 }
 #app .el-menu--collapse .sidebar-nav{
@@ -73,7 +76,10 @@ export default {
   .el-menu-item, .el-submenu__title{
     min-height: 44px;
     height: auto;
-  }  
+  }
+  .el-submenu .el-menu-item{
+    padding-left: 20px !important;
+  }
 }
 .svg-icon {
   margin-right: 10px;
