@@ -1,12 +1,21 @@
 import fetch from '@/utils/fetch'
 
-export function login(username, password) {
+export function login(username, password, accNum) {
+  var grant_type = 'password'
+  var scope = 'webApp'
   return fetch({
-    url: '/user/login',
+    url: '/uaa/oauth/token',
     method: 'post',
-    data: {
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+    },
+    params: {
       username,
-      password
+      password,
+      grant_type
+      // scope,
+      // accNum
     }
   })
 }

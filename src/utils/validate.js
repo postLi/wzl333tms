@@ -2,7 +2,17 @@
  * Created by jiachenpan on 16/11/18.
  */
 
+// 公司id
+export function isvalCompanyId(str) {
+  // const reg = /^\d{4}$/
+  // return reg.test(str)
+
+  const valid_map = ['123', '456']
+  return valid_map.indexOf(str.trim()) >= 0
+}
+
 export function isvalidUsername(str) {
+  return true
   const valid_map = ['admin', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }
