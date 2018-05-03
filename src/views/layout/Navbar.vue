@@ -1,12 +1,12 @@
 <template>
-  <el-menu class="navbar" mode="horizontal" theme="dark">
+  <div class="navbar">
     <div class="logo-panel">
-      <img src="../../assets/home_logo_2.png" alt="">
+      <router-link to="/"><img src="../../assets/logo_white.png" alt=""></router-link>
     </div>
     <TopNavMenu />
-    <!-- <levelbar></levelbar> -->
     <TopNavUser />
-  </el-menu>
+  </div>
+  
 </template>
 
 <script>
@@ -17,12 +17,17 @@ export default {
   components: {
     TopNavMenu,
     TopNavUser
+  },
+  data () {
+    return {
+    }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
     .navbar {
+        background: #378CBE;
         border-radius: 0;
         .hamburger-container {
             line-height: 58px;
@@ -44,6 +49,7 @@ export default {
         .page-top-nav{
           height: 50px;
           float: left;
+          margin-left: 5px;
         }
     }
 
@@ -55,8 +61,8 @@ export default {
       height: 50px;
       
       img{
-        height: 37px;
-        width: 197px;
+        height: 38px;
+        width: 198px;
       }
     }
 </style>

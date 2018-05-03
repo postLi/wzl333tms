@@ -2,7 +2,7 @@
   <div class="tags-view-container">
     <div class="tags-view-scroll">
       <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
-        <router-link class="tags-view-item" :class="isActive({path:'/dashboard'})?'active':''" to="/dashboard" >
+        <router-link class="tags-view-item" :class="isActive({path:'/dashboard', name:'首页'})?'active':''" to="/dashboard" >
           首页
         </router-link>
         <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
@@ -58,9 +58,13 @@ export default {
     }
   },
   watch: {
-    $route() {
-      this.addViewTags()
-      this.moveToCurrentTag()
+    $route(newpath, oldpath) {
+      // 如果新的路径是三级路径以上，则不进行加入
+      if(/^(\/[^/]*){1,2}$/.test(newpath.fullPath)){
+        this.addViewTags()
+        this.moveToCurrentTag()
+      }
+      
     },
     visible(value) {
       if (value) {
@@ -84,7 +88,13 @@ export default {
       return false
     },
     isActive(route) {
-      return route.path === this.$route.path || route.name === this.$route.name
+      if(route.path === this.$route.path || route.name === this.$route.name){
+        this.selectedTag = route
+        return true
+      } else {
+        return false
+      }
+      
     },
     addViewTags() {
       const route = this.generateRoute()
@@ -94,7 +104,8 @@ export default {
       this.$store.dispatch('addVisitedViews', route)
     },
     moveToCurrentTag() {
-      const tags = this.$refs.tag
+      // 因为首页为固定标签，所以初始页面时，this.$refs.tag还未传入任何值，为undefined，需要给个默认的值 []
+      const tags = this.$refs.tag || []
       this.$nextTick(() => {
         for (const tag of tags) {
           if (tag.to === this.$route.path) {
@@ -148,19 +159,20 @@ export default {
   }
   .tags-view-more{
     width: 50px;
-    height: 34px;
+    height: 33px;
     text-align: center;
     position: absolute;
     right: 0;
     top: 0;
+    background: #fff;
 
     .el-icon-arrow-down{
       cursor: pointer;
-      line-height: 34px;
+      line-height: 33px;
     }
 
     &:hover{
-      background: rgba(0, 0, 0, .2);
+      background: #eee;
 
       .contextmenu-box{
         display: block;
@@ -216,7 +228,7 @@ export default {
 
     position: absolute;
     right: 2px;
-    top: 36px;
+    top: 33px;
 
     display: none;
 

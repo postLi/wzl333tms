@@ -1,5 +1,5 @@
 <template>
-<el-dialog class="passwordPop" title="收货地址" :visible.sync="showPop" :close-on-click-modal="false" :before-close="closeMe">
+<el-dialog class="passwordPop" title="修改密码" :visible.sync="showPop" :close-on-click-modal="false" :before-close="closeMe">
   <el-form :model="form" status-icon :rules="rules" ref="ruleForm">
     <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
       <el-input v-model="form.username" auto-complete="off"></el-input>

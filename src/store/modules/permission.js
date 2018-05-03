@@ -34,12 +34,16 @@ function filterAsyncRouter(asyncRouterMap, roles) {
 const permission = {
   state: {
     routers: constantRouterMap,
+    sidebarRouters: [],
     addRouters: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
+    },
+    SET_SIDEBAR_ROUTERS: (state, routers) => {
+      state.sidebarRouters = routers
     }
   },
   actions: {
@@ -47,6 +51,7 @@ const permission = {
       return new Promise(resolve => {
         const { roles } = data
         let accessedRouters
+        // 如果是管理员，则给于全部权限
         if (roles.indexOf('admin') >= 0) {
           accessedRouters = asyncRouterMap
         } else {
@@ -54,6 +59,16 @@ const permission = {
         }
         commit('SET_ROUTERS', accessedRouters)
         resolve()
+      })
+    },
+    GenerateSidebarRoutes({ commit, state }, data) {
+      return new Promise(reslove => {
+        const currentRouters = state.routers
+        const subRouter = currentRouters.find(route => {
+          return route.name === data
+        })
+        commit('SET_SIDEBAR_ROUTERS', subRouter.children || [])
+        reslove()
       })
     }
   }

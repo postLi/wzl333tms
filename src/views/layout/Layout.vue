@@ -12,11 +12,13 @@
           <app-main></app-main>
       </div>
     </div>
+    <LockScreen></LockScreen>
   </div>
 </template>
 
 
 <script>
+import LockScreen from '@/components/LockScreen/index'
 import { Navbar, Sidebar, AppMain, TagsView } from '@/views/layout'
 
 export default {
@@ -25,7 +27,8 @@ export default {
     Navbar,
     Sidebar,
     AppMain,
-    TagsView
+    TagsView,
+    LockScreen
   },
   computed: {
     sidebar() {
@@ -42,9 +45,10 @@ export default {
         position: relative;
         height: 100%;
         width: 100%;
+
         &.hideSidebar {
             .main-container {
-                margin-left: 40px;
+                margin-left: 50px;
             }
             .sidebar-wrapper{
                 width: 50px;
@@ -58,6 +62,9 @@ export default {
                     display: block;
                 }
             }
+            .sidebar-userinfo, .sidebar-menu-search{
+                display: none;
+            }
         }
         .sidebar-wrapper {
             width: 180px;
@@ -66,10 +73,10 @@ export default {
             bottom: 0;
             left: 0;
             z-index: 1001;
-            transition: all .28s ease-out;
+            transition: all .1s ease-out;
         }
         .sidebar-container {
-            transition: all .28s ease-out;
+            transition: all .1s ease-out;
             position: absolute;
             top: 0;
             bottom: 0;
@@ -78,7 +85,7 @@ export default {
         }
         .main-container {
             height: 100%;
-            transition: all .28s ease-out;
+            transition: all .1s ease-out;
             margin-left: 180px;
             box-sizing: border-box;
             padding-top: 84px;
@@ -103,7 +110,7 @@ export default {
             height: 50px;
             line-height: 50px;
             border-radius: 0px !important;
-            background: rgb(63, 114, 214);
+            background: #378CBE;
             z-index: 999;
         }
     }
