@@ -50,6 +50,7 @@ export default {
         el.value = el.name
         return el
       })
+      console.log('query:', queryString, menus)
       var results = queryString ? menus.filter(el => {
         return el.name.indexOf(queryString) !== -1
       }) : menus

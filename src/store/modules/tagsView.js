@@ -38,6 +38,7 @@ const tagsView = {
         }
       }
       for (const i of state.cachedViews) {
+        console.log("=========>",i, view, view.name)
         if (i === view.name) {
           const index = state.cachedViews.indexOf(i)
           state.cachedViews = state.cachedViews.slice(index, i + 1)

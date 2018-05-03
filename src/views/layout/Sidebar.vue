@@ -51,13 +51,16 @@ export default {
   border-radius: 0;
 
   .sidebar-userinfo{
+    margin-top: -40px;
+    margin-bottom: 15px;
     img{
       float: left;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       margin-right: 10px;
-      margin-left: 10px;
+      margin-left: 5px;
+      
     }
     span{
       display: inline-block;
@@ -67,14 +70,14 @@ export default {
       text-overflow: ellipsis;
       font-size: 14px;
       color: #eee;
-      line-height: 25px;
+      line-height: 20px;
     }
   }
 
   .hamburger-container{
     position: absolute;
     top: 10px;
-    right: 15px;
+    right: 10px;
   }
 }
 

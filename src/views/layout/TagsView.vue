@@ -2,7 +2,7 @@
   <div class="tags-view-container">
     <div class="tags-view-scroll">
       <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
-        <router-link class="tags-view-item" :class="isActive({path:'/dashboard'})?'active':''" to="/dashboard" >
+        <router-link class="tags-view-item" :class="isActive({path:'/dashboard', name:'首页'})?'active':''" to="/dashboard" >
           首页
         </router-link>
         <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
@@ -54,7 +54,6 @@ export default {
   },
   computed: {
     visitedViews() {
-      console.log('this.$store.state.tagsView.visitedViews', Array.from(this.$store.state.tagsView.visitedViews))
       return this.$store.state.tagsView.visitedViews
     }
   },
@@ -85,7 +84,13 @@ export default {
       return false
     },
     isActive(route) {
-      return route.path === this.$route.path || route.name === this.$route.name
+      if(route.path === this.$route.path || route.name === this.$route.name){
+        this.selectedTag = route
+        return true
+      } else {
+        return false
+      }
+      
     },
     addViewTags() {
       const route = this.generateRoute()
@@ -219,7 +224,7 @@ export default {
 
     position: absolute;
     right: 2px;
-    top: 36px;
+    top: 34px;
 
     display: none;
 
