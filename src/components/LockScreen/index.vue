@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { removeToken } from '../../utils/auth'
+import { removeToken, getUsername } from '../../utils/auth'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -48,7 +48,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.form.username = this.username
+          this.form.username = this.username || getUsername()
           this.$store.dispatch('Login', this.form).then(() => {
             this.loading = false
             this.$store.dispatch('UnLockScreen')

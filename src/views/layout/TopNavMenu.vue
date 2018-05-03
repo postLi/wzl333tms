@@ -1,10 +1,18 @@
 <template>
   <div class="page-top-nav">
+    <el-menu 
+      mode="horizontal" 
+      :default-active="current"
+      background-color="#378CBE"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+      :router="true">
       <template v-for="(menu, index) in permission_routers">
          <el-menu-item :key="index" :index="menu.path" v-if="!menu.hidden">
           {{menu.name}}
         </el-menu-item>
       </template>
+      </el-menu>
     </div>
 </template>
 
@@ -19,103 +27,32 @@ export default {
   },
   data () {
     return {
-      menus: [{
-        name: '运营管理',
-        childrens: [
-          {
-            name: '订单管理',
-            link: ''
-          },
-          {
-            name: '运单管理',
-            link: ''
-          },
-          {
-            name: '提货管理',
-            link: ''
-          }
-        ]
-      },{
-        name: '财务管理',
-        childrens: [
-          {
-            name: '核销管理',
-            link: ''
-          },
-          {
-            name: '财务初始化',
-            link: ''
-          },
-          {
-            name: '会计凭证',
-            link: ''
-          },
-          {
-            name: '财务对账',
-            link: ''
-          },
-          {
-            name: '员工交账',
-            link: ''
-          }
-        ]
-      },{
-        name: '报表管理',
-        childrens: [
-          {
-            name: '财务报表',
-            link: ''
-          },
-          {
-            name: '运营报表',
-            link: ''
-          },
-          {
-            name: '其它报表',
-            link: ''
-          }
-        ]
-      },{
-        name: '公司管理',
-        childrens: [
-          {
-            name: '系统设置',
-            link: ''
-          },
-          {
-            name: '网点管理',
-            link: ''
-          },
-          {
-            name: '权限管理',
-            link: ''
-          },
-          {
-            name: '员工管理',
-            link: ''
-          },
-          {
-            name: '客户管理',
-            link: ''
-          },
-          {
-            name: '司机管理',
-            link: ''
-          },
-          {
-            name: '车辆管理',
-            link: ''
-          },
-          {
-            name: '承运商管理',
-            link: ''
-          },
-          {
-            name: '打印模板管理',
-            link: ''
-          }
-        ]
-      }]
+      current: '',
+      prevPath: ''
+    }
+  },
+  watch: {
+    $route () {
+      this.setNavHightlight()
+    }
+  },
+  mounted(){
+    this.setNavHightlight()
+  },
+  methods: {
+    /**
+     * 设置与当前页匹配的菜单高亮
+     */
+    setNavHightlight(){
+      let find = this.permission_routers.filter(route => {
+          return route.path !=='/' && this.$route.path.indexOf(route.path) === 0
+        })
+      let current = find[0] || this.$route
+      this.current = current.path
+      if(this.prevPath!==this.current){
+        this.prevPath = this.current
+        this.$store.dispatch('GenerateSidebarRoutes', current.name)
+      }
     }
   }
 }

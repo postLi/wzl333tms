@@ -110,7 +110,7 @@ export default {
             height: 50px;
             line-height: 50px;
             border-radius: 0px !important;
-            background: rgb(63, 114, 214);
+            background: #378CBE;
             z-index: 999;
         }
     }

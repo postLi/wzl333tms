@@ -30,7 +30,11 @@ module.exports = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/uaa' : {
+        target: "http://192.168.1.157:7010/"
+      }
+    },
     // vue-cli 
     errorOverlay: true,
     notifyOnErrors: true,

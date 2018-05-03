@@ -37,6 +37,10 @@ export default {
     return userMap[username]
   },
   getUserInfo: config => {
+    return {
+      code: 20000,
+      data: userMap['admin']
+    }
     const { token } = param2Obj(config.url)
     if (userMap[token]) {
       const user = {
