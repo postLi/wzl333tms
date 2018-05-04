@@ -11,21 +11,31 @@
       <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
                class="card-box login-form">
         <h3 class="title">欢迎使用安发物流</h3>
+
+        <!--<div v-if="errInfo">-->
+          <!--<span>{{errInfo}}</span>-->
+        <!--</div>-->
+
+
         <el-form-item prop="accNum">
+
           <!--<span class="svg-container svg-container_login">-->
           <!--<icon-svg icon-class="yonghuming" />-->
           <!--</span>-->
-         <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="on" placeholder="公司ID" clearable />
+
+         <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="on" :placeholder="holder.accNum" @focus='accNum()'   clearable />
         </el-form-item>
 
         <el-form-item prop="username">
           <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="on"
-                     placeholder="账号" clearable></el-input>
+                    :placeholder="holder.username" @focus='username()' clearable></el-input>
+
+
         </el-form-item>
 
         <el-form-item prop="password">
           <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-                     placeholder="密码" clearable></el-input>
+                    :placeholder="holder.password" @focus='password()' clearable></el-input>
         </el-form-item>
 
         <el-form-item class="login">
@@ -34,11 +44,9 @@
           </el-button>
         </el-form-item>
 
-        <!--<div class='tips'>账号:admin 密码随便填</div>-->
-        <!--<div class='tips'>账号:editor  密码随便填</div>-->
         <div class="rember">
           <el-checkbox v-model="checked">记住密码</el-checkbox>
-          <p class="rember-tit">忘记密码</p>
+          <p class="rember-tit" @click="forgetPsw">忘记密码</p>
         </div>
       </el-form>
     </div>
@@ -81,13 +89,22 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能小于6位'))
+      } else if (!value.length) {
+        callback(new Error('请输入6位数字密码'))
       } else {
         callback()
       }
     }
     return {
+      holder: {
+        accNum: '公司ID',
+        username: '账号',
+        password: '密码'
+      },
       loading: false,
       checked: false,
+      errInfo: false,
+      //模拟登陆信息
       loginForm: {
         accNum: '1234',
         username: 'fangjian',
@@ -108,6 +125,16 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
+            // if (!this.loginForm.accNum) {
+            //   this.errInfo = true
+            //   this.errInfo = '该公司Id不存在'
+            // } else if (!this.loginForm.username) {
+            //   this.errInfo = true
+            //   this.errInfo = '该用户名不存在'
+            // } else if (!this.loginForm.password) {
+            //   this.errInfo = true
+            //   this.errInfo = '输入的密码错误'
+            // }
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch(() => {
@@ -118,6 +145,19 @@ export default {
           return false
         }
       })
+    },
+    forgetPsw() {
+      // this.$router.push({ path: '/' })
+      console.log(5555)
+    },
+    accNum() {
+      this.holder = ''
+    },
+    username() {
+      this.holder = ''
+    },
+    password() {
+      this.holder = ''
     }
   }
 }
@@ -132,23 +172,22 @@ export default {
   $light_gray:#eee;
   /**/
   .container-left{
-    display: inline-block;
-    margin: 200px 200px 200px 300px;
+    float: left;
+    margin: 280px 200px 200px 350px;
   }
   .container-left img{
     display: inline-block;
-    width: 400px;
-    height: 290px;
+    width: 500px;
+    height: 400px;
   }
   .container-right{
-    display: inline-block;
-    margin: 110px 300px 170px 0;
+    float: right;
+    margin: 200px 350px 0px 0px;
   }
   .login-container {
     @include relative;
     height: 100vh;
     background: url("../../assets/login_images/bg.png");
-
 
     input:-webkit-autofill {
       box-shadow: 0 0 0px 1000px #293444 inset !important;
@@ -166,7 +205,7 @@ export default {
     .el-input {
       display: inline-block;
       height: 47px;
-      width: 85%;
+      width: 95%;
     }
     .svg-container {
       padding: 6px 5px 6px 15px;
@@ -196,6 +235,9 @@ export default {
       color: #454545;
       margin-bottom: 18px !important;
     }
+    .el-form-item:hover{
+      border-color: #409eff;
+    }
     .logo{
       text-align: center;
     }
@@ -213,24 +255,12 @@ export default {
       font-weight: bold;
     }
 
-    .show-pwd {
-      position: absolute;
-      right: 10px;
-      top: 7px;
-      font-size: 16px;
-      color: $dark_gray;
-      cursor: pointer;
-    }
-    .thirdparty-button{
-      position: absolute;
-      right: 35px;
-      bottom: 28px;
-    }
+
     .el-but{
-      line-height: 66px !important;
-      font-size: 24px;
+      line-height: 40px !important;
+      font-size: 18px;
       background-color: #0a84ff;
-      text-indent: 1px;
+      letter-spacing: 2px;
     }
     .login{
       margin-bottom: 0 !important;
@@ -252,7 +282,7 @@ export default {
       font-size: 14px;
     }
     .el-form-item:focus{
-      outline: none;
+      /*outline: none;*/
       border-color:#409eff ;
     }
 
@@ -260,7 +290,7 @@ export default {
     .button-cont{
       ul{
         display: inline-block;
-        padding-left: 350px;
+        padding-left: 470px;
       }
       li{
         list-style: none;
@@ -272,7 +302,7 @@ export default {
       .down{
         position: relative;
         bottom: 132px;
-        right: -1200px;
+        left: 1420px;
 
         img{
           vertical-align: middle;
@@ -285,8 +315,5 @@ export default {
       }
 
     }
-  }
-  .el-form-item .el-form-item__content:focus{
-    border-color: #3e9ff1;
   }
 </style>
