@@ -44,6 +44,7 @@ const user = {
         login(username, userInfo.password, userInfo.accNum).then(response => {
           const data = response
           setToken(data.access_token)
+          setUsername(username)
           commit('SET_TOKEN', data.access_token)
           commit('SET_USERNAME', username)
           resolve()

@@ -67,12 +67,13 @@ export default {
         vertical-align: middle;
       }
     .avatar-container {
+      width: 116px;
       padding: 0 5px;
       height: 50px;
       display: inline-block;
       white-space: nowrap;
       position: absolute;
-      right: 0;
+      right: 118px;
       top: 0;
 
       &:hover{
