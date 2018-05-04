@@ -12,6 +12,9 @@ export default {
     path: '/order/index', icon: 'QQ', name: '运单管理', component: _import('order/index'), meta: { role: ['admin'], title: '运单管理', noCache: true }
   },
   {
+    path: '/order/manage', icon: 'QQ', name: '订单管理', component: _import('order/manage/index'), meta: { role: ['admin'], title: '订单管理', noCache: true }
+  },
+  {
     path: '/order/createOrder', icon: 'QQ', name: '创建运单', component: _import('order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: true }
   },
   {

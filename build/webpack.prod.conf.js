@@ -9,7 +9,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-var env = config.build.env
+var env = process.env.BUILD_ENV === 'test' ? config.test.env : config.build.env
+console.log('process.env.BUILD_ENV： ', process.env.BUILD_ENV, env)
 
 function resolveApp(relativePath) {
     return path.resolve(relativePath);
