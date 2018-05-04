@@ -24,6 +24,9 @@ module.exports = {
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
   },
+  test:{
+    env: require('./test.env'),
+  },
   dev: {
     env: require('./dev.env'),
     port: 9528,

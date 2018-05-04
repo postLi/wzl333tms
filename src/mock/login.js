@@ -56,5 +56,9 @@ export default {
       return false
     }
   },
-  logout: () => 'success'
+  logout: () => {
+    return {
+      code: 20000
+    }
+  }
 }
