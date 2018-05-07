@@ -1,13 +1,14 @@
 {
-  "name": "vue-admin-template",
+  "name": "anfa-tms",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
-  "author": "Pan <panfree23@gmail.com>",
+  "description": "安发TMS物流管理系统支撑行业发展",
+  "author": "www.anfanet.com",
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
+    "build-test": "cross-env BUILD_ENV=test node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "chalk": "1.1.3",
     "connect-history-api-fallback": "1.3.0",
     "copy-webpack-plugin": "4.0.1",
+    "cross-env": "^5.1.4",
     "css-loader": "0.28.0",
     "eslint": "3.19.0",
     "eslint-friendly-formatter": "2.0.7",

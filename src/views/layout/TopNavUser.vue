@@ -9,7 +9,7 @@
       trigger="hover">
       <el-row>
         <el-col :span="8" class="popoveruser-avatar">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+          <img class="user-avatar" :src="avatar">
         </el-col>
         <el-col :span="16">
           {{ name }}
@@ -31,7 +31,7 @@
       </el-row>
     </el-popover>
     <div class="avatar-wrapper" v-popover:popoveruser>
-      <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+      <img class="user-avatar" :src="avatar">
       <span class="user-name">{{ name }}</span>
     </div>
   </div>
@@ -67,12 +67,13 @@ export default {
         vertical-align: middle;
       }
     .avatar-container {
+      width: 116px;
       padding: 0 5px;
       height: 50px;
       display: inline-block;
       white-space: nowrap;
       position: absolute;
-      right: 0;
+      right: 118px;
       top: 0;
 
       &:hover{

@@ -89,7 +89,7 @@ export default {
       loading: false,
       checked: false,
       loginForm: {
-        accNum: '1234',
+        accNum: '4',
         username: 'fangjian',
         password: '123456'
       },

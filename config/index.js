@@ -24,6 +24,9 @@ module.exports = {
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
   },
+  test:{
+    env: require('./test.env'),
+  },
   dev: {
     env: require('./dev.env'),
     port: 9528,
@@ -31,7 +34,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/uaa' : {
+      '/api' : {
+        target: "http://192.168.1.157:7010/",
+        pathRewrite: {'^/api': ''}
+      },
+      '/tmssystemservice': {
         target: "http://192.168.1.157:7010/"
       }
     },
