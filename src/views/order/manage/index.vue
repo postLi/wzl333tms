@@ -47,7 +47,8 @@
     <div class="customer-fun">
       <div class="fun-left">
         <ul>
-          <li>新建</li>
+
+          <li @click="dialogFormVisible = true">新建</li>
           <li>受理</li>
           <li>拒绝</li>
           <li>修改</li>
@@ -70,40 +71,65 @@
 
     <div class=customer-table>
       <el-table
-        :data="tableData4"
-        style="width: 100%"
-        max-height="250">
-        <el-table-column
-          fixed
-          prop="date"
-          label="日期"
-          width="150">
-        </el-table-column>
+        :data="tableData"
+        border
+        style="width: 100%">
+          <el-table-column
+            prop="date"
+            label="订单号"
+            width="180">
+          </el-table-column>
         <el-table-column
           prop="name"
-          label="姓名"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="province"
-          label="省份"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="city"
-          label="市区"
-          width="120">
+          label="订单状态"
+          width="180">
         </el-table-column>
         <el-table-column
           prop="address"
-          label="地址"
-          width="300">
+          label="关联运单号"
+          width="180">
         </el-table-column>
         <el-table-column
-          prop="zip"
-          label="邮编"
-          width="120">
+          prop="address"
+          label="关联运单号"
+          width="180">
         </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="关联运单号"
+          width="180">
+        </el-table-column>
+      </el-table>
         <!--<el-table-column-->
           <!--fixed="right"-->
           <!--label="操作"-->
@@ -117,7 +143,7 @@
             <!--</el-button>-->
           <!--</template>-->
         <!--</el-table-column>-->
-      </el-table>
+      <!--</el-table>-->
     </div>
 
     <div class="customer-page">
@@ -136,15 +162,168 @@
       </div>
 
     </div>
+
+
+    <div class="create-order">
+
+
+      <el-dialog title="新增" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <div class="order-content">
+            <div class="order-left">
+              <span>发货方</span>
+              <el-form-item label="发货人：">
+                <el-input v-model="sizeForm.name"></el-input>
+              </el-form-item>
+              <el-form-item label="联系号码：">
+                <el-input v-model="sizeForm.name"></el-input>
+              </el-form-item>
+              <el-form-item label="发货地址：">
+                <el-input v-model="sizeForm.name"></el-input>
+              </el-form-item>
+            </div>
+            <div class="order-right">
+              <span>收货方</span>
+              <el-form-item label="收货方：">
+                <el-input v-model="sizeForm.name"></el-input>
+              </el-form-item>
+              <el-form-item label="联系号码：">
+                <el-input v-model="sizeForm.name"></el-input>
+              </el-form-item>
+              <el-form-item label="发货地址：">
+                <el-input v-model="sizeForm.name"></el-input>
+              </el-form-item>
+            </div>
+          </div>
+
+          <div class="order-center">
+            <span>货物信息</span>
+            <el-table
+              :data="tableData1"
+              border
+              style="width: 100%">
+
+              <el-table-column
+                prop="name"
+                label="货品名"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="件数"
+                width="120">
+
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="重量"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="体积"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="单价"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="包装"
+                width="140">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="品种规格"
+                width="180">
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="order-bottom">
+            <span>订单信息</span>
+            <el-form :inline="true" :model="formInline" class="demo-form-inline">
+              <el-form-item label="出发城市">
+                <el-input v-model="formInline.user" placeholder=""></el-input>
+              </el-form-item>
+              <el-form-item label="到达城市">
+                <el-input v-model="formInline.user" placeholder=""></el-input>
+              </el-form-item>
+              <el-form-item label="开单网点">
+                <el-input v-model="formInline.user" placeholder=""></el-input>
+              </el-form-item>
+              <el-form-item label="目的网点">
+                <el-select v-model="formInline.region" placeholder="">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="提货方式">
+                <el-select v-model="formInline.region" placeholder="">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="紧急度">
+                <el-select v-model="formInline.region" placeholder="">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="代收款">
+                <el-input v-model="formInline.user" placeholder=""></el-input>
+              </el-form-item>
+              <el-form-item label="代收款手续费">
+                <el-input v-model="formInline.user" placeholder=""></el-input>
+              </el-form-item>
+
+              <el-form-item label="付款方式">
+                <el-select v-model="formInline.region" placeholder="">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </div>
+
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
   import { REGEX } from '@/utils/validate'
+  import CreateOrder from '../createOrder/index'
+
   export default {
     name: 'mange',
+    components: {
+      CreateOrder
+    },
     data() {
+      //创建订单
       return {
+        formInline: {
+          user: '',
+          region: ''
+        },
+        tableData1: [{
+          date: '2016-05-02',
+          name: '',
+          address: ''
+        }],
+        sizeForm: {
+          name: ''
+        },
+        //创建订单
         pickerOptions2: {
           shortcuts: [{
             text: '最近一周',
@@ -181,110 +360,62 @@
         }, {
           value: '选项3',
           label: '已拒绝'
-        }, {
-          value: '选项4',
-          label: '全部'
-        }],
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
         }],
         value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        tableData4: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
+        //表格编辑
+        tableData: [{
           date: '2016-05-02',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          address: '上海市普陀区金沙江路 1518 弄'
+        }],
+      //  新建
+        gridData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           date: '2016-05-04',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           date: '2016-05-01',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
-          date: '2016-05-08',
+          date: '2016-05-03',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          address: '上海市普陀区金沙江路 1518 弄'
+        }],
+        dialogTableVisible: false,
+        dialogFormVisible: false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '120px',
+
+        createData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
-          date: '2016-05-06',
+          date: '2016-05-04',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          address: '上海市普陀区金沙江路 1517 弄'
         }, {
-          date: '2016-05-07',
+          date: '2016-05-01',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
         }],
       // },
         value5: '',
@@ -299,7 +430,7 @@
     },
     mounted() {
       let userId = REGEX
-      console.log(userId)
+      // console.log(userId)
     },
     methods: {
       //分页
@@ -312,30 +443,17 @@
       //
       deleteRow(index, rows) {
         rows.splice(index, 1)
+      },
+      newlyBuild() {
+
       }
     }
+    // }
 
   }
 </script>
 <style rel="stylesheet/scss" lang="scss">
   @import "../../../styles/mixin.scss";
   @import "../../../styles/manage-customer.css";
-  .edit-table{
-    border:1px solid gray;
-    border-collapse: collapse;
-    th{
-      border:1px solid gray;
-    }
-    tbody{
 
-      tr{
-        td{
-          border:1px solid gray;
-          input{
-            border:none;
-          }
-        }
-      }
-    }
-  }
 </style>
