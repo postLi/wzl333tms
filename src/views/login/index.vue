@@ -106,7 +106,7 @@ export default {
       errInfo: false,
       //模拟登陆信息
       loginForm: {
-        accNum: '1234',
+        accNum: '4',
         username: 'fangjian',
         password: '123456'
       },

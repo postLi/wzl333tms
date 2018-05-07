@@ -1,6 +1,7 @@
 import fetch from '@/utils/fetch'
+import {getRefreshToken} from '../utils/auth'
 
-export function login(username, password, accNum) {
+export function login(username, password, orgid) {
   var grant_type = 'password'
   var scope = 'webApp'
   return fetch({
@@ -13,24 +14,30 @@ export function login(username, password, accNum) {
     params: {
       username,
       password,
-      grant_type
+      grant_type,
+      orgid
       // scope,
-      // accNum
     }
   })
 }
 
-export function getInfo(token) {
+export function getInfo(username, orgid) {
   return fetch({
-    url: '/user/info',
+    url: '/tmssystemservice/system/user/v1/',
     method: 'get',
-    params: { token }
+    params: { username, orgid }
   })
 }
 
 export function logout() {
-  return fetch({
-    url: '/user/logout',
-    method: 'post'
+  return fetch.delete('/uaa/oauth/token', {
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+    }
   })
+}
+
+export function refreshToken() {
+  return fetch.put()
 }

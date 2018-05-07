@@ -2,10 +2,11 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken } from '@/utils/auth' // 验权
+import { getToken, removeToken } from '@/utils/auth' // 验权
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
+  console.log('router to: ', to)
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {
@@ -13,12 +14,15 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => {
-          const roles = res.data.roles
+          const roles = res.data[0].rolesIdList
           store.dispatch('GenerateRoutes', { roles }).then(() => {
             router.addRoutes(store.getters.addRouters)
             next({ ...to, replace: true })
           })
-        }).catch(err => console.log(err))
+        }).catch(err => {
+          removeToken()
+          next('/login')
+        })
       } else {
         next()
       }

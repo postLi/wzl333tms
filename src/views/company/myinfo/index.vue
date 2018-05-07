@@ -3,11 +3,11 @@
     <el-row class="infopanel">
       <el-col :span="4">
         <div class="label">
-         <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+         <img class="user-avatar" :src="avatar">
         </div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.personal.name }} <br>手机号{{ otherinfo.personal.mobile }}
+        {{ otherinfo.username }} <br>手机号{{ otherinfo.mobilephone }}
       </el-col>
     </el-row>
     
@@ -16,7 +16,7 @@
         <div class="label">登录账户</div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.personal.username }}
+        {{ otherinfo.username }}
       </el-col>
 
       <el-col :span="4">
@@ -32,28 +32,28 @@
         <div class="label">公司</div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.company.name }}
+        {{ otherinfo.orgName }}
       </el-col>
 
       <el-col :span="4">
         <div class="label">所属网点</div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.company.branch }}
+        {{ otherinfo.orgName }}
       </el-col>
 
       <el-col :span="4">
         <div class="label">所属部门</div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.company.department }}
+        {{ otherinfo.departmentName || otherinfo.departmentId }}
       </el-col>
 
       <el-col :span="4">
         <div class="label">职位</div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.company.position }}
+        {{ otherinfo.position }}
       </el-col>
     </el-row>
     <ChangePwPop :isShow="showPop" @close="close" />
