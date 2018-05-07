@@ -68,57 +68,56 @@
       </div>
     </div>
 
-    <!--<div class="customer-table">-->
-      <!--<el-table-->
-        <!--:data="tableData3"-->
-        <!--style="width: 100%">-->
-        <!--<el-table-column-->
-          <!--prop="date"-->
-          <!--label="日期"-->
-          <!--width="150">-->
-        <!--</el-table-column>-->
-        <!--&lt;!&ndash;<el-table-column label="配送信息">&ndash;&gt;-->
-          <!--<el-table-column-->
-            <!--prop="name"-->
-            <!--label="姓名"-->
-            <!--width="120">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column label="地址">-->
-            <!--<el-table-column-->
-              <!--prop="province"-->
-              <!--label="省份"-->
-              <!--width="120">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="city"-->
-              <!--label="市区"-->
-              <!--width="120">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="address"-->
-              <!--label="地址"-->
-              <!--width="300">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="zip"-->
-              <!--label="邮编"-->
-              <!--width="120">-->
-            <!--</el-table-column>-->
-          <!--</el-table-column>-->
-        <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-      <!--</el-table>-->
-    <!--</div>-->
-
-
     <div class=customer-table>
-        <table class="edit-table">
-          <thead>
-          <th>姓名</th><th>年龄</th><th>成绩</th><th>性别</th>
-          </thead>
-          <tbody>
-          <tr><td><input value="张三"/></td><td><input value="30"/></td><td><input value="90"/></td><td><input value="女"/></td></tr>
-          </tbody>
-        </table>
+      <el-table
+        :data="tableData4"
+        style="width: 100%"
+        max-height="250">
+        <el-table-column
+          fixed
+          prop="date"
+          label="日期"
+          width="150">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="province"
+          label="省份"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="city"
+          label="市区"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="地址"
+          width="300">
+        </el-table-column>
+        <el-table-column
+          prop="zip"
+          label="邮编"
+          width="120">
+        </el-table-column>
+        <!--<el-table-column-->
+          <!--fixed="right"-->
+          <!--label="操作"-->
+          <!--width="120">-->
+          <!--<template slot-scope="scope">-->
+            <!--<el-button-->
+              <!--@click.native.prevent="deleteRow(scope.$index, tableData4)"-->
+              <!--type="text"-->
+              <!--size="small">-->
+              <!--移除-->
+            <!--</el-button>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
+      </el-table>
     </div>
 
     <div class="customer-page">
@@ -141,7 +140,6 @@
 </template>
 
 <script>
-  // import REGEX from '../../../utils/validate.js'
   import { REGEX } from '@/utils/validate'
   export default {
     name: 'mange',
@@ -238,6 +236,57 @@
           zip: 200333
         }],
         value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        tableData4: [{
+          date: '2016-05-03',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-02',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-08',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-06',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-07',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }],
+      // },
         value5: '',
         value: '',
         //分页
@@ -261,6 +310,9 @@
         console.log(`当前页: ${val}`);
       },
       //
+      deleteRow(index, rows) {
+        rows.splice(index, 1)
+      }
     }
 
   }
