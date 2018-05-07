@@ -34,8 +34,9 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/uaa' : {
-        target: "http://192.168.1.157:7010/"
+      '/api' : {
+        target: "http://192.168.1.157:7010/",
+        pathRewrite: {'^/api': ''}
       },
       '/tmssystemservice': {
         target: "http://192.168.1.157:7010/"

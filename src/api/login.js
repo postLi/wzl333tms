@@ -1,4 +1,5 @@
 import fetch from '@/utils/fetch'
+import {getRefreshToken} from '../utils/auth'
 
 export function login(username, password, orgid) {
   var grant_type = 'password'
@@ -35,4 +36,8 @@ export function logout() {
       'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
     }
   })
+}
+
+export function refreshToken() {
+  return fetch.put()
 }

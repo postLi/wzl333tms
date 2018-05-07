@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+import { getToken, setToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -12,7 +12,9 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
   if (store.getters.token) {
-    config.headers['access_token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    // 让每个请求携带自定义token 请根据实际情况自行修改
+    // config.headers['access_token'] = getToken()
+    config.headers.Authorization = 'Bearer ' + getToken()
 
     // 暂时放到链接中
     if (!config.params) {
@@ -20,6 +22,9 @@ service.interceptors.request.use(config => {
     }
     config.params['access_token'] = getToken()
   }
+
+  // 统一加上/api 前缀，方便后台转发接口
+  config.url = '/api' + config.url
 
   return config
 }, error => {
