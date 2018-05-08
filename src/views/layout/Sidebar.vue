@@ -3,9 +3,9 @@
   class="sidebar-menu" 
   mode="vertical" 
   theme="dark" 
-  background-color="#324056"
+  background-color="#002039"
   text-color="#BFCBD9"
-  active-text-color="#ffd04b"
+  active-text-color="#3e9ff1"
   :default-active="$route.path" 
   :select="openMenu" 
   :collapse="!sidebar.opened">
