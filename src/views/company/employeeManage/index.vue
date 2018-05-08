@@ -1,40 +1,13 @@
 <template>
     <div class="staff_manage">
-        <div class="staff_searchinfo">
-            <label>归属网点
-                <el-select v-model="value8" filterable placeholder="全部">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-            </label>
-            <label>员工名称：
-                <el-input
-                  placeholder="请输入内容"
-                  v-model="input9"
-                  clearable>
-                </el-input>
-            </label>
-            <label>手机号码：
-                <el-input
-                  placeholder="请输入内容"
-                  v-model="input10"
-                  clearable>
-                </el-input>
-            </label>
-            <el-button type="info" plain>查询</el-button>
-            <el-button type="info" plain>清空</el-button>
-        </div>
+        <SearchForm @change="getSearchParam" :btnsize="btnsize" />
         <div class="staff_info">
             <div class="btns_box">
-                <el-button type="primary" plain @click="dialogFormVisible = true">新增员工</el-button>
-                <el-button type="primary" plain>员工授权</el-button>
-                <el-button type="primary" plain>修改</el-button>
-                <el-button type="primary" plain>删除</el-button>
-                <el-button type="primary" plain style="float:right;">表格设置</el-button>
+                <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增员工</el-button>
+                <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('auth')" plain>员工授权</el-button>
+                <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
+                <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
+                <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
             </div>
             <div class="info_news">
                 <el-table
@@ -43,17 +16,22 @@
                     stripe
                     border
                     @row-click="clickDetails"
+                    @selection-change="getSelection"
+                    height="100%"
                     tooltip-effect="dark"
                     style="width: 100%">
                     <el-table-column
+                      fixed
                       type="selection"
                       width="55">
                     </el-table-column>
                     <el-table-column
+                      fixed
                       prop="id"
                       label="编号">
                     </el-table-column>
                     <el-table-column
+                      fixed
                       prop="name"
                       label="姓名">
                     </el-table-column>
@@ -99,111 +77,226 @@
                   </el-table>
             </div>
 
-            <div class="addstaff">
-                <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-                  <el-form :model="form">
-                    <el-form-item label="活动名称" :label-width="formLabelWidth">
-                      <el-input v-model="form.name" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="活动区域" :label-width="formLabelWidth">
-                      <el-select v-model="form.region" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-form>
-                  <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                  </div>
-                </el-dialog>
-            </div>
+            <div class="info_news_footer">共计:{{ tableData3.length }}</div>    
         </div>
+        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" />
+        <AddEmployeer :popVisible="AddEmployeerVisible" @close="closeAddEmployeer" />
     </div>
 </template>
 
 <script type="text/javascript">
-    export default{
-        data(){
-            return{
-                dialogFormVisible: false,
-                    form: {
-                      name: '',
-                      region: '',
-                      date1: '',
-                      date2: '',
-                      delivery: false,
-                      type: [],
-                      resource: '',
-                      desc: ''
-                    },
-                    formLabelWidth: '120px',
-                options: [{
-                  value: '选项1',
-                  label: '广州网点'
-                }, {
-                  value: '选项2',
-                  label: '广州网点'
-                }, {
-                  value: '选项3',
-                  label: '广州网点'
-                }, {
-                  value: '选项4',
-                  label: '广州网点'
-                }, {
-                  value: '选项5',
-                  label: '广州网点'
-                }],
-                value8: '',
-                input9: '',
-                input10: '',
-                tableData3:[
-                {
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-                }
-                ],
+import SearchForm from './search'
+import TableSetup from './tableSetup'
+import AddEmployeer from './add'
+
+export default{
+    components: {
+        SearchForm,
+        TableSetup,
+        AddEmployeer
+    },
+    data(){
+        return{
+            // 选中的行
+            selected: [],
+            // 按钮大小
+            btnsize: 'small',
+            // 各个弹窗状态更改
+            setupTableVisible: false,
+            AddEmployeerVisible: false,
+            searchForm: {
+
+            },
+            dialogFormVisible: false,
+            tableData3:[
+            {
+                id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:2,name:'隔壁老王1',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:3,name:'隔壁老王2',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:4,name:'隔壁老王3',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:5,name:'隔壁老王4',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:6,name:'隔壁老王5',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:7,name:'隔壁老王6',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:8,name:'隔壁老王7',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:9,name:'隔壁老王8',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:10,name:'隔壁老王9',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:11,name:'隔壁老王10',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:12,name:'隔壁老王11',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:13,name:'隔壁老王12',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            },
+            {
+                id:14,name:'隔壁老王13',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
+            }
+            ],
+        }
+    },
+    methods: {
+        doAction (type) {
+            // 判断是否有选中项
+            if(!this.selected.length && type !== 'add'){
+                this.$message({
+                    message: '请选择要操作的员工~',
+                    type: 'warning'
+                })
+                return false
+            }
+
+            switch (type) {
+                // 添加员工
+                case 'add':
+                    this.openAddEmployeer()
+                    break;
+                // 修改员工信息
+                case 'modify':
+                    if(this.selected.length > 1){
+                        this.$message({
+                            message: '每次只能修改单条数据~',
+                            type: 'warning'
+                        })
+                    }
+                    this.openAddEmployeer()
+                    break;
+                // 删除员工
+                case 'delete':
+                        let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
+                        this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
+                        confirmButtonText: '删除',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                        }).then(() => {
+                            // 模拟操作，删除选中项
+                            this.tableData3 = this.tableData3.filter( el => {
+                                return this.selected.indexOf(el) === -1
+                            })
+                            return new Promise(reslove => {
+                                this.selected = []
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                                reslove()
+                            })
+                            
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });          
+                        });
+                    break;
+                // 设置员工权限
+                case 'auth':
+                    
+                    break;
             }
         },
-        methods: {
-            clickDetails(row, event, column){
-                this.$refs.multipleTable.toggleRowSelection(row)
-            }
-        }
+        // 设置表格
+        setTable () {
+            this.setupTableVisible = true
+        },
+        closeSetupTable () {
+            this.setupTableVisible = false
+        },
+        openAddEmployeer () {
+            this.AddEmployeerVisible = true
+        },
+        closeAddEmployeer () {
+            this.AddEmployeerVisible = false
+        },
+        clickDetails(row, event, column){
+            this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        getSelection (selection) {
+            this.selected = selection
+        },
+        fetchData () {
 
+        },
+        // 获取组件返回的搜索参数
+        getSearchParam (searchParam) {
+            console.log('searchParam: ', searchParam)
+            // 根据搜索参数请求后台获取数据
+            this.fetchData()
+        }
     }
+
+}
 </script>
 
 
 <style type="text/css" lang="scss">
+    
     .staff_manage{
-        .staff_searchinfo{
-            padding:10px 30px;
-            border-bottom:1px solid #ccc;
-            label{
-                margin-right:50px;
-                .el-input{
-                    width:300px;
-                }
-            }
-        }
+        height: 100%;
+        display: flex;
+        flex-direction:column;
+
         .staff_info{
-            padding:10px 50px 10px 30px;
+            padding:10px 30px 0;
+            height: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction:column;
+
             .btns_box{
-                margin-bottom:20px;
+                margin-bottom:10px;
                 .el-button{
-                    margin-right:20px;
+                    margin-right:10px;
+                }
+                .table_setup{
+                    float: right;
+                    margin-right: 0;
                 }
             }
             .info_news{
+                width: 100%;
+                height: calc(100% - 90px);
+                flex-grow: 1;
+                
                 .el-table{
                     table{
-                        width: 100% !important;
                         th,td{
                             text-align:center;
                         }
                     }
                 }
+                .el-table td, .el-table th{
+                    padding: 5px 0;
+                }
             }
+        }
+        .info_news_footer{
+            padding-left: 20px;
+            background: #eee;
+            height: 40px;
+            line-height: 40px;
+            box-shadow: 0 -2px 2px rgba(0,0,0,.1);
+            position: relative;
+            z-index: 10;
         }
     }
 </style>

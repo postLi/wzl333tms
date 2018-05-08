@@ -3,9 +3,9 @@
     <el-menu 
       mode="horizontal" 
       :default-active="current"
-      background-color="#378CBE"
+      background-color="#003863"
       text-color="#fff"
-      active-text-color="#ffd04b"
+      active-text-color="#ffffff"
       :router="true">
       <template v-for="(menu, index) in permission_routers">
          <el-menu-item :key="index" :index="menu.path" v-if="!menu.hidden">
