@@ -15,26 +15,72 @@
     </div>
     <div class="side_right">
         <div class="side_right_top">
-            <label>网点名称：<input type="text" value="广东广州" /></label>
-            <label>网点名称：<input type="text" value="广东广州" /></label>
-            <label>网点名称：<input type="text" value="广东广州" /></label>
-            <br/>
-            <label>网点名称：<input type="text" value="广东广州" /></label>
-            <label>网点名称：<input type="text" value="广东广州" /></label>
-            <label>网点名称：<input type="text" value="广东广州" /></label>
-            <br/>
-            <label>负责人：<input type="text" value="广东广州" /></label>
-            <label>负责人电话：<input type="text" value="广东广州" /></label>
-            <label>所在地：<input type="text" value="广东广州" /></label>
+          <el-form :inline="true" :model="formInline" class="">
+            <el-form-item label="网点名称：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="网点类型：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="网点状态：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="客服人员：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="客服电话：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="上级网点：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="经营类型：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="创建时间：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="*网点代码：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="代收款限额：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label=" 负 责 人：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="负责人电话：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="所在城市：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="锁机额度：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="预警额度：">
+              <el-input v-model="formInline.user" placeholder=""></el-input>
+            </el-form-item>
+          </el-form>
+
         </div>
         <div class="side_right_bottom clearfix">
             <div class="btns_box clearfix">
-                <el-button type="primary" plain @click="addStaff = true">新增员工</el-button>
-                <el-button type="primary" plain>删除员工</el-button>
-                <el-button type="primary" plain>修改网点</el-button>
-                <el-button type="primary" plain>新增网点</el-button>
+              <!--表格功能-->
+                <div class="btns_box_left">
+                  <el-button type="primary" plain @click="addStaff = true">新增员工</el-button>
+                  <el-button type="primary" plain>删除员工</el-button>
+                  <el-button type="primary" plain>修改网点</el-button>
+                  <el-button type="primary" plain>新增网点</el-button>
+                </div>
+              <div class="btns_box_right">
+                广东广州员工
+              </div>
             </div>
+          <!--表格功能-->
+          <!--表格内容-->
             <div class="info_news">
+              
                 <el-table
                     ref="multipleTable"
                     :data="tableData3"
@@ -49,49 +95,73 @@
                     </el-table-column>
                     <el-table-column
                       prop="id"
-                      label="序号">
+                      label="序号"
+                      width="60"
+                      >
                     </el-table-column>
                     <el-table-column
                       prop="name"
-                      label="姓名">
+                      label="姓名"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="side"
-                      label="归属网点">
+                      label="归属网点"
+
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="bumen"
-                      label="归属部门">
+                      label="归属部门"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="zhiwu"
-                      label="职务">
+                      label="职务"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="load"
-                      label="登录账号">
+                      label="登录账号"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="quanxian"
-                      label="权限角色">
+                      label="权限角色"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="sex"
                       label="性别"
-                      width="80">
+                      width="80"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column
                       prop="phone"
                       label="联系手机"
-                      width="200">
-                    </el-table-column>
-                    <el-table-column
-                      label="创建日期">
-                      <template slot-scope="scope">{{ scope.row.date }}</template>
+                      width="200"
+                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
                     </el-table-column>
                   </el-table>
             </div>
-
+          <!--表格内容-->
+<!--分页-->
             <div class="Pagination ">
                 <div class="block">
                     <el-pagination
@@ -105,9 +175,11 @@
                     </el-pagination>
                   </div>
             </div>
+          <!--分页-->
+
         </div>
     </div>
-    <div class="addstaff"> 
+    <div class="addstaff">
         <el-dialog title="新 增 员 工" :visible.sync="addStaff">
           <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
@@ -175,7 +247,7 @@
         </el-dialog>
     </div>
   </div>
-</template> 
+</template>
 <script>
 
     import fetch from '../../../utils/fetch'
@@ -228,9 +300,13 @@
 
              };
             return {
+              formInline: {
+                user: '',
+                region: ''
+              },
                 addStaff: false,
                 form: {
-                 name: '', 
+                 name: '',
                  phone: '',
                  username: '',
                  password: '123456',
@@ -332,78 +408,18 @@
              },
              clickDetails(row, event, column){
                 this.$refs.multipleTable.toggleRowSelection(row)
-            }
+            },
+          //表头筛选
+          filterTag(value, row) {
+            return row.tag === value;
+          }
            },
       };
 </script>
 
 <style type="text/css" lang="scss">
-    .company{
-        height:100%;
-        
-        .side_left{
-            width: 15%;
-            height:100%;
-            float:left;
-            padding-top:10px;
-            
-        }
-        .side_right{
-            width:85%;
-            float:left;
-            padding-top:18px;
-            .side_right_top{
-                border-bottom:1px solid #ccc;
-                label{
-                    display: inline-block;
-                    width: 300px;
-                    height:40px;
-                    text-align:right;
-                }
-            }
-            .side_right_bottom{
-                .btns_box{
-                    float:right;
-                    padding-right:300px;
-                    padding-top:10px;
-                    margin-bottom:10px;
-                }
-                .info_news{
-                    .el-table{
-                        width: 100% !important;
+  @import "../../../styles/mixin.scss";
+  @import "./css/index.css";
 
-                        table{
-                            width: 100% !important;
-                            th,td{
-                                text-align:center;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        .addstaff{
-            .el-dialog{
-                margin-top: 17vh !important;
-                .el-dialog__header{
-                    border-bottom:1px solid #ccc;
-                    text-align:center;
-                    background:#ddd;
-
-                }
-                .el-dialog__body{
-                    .el-form{
-                        .el-form-item{
-                            .el-input{
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
 
 </style>
