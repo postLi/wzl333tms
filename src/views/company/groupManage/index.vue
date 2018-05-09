@@ -5,61 +5,21 @@
     <!-- <router-view></router-view> -->
     <div class="side_left">
         <el-tree
-          :data="data2"
-          show-checkbox
+          :data="dataTree"
           node-key="id"
           :default-expanded-keys="[1]"
-          :default-checked-keys="[1]"
-          :props="defaultProps">
+          :props="defaultProps"
+          ref="tree"
+          @node-click="getCheckedKeys"
+          >
         </el-tree>
     </div>
+
     <div class="side_right">
         <div class="side_right_top">
-          <el-form :inline="true" :model="formInline" class="">
-            <el-form-item label="网点名称：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="网点类型：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="网点状态：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="客服人员：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="客服电话：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="上级网点：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="经营类型：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="创建时间：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="*网点代码：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="代收款限额：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label=" 负 责 人：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="负责人电话：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="所在城市：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="锁机额度：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="预警额度：">
-              <el-input v-model="formInline.user" placeholder=""></el-input>
+          <el-form :inline="true" class="" v-for="item in formData" :key="item.id">
+            <el-form-item :label="item.label">
+              <el-input v-model="item.name" readonly="readonly"></el-input>
             </el-form-item>
           </el-form>
 
@@ -80,7 +40,7 @@
           <!--表格功能-->
           <!--表格内容-->
             <div class="info_news">
-              
+
                 <el-table
                     ref="multipleTable"
                     :data="tableData3"
@@ -250,7 +210,7 @@
 </template>
 <script>
 
-    import fetch from '../../../utils/fetch'
+    import { getAllOrgInfo , getOrgId , isEmpty , objStory } from '../../../api/company/groupManage'
 
     export default {
         data() {
@@ -260,10 +220,6 @@
                 }else{
                     callback();
                 }
-
-                // fetch(){
-
-                // }
 
              };
             var checkPhone = (rule, value, callback) => {
@@ -298,12 +254,9 @@
                     callback();
                 }
 
-             };
+             }
             return {
-              formInline: {
-                user: '',
-                region: ''
-              },
+              formData: [],
                 addStaff: false,
                 form: {
                  name: '',
@@ -344,77 +297,109 @@
                 currentPage3: 5,
                 currentPage4: 4,
                 tableData3:[
-                {
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                },
-                {
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                },
-                {
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                },{
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                }
-                ,{
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                },{
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                },
-                {
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                },
-                {
-                    id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                }
-                ],
-                data2: [{
-                  id: 1,
-                  label: '山东卓鑫',
-                  children: [{
-                    id: 4,
-                    label: '济宁卓鑫',
-                    children: [{
-                      id: 9,
-                      label: '济宁xxx'
-                    }, {
-                      id: 10,
-                      label: '济宁xxx'
-                    }]
+                  {
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  },
+                  {
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  },
+                  {
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
                   },{
-                    id: 5,
-                    label: '广东广州',
-                    children: [{
-                      id: 9,
-                      label: '广州白云'
-                    }, {
-                      id: 10,
-                      label: '广州天河'
-                    }]
-                  }]
-                }],
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  }
+                  ,{
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  },{
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  },
+                  {
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  },
+                  {
+                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
+                  }
+                ],
+                //左边树形初始化数据
+                dataTree:[],
                 defaultProps: {
                   children: 'children',
-                  label: 'label'
-                }
-
+                  label: 'name'
+                },
+                //左边树形初始化数据
+                getOrgId: ''//根据组织id获取列表
               };
             },
+        mounted () {
+          this.fetchOrg()//左边树形数据
+          // this.fetchOrgFindId() //根据组织id获取列表
+        },
         methods: {
-             handleSizeChange(val) {
-               console.log(`每页 ${val} 条`);
-             },
-             handleCurrentChange(val) {
-               console.log(`当前页: ${val}`);
-             },
-             clickDetails(row, event, column){
-                this.$refs.multipleTable.toggleRowSelection(row)
-            },
+          //左边树形数据
+          fetchOrg() {
+            getAllOrgInfo().then(res => {
+              for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i] == '') {
+                  console.log('暂无数据')
+                } else {
+                  this.dataTree = res.data
+                  this.fetchOrgId(this.dataTree[0].id)//根据组织id显示列表
+                }
+              }
+            })
+          },
+          // 根据组织id显示列表
+          fetchOrgId() {
+              getOrgId(this.dataTree[0].id).then(res => {
+                // if (res.data.orgType = 1) {
+                //   res.data.orgType == "营业网点"
+                //   console.log(res.data.orgType)
+                // } else {
+                //   res.data.orgType == '分拨中心'
+                // }
+                this.formData.push(new objStory('网点名称：', isEmpty(res.data.orgName)))
+                this.formData.push(new objStory('网点类型：', res.data.orgType))
+                this.formData.push(new objStory('网点状态：', isEmpty(res.data.status)))
+                this.formData.push(new objStory('客服人员：', isEmpty(res.data.serviceName)))
+                this.formData.push(new objStory('客服电话：', isEmpty(res.data.servicePhone)))
+                this.formData.push(new objStory('上级网点：', isEmpty(res.data.parentName))) //parentName
+                this.formData.push(new objStory('经营类型：', isEmpty(res.data.manageType)))
+                this.formData.push(new objStory('创建时间：', isEmpty(res.data.createTime)))
+                this.formData.push(new objStory('网点代码：', isEmpty(res.data.networkCode)))
+                this.formData.push(new objStory('代收款限额：',isEmpty(res.data.collectionFee)))
+                this.formData.push(new objStory('负 责 人：',isEmpty(res.data.responsibleName)))
+                this.formData.push(new objStory('负责人电话：',isEmpty(res.data.responsibleTelephone)))
+                this.formData.push(new objStory('所在城市：',isEmpty(res.data.city)))
+                this.formData.push(new objStory('锁机额度：',isEmpty(res.data.lockMachineQuota)))
+                this.formData.push(new objStory('预警额度：',isEmpty(res.data.warningQuota)))
+            })
+          },
+          handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+          },
+          handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+          },
+          clickDetails(row, event, column) {
+            this.$refs.multipleTable.toggleRowSelection(row)
+          },
           //表头筛选
           filterTag(value, row) {
-            return row.tag === value;
+            return row.tag === value
+          },
+          getCheckedKeys() {
+            this.getOrgId = this.$refs.tree._data.currentNode.node.data.id
+            // this.fetchOrgId(this.getOrgId)//根据组织id显示列表
+            // console.log(this.getOrgId)
+            // fetchOrgFindId(){
+            //   this.getOrgId(this.getOrgId).then(res => {
+            //     console.log(res)
+            //   })//根据组织id获取列表
+            // }
+
           }
-           },
-      };
+        }
+      }
 </script>
 
 <style type="text/css" lang="scss">
