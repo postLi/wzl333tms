@@ -31,37 +31,37 @@ const userMap = {
   }
 }
 
-var 真实接口 = {
+/* var 真实接口 = {
   "status": 200,
   "data": [
       {
-        "id": 36,
-        "username": "fangjian",
-        "password": null,
-        "orgId": 4,
-        "orgName": "广州白云",
-        "departmentId": 4,
-        "departmentName": null,
-        "position": "5",
-        "mobilephone": "13825160872",
-        "createTime": 1524652461000,
-        "updateTime": 1524652463000,
-        "delFlag": "0",
-        "rolesId": "2",
-        "rolesIdList": [
-            2
-        ],
-        "rolesName": "财务",
-        "rolesNameList": [
-            "财务"
-        ],
-        "sexFlag": "0",
-        "loginAccount": "fangj"
+          "id": 36,
+          "username": "fangjian",
+          "password": null,
+          "orgId": 4,
+          "orgName": "广州白云",
+          "departmentId": 4,
+          "departmentName": null,
+          "position": "5",
+          "mobilephone": "13825160872",
+          "createTime": 1524652461000,
+          "updateTime": 1524652463000,
+          "delFlag": "0",
+          "rolesId": "2",
+          "rolesIdList": [
+              2
+          ],
+          "rolesName": "财务",
+          "rolesNameList": [
+              "财务"
+          ],
+          "sexFlag": "0",
+          "loginAccount": "fangj"
       }
   ],
   "text": "success",
   "errorInfo": null
-}
+} */
 
 export default {
   loginByUsername: config => {
@@ -70,9 +70,36 @@ export default {
   },
   getUserInfo: config => {
     return {
-      code: 20000,
-      data: userMap['admin']
-    }
+      "status": 200,
+      "data": [
+          {
+              "id": 36,
+              "username": "fangjian",
+              "password": null,
+              "orgId": 4,
+              "orgName": "广州白云",
+              "departmentId": 4,
+              "departmentName": null,
+              "position": "5",
+              "mobilephone": "13825160872",
+              "createTime": 1524652461000,
+              "updateTime": 1524652463000,
+              "delFlag": "0",
+              "rolesId": "2",
+              "rolesIdList": [
+                  2
+              ],
+              "rolesName": "财务",
+              "rolesNameList": [
+                  "财务"
+              ],
+              "sexFlag": "0",
+              "loginAccount": "fangj"
+          }
+      ],
+      "text": "success",
+      "errorInfo": null
+  }
     const { token } = param2Obj(config.url)
     if (userMap[token]) {
       const user = {
