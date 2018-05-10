@@ -68,14 +68,21 @@ export default {
         vertical-align: middle;
       }
     .avatar-container {
-      width: 146px;
-      padding: 0 20px;
+      padding: 0 23px 0 30px;
       height: $topNavHeight;
-      display: inline-block;
+      float: right;
       white-space: nowrap;
-      position: absolute;
-      right: 118px;
-      top: 0;
+      position: relative;
+
+      &::before{
+        position: absolute;
+        content: '';
+        top: ($topNavHeight - 20px) / 2;
+        height: 20px;
+        width: 1px;
+        background: #87cfff;
+        left: 0;
+      }
 
       &:hover{
         background: rgba(255, 255, 255, .1);
@@ -86,13 +93,14 @@ export default {
           position: relative;
           
           .user-avatar{
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
+            margin-right: 12px;
           }
           
           .user-name{
             display: inline-block;
-            max-width: 60px;
+            max-width: $topNavFontSize * 4;
             color: #fff;
             line-height: $topNavHeight;
             vertical-align: middle;

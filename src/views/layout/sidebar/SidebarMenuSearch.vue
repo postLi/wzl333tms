@@ -64,16 +64,21 @@ export default {
 }
 </script>
 <style lang="scss">
-$height: 30px;
+$height: 24px;
 
 .sidebar-menu-search{
   padding-left: 3px;
   .el-input{
-    width: 160px;
+    width: 120px;
+    font-size: 12px;
 
     input {
       height: $height;
       line-height: $height;
+      border-radius: 4px;
+      border: solid 1px rgba(255, 255, 255, 0.6);
+      background: transparent;
+      color: #fff;
     }
     .el-input__icon{
       line-height: $height;
@@ -82,5 +87,9 @@ $height: 30px;
 }
 .sidebar-menu-pop{
   left: 3px !important;
+
+  .el-autocomplete-suggestion li, .el-autocomplete-suggestion__wrap{
+    padding: 0;
+  }
 }
 </style>

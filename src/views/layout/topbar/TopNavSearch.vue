@@ -15,14 +15,12 @@
       @focus="addLong"
       @blur="setShort"
       @select="handleSelect">
-      <i
-        class="el-icon-search el-input__icon"
-        slot="prefix">
-      </i>
+      <icon-svg icon-class="sousuo" slot="prefix" />
+      <icon-svg v-if="!topSearch.length" icon-class="shouqicaidan" slot="suffix" />
       <i
         v-if="topSearch.length"
         class="el-icon-circle-close el-input__icon"
-        @click="clearinput"
+        @click.stop="clearinput"
         slot="suffix">
       </i>
       <template slot-scope="{ item }">
@@ -87,7 +85,7 @@ export default {
     },
     setShort () {
       this.$refs['topNavSearch'].classList.remove('longSearchBox')
-      this.$refs['topNavSearch'].classList.remove('showMiniSearchBox')
+      // this.$refs['topNavSearch'].classList.remove('showMiniSearchBox')
     },
     querySearch (query, cb) {
       let data = this.searchListArr
@@ -124,8 +122,8 @@ export default {
 @import "src/styles/variate.scss";
 .topNav-search{
   position: absolute;
-  right: 454px;
   top: 0;
+  right: 320px;
   height: $topNavHeight;
   line-height: $topNavHeight;
 
@@ -145,6 +143,13 @@ export default {
   }
 
   .el-input__inner{
+    width: 160px;
+    height: 26px;
+    border-radius: 12px;
+    border: solid 1px rgba(255, 255, 255, 0.69);
+    background: #003863;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
   }
 
   .el-icon-circle-close{
@@ -173,13 +178,14 @@ export default {
     background: rgba(0, 0, 0, .1);
     text-align: right;
     padding-right: 3px;
+    font-size: 14px;
   }
 }
-@media screen and (max-width:1320px) {
+@media screen and (max-width:1300px) {
   .my-topNav-search-input{
     display: none;
     position: absolute;
-    top: $topNavHeight - 10px;
+    top: $topNavHeight - 6px;
     right: 0;
     width: 200px;
     line-height: $topNavHeight - 10px;
@@ -188,8 +194,13 @@ export default {
     }
     .el-input--prefix .el-input__inner{
       padding-left: 10px;
+      width: 100%;
       padding-right: 10px;
-      border: 1px solid #003863;
+      border: 1px solid #1C6094;
+    }
+
+    .svg-icon{
+      display: none;
     }
     
   }
@@ -204,7 +215,7 @@ export default {
     }
   }
 }
-@media screen and (min-width:1320px){
+@media screen and (min-width:1300px){
   .topNavSearch-trigger{
     display: none;
   }

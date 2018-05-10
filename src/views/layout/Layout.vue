@@ -110,7 +110,7 @@ export default {
             border-radius: 0px !important;
             background: #003863;
             z-index: 999;
-            min-width: 1150px;
+            min-width: 1180px;
         }
     }
 </style>

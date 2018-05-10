@@ -1,14 +1,13 @@
 <template>
   <div class="navbar">
     <div class="logo-panel">
-      <router-link to="/"><img src="../../assets/logo_white.png" alt=""></router-link>
+      <router-link to="/"><img src="../../../assets/logo.png" alt=""></router-link>
     </div>
     <TopNavMenu />
-    <TopNavSearch />
-    <router-link tag="div" class="pickClip" to="/order/pickClip"><icon-svg icon-class="tiaodanjia" /> 挑单夹</router-link>
-    <TopNavMessage />
+<!--     <router-link tag="div" class="pickClip" to="/order/pickClip"><icon-svg icon-class="tiaodanjia" />挑单夹</router-link> -->
     <TopNavUser />
     <TopNavCreateOrder />
+    <TopNavSearch />
   </div>
   
 </template>
@@ -17,7 +16,6 @@
 import TopNavMenu from './TopNavMenu'
 import TopNavUser from './TopNavUser'
 import TopNavSearch from './TopNavSearch'
-import TopNavMessage from './TopNavMessage'
 import TopNavCreateOrder from './TopNavCreateOrder'
 
 export default {
@@ -25,7 +23,6 @@ export default {
     TopNavMenu,
     TopNavUser,
     TopNavSearch,
-    TopNavMessage,
     TopNavCreateOrder
   },
   data () {
@@ -60,7 +57,8 @@ export default {
     }
 
     .logo-panel{
-      padding-left: 9px;
+      padding-left: 32px;
+      padding-right: 53px;
       height: auto;
       float: left;
       height: $topNavHeight;
@@ -72,35 +70,13 @@ export default {
       }
       
       img{
-        height: 38px;
-        width: 198px;
+        height: 37px;
+        width: 112px;
         vertical-align: middle;
       }
     }
     
-    .createOrder{
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: $topNavHeight;
-      width: 118px;
-      text-align: center;
-      line-height: $topNavHeight;
-      font-size: $topNavFontSize;
-      background-color: #0099FF;
-      color: #fff;
-      cursor: pointer;
 
-      &:hover{
-        background-color: rgb(0, 129, 214);
-      }
-
-      .svg-icon{
-        margin-right: 0px;
-        font-size: 1.5em;
-        vertical-align: middle;
-      }
-    }
     .pickClip{
       width: 110px;
       position: absolute;
