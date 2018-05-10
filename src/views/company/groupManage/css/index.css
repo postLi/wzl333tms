@@ -1,0 +1,108 @@
+
+.company{
+  height:100%;
+}
+/*左侧栏*/
+.side_left{
+  width: 12%;
+  height:100%;
+  float:left;
+  padding-top:10px;
+
+}
+/*右侧栏*/
+.side_right {
+  width: 88%;
+  float: left;
+  padding-top: 28px;
+  border-left: 2px solid #ccc;
+  padding-left: 6px;
+}
+.side_right_top{
+  border-bottom:2px dotted #ccc;
+  padding-left: 29px;
+}
+.side_right_top .el-form{
+  display: inline-block;
+  margin-bottom: 5px;
+
+}
+.side_right_top label{
+
+  text-align:right;
+  color: #333;
+  padding-right: 10px;
+}
+
+.side_right_top .el-form-item {
+  margin-bottom: 10px;
+  border-color:#fff;
+}
+.side_right_top .el-input__inner{
+  line-height: 24px;
+  height:24px;
+  border-radius: 2px;
+  padding-left: 11px;
+  width: 75%;
+  color: #3e9ff1;
+}
+
+/*表格功能*/
+.side_right_bottom .btns_box{
+  margin:26px 0 10px 25px;
+}
+.btns_box_left{
+  float: left;
+}
+.btns_box_right{
+  float: right;
+  margin-right: 25px;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 40px;
+  letter-spacing: 2px;
+  color: #333;
+}
+.btns_box img{
+  position: relative;
+  top: 1px;
+  left: 31px;
+  wdith:13px;
+  height: 17px;
+}
+.btns_box .el-button--primary{
+  color:#3e9ff1;
+  background: #fff;
+  border-color: #3e9ff1;
+  padding: 8px 12px 8px 29px;
+}
+.el-table {
+  width: 100% !important;
+}
+.el-table table{
+  width: 100% !important;
+
+}
+.el-table th,td{
+  text-align:center;
+}
+/*表格功能*/
+
+/*表格内容*/
+.info_news {
+  margin: 0 11px 41px 13px;
+}
+.info_news .el-table__header{
+  background-color: #eee;
+}
+.info_news .cell{
+  color: #333;
+  font-size: 14px;
+}
+/*表格内容*/
+/*分页*/
+.Pagination{
+  text-align: right;
+}
+/*分页*/
