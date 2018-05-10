@@ -28,9 +28,13 @@
             <div class="btns_box clearfix">
               <!--表格功能-->
                 <div class="btns_box_left">
+                  <img src="../../../assets/icom/xinzeng.png" alt="">
                   <el-button type="primary" plain @click="addStaff = true">新增员工</el-button>
+                  <img src="../../../assets/icom/shanchu.png" alt="">
                   <el-button type="primary" plain>删除员工</el-button>
+                  <img src="../../../assets/icom/xiugai.png" alt="">
                   <el-button type="primary" plain>修改网点</el-button>
+                  <img src="../../../assets/icom/xinzengwangdian.png" alt="">
                   <el-button type="primary" plain>新增网点</el-button>
                 </div>
               <div class="btns_box_right">
@@ -48,7 +52,8 @@
                     border
                     tooltip-effect="dark"
                     @row-click="clickDetails"
-                    style="width: 100%">
+                    style="width: 100%;"
+                    >
                     <el-table-column
                       type="selection"
                       width="55">
@@ -210,7 +215,7 @@
 </template>
 <script>
 
-    import { getAllOrgInfo , getOrgId , isEmpty , objStory } from '../../../api/company/groupManage'
+    import { getAllOrgInfo , getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
 
     export default {
         data() {
@@ -327,7 +332,56 @@
                   label: 'name'
                 },
                 //左边树形初始化数据
-                getOrgId: ''//根据组织id获取列表
+                getOrgId: '',//根据组织id获取列表
+                formData: [
+                  {
+                    label:"网点名称：",
+                  name:''},
+                  {
+                    label:"网点类型：",
+                    name:''},
+                  {
+                    label:"网点状态：",
+                    name:''},
+                  {
+                    label:"客服人员：",
+                    name:''},
+                  {
+                    label:"客服电话：",
+                    name:''},
+                  {
+                    label:"上级网点：",
+                    name:''},
+                  {
+                    label:"经营类型：",
+                    name:''},
+                  {
+                    label:"创建时间：",
+                    name:''},
+                  {
+                    label:"网点代码：",
+                    name:''},
+                  {
+                    label:"代收款限额：",
+                    name:''},
+                  {
+                    label:"负 责 人：",
+                    name:''},
+                  {
+                    label:"负责人电话：",
+                    name:''},
+                     {
+                    label:"所在城市：",
+                    name:''},
+                     {
+                    label:"所在城市：",
+                    name:''},
+                    {
+                    label:"预警额度：",
+                    name:''}
+                    ],
+                  // 缓存节点数据
+                  orgInfoCache: {}
               };
             },
         mounted () {
@@ -348,31 +402,49 @@
               }
             })
           },
+          // 处理返回的节点数据
+          handleOrgInfo(data){
+            if(data.orgType = 1){
+              this.formData[1].name = '营业网点'
+            }else{
+              this.formData[1].name ="分拨中心"
+            }
+            if(data.status = 1){
+              this.formData[2].name ="无效"
+            }else{
+              this.formData[2].name ="有效"
+            }
+            if(data.manageType = 1){
+              this.formData[6].name ="自营"
+            }else{
+              this.formData[6].name ="加盟"
+            }
+
+            this.formData[0].name = isEmpty(data.orgName);
+            this.formData[3].name = isEmpty(data.serviceName);
+            this.formData[4].name = isEmpty(data.servicePhone);
+            this.formData[5].name = isEmpty(data.parentName);
+            this.formData[7].name = fmtDate(data.createTime);
+            this.formData[8].name = isEmpty(data.networkCode);
+            this.formData[9].name = isEmpty(data.collectionFee);
+            this.formData[10].name = isEmpty(data.responsibleName);
+            this.formData[11].name = isEmpty(data.responsibleTelephone);
+            this.formData[12].name = isEmpty(data.city);
+            this.formData[13].name = isEmpty(data.lockMachineQuota);
+            this.formData[14].name = isEmpty(data.warningQuota);
+            console.log(this.formData[7].name);
+          },
           // 根据组织id显示列表
-          fetchOrgId() {
-              getOrgId(this.dataTree[0].id).then(res => {
-                // if (res.data.orgType = 1) {
-                //   res.data.orgType == "营业网点"
-                //   console.log(res.data.orgType)
-                // } else {
-                //   res.data.orgType == '分拨中心'
-                // }
-                this.formData.push(new objStory('网点名称：', isEmpty(res.data.orgName)))
-                this.formData.push(new objStory('网点类型：', res.data.orgType))
-                this.formData.push(new objStory('网点状态：', isEmpty(res.data.status)))
-                this.formData.push(new objStory('客服人员：', isEmpty(res.data.serviceName)))
-                this.formData.push(new objStory('客服电话：', isEmpty(res.data.servicePhone)))
-                this.formData.push(new objStory('上级网点：', isEmpty(res.data.parentName))) //parentName
-                this.formData.push(new objStory('经营类型：', isEmpty(res.data.manageType)))
-                this.formData.push(new objStory('创建时间：', isEmpty(res.data.createTime)))
-                this.formData.push(new objStory('网点代码：', isEmpty(res.data.networkCode)))
-                this.formData.push(new objStory('代收款限额：',isEmpty(res.data.collectionFee)))
-                this.formData.push(new objStory('负 责 人：',isEmpty(res.data.responsibleName)))
-                this.formData.push(new objStory('负责人电话：',isEmpty(res.data.responsibleTelephone)))
-                this.formData.push(new objStory('所在城市：',isEmpty(res.data.city)))
-                this.formData.push(new objStory('锁机额度：',isEmpty(res.data.lockMachineQuota)))
-                this.formData.push(new objStory('预警额度：',isEmpty(res.data.warningQuota)))
-            })
+          fetchOrgId(id) {
+
+            if(this.orgInfoCache[id]){
+              this.handleOrgInfo(this.orgInfoCache[id])
+            } else {
+              getOrgId(id).then(res => {
+                this.orgInfoCache[id] = res.data
+                this.handleOrgInfo(res.data)
+              })
+            }
           },
           handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -389,14 +461,7 @@
           },
           getCheckedKeys() {
             this.getOrgId = this.$refs.tree._data.currentNode.node.data.id
-            // this.fetchOrgId(this.getOrgId)//根据组织id显示列表
-            // console.log(this.getOrgId)
-            // fetchOrgFindId(){
-            //   this.getOrgId(this.getOrgId).then(res => {
-            //     console.log(res)
-            //   })//根据组织id获取列表
-            // }
-
+            this.fetchOrgId(this.getOrgId)//根据组织id显示列表
           }
         }
       }
