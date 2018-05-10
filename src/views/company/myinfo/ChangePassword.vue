@@ -13,7 +13,7 @@
     <el-form-item label="确认新密码" :label-width="formLabelWidth" prop="re_pwd">
       <el-input type="password" v-model="form.re_pwd" auto-complete="off"></el-input>
     </el-form-item>
-    
+
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="closeMe">取 消</el-button>
