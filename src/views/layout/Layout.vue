@@ -4,7 +4,7 @@
         <navbar></navbar>
     </div>
     <div class="sidebar-wrapper">
-      <sidebar class="sidebar-container"></sidebar>
+      <sidebar></sidebar>
     </div>
     <div class="main-container">
       <TagsView></TagsView>
@@ -40,6 +40,8 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
     @import "src/styles/mixin.scss";
+    @import "src/styles/variate.scss";
+
     .app-wrapper {
         @include clearfix;
         position: relative;
@@ -48,15 +50,15 @@ export default {
 
         &.hideSidebar {
             .main-container {
-                margin-left: 50px;
+                margin-left: $hideSidebarWidth;
             }
             .sidebar-wrapper{
-                width: 50px;
+                width: $hideSidebarWidth;
                 .el-submenu__icon-arrow{
                     display: none;
                 }
                 .el-menu--collapse {
-                    width: 50px;
+                    width: $hideSidebarWidth;
                 }
                 .svg-icon{
                     display: block;
@@ -65,11 +67,14 @@ export default {
             .sidebar-userinfo, .sidebar-menu-search{
                 display: none;
             }
+            .sidebar-container{
+                padding-top: 80px;                
+            }
         }
         .sidebar-wrapper {
-            width: 180px;
+            width: $sidebarWidth;
             position: fixed;
-            top: 50px;
+            top: $topNavHeight;
             bottom: 0;
             left: 0;
             z-index: 1001;
@@ -86,29 +91,22 @@ export default {
         .main-container {
             height: 100%;
             transition: all .1s ease-out;
-            margin-left: 180px;
+            margin-left: $sidebarWidth;
             box-sizing: border-box;
-            padding-top: 84px;
+            padding-top: $topNavHeight + $tabsHeight;
             position: relative;
         }
         .main-container-wrap{
             height: 100%;
             overflow: auto;
         }
-        .tags-view-container{
-            position: absolute;
-            height: 34px;
-            top: 50px;
-            left: 0;
-            width: 100%;
-        }
         .navbar-wrapper{
             position: fixed;
             left: 0;
             top: 0;
             width: 100%;
-            height: 50px;
-            line-height: 50px;
+            height: $topNavHeight;
+            line-height: $topNavHeight;
             border-radius: 0px !important;
             background: #003863;
             z-index: 999;

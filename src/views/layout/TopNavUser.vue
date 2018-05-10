@@ -61,15 +61,16 @@ export default {
 </script>
 
 <style lang="scss">
+@import "src/styles/variate.scss";
   .navbar{
     .user-avatar {
         border-radius: 50%;
         vertical-align: middle;
       }
     .avatar-container {
-      width: 116px;
-      padding: 0 5px;
-      height: 50px;
+      width: 146px;
+      padding: 0 20px;
+      height: $topNavHeight;
       display: inline-block;
       white-space: nowrap;
       position: absolute;
@@ -93,7 +94,7 @@ export default {
             display: inline-block;
             max-width: 60px;
             color: #fff;
-            line-height: 50px;
+            line-height: $topNavHeight;
             vertical-align: middle;
             text-overflow: ellipsis;
             overflow: hidden;

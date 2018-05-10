@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/login'
-import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername, setUserInfo } from '@/utils/auth'
 
 const user = {
   state: {
@@ -65,6 +65,7 @@ const user = {
           commit('SET_COMPANY', data.orgName)
           commit('SET_AVATAR', require('../../assets/role.png'))
           commit('SET_OTHERINFO', data)
+          setUserInfo(data)
           resolve(response)
         }).catch(error => {
           reject(error)

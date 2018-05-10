@@ -23,9 +23,9 @@
         </el-col>
       </el-row>
     </el-popover>
-    <div class="avatar-wrapper" v-popover:popovermsg>
+    <div class="message-wrapper" v-popover:popovermsg>
       <el-badge :value="1">
-        <i class="el-icon-message"></i>
+        <icon-svg icon-class="xiaoxi" />
       </el-badge>
     </div>
   </div>
@@ -36,21 +36,49 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "src/styles/variate.scss";
 .topNav-message{
   position: absolute;
   top: 0;
-  right: 234px;
-  width: 60px;
+  right: 264px;
+  width: 80px;
   text-align: center;
-  padding-top: 17px;
-  height: 50px;
+  
+  height: $topNavHeight;
   line-height: 16px;
-  border: 1px solid #1B79B1;
   color:#fff;
-  border-top: none;
-  border-bottom: none;
   cursor: pointer;
   
+}
+.message-wrapper{
+  height: $topNavHeight;
+  padding-top: 27px;
+  padding-right: 22px;
+  padding-left: 18px;
+  .svg-icon{
+        margin-right: 0px;
+        font-size: 1.5em;
+        vertical-align: middle;
+      }
+  .el-badge__content{
+    border-radius: 8px;
+    padding: 0 4px;
+  }
+
+  &::after,&::before{
+    position: absolute;
+    content: '';
+    top: ($topNavHeight - 20px) / 2;
+    height: 20px;
+    width: 1px;
+    background: #87cfff;
+  }
+  &::after{
+    left: 0;
+  }
+  &::before{
+    right: 0;
+  }
 }
 .popovermsg{
   padding: 0;

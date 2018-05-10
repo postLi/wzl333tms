@@ -4,6 +4,7 @@ const TokenKey = 'TMS-Token'
 const UsernameKey = 'lastloginUsername'
 const OrgIdKey = 'OrganizationId'
 const RefreshTokenKey = 'TMS-refreshtoken'
+const UserinfoKey = 'TMS-userinfo'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -51,4 +52,16 @@ export function setRefreshToken(name) {
 
 export function removeRefreshToken() {
   return localStorage.removeItem(RefreshTokenKey)
+}
+
+export function getUserInfo() {
+  return JSON.parse(localStorage.getItem(UserinfoKey))
+}
+
+export function setUserInfo(obj) {
+  return localStorage.setItem(UserinfoKey, JSON.stringify(obj))
+}
+
+export function removeUserInfo() {
+  return localStorage.removeItem(UserinfoKey)
 }

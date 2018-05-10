@@ -20,6 +20,10 @@ body{
   width: 100%;
 }
 
+:focus {
+  outline: none;
+}
+
 @media (max-width: 800px) {
   body{
     overflow-x: scroll;

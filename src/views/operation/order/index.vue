@@ -1,7 +1,6 @@
 <template>
   <div>
-    运单页面
-    <router-view></router-view>
+    运单页面3
   </div>
 </template>
 <script>

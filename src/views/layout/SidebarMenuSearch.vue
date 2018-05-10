@@ -64,8 +64,21 @@ export default {
 }
 </script>
 <style lang="scss">
+$height: 30px;
+
 .sidebar-menu-search{
   padding-left: 3px;
+  .el-input{
+    width: 160px;
+
+    input {
+      height: $height;
+      line-height: $height;
+    }
+    .el-input__icon{
+      line-height: $height;
+    }
+  }
 }
 .sidebar-menu-pop{
   left: 3px !important;

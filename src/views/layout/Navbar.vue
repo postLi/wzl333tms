@@ -5,10 +5,10 @@
     </div>
     <TopNavMenu />
     <TopNavSearch />
-    <router-link tag="div" class="pickClip" to="/order/pickClip"><i class="el-icon-document"></i> 挑单夹</router-link>
+    <router-link tag="div" class="pickClip" to="/order/pickClip"><icon-svg icon-class="tiaodanjia" /> 挑单夹</router-link>
     <TopNavMessage />
     <TopNavUser />
-    <router-link tag="div" class="createOrder" to="/order/createOrder">创建运单</router-link>
+    <TopNavCreateOrder />
   </div>
   
 </template>
@@ -18,13 +18,15 @@ import TopNavMenu from './TopNavMenu'
 import TopNavUser from './TopNavUser'
 import TopNavSearch from './TopNavSearch'
 import TopNavMessage from './TopNavMessage'
+import TopNavCreateOrder from './TopNavCreateOrder'
 
 export default {
   components: {
     TopNavMenu,
     TopNavUser,
     TopNavSearch,
-    TopNavMessage
+    TopNavMessage,
+    TopNavCreateOrder
   },
   data () {
     return {
@@ -34,15 +36,11 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+@import "src/styles/variate.scss";
     .navbar {
         background: #003863;
         border-radius: 0;
-        .hamburger-container {
-            line-height: 58px;
-            height: 50px;
-            float: left;
-            padding: 0 10px;
-        }
+
         .errLog-container {
             display: inline-block;
             position: absolute;
@@ -55,22 +53,28 @@ export default {
             color: red;
         }
         .page-top-nav{
-          height: 50px;
+          height: $topNavHeight;
           float: left;
           margin-left: 5px;
         }
     }
 
     .logo-panel{
-      padding-top: 6px;
       padding-left: 9px;
       height: auto;
       float: left;
-      height: 50px;
+      height: $topNavHeight;
+      
+
+      a{
+        line-height: $topNavHeight;
+        display: block;
+      }
       
       img{
         height: 38px;
         width: 198px;
+        vertical-align: middle;
       }
     }
     
@@ -78,10 +82,11 @@ export default {
       position: absolute;
       right: 0;
       top: 0;
-      height: 50px;
+      height: $topNavHeight;
       width: 118px;
       text-align: center;
-      line-height: 50px;
+      line-height: $topNavHeight;
+      font-size: $topNavFontSize;
       background-color: #0099FF;
       color: #fff;
       cursor: pointer;
@@ -89,19 +94,29 @@ export default {
       &:hover{
         background-color: rgb(0, 129, 214);
       }
+
+      .svg-icon{
+        margin-right: 0px;
+        font-size: 1.5em;
+        vertical-align: middle;
+      }
     }
     .pickClip{
       width: 110px;
       position: absolute;
       top: 0;
-      right: 294px;
-      height: 50px;
-      border-left: 1px solid #1B79B1;
+      right: 344px;
+      height: $topNavHeight;
       color: #fff;
       text-align: center;
       cursor: pointer;
       &:hover{
         background-color: rgba(0, 0, 0, .2);
+      }
+      .svg-icon{
+        margin-right: 0px;
+        font-size: 1.5em;
+        vertical-align: middle;
       }
     }
 </style>

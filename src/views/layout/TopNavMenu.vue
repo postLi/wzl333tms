@@ -3,13 +3,13 @@
     <el-menu 
       mode="horizontal" 
       :default-active="current"
-      background-color="#003863"
-      text-color="#fff"
-      active-text-color="#ffffff"
       :router="true">
+      <el-menu-item key="/dashboard" index="/dashboard">
+        <icon-svg icon-class="shouye" /> 首页
+      </el-menu-item>
       <template v-for="(menu, index) in permission_routers">
          <el-menu-item :key="index" :index="menu.path" v-if="!menu.hidden">
-          {{menu.name}}
+          <icon-svg v-if="menu.icon" :icon-class="menu.icon" /> {{menu.name}}
         </el-menu-item>
       </template>
       </el-menu>
@@ -60,20 +60,37 @@ export default {
 
 
 <style lang="scss">
+@import "src/styles/variate.scss";
+  #app .page-top-nav{
+    .el-menu--horizontal{
+      border-bottom: none;
+    }
+    .el-menu{
+      background: #003863;
+    }
+  }
   #app .page-top-nav .el-menu-item{
-    height: 50px;
-    line-height: 50px;
+    height: $topNavHeight;
+    line-height: $topNavHeight;
     color: #fff;
+    font-size: $topNavFontSize;
 
     &.is-active{
-      background: #307AA6;
+      background: #002C4E;
+      border-bottom: none;
+    }
+
+    .svg-icon{
+      margin-right: 0;
+      vertical-align: -4px;
+      font-size: 1.2em;
     }
 
     &:hover{
-      background: #307AA6;
+      background: #002C4E;
     }
   }
   #app .page-top-nav .el-submenu>.el-menu{
-    top: 52px;
+    top: $topNavHeight + 2px;
   }
 </style>

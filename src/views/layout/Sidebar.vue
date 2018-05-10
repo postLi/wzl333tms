@@ -1,23 +1,14 @@
 <template>
-  <el-menu 
-  class="sidebar-menu" 
-  mode="vertical" 
-  theme="dark" 
-  background-color="#002039"
-  text-color="#BFCBD9"
-  active-text-color="#3e9ff1"
-  :default-active="$route.path" 
-  :select="openMenu" 
-  :collapse="!sidebar.opened">
-    <div class="sidebar-userinfo clearfix">
-      <img :src="avatar" alt="">
-      <span>{{ name }}</span><br><span>{{ company }}</span>
-    </div>
-    <SidebarMenuSearch :searchItem="sidebarRouters" />
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-    
-    <sidebar-item :routes='sidebarRouters'></sidebar-item>
-  </el-menu>
+  <div class="sidebar-container">
+    <!--     <div class="sidebar-userinfo clearfix">
+        <img :src="avatar" alt="">
+        <span>{{ name }}</span><br><span>{{ company }}</span>
+      </div> -->
+      <SidebarMenuSearch :searchItem="sidebarRouters" />
+      <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+      <sidebar-item :routes='sidebarRouters'></sidebar-item>
+  </div>
+  
 </template>
 
 <script>
@@ -32,24 +23,19 @@ export default {
     ...mapGetters([
       'sidebar',
       'sidebarRouters',
-      'permission_routers',
-      'avatar',
-      'name',
-      'company'
+      'permission_routers'
     ])
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
-    },
-    openMenu () {
-
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+@import "src/styles/variate.scss";
 #app .sidebar-menu{
   min-height: 100%;
   .router-link-exact-active{
@@ -59,8 +45,15 @@ export default {
   }
 }
 .sidebar-container{
-  padding-top: 50px;
+  min-height: 100%;
+  padding-top: 40px;
+  background: #002039;
   border-radius: 0;
+
+  .el-menu{
+    border-right: 0;
+    background: #002039;
+  }
 
   .sidebar-userinfo{
     margin-top: -40px;
@@ -88,7 +81,7 @@ export default {
 
   .hamburger-container{
     position: absolute;
-    top: 10px;
+    top: 40px;
     right: 10px;
   }
 }

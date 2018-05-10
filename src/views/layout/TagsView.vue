@@ -1,16 +1,16 @@
 <template>
   <div class="tags-view-container">
     <div class="tags-view-scroll">
-      <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
-        <router-link class="tags-view-item" :class="isActive({path:'/dashboard', name:'首页'})?'active':''" to="/dashboard" >
+      <div class="scroll-container tags-view-wrapper" ref="scrollContainer" @wheel.prevent="handleScroll">
+        <div class="scroll-wrapper" ref="scrollWrapper" :style="{left: left + 'px'}">
+          <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard" >
           首页
-        </router-link>
-        <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
-          :to="tag.path" :key="tag.path">
-          {{generateTitle(tag.title)}}
-          <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
-        </router-link>
-      </scroll-pane>
+          </router-link><router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
+            :to="tag.path" :key="tag.path">
+            {{generateTitle(tag.title)}}<span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
+          </router-link>
+        </div>
+      </div>
     </div>
     <div class="tags-view-more">
       <i class="el-icon-arrow-down el-icon--right"></i>
@@ -39,17 +39,17 @@
 </template>
 
 <script>
-import ScrollPane from '@/components/ScrollPane'
+const padding = 0
 
 export default {
-  components: { ScrollPane },
   data() {
     return {
       visible: true,
       top: 0,
       left: 0,
       selectedTag: {},
-      hideCloseCurrentMenu: false
+      hideCloseCurrentMenu: false,
+      indexTag: {path:'/dashboard', name:'首页', lock: true}
     }
   },
   computed: {
@@ -60,7 +60,7 @@ export default {
   watch: {
     $route(newpath, oldpath) {
       // 如果新的路径是三级路径以上，则不进行加入
-      if(/^(\/[^/]*){1,2}$/.test(newpath.fullPath)){
+      if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
         this.addViewTags()
         this.moveToCurrentTag()
       }
@@ -98,18 +98,26 @@ export default {
     },
     addViewTags() {
       const route = this.generateRoute()
+      console.log('this.$refs.tag222:',this.$refs.tag)
+      
       if (!route) {
         return false
       }
       this.$store.dispatch('addVisitedViews', route)
     },
     moveToCurrentTag() {
+      // 针对首页特殊处理
+      if(this.$route.path == this.indexTag.path){
+        this.moveToTarget(this.$refs.tagIndex.$el)
+        return
+      }
       // 因为首页为固定标签，所以初始页面时，this.$refs.tag还未传入任何值，为undefined，需要给个默认的值 []
-      const tags = this.$refs.tag || []
+      const tags = this.$refs.tag ? Array.isArray(this.$refs.tag) ? this.$refs.tag : [this.$refs.tag] : []
+      
       this.$nextTick(() => {
         for (const tag of tags) {
           if (tag.to === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag.$el)
+            this.moveToTarget(tag.$el)
             break
           }
         }
@@ -140,35 +148,85 @@ export default {
     openMenu(tag, e, hideClose) {
       this.visible = true
       this.selectedTag = tag
-      this.left = e.clientX
-      this.top = e.clientY
       this.hideCloseCurrentMenu = !!hideClose
     },
     closeMenu() {
       this.visible = false
+    },
+    handleScroll(e) {
+      const eventDelta = e.wheelDelta || -e.deltaY * 3
+      const $container = this.$refs.scrollContainer
+      const $containerWidth = $container.offsetWidth
+      const $wrapper = this.$refs.scrollWrapper
+      const $wrapperWidth = $wrapper.offsetWidth
+
+      if (eventDelta > 0) {
+        this.left = Math.min(0, this.left + eventDelta)
+      } else {
+        if ($containerWidth - padding < $wrapperWidth) {
+          if (this.left < -($wrapperWidth - $containerWidth + padding)) {
+            this.left = this.left
+          } else {
+            this.left = Math.max(this.left + eventDelta, $containerWidth - $wrapperWidth - padding)
+          }
+        } else {
+          this.left = 0
+        }
+      }
+    },
+    moveToTarget($target) {
+      const $container = this.$refs.scrollContainer
+      const $containerWidth = $container.offsetWidth
+      const $targetLeft = $target.offsetLeft
+      const $targetWidth = $target.offsetWidth
+
+      console.log($target,$containerWidth,$targetLeft,$targetWidth)
+
+      if ($targetLeft <= -this.left) {
+        // tag in the left
+        this.left = -$targetLeft + padding
+      } else if ($targetLeft + padding > -this.left && $targetLeft + $targetWidth < -this.left + $containerWidth - padding) {
+        // tag in the current view
+        // eslint-disable-line
+      } else {
+        // tag in the right
+        this.left = -($targetLeft - ($containerWidth - $targetWidth) + padding)
+      }
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" >
+ @import "src/styles/variate.scss";
+
 .tags-view-container {
+  position: absolute;
+  height: $tabsHeight + 1px;
+  top: $topNavHeight;
+  background: #e6e6e6;
+  
+  left: 0;
+  width: 100%;
+
   .tags-view-scroll{
     .scroll-wrapper{
+      
     }
   }
   .tags-view-more{
     width: 50px;
-    height: 33px;
+    height: $tabsHeight;
     text-align: center;
     position: absolute;
     right: 0;
     top: 0;
-    background: #fff;
+    z-index: 2;
+    background: #E6E6E6;
 
     .el-icon-arrow-down{
       cursor: pointer;
-      line-height: 33px;
+      line-height: $tabsHeight;
     }
 
     &:hover{
@@ -181,39 +239,28 @@ export default {
   }
 
   .tags-view-wrapper {
-    background: #fff;
-    height: 34px;
-    border-bottom: 1px solid #d8dce5;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+    height: $tabsHeight + 1px;
+    
+    font-size: 0;
+    
     .tags-view-item {
       display: inline-block;
       position: relative;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
+      height: $tabsHeight;
+      line-height: $tabsHeight;
+      border-right: 2px solid #b8b8b8;
       color: #495060;
-      background: #fff;
-      padding: 0 8px;
-      font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
+      background: #e6e6e6;
+      padding: 0 20px;
+      font-size: 14px;
       &:first-of-type {
-        margin-left: 15px;
+        margin-left: 0;
       }
       &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
-        &::before {
-          content: '';
-          background: #fff;
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
-        }
+        background-color: #fff;
+        color: #666;
+        position: relative;
+        height: $tabsHeight + 1px;
       }
     }
   }
@@ -228,7 +275,7 @@ export default {
 
     position: absolute;
     right: 2px;
-    top: 33px;
+    top: $tabsHeight + 1px;
 
     display: none;
 
@@ -270,30 +317,42 @@ export default {
     overflow: auto;
   }
 }
-</style>
 
-<style rel="stylesheet/scss" lang="scss">
 //reset element css of el-icon-close
 .tags-view-wrapper {
   .tags-view-item {
     .el-icon-close {
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
+      margin-left: 20px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(.6);
-        display: inline-block;
-        vertical-align: -3px;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
+      font-size: 12px;
+      &:hover{
+        color: #2887e0;
+        font-weight: bold;
       }
     }
+  }
+}
+.scroll-container {
+  white-space: nowrap;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: visible;
+  width: 100%;
+  &:after{
+      content:'';
+      width: 100%;
+      height: 1px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      background: #DCDCDC;
+    }
+
+  .scroll-wrapper {
+    position: absolute;
+    z-index: 2;
+    height: $tabsHeight;
   }
 }
 </style>

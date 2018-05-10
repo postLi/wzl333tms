@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-import {getRefreshToken} from '../utils/auth'
+import { getRefreshToken } from '../utils/auth'
 
 export function login(username, password, orgid) {
   var grant_type = 'password'

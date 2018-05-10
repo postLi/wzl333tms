@@ -12,9 +12,8 @@ export function isvalCompanyId(str) {
 }
 
 export function isvalidUsername(str) {
-  return true
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  const usernameRegex = /^([0-9a-zA-Z]|[\u0391-\uFFE5]){2,}$/
+  return usernameRegex.test(str.trim())
 }
 
 /* 合法uri*/

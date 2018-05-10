@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "babel-polyfill": "6.26.0",
     "clipboard": "2.0.1",
     "element-ui": "2.3.7",
     "js-cookie": "2.1.4",
@@ -21,6 +22,7 @@
     "nprogress": "0.2.0",
     "vue": "2.5.16",
     "vue-router": "3.0.1",
+    "vuedraggable": "2.16.0",
     "vuex": "3.0.1"
   },
   "devDependencies": {

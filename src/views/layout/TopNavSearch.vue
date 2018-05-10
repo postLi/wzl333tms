@@ -121,12 +121,13 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "src/styles/variate.scss";
 .topNav-search{
   position: absolute;
-  right: 404px;
+  right: 454px;
   top: 0;
-  height: 50px;
-  line-height: 50px;
+  height: $topNavHeight;
+  line-height: $topNavHeight;
 
   .topNavSearch-trigger{
     width: 50px;
@@ -178,16 +179,17 @@ export default {
   .my-topNav-search-input{
     display: none;
     position: absolute;
-    top: 50px;
+    top: $topNavHeight - 10px;
     right: 0;
     width: 200px;
-    line-height: 40px;
+    line-height: $topNavHeight - 10px;
     .el-icon-search{
       display: none;
     }
     .el-input--prefix .el-input__inner{
       padding-left: 10px;
       padding-right: 10px;
+      border: 1px solid #003863;
     }
     
   }

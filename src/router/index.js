@@ -15,8 +15,8 @@ import Finance from './module/finance'
 import Service from './module/service'
 // 运营
 import Operation from './module/operation'
-// 运单
-import Order from './module/order'
+// 报表
+import Report from './module/report'
 
 Vue.use(Router)
 
@@ -35,11 +35,11 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     noDropdown: true,
-    icon: 'shouce',
+    icon: 'shouye',
     name: '首页',
     hidden: true,
     children: [{
-      path: 'dashboard', name: '首页', icon: 'dashboard', component: _import('dashboard/index'),
+      path: 'dashboard', name: '首页', icon: 'shouye', component: _import('dashboard/index'),
       meta: { title: '首页', noCache: true }
     }]
   }
@@ -52,10 +52,13 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  Company,
-  Finance,
-  Service,
   Operation,
-  Order,
+  Finance,
+  Report,
+  Company,
+  Service,
+  {
+    path: '/createOrder', hidden: true, icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/pop'), meta: { role: ['admin'], title: '创建运单', noCache: true }
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]

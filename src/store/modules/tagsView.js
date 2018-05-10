@@ -5,10 +5,12 @@ const tagsView = {
   },
   mutations: {
     ADD_VISITED_VIEWS: (state, view) => {
+      // 判断是否已经添加过
       if (state.visitedViews.some(v => v.path === view.path)) return
       state.visitedViews.push({
         name: view.name,
         path: view.path,
+        lock: false,
         title: view.meta.title || 'no-name'
       })
       if (!view.meta.noCache) {
