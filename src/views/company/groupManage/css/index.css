@@ -54,6 +54,7 @@
 .btns_box_left{
   float: left;
 }
+
 .btns_box_right{
   float: right;
   margin-right: 25px;
@@ -76,6 +77,7 @@
   background: #fff;
   border-color: #3e9ff1;
   padding: 8px 12px 8px 29px;
+  cursor: pointer;
 }
 .el-table {
   width: 100% !important;
