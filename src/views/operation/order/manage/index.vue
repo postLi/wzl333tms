@@ -453,7 +453,7 @@
   }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-  @import "../../../styles/mixin.scss";
-  @import "../../../styles/manage-customer.css";
+  @import "src/styles/mixin.scss";
+  @import "src/styles/manage-customer.scss";
 
 </style>
