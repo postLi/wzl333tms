@@ -35,7 +35,7 @@
                   <img src="../../../assets/icom/xiugai.png" alt="">
                   <el-button type="primary" plain>修改网点</el-button>
                   <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-                  <el-button type="primary" plain>新增网点</el-button>
+                  <el-button type="primary" plain >新增网点</el-button>
                 </div>
               <div class="btns_box_right">
                 广东广州员工
@@ -221,14 +221,18 @@
     <div class="revise-dot">
 
     </div>
-
+    <AddDot :popVisible="addDoTotVisible" @click="closeAddDot" />
   </div>
 </template>
-<script>
+<script type="text/javascript">
+    import AddDot from './addDot'
 
     import { getAllOrgInfo , getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
 
     export default {
+      components: {
+        AddDot
+      },
         data() {
             var checkName = (rule, value, callback) => {
                 if (!value) {
@@ -272,6 +276,7 @@
 
              }
             return {
+              addDoTotVisible:false,
               //新建网点
               ruleForm: {
                 name: '',
@@ -479,7 +484,6 @@
             this.formData[12].name = isEmpty(data.city);
             this.formData[13].name = isEmpty(data.lockMachineQuota);
             this.formData[14].name = isEmpty(data.warningQuota);
-            console.log(this.formData[7].name);
           },
           // 根据组织id显示列表
           fetchOrgId(id) {
@@ -510,8 +514,10 @@
             this.getOrgId = this.$refs.tree._data.currentNode.node.data.id
             this.fetchOrgId(this.getOrgId)//根据组织id显示列表
           },
-          //修改网点
-
+          //新增网点
+          closeAddDot(){
+            this.addDoTotVisible = true
+          }
         }
       }
 </script>

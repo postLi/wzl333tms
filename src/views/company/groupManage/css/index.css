@@ -20,7 +20,7 @@
 }
 .side_right_top{
   border-bottom:2px dotted #ccc;
-  padding-left: 29px;
+  padding: 0 0 10px 29px;
 }
 .side_right_top .el-form{
   display: inline-block;
@@ -32,11 +32,16 @@
   text-align:right;
   color: #333;
   padding-right: 10px;
+  line-height: 0;
+}
+.side_right_top .el-form-item__content{
+  line-height: 0;
 }
 
 .side_right_top .el-form-item {
   margin-bottom: 10px;
   border-color:#fff;
+  margin-right:0
 }
 .side_right_top .el-input__inner{
   line-height: 24px;
