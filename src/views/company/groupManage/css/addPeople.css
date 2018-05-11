@@ -1,0 +1,66 @@
+.add-people .el-form-item{
+  border-color: #fff;
+}
+.add-people .el-dialog{
+  margin-top: 8.3vh !important;
+  margin-left: 1330px;
+  width: 30%;
+}
+.el-dialog__header{
+  background: #0b4b7c;
+  text-align: center;
+
+}
+.el-dialog__title{
+  color: #ffffff;
+  font-size: 18px;
+}
+.el-dialog__header{
+  padding: 8px 0 8px 0
+}
+.el-dialog__headerbtn{
+  width: 12px;
+  height: 12px;
+  top: 9px;
+  font-size: 20px;
+}
+.el-dialog__body{
+  padding: 20px 10px 480px 30px;;
+}
+.add-people .el-form-item__label{
+  width: 80px !important;
+}
+.add-people .el-form--inline .el-form-item{
+  margin-right:-8px;
+}
+
+.add-people .el-input{
+  width: 78%
+}
+
+.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+  margin-bottom: 14px
+}
+/*label对齐*/
+.el-form-item:nth-of-type(8) .el-form-item__label{
+  padding-right: 24px;
+}
+.el-form-item:nth-of-type(8) .el-form-item__content{
+  left: -14px;
+}
+.rem {
+  padding: 24px 0 0 58px;
+}
+.rem img{
+  display: inline-block;
+  width: 22px;
+  height: 20px;
+}
+.rem span{
+  color: #888;
+  font-size: 14px;
+
+}
+.el-dialog__footer{
+  text-align: center;
+}

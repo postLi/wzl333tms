@@ -146,138 +146,29 @@
         </div>
     </div>
     <!--新 增 员 工-->
-    <div class="addstaff">
-        <el-dialog title="新 增 员 工" :visible.sync="addStaff">
-          <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
-                <el-input v-model="form.name" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone">
-                <el-input v-model="form.phone" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
-                <el-input v-model="form.username" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
-                <el-input  v-model="form.password"  auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="职位" :label-width="formLabelWidth">
-                <el-input v-model="form.zhiwei" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" :label-width="formLabelWidth">
-              <el-select v-model="form.sex">
-                <el-option label="男" value="nan"></el-option>
-                <el-option label="女" value="nv"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="归属网点" :label-width="formLabelWidth">
-              <el-select v-model="form.site">
-                <el-option label="广州网点" value="guangzhou"></el-option>
-                <el-option label="广州网点" value="guangzhou"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="归属部门" :label-width="formLabelWidth">
-              <el-select v-model="form.bumen">
-                <el-option label="财务部" value="caiwubu"></el-option>
-                <el-option label="人力行政部" value="renli"></el-option>
-                <el-option label="调度部" value="diaodu"></el-option>
-                <el-option label="销售部" value="sale"></el-option>
-                <el-option label="运营部" value="yunying"></el-option>
-                <el-option label="客服部" value="kefu"></el-option>
-                <el-option label="项目部" value="xiangmu"></el-option>
-                <el-option label="专线部" value="zhuanxian"></el-option>
-                <el-option label="仓管部" value="cangguan"></el-option>
-                <el-option label="业务部" value="yewu"></el-option>
-                <el-option label="客户" value="kehu"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="权限角色" :label-width="formLabelWidth">
-              <el-select v-model="form.quanxianjuese">
-                <el-option label="财务部" value="caiwubu"></el-option>
-                <el-option label="人力行政部" value="renli"></el-option>
-                <el-option label="调度部" value="diaodu"></el-option>
-                <el-option label="销售部" value="sale"></el-option>
-                <el-option label="运营部" value="yunying"></el-option>
-                <el-option label="客服部" value="kefu"></el-option>
-                <el-option label="项目部" value="xiangmu"></el-option>
-                <el-option label="专线部" value="zhuanxian"></el-option>
-                <el-option label="仓管部" value="cangguan"></el-option>
-                <el-option label="业务部" value="yewu"></el-option>
-                <el-option label="客户" value="kehu"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addStaff = false">确 定</el-button>
-            <el-button @click="addStaff = false">取 消</el-button>
-          </div>
-        </el-dialog>
-    </div>
 
-  <!--新增网点-->
-    <div class="add-dot">
 
-    </div>
-    <!--修改网点-->
-    <div class="revise-dot">
 
-    </div>
-    <AddDot :popVisible="addDoTotVisible" @click="closeAddDot" />
+
+    <!--</div>-->
+    <AddDot :popVisible="addDoTotVisible" @close="closeAddDot" />
+    <AddPeople :popVisible="addPeopleVisible" @close="closeAddPeople" />
   </div>
 </template>
 <script type="text/javascript">
     import AddDot from './addDot'
-
+    import AddPeople from './addPeople'
     import { getAllOrgInfo , getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
 
     export default {
       components: {
-        AddDot
+        AddDot,
+        AddPeople
       },
         data() {
-            var checkName = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请输入用户姓名(务必真实)'));
-                }else{
-                    callback();
-                }
-
-             };
-            var checkPhone = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请输入手机号码'));
-                }else if(!/^1[34578]\d{9}$/.test(value)){
-                    return callback(new Error('请输入正确的手机号码'));
-                }
-                else{
-                    callback();
-                }
-
-             };
-            var checkUsername = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请输入用户账号'));
-                }else if(!/^[0-9a-zA-Z\u2E80-\u9FFF]{1,}$/.test(value)){
-                    return callback(new Error('用户账号只能为数字、字母和中文'));
-                }
-                else{
-                    callback();
-                }
-
-             };
-            var checkPassword = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请输入用户密码'));
-                }else if(!/^[0-9a-zA-Z!@#$%^&*]{8,}$/.test(value)){
-                    return callback(new Error('用户账号只能为数字、字母或者特殊符号'));
-                }
-                else{
-                    callback();
-                }
-
-             }
             return {
               addDoTotVisible:false,
+              addPeopleVisible:false,
               //新建网点
               ruleForm: {
                 name: '',
@@ -289,66 +180,6 @@
                 resource: '',
                 desc: ''
               },
-              ruleData: {
-                name: [
-                  { required: true, message: '请输入活动名称', trigger: 'blur' },
-                  { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                ],
-                region: [
-                  { required: true, message: '请选择活动区域', trigger: 'change' }
-                ],
-                date1: [
-                  { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-                ],
-                date2: [
-                  { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-                ],
-                type: [
-                  { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-                ],
-                resource: [
-                  { required: true, message: '请选择活动资源', trigger: 'change' }
-                ],
-                desc: [
-                  { required: true, message: '请填写活动形式', trigger: 'blur' }
-                ]
-              },
-              //新建网点
-              formData: [],
-                addStaff: false,
-                form: {
-                 name: '',
-                 phone: '',
-                 username: '',
-                 password: '123456',
-                 zhiwei:'',
-                 sex:'男',
-                 site:'广州网点',
-                 delivery: false,
-                 quanxianjuese:'',
-               },
-               rules: {
-                 name: [
-                   { required: true,validator: checkName, trigger: 'blur' },
-                   { min: 2,  message: '用户姓名最少2个字符', trigger: 'blur' },
-                   { max: 10, message: '用户姓名不可超过10个字符', trigger: 'blur' }
-                 ],
-                 phone: [
-                   { required: true,validator: checkPhone, trigger: ['blur', 'change'] },
-                 ],
-                 username: [
-                   { required: true, validator: checkUsername, trigger: ['blur', 'change'] },
-                   { min: 6,  message: '用户账号最少6个字符', trigger: 'blur' },
-                   { max: 15, message: '用户账号不可超过15个字符', trigger: 'blur' }
-
-                 ],
-                 password: [
-                   { validator: checkPassword, trigger: ['blur', 'change'] },
-                   { min: 6,  message: '密码最少6个字符', trigger: 'blur' },
-                   { min: 3, max: 30, message: '密码不可超过30个字符', trigger: 'blur' }
-
-                 ]
-               },
                formLabelWidth: '120px',
                 currentPage1: 5,
                 currentPage2: 5,
@@ -528,11 +359,11 @@
             switch (type){
                 //新增员工
               case 'addPeople':
-                // this.closeAddDot()
+                this.addPeopleVisible = true
                 break;
               //  新增网点
               case 'addNot':
-                this.closeAddDot()
+                this.addDoTotVisible = true
                 break;
             //    删除员工
               case 'deletePeople':
@@ -584,7 +415,10 @@
           },
           //新增网点
           closeAddDot(){
-            this.addDoTotVisible = true
+            this.addDoTotVisible = false
+          },
+          closeAddPeople(){
+            this.addPeopleVisible = false
           }
         }
       }

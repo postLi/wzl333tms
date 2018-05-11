@@ -62,9 +62,13 @@
               <el-option label="客户" value="kehu"></el-option>
             </el-select>
           </el-form-item>
+          <div class="rem">
+            <img src="../../../assets/icom/xinzengwangdian.png" alt="">
+            <span>注： 密码默认为 123456</span>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
           <el-button @click="closeMe">取 消</el-button>
         </div>
     </el-dialog>
@@ -164,20 +168,19 @@
 
           ]
         },
+        dialogVisible: false,
         formLabelWidth: '120px'
       }
     },
     methods: {
       closeMe(done){
-
-        done();
         this.$emit('close')
-        // this.$refs['ruleForm'].resetFields()
-        // console.log(done)
-        // if(typeof done === 'function'){
-        //   done()
+        this.$refs['ruleForm'].resetFields()
+        console.log(done)
+        if(typeof done === 'function'){
+          done()
         console.log(this.$emit('close'))
-        // }
+        }
       },
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
