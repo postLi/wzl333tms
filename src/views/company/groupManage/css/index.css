@@ -33,13 +33,15 @@
   color: #333;
   padding-right: 10px;
   line-height: 0;
+  width: 95px;
 }
 .side_right_top .el-form-item__content{
   line-height: 0;
+  margin-right: -15px;
 }
 
 .side_right_top .el-form-item {
-  margin-bottom: 10px;
+  margin-bottom: 19px;
   border-color:#fff;
   margin-right:0
 }
@@ -47,9 +49,12 @@
   line-height: 24px;
   height:24px;
   border-radius: 2px;
-  padding-left: 11px;
+  /*padding-left: 11px;*/
   width: 75%;
   color: #3e9ff1;
+}
+.side_right_top .el-input{
+  height: 0;
 }
 
 /*表格功能*/

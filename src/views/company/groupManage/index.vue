@@ -29,13 +29,13 @@
               <!--表格功能-->
                 <div class="btns_box_left">
                   <img src="../../../assets/icom/xinzeng.png" alt="">
-                  <el-button type="primary" plain @click="addStaff = true">新增员工</el-button>
+                  <el-button type="primary" plain @click="doAction('addPeople')">新增员工</el-button>
                   <img src="../../../assets/icom/shanchu.png" alt="">
-                  <el-button type="primary" plain>删除员工</el-button>
+                  <el-button type="primary" plain @click="doAction('deletePeople')">删除员工</el-button>
                   <img src="../../../assets/icom/xiugai.png" alt="">
-                  <el-button type="primary" plain>修改网点</el-button>
+                  <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
                   <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-                  <el-button type="primary" plain >新增网点</el-button>
+                  <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button>
                 </div>
               <div class="btns_box_right">
                 广东广州员工
@@ -52,6 +52,7 @@
                     border
                     tooltip-effect="dark"
                     @row-click="clickDetails"
+                    @selection-change="seleClick"
                     style="width: 100%;"
                     >
                     <el-table-column
@@ -353,6 +354,8 @@
                 currentPage2: 5,
                 currentPage3: 5,
                 currentPage4: 4,
+                //表格内容
+              selected:[],
                 tableData3:[
                   {
                       id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
@@ -503,8 +506,73 @@
           handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
           },
+          //表格内容
           clickDetails(row, event, column) {
             this.$refs.multipleTable.toggleRowSelection(row)
+          },
+          seleClick(selected) {
+            this.selected = selected
+            console.log(this.selected)
+          },
+          doAction(type){
+          //  判断是否有选中项
+            console.log(this.selected);
+              if(!this.selected.length && type !== 'addPeople' && type !== 'addNot') {
+              this.$message({
+                message: '请选择要操作的员工~',
+                type: 'warning'
+              })
+              return false
+            }
+
+            switch (type){
+                //新增员工
+              case 'addPeople':
+                // this.closeAddDot()
+                break;
+              //  新增网点
+              case 'addNot':
+                this.closeAddDot()
+                break;
+            //    删除员工
+              case 'deletePeople':
+                let deleteItem = this.selected.length > 1 ? this.selected.length + '名': this.selected[0].name
+               this.$confirm('确定要删除'+deleteItem+'员工吗?','提示',{
+                 confirmButtonText:'删除',
+                 cancelButtonText:'取消',
+                 type:'warning'
+               }).then(() => {
+                 // 模拟操作，删除选中项
+                 this.tableData3 = this.tableData3.filter(el=>{
+                   return this.selected.indexOf(el) === -1
+                 })
+                 return new Promise(reslove => {
+                   this.selected = []
+                   this.$message({
+                     type:'success',
+                     message:'删除成功!'
+                   });
+                   reslove()
+                 })
+               }).catch(() => {
+                 this.$message({
+                   type:'info',
+                   message:'已取消删除'
+                 })
+               });
+              break;
+              //修改网点
+              case 'modifyNot':
+                if(this.selected.length > 1){
+                  this.$message({
+                    message:'每次只能修改单条数据~',
+                    type:'warning'
+                  })
+                }
+            //    开窗口
+                break;
+
+            }
           },
           //表头筛选
           filterTag(value, row) {
