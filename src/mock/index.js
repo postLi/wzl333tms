@@ -14,7 +14,7 @@ Mock.mock(/\/user\/logout/, 'post', loginAPI.logout)
 Mock.mock(/\/tmssystemservice\/system\/user\/v1\//, 'get', loginAPI.getUserInfo)
 
 // 文章相关
-Mock.mock(/\/article\/list/, 'get', articleAPI.getList)
+Mock.mock(/\/table\/list/, 'get', articleAPI.getList)
 Mock.mock(/\/article\/detail/, 'get', articleAPI.getArticle)
 Mock.mock(/\/article\/pv/, 'get', articleAPI.getPv)
 Mock.mock(/\/article\/create/, 'post', articleAPI.createArticle)

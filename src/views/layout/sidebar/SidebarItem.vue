@@ -1,5 +1,12 @@
 <template>
-    <el-menu 
+    <ul class="sidebar-menu" :default-active="$route.path">
+      <SidebarItemNode
+        class="menu-item"
+        v-for="(route, index) in routes"
+        :key="index"
+        :routes="route">
+      </SidebarItemNode>
+    <!-- <el-menu 
       class="sidebar-menu" 
       mode="vertical" 
       theme="dark" 
@@ -7,14 +14,12 @@
       :collapse="!sidebar.opened">
 
     <template v-for="item in routes">
-      <!-- 有子菜单但不展示 -->
       <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="item.path" :key="item.name">
         <el-menu-item :index="item.path">
           <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.children[0].meta.title}}</span>
           <span class="sidebar-nav-stitle">{{item.children[0].meta.stitle || item.children[0].meta.title}}</span>
         </el-menu-item>
       </router-link>
-      <!-- 没有子菜单 -->
       
         <el-menu-item v-if="!item.hidden&&(!item.children || item.children.length===0)" :index="item.path" :key="item.name">
           <router-link :to="item.path" >
@@ -23,7 +28,6 @@
           </router-link>
         </el-menu-item>
       
-      <!-- 包含子菜单展示 -->
       <el-submenu :index="item.name" v-if="!item.noDropdown&&!item.hidden&&item.children&&item.children.length" class="sidebar-sub-menu" :key="item.name">
         <template slot="title">
           <router-link :to="item.path" :key="item.name">
@@ -41,14 +45,18 @@
         </template>
       </el-submenu>
     </template>
-
-    </el-menu>
+    </el-menu> -->
+    </ul>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import SidebarItemNode from './SidebarItemNode'
 export default {
   name: 'SidebarItem',
+  components: {
+    SidebarItemNode
+  },
   props: {
     routes: {
       type: Array
@@ -66,9 +74,9 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 @import "src/styles/variate.scss";
-#app .sidebar-menu{
-  
-  &>.el-menu-item,&>.el-submenu{
+.sidebar-menu{
+  color: rgba(255, 255, 255, 0.8);
+  &>.menu-item,&>.submenu{
     border-left: 4px solid #002039;
   }
 
