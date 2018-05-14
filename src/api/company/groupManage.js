@@ -14,6 +14,13 @@ export function getOrgId(id) {
   return fetch.get('/api-system/system/org/v1/'+id)
 }
 
+/**
+ * 保存组织机构数据
+ */
+export function postOrgSaveDate() {
+  return fetch.post('/api-system/system/org/v1/save')
+}
+
 // 特殊字段判断
 export function isEmpty(o) {
   if (o === undefined) {

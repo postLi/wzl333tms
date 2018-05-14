@@ -38,7 +38,23 @@
                   <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button>
                 </div>
               <div class="btns_box_right">
-                广东广州员工
+                <p>广东广州员工</p>
+                <!--分页-->
+
+                <!--分页-->
+              </div>
+              <div class="Pagination ">
+                <div class="block">
+                  <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage4"
+                    :page-sizes="[100, 200, 300, 400]"
+                    :page-size="100"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="400">
+                  </el-pagination>
+                </div>
               </div>
             </div>
           <!--表格功能-->
@@ -127,21 +143,6 @@
                   </el-table>
             </div>
           <!--表格内容-->
-<!--分页-->
-            <div class="Pagination ">
-                <div class="block">
-                    <el-pagination
-                      @size-change="handleSizeChange"
-                      @current-change="handleCurrentChange"
-                      :current-page="currentPage4"
-                      :page-sizes="[100, 200, 300, 400]"
-                      :page-size="100"
-                      layout="total, sizes, prev, pager, next, jumper"
-                      :total="400">
-                    </el-pagination>
-                  </div>
-            </div>
-          <!--分页-->
 
         </div>
     </div>

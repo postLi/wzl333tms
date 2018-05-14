@@ -8,6 +8,7 @@
   height:100%;
   float:left;
   padding-top:10px;
+  border-right: 2px solid #ccc;
 
 }
 /*右侧栏*/
@@ -15,7 +16,7 @@
   width: 88%;
   float: left;
   padding-top: 28px;
-  border-left: 2px solid #ccc;
+
   padding-left: 6px;
 }
 .side_right_top{
@@ -66,14 +67,15 @@
 }
 
 .btns_box_right{
-  float: right;
-  margin-right: 25px;
+  display: inline-block;
+  margin-left: 380px;
   font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
   line-height: 40px;
   letter-spacing: 2px;
   color: #333;
+  margin-top: -5px;
 }
 .btns_box img{
   position: relative;
@@ -115,6 +117,6 @@
 /*表格内容*/
 /*分页*/
 .Pagination{
-  text-align: right;
+  float:  right;
 }
 /*分页*/
