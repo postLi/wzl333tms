@@ -25,17 +25,17 @@
         </el-form-item>
         <el-form-item label="归属网点" :label-width="formLabelWidth">
           <el-select v-model="form.orgId" placeholder="请选择网点">
-            <el-option v-for="item in orgArr" :key="item.key" :label="item.name" :value="item.key"></el-option>
+            <el-option v-for="item in groups" :key="item.id" :label="item.orgName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
           <el-select multiple v-model="form.rolesId" placeholder="请选择权限">
-            <el-option v-for="item in rolesArr" :key="item.key" :label="item.name" :value="item.key"></el-option>
+            <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="归属部门" :label-width="formLabelWidth">
           <el-select v-model="form.departmentId" placeholder="请选择部门">
-            <el-option v-for="item in departmentArr" :key="item.key" :label="item.name" :value="item.key"></el-option>
+            <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -60,6 +60,18 @@ export default {
     popVisible: {
       type: Boolean,
       default: false
+    },
+    roles: {
+      type: Array,
+      default: []
+    },
+    departments: {
+      type: Array,
+      default: []
+    },
+    groups: {
+      type: Array,
+      default: []
     }
   },
   data () {
@@ -128,7 +140,7 @@ export default {
     }
   },
   mounted () {
-    this.fetchInfo()
+    //this.fetchInfo()
   },
   methods: {
     submitForm(formName) {

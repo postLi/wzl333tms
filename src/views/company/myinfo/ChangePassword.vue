@@ -1,8 +1,8 @@
 <template>
-<el-dialog class="passwordPop" title="修改密码" :visible.sync="showPop" :close-on-click-modal="false" :before-close="closeMe">
+<el-dialog class="passwordPop" title="修改密码" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe">
   <el-form :model="form" status-icon :rules="rules" ref="ruleForm">
     <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
-      <el-input v-model="form.username" auto-complete="off"></el-input>
+      <el-input disabled v-model="form.username" auto-complete="off"></el-input>
     </el-form-item>
     <el-form-item label="原始密码" :label-width="formLabelWidth" prop="origin_pwd">
       <el-input type="password" v-model="form.origin_pwd" auto-complete="off"></el-input>
@@ -23,12 +23,24 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { putChangeMyPassword } from '../../../api/company/myinfo'
+
 export default {
   props: {
     isShow: {
       type: Boolean,
       default: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ])
+  },
+  mounted () {
+    this.form.username = this.otherinfo.username
+    this.form.id = this.otherinfo.id
   },
   data () {
     var validatePass2 = (rule, value, callback) => {
@@ -42,6 +54,7 @@ export default {
     }
     return {
       form: {
+        id: 0,
         username: '',
         origin_pwd: '',
         pwd: '',
@@ -66,23 +79,32 @@ export default {
       }
     }
   },
-  computed: {
-    showPop: {
-      get () {
-        return this.isShow
-      },
-      set () {
-
-      }
-    }
-  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          let form = this.form
+          putChangeMyPassword({
+            "username": form.username,
+            "id": form.id,
+            "password": form.origin_pwd,
+            "newPassword": form.pwd,
+            "affirmNewPassword": form.re_pwd
+          }).then( res => {
+            this.$alert('修改成功', '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.closeMe()
+              }
+            })
+          }).catch( res => {
+            this.$alert(res.data.errorInfo, '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+              }
+            })
+          })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -91,7 +113,8 @@ export default {
       this.$refs[formName].resetFields();
     },
     closeMe (done) {
-      this.$emit('close')
+      this.resetForm('ruleForm')
+      this.$emit('update:isShow', false)
       if(typeof done === 'function'){
         done()
       }

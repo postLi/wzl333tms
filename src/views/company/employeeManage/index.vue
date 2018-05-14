@@ -1,6 +1,6 @@
 <template>
-    <div class="staff_manage">
-        <SearchForm @change="getSearchParam" :btnsize="btnsize" />
+    <div class="staff_manage" v-loading="loading">
+        <SearchForm :groups="groupsArr" @change="getSearchParam" :btnsize="btnsize" />
         <div class="staff_info">
             <div class="btns_box">
                 <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增员工</el-button>
@@ -12,7 +12,7 @@
             <div class="info_news">
                 <el-table
                     ref="multipleTable"
-                    :data="tableData3"
+                    :data="usersArr"
                     stripe
                     border
                     @row-click="clickDetails"
@@ -28,7 +28,7 @@
                     <el-table-column
                       fixed
                       prop="id"
-                      label="编号">
+                      label="序号">
                     </el-table-column>
                     <el-table-column
                       fixed
@@ -36,56 +36,55 @@
                       label="姓名">
                     </el-table-column>
                     <el-table-column
-                      prop="side"
+                      prop="orgName"
                       label="归属网点">
                     </el-table-column>
                     <el-table-column
-                      prop="bumen"
+                      prop="departmentName"
                       label="归属部门">
                     </el-table-column>
                     <el-table-column
-                      prop="zhiwu"
+                      prop="position"
                       label="职务">
                     </el-table-column>
                     <el-table-column
-                      prop="load"
+                      prop="username"
                       label="登录账号">
                     </el-table-column>
                     <el-table-column
-                      prop="quanxian"
-                      label="角色授权">
+                      prop="rolesName"
+                      label="权限角色">
                     </el-table-column>
                     <el-table-column
-                      prop="sex"
                       label="性别"
                       width="80">
+                      <template slot-scope="scope">
+                          {{ scope.row.sexFlag === "0" ? "男" : "女" }}
+                      </template>
                     </el-table-column>
                     <el-table-column
-                      prop="phone"
+                      prop="mobilephone"
                       label="联系手机"
                       width="200">
                     </el-table-column>
                     <el-table-column
                       label="创建日期">
-                      <template slot-scope="scope">{{ scope.row.date }}</template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="beizhu"
-                      label="备注"
-                      width="400">
+                      <template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>
                     </el-table-column>
                   </el-table>
             </div>
 
-            <div class="info_news_footer">共计:{{ tableData3.length }}</div>    
+            <div class="info_news_footer">共计:{{ usersArr.length }}</div>    
         </div>
         <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" />
-        <AddEmployeer :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" />
-        <SetAuth :popVisible.sync="SetAuthVisible" @close="closeAuth" :users="authUser" />
+        <AddEmployeer :groups="groupsArr" :roles="rolesArr" :departments="departmentArr" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" />
+        <SetAuth :roles="rolesArr" :popVisible.sync="SetAuthVisible" @close="closeAuth" :users="authUser" />
     </div>
 </template>
 
 <script type="text/javascript">
+import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
+import { mapGetters } from 'vuex'
 import SearchForm from './search'
 import TableSetup from './tableSetup'
 import AddEmployeer from './add'
@@ -98,8 +97,20 @@ export default{
         AddEmployeer,
         SetAuth
     },
+    computed: {
+        ...mapGetters([
+            'otherinfo'
+        ])
+    },
     data(){
         return{
+            // 请求获得的数据
+            groupsArr: [],
+            rolesArr: [],
+            departmentArr: [],
+            usersArr: [],
+            //加载状态
+            loading: true,
             // 选中的行
             selected: [],
             authUser: [],
@@ -112,54 +123,22 @@ export default{
             searchForm: {
 
             },
-            dialogFormVisible: false,
-            tableData3:[
-            {
-                id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:2,name:'隔壁老王1',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:3,name:'隔壁老王2',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:4,name:'隔壁老王3',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:5,name:'隔壁老王4',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:6,name:'隔壁老王5',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:7,name:'隔壁老王6',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:8,name:'隔壁老王7',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:9,name:'隔壁老王8',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:10,name:'隔壁老王9',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:11,name:'隔壁老王10',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:12,name:'隔壁老王11',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:13,name:'隔壁老王12',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            },
-            {
-                id:14,name:'隔壁老王13',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12',beizhu:''
-            }
-            ],
+            dialogFormVisible: false
         }
     },
+    mounted () {
+        Promise.all([getGroupName(this.otherinfo.orgid), getAuthInfo(this.otherinfo.orgid), this.fetchAllUser(1), getDepartmentInfo(this.otherinfo.orgid)]).then(resArr => {
+            this.loading = false
+            this.groupsArr = resArr[0]
+            this.rolesArr = resArr[1]
+            this.usersArr = resArr[2]
+            this.departmentArr = resArr[3]
+        })
+    },
     methods: {
+        fetchAllUser (orgid, username, mobilephone) {
+            return getAllUser(orgid, username||'', mobilephone||'')
+        },
         doAction (type) {
             // 判断是否有选中项
             if(!this.selected.length && type !== 'add'){
@@ -269,6 +248,7 @@ export default{
         height: 100%;
         display: flex;
         flex-direction:column;
+        position: relative;
 
         .staff_info{
             padding:10px 30px 0;

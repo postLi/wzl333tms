@@ -56,7 +56,7 @@
         {{ otherinfo.position }}
       </el-col>
     </el-row>
-    <ChangePwPop :isShow="showPop" @close="close" />
+    <ChangePwPop :isShow.sync="showPop" @close="close" />
   </div>
 </template>
 

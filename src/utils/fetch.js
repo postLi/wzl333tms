@@ -21,6 +21,7 @@ service.interceptors.request.use(config => {
       config.params = {}
     }
     config.params['access_token'] = getToken()
+    console.log(config.url, config.params)
   }
 
   // 统一加上/api 前缀，方便后台转发接口

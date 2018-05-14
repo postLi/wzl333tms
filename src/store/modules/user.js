@@ -1,5 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername, setUserInfo } from '@/utils/auth'
+import { debug } from 'util';
 
 const user = {
   state: {
@@ -58,15 +59,18 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(getUsername(), getOrgId()).then(response => {
-          const data = response.data[0]
-          commit('SET_ROLES', data.rolesIdList || [])
+        getInfo().then(response => {
+          const data = response.data
+          data.rolesIdList = data.rolesId.split(',')
+          commit('SET_ROLES', data.rolesIdList)
           commit('SET_NAME', data.username)
+          commit('SET_USERNAME', data.username)
           commit('SET_COMPANY', data.orgName)
+          setOrgId(data.orgid)
           commit('SET_AVATAR', require('../../assets/role.png'))
           commit('SET_OTHERINFO', data)
           setUserInfo(data)
-          resolve(response)
+          resolve({ data })
         }).catch(error => {
           reject(error)
         })

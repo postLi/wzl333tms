@@ -23,9 +23,8 @@ export function login(username, password, orgid) {
 
 export function getInfo(username, orgid) {
   return fetch({
-    url: '/tmssystemservice/system/user/v1/',
-    method: 'get',
-    params: { username, orgid }
+    url: '/api-system/system/user/v1/getCurrentUser',
+    method: 'get'
   })
 }
 

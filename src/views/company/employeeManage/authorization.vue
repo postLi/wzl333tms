@@ -15,7 +15,7 @@
             </td>
             <td>
               <el-select size="mini" multiple v-model="form.rolesId" placeholder="请选择权限">
-                <el-option v-for="item in rolesArr" :key="item.key" :label="item.name" :value="item.key"></el-option>
+                <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
               </el-select>
             </td>
           </tr>
@@ -29,7 +29,7 @@
   </pop-right>
 </template>
 <script>
-import { postEmployeer, getAuthInfo } from '../../../api/company/employeeManage'
+import { postEmployeer } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 
 export default {
@@ -42,6 +42,10 @@ export default {
       default: false
     },
     users: {
+      type: Array,
+      default: []
+    },
+    roles: {
       type: Array,
       default: []
     }
@@ -69,16 +73,11 @@ export default {
     }
   },
   mounted () {
-    this.fetchInfo()
+
   },
   methods: {
     submitForm(formName) {
       alert('TIjiao')
-    },
-    fetchInfo () {
-      getAuthInfo(4).then(dataArr => {
-        this.rolesArr = dataArr
-      })
     },
     closeMe () {
       this.$emit('update:popVisible', false);

@@ -1,17 +1,12 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <el-form-item label="归属网点">
-          <el-select v-model="searchForm.group" filterable>
+          <el-select v-model="searchForm.orgid" filterable>
               <el-option
-              value="all"
-              label="全部"
-              >
-              </el-option>
-              <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in groups"
+              :key="item.id"
+              :label="item.orgName"
+              :value="item.id">
               </el-option>
           </el-select>
       </el-form-item>
@@ -37,7 +32,6 @@
 </template>
 
 <script>
-import { getGroupName } from '@/api/company/employeeManage'
 import { validateMobile }  from '@/utils/validate'
 
 export default {
@@ -45,6 +39,10 @@ export default {
     btnsize: {
       type: String,
       default: 'mini'
+    },
+    groups: {
+      type: Array,
+      default: []
     }
   },
   data () {
@@ -62,11 +60,10 @@ export default {
 
     return {
       searchForm: {
-        group: '',
+        orgid: '',
         name: '',
         mobile: ''
       },
-      options: [],
       rules: {
         mobile: [{
           validator: validateFormMobile, trigger: 'blur'
@@ -75,9 +72,7 @@ export default {
     }
   },
   mounted () {
-    getGroupName().then(res => {
-      this.options = res.data.list
-    })
+
   },
   methods: {
     onSubmit () {
@@ -85,7 +80,7 @@ export default {
     },
     clearForm (formName) {
       this.searchForm.name = ''
-      this.searchForm.group = ''
+      this.searchForm.orgid = ''
       this.searchForm.mobile = ''
     }
   }
