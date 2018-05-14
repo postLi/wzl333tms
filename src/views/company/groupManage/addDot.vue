@@ -65,7 +65,7 @@
 
         <el-checkbox v-model="checked">开通管理员账号</el-checkbox>
         <div class="rem">
-          备注
+          <span>备注</span>
           <el-input
             type="textarea"
             :rows="2"
@@ -208,6 +208,6 @@
 </script>
 <style>
   @import "../../../styles/mixin.scss";
-  @import "./css/addPeople.css";
+  @import "./css/addDot.css";
 </style>
 
