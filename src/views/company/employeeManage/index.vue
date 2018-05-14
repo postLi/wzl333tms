@@ -80,7 +80,8 @@
             <div class="info_news_footer">共计:{{ tableData3.length }}</div>    
         </div>
         <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" />
-        <AddEmployeer :popVisible="AddEmployeerVisible" @close="closeAddEmployeer" />
+        <AddEmployeer :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" />
+        <SetAuth :popVisible.sync="SetAuthVisible" @close="closeAuth" :users="authUser" />
     </div>
 </template>
 
@@ -88,22 +89,26 @@
 import SearchForm from './search'
 import TableSetup from './tableSetup'
 import AddEmployeer from './add'
+import SetAuth from './authorization'
 
 export default{
     components: {
         SearchForm,
         TableSetup,
-        AddEmployeer
+        AddEmployeer,
+        SetAuth
     },
     data(){
         return{
             // 选中的行
             selected: [],
+            authUser: [],
             // 按钮大小
             btnsize: 'small',
             // 各个弹窗状态更改
             setupTableVisible: false,
             AddEmployeerVisible: false,
+            SetAuthVisible: false,
             searchForm: {
 
             },
@@ -165,6 +170,9 @@ export default{
                 return false
             }
 
+            console.log("this.selected:", this.selected)
+            
+
             switch (type) {
                 // 添加员工
                 case 'add':
@@ -184,9 +192,9 @@ export default{
                 case 'delete':
                         let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
                         this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
-                        confirmButtonText: '删除',
-                        cancelButtonText: '取消',
-                        type: 'warning'
+                            confirmButtonText: '删除',
+                            cancelButtonText: '取消',
+                            type: 'warning'
                         }).then(() => {
                             // 模拟操作，删除选中项
                             this.tableData3 = this.tableData3.filter( el => {
@@ -210,7 +218,8 @@ export default{
                     break;
                 // 设置员工权限
                 case 'auth':
-                    
+                    this.authUser = this.selected
+                    this.openAuth()
                     break;
             }
         },
@@ -226,6 +235,12 @@ export default{
         },
         closeAddEmployeer () {
             this.AddEmployeerVisible = false
+        },
+        openAuth () {
+            this.SetAuthVisible = true
+        },
+        closeAuth () {
+            this.SetAuthVisible = false
         },
         clickDetails(row, event, column){
             this.$refs.multipleTable.toggleRowSelection(row)

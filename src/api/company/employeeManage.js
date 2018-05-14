@@ -89,7 +89,14 @@ function getDepartmentInfo(params) {
   })
 }
 
-function getAuthInfo(params) {
+export function getAuthInfo(orgid, pagesize) {
+  return fetch.get('/api-system/system/role/v1/', {
+    orgid,
+    roleName: '',
+    pageSize: pagesize || 10
+  }).then(res => {
+    console.log('res:', res)
+  })
   return new Promise(resolve => {
     resolve([{
       name: '超级管理员',

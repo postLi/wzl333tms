@@ -1,6 +1,5 @@
 <template>
-  <div>
-    创建运单2
+  <div class="createOrder-page">
     <Main />
   </div>
 </template>

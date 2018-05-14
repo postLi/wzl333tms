@@ -60,6 +60,11 @@ li {
   padding: 0;
 }
 
+table{
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
 ::-webkit-scrollbar {/*滚动条整体样式*/
   width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
   height: 6px;

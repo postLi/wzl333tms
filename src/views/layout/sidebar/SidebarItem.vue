@@ -9,6 +9,46 @@
         ref="sidebarMenuItem"
         :routes="route">
       </SidebarItemNode>
+    <!-- <el-menu 
+      class="sidebar-menu" 
+      mode="vertical" 
+      theme="dark" 
+      :default-active="$route.path" 
+      :collapse="!sidebar.opened">
+
+    <template v-for="item in routes">
+      <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="item.path" :key="item.name">
+        <el-menu-item :index="item.path">
+          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.children[0].meta.title}}</span>
+          <span class="sidebar-nav-stitle">{{item.children[0].meta.stitle || item.children[0].meta.title}}</span>
+        </el-menu-item>
+      </router-link>
+      
+        <el-menu-item v-if="!item.hidden&&(!item.children || item.children.length===0)" :index="item.path" :key="item.name">
+          <router-link :to="item.path" >
+          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.meta.title}}</span>
+          <span class="sidebar-nav-stitle">{{item.meta.stitle || item.meta.title}}</span>
+          </router-link>
+        </el-menu-item>
+      
+      <el-submenu :index="item.name" v-if="!item.noDropdown&&!item.hidden&&item.children&&item.children.length" class="sidebar-sub-menu" :key="item.name">
+        <template slot="title">
+          <router-link :to="item.path" :key="item.name">
+          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.meta.title}}</span>
+          <span class="sidebar-nav-stitle">{{item.meta.stitle || item.meta.title}}</span>
+          </router-link>
+        </template>
+        <template v-for="child in item.children" v-if='!child.hidden'>
+          <sidebar-item class='menu-indent' v-if='child.children&&child.children.length>0' :routes='[child]' :key="child.name"> </sidebar-item>
+          <router-link v-else class="menu-indent" :to="child.path" :key="child.name">
+            <el-menu-item :index="child.path">
+              {{child.meta.title}}
+            </el-menu-item>
+          </router-link>
+        </template>
+      </el-submenu>
+    </template>
+    </el-menu> -->
     </ul>
 </template>
 
