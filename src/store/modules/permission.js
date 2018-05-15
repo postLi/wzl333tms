@@ -52,7 +52,7 @@ const permission = {
         const { roles } = data
         let accessedRouters
         // 如果是管理员，则给于全部权限
-        if (roles.indexOf(2) >= 0) {
+        if (roles.indexOf('2') >= 0) {
           accessedRouters = asyncRouterMap
         } else {
           accessedRouters = filterAsyncRouter(asyncRouterMap, roles)

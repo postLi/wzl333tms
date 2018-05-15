@@ -42,12 +42,12 @@ export function getAuthInfo(orgid, pagesize) {
 
 /**
  * 获取全部用户
- * @param {*} username 用户名
+ * @param {*} name 姓名
  * @param {*} orgid 组织ID
  */
-export function getAllUser(orgid, username, mobilephone) {
+export function getAllUser(orgid, name, mobilephone) {
   return fetch.get('/tmssystemservice/system/user/v1/', {
-    params: { username, orgid, mobilephone }
+    params: { name, orgid, mobilephone }
   }).then(res => {
     return res.data ? res.data.list : []
   })
