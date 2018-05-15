@@ -1,81 +1,92 @@
 <template>
   <div class="add-people">
-    <!-- Form -->
-    <!--<el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>-->
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addEmployeerPop">
+    <template class="addEmployeerPop-content" slot="content">
 
-    <el-dialog title="新 增 员 工" :visible.sync="isShow" :close-on-modal="true" :before-close="closeMe">
-        <el-form :model="form" :rules="rules" ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-          <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="form.name" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone">
-            <el-input v-model="form.phone" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
-            <el-input v-model="form.username" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
-            <el-input  v-model="form.password"  auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="职位" :label-width="formLabelWidth">
-            <el-input v-model="form.zhiwei" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" :label-width="formLabelWidth">
-            <el-select v-model="form.sex">
-              <el-option label="男" value="nan"></el-option>
-              <el-option label="女" value="nv"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="归属网点" :label-width="formLabelWidth">
-            <el-select v-model="form.site">
-              <el-option label="广州网点" value="guangzhou"></el-option>
-              <el-option label="广州网点" value="guangzhou"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="归属部门" :label-width="formLabelWidth">
-            <el-select v-model="form.bumen">
-              <el-option label="财务部" value="caiwubu"></el-option>
-              <el-option label="人力行政部" value="renli"></el-option>
-              <el-option label="调度部" value="diaodu"></el-option>
-              <el-option label="销售部" value="sale"></el-option>
-              <el-option label="运营部" value="yunying"></el-option>
-              <el-option label="客服部" value="kefu"></el-option>
-              <el-option label="项目部" value="xiangmu"></el-option>
-              <el-option label="专线部" value="zhuanxian"></el-option>
-              <el-option label="仓管部" value="cangguan"></el-option>
-              <el-option label="业务部" value="yewu"></el-option>
-              <el-option label="客户" value="kehu"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="权限角色" :label-width="formLabelWidth">
-            <el-select v-model="form.quanxianjuese">
-              <el-option label="财务部" value="caiwubu"></el-option>
-              <el-option label="人力行政部" value="renli"></el-option>
-              <el-option label="调度部" value="diaodu"></el-option>
-              <el-option label="销售部" value="sale"></el-option>
-              <el-option label="运营部" value="yunying"></el-option>
-              <el-option label="客服部" value="kefu"></el-option>
-              <el-option label="项目部" value="xiangmu"></el-option>
-              <el-option label="专线部" value="zhuanxian"></el-option>
-              <el-option label="仓管部" value="cangguan"></el-option>
-              <el-option label="业务部" value="yewu"></el-option>
-              <el-option label="客户" value="kehu"></el-option>
-            </el-select>
-          </el-form-item>
-          <div class="rem">
-            <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-            <span>注： 密码默认为 123456</span>
+        <!-- Form -->
+        <!--<el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>-->
+
+        <!--<el-dialog title="新 增 员 工" :visible.sync="isShow" :close-on-modal="true" :before-close="closeMe">-->
+          <el-form :model="form" :rules="rules" ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+            <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
+              <el-input v-model="form.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone">
+              <el-input v-model="form.phone" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
+              <el-input v-model="form.username" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+              <el-input  v-model="form.password"  auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="职位" :label-width="formLabelWidth">
+              <el-input v-model="form.zhiwei" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="性别" :label-width="formLabelWidth">
+              <el-select v-model="form.sex">
+                <el-option label="男" value="nan"></el-option>
+                <el-option label="女" value="nv"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="归属网点" :label-width="formLabelWidth">
+              <el-select v-model="form.site">
+                <el-option label="广州网点" value="guangzhou"></el-option>
+                <el-option label="广州网点" value="guangzhou"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="归属部门" :label-width="formLabelWidth">
+              <el-select v-model="form.bumen">
+                <el-option label="财务部" value="caiwubu"></el-option>
+                <el-option label="人力行政部" value="renli"></el-option>
+                <el-option label="调度部" value="diaodu"></el-option>
+                <el-option label="销售部" value="sale"></el-option>
+                <el-option label="运营部" value="yunying"></el-option>
+                <el-option label="客服部" value="kefu"></el-option>
+                <el-option label="项目部" value="xiangmu"></el-option>
+                <el-option label="专线部" value="zhuanxian"></el-option>
+                <el-option label="仓管部" value="cangguan"></el-option>
+                <el-option label="业务部" value="yewu"></el-option>
+                <el-option label="客户" value="kehu"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="权限角色" :label-width="formLabelWidth">
+              <el-select v-model="form.quanxianjuese">
+                <el-option label="财务部" value="caiwubu"></el-option>
+                <el-option label="人力行政部" value="renli"></el-option>
+                <el-option label="调度部" value="diaodu"></el-option>
+                <el-option label="销售部" value="sale"></el-option>
+                <el-option label="运营部" value="yunying"></el-option>
+                <el-option label="客服部" value="kefu"></el-option>
+                <el-option label="项目部" value="xiangmu"></el-option>
+                <el-option label="专线部" value="zhuanxian"></el-option>
+                <el-option label="仓管部" value="cangguan"></el-option>
+                <el-option label="业务部" value="yewu"></el-option>
+                <el-option label="客户" value="kehu"></el-option>
+              </el-select>
+            </el-form-item>
+            <div class="rem">
+              <img src="../../../assets/icom/xinzengwangdian.png" alt="">
+              <span>注： 密码默认为 123456</span>
+            </div>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+            <el-button @click="closeMe">取 消</el-button>
           </div>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-          <el-button @click="closeMe">取 消</el-button>
-        </div>
-    </el-dialog>
+        <!--</el-dialog>-->
+
+    </template>
+
+  </pop-right>
   </div>
 </template>
 <script>
+  import popRight from '@/components/PopRight/index'
   export default {
+    components:{
+      popRight
+    },
     props: {
       popVisible: {
         type:Boolean,
@@ -168,6 +179,7 @@
 
           ]
         },
+        popTitle: '新增员工',
         dialogVisible: false,
         formLabelWidth: '120px'
       }
@@ -198,5 +210,24 @@
 <style>
   @import "../../../styles/mixin.scss";
   @import "./css/addPeople.css";
+  .addEmployeerPop{
+    left: auto;
+    top: 50px;
+    bottom: auto;
+    height: 100%;
+    min-width: 600px;
+    max-width:  600px;
+
+
+
+
+  }
+  .popRight-content{
+    padding: 20px 20px 0;
+    box-sizing: border-box;
+  }
+  .el-select .el-input__inner{
+    padding-right: 15px;
+  }
 </style>
 

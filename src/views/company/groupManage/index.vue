@@ -1,8 +1,6 @@
 <template>
-  <div class="company clearfix">
-    <!-- 网点管理 -->
-    <!-- 用来展示次级菜单（弹窗样式） -->
-    <!-- <router-view></router-view> -->
+  <!--v-loading="loading"-->
+  <div class="company clearfix" >
     <div class="side_left">
         <el-tree
           :data="dataTree"
@@ -168,6 +166,8 @@
       },
         data() {
             return {
+              //加载状态
+              loading:true,
               addDoTotVisible:false,
               addPeopleVisible:false,
               //新建网点
@@ -273,7 +273,7 @@
             },
         mounted () {
           this.fetchOrg()//左边树形数据
-          // this.fetchOrgFindId() //根据组织id获取列表
+
         },
         methods: {
           //左边树形数据
