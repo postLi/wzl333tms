@@ -214,7 +214,6 @@
     left: auto;
     top: 50px;
     bottom: auto;
-    height: 100%;
     min-width: 600px;
     max-width:  600px;
 

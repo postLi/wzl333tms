@@ -1,71 +1,71 @@
 <template>
-  <div class="add-dot">
+  <div class="add-dot" v-loading="loading">
   <pop-right :title='popTitle' :isShow="popVisible" @close="closeMe" class='addEmployeerPop'>
     <template class='addEmployeerPop-content' slot="content">
           <el-form :model="form" :rules="rules" ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-            <el-form-item label="网点名称" :label-width="formLabelWidth" prop="name">
-              <el-input v-model="form.name" auto-complete="off"></el-input>
+            <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
+              <el-input v-model="form.orgName" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
-              <el-select v-model="form.dotType">
-                <el-option label="营业网点" value="nan"></el-option>
-                <el-option label="分拨中心" value="nv"></el-option>
+              <el-select v-model="form.orgType">
+                <el-option label="营业网点" :value="1"></el-option>
+                <el-option label="分拨中心" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
-              <el-select v-model="form.dotState">
-                <el-option label="有效" value="nan"></el-option>
-                <el-option label="无效" value="nv"></el-option>
+              <el-select v-model="form.status">
+                <el-option label="有效" :value="32"></el-option>
+                <el-option label="无效" :value="31"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <el-select v-model="form.parentDot">
-                <el-option label="营业网点" value="nan"></el-option>
-                <el-option label="分拨中心" value="nv"></el-option>
+              <el-select v-model="form.parentName">
+                <el-option label="山东卓鑫" value="nan"></el-option>
+                <!--<el-option label="分拨中心" value="nv"></el-option>-->
               </el-select>
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
-              <el-select v-model="form.manType">
-                <el-option label="自营" value="nan"></el-option>
-                <el-option label="分拨中心" value="nv"></el-option>
+              <el-select v-model="form.manageType">
+                <el-option label="自营" :value="3"></el-option>
+                <el-option label="加盟" :value="4"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
               <el-input v-model="form.creatTime"></el-input>
             </el-form-item>
             <el-form-item label="负责人" :label-width="formLabelWidth" prop="chargePerson">
-              <el-input v-model="form.username" auto-complete="off"></el-input>
+              <el-input v-model="form.responsibleName" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="checkPhone">
-              <el-input  v-model="form.phone"  auto-complete="off"></el-input>
+              <el-input  v-model="form.responsibleTelephone"  auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth">
               <el-input v-model="form.city" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="chargePerson">
-              <el-input v-model="form.chargePeople" auto-complete="off"></el-input>
+              <el-input v-model="form.serviceName" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="客服电话" :label-width="formLabelWidth" prop="checkPhone">
-              <el-input v-model="form.chargePhone" auto-complete="off"></el-input>
+              <el-input v-model="form.servicePhone" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
-              <el-input v-model="form.address" auto-complete="off"></el-input>
+              <el-input v-model="form.detailedAddr" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="网点代码" :label-width="formLabelWidth" prop="dotCode">
-              <el-input v-model="form.dotCode" auto-complete="off"></el-input>
+            <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
+              <el-input v-model="form.networkCode" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="代收款限额" :label-width="formLabelWidth">
-              <el-input v-model="form.company" auto-complete="off"></el-input>
+              <el-input v-model="form.collectionFee" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="体现基准" :label-width="formLabelWidth">
-              <el-input v-model="form.zhiwei" auto-complete="off"></el-input>
+            <el-form-item label="提现基准" :label-width="formLabelWidth">
+              <el-input v-model="form.benchmark" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth">
-              <el-input v-model="form.zhiwei" auto-complete="off"></el-input>
+              <el-input v-model="form.warningQuota" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="锁机额度" :label-width="formLabelWidth">
-              <el-input v-model="form.zhiwei" auto-complete="off"></el-input>
+              <el-input v-model="form.lockMachineQuota" auto-complete="off"></el-input>
             </el-form-item>
 
             <div class="ad-add-dot">
@@ -79,7 +79,7 @@
                 type="textarea"
                 :rows="2"
                 placeholder="不可超300字"
-                v-model="textarea">
+                v-model="form.remarks">
               </el-input>
             </div>
 
@@ -127,13 +127,11 @@
         if (!value) {
           return callback(new Error('请输入网点名称'));
         } else{
-          console.log(value);
           callback();
         }
       }
       var checkPhone = (rule, value, callback) => {
         if (validateMobile(value)) {
-          console.log(value.length);
           return callback(new Error('请输入手机号码'));
         } else if (!/^1[34578]\d{9}$/.test(value)) {
           return callback(new Error('请输入正确的手机号码'));
@@ -171,51 +169,38 @@
 
       }
       return {
-        // submitDateInfo:{
-        //   name:'',
-        //   dotType:'',
-        //   dotState:'',
-        //   parentDot:'',
-        //   manType:'',
-        //   username:'',
-        //   phone:'',
-        //   city:'',
-        //   chargePeople:'',//客服人员
-        //   address:'',
-        //   dotCode:'',
-        //   arentDot:'',
-        //   manType:'',
-        //   username:'',
-        //   phone:'',
-        //   city:'',
-        //   chargePeople:'',//客服人员
-        //   manType:'',
-        //   username:''
-        // },
         popTitle: '新增网点',
         //多选框
         checked: true,
-        textarea: '', //文本域
+        loading: false,
         form: {
-          name: '',
-          phone: '',
-          creatTime:'',
-          username: '',
-          zhiwei:'',
-          parentDot:'',//上级网点
-          dotCode:'',//网点代码
-          company:'',//代收款额度
-          dotType:'营业网点',
-          dotState: '有效',
-          manType:'自营',
-          site:'广州网点',
-          delivery: false,
-          quanxianjuese:'',
-          chargePeople:''
+          orgName: '',
+          orgType:1,
+          status:32,
+          responsibleTelephone: '',
+          // creatTime:'',
+          responsibleName: '',
+          city:'',
+          serviceName:'',
+          parentName:'山东卓鑫',//上级网点
+          servicePhone:'',
+          detailedAddr:'',
+          networkCode:'',//网点代码
+          collectionFee:'',//代收款额度
+          benchmark:'',
+          warningQuota:'',
+          lockMachineQuota:'',
+          manageType:3,
+          remarks:'',
+          //默认值
+          accountStatus:'0',
+          //id:1,
+          parentId:0
+
         },
         rules: {
           //网点代码
-          dotCode: [
+          networkCode: [
             { required: true,validator: checkDotCode, trigger: 'blur' },
             { min: 2,  message: '用户姓名最少2个字符', trigger: 'blur' },
             { max: 10, message: '用户姓名不可超过10个字符', trigger: 'blur' }
@@ -225,7 +210,7 @@
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
-          name: [
+          orgName: [
             { required: true,validator: checkName, trigger: 'blur' },
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过15个字符', trigger: 'blur' }
@@ -245,14 +230,18 @@
       }
     },
     mounted(){
-      // this.submitDate()
+      if(this.isModify){
+        console.log(this.dotInfo);
+        this.form = this.dotInfo
+
+      }
     },
     methods: {
-      submitDate(){
-        postOrgSaveDate().then(res =>{
-          console.log(res)
-        })
-      },
+      // submitDate(){
+      //   postOrgSaveDate().then(res =>{
+      //     console.log(res)
+      //   })
+      // },
       closeMe(done){
         this.$emit('close')
         this.$refs['ruleForm'].resetFields()
@@ -262,10 +251,21 @@
       },
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
-          console.log(valid)
           if(valid){
-            console.log(valid+'111')
-            alert('提交数据')
+            console.log(JSON.stringify(this.form));
+            this.loading = true
+            postOrgSaveDate(this.form).then(res=>{
+              console.log(res);
+              this.$alert('保存成功', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.loading = false
+                  this.closeMe()
+                  this.$emit('success')
+                }
+              })
+
+            })
           }else{
             return false
           }
@@ -281,12 +281,8 @@
     left: auto;
     top: 50px;
     bottom: auto;
-    height: 100%;
     min-width: 600px;
     max-width:  600px;
-
-
-
 
   }
   .popRight-content{

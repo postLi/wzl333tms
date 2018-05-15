@@ -15,12 +15,58 @@
 
     <div class="side_right">
         <div class="side_right_top">
-          <el-form :inline="true" class="" v-for="item in formData" :key="item.id">
-            <el-form-item :label="item.label">
-              <el-input v-model="item.name" readonly="readonly"></el-input>
+          <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+            <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
+              <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
             </el-form-item>
-          </el-form>
+            <el-form-item label="网点类型" :label-width="formLabelWidth">
+              <el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>
+              <!--form.orgType ==="1" ? "营业网点" : "分拨中心"-->
+              <!--{{ scope.row.sexFlag === "0" ? "男" : "女" }}-->
+            </el-form-item>
+            <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
+              <el-input :value='form.status ==="32" ? "有效" : "有效"' disabled></el-input>
+            </el-form-item>
+            <el-form-item label="客服人员" :label-width="formLabelWidth" prop="chargePerson">
+              <el-input v-model="form.serviceName" auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="客服电话" :label-width="formLabelWidth" prop="checkPhone">
+              <el-input v-model="form.servicePhone" auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="上级网点" :label-width="formLabelWidth">
+              <el-input v-model="form.parentName" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="经营类型" :label-width="formLabelWidth">
+              <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
+            </el-form-item>
+            <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
+              <el-input v-model="form.creatTime" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
+              <el-input v-model="form.networkCode" auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="代收款限额" :label-width="formLabelWidth">
+              <el-input v-model="form.collectionFee" auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="负责人" :label-width="formLabelWidth" prop="chargePerson">
+              <el-input v-model="form.responsibleName" auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="checkPhone">
+              <el-input  v-model="form.responsibleTelephone"  auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="所在城市" :label-width="formLabelWidth">
+              <el-input v-model="form.city" auto-complete="off" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="锁机额度" :label-width="formLabelWidth">
+              <el-input v-model="form.lockMachineQuota" auto-complete="off" disabled></el-input>
+            </el-form-item>
 
+            <el-form-item label="预警额度" :label-width="formLabelWidth">
+              <el-input v-model="form.warningQuota" auto-complete="off" disabled></el-input>
+            </el-form-item>
+
+
+          </el-form>
         </div>
         <div class="side_right_bottom clearfix">
             <div class="btns_box clearfix">
@@ -37,9 +83,6 @@
                 </div>
               <div class="btns_box_right">
                 <p>广东广州员工</p>
-                <!--分页-->
-
-                <!--分页-->
               </div>
               <div class="Pagination ">
                 <div class="block">
@@ -59,98 +102,72 @@
           <!--表格内容-->
             <div class="info_news">
 
-                <el-table
-                    ref="multipleTable"
-                    :data="tableData3"
-                    stripe
-                    border
-                    tooltip-effect="dark"
-                    @row-click="clickDetails"
-                    @selection-change="seleClick"
-                    style="width: 100%;"
-                    >
-                    <el-table-column
-                      type="selection"
-                      width="55">
-                    </el-table-column>
-                    <el-table-column
-                      prop="id"
-                      label="序号"
-                      width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="name"
-                      label="姓名"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="side"
-                      label="归属网点"
-
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="bumen"
-                      label="归属部门"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="zhiwu"
-                      label="职务"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="load"
-                      label="登录账号"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="quanxian"
-                      label="权限角色"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="sex"
-                      label="性别"
-                      width="80"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                    <el-table-column
-                      prop="phone"
-                      label="联系手机"
-                      width="200"
-                      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end">
-                    </el-table-column>
-                  </el-table>
+              <el-table
+                ref="multipleTable"
+                :data="usersArr"
+                stripe
+                border
+                tooltip-effect="dark"
+                @row-click="clickDetails"
+                @selection-change="seleClick"
+                style="width: 100%;">
+                <el-table-column
+                  fixed
+                  type="selection"
+                  width="55">
+                </el-table-column>
+                <el-table-column
+                  fixed
+                  prop="id"
+                  label="序号">
+                </el-table-column>
+                <el-table-column
+                  fixed
+                  prop="name"
+                  label="姓名">
+                </el-table-column>
+                <el-table-column
+                  prop="orgName"
+                  label="归属网点">
+                </el-table-column>
+                <el-table-column
+                  prop="departmentName"
+                  label="归属部门">
+                </el-table-column>
+                <el-table-column
+                  prop="position"
+                  label="职务">
+                </el-table-column>
+                <el-table-column
+                  prop="username"
+                  label="登录账号">
+                </el-table-column>
+                <el-table-column
+                  label="权限角色">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
+                    <span class="unauth" v-else>未授权</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="性别"
+                  width="80">
+                  <template slot-scope="scope">
+                    {{ scope.row.sexFlag === "0" ? "男" : "女" }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="mobilephone"
+                  label="联系手机"
+                  width="200">
+                </el-table-column>
+              </el-table>
             </div>
           <!--表格内容-->
 
         </div>
     </div>
-    <!--新 增 员 工-->
-
-
-
-
-    <!--</div>-->
-    <AddDot :popVisible="addDoTotVisible" @close="closeAddDot" />
+    <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg" :popVisible="addDoTotVisible" @close="closeAddDot" />
     <AddPeople :popVisible="addPeopleVisible" @close="closeAddPeople" />
   </div>
 </template>
@@ -158,6 +175,7 @@
     import AddDot from './addDot'
     import AddPeople from './addPeople'
     import { getAllOrgInfo , getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
+    import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 
     export default {
       components: {
@@ -170,6 +188,9 @@
               loading:true,
               addDoTotVisible:false,
               addPeopleVisible:false,
+              usersArr: [],
+              //
+              isModify: false,
               //新建网点
               ruleForm: {
                 name: '',
@@ -188,30 +209,6 @@
                 currentPage4: 4,
                 //表格内容
               selected:[],
-                tableData3:[
-                  {
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  },
-                  {
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  },
-                  {
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  },{
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  }
-                  ,{
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  },{
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  },
-                  {
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  },
-                  {
-                      id:1,name:'隔壁老王',side:'广州广东',bumen:'财务部',zhiwu:'财务经理',load:'李四',  quanxian:'财务管理',sex:'男',phone:'13000000000',date:'2017-9-12'
-                  }
-                ],
                 //左边树形初始化数据
                 dataTree:[],
                 defaultProps: {
@@ -220,53 +217,78 @@
                 },
                 //左边树形初始化数据
                 getOrgId: '',//根据组织id获取列表
-                formData: [
-                  {
-                    label:"网点名称：",
-                  name:''},
-                  {
-                    label:"网点类型：",
-                    name:''},
-                  {
-                    label:"网点状态：",
-                    name:''},
-                  {
-                    label:"客服人员：",
-                    name:''},
-                  {
-                    label:"客服电话：",
-                    name:''},
-                  {
-                    label:"上级网点：",
-                    name:''},
-                  {
-                    label:"经营类型：",
-                    name:''},
-                  {
-                    label:"创建时间：",
-                    name:''},
-                  {
-                    label:"网点代码：",
-                    name:''},
-                  {
-                    label:"代收款限额：",
-                    name:''},
-                  {
-                    label:"负 责 人：",
-                    name:''},
-                  {
-                    label:"负责人电话：",
-                    name:''},
-                     {
-                    label:"所在城市：",
-                    name:''},
-                     {
-                    label:"所在城市：",
-                    name:''},
-                    {
-                    label:"预警额度：",
-                    name:''}
-                    ],
+                form: {
+                  orgName: '',
+                  orgType:1,
+                  status:32,
+                  responsibleTelephone: '',
+                  // creatTime:'',
+                  responsibleName: '',
+                  city:'',
+                  serviceName:'',
+                  parentName:'',//上级网点
+                  servicePhone:'',
+                  detailedAddr:'',
+                  networkCode:'',//网点代码
+                  collectionFee:'',//代收款额度
+                  benchmark:'',
+                  warningQuota:'',
+                  lockMachineQuota:'',
+                  manageType:3,
+                  remarks:'',
+                  //默认值
+                  accountStatus:'0',
+                  //id:1,
+                  parentId:0
+
+                },
+                // formData: [
+                //   {
+                //     label:"网点名称：",
+                //   name:''},
+                //   {
+                //     label:"网点类型：",
+                //     name:''},
+                //   {
+                //     label:"网点状态：",
+                //     name:''},
+                //   {
+                //     label:"客服人员：",
+                //     name:''},
+                //   {
+                //     label:"客服电话：",
+                //     name:''},
+                //   {
+                //     label:"上级网点：",
+                //     name:''},
+                //   {
+                //     label:"经营类型：",
+                //     name:''},
+                //   {
+                //     label:"创建时间：",
+                //     name:''},
+                //   {
+                //     label:"网点代码：",
+                //     name:''},
+                //   {
+                //     label:"代收款限额：",
+                //     name:''},
+                //   {
+                //     label:"负 责 人：",
+                //     name:''},
+                //   {
+                //     label:"负责人电话：",
+                //     name:''},
+                //      {
+                //     label:"所在城市：",
+                //     name:''},
+                //      {
+                //     label:"所在城市：",
+                //     name:''},
+                //     {
+                //     label:"预警额度：",
+                //     name:''}
+                //     ],
                   // 缓存节点数据
                   orgInfoCache: {}
               };
@@ -291,38 +313,13 @@
           },
           // 处理返回的节点数据
           handleOrgInfo(data){
-            if(data.orgType = 1){
-              this.formData[1].name = '营业网点'
-            }else{
-              this.formData[1].name ="分拨中心"
-            }
-            if(data.status = 1){
-              this.formData[2].name ="无效"
-            }else{
-              this.formData[2].name ="有效"
-            }
-            if(data.manageType = 1){
-              this.formData[6].name ="自营"
-            }else{
-              this.formData[6].name ="加盟"
-            }
-
-            this.formData[0].name = isEmpty(data.orgName);
-            this.formData[3].name = isEmpty(data.serviceName);
-            this.formData[4].name = isEmpty(data.servicePhone);
-            this.formData[5].name = isEmpty(data.parentName);
-            this.formData[7].name = fmtDate(data.createTime);
-            this.formData[8].name = isEmpty(data.networkCode);
-            this.formData[9].name = isEmpty(data.collectionFee);
-            this.formData[10].name = isEmpty(data.responsibleName);
-            this.formData[11].name = isEmpty(data.responsibleTelephone);
-            this.formData[12].name = isEmpty(data.city);
-            this.formData[13].name = isEmpty(data.lockMachineQuota);
-            this.formData[14].name = isEmpty(data.warningQuota);
+            this.form = data
           },
           // 根据组织id显示列表
           fetchOrgId(id) {
-
+            getAllUser(id, '', '').then(res=>{
+              this.usersArr = res
+            })
             if(this.orgInfoCache[id]){
               this.handleOrgInfo(this.orgInfoCache[id])
             } else {
@@ -348,8 +345,7 @@
           },
           doAction(type){
           //  判断是否有选中项
-            console.log(this.selected);
-              if(!this.selected.length && type !== 'addPeople' && type !== 'addNot') {
+              if(!this.selected.length && type === 'deletePeople') {
               this.$message({
                 message: '请选择要操作的员工~',
                 type: 'warning'
@@ -364,6 +360,7 @@
                 break;
               //  新增网点
               case 'addNot':
+                this.isModify = false
                 this.addDoTotVisible = true
                 break;
             //    删除员工
@@ -395,15 +392,9 @@
               break;
               //修改网点
               case 'modifyNot':
-                if(this.selected.length > 1){
-                  this.$message({
-                    message:'每次只能修改单条数据~',
-                    type:'warning'
-                  })
-                }
-            //    开窗口
+                this.isModify = true
+                this.addDoTotVisible = true
                 break;
-
             }
           },
           //表头筛选

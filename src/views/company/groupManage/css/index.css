@@ -15,9 +15,7 @@
 .side_right {
   width: 88%;
   float: left;
-  padding-top: 28px;
-
-  padding-left: 6px;
+  padding: 28px 0 0 6px;
 }
 .side_right_top{
   border-bottom:2px dotted #ccc;
@@ -45,6 +43,10 @@
   margin-bottom: 19px;
   border-color:#fff;
   margin-right:0
+}
+.side_right_top .el-input.is-disabled .el-input__inner{
+  color: #3e9ff1;
+  background: transparent;
 }
 .side_right_top .el-input__inner{
   line-height: 24px;
