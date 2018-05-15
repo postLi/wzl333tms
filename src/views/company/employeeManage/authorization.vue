@@ -1,5 +1,5 @@
 <template>
-  <pop-right title="员工授权" :isShow="popVisible" @close="closeMe" class="setUserAuthPop">
+  <pop-right v-loading="loading" title="员工授权" :isShow="popVisible" @close="closeMe" class="setUserAuthPop">
     <template class="setUserAuthPop-content" slot="content">
       <table>
         <thead>
@@ -14,7 +14,7 @@
               {{user.name}}
             </td>
             <td>
-              <el-select size="mini" multiple v-model="form.rolesId" placeholder="请选择权限">
+              <el-select size="mini" multiple v-model="form.users[user.id]" placeholder="请选择权限">
                 <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
               </el-select>
             </td>
@@ -23,13 +23,13 @@
       </table>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+      <el-button type="primary" @click="submitForm()">保存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
 </template>
 <script>
-import { postEmployeer } from '../../../api/company/employeeManage'
+import { putEmployeerAuth } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 
 export default {
@@ -54,30 +54,26 @@ export default {
 
     return {
       form: {
-        username: '', // 用户姓名
-        mobilephone: '', // 手机号码
-        loginAccount: '', // 登录账户
-        position: '', // 职位
-        sexFlag: '',// 性别
-        orgId: [], // 归属网点
         rolesId: [], // 权限角色
-        departmentId: '', // 归属部门
-        password: '123456'
+        users: {}
       },
-      formLabelWidth: '80px',
-      tooltip: false,
-      orgArr: [],
-      rolesArr: [],
-      departmentArr: []
-
+      loading: false
     }
   },
-  mounted () {
-
-  },
   methods: {
-    submitForm(formName) {
-      alert('TIjiao')
+    submitForm() {
+      this.loading = true
+      console.log(this.form.users)
+      debugger
+      putEmployeerAuth().then(res => {
+        this.loading = false
+        this.$alert('保存成功', '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.closeMe()
+          }
+        });
+      })
     },
     closeMe () {
       this.$emit('update:popVisible', false);

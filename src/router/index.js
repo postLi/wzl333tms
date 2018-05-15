@@ -57,8 +57,8 @@ export const asyncRouterMap = [
   Report,
   Company,
   Service,
-  {
+/*   {
     path: '/createOrder', hidden: true, icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/pop'), meta: { role: ['admin'], title: '创建运单', noCache: true }
-  },
+  }, */
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -52,8 +52,11 @@
                       label="登录账号">
                     </el-table-column>
                     <el-table-column
-                      prop="rolesName"
                       label="权限角色">
+                       <template slot-scope="scope">
+                           <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
+                           <span class="unauth" v-else>未授权</span>
+                      </template>
                     </el-table-column>
                     <el-table-column
                       label="性别"
@@ -232,9 +235,13 @@ export default{
         },
         // 获取组件返回的搜索参数
         getSearchParam (searchParam) {
-            console.log('searchParam: ', searchParam)
             // 根据搜索参数请求后台获取数据
-            this.fetchData()
+            this.loading = true
+            this.fetchAllUser(searchParam.orgid || this.otherinfo.orgid, searchParam.name, searchParam.mobile).then(data => {
+                this.loading = false
+                this.usersArr = data
+            })
+            //this.fetchData()
         }
     }
 
@@ -277,6 +284,9 @@ export default{
                         th,td{
                             text-align:center;
                         }
+                    }
+                    .unauth{
+                        color: #f00;
                     }
                 }
                 .el-table td, .el-table th{

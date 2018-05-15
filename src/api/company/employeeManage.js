@@ -1,33 +1,18 @@
 import fetch from '../../utils/fetch'
 
 /**
- *
- * @param {*} params 获取网点列表信息
+ * 获取指定网点的所有下级节点
+ * @param {*} orgid 网点ID
  */
-export function getGroupName(gid) {
-  return fetch.get('/api-system/system/org/v1/getChildInfo/' + gid).then(res => {
-    return res.data
+export function getGroupName(orgid) {
+  return fetch.get('/api-system/system/org/v1/getChildInfo/' + orgid).then(res => {
+    return res.data || []
   })
 }
-
-function getGroupInfo(params) {
-  return new Promise(resolve => {
-    resolve([{
-      name: '广州网点',
-      key: '1'
-    }, {
-      name: '柳州网点',
-      key: '2'
-    }, {
-      name: '雷州网点',
-      key: '3'
-    }, {
-      name: '西州网点',
-      key: '4'
-    }])
-  })
-}
-
+/**
+ * 获取指定网点的部门信息
+ * @param {*} orgid 网点id
+ */
 export function getDepartmentInfo(orgid) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
@@ -35,10 +20,14 @@ export function getDepartmentInfo(orgid) {
       orgid
     }
   }).then(res => {
-    return res.data
+    return res.data || []
   })
 }
-
+/**
+ * 获取指定网点的权限信息
+ * @param {*} orgid 网点id
+ * @param {*} pagesize 获取权限列表的长度
+ */
 export function getAuthInfo(orgid, pagesize) {
   return fetch.get('/api-system/system/role/v1/', {
     params: {
@@ -47,7 +36,7 @@ export function getAuthInfo(orgid, pagesize) {
       pageSize: pagesize || 50
     }
   }).then(res => {
-    return res.data.list
+    return res.data ? res.data.list : []
   })
 }
 
@@ -60,7 +49,7 @@ export function getAllUser(orgid, username, mobilephone) {
   return fetch.get('/tmssystemservice/system/user/v1/', {
     params: { username, orgid, mobilephone }
   }).then(res => {
-    return res.data.list
+    return res.data ? res.data.list : []
   })
 }
 
@@ -69,9 +58,19 @@ export function getAllUser(orgid, username, mobilephone) {
  * @param {*} orgid 组织id
  */
 export function getOrgInfo(orgid) {
-  return Promise.all([getGroupInfo(), getDepartmentInfo(), getAuthInfo()])
+  return Promise.all([getGroupName(orgid), getDepartmentInfo(orgid), getAuthInfo(orgid)])
 }
-
+/**
+ * 新建员工
+ * @param {*} data 要传输的数据
+ */
 export function postEmployeer(data) {
   return fetch.post()
+}
+/**
+ * 修改员工的权限信息
+ * @param {*} data 员工权限数据
+ */
+export function putEmployeerAuth(data) {
+  return fetch.put('/api-system/system/user/v1/usersAuth', data)
 }
