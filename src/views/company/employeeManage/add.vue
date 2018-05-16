@@ -14,7 +14,7 @@
             <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input>
           </el-tooltip>
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+        <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if="!isModify">
           <el-input v-model.trim="form.password" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
@@ -42,7 +42,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div class="info">注：密码默认为：123456。</div>
+      <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
     </template>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
@@ -52,7 +52,7 @@
 </template>
 <script>
 import { validateMobile, isvalidUsername }  from '@/utils/validate'
-import { getOrgInfo, postEmployeer } from '../../../api/company/employeeManage'
+import { postEmployeer, putEmployeer } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 
 export default {
@@ -75,6 +75,14 @@ export default {
     groups: {
       type: Array,
       default: []
+    },
+    isModify: {
+      type: Boolean,
+      default: false
+    },
+    userInfo: {
+      type: Object,
+      default: {}
     }
   },
   data () {
@@ -129,14 +137,14 @@ export default {
           { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
         ],
         mobilephone: [
-          { required: true, message: '请输入手机号码', trigger: 'change', validator: validateFormMobile }
+          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
         ],
         username: [
           { required: true, message: '请输入有效的登录账号', trigger: 'blur', validator: validateusername },
-          { max: 15, message: '不能超过15个字符', trigger: 'change' },
+          { max: 15, message: '不能超过15个字符', trigger: 'blur' },
         ],
         position: [
-          { max: 10,  message: '不能超过10个字符', trigger: 'change' }
+          { max: 10,  message: '不能超过10个字符', trigger: 'blur' }
         ]
       },
       popTitle: '新增员工',
@@ -147,7 +155,23 @@ export default {
 
     }
   },
-  mounted () {
+  watch: {
+    userInfo () {
+      if(this.isModify){
+        console.log('this.userInfo:',this.userInfo)
+        this.popTitle = '修改员工'
+        let data = Object.assign({},this.userInfo)
+        for(let i in this.form){
+          this.form[i] = this.userInfo[i]
+        }
+        this.form.rolesId = this.userInfo.rolesIdList
+      } else {
+        this.popTitle = '新增员工'
+        for(let i in this.form){
+          this.form[i] = i === 'password' ? '123456' : i === 'rolesId' ? [] : ''
+        }
+      }
+    }
   },
   methods: {
     submitForm(formName) {
@@ -155,10 +179,19 @@ export default {
         if (valid) {
           this.loading = true
           let data = Object.assign({},this.form)
+          let promiseObj
           data.rolesId = data.rolesId.join(',')
-          postEmployeer(data).then(res => {
+          // 判断操作，调用对应的函数
+          if(this.isModify){
+            data.id = this.userInfo.id
+            promiseObj = putEmployeer(data)
+          } else {
+            promiseObj = postEmployeer(data)
+          }
+
+          promiseObj.then(res => {
             this.loading = false
-            this.$alert('创建成功', '提示', {
+            this.$alert('操作成功', '提示', {
               confirmButtonText: '确定',
               callback: action => {
                 this.closeMe()

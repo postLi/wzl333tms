@@ -68,6 +68,20 @@ export function postEmployeer(data) {
   return fetch.post('/api-system/system/user/v1/', data)
 }
 /**
+ * 修改员工
+ * @param {*} data 要传输的数据
+ */
+export function putEmployeer(data) {
+  return fetch.put('/api-system/system/user/v1/', data)
+}
+/**
+ * 删除员工
+ * @param {*} data 要传输的数据
+ */
+export function deleteEmployeer(id) {
+  return fetch.delete('/api-system/system/user/v1/' + id)
+}
+/**
  * 修改员工的权限信息
  * @param {*} data 员工权限数据
  */

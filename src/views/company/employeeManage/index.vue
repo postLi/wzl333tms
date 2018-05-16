@@ -92,13 +92,13 @@
             <div class="info_news_footer">共计:{{ usersArr.length }}</div>    
         </div>
         <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" />
-        <AddEmployeer :groups="groupsArr" :roles="rolesArr" :departments="departmentArr" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
+        <AddEmployeer :isModify="isModify" :userInfo="theUser" :groups="groupsArr" :roles="rolesArr" :departments="departmentArr" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
         <SetAuth :roles="rolesArr" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" />
     </div>
 </template>
 
 <script type="text/javascript">
-import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
+import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo, deleteEmployeer } from '../../../api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import SearchForm from './search'
 import TableSetup from './tableSetup'
@@ -129,6 +129,8 @@ export default{
             // 选中的行
             selected: [],
             authUser: [],
+            // 保存要修改的用户
+            theUser: {},
             // 按钮大小
             btnsize: 'small',
             // 各个弹窗状态更改
@@ -138,11 +140,13 @@ export default{
             searchForm: {
 
             },
-            dialogFormVisible: false
+            dialogFormVisible: false,
+            // 是否修改员工信息
+            isModify: false
         }
     },
     mounted () {
-        Promise.all([getGroupName(this.otherinfo.orgid), getAuthInfo(this.otherinfo.orgid), this.fetchAllUser(1), getDepartmentInfo(this.otherinfo.orgid)]).then(resArr => {
+        Promise.all([getGroupName(1 || this.otherinfo.orgid), getAuthInfo(this.otherinfo.orgid), this.fetchAllUser(1), getDepartmentInfo(this.otherinfo.orgid)]).then(resArr => {
             this.loading = false
             this.groupsArr = resArr[0]
             this.rolesArr = resArr[1]
@@ -172,45 +176,57 @@ export default{
             switch (type) {
                 // 添加员工
                 case 'add':
+                    this.isModify = false
+                    this.theUser = {}
                     this.openAddEmployeer()
                     break;
                 // 修改员工信息
                 case 'modify':
+                    this.isModify = true
                     if(this.selected.length > 1){
                         this.$message({
                             message: '每次只能修改单条数据~',
                             type: 'warning'
                         })
                     }
+                    this.theUser = this.selected[0]
                     this.openAddEmployeer()
                     break;
                 // 删除员工
                 case 'delete':
                         let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
+                        //=>todo 删除多个
+                        let ids = ''
+                        this.selected.map(item => {
+                            ids += item.id + ','
+                        })
+                        ids = ids.slice(0, ids.length - 1)
+
+                        let id = this.selected[0].id
                         this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
                             confirmButtonText: '删除',
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(() => {
-                            // 模拟操作，删除选中项
-                            this.tableData3 = this.tableData3.filter( el => {
-                                return this.selected.indexOf(el) === -1
-                            })
-                            return new Promise(reslove => {
-                                this.selected = []
+                            deleteEmployeer(id).then(res => {
                                 this.$message({
                                     type: 'success',
                                     message: '删除成功!'
-                                });
-                                reslove()
+                                })
+                                this.fetchData()
+                            }).catch(err=>{
+                                this.$message({
+                                    type: 'info',
+                                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                                })  
                             })
                             
                         }).catch(() => {
                             this.$message({
                                 type: 'info',
                                 message: '已取消删除'
-                            });          
-                        });
+                            })          
+                        })
                     break;
                 // 设置员工权限
                 case 'auth':
