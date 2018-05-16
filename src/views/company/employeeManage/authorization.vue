@@ -9,12 +9,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user,index) in users" :key="index">
+          <tr v-for="(user,index) in myusers" :key="user.username">
             <td>
               {{user.name}}
             </td>
             <td>
-              <el-select size="mini" multiple v-model="form.users[user.id]" placeholder="请选择权限">
+              <el-select size="mini" multiple v-model="form.users[user.id]" placeholder="请选择权限" @change="getId(user.id)">
                 <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
               </el-select>
             </td>
@@ -50,6 +50,16 @@ export default {
       default: []
     }
   },
+  computed: {
+    myusers () {
+      this.form.users = {}
+      this.users.map(el => {
+        // 需要实现双向绑定
+        this.$set(this.form.users, el.id, el.rolesIdList)
+      })
+      return this.users
+    }
+  },
   data () {
 
     return {
@@ -63,21 +73,33 @@ export default {
   methods: {
     submitForm() {
       this.loading = true
-      console.log(this.form.users)
-      debugger
-      putEmployeerAuth().then(res => {
+      let data = []
+      for(let i in this.form.users){
+        data.push({
+          "id": i,
+          "rolesId": this.form.users[i].join(',')
+        })
+      }
+      putEmployeerAuth(data).then(res => {
         this.loading = false
         this.$alert('保存成功', '提示', {
           confirmButtonText: '确定',
           callback: action => {
             this.closeMe()
+            this.$emit('success')
           }
         });
+      }).catch(err => {
+        this.loading = false
       })
     },
     closeMe () {
+      this.form.users = {}
       this.$emit('update:popVisible', false);
     },
+    getId(a,b){
+      console.log('change:: ', a, b)
+    }
   }
 }
 </script>

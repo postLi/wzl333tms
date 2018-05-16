@@ -19,39 +19,48 @@
                     @selection-change="getSelection"
                     height="100%"
                     tooltip-effect="dark"
+                    :default-sort = "{prop: 'id', order: 'ascending'}"
                     style="width: 100%">
                     <el-table-column
                       fixed
+                      sortable
                       type="selection"
                       width="55">
                     </el-table-column>
                     <el-table-column
                       fixed
+                      sortable
                       prop="id"
                       label="序号">
                     </el-table-column>
                     <el-table-column
                       fixed
+                      sortable
                       prop="name"
                       label="姓名">
                     </el-table-column>
                     <el-table-column
                       prop="orgName"
+                      sortable
                       label="归属网点">
                     </el-table-column>
                     <el-table-column
                       prop="departmentName"
+                      sortable
                       label="归属部门">
                     </el-table-column>
                     <el-table-column
                       prop="position"
+                      sortable
                       label="职务">
                     </el-table-column>
                     <el-table-column
                       prop="username"
+                      sortable
                       label="登录账号">
                     </el-table-column>
                     <el-table-column
+                      sortable
                       label="权限角色">
                        <template slot-scope="scope">
                            <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
@@ -60,6 +69,7 @@
                     </el-table-column>
                     <el-table-column
                       label="性别"
+                      sortable
                       width="80">
                       <template slot-scope="scope">
                           {{ scope.row.sexFlag === "0" ? "男" : "女" }}
@@ -68,9 +78,11 @@
                     <el-table-column
                       prop="mobilephone"
                       label="联系手机"
+                      sortable
                       width="200">
                     </el-table-column>
                     <el-table-column
+                      sortable
                       label="创建日期">
                       <template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>
                     </el-table-column>
@@ -79,9 +91,9 @@
 
             <div class="info_news_footer">共计:{{ usersArr.length }}</div>    
         </div>
-        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" />
-        <AddEmployeer :groups="groupsArr" :roles="rolesArr" :departments="departmentArr" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" />
-        <SetAuth :roles="rolesArr" :popVisible.sync="SetAuthVisible" @close="closeAuth" :users="authUser" />
+        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" />
+        <AddEmployeer :groups="groupsArr" :roles="rolesArr" :departments="departmentArr" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
+        <SetAuth :roles="rolesArr" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" />
     </div>
 </template>
 
@@ -145,6 +157,8 @@ export default{
         doAction (type) {
             // 判断是否有选中项
             if(!this.selected.length && type !== 'add'){
+                this.closeAuth()
+                this.closeAddEmployeer()
                 this.$message({
                     message: '请选择要操作的员工~',
                     type: 'warning'
@@ -204,6 +218,8 @@ export default{
                     this.openAuth()
                     break;
             }
+            // 清除选中状态，避免影响下个操作
+            this.$refs.multipleTable.clearSelection()
         },
         // 设置表格
         setTable () {
@@ -230,18 +246,17 @@ export default{
         getSelection (selection) {
             this.selected = selection
         },
-        fetchData () {
-
+        fetchData (orgid = this.otherinfo.orgid, name = '', mobile = '') {
+            this.loading = true
+            this.fetchAllUser(orgid, name, mobile).then(data => {
+                this.loading = false
+                this.usersArr = data
+            })
         },
         // 获取组件返回的搜索参数
         getSearchParam (searchParam) {
             // 根据搜索参数请求后台获取数据
-            this.loading = true
-            this.fetchAllUser(searchParam.orgid || this.otherinfo.orgid, searchParam.name, searchParam.mobile).then(data => {
-                this.loading = false
-                this.usersArr = data
-            })
-            //this.fetchData()
+            this.fetchData(searchParam.orgid, searchParam.name, searchParam.mobile)
         }
     }
 

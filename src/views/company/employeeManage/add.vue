@@ -1,18 +1,21 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addEmployeerPop">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addEmployeerPop" v-loading="loading">
     <template class="addEmployeerPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini">
-        <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="form.username" auto-complete="off"></el-input>
+        <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" :label-width="formLabelWidth" prop="mobilephone">
           <el-input v-model="form.mobilephone" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="登录账号" :label-width="formLabelWidth" prop="loginAccount">
+        <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
             <div slot="content">账号可以由字母、数字、中文组成<br/>长度范围2~15个字符</div>
-            <el-input v-model.trim="form.loginAccount" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input>
+            <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input>
           </el-tooltip>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+          <el-input v-model.trim="form.password" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
           <el-input v-model="form.position" auto-complete="off"></el-input>
@@ -24,7 +27,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属网点" :label-width="formLabelWidth">
-          <el-select v-model="form.orgId" placeholder="请选择网点">
+          <el-select v-model="form.orgid" placeholder="请选择网点">
             <el-option v-for="item in groups" :key="item.id" :label="item.orgName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -94,7 +97,7 @@ export default {
       }
     }
 
-    const validateLoginAccount = function (rule, value, callback) {
+    const validateusername = function (rule, value, callback) {
       if(isvalidUsername(value)){
         callback()
       } else {
@@ -104,28 +107,32 @@ export default {
 
     return {
       form: {
-        username: '', // 用户姓名
+        name: '', // 用户姓名
         mobilephone: '', // 手机号码
-        loginAccount: '', // 登录账户
+        username: '', // 登录账户
+        password: '123456',
         position: '', // 职位
         sexFlag: '',// 性别
-        orgId: [], // 归属网点
+        orgid: '', // 归属网点
         rolesId: [], // 权限角色
-        departmentId: '', // 归属部门
-        password: '123456'
+        departmentId: '' // 归属部门
       },
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
-        username: [
+        name: [
           { required: true, message: '请输入用户姓名', trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
         ],
         mobilephone: [
           { required: true, message: '请输入手机号码', trigger: 'change', validator: validateFormMobile }
         ],
-        loginAccount: [
-          { required: true, message: '请输入有效的登录账号', trigger: 'blur', validator: validateLoginAccount },
+        username: [
+          { required: true, message: '请输入有效的登录账号', trigger: 'blur', validator: validateusername },
           { max: 15, message: '不能超过15个字符', trigger: 'change' },
         ],
         position: [
@@ -135,29 +142,36 @@ export default {
       popTitle: '新增员工',
       orgArr: [],
       rolesArr: [],
-      departmentArr: []
+      departmentArr: [],
+      loading: false
 
     }
   },
   mounted () {
-    //this.fetchInfo()
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('可以提交到后台!');
+          this.loading = true
+          let data = Object.assign({},this.form)
+          data.rolesId = data.rolesId.join(',')
+          postEmployeer(data).then(res => {
+            this.loading = false
+            this.$alert('创建成功', '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.closeMe()
+                this.$emit('success')
+              }
+            });
+          }).catch(err => {
+            this.loading = false
+          })
         } else {
           return false;
         }
       });
-    },
-    fetchInfo () {
-      getOrgInfo().then(dataArr => {
-        this.orgArr = dataArr[0]
-        this.departmentArr = dataArr[1]
-        this.rolesArr = dataArr[2]
-      })
     },
     closeMe (done) {
       this.$refs['ruleForm'].resetFields()

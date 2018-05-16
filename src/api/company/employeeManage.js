@@ -65,7 +65,7 @@ export function getOrgInfo(orgid) {
  * @param {*} data 要传输的数据
  */
 export function postEmployeer(data) {
-  return fetch.post()
+  return fetch.post('/api-system/system/user/v1/', data)
 }
 /**
  * 修改员工的权限信息
