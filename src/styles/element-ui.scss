@@ -16,6 +16,21 @@
   position: relative;
   margin: 0 auto;
 }
+/** 表格样式覆盖 ***/
+$bodercolor: #d0d7e5;
+.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,.el-table--border, .el-table--group,.el-table td, .el-table th.is-leaf{
+  border-color: $bodercolor;
+}
+.el-table--border::after, .el-table--group::after, .el-table::before{
+  background: $bodercolor;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row td, .el-table__body tr.current-row>td, .el-table__body tr.hover-row.current-row>td, .el-table__body tr.hover-row.el-table__row--striped.current-row>td, .el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td{
+  background: #bcd6f5;
+}
+
+.el-table__column-resize-proxy{
+  border-left: 1px solid #409EFF;
+}
 
 //element ui upload
 .upload-container {

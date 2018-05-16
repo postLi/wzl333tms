@@ -43,6 +43,9 @@ export default {
     groups: {
       type: Array,
       default: []
+    },
+    orgid: {
+      type: Number
     }
   },
   data () {
@@ -60,7 +63,7 @@ export default {
 
     return {
       searchForm: {
-        orgid: '',
+        orgid: this.orgid,
         name: '',
         mobile: ''
       },
@@ -80,7 +83,7 @@ export default {
     },
     clearForm (formName) {
       this.searchForm.name = ''
-      this.searchForm.orgid = ''
+      this.searchForm.orgid = this.orgid
       this.searchForm.mobile = ''
     }
   }

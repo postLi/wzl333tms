@@ -1,6 +1,6 @@
 <template>
     <div class="staff_manage" v-loading="loading">
-        <SearchForm :groups="groupsArr" @change="getSearchParam" :btnsize="btnsize" />
+        <SearchForm :groups="groupsArr" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
         <div class="staff_info">
             <div class="btns_box">
                 <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增员工</el-button>

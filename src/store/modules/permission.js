@@ -52,11 +52,13 @@ const permission = {
         const { roles } = data
         let accessedRouters
         // 如果是管理员，则给于全部权限
-        if (roles.indexOf('2') >= 0) {
+        /* if (roles.indexOf('2') >= 0) {
           accessedRouters = asyncRouterMap
         } else {
           accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-        }
+        } */
+        // 暂时给于全部权限，等后台权限体系建立好再对接设置
+        accessedRouters = asyncRouterMap
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
