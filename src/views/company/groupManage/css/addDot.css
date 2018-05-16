@@ -35,18 +35,17 @@
 
 }
 
-
-
 .ad-add-dot .el-checkbox__label{
-
   margin-bottom: 7px;
 }
 .el-checkbox__input.is-checked+.el-checkbox__label{
   color: #666;
 }
+
 .rem-add-dot{
   margin: 16px 0 0 40px;
 }
+
 .rem-add-dot span{
   color: #666;
   vertical-align: top;

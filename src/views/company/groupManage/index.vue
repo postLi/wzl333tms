@@ -242,53 +242,6 @@
                   parentId:0
 
                 },
-                // formData: [
-                //   {
-                //     label:"网点名称：",
-                //   name:''},
-                //   {
-                //     label:"网点类型：",
-                //     name:''},
-                //   {
-                //     label:"网点状态：",
-                //     name:''},
-                //   {
-                //     label:"客服人员：",
-                //     name:''},
-                //   {
-                //     label:"客服电话：",
-                //     name:''},
-                //   {
-                //     label:"上级网点：",
-                //     name:''},
-                //   {
-                //     label:"经营类型：",
-                //     name:''},
-                //   {
-                //     label:"创建时间：",
-                //     name:''},
-                //   {
-                //     label:"网点代码：",
-                //     name:''},
-                //   {
-                //     label:"代收款限额：",
-                //     name:''},
-                //   {
-                //     label:"负 责 人：",
-                //     name:''},
-                //   {
-                //     label:"负责人电话：",
-                //     name:''},
-                //      {
-                //     label:"所在城市：",
-                //     name:''},
-                //      {
-                //     label:"所在城市：",
-                //     name:''},
-                //     {
-                //     label:"预警额度：",
-                //     name:''}
-                //     ],
                   // 缓存节点数据
                   orgInfoCache: {}
               };
@@ -357,6 +310,8 @@
                 //新增员工
               case 'addPeople':
                 this.addPeopleVisible = true
+                this.isModify = false
+                console.log(this.isModify);
                 break;
               //  新增网点
               case 'addNot':
@@ -394,6 +349,7 @@
               case 'modifyNot':
                 this.isModify = true
                 this.addDoTotVisible = true
+                console.log(this.isModify);
                 break;
             }
           },

@@ -110,7 +110,12 @@
       popVisible: {
         type:Boolean,
         default:false
-      }
+      },
+      isModify: {
+        type:Boolean,
+        default:false
+      },
+      dotInfo: Object
     },
     computed: {
       isShow: {
@@ -230,10 +235,12 @@
       }
     },
     mounted(){
+      console.log(this.isModify);
       if(this.isModify){
+
         console.log(this.dotInfo);
         this.form = this.dotInfo
-
+        console.log(this.form)
       }
     },
     methods: {

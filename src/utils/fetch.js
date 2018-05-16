@@ -21,10 +21,10 @@ service.interceptors.request.use(config => {
       config.params = {}
     }
     config.params['access_token'] = getToken()
-    console.log(config.url, config.params)
+    // console.log(config.url, config.params)
   }
   if (config.url.indexOf('http://') !== -1) {
-    
+
   } else {
     // 统一加上/api 前缀，方便后台转发接口
     config.url = '/api' + config.url

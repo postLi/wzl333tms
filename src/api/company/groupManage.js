@@ -32,13 +32,6 @@ export function isEmpty(o) {
   return o
 }
 
-// 存放数据列表
-export function objStory( label , name ) {
-  this.label = label
-  this.name = name
-}
-
-
 /*转换时间戳方法
 使用例子：alert(dateFormat_1(1525283454000))
  */
