@@ -1,0 +1,78 @@
+.permManage{
+  margin: 20px 20px 20px 12px;
+}
+.permManage-top{
+
+}
+.permManage-top .el-form-item__label{
+  color: #333;
+  font-size: 14px;
+  line-height: 24px;
+}
+.permManage-top .el-form--inline .el-form-item{
+   margin-right: 0;
+}
+.permManage-top .el-form-item .el-form-item__content{
+  line-height: 24px;
+}
+.permManage-top .el-form-item .el-input__inner{
+  width: 74%;
+  height: 24px;
+  line-height: 24px;
+}
+.permManage-top .el-button--primary{
+  margin: -1px 0 0 -45px;
+  padding: 4px 14px;
+  background-color: transparent;
+  border-color: #3e9ff1;
+  color: #3e9ff1;
+}
+
+
+
+/*表格功能*/
+.side_right_bottom .btns_box{
+  margin:26px 0 10px 25px;
+}
+.btns_box_left{
+  float: left;
+}
+
+.btns_box img{
+  position: relative;
+  top: 1px;
+  left: 31px;
+  wdith:13px;
+  height: 17px;
+}
+.btns_box .el-button--primary{
+  color:#3e9ff1;
+  background: #fff;
+  border-color: #3e9ff1;
+  padding: 8px 12px 8px 29px;
+  cursor: pointer;
+}
+.el-table {
+  width: 100% !important;
+}
+.el-table table{
+  width: 100% !important;
+
+}
+.el-table th,td{
+  text-align:center;
+}
+/*表格功能*/
+
+/*表格内容*/
+.info_news {
+  margin: 0 11px 41px 13px;
+}
+.info_news .el-table__header{
+  background-color: #eee;
+}
+.info_news .cell{
+  color: #333;
+  font-size: 14px;
+}
+/*表格内容*/
