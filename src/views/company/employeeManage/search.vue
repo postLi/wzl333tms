@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <el-form-item label="归属网点">
-          <SelectTree @change="getOrgid" :groups="groups" :orgid="orgid" />
+          <SelectTree @change="getOrgid" :orgid="orgid" />
       </el-form-item>
       <el-form-item label="员工名称">
           <el-input
@@ -36,10 +36,6 @@ export default {
     btnsize: {
       type: String,
       default: 'mini'
-    },
-    groups: {
-      type: Array,
-      default: []
     },
     orgid: {
       type: Number

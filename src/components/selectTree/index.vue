@@ -36,6 +36,7 @@ export default {
     }
   },
   mounted () {
+    this.aid = this.orgid
     getAllOrgInfo(this.orgid).then(data => {
       this.groups = data
     })

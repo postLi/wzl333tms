@@ -27,7 +27,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属网点" :label-width="formLabelWidth">
-          <SelectTree @change="getOrgid" :orgid="orgid" :groups="groups" />
+          <SelectTree @change="getOrgid" :orgid="this.form.orgid" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
           <el-select multiple v-model="form.rolesId" placeholder="请选择权限">
@@ -50,7 +50,7 @@
 </template>
 <script>
 import { validateMobile, isvalidUsername }  from '@/utils/validate'
-import { postEmployeer, putEmployeer, getAllOrgInfo,  getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
+import { postEmployeer, putEmployeer,  getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
@@ -156,6 +156,9 @@ export default {
 
     }
   },
+  mounted () {
+    this.form.orgid = this.orgid
+  },
   watch: {
     popVisible (newVal, oldVal) {
       if(newVal&&!this.inited){
@@ -173,7 +176,7 @@ export default {
         for(let i in this.form){
           this.form[i] = this.userInfo[i]
         }
-        this.form.rolesId = this.userInfo.rolesIdList
+        this.form.rolesId = this.userInfo.rolesIdList === '0' ? '' : this.userInfo.rolesIdList
       } else {
         this.popTitle = '新增员工'
         for(let i in this.form){
@@ -186,11 +189,10 @@ export default {
   methods: {
     initInfo () {
       this.loading = true
-      return Promise.all([getAllOrgInfo(this.orgid), getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {
+      return Promise.all([getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {
         this.loading = false
-        this.groups = resArr[0]
-        this.roles = resArr[1]
-        this.departments = resArr[2]
+        this.roles = resArr[0]
+        this.departments = resArr[1]
       }).catch(err => {
         this.loading = false
         this.inited = false
