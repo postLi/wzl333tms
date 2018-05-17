@@ -10,6 +10,52 @@ export function getGroupName(orgid) {
   })
 }
 /**
+ * 过滤树中的某个节点及其子节点数据
+ * @param {*} data 数组结构的树
+ */
+function getOrgChild(data, id) {
+  // 1.遍历数据的第一层
+  const res = data.filter(el => {
+    if (el.id === id) {
+      return true
+    }
+  })
+  // 2.找到则不再遍历子节点
+  if (res.length) {
+    // 正常情况下，id值唯一
+    return res
+  } else {
+    // 3.找不到数据则寻找遍历子节点
+    data.map(el => {
+      if (el.children && el.children.length) {
+        const find = getOrgChild(el.children, id)
+        if (find.length) {
+          res.push(find[0])
+        }
+      }
+    })
+    // 4.找到数据则返回
+    if (res.length) {
+      return res
+    } else {
+      // 5.否则返回空数组
+      return []
+    }
+  }
+}
+/**
+ * 获取所有网点的信息，树形结构
+ */
+export function getAllOrgInfo(orgid) {
+  return fetch.get('/api-system/system/org/v1/tree').then(res => {
+    let data = res.data
+    if (orgid) {
+      data = getOrgChild(data, orgid)
+    }
+    return data
+  })
+}
+/**
  * 获取指定网点的部门信息
  * @param {*} orgid 网点id
  */
@@ -45,9 +91,9 @@ export function getAuthInfo(orgid, pagesize) {
  * @param {*} name 姓名
  * @param {*} orgid 组织ID
  */
-export function getAllUser(orgid, name, mobilephone) {
-  return fetch.get('/tmssystemservice/system/user/v1/', {
-    params: { name, orgid, mobilephone }
+export function getAllUser(orgid, name, mobilephone, pageSize = 100, pageNum = 1) {
+  return fetch.get('/api-system/system/user/v1/', {
+    params: { name, orgid, mobilephone, pageSize, pageNum }
   }).then(res => {
     return res.data ? res.data.list : []
   })

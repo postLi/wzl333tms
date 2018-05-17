@@ -25,13 +25,14 @@
                       fixed
                       sortable
                       type="selection"
-                      width="55">
+                      width="50">
                     </el-table-column>
                     <el-table-column
                       fixed
                       sortable
                       prop="id"
-                      label="序号">
+                      label="序号"
+                      width="80">
                     </el-table-column>
                     <el-table-column
                       fixed
@@ -63,14 +64,14 @@
                       sortable
                       label="权限角色">
                        <template slot-scope="scope">
-                           <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
+                           <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
                            <span class="unauth" v-else>未授权</span>
                       </template>
                     </el-table-column>
                     <el-table-column
                       label="性别"
                       sortable
-                      width="80">
+                      >
                       <template slot-scope="scope">
                           {{ scope.row.sexFlag === "0" ? "男" : "女" }}
                       </template>
@@ -79,7 +80,7 @@
                       prop="mobilephone"
                       label="联系手机"
                       sortable
-                      width="200">
+                      >
                     </el-table-column>
                     <el-table-column
                       sortable
@@ -89,28 +90,30 @@
                   </el-table>
             </div>
 
-            <div class="info_news_footer">共计:{{ usersArr.length }}</div>    
+            <div class="info_news_footer">共计:{{ usersArr.length }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div> </div>    
         </div>
         <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" />
-        <AddEmployeer :isModify="isModify" :userInfo="theUser" :groups="groupsArr" :roles="rolesArr" :departments="departmentArr" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
-        <SetAuth :roles="rolesArr" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" />
+        <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
+        <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" />
     </div>
 </template>
 
 <script type="text/javascript">
-import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo, deleteEmployeer } from '../../../api/company/employeeManage'
+import { getAllOrgInfo, getAllUser, deleteEmployeer } from '../../../api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import SearchForm from './search'
 import TableSetup from './tableSetup'
 import AddEmployeer from './add'
 import SetAuth from './authorization'
+import Pager from '@/components/Pagination/index'
 
 export default{
     components: {
         SearchForm,
         TableSetup,
         AddEmployeer,
-        SetAuth
+        SetAuth,
+        Pager
     },
     computed: {
         ...mapGetters([
@@ -138,7 +141,11 @@ export default{
             AddEmployeerVisible: false,
             SetAuthVisible: false,
             searchForm: {
-
+                name: '',
+                pageSize: 100,
+                pageNum: 1,
+                mobile: '',
+                orgid: ''
             },
             dialogFormVisible: false,
             // 是否修改员工信息
@@ -146,12 +153,10 @@ export default{
         }
     },
     mounted () {
-        Promise.all([getGroupName(1 || this.otherinfo.orgid), getAuthInfo(this.otherinfo.orgid), this.fetchAllUser(1), getDepartmentInfo(this.otherinfo.orgid)]).then(resArr => {
+        Promise.all([getAllOrgInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
             this.loading = false
             this.groupsArr = resArr[0]
-            this.rolesArr = resArr[1]
-            this.usersArr = resArr[2]
-            this.departmentArr = resArr[3]
+            this.usersArr = resArr[1]
         })
     },
     methods: {
@@ -262,7 +267,7 @@ export default{
         getSelection (selection) {
             this.selected = selection
         },
-        fetchData (orgid = this.otherinfo.orgid, name = '', mobile = '') {
+        fetchData (orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
             this.loading = true
             this.fetchAllUser(orgid, name, mobile).then(data => {
                 this.loading = false
@@ -272,7 +277,13 @@ export default{
         // 获取组件返回的搜索参数
         getSearchParam (searchParam) {
             // 根据搜索参数请求后台获取数据
-            this.fetchData(searchParam.orgid, searchParam.name, searchParam.mobile)
+            Object.assign(this.searchForm, searchParam)
+            this.fetchData()
+        },
+        // 获取翻页返回的数据
+        handlePageChange (obj) {
+            Object.assign(this.searchForm, obj)
+            this.fetchData()
         }
     }
 
@@ -289,7 +300,7 @@ export default{
         position: relative;
 
         .staff_info{
-            padding:10px 30px 0;
+            padding:10px 30px 40px;
             height: 100%;
             flex-grow: 1;
             display: flex;
@@ -333,6 +344,17 @@ export default{
             box-shadow: 0 -2px 2px rgba(0,0,0,.1);
             position: relative;
             z-index: 10;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .show_pager{
+            float: right;
+            line-height: 40px;
+            height: 40px;
+            overflow: hidden;
         }
     }
 </style>

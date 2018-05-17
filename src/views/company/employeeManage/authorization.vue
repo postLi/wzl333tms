@@ -29,8 +29,9 @@
   </pop-right>
 </template>
 <script>
-import { putEmployeerAuth } from '../../../api/company/employeeManage'
+import { putEmployeerAuth, getAuthInfo } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -44,13 +45,12 @@ export default {
     users: {
       type: Array,
       default: []
-    },
-    roles: {
-      type: Array,
-      default: []
     }
   },
   computed: {
+    ...mapGetters([
+        'otherinfo'
+    ]),
     myusers () {
       this.form.users = {}
       this.users.map(el => {
@@ -67,10 +67,30 @@ export default {
         rolesId: [], // 权限角色
         users: {}
       },
-      loading: false
+      loading: false,
+      roles: [],
+      inited: false
+    }
+  },
+  watch: {
+    popVisible (newVal){
+      if(newVal &&  !this.inited){
+        this.inited = true
+        this.initInfo()
+      }
     }
   },
   methods: {
+    initInfo () {
+      this.loading = true
+      return getAuthInfo(this.otherinfo.companyId).then(res => {
+        this.roles = res
+        this.loading = false
+      }).catch(err => {
+        this.loading = false
+        this.inited = false
+      })
+    },
     submitForm() {
       this.loading = true
       let data = []

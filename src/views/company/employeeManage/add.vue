@@ -27,9 +27,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属网点" :label-width="formLabelWidth">
-          <el-select v-model="form.orgid" placeholder="请选择网点">
-            <el-option v-for="item in groups" :key="item.id" :label="item.orgName" :value="item.id"></el-option>
-          </el-select>
+          <SelectTree @change="getOrgid" :orgid="orgid" :groups="groups" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
           <el-select multiple v-model="form.rolesId" placeholder="请选择权限">
@@ -52,29 +50,24 @@
 </template>
 <script>
 import { validateMobile, isvalidUsername }  from '@/utils/validate'
-import { postEmployeer, putEmployeer } from '../../../api/company/employeeManage'
+import { postEmployeer, putEmployeer, getAllOrgInfo,  getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
+import SelectTree from '@/components/selectTree/index'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    popRight
+    popRight,
+    SelectTree
   },
   props: {
     popVisible: {
       type: Boolean,
       default: false
     },
-    roles: {
-      type: Array,
-      default: []
-    },
-    departments: {
-      type: Array,
-      default: []
-    },
-    groups: {
-      type: Array,
-      default: []
+    orgid: {
+      type: Number,
+      required: true
     },
     isModify: {
       type: Boolean,
@@ -84,6 +77,11 @@ export default {
       type: Object,
       default: {}
     }
+  },
+  computed: {
+      ...mapGetters([
+          'otherinfo'
+      ])
   },
   data () {
     var validatePass = (rule, value, callback) => {
@@ -151,14 +149,23 @@ export default {
       orgArr: [],
       rolesArr: [],
       departmentArr: [],
-      loading: false
+      loading: false,
+      roles: [],
+      departments: [],
+      groups: [],
+      inited: false
 
     }
   },
   watch: {
+    popVisible (newVal, oldVal) {
+      if(newVal&&!this.inited){
+        this.inited = true
+        this.initInfo()
+      }
+    },
     userInfo () {
       if(this.isModify){
-        console.log('this.userInfo:',this.userInfo)
         this.popTitle = '修改员工'
         let data = Object.assign({},this.userInfo)
         for(let i in this.form){
@@ -170,10 +177,26 @@ export default {
         for(let i in this.form){
           this.form[i] = i === 'password' ? '123456' : i === 'rolesId' ? [] : ''
         }
+        this.form.orgid = this.orgid
       }
     }
   },
   methods: {
+    initInfo () {
+      this.loading = true
+      return Promise.all([getAllOrgInfo(this.orgid), getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {
+        this.loading = false
+        this.groups = resArr[0]
+        this.roles = resArr[1]
+        this.departments = resArr[2]
+      }).catch(err => {
+        this.loading = false
+        this.inited = false
+      })
+    },
+    getOrgid (id) {
+      this.form.orgid = id
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

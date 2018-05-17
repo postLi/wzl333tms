@@ -1,14 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <el-form-item label="归属网点">
-          <el-select v-model="searchForm.orgid" filterable>
-              <el-option
-              v-for="item in groups"
-              :key="item.id"
-              :label="item.orgName"
-              :value="item.id">
-              </el-option>
-          </el-select>
+          <SelectTree @change="getOrgid" :groups="groups" :orgid="orgid" />
       </el-form-item>
       <el-form-item label="员工名称">
           <el-input
@@ -33,8 +26,12 @@
 
 <script>
 import { validateMobile }  from '@/utils/validate'
+import SelectTree from '@/components/selectTree/index'
 
 export default {
+  components: {
+    SelectTree
+  },
   props: {
     btnsize: {
       type: String,
@@ -78,6 +75,9 @@ export default {
 
   },
   methods: {
+    getOrgid (id){
+      this.searchForm.orgid = id
+    },
     onSubmit () {
       this.$emit('change', this.searchForm)
     },
@@ -99,6 +99,7 @@ export default {
         .el-form-item{
             margin-bottom: 0;
         }
+        
     }
     .staff_searchinfo--btn{
         float: right;
