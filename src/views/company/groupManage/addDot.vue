@@ -281,7 +281,7 @@
     }
   };
 </script>
-<style>
+<style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";
   @import "./css/addDot.css";
   .addEmployeerPop{

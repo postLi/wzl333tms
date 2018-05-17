@@ -174,7 +174,6 @@
 <script type="text/javascript">
     import AddDot from './addDot'
     import AddPeople from './addPeople'
-    import { getAllOrgInfo , getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
     import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 
     export default {
@@ -254,14 +253,12 @@
           //左边树形数据
           fetchOrg() {
             getAllOrgInfo().then(res => {
-              for (var i = 0; i < res.data.length; i++) {
                 if (res.data[i] == '') {
                   console.log('暂无数据')
                 } else {
                   this.dataTree = res.data
                   this.fetchOrgId(this.dataTree[0].id)//根据组织id显示列表
                 }
-              }
             })
           },
           // 处理返回的节点数据

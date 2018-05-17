@@ -2,11 +2,6 @@
   <div class="add-people">
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addEmployeerPop">
     <template class="addEmployeerPop-content" slot="content">
-
-        <!-- Form -->
-        <!--<el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>-->
-
-        <!--<el-dialog title="新 增 员 工" :visible.sync="isShow" :close-on-modal="true" :before-close="closeMe">-->
           <el-form :model="form" :rules="rules" ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
             <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
               <el-input v-model="form.name" auto-complete="off"></el-input>
@@ -74,8 +69,6 @@
             <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
             <el-button @click="closeMe">取 消</el-button>
           </div>
-        <!--</el-dialog>-->
-
     </template>
 
   </pop-right>

@@ -30,3 +30,10 @@ export function getAuthInfo(orgid, pagesize) {
     return res.data ? res.data.list : []
   })
 }
+/**
+ * 删除员工
+ * @param {*} data 要传输的数据
+ */
+export function deleteEmployeer(id) {
+  return fetch.delete('/api-system/system/user/v1/' + id)
+}
