@@ -86,15 +86,8 @@
               </div>
               <div class="Pagination ">
                 <div class="block">
-                  <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
-                  </el-pagination>
+                  共计:{{ usersArr.length }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
+
                 </div>
               </div>
             </div>
@@ -167,19 +160,29 @@
 
         </div>
     </div>
-    <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg" :popVisible="addDoTotVisible" @close="closeAddDot" />
-    <AddPeople :popVisible="addPeopleVisible" @close="closeAddPeople" />
+    <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
+    <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId" @success="fetchOrgId(getOrgId)" />
   </div>
 </template>
 <script type="text/javascript">
+    import AddPeople from '../employeeManage/add'
     import AddDot from './addDot'
-    import AddPeople from './addPeople'
-    import { getGroupName, getAllUser, getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
+    //import AddPeople from './addPeople'
+    import { getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
+    import { getAllOrgInfo, getGroupName, getAllUser, getAuthInfo, getDepartmentInfo, deleteEmployeer } from '../../../api/company/employeeManage'
+    import { mapGetters } from 'vuex'
+    import Pager from '@/components/Pagination/index'
 
     export default {
       components: {
         AddDot,
-        AddPeople
+        AddPeople,
+        Pager
+      },
+      computed: {
+        ...mapGetters([
+          'otherinfo'
+        ])
       },
         data() {
             return {
@@ -252,13 +255,10 @@
         methods: {
           //左边树形数据
           fetchOrg() {
-            getAllOrgInfo().then(res => {
-                if (res.data[i] == '') {
-                  console.log('暂无数据')
-                } else {
-                  this.dataTree = res.data
+            getAllOrgInfo(this.otherinfo.orgid).then(data => {
+
+                  this.dataTree = data
                   this.fetchOrgId(this.dataTree[0].id)//根据组织id显示列表
-                }
             })
           },
           // 处理返回的节点数据
@@ -267,9 +267,8 @@
           },
           // 根据组织id显示列表
           fetchOrgId(id) {
-            getAllUser(id, '', '').then(res=>{
-              this.usersArr = res
-            })
+            this.getOrgId = parseInt(id, 10)
+            this.fetchAllUsers(id)
             if(this.orgInfoCache[id]){
               this.handleOrgInfo(this.orgInfoCache[id])
             } else {
@@ -278,6 +277,11 @@
                 this.handleOrgInfo(res.data)
               })
             }
+          },
+          fetchAllUsers (orgid, name = "", mobile = "", pageSize = 100, pageNum = 1) {
+            getAllUser(orgid, name, mobile , pageSize, pageNum).then(res=>{
+              this.usersArr = res
+            })
           },
           handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -317,36 +321,44 @@
                 break;
             //    删除员工
               case 'deletePeople':
-                let deleteItem = this.selected.length > 1 ? this.selected.length + '名': this.selected[0].name
-               this.$confirm('确定要删除'+deleteItem+'员工吗?','提示',{
-                 confirmButtonText:'删除',
-                 cancelButtonText:'取消',
-                 type:'warning'
-               }).then(() => {
-                 // 模拟操作，删除选中项
-                 this.tableData3 = this.tableData3.filter(el=>{
-                   return this.selected.indexOf(el) === -1
-                 })
-                 return new Promise(reslove => {
-                   this.selected = []
-                   this.$message({
-                     type:'success',
-                     message:'删除成功!'
-                   });
-                   reslove()
-                 })
-               }).catch(() => {
-                 this.$message({
-                   type:'info',
-                   message:'已取消删除'
-                 })
-               });
+                let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
+                //=>todo 删除多个
+                let ids = ''
+                this.selected.map(item => {
+                  ids += item.id + ','
+                })
+                ids = ids.slice(0, ids.length - 1)
+
+                let id = this.selected[0].id
+                this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
+                  confirmButtonText: '删除',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  deleteEmployeer(id).then(res => {
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    })
+                    this.fetchOrgId(this.getOrgId)
+                  }).catch(err=>{
+                    this.$message({
+                      type: 'info',
+                      message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                    })
+                  })
+
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                  })
+                })
               break;
               //修改网点
               case 'modifyNot':
                 this.isModify = true
                 this.addDoTotVisible = true
-                console.log(this.isModify);
                 break;
             }
           },
@@ -355,8 +367,7 @@
             return row.tag === value
           },
           getCheckedKeys() {
-            this.getOrgId = this.$refs.tree._data.currentNode.node.data.id
-            this.fetchOrgId(this.getOrgId)//根据组织id显示列表
+            this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)//根据组织id显示列表
           },
           //新增网点
           closeAddDot(){
@@ -364,6 +375,9 @@
           },
           closeAddPeople(){
             this.addPeopleVisible = false
+          },
+          handlePageChange (obj) {
+            this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
           }
         }
       }
@@ -373,5 +387,7 @@
   @import "../../../styles/mixin.scss";
   @import "./css/index.css";
 
-
+  .show_pager{
+    float: right;
+  }
 </style>

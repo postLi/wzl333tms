@@ -52,7 +52,7 @@ export function getAllOrgInfo(orgid) {
     if (orgid) {
       data = getOrgChild(data, orgid)
     }
-    return data
+    return data || []
   })
 }
 /**

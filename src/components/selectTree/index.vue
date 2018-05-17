@@ -1,5 +1,6 @@
+<script src="../../api/company/employeeManage.js"></script>
 <template>
-  <el-select v-model="orgid" class="select-tree" filterable @change="change">
+  <el-select v-model="aid" class="select-tree" filterable @change="change">
         <el-option
         v-for="item in openGroups"
         :key="item.id"
@@ -10,6 +11,7 @@
     </el-select>
 </template>
 <script>
+  import { getAllOrgInfo  } from '@/api/company/employeeManage'
 function expandGroups (data, i) {
   let res = []
   data.map(el => {
@@ -24,13 +26,19 @@ function expandGroups (data, i) {
 
 export default {
   props: {
-    groups: {
-      type: Array,
-      default: []
-    },
     orgid: {
-      type: Number
+      type: [Number, String]
     }
+  },
+  watch: {
+    orgid (newVal) {
+      this.aid = newVal
+    }
+  },
+  mounted () {
+    getAllOrgInfo(this.orgid).then(data => {
+      this.groups = data
+    })
   },
   computed: {
     openGroups () {
@@ -39,6 +47,12 @@ export default {
       let res
       res = expandGroups(this.groups, index)
       return res
+    }
+  },
+  data () {
+    return {
+      groups: [],
+      aid: ''
     }
   },
   methods: {

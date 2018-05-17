@@ -20,10 +20,7 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <el-select v-model="form.parentName">
-                <el-option label="山东卓鑫" value="nan"></el-option>
-                <!--<el-option label="分拨中心" value="nv"></el-option>-->
-              </el-select>
+              <SelectTree @change="getOrgid" :orgid="form.parentId || form.id" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType">
@@ -102,9 +99,13 @@
   import { validateMobile , isvalidUsername } from "@/utils/validate";
   import { postOrgSaveDate} from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
+  import SelectTree from '@/components/selectTree/index'
+  import { getAllOrgInfo } from '../../../api/company/employeeManage'
+
   export default {
     components: {
-      popRight
+      popRight,
+      SelectTree
     },
     props: {
       popVisible: {
@@ -124,6 +125,29 @@
         },
         set(){
 
+        }
+      }
+    },
+    watch: {
+      dotInfo (newVal) {
+        this.form = Object.assign({}, this.dotInfo)
+      },
+      isModify (newVal) {
+        if(newVal){
+          this.popTitle = '修改网点'
+          this.form = Object.assign({}, this.dotInfo)
+        } else {
+          this.popTitle = '新增网点'
+          for(let i in this.form){
+            this.form[i] = ''
+          }
+          if(this.form.id){
+            delete  this.form.id
+          }
+          this.form.orgType = 1
+          this.form.status = 32
+          this.form.manageType = 3
+          this.form.parentId = this.dotInfo.parentId
         }
       }
     },
@@ -187,7 +211,7 @@
           responsibleName: '',
           city:'',
           serviceName:'',
-          parentName:'山东卓鑫',//上级网点
+          parentName:'',//上级网点
           servicePhone:'',
           detailedAddr:'',
           networkCode:'',//网点代码
@@ -236,12 +260,7 @@
     },
     mounted(){
       console.log(this.isModify);
-      if(this.isModify){
 
-        console.log(this.dotInfo);
-        this.form = this.dotInfo
-        console.log(this.form)
-      }
     },
     methods: {
       // submitDate(){
@@ -249,6 +268,9 @@
       //     console.log(res)
       //   })
       // },
+      getOrgid (id){
+        this.form.parentId = id
+      },
       closeMe(done){
         this.$emit('close')
         this.$refs['ruleForm'].resetFields()

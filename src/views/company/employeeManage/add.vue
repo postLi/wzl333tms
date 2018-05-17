@@ -66,7 +66,6 @@ export default {
       default: false
     },
     orgid: {
-      type: Number,
       required: true
     },
     isModify: {
@@ -75,7 +74,7 @@ export default {
     },
     userInfo: {
       type: Object,
-      default: {}
+      default: () => {}
     }
   },
   computed: {
@@ -164,6 +163,9 @@ export default {
         this.initInfo()
       }
     },
+    orgid (newVal) {
+      this.form.orgid = newVal
+    },
     userInfo () {
       if(this.isModify){
         this.popTitle = '修改员工'
@@ -244,7 +246,6 @@ export default {
   left: auto;
   top: 50px;
   bottom: auto;
-  height: 100%;
   min-width: 600px;
   max-width:  600px;
 
