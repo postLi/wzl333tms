@@ -1,7 +1,8 @@
 <template>
   <!--v-loading="loading"-->
   <div class="company clearfix" >
-    <div class="side_left">
+    <div class="company-box">
+      <div class="side_left">
         <el-tree
           :data="dataTree"
           node-key="id"
@@ -9,20 +10,18 @@
           :props="defaultProps"
           ref="tree"
           @node-click="getCheckedKeys"
-          >
+        >
         </el-tree>
-    </div>
+      </div>
 
-    <div class="side_right">
+      <div class="side_right">
         <div class="side_right_top">
-          <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+          <el-form :model="form" :rules="rules" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
             <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
               <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
               <el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>
-              <!--form.orgType ==="1" ? "营业网点" : "分拨中心"-->
-              <!--{{ scope.row.sexFlag === "0" ? "男" : "女" }}-->
             </el-form-item>
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
               <el-input :value='form.status ==="32" ? "有效" : "有效"' disabled></el-input>
@@ -69,106 +68,106 @@
           </el-form>
         </div>
         <div class="side_right_bottom clearfix">
-            <div class="btns_box clearfix">
-              <!--表格功能-->
-                <div class="btns_box_left">
-                  <img src="../../../assets/icom/xinzeng.png" alt="">
-                  <el-button type="primary" plain @click="doAction('addPeople')">新增员工</el-button>
-                  <img src="../../../assets/icom/shanchu.png" alt="">
-                  <el-button type="primary" plain @click="doAction('deletePeople')">删除员工</el-button>
-                  <img src="../../../assets/icom/xiugai.png" alt="">
-                  <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
-                  <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-                  <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button>
-                </div>
-              <div class="btns_box_right">
-                <p>广东广州员工</p>
-              </div>
-              <div class="Pagination ">
-                <div class="block">
-                  <span>共计:{{ usersArr.length }}</span>
-                   <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
+          <div class="btns_box clearfix">
+            <!--表格功能-->
+            <div class="btns_box_left">
+              <img src="../../../assets/icom/xinzeng.png" alt="">
+              <el-button type="primary" plain @click="doAction('addPeople')">新增员工</el-button>
+              <img src="../../../assets/icom/shanchu.png" alt="">
+              <el-button type="primary" plain @click="doAction('deletePeople')">删除员工</el-button>
+              <img src="../../../assets/icom/xiugai.png" alt="">
+              <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
+              <img src="../../../assets/icom/xinzengwangdian.png" alt="">
+              <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button>
+            </div>
+            <div class="btns_box_right">
+              <p>广东广州员工</p>
+            </div>
+            <div class="Pagination ">
+              <div class="block">
+                <span class="user-length">共计:{{ usersArr.length }}</span>
+                <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
 
-                </div>
               </div>
             </div>
+          </div>
           <!--表格功能-->
           <!--表格内容-->
-            <div class="info_news">
+          <div class="info_news">
 
-              <el-table
-                ref="multipleTable"
-                :data="usersArr"
-                stripe
-                border
-                tooltip-effect="dark"
-                @row-click="clickDetails"
-                @selection-change="seleClick"
-                style="width: 100%;">
-                <el-table-column
-                  fixed
-                  type="selection"
-                  width="55">
-                </el-table-column>
-                <el-table-column
-                  fixed
-                  prop="id"
-                  label="序号">
-                </el-table-column>
-                <el-table-column
-                  fixed
-                  prop="name"
-                  label="姓名">
-                </el-table-column>
-                <el-table-column
-                  prop="orgName"
-                  label="归属网点">
-                </el-table-column>
-                <el-table-column
-                  prop="departmentName"
-                  label="归属部门">
-                </el-table-column>
-                <el-table-column
-                  prop="position"
-                  label="职务">
-                </el-table-column>
-                <el-table-column
-                  prop="username"
-                  label="登录账号">
-                </el-table-column>
-                <el-table-column
-                  label="权限角色">
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
-                    <span class="unauth" v-else>未授权</span>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="性别"
-                  width="80">
-                  <template slot-scope="scope">
-                    {{ scope.row.sexFlag === "0" ? "男" : "女" }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  prop="mobilephone"
-                  label="联系手机"
-                  width="200">
-                </el-table-column>
-              </el-table>
-            </div>
+            <el-table
+              ref="multipleTable"
+              :data="usersArr"
+              stripe
+              border
+              tooltip-effect="dark"
+              @row-click="clickDetails"
+              @selection-change="seleClick"
+              style="width: 100%;">
+              <el-table-column
+                fixed
+                type="selection"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="id"
+                label="序号">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="name"
+                label="姓名">
+              </el-table-column>
+              <el-table-column
+                prop="orgName"
+                label="归属网点">
+              </el-table-column>
+              <el-table-column
+                prop="departmentName"
+                label="归属部门">
+              </el-table-column>
+              <el-table-column
+                prop="position"
+                label="职务">
+              </el-table-column>
+              <el-table-column
+                prop="username"
+                label="登录账号">
+              </el-table-column>
+              <el-table-column
+                label="权限角色">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
+                  <span class="unauth" v-else>未授权</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="性别"
+                width="80">
+                <template slot-scope="scope">
+                  {{ scope.row.sexFlag === "0" ? "男" : "女" }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="mobilephone"
+                label="联系手机"
+                width="200">
+              </el-table-column>
+            </el-table>
+          </div>
           <!--表格内容-->
 
         </div>
+      </div>
+      <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId" @success="fetchOrgId(getOrgId)" />
     </div>
-    <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
-    <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId" @success="fetchOrgId(getOrgId)" />
   </div>
 </template>
 <script type="text/javascript">
     import AddPeople from '../employeeManage/add'
     import AddDot from './addDot'
-    //import AddPeople from './addPeople'
     import { getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
     import { getAllOrgInfo, getGroupName, getAllUser, getAuthInfo, getDepartmentInfo, deleteEmployeer } from '../../../api/company/employeeManage'
     import { mapGetters } from 'vuex'
@@ -187,6 +186,9 @@
       },
         data() {
             return {
+              rules:{
+                // networkCode:{required: true}
+              },
               //加载状态
               loading:true,
               addDoTotVisible:false,
@@ -386,7 +388,7 @@
 
 <style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";
-  @import "./css/index.css";
+  @import "./index.css";
 
   .show_pager{
     float: right;

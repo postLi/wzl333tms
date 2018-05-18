@@ -31,16 +31,16 @@
             <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
               <el-input v-model="form.creatTime"></el-input>
             </el-form-item>
-            <el-form-item label="负责人" :label-width="formLabelWidth" prop="chargePerson">
+            <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
               <el-input v-model="form.responsibleName" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="checkPhone">
+            <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="所在城市" :label-width="formLabelWidth">
+            <el-form-item label="所在城市" :label-width="formLabelWidth" >
               <el-input v-model="form.city" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="客服人员" :label-width="formLabelWidth" prop="chargePerson">
+            <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="客服电话" :label-width="formLabelWidth" prop="checkPhone">
@@ -52,16 +52,16 @@
             <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
               <el-input v-model="form.networkCode" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="代收款限额" :label-width="formLabelWidth">
+            <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="collectionFee">
               <el-input v-model="form.collectionFee" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="提现基准" :label-width="formLabelWidth">
+            <el-form-item label="提现基准" :label-width="formLabelWidth" prop="benchmark">
               <el-input v-model="form.benchmark" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="预警额度" :label-width="formLabelWidth">
+            <el-form-item label="预警额度" :label-width="formLabelWidth" prop="warningQuota">
               <el-input v-model="form.warningQuota" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="锁机额度" :label-width="formLabelWidth">
+            <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="lockMachineQuota">
               <el-input v-model="form.lockMachineQuota" auto-complete="off"></el-input>
             </el-form-item>
 
@@ -71,15 +71,15 @@
             </div>
 
             <div class="rem-add-dot">
-              <span>备注</span>
-              <el-input
-                type="textarea"
-                :rows="2"
-                placeholder="不可超300字"
-                v-model="form.remarks">
-              </el-input>
+              <el-form-item label="备注" :label-width="formLabelWidth" prop="remarks">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  placeholder="不可超300字"
+                  v-model="form.remarks"
+                  auto-complete="off"></el-input>
+              </el-form-item>
             </div>
-
           </el-form>
       <div class="spanDiv">
         <span>元</span>
@@ -96,10 +96,10 @@
 </template>
 
 <script>
-  import { validateMobile , isvalidUsername } from "@/utils/validate";
   import { postOrgSaveDate} from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
+  import {REGEX ,isvalidUsername} from '../../../utils/validate'
   import { getAllOrgInfo } from '../../../api/company/employeeManage'
 
   export default {
@@ -152,32 +152,50 @@
       }
     },
     data() {
-      var checkName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入网点名称'));
-        } else{
-          callback();
+      //REGEX
+      var orgName = (rule, value, callback) => {
+        if ( this.form.orgName == value ) {
+          return callback(new Error('网点名称不能有重复哦！'))
+        } else if (!value) {
+          return callback(new Error('请输入网点名称'))
+        } else {
+          callback()
         }
       }
-      var checkPhone = (rule, value, callback) => {
-        if (validateMobile(value)) {
-          return callback(new Error('请输入手机号码'));
-        } else if (!/^1[34578]\d{9}$/.test(value)) {
+      var callBackName = (rule, value, callback) => {
+        callback()
+      }
+      var responsibleTelephone = (rule, value, callback) => {
+        if (!REGEX.MOBILE.test(value) && !value) {
           return callback(new Error('请输入正确的手机号码'));
         } else {
           callback();
         }
+      }
+      var servicePhone = (rule, value, callback) => {
+        if (!REGEX.TELEPHONE.test(value) && !value == '') {
+          return callback(new Error('请输入正确的电话号码'));
+        } else {
+          callback();
+        }
+      }
+      var collectionFee = (rule, value, callback) => {
+        if (!REGEX.ONLY_NUMBER.test(value) && !value == '') {
+          return callback(new Error('请输入数字'));
+        } else {
+          callback();
+        }
+      }
 
+      var benchmark = (rule, value, callback) => {
+        //暂定
+        if (!REGEX.NUM_POINT.test(value) && !REGEX.NUM_PERCENTAGE.test(value) && value !== '') {
+          return callback(new Error('请输入百分比和小数点'));
+        } else {
+          callback();
+        }
       }
-      var checkChargePerson= (rule, value, callback) => {
-        // if (!value) {
-        //   return callback(new Error('请输入网点名称'));
-        // } else{
-        //   callback();
-        // }
-        callback();
-      }
-      var checkDotCode = (rule, value, callback) => {
+      var networkCode = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请输入网点代码'));
         } else{
@@ -185,18 +203,11 @@
         }
 
       }
-
-      var checkUsername = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入用户账号'));
-        }else if(!/^[0-9a-zA-Z\u2E80-\u9FFF]{1,}$/.test(value)){
-          return callback(new Error('用户账号只能为数字、字母和中文'));
-        }
-        else{
-          callback();
-        }
-
+      var remarks = (rule, value, callback) => {
+        console.log(value);
+        callback()
       }
+
       return {
         popTitle: '新增网点',
         //多选框
@@ -228,31 +239,57 @@
 
         },
         rules: {
-          //网点代码
-          networkCode: [
-            { required: true,validator: checkDotCode, trigger: 'blur' },
-            { min: 2,  message: '用户姓名最少2个字符', trigger: 'blur' },
-            { max: 10, message: '用户姓名不可超过10个字符', trigger: 'blur' }
+          orgName: [
+            { required: true,validator: orgName, trigger: 'blur' },
+            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { max: 15, message: '不可超过15个字符', trigger: 'blur' }
           ],
-          chargePerson:[
-            { validator: checkChargePerson, trigger: 'blur' },
+          responsibleName: [
+            { validator: callBackName, trigger: 'blur' },
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
-          orgName: [
-            { required: true,validator: checkName, trigger: 'blur' },
+          responsibleTelephone: [
+            {validator: responsibleTelephone, trigger: ['blur', 'change'] },
+          ],
+          serviceName: [
+            { validator: callBackName, trigger: 'blur' },
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
-            { max: 10, message: '不可超过15个字符', trigger: 'blur' }
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
-          chargePhone: [
-            { required: true,validator: checkPhone, trigger: ['blur', 'change'] },
+          servicePhone: [
+            {validator: servicePhone, trigger: ['blur', 'change'] },
+            { max: 13, message: '不可超过13个字符', trigger: 'blur' }
           ],
-          username: [
-            { required: true, validator: checkUsername, trigger: ['blur', 'change'] },
-            { min: 6,  message: '用户账号最少6个字符', trigger: 'blur' },
-            { max: 15, message: '用户账号不可超过15个字符', trigger: 'blur' }
-
+          //网点代码
+          networkCode: [
+            { required: true,validator: networkCode, trigger: 'blur' },
+            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
+          collectionFee: [
+            { validator: collectionFee, trigger: 'blur' },
+            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { max: 9, message: '不可超过9个字符', trigger: 'blur' }
+          ],
+          benchmark: [
+            { validator: benchmark, trigger: 'blur' },
+          ],
+          warningQuota: [
+            { validator: collectionFee, trigger: 'blur' },
+            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { max: 9, message: '不可超过9个字符', trigger: 'blur' }
+          ],
+          lockMachineQuota: [
+            { validator: collectionFee, trigger: 'blur' },
+            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { max: 9, message: '不可超过9个字符', trigger: 'blur' }
+          ],
+          remarks: [
+            { validator: remarks, trigger: 'blur' },
+            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { max: 300, message: '不可超过300个字符', trigger: 'blur' }
+          ]
         },
         dialogVisible: false,
         formLabelWidth: '120px'
@@ -263,11 +300,6 @@
 
     },
     methods: {
-      // submitDate(){
-      //   postOrgSaveDate().then(res =>{
-      //     console.log(res)
-      //   })
-      // },
       getOrgid (id){
         this.form.parentId = id
       },
@@ -305,7 +337,7 @@
 </script>
 <style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";
-  @import "./css/addDot.css";
+  @import "./addDot.css";
   .addEmployeerPop{
     left: auto;
     top: 50px;

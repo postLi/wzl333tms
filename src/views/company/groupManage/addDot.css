@@ -49,23 +49,21 @@
   color: #666;
   font-weight: 600;
 }
-.rem-add-dot{
-  margin: 16px 0 0 40px;
+/*备注*/
+.rem-add-dot {
+  margin-top: 5px;
 }
-
-.rem-add-dot span{
+.rem-add-dot .el-form-item__label{
   color: #666;
   vertical-align: top;
-  padding-right: 7px;
+  padding-right: 10px;
 }
 .rem-add-dot .el-textarea__inner{
-  width: 98%;
+  width: 594px;
   padding: 6px 15px;
   line-height: 1.9;
 }
-.rem-add-dot .el-textarea{
-  width: 90%;
-}
+
 .add-dot .spanDiv{
   display:inline-block;
 }
@@ -75,7 +73,7 @@
 }
 .add-dot .spanDiv span:first-of-type{
   position: relative;
-  top: -171px;
+  top: -170px;
   left: 440px;
 
 }
