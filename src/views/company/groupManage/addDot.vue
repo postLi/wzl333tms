@@ -13,14 +13,14 @@
               </el-select>
             </el-form-item>
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
-              <el-select v-model="form.status">
+              <el-select v-model="form.status" :disabled="isModify ? false : true">
                 <el-option label="有效" :value="32"></el-option>
                 <el-option label="无效" :value="31"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree @change="getOrgid" :orgid="form.parentId || form.id" />
+              <SelectTree @change="getOrgid" :orgid="form.id || form.parentId" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType">
@@ -38,7 +38,7 @@
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth" >
-              <el-input v-model="form.city" auto-complete="off"></el-input>
+              <SelectCity :city="form.city" @change="getCity" />
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off"></el-input>
@@ -99,13 +99,15 @@
   import { postOrgSaveDate} from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
+  import SelectCity from '@/components/selectCity/index'
   import {REGEX ,isvalidUsername} from '../../../utils/validate'
   import { getAllOrgInfo } from '../../../api/company/employeeManage'
 
   export default {
     components: {
       popRight,
-      SelectTree
+      SelectTree,
+      SelectCity
     },
     props: {
       popVisible: {
@@ -300,6 +302,9 @@
 
     },
     methods: {
+      getCity (city) {
+        this.form.city = city
+      },
       getOrgid (id){
         this.form.parentId = id
       },

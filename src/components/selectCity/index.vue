@@ -1,7 +1,7 @@
 <template>
 <el-autocomplete
   popper-class="city-autocomplete"
-  v-model="city"
+  v-model="cityName"
   :fetch-suggestions="querySearch"
   placeholder="请输入内容"
   @select="handleSelect">
@@ -14,9 +14,19 @@
 import { getCityInfo } from '../../api/common'
 
 export default {
+  props: {
+    city: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    cityName(){
+      return this.city
+    }
+  },
   data () {
     return {
-      city: ''
     }
   },
   methods: {
