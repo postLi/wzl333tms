@@ -9,7 +9,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user,index) in myusers" :key="user.username">
+          <tr v-for="(user) in myusers" :key="user.username">
             <td>
               {{user.name}}
             </td>

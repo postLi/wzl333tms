@@ -20,7 +20,7 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree @change="getOrgid" :orgid="form.id || form.parentId" />
+              <SelectTree @change="getOrgid" :orgid="form.id || orgid" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType">
@@ -118,7 +118,10 @@
         type:Boolean,
         default:false
       },
-      dotInfo: Object
+      dotInfo: Object,
+      orgid: {
+        type: Number
+      }
     },
     computed: {
       isShow: {
