@@ -46,14 +46,19 @@ function getOrgChild(data, id) {
 /**
  * 获取所有网点的信息，树形结构
  */
-export function getAllOrgInfo(orgid) {
-  return fetch.get('/api-system/system/org/v1/tree').then(res => {
+export function getAllOrgInfo(orgId) {
+  return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
+    const data = res.data
+    return data || []
+  })
+
+  /* return fetch.get('/api-system/system/org/v1/tree').then(res => {
     let data = res.data
     if (orgid) {
       data = getOrgChild(data, orgid)
     }
     return data || []
-  })
+  }) */
 }
 /**
  * 获取指定网点的部门信息
