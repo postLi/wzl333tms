@@ -78,6 +78,7 @@
       </div>
     </div>
     <AddRole :popVisible="addDoRoleVisible" @close="closeAddDot"></AddRole>
+    <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
   </div>
 </template>
 <script>
@@ -85,9 +86,11 @@
   import {fmtDate} from '../../../utils/index'
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
+  import RelationPer from './relationPer'
   export default {
     components: {
-      AddRole
+      AddRole,
+      RelationPer
     },
     computed: {
       ...mapGetters([
@@ -105,6 +108,7 @@
         },
         //加载状态
         loading:true,
+        addRelatVisible:false,
         addDoRoleVisible:false,
         addDoTotVisible:false,
         addPeopleVisible:false,
@@ -200,7 +204,14 @@
         switch (type){
           //新增角色
           case 'addRole':
-            this.addDoRoleVisible = true
+            this.addDoRoleVisible = true,
+              this.addRelatVisible = false
+            // this.isModify = false
+            break;
+          //关联员工
+          case 'relationPer':
+            this.addDoRoleVisible = false,
+              this.addRelatVisible = true
             // this.isModify = false
             break;
           //  新增网点
@@ -270,6 +281,6 @@
   }
 </script>
 <style  type="text/css" lang="scss">
-  @import "index.css";
+  @import "./index.css";
 </style>
 

@@ -160,8 +160,8 @@
 
         </div>
       </div>
-      <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg(getOrgId)" :orgid="getOrgId || otherinfo.orgid" :popVisible="addDoTotVisible" @close="closeAddDot" />
-      <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
+      <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId" @success="fetchOrgId(getOrgId)" />
     </div>
   </div>
 </template>

@@ -41,12 +41,13 @@
 }
 /*头部输入框*/
 /*中部树形*/
-/*.add-role-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{*/
-  /*!*background: lightpink;*!*/
-/*}*/
-/*.el-tree-node__content:hover {*/
-  /*background-color: #f5f7fa;*/
-/*}*/
+.add-role-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+  background: rgb(195,232,255);
+}
+
+.el-tree-node__content:hover {
+  background-color: rgb(195,232,255);
+}
 /*.add-role-tree .el-tree .el-tree-node:first-of-type > div.el-tree-node__content{*/
 /*border-top:1px solid #b0d1e9;*/
 /*border-bottom:1px solid #cddde9;*/
@@ -56,6 +57,7 @@
 }
 .add-role-tree .el-tree .el-tree-node__label{
   color: #666;
+  font-size: 14px;
 }
 
 

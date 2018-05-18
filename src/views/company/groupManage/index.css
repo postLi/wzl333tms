@@ -49,6 +49,9 @@ background-color: rgb(195,232,255);
 .side_left .el-tree-node__content:visited {
   background-color: rgb(195,232,255);
 }
+.side_left .add-role-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+  background: lightpink;
+}
 
 /*右侧栏*/
 .side_right {
@@ -118,6 +121,24 @@ background-color: rgb(195,232,255);
   margin-top: -5px;
   padding-left: 520px;
 }
+/*分页*/
+.Pagination{
+  float:  right;
+}
+.Pagination .user-length{
+  position: relative;
+  top: 7px;
+  padding-right: 15px;
+  color: #333;
+  font-size: 14px;
+}
+.Pagination .tms-pagenation .el-select .el-input{
+  margin-right: 0;
+}
+.Pagination .tms-pagination__sizes .el-input el-input--suffix .el-input__inner{
+  margin-top: -11px
+}
+/*分页*/
 .btns_box img{
   position: relative;
   top: 1px;
@@ -156,24 +177,7 @@ background-color: rgb(195,232,255);
   font-size: 14px;
 }
 /*表格内容*/
-/*分页*/
-.Pagination{
-  float:  right;
-}
-.Pagination .user-length{
-  position: relative;
-  top: 7px;
-  padding-right: 15px;
-  color: #333;
-  font-size: 14px;
-}
-.Pagination .tms-pagenation .el-select .el-input{
-  margin-right: 0;
-}
-.Pagination .tms-pagination__sizes .el-input el-input--suffix .el-input__inner{
-  margin-top: -11px
-}
-/*分页*/
+
 
 /*其他**/
 
