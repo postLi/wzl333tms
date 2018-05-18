@@ -40,11 +40,14 @@
   margin-left: 13px;
 }
 side_left .el-tree-node__content:hover{
-  background: #c3e8ff;;
+  background: rgb(195,232,255);
 }
 
 .side_left .el-tree-node__content:hover {
-background-color: #f5f7fa;
+background-color: rgb(195,232,255);
+}
+.side_left .el-tree-node__content:visited {
+  background-color: rgb(195,232,255);
 }
 
 /*右侧栏*/
