@@ -27,7 +27,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属网点" :label-width="formLabelWidth">
-          <SelectTree @change="getOrgid" :orgid="this.form.orgid" />
+          <SelectTree @change="getOrgid" :orgid="this.orgid" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
           <el-select multiple v-model="form.rolesId" placeholder="请选择权限">

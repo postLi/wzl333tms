@@ -46,11 +46,20 @@ function getOrgChild(data, id) {
 /**
  * 获取所有网点的信息，树形结构
  */
-export function getAllOrgInfo(orgId) {
-  return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
-    const data = res.data
-    return data || []
-  })
+const LocalAllOrgInfo = {}
+export function getAllOrgInfo(orgId, isRefresh) {
+  // 如果是强制刷新或者无本地缓存则请求服务器
+  if (isRefresh || (!LocalAllOrgInfo[orgId])) {
+    return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
+      const data = res.data || []
+      LocalAllOrgInfo[orgId] = data
+      return data
+    })
+  } else {
+    return new Promise(resolve => {
+      resolve(LocalAllOrgInfo[orgId])
+    })
+  }
 
   /* return fetch.get('/api-system/system/org/v1/tree').then(res => {
     let data = res.data

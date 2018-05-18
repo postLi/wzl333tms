@@ -3,10 +3,32 @@ import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
+// cityData
+import theCityData from '@/vendor/citydata.min.js'
 
 // Mock.setup({
 //   timeout: '350-600'
 // })
+
+Mock.mock(/\/getcity/, 'get', (option) => {
+  const match = option.url.match(/query=([^&]*)&/)
+  const query = decodeURIComponent(match ? match[1] : '').trim().replace(/\+{1,}/g,' ').split(' ')
+  let array = []
+  array = theCityData.filter(el => {
+    return query.every(q => {
+      if (el.name.indexOf(q) !== -1 || el.pinyin.toLowerCase().indexOf(q) !== -1) {
+        return true
+      } else {
+        return false
+      }
+    })
+  })
+
+  return {
+    status: 200,
+    data: array.slice(0, 50)
+  }
+})
 
 // 登录相关
 // Mock.mock(/\/login\/login/, 'post', loginAPI.loginByUsername)
