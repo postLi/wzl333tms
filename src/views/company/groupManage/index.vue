@@ -86,7 +86,8 @@
               </div>
               <div class="Pagination ">
                 <div class="block">
-                  共计:{{ usersArr.length }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
+                  <span>共计:{{ usersArr.length }}</span>
+                   <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
 
                 </div>
               </div>

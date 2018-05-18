@@ -88,7 +88,6 @@ side_left .el-tree-node__content:hover{
 
 .btns_box_right{
   display: inline-block;
-  margin-left: 360px;
   font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
@@ -96,6 +95,7 @@ side_left .el-tree-node__content:hover{
   letter-spacing: 2px;
   color: #333;
   margin-top: -5px;
+  padding-left: 520px;
 }
 .btns_box img{
   position: relative;
@@ -138,5 +138,9 @@ side_left .el-tree-node__content:hover{
 /*分页*/
 .Pagination{
   float:  right;
+}
+.Pagination span{
+  position: relative;
+  top: 7px;
 }
 /*分页*/
