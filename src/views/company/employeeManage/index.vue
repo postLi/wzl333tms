@@ -92,9 +92,13 @@
 
             <div class="info_news_footer">共计:{{ usersArr.length }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div> </div>    
         </div>
-        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" />
-        <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
-        <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" />
+        <transition name="slideInRight">
+            <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" v-if="showAddEmployeer" />
+        </transition>
+        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" v-if="showTableSetup" />
+        <transition name="slideInRight">
+            <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" v-if="showSetAuth" />
+        </transition>
     </div>
 </template>
 
@@ -138,8 +142,11 @@ export default{
             btnsize: 'small',
             // 各个弹窗状态更改
             setupTableVisible: false,
-            AddEmployeerVisible: false,
+            AddEmployeerVisible: true,
             SetAuthVisible: false,
+            showTableSetup: false,
+            showSetAuth: false,
+            showAddEmployeer: false,
             searchForm: {
                 name: '',
                 pageSize: 100,
@@ -244,18 +251,21 @@ export default{
         },
         // 设置表格
         setTable () {
+            this.showTableSetup = true
             this.setupTableVisible = true
         },
         closeSetupTable () {
             this.setupTableVisible = false
         },
         openAddEmployeer () {
+            this.showAddEmployeer = true
             this.AddEmployeerVisible = true
         },
         closeAddEmployeer () {
             this.AddEmployeerVisible = false
         },
         openAuth () {
+            this.showSetAuth = true            
             this.SetAuthVisible = true
         },
         closeAuth () {

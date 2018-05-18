@@ -28,7 +28,10 @@ export default {
       hidden: false,
       name: '客户管理',
       component: _import('company/customerManage/index'),
-      meta: { title: '客户管理', stitle: '客户', noCache: true }
+      // redirect: '/company/customerManage/sender',
+      meta: { title: '客户管理', stitle: '客户', noCache: true },
+      tab: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender'), meta: { title: '发货人', stitle: '权限', noCache: true }},
+      { path: '/company/customerManage/receiver', hidden: false, name: '收货人', component: _import('company/customerManage/receiver'), meta: { title: '收货人', stitle: '权限', noCache: true }}]
     },
     {
       path: '/company/driverManage',

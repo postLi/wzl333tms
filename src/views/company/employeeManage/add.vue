@@ -39,6 +39,9 @@
             <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="suozaidi" :label-width="formLabelWidth">
+          <SelectCity @change="getCityInfo" />
+        </el-form-item>
       </el-form>
       <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
     </template>
@@ -53,12 +56,14 @@ import { validateMobile, isvalidUsername }  from '@/utils/validate'
 import { postEmployeer, putEmployeer,  getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 import SelectTree from '@/components/selectTree/index'
+import SelectCity from '@/components/selectCity/index'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
-    SelectTree
+    SelectTree,
+    SelectCity
   },
   props: {
     popVisible: {
@@ -187,6 +192,9 @@ export default {
     }
   },
   methods: {
+    getCityInfo(city){
+      console.log("city:", city)
+    },
     initInfo () {
       this.loading = true
       return Promise.all([getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {

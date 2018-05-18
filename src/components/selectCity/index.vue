@@ -38,7 +38,7 @@ export default {
       })
     },
     handleSelect (info) {
-      this.$emit('change', info)
+      this.$emit('change', info.name)
     }
   }
 }
