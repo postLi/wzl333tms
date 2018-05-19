@@ -6,8 +6,8 @@
           <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard" >
           首页
           </router-link><router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
-            :to="tag.path" :key="tag.path">
-            {{generateTitle(tag.title)}}<span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
+            :to="tag.path" :key="tag.path"> <sapn class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></sapn>
+            {{generateTitle(tag.title)}}<span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
           </router-link>
         </div>
       </div>
@@ -26,9 +26,9 @@
             <i :class="isActive({path:'/dashboard'})?'el-icon-check':''"></i>
             首页
           </router-link>
-          <router-link tag="li" v-for="tag in Array.from(visitedViews)"
+          <router-link :class="isActive(tag)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)"
           :to="tag.path" :key="tag.path">
-          <i :class="isActive(tag)?'el-icon-check':''"></i>
+          <i class="el-icon-check"></i>
           {{generateTitle(tag.title)}}
           </router-link>
         </ul>
@@ -134,6 +134,9 @@ export default {
           }
         }
       })
+    },
+    refreshSelectedTag (tag) {
+      this.$parent.refreshKey()
     },
     closeOthersTags() {
       this.$router.push(this.selectedTag.path)
@@ -251,7 +254,7 @@ export default {
       border-right: 2px solid #b8b8b8;
       color: #495060;
       background: #e6e6e6;
-      padding: 0 20px;
+      padding: 0 30px;
       font-size: 14px;
       &:first-of-type {
         margin-left: 0;
@@ -281,10 +284,17 @@ export default {
 
     .el-icon-check{
       font-size: 6px;
-      color: #2887e0;
       position: absolute;
       top: 9px;
       left: 5px;
+      display: none;
+    }
+    .active-menu{
+      color: #2887e0;
+
+      .el-icon-check{
+        display: block;
+      }
     }
   }
   .contextmenu {
@@ -321,15 +331,36 @@ export default {
 //reset element css of el-icon-close
 .tags-view-wrapper {
   .tags-view-item {
-    .el-icon-close {
-      margin-left: 20px;
-      border-radius: 50%;
-      text-align: center;
-      font-size: 12px;
+    &.active:hover{
+      .el-icon-refresh{
+        display: block;
+      }
+    }
+    &:hover{
+      .el-icon-close {
+        color: #f00;
+        font-weight: bold;
+      }
+    }
+    .el-icon-refresh{
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      display: none;
+
       &:hover{
         color: #2887e0;
         font-weight: bold;
       }
+    }
+    .el-icon-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      margin-left: 10px;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 12px;
     }
   }
 }
