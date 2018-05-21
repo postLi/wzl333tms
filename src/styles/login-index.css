@@ -1,7 +1,13 @@
 
+.login-wrapper{
+  max-width: 1230px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
 .container-left{
   float: left;
-  margin: 280px 200px 200px 350px;
+  margin: 280px 0 200px 0;
 }
 
 .container-left img{
@@ -12,13 +18,15 @@
 
 .container-right{
   float: right;
-  margin: 200px 350px 0px 0px;
+  margin: 200px 0 0px 0px;
 }
 
 .login-container {
-@include relative;
-  height: 100vh;
-  background: url('../assets/login_images/bg.png')
+  position: relative;
+  height: 100%;
+  min-height: 86px;
+  background: url('../assets/login_images/bg.png');
+  overflow: auto;
 }
 
 .login-container input:-webkit-autofill {
@@ -32,15 +40,11 @@
   -webkit-appearance: none;
   border-radius: 0px;
   padding: 12px 5px 12px 15px;
-  color: rgba(153, 153, 153, 0.5);
+  color: rgba(100, 100, 100, 1);
   height: 47px;
 }
 
-.el-input {
-  display: inline-block;
-  height: 47px;
-  width: 95%;
-}
+
 
 .svg-container {
   padding: 6px 5px 6px 15px;
@@ -64,12 +68,17 @@
 
 }
 
-.el-form-item {
-  border: 1px solid #666;
+.login-form .el-form-item {
+  border: 1px solid #aaa;
   background: #fff;
   border-radius: 5px;
   color: #454545;
-  margin-bottom: 18px !important;
+  margin-bottom: 10px !important;
+}
+.login-form .el-input-group__prepend{
+  border-radius: 5px 0 0 5px;
+  border: 0;
+  border-right: 1px solid #dcdfe6;
 }
 
 .login-container .el-form-item:hover{
@@ -129,28 +138,36 @@
 }
 
 /*底部*/
+.button-cont{
+  position: relative;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1230px;
+}
 .button-cont ul{
   display: inline-block;
-  padding-left: 470px;
+  text-align: center;
 }
 
 .button-cont li{
   list-style: none;
-  float: left;
+  display: inline-block;
   font-size: 12px;
   color: #eee;
   padding-right: 38px;
 }
 
 .down{
-  position: relative;
-  bottom: 132px;
-  left: 1420px;
+  position: absolute;
+  bottom: 32px;
+  right: 0;
 }
 
 .down img{
   vertical-align: middle;
   padding-left: 8px;
+  margin-bottom: 3px;
 }
 
 .down p{

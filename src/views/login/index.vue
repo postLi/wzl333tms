@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <div class="login-wrapper clearfix">
     <div class="container-left">
       <img src="../../assets/login_images/left.png" alt="">
     </div>
@@ -23,19 +24,25 @@
           <!--<icon-svg icon-class="yonghuming" />-->
           <!--</span>-->
 
-         <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="on" :placeholder="holder.accNum" @focus='accNum()'   clearable />
+         <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="off" :placeholder="holder.accNum" @focus='accNum()'   clearable >
+          <template slot="prepend">公司ID</template>
+         </el-input>
         </el-form-item>
 
         <el-form-item prop="username">
-          <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="on"
-                    :placeholder="holder.username" @focus='username()' clearable></el-input>
+          <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="off"
+                    :placeholder="holder.username" @focus='username()' clearable>
+                    <template slot="prepend">用户名</template>
+         </el-input>
 
 
         </el-form-item>
 
         <el-form-item prop="password">
-          <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-                    :placeholder="holder.password" @focus='password()' clearable></el-input>
+          <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off"
+                    :placeholder="holder.password" @focus='password()' clearable>
+            <template slot="prepend">密　码</template>          
+          </el-input>
         </el-form-item>
 
         <el-form-item class="login">
@@ -49,6 +56,7 @@
           <p class="rember-tit" @click="forgetPsw">忘记密码</p>
         </div>
       </el-form>
+    </div>
     </div>
     <div class="button-cont">
       <ul>
