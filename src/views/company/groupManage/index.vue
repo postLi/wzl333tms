@@ -168,8 +168,8 @@
 <script type="text/javascript">
     import AddPeople from '../employeeManage/add'
     import AddDot from './addDot'
-    import { getOrgId , isEmpty , fmtDate } from '../../../api/company/groupManage'
-    import { getAllOrgInfo, getGroupName, getAllUser, getAuthInfo, getDepartmentInfo, deleteEmployeer } from '../../../api/company/employeeManage'
+    import { getOrgId } from '../../../api/company/groupManage'
+    import { getAllOrgInfo, getAllUser, deleteEmployeer } from '../../../api/company/employeeManage'
     import { mapGetters } from 'vuex'
     import Pager from '@/components/Pagination/index'
 
@@ -208,10 +208,6 @@
                 desc: ''
               },
                formLabelWidth: '120px',
-                currentPage1: 5,
-                currentPage2: 5,
-                currentPage3: 5,
-                currentPage4: 4,
                 //表格内容
               selected:[],
                 //左边树形初始化数据
@@ -243,7 +239,6 @@
                   remarks:'',
                   //默认值
                   accountStatus:'0',
-                  //id:1,
                   parentId:0
 
                 },
@@ -259,7 +254,6 @@
           //左边树形数据
           fetchOrg() {
             getAllOrgInfo(this.otherinfo.orgid).then(data => {
-
                   this.dataTree = data
                   this.fetchOrgId(this.dataTree[0].id)//根据组织id显示列表
             })
@@ -286,19 +280,8 @@
               this.usersArr = res
             })
           },
-          handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-          },
-          handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-          },
-          //表格内容
-          clickDetails(row, event, column) {
-            this.$refs.multipleTable.toggleRowSelection(row)
-          },
           seleClick(selected) {
             this.selected = selected
-            console.log(this.selected)
           },
           doAction(type){
           //  判断是否有选中项
@@ -315,7 +298,6 @@
               case 'addPeople':
                 this.addPeopleVisible = true
                 this.isModify = false
-                console.log(this.isModify);
                 break;
               //  新增网点
               case 'addNot':
@@ -381,6 +363,9 @@
           },
           handlePageChange (obj) {
             this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
+          },
+          clickDetails(row, event, column){
+            this.$refs.multipleTable.toggleRowSelection(row)
           }
         }
       }

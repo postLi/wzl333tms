@@ -22,8 +22,6 @@ function getPopZindex() {
     return window.tmsPopZindex
   }
 }
-
-
 export default {
   props: {
     width: {
@@ -41,7 +39,7 @@ export default {
   },
   data () {
     return {
-      zIndex: getPopZindex()  
+      zIndex: getPopZindex()
     }
   },
   methods: {
@@ -65,12 +63,12 @@ export default {
   padding-bottom: 76px;
   background: #fff;
   border-radius: 6px 0px 0px 6px;
-  box-shadow: -2px 0px 8px 0px 
+  box-shadow: -2px 0px 8px 0px
     rgba(169, 169, 169, 0.78);
-  
+
   transition: transform 0.6s ease;
   transform: translate(100%,0);
-  
+
 }
 .showPopRight{
   transform: translate(0, 0);

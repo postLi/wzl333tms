@@ -28,7 +28,12 @@
   color: #3e9ff1;
 }
 
-
+.permManage-top .el-input__inner:focus{
+  border-color: #0a84ff;
+}
+.permManage-top .el-input__suffix{
+  right: 60px;
+}
 
 /*表格功能*/
 .side_right_bottom .btns_box{

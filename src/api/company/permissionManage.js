@@ -9,7 +9,7 @@ import fetch from '../../utils/fetch'
  */
 export function getroleInfo(orgid, pageSize, roleName) {
   return fetch.get('/api-system/system/role/v1/',{
-    params:{orgid,roleName,pageSize}
+    params:{ orgid,pageSize,roleName }
   }).then(res=>{
     return res.data?res.data.list:[]
   })
@@ -30,10 +30,14 @@ export function getAuthInfo(orgid, pagesize) {
     return res.data ? res.data.list : []
   })
 }
+
 /**
- * 删除员工
- * @param {*} data 要传输的数据
+ * 查询运营管理树-查询
+ * @param orgid 新增填0，修改对应id
+ * @returns {Promise<AxiosResponse<any>>}
  */
-export function deleteEmployeer(id) {
-  return fetch.delete('/api-system/system/user/v1/' + id)
+export function getauthTreeInfo(id) {
+  return fetch.get('/api-system/system/menu/v1/authTree/' ,+ id).then(res => {
+    return res.data || []
+  })
 }

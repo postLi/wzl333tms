@@ -59,5 +59,9 @@
   color: #666;
   font-size: 14px;
 }
-
-
+.add-role-tree .el-tree--highlight-current > .el-tree-node__content{
+  background: #333;
+}
+.add-role-tree .el-checkbox__inner::before {
+  border-bottom: 5px solid #333;
+}

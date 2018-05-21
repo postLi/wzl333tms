@@ -1,9 +1,9 @@
 <template>
-  <div class="permManage">
+  <div class="permManage" v-loading="loading">
     <div class="permManage-top">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="角色名称：">
-          <el-input v-model="formInline.user" placeholder=""></el-input>
+          <el-input v-model="formInline.user" placeholder="" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -77,24 +77,27 @@
 
       </div>
     </div>
-    <AddRole :popVisible="addDoRoleVisible" @close="closeAddDot"></AddRole>
+    <AddRole :dotInfo='getTreeArr' :popVisible="addDoRoleVisible" @close="closeAddRole" :isModify="isModify"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
+    <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDot"></DepMaintain>-->
   </div>
 </template>
 <script>
-  import { getroleInfo , getAuthInfo , deleteEmployeer } from '../../../api/company/permissionManage'
-  import {fmtDate} from '../../../utils/index'
+  import { getAuthInfo ,getauthTreeInfo  } from '../../../api/company/permissionManage'
+  import { deleteEmployeer } from '../../../api/company/employeeManage'
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
+  import DepMaintain from './depMaintain'
   export default {
     components: {
       AddRole,
-      RelationPer
+      RelationPer,
+      DepMaintain
     },
     computed: {
       ...mapGetters([
-        ' otherinfo '
+        'otherinfo'
       ])
     },
     created() {
@@ -110,27 +113,15 @@
         loading:true,
         addRelatVisible:false,
         addDoRoleVisible:false,
+        adddepMaintainisible:false,
         addDoTotVisible:false,
+
         addPeopleVisible:false,
         usersArr: [],
+        getTreeArr:[],
         //
         isModify: false,
-        //新建网点
-        ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
         formLabelWidth: '120px',
-        currentPage1: 5,
-        currentPage2: 5,
-        currentPage3: 5,
-        currentPage4: 4,
         //表格内容
         selected:[],
         //左边树形初始化数据
@@ -141,55 +132,24 @@
         },
         //左边树形初始化数据
         getOrgId: '',//根据组织id获取列表
-        form: {
-          orgName: '',
-          orgType:1,
-          status:32,
-          responsibleTelephone: '',
-          // creatTime:'',
-          responsibleName: '',
-          city:'',
-          serviceName:'',
-          parentName:'',//上级网点
-          servicePhone:'',
-          detailedAddr:'',
-          networkCode:'',//网点代码
-          collectionFee:'',//代收款额度
-          benchmark:'',
-          warningQuota:'',
-          lockMachineQuota:'',
-          manageType:3,
-          remarks:'',
-          //默认值
-          accountStatus:'0',
-          //id:1,
-          parentId:0
-
-        },
+        role_id:0,
         // 缓存节点数据
         orgInfoCache: {}
       }
 
     },
     mounted() {
-      Promise.all([getAuthInfo(1),this.roleInfo(1, 10)]).then( resArr => {
+      Promise.all([getAuthInfo(this.otherinfo.orgid),getauthTreeInfo(this.role_id)]).then( resArr => {
+        this.loading = false
         this.usersArr = resArr[0]
+        this.getTreeArr = resArr[1]
       })
 
     },
     methods: {
 
-      roleInfo(orgid, pageSize, roleName){
-        return getroleInfo(orgid, pageSize || '', roleName || '')
-      },
-
-      //表格内容
-      clickDetails(row, event, column) {
-        this.$refs.multipleTable.toggleRowSelection(row)
-      },
       seleClick(selected) {
         this.selected = selected
-        console.log(this.selected)
       },
       doAction(type){
         //  判断是否有选中项
@@ -204,53 +164,66 @@
         switch (type){
           //新增角色
           case 'addRole':
-            this.addDoRoleVisible = true,
-              this.addRelatVisible = false
-            // this.isModify = false
+            this.addDoRoleVisible = true
+            this.addRelatVisible = false
+            this.isModify = false
+            break;
+          //修改角色
+          case 'modifyDot':
+            this.addDoRoleVisible = true
+            this.addRelatVisible = false
+            this.isModify = true
             break;
           //关联员工
           case 'relationPer':
             this.addDoRoleVisible = false,
               this.addRelatVisible = true
-            // this.isModify = false
+            this.isModify = false
             break;
           //  新增网点
           case 'addNot':
             this.isModify = false
             this.addDoTotVisible = true
             break;
+          //  部门维护
+          case 'depMaintain':
+            this.isModify = false
+            this.adddepMaintainisible = true
+            break;
           //    删除员工
           case 'deletePeople':
-            let deleteItem = this.selected.length > 1 ? this.selected.length + '名': this.selected[0].roleName
-            let ids =''
-            //删除多个
+            let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].roleName
+            //=>todo 删除多个
+            let ids = ''
             this.selected.map(item => {
               ids += item.id + ','
             })
             ids = ids.slice(0, ids.length - 1)
-            this.$confirm('确定要删除' + deleteItem + '员工吗?' , '提示' , {
-              confirmButtonText:'删除',
-              cancelButtonText:'取消',
-              type:'warning'
+            let id = this.selected[0].id
+            this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
             }).then(() => {
               deleteEmployeer(id).then(res => {
                 this.$message({
-                  type:'success',
-                  message:'删除成功'
+                  type: 'success',
+                  message: '删除成功!'
                 })
-                // this.fetchData()
-              }).catch(err => {
+                // this.getAuthInfo()
+              }).catch(err=>{
                 this.$message({
-                  type:'info',
-                  message:'删除失败，原因:'+err.errInfo?err.errorInfo:err
+                  type: 'info',
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
                 })
               })
+
             }).catch(() => {
               this.$message({
-                type:'info',
-                message:'已取消删除'
+                type: 'info',
+                message: '已取消删除'
               })
-            });
+            })
             break;
           //修改网点
           case 'modifyDot':
@@ -263,16 +236,18 @@
       filterTag(value, row) {
         return row.tag === value
       },
+      clickDetails(row, event, column){
+        this.$refs.multipleTable.toggleRowSelection(row)
+      },
       getCheckedKeys() {
         this.getOrgId = this.$refs.tree._data.currentNode.node.data.id
         this.fetchOrgId(this.getOrgId)//根据组织id显示列表
       },
-      //新增网点
-      closeAddDot(){
-        this.addDoTotVisible = false
+      closeAddRole(){
+        this.addDoRoleVisible = false
       },
-      closeAddPeople(){
-        this.addPeopleVisible = false
+      closeAddDot(){
+        this.addRelatVisible = false
       },
       onSubmit() {
         console.log('submit!');

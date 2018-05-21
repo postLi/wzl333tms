@@ -17,7 +17,7 @@
               </div>
               <div class="add-role-tree">
                 <el-tree
-                  :data="data2"
+                  :data="treeData"
                   show-checkbox
                   default-expand-all
                   node-key="id"
@@ -59,16 +59,17 @@
         type:Boolean,
         default:false
       },
-      dotInfo: Object
+      dotInfo: Array
     },
     watch: {
       isModify () {
         if(this.isModify){
-          console.log(this.isModify);
-          this.form = this.dotInfo
+          // this.form = this.dotInfo
           this.popTitle = '修改网点'
+          this.treeData = this.dotInfo
         }else{
-          console.log(this.isModify);
+          this.treeData = this.dotInfo
+          console.log(this.dotInfo);
           this.popTitle = '新增网点'
         }
       }
@@ -85,156 +86,10 @@
     },
     data() {
       return {
-        data2: [{
-          id: 1,
-          label: '一级 1',
-          children: [{
-            id: 4,
-            label: '二级 1-166',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2',
-              children: [{
-                id: 4,
-                label: '二级 1-15',
-                children: [{
-                  id: 9,
-                  label: '三级 1-1-1'
-                }, {
-                  id: 10,
-                  label: '三级 1-1-2',
-                  children: [{
-                    id: 4,
-                    label: '二级 1-1',
-                    children: [{
-                      id: 9,
-                      label: '三级 1-1-1'
-                    }, {
-                      id: 10,
-                      label: '三级 1-1-2'
-                    }]
-                  }]
-                }]
-              }]
-            }]
-          }]
-          ,
-          children: [{
-            id: 4,
-            label: '二级 1-11',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2',
-              children: [{
-                id: 4,
-                label: '二级 1-1',
-                children: [{
-                  id: 9,
-                  label: '三级 1-1-1'
-                }, {
-                  id: 10,
-                  label: '三级 1-1-2'
-                }]
-              }]
-            }]
-          }],
-          children: [{
-            id: 4,
-            label: '1二级 1-11',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2',
-              children: [{
-                id: 4,
-                label: '二级 1-1',
-                children: [{
-                  id: 9,
-                  label: '三级 1-1-1'
-                }, {
-                  id: 10,
-                  label: '三级 1-1-2'
-                }]
-              }]
-            }]
-          }],
-          children: [{
-            id: 4,
-            label: '4级 1-11',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2',
-              children: [{
-                id: 4,
-                label: '二级 1-1',
-                children: [{
-                  id: 9,
-                  label: '三级 1-1-1'
-                }, {
-                  id: 10,
-                  label: '三级 1-1-2'
-                }]
-              }]
-            }]
-          }],
-          children: [{
-            id: 4,
-            label: '二级 1-11',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2',
-              children: [{
-                id: 4,
-                label: '二级 1-1',
-                children: [{
-                  id: 9,
-                  label: '三级 1-1-1'
-                }, {
-                  id: 10,
-                  label: '三级 1-1-2'
-                }]
-              }]
-            }]
-          }],
-
-        }, {
-          id: 2,
-          label: '一级 2',
-          children: [{
-            id: 5,
-            label: '二级 2-1'
-          }, {
-            id: 6,
-            label: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }],
+        treeData: [],
         defaultProps: {
           children: 'children',
-          label: 'label'
+          label: 'name'
         },
         formInline: {
           user: '',
@@ -248,6 +103,9 @@
       }
     },
     mounted(){
+
+      this.treeData = this.dotInfo
+      console.log(this.treeData)
       // this.creatTime = getNowFormatDate
     },
     methods: {
@@ -273,15 +131,13 @@
         this.$refs.tree.setCheckedKeys([]);
       },
       closeMe(done){
-        done()
-        // this.$emit('close')
-        // this.$refs['ruleForm'].resetFields()
-        // if(typeof done === 'function'){
-        //   done()
-
-
-        //   console.log(9999);
-        // }
+        // done()
+        this.$emit('close')
+        this.$refs['ruleForm'].resetFields()
+        if(typeof done === 'function'){
+          done()
+          console.log(9999);
+        }
       },
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
