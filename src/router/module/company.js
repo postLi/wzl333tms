@@ -1,6 +1,12 @@
 import Layout from '@/views/layout/Layout'
 const _import = require('../_import_' + process.env.NODE_ENV)
 
+/**
+ * 配置说明
+ * icon 图标名称，对应src/icon/svg下的图标名字
+ * hidden 是否隐藏不显示
+ * meta 路由相关信息 ： stitle为边栏折叠时显示， noCache是否加入到路由的缓存列表里， istab 是否为页面内的tab切换
+ */
 export default {
   path: '/company',
   component: Layout,
@@ -30,8 +36,8 @@ export default {
       component: _import('company/customerManage/index'),
       // redirect: '/company/customerManage/sender',
       meta: { title: '客户管理', stitle: '客户', noCache: true },
-      tab: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender'), meta: { title: '发货人', stitle: '权限', noCache: true }},
-      { path: '/company/customerManage/receiver', hidden: false, name: '收货人', component: _import('company/customerManage/receiver'), meta: { title: '收货人', stitle: '权限', noCache: true }}]
+      children: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender/index'), meta: { title: '发货人', noCache: true }},
+      { path: '/company/customerManage/receiver', hidden: false, name: '收货人', component: _import('company/customerManage/receiver/index'), meta: { title: '收货人', noCache: true }}]
     },
     {
       path: '/company/driverManage',

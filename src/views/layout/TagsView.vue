@@ -6,7 +6,7 @@
           <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard" >
           首页
           </router-link><router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
-            :to="tag.path" :key="tag.path"> <sapn class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></sapn>
+            :to="tag.path" :key="tag.path"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span>
             {{generateTitle(tag.title)}}<span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
           </router-link>
         </div>
@@ -82,7 +82,7 @@ export default {
       return title
     },
     generateRoute() {
-      if (this.$route.name && this.$route.name !== '首页') {
+      if (this.$route.name && this.$route.name !== '首页' ) {
         return this.$route
       }
       return false
@@ -98,7 +98,6 @@ export default {
     },
     addViewTags() {
       const route = this.generateRoute()
-      console.log('this.$refs.tag222:',this.$refs.tag)
       
       if (!route) {
         return false

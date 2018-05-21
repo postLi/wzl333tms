@@ -96,7 +96,7 @@ export function getAuthInfo(orgid, pagesize) {
       pageSize: pagesize || 50
     }
   }).then(res => {
-    return res.data ? res.data.list : []
+    return res.data || { total: 0, list: [] }
   })
 }
 
@@ -109,7 +109,7 @@ export function getAllUser(orgid, name, mobilephone, pageSize = 100, pageNum = 1
   return fetch.get('/api-system/system/user/v1/', {
     params: { name, orgid, mobilephone, pageSize, pageNum }
   }).then(res => {
-    return res.data ? res.data.list : []
+    return res.data || { total: 0, list: [] }
   })
 }
 

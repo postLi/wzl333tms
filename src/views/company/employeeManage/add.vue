@@ -39,9 +39,6 @@
             <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="suozaidi" :label-width="formLabelWidth">
-          <SelectCity @change="getCityInfo" />
-        </el-form-item>
       </el-form>
       <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
     </template>
@@ -56,14 +53,12 @@ import { validateMobile, isvalidUsername }  from '@/utils/validate'
 import { postEmployeer, putEmployeer,  getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 import SelectTree from '@/components/selectTree/index'
-import SelectCity from '@/components/selectCity/index'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
-    SelectTree,
-    SelectCity
+    SelectTree
   },
   props: {
     popVisible: {
@@ -163,10 +158,14 @@ export default {
   },
   mounted () {
     this.form.orgid = this.orgid
+    if(!this.inited){
+      this.inited = true
+      this.initInfo()
+    }
   },
   watch: {
     popVisible (newVal, oldVal) {
-      if(newVal&&!this.inited){
+      if(!this.inited){
         this.inited = true
         this.initInfo()
       }
@@ -192,14 +191,11 @@ export default {
     }
   },
   methods: {
-    getCityInfo(city){
-      console.log("city:", city)
-    },
     initInfo () {
       this.loading = true
       return Promise.all([getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {
         this.loading = false
-        this.roles = resArr[0]
+        this.roles = resArr[0].list
         this.departments = resArr[1]
       }).catch(err => {
         this.loading = false

@@ -90,12 +90,12 @@
                   </el-table>
             </div>
 
-            <div class="info_news_footer">共计:{{ usersArr.length }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div> </div>    
+            <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div> </div>    
         </div>
         <transition name="slideInRight">
-            <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" v-if="showAddEmployeer" />
+            <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData"  />
         </transition>
-        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" v-if="showTableSetup" />
+        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
         <transition name="slideInRight">
             <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" v-if="showSetAuth" />
         </transition>
@@ -142,7 +142,7 @@ export default{
             btnsize: 'small',
             // 各个弹窗状态更改
             setupTableVisible: false,
-            AddEmployeerVisible: true,
+            AddEmployeerVisible: false,
             SetAuthVisible: false,
             showTableSetup: false,
             showSetAuth: false,
@@ -156,14 +156,16 @@ export default{
             },
             dialogFormVisible: false,
             // 是否修改员工信息
-            isModify: false
+            isModify: false,
+            total: 0
         }
     },
     mounted () {
         Promise.all([getAllOrgInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
             this.loading = false
             this.groupsArr = resArr[0]
-            this.usersArr = resArr[1]
+            this.usersArr = resArr[1].list
+            this.total = resArr[1].total
         })
     },
     methods: {
@@ -281,7 +283,8 @@ export default{
             this.loading = true
             this.fetchAllUser(orgid, name, mobile).then(data => {
                 this.loading = false
-                this.usersArr = data
+                this.usersArr = data.list
+                this.total = data.total
             })
         },
         // 获取组件返回的搜索参数

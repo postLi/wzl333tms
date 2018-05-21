@@ -74,17 +74,23 @@ export default {
   },
   watch: {
     popVisible (newVal){
-      if(newVal &&  !this.inited){
+      if(!this.inited){
         this.inited = true
         this.initInfo()
       }
     }
   },
+  mounted () {
+    if(!this.inited){
+        this.inited = true
+        this.initInfo()
+      }
+  },
   methods: {
     initInfo () {
       this.loading = true
       return getAuthInfo(this.otherinfo.companyId).then(res => {
-        this.roles = res
+        this.roles = res.list
         this.loading = false
       }).catch(err => {
         this.loading = false

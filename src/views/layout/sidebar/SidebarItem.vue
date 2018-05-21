@@ -1,72 +1,65 @@
 <template>
-    <ul class="sidebar-menu" :default-active="$route.path"  ref="sidebarMenu">
-      <SidebarItemNode
+    <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
+      <li
         class="menu-item"
         v-for="(route, index) in routes"
         :key="index"
         v-if="!route.hidden"
-        @removeOtherOpenFolder="removeOtherOpenFolder"
-        ref="sidebarMenuItem"
-        :routes="route">
-      </SidebarItemNode>
-    <!-- <el-menu 
-      class="sidebar-menu" 
-      mode="vertical" 
-      theme="dark" 
-      :default-active="$route.path" 
-      :collapse="!sidebar.opened">
-
-    <template v-for="item in routes">
-      <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="item.path" :key="item.name">
-        <el-menu-item :index="item.path">
-          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.children[0].meta.title}}</span>
-          <span class="sidebar-nav-stitle">{{item.children[0].meta.stitle || item.children[0].meta.title}}</span>
-        </el-menu-item>
-      </router-link>
-      
-        <el-menu-item v-if="!item.hidden&&(!item.children || item.children.length===0)" :index="item.path" :key="item.name">
-          <router-link :to="item.path" >
-          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.meta.title}}</span>
-          <span class="sidebar-nav-stitle">{{item.meta.stitle || item.meta.title}}</span>
-          </router-link>
-        </el-menu-item>
-      
-      <el-submenu :index="item.name" v-if="!item.noDropdown&&!item.hidden&&item.children&&item.children.length" class="sidebar-sub-menu" :key="item.name">
-        <template slot="title">
-          <router-link :to="item.path" :key="item.name">
-          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{item.meta.title}}</span>
-          <span class="sidebar-nav-stitle">{{item.meta.stitle || item.meta.title}}</span>
-          </router-link>
+        :class="{'is-active': route.path === $route.path}" 
+        ref="sidebaritem"
+        >
+        <!-- 有子菜单但不展示 && 没有子菜单 -->
+        <router-link v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name" >
+          <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
+        </router-link>
+        <!-- 带子菜单展示 -->
+        <template v-if="isFolder(route)">
+          <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
+            <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
+            <i class="el-icon-caret-bottom dropdownIcon" ></i>
+           </span>
+           <ul class='sidebar-submenu' @click.stop>
+            <!-- 暂时只展开二级菜单 -->
+            <li v-for="(item, index) in route.children"
+              v-if="!item.hidden"
+              :key="index"
+              :class="{'is-active': item.path === $route.path}"
+              class="submenu-item">
+              <router-link :to="item.path" :index="item.path" :key="item.name">
+                <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{ item.meta.title }}</span>
+              </router-link>
+            </li>
+          </ul>
         </template>
-        <template v-for="child in item.children" v-if='!child.hidden'>
-          <sidebar-item class='menu-indent' v-if='child.children&&child.children.length>0' :routes='[child]' :key="child.name"> </sidebar-item>
-          <router-link v-else class="menu-indent" :to="child.path" :key="child.name">
-            <el-menu-item :index="child.path">
-              {{child.meta.title}}
-            </el-menu-item>
-          </router-link>
-        </template>
-      </el-submenu>
-    </template>
-    </el-menu> -->
+        <!-- 带tab菜单展示 -->
+        <template v-if="route.tab">
+          <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
+            <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
+            <i class="el-icon-caret-bottom dropdownIcon" ></i>
+           </span>
+           <ul class='sidebar-submenu' @click.stop>
+            <!-- 暂时只展开二级菜单 -->
+            <li v-for="(item, index) in route.tab"
+              v-if="!item.hidden"
+              :key="index"
+              :path="item.path"
+              :class="{'is-active': item.path === $route.path}"
+              class="submenu-item submenu-item-tab">
+                <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{ item.meta.title }}</span>
+            </li>
+          </ul>
+        </template>  
+      </li>
     </ul>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import SidebarItemNode from './SidebarItemNode'
-
-function hasParent(el,clsName) {
-  if(el.parentNode.classList.contain(clsName)){
-    el.parentNode.classList.add('clsName')
-  }
-}
+import { closest } from '@/utils/index'
+import { eventBus } from '@/eventBus'
 
 export default {
   name: 'SidebarItem',
-  components: {
-    SidebarItemNode
-  },
   props: {
     routes: {
       type: Array
@@ -74,12 +67,18 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar',
-      'sidebarRouters',
-      'permission_routers'
+      'sidebar'
     ])
   },
+  data () {
+    return {
+      open: true
+    }
+  },
   methods: {
+    isFolder (item) {
+      return item.children && item.children.length
+    },
     removeOtherOpenFolder () {
       let childRef = Array.isArray(this.$refs.sidebarMenuItem) ? this.$refs.sidebarMenuItem : [this.$refs.sidebarMenuItem]
       childRef.map( el =>{
@@ -87,6 +86,20 @@ export default {
           el.open = false
         }
       })
+    },
+    isOpen (route) {
+      return true
+    },
+    toggle (event) {
+      const el = closest(event.target, 'li')
+      el.classList.toggle('isOpen')
+    },
+    showTab (event) {
+      let el = closest(event.target, 'li.submenu-item-tab')
+      
+      if(el){
+        eventBus.$emit('changeTab', el.path)        
+      }
     }
   }
 }
@@ -122,6 +135,10 @@ export default {
   }
   .isOpen{
     height: auto;
+    .dropdownIcon{
+      transform-origin: center center;
+      transform: rotate(180deg);
+    }
   }
 
   .sidebar-nav-title{
@@ -149,7 +166,10 @@ export default {
     }
   }
 
-  
+  .sidebar_menu_toggle, .submenu-item-tab{
+    cursor: pointer;
+    display: block;
+  }
 
 
   .menu-item:focus, .menu-item:hover, .sidebar-nav-title:hover{
@@ -166,6 +186,7 @@ export default {
     top: 12px;
     right: 5px;
     cursor: pointer;
+    transition: transform .6s ease;
   }
 }
 .hideSidebar .sidebar-menu{
@@ -189,6 +210,7 @@ export default {
     .sidebar-submenu{
       display: none;
     }
+    
   }
   .menu-item:hover{
     .sidebar-submenu{
