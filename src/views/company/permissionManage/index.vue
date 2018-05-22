@@ -18,15 +18,13 @@
             <img src="../../../assets/icom/xinzeng.png" alt="">
             <el-button type="primary" plain @click="doAction('addRole')">新增角色</el-button>
             <img src="../../../assets/icom/shanchu.png" alt="">
-            <el-button type="primary" plain @click="doAction('modifyNot')">修改</el-button>
+            <el-button type="primary" plain @click="doAction('roleNot')">修改</el-button>
             <img src="../../../assets/icom/shanchu.png" alt="">
             <el-button type="primary" plain @click="doAction('deletePeople')">删除</el-button>
             <img src="../../../assets/icom/shanchu.png" alt="">
             <el-button type="primary" plain @click="doAction('reference')">参照</el-button>
             <img src="../../../assets/icom/shanchu.png" alt="">
             <el-button type="primary" plain @click="doAction('relationPer')">关联员工 </el-button>
-            <img src="../../../assets/icom/xiugai.png" alt="">
-            <el-button type="primary" plain @click="doAction('modifyDot')">修改网点</el-button>
             <img src="../../../assets/icom/xinzengwangdian.png" alt="">
             <el-button type="primary" plain @click="doAction('depMaintain')" >部门维护</el-button>
           </div>
@@ -34,7 +32,6 @@
         <!--表格功能-->
         <!--表格内容-->
         <div class="info_news">
-
           <el-table
             ref="multipleTable"
             :data="usersArr"
@@ -77,14 +74,14 @@
 
       </div>
     </div>
-    <AddRole :dotInfo='getTreeArr' :popVisible="addDoRoleVisible" @close="closeAddRole" :isModify="isModify"></AddRole>
+    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :popVisible="addDoRoleVisible" @close="closeAddRole" ></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
     <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDot"></DepMaintain>-->
   </div>
 </template>
 <script>
-  import { getAuthInfo ,getauthTreeInfo  } from '../../../api/company/permissionManage'
-  import { deleteEmployeer } from '../../../api/company/employeeManage'
+  import { getAuthInfo , getauthTreeInfo } from '@/api/company/permissionManage'
+  import { deleteEmployeer } from '@/api/company/employeeManage'
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
@@ -101,7 +98,6 @@
       ])
     },
     created() {
-      //打印下获得数据结果
       // console.log(this.otherinfo)
     },
     data() {
@@ -115,15 +111,13 @@
         addDoRoleVisible:false,
         adddepMaintainisible:false,
         addDoTotVisible:false,
-
         addPeopleVisible:false,
-        usersArr: [],
-        getTreeArr:[],
-        //
         isModify: false,
         formLabelWidth: '120px',
         //表格内容
         selected:[],
+        usersArr: [],
+        getTreeArr:[],
         //左边树形初始化数据
         dataTree:[],
         defaultProps: {
@@ -136,7 +130,6 @@
         // 缓存节点数据
         orgInfoCache: {}
       }
-
     },
     mounted() {
       Promise.all([getAuthInfo(this.otherinfo.orgid),getauthTreeInfo(this.role_id)]).then( resArr => {
@@ -147,7 +140,6 @@
 
     },
     methods: {
-
       seleClick(selected) {
         this.selected = selected
       },
@@ -167,23 +159,20 @@
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = false
+            console.log(this.isModify + "163");
             break;
           //修改角色
-          case 'modifyDot':
+          case 'roleNot':
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = true
+
             break;
           //关联员工
           case 'relationPer':
-            this.addDoRoleVisible = false,
-              this.addRelatVisible = true
+            this.addDoRoleVisible = false
+            this.addRelatVisible = true
             this.isModify = false
-            break;
-          //  新增网点
-          case 'addNot':
-            this.isModify = false
-            this.addDoTotVisible = true
             break;
           //  部门维护
           case 'depMaintain':

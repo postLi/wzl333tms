@@ -63,5 +63,5 @@
   background: #333;
 }
 .add-role-tree .el-checkbox__inner::before {
-  border-bottom: 5px solid #333;
+  /*border-bottom: 5px solid #333;*/
 }

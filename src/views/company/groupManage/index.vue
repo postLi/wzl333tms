@@ -85,7 +85,7 @@
             </div>
             <div class="Pagination ">
               <div class="block">
-                <span class="user-length">共计:{{ usersArr.length }}</span>
+                <span class="user-length">共计:{{ total }}</span>
                 <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
 
               </div>
@@ -194,6 +194,7 @@
               addDoTotVisible:false,
               addPeopleVisible:false,
               usersArr: [],
+              total: 0,
               //
               isModify: false,
               //新建网点
@@ -277,7 +278,8 @@
           },
           fetchAllUsers (orgid, name = "", mobile = "", pageSize = 100, pageNum = 1) {
             getAllUser(orgid, name, mobile , pageSize, pageNum).then(res=>{
-              this.usersArr = res
+              this.usersArr = res.list
+              this.total = res.total
             })
           },
           seleClick(selected) {
@@ -352,7 +354,6 @@
             return row.tag === value
           },
           getCheckedKeys() {
-            this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)//根据组织id显示列表
           },
           //新增网点
           closeAddDot(){
