@@ -1,9 +1,9 @@
 <template>
   <div class="permManage" v-loading="loading">
     <div class="permManage-top">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form :inline="true" :model="usersArr" class="demo-form-inline">
         <el-form-item label="角色名称：">
-          <el-input v-model="formInline.user" placeholder="" clearable></el-input>
+          <el-input v-model="usersArr.roleName" placeholder="" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -102,8 +102,9 @@
     },
     data() {
       return {
-        formInline: {
-          user: ''
+        searchDate: {
+          roleName: '',
+          id:''
         },
         //加载状态
         loading:true,
@@ -137,7 +138,6 @@
         this.usersArr = resArr[0]
         this.getTreeArr = resArr[1]
       })
-
     },
     methods: {
       seleClick(selected) {
@@ -239,6 +239,7 @@
         this.addRelatVisible = false
       },
       onSubmit() {
+        console.log(this.searchDate.roleName)
         console.log('submit!');
       }
     }
