@@ -1,34 +1,58 @@
 import fetch from '../../utils/fetch'
 
 /**
- * 根据网点id查询该公司的所有角色信息
- * @param orgid
- * @param roleName
- * @param pageSize
- * @returns {Promise<AxiosResponse<any>>}
+ * 插入角色信息
+ * data 要上传的信息
+  "menusId": [
+    0
+  ],
+  "remark": "string",
+  "roleName": "string",
  */
-export function getroleInfo(orgid, pageSize, roleName) {
-  return fetch.get('/api-system/system/role/v1/',{
-    params:{ orgid,pageSize,roleName }
-  }).then(res=>{
-    return res.data?res.data.list:[]
+export function postRoleInfo(data) {
+  return fetch.post('/api-system/system/role/v1/', data).then(res => {
+    return res.data ? res.data : {}
   })
 }
 /**
- * 获取指定网点的权限信息
+ * 修改角色信息
+ * data 要上传的信息
+ *id: 1,
+  "menusId": [
+    0
+  ],
+  "remark": "string",
+  "roleName": "string",
+ */
+export function putRoleInfo(data) {
+  return fetch.put('/api-system/system/role/v1/', data).then(res => {
+    return res.data ? res.data : {}
+  })
+}
+/**
+ * 设置角色不可用
+ * id 要设置失效的id
+ */
+export function deleteRoleInfo(id) {
+  return fetch.delete('/api-system/system/role/v1/' + id).then(res => {
+    return res.data ? res.data : {}
+  })
+}
+/**
+ * 根据网点id查询该公司的所有角色信息
  * @param {*} orgid 网点id
  * @param {*} pagesize 获取权限列表的长度
  */
-export function getAuthInfo(orgid,roleName,pageNum, pagesize) {
+export function getAuthInfo(orgid, roleName, pageNum, pagesize) {
   return fetch.get('/api-system/system/role/v1/', {
     params: {
       orgid,
-      roleName: roleName||'',
-      pageNum:pageNum||1,
+      roleName: roleName || '',
+      pageNum: pageNum || 1,
       pageSize: pagesize || 50
     }
   }).then(res => {
-    return res.data ? res.data.list : []
+    return res.data ? res.data : {}
   })
 }
 
@@ -38,7 +62,11 @@ export function getAuthInfo(orgid,roleName,pageNum, pagesize) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function getauthTreeInfo(id) {
-  return fetch.get('/api-system/system/menu/v1/authTree/' ,+ id).then(res => {
+  return fetch.get('/api-system/system/menu/v1/authTree/',{
+    params: {
+      role_id: id
+    }
+  }).then(res => {
     return res.data || []
   })
 }

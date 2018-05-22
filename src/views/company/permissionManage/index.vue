@@ -133,9 +133,9 @@
       }
     },
     mounted() {
-      Promise.all([getAuthInfo(this.otherinfo.orgid),getauthTreeInfo(this.role_id)]).then( resArr => {
+      Promise.all([getAuthInfo(this.otherinfo.orgid), getauthTreeInfo(this.role_id)]).then( resArr => {
         this.loading = false
-        this.usersArr = resArr[0]
+        this.usersArr = resArr[0].list
         this.getTreeArr = resArr[1]
       })
     },
