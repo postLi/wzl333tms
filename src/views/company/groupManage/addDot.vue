@@ -20,7 +20,7 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree @change="getOrgid" :orgid="form.id || orgid" />
+              <SelectTree @change="getOrgid" :disabled="isModify" :orgid="isModify ?　companyId : (form.id || orgid)" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType">
@@ -28,8 +28,8 @@
                 <el-option label="加盟" :value="4"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
-              <el-input v-model="form.creatTime"></el-input>
+            <el-form-item label="创建时间" v-if="isModify" :label-width="formLabelWidth">
+              <el-input :disabled="isModify" :value="form.createTime ? new Date(form.createTime).toLocaleString() : ''"></el-input>
             </el-form-item>
             <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
               <el-input v-model="form.responsibleName" auto-complete="off"></el-input>
@@ -56,7 +56,7 @@
               <el-input v-model="form.collectionFee" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="提现基准" :label-width="formLabelWidth" prop="benchmark">
-              <el-input v-model="form.benchmark" auto-complete="off"></el-input>
+              <el-input v-model="form.benchmark" :disabled="isModify"  auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth" prop="warningQuota">
               <el-input v-model="form.warningQuota" auto-complete="off"></el-input>
@@ -65,8 +65,8 @@
               <el-input v-model="form.lockMachineQuota" auto-complete="off"></el-input>
             </el-form-item>
 
-            <div class="ad-add-dot">
-              <el-checkbox v-model="checked">开通管理员账号</el-checkbox>
+            <div class="ad-add-dot" v-if="!isModify">
+              <el-checkbox checked :true-label="0" :false-label="1" v-model="form.accountStatus">开通管理员账号</el-checkbox>
               <p>登录账号：网点名称 密码：123456</p>
             </div>
 
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-  import { postOrgSaveDate} from '../../../api/company/groupManage'
+  import { postOrgSaveDate, putOrgData } from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
   import SelectCity from '@/components/selectCity/index'
@@ -121,6 +121,9 @@
       dotInfo: Object,
       orgid: {
         type: Number
+      },
+      companyId: {
+        type: Number
       }
     },
     computed: {
@@ -135,7 +138,9 @@
     },
     watch: {
       dotInfo (newVal) {
-        this.form = Object.assign({}, this.dotInfo)
+        if(this.isModify){
+          this.form = Object.assign({}, this.dotInfo)      
+        }
       },
       isModify (newVal) {
         if(newVal){
@@ -149,6 +154,7 @@
           if(this.form.id){
             delete  this.form.id
           }
+          delete this.form.createTime
           this.form.orgType = 1
           this.form.status = 32
           this.form.manageType = 3
@@ -159,9 +165,7 @@
     data() {
       //REGEX
       var orgName = (rule, value, callback) => {
-        if ( this.form.orgName == value ) {
-          return callback(new Error('网点名称不能有重复哦！'))
-        } else if (!value) {
+        if (!value) {
           return callback(new Error('请输入网点名称'))
         } else {
           callback()
@@ -223,7 +227,7 @@
           orgType:1,
           status:32,
           responsibleTelephone: '',
-          // creatTime:'',
+          // createTime:'',
           responsibleName: '',
           city:'',
           serviceName:'',
@@ -238,9 +242,10 @@
           manageType:3,
           remarks:'',
           //默认值
-          accountStatus:'0',
+          accountStatus: 0,
           //id:1,
           parentId:0
+
 
         },
         rules: {
@@ -323,8 +328,13 @@
           if(valid){
             console.log(JSON.stringify(this.form));
             this.loading = true
-            postOrgSaveDate(this.form).then(res=>{
-              console.log(res);
+            let reqPromise
+            if(this.isModify){
+              reqPromise = putOrgData(this.form)
+            } else {
+              reqPromise = postOrgSaveDate(this.form)
+            }
+            reqPromise.then(res=>{
               this.$alert('保存成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {

@@ -90,7 +90,7 @@
                   </el-table>
             </div>
 
-            <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div> </div>    
+            <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
         </div>
         <transition name="slideInRight">
             <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData"  />

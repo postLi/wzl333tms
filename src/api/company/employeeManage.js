@@ -13,7 +13,7 @@ export function getGroupName(orgid) {
  * 过滤树中的某个节点及其子节点数据
  * @param {*} data 数组结构的树
  */
-function getOrgChild(data, id) {
+/* function getOrgChild(data, id) {
   // 1.遍历数据的第一层
   const res = data.filter(el => {
     if (el.id === id) {
@@ -42,7 +42,7 @@ function getOrgChild(data, id) {
       return []
     }
   }
-}
+} */
 /**
  * 获取所有网点的信息，树形结构
  */

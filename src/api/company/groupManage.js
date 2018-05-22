@@ -20,3 +20,9 @@ export function getOrgId(id) {
 export function postOrgSaveDate(data) {
   return fetch.post('/api-system/system/org/v1/save/', data)
 }
+/**
+ * 修改组织机构数据
+ */
+export function putOrgData(data) {
+  return fetch.put('/api-system/system/org/v1/edit/', data)
+}

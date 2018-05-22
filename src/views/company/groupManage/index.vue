@@ -16,8 +16,8 @@
 
       <div class="side_right">
         <div class="side_right_top">
-          <el-form :model="form" :rules="rules" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-            <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
+          <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+            <el-form-item label="网点名称" :label-width="formLabelWidth" >
               <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
@@ -26,31 +26,31 @@
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
               <el-input :value='form.status ==="32" ? "有效" : "有效"' disabled></el-input>
             </el-form-item>
-            <el-form-item label="客服人员" :label-width="formLabelWidth" prop="chargePerson">
+            <el-form-item label="客服人员" :label-width="formLabelWidth" >
               <el-input v-model="form.serviceName" auto-complete="off" disabled></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth" prop="checkPhone">
+            <el-form-item label="客服电话" :label-width="formLabelWidth" >
               <el-input v-model="form.servicePhone" auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <el-input v-model="form.parentName" disabled></el-input>
+              <el-input v-model="form.parentName || form.orgName" disabled></el-input>
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
             </el-form-item>
-            <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
-              <el-input v-model="form.creatTime" disabled></el-input>
+            <el-form-item label="创建时间" :label-width="formLabelWidth" >
+              <el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
             </el-form-item>
-            <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
+            <el-form-item label="网点代码" :label-width="formLabelWidth" >
               <el-input v-model="form.networkCode" auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item label="代收款限额" :label-width="formLabelWidth">
               <el-input v-model="form.collectionFee" auto-complete="off" disabled></el-input>
             </el-form-item>
-            <el-form-item label="负责人" :label-width="formLabelWidth" prop="chargePerson">
+            <el-form-item label="负责人" :label-width="formLabelWidth" >
               <el-input v-model="form.responsibleName" auto-complete="off" disabled></el-input>
             </el-form-item>
-            <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="checkPhone">
+            <el-form-item label="负责人电话" :label-width="formLabelWidth" >
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth">
@@ -86,7 +86,7 @@
             <div class="Pagination ">
               <div class="block">
                 <span class="user-length">共计:{{ total }}</span>
-                <div class="show_pager"> <Pager :total="usersArr.length" @change="handlePageChange" /></div>
+                <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div>
 
               </div>
             </div>
@@ -112,11 +112,13 @@
               <el-table-column
                 fixed
                 prop="id"
+                width="60"
                 label="序号">
               </el-table-column>
               <el-table-column
                 fixed
                 prop="name"
+                width="100"
                 label="姓名">
               </el-table-column>
               <el-table-column
@@ -138,7 +140,7 @@
               <el-table-column
                 label="权限角色">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.rolesName">{{ scope.row.rolesName }}</span>
+                  <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
                   <span class="unauth" v-else>未授权</span>
                 </template>
               </el-table-column>
@@ -160,8 +162,8 @@
 
         </div>
       </div>
-      <AddDot :dotInfo="form" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
-      <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId" @success="fetchOrgId(getOrgId)" />
+      <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
     </div>
   </div>
 </template>
@@ -186,9 +188,6 @@
       },
         data() {
             return {
-              rules:{
-                // networkCode:{required: true}
-              },
               //加载状态
               loading:true,
               addDoTotVisible:false,
@@ -354,6 +353,7 @@
             return row.tag === value
           },
           getCheckedKeys() {
+            this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)//根据组织id显示列表
           },
           //新增网点
           closeAddDot(){
@@ -378,5 +378,8 @@
 
   .show_pager{
     float: right;
+  }
+  .unauth{
+    color:#f00;
   }
 </style>
