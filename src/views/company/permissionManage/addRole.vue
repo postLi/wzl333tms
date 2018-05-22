@@ -7,10 +7,10 @@
               <div class="add-role-top">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                   <el-form-item label="角色名称：">
-                    <el-input v-model="formInline.user" placeholder=""></el-input>
+                    <el-input v-model="formInline.roleName" placeholder="" clearable></el-input>
                   </el-form-item>
                   <el-form-item label="备注：">
-                    <el-input type="textarea" v-model="formInline.user" placeholder=""></el-input>
+                    <el-input type="textarea" v-model="formInline.remark" placeholder=""></el-input>
                   </el-form-item>
 
                 </el-form>
@@ -23,7 +23,9 @@
                   node-key="id"
                   ref="tree"
                   highlight-current
-                  :props="defaultProps">
+                  :props="defaultProps"
+                  @node-click="getCheckedKeys"
+                >
                 </el-tree>
               </div>
             </el-form>
@@ -55,26 +57,21 @@
       dotInfo: Array
     },
     watch: {
-
       dotInfo (newVal) {
-        this.form = Object.assign({}, this.dotInfo)
-      },
-      isModify (newVal) {
-        if(newVal){
-          this.popTitle = '修改网点'
+        if(this.isModify){
           this.form = Object.assign({}, this.dotInfo)
-        } else {
-          this.popTitle = '新增网点'
-          for(let i in this.form){
-            this.form[i] = ''
-          }
-          if(this.form.id){
-            delete  this.form.id
-          }
-          this.form.orgType = 1
-          this.form.status = 32
-          this.form.manageType = 3
-          this.form.parentId = this.dotInfo.parentId
+        }
+      },
+      isModify () {
+        if(this.isModify){
+          console.log(this.dotInfo);
+          // this.form = this.dotInfo
+          this.popTitle = '修改角色'
+          // this.treeData = this.dotInfo
+        }else{
+          // this.treeData = this.dotInfo
+
+          this.popTitle = '新增角色'
         }
       }
     },
@@ -96,20 +93,18 @@
           label: 'name'
         },
         formInline: {
-          user: '',
-          region: ''
+          roleName: '',
+          remark: '',
+          id:''
         },
         popTitle: '新增角色',
-        //多选框
-        checked: true,
-        loading: false,
-        dialogVisible: false
+        loading: false
       }
     },
     mounted() {
       this.treeData = this.dotInfo
-      console.log(this.dotInfo)
-      console.log(this.isModify);
+      // console.log(this.dotInfo )
+
       // this.creatTime = getNowFormatDate
     },
     methods: {
@@ -122,6 +117,8 @@
         }
       },
       submitForm(formName){
+        console.log(this.formInline.roleName)
+        console.log(this.$refs.tree.getCheckedNodes());
         this.$refs[formName].validate((valid) => {
           if ( valid ) {
             this.loading = true
@@ -141,6 +138,10 @@
             return false
           }
         })
+      },
+      getCheckedKeys() {
+        console.log(this.$refs.tree)
+        alert(this.$refs.tree._data.currentNode.node.data.id)
       }
     }
   };
@@ -148,6 +149,6 @@
 </script>
 
 <style type="text/css" lang="scss">
-  @import "addRole.css";
+  @import "./addRole.css";
 
 </style>

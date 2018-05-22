@@ -65,3 +65,6 @@
 .add-role-tree .el-checkbox__inner::before {
   /*border-bottom: 5px solid #333;*/
 }
+.add-role-tree .el-tree--highlight-current .is-focusable > .el-tree-node__children{
+  /*overflow-x: scroll;*/
+}

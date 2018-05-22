@@ -1,9 +1,10 @@
+<script src="../../../api/company/carrierManage.js"></script>
 <template>
   <div class="permManage" v-loading="loading">
     <div class="permManage-top">
-      <el-form :inline="true" :model="usersArr" class="demo-form-inline">
+      <el-form :inline="true" :model="searchDate" class="demo-form-inline">
         <el-form-item label="角色名称：">
-          <el-input v-model="usersArr.roleName" placeholder="" clearable></el-input>
+          <el-input v-model="searchDate.roleName" placeholder="" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -76,7 +77,7 @@
     </div>
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :popVisible="addDoRoleVisible" @close="closeAddRole" ></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
-    <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDot"></DepMaintain>-->
+    <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDep"></DepMaintain>-->
   </div>
 </template>
 <script>
@@ -133,13 +134,29 @@
       }
     },
     mounted() {
+
       Promise.all([getAuthInfo(this.otherinfo.orgid), getauthTreeInfo(this.role_id)]).then( resArr => {
         this.loading = false
-        this.usersArr = resArr[0].list
+        // this.usersArr = resArr[0].list
         this.getTreeArr = resArr[1]
+        console.log( this.getTreeArr)
       })
+      this.getSeachInfo()
     },
     methods: {
+      getSeachInfo(orgid, roleName, pageNum, pagesize){
+        this.loading = false
+        if(roleName){
+          this.searchDate.roleName = roleName
+          getAuthInfo(this.otherinfo.orgid,this.searchDate.roleName).then(res=>{
+            this.usersArr = res.list
+          })
+        }else{
+          getAuthInfo(this.otherinfo.orgid).then(res =>{
+            this.usersArr = res.list
+          })
+        }
+      },
       seleClick(selected) {
         this.selected = selected
       },
@@ -159,7 +176,6 @@
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = false
-            console.log(this.isModify + "163");
             break;
           //修改角色
           case 'roleNot':
@@ -177,6 +193,7 @@
           //  部门维护
           case 'depMaintain':
             this.isModify = false
+            this.addDoRoleVisible = false
             this.adddepMaintainisible = true
             break;
           //    删除员工
@@ -238,9 +255,11 @@
       closeAddDot(){
         this.addRelatVisible = false
       },
+      closeAddDep(){
+        this.adddepMaintainisible = false
+      },
       onSubmit() {
-        console.log(this.searchDate.roleName)
-        console.log('submit!');
+        this.getSeachInfo(this.otherinfo.orgid,this.searchDate.roleName)
       }
     }
   }
