@@ -19,11 +19,12 @@ export function getroleInfo(orgid, pageSize, roleName) {
  * @param {*} orgid 网点id
  * @param {*} pagesize 获取权限列表的长度
  */
-export function getAuthInfo(orgid, pagesize) {
+export function getAuthInfo(orgid,roleName,pageNum, pagesize) {
   return fetch.get('/api-system/system/role/v1/', {
     params: {
       orgid,
-      roleName: '',
+      roleName: roleName||'',
+      pageNum:pageNum||1,
       pageSize: pagesize || 50
     }
   }).then(res => {
