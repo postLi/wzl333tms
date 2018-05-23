@@ -7,6 +7,7 @@
           <el-input
               placeholder="发货单位或发货人"
               v-model="searchForm.name"
+              maxlength="15"
               clearable>
           </el-input>
       </el-form-item>

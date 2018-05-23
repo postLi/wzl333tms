@@ -1,4 +1,6 @@
 import fetch from '../../utils/fetch'
+import { getToken } from '../../utils/auth'
+import { exportWithIframe } from '../../utils/index'
 
 /**
  * 根据条件获取承运商列表
@@ -61,6 +63,10 @@ export function deleteSomeCarrierInfo(ids) {
  * @param {array} ids 多个承运商id用数组
  */
 export function getExportExcel(ids) {
+  return new Promise((resolve, rejects) => {
+    exportWithIframe('/api/api-system/system/carrier/v1/exportCarrier?access_token=' + getToken() + '&ids=' + ids)
+    resolve(true)
+  })
   return fetch.post('/api-system/system/carrier/v1/exportCarrier', ids)
 }
 /**

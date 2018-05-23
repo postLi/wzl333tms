@@ -1,10 +1,10 @@
 <template>
     <div class="upload-container">
-        <el-upload v-if="uploadUrl" class="image-uploader" :data="upload" :before-upload="beforeUpload" drag :multiple="false" :show-file-list="true" :action="uploadUrl"
+        <el-upload v-if="uploadUrl" class="image-uploader" :data="upload" :before-upload="beforeUpload" drag :multiple="false" :show-file-list="false" :action="uploadUrl"
             :on-success="handleImageScucess">
             <slot name="content">
                 <div v-if="title" class="upload__title">{{ title }}</div>
-                <el-button size="middle" type="primary">点击上传</el-button>
+                <el-button :size="size" type="primary">点击上传</el-button>
                 <div class="el-upload__text">将文件拖拽到此区域</div>
                 <div v-if="tip" class="upload__tip">{{ tip }}</div>
             </slot>
@@ -36,6 +36,10 @@ export default {
     tip: {
         type: String,
         default: '（jpg/png。小于5M）'
+    },
+    size: {
+        type: String,
+        default: 'mini'
     }
   },
   computed: {
@@ -106,7 +110,7 @@ export default {
     beforeUpload(file) {
       const _self = this
       const isJPG = /image\/\w+/.test(file.type) && /(jpeg|jpg|png)/i.test(file.type)
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt5M = file.size / 1024 / 1024 < 5
       let type = file.name.match(/([^\.]+)$/)
       type = type ? '.' + type[1] : ''
 
@@ -114,8 +118,8 @@ export default {
         if (!isJPG) {
             this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
             reject(false)
-        }else if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!')
+        }else if (!isLt5M) {
+            this.$message.error('上传头像图片大小不能超过 5MB!')
             reject(false)
         } else {
             // 设置文件名
@@ -134,6 +138,10 @@ export default {
         width: 100%;
         position: relative;
         @include clearfix;
+
+        .el-upload .el-upload-dragger{
+            height: 116px;
+        }
         .image-uploader {
             width: 100%;
             height: 100%;

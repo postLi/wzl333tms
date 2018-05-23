@@ -292,3 +292,16 @@ export function closest(element, selector) {
 
   return null
 }
+/**
+ * 用隐藏iframe的方式下载文件
+ * @param {*} url 要导出的链接
+ */
+export function exportWithIframe(url) {
+  let ifr = document.getElementById('downloadiframe')
+  if (!ifr) {
+    ifr = document.createElement('iframe')
+    ifr.id = 'downloadiframe'
+    document.body.appendChild(ifr)
+  }
+  ifr.src = url
+}

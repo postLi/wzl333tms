@@ -1,63 +1,99 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
-    <template class="addEmployeerPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini">
-        <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" auto-complete="off"></el-input>
+    <template class="addCustomerPop-content" slot="content">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
+        <el-form-item  v-if="!isModify" class="clearfix">
+          <div class="selectType" :class="{checked: form.companyType === 2}" @click.stop="form.companyType=2">
+            <span class="icon"><icon-svg icon-class="qiye" /></span>
+             <strong>企业</strong>
+            <p>有合法营业执照等企业</p>
+          </div>
+          <div class="selectType single" :class="{checked: form.companyType === 1}" @click.stop="form.companyType=1">
+            <span class="icon"><icon-svg icon-class="geren" /></span> <strong>个人</strong>
+            <p>具备有效身份的自然人</p>
+          </div>
         </el-form-item>
-        <el-form-item label="手机号码" :label-width="formLabelWidth" prop="mobilephone">
-          <el-input v-model="form.mobilephone" maxlength="11" auto-complete="off"></el-input>
+        <div class="info" v-if="form.companyType === 2">公司名称</div>
+        <el-form-item v-if="form.companyType === 2">
+          <el-input v-model="form.companyName" placeholder="公司全称" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
-          <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
-            <div slot="content">账号可以由字母、数字、中文组成<br/>长度范围2~15个字符</div>
-            <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input>
-          </el-tooltip>
+        <el-form-item >
+          <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if="!isModify">
-          <el-input v-model.trim="form.password" auto-complete="off"></el-input>
+        <div class="info" v-if="form.companyType === 2">公司法人信息</div>
+        <el-form-item prop="legalPersonname" v-if="form.companyType === 2">
+          <el-input v-model.trim="form.legalPersonname" placeholder="公司法人名称" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
-          <el-input v-model="form.position" auto-complete="off"></el-input>
+        <el-form-item class="clearfix" v-if="form.companyType === 2">
+          <div class="idcard-pos">
+            <upload title="法人身份证正面" v-model="form.idCardPositive" />
+          </div>
+          <div class="idcard-ver">
+            <upload title="法人身份证反面" v-model="form.idCardVerso" />
+          </div>
         </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth">
-          <el-select v-model="form.sexFlag" placeholder="请选择性别">
-            <el-option label="男" value="0"></el-option>
-            <el-option label="女" value="1"></el-option>
-          </el-select>
+        <el-form-item class="clearfix" v-if="form.companyType === 1">
+          <div class="idcard-pos">
+            <upload title="自然人身份证正面" v-model="form.idCardPositive" />
+          </div>
+          <div class="idcard-ver">
+            <upload title="自然人身份证反面" v-model="form.idCardVerso" />
+          </div>
         </el-form-item>
-        <el-form-item label="归属网点" :label-width="formLabelWidth">
-          <SelectTree @change="getOrgid" :orgid="this.orgid" />
+        <div class="info">发货信息</div>
+        <el-form-item label="发货方" prop="customerUnit">
+          <el-input v-model="form.customerUnit" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="权限角色" :label-width="formLabelWidth">
-          <el-select multiple v-model="form.rolesId" placeholder="请选择权限">
-            <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
-          </el-select>
+        <el-form-item label="联系人" prop="customerName">
+          <el-input v-model="form.customerName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="归属部门" :label-width="formLabelWidth">
-          <el-select v-model="form.departmentId" placeholder="请选择部门">
-            <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-          </el-select>
+        <el-form-item label="手机" prop="customerMobile">
+          <el-input v-model="form.customerMobile" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" class="customerPhone" prop="customerName">
+          <el-input v-model="phoneshort" class="phoneshort" auto-complete="off"></el-input> - <el-input class="phonelong" v-model="phonelong" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="归属网点" prop="orgid">
+          <SelectTree v-model="form.orgid" />
+        </el-form-item>
+        <el-form-item label="客户VIP号" prop="vipNum">
+          <el-input v-model="form.vipNum" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号码" prop="idcard">
+          <el-input v-model="form.idcard" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="开户行" prop="openBank">
+          <el-input v-model="form.openBank" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="银行名称" prop="bankName">
+          <el-input v-model="form.bankName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="银行卡号" prop="bankCardNumber">
+          <el-input v-model="form.bankCardNumber" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="detailedAddress">
+          <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
-      <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
 </template>
 <script>
-import { validateMobile, isvalidUsername }  from '@/utils/validate'
-import { postEmployeer, putEmployeer,  getAuthInfo, getDepartmentInfo } from '@/api/company/employeeManage'
+import { REGEX }  from '@/utils/validate'
+import { postCustomer, putCustomer } from '@/api/company/customerManage'
 import popRight from '@/components/PopRight/index'
+import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
+    Upload,
     SelectTree
   },
   props: {
@@ -80,7 +116,27 @@ export default {
   computed: {
       ...mapGetters([
           'otherinfo'
-      ])
+      ]),
+      "fixPhone": {
+        get(){
+          return this.phoneshort+''+this.phonelong
+        },
+        set (val){
+          let names = val.match(/(.*)(.{7})$/)
+          if(names){
+            this.phoneshort = names[1]
+            this.phonelong = names[2]
+          } else {
+            this.phoneshort = ''
+            this.phonelong = ''
+          }
+        }
+      }
+  },
+  watch: {
+    form (newVal) {
+      this.fixPhone = newVal.fixPhone
+    }
   },
   data () {
     var validatePass = (rule, value, callback) => {
@@ -111,18 +167,32 @@ export default {
     }
 
     return {
+      phoneshort: '', // 固话区号
+      phonelong: '', // 固话号码
+      //fixPhone: '',
       form: {
-        name: '', // 用户姓名
-        mobilephone: '', // 手机号码
-        username: '', // 登录账户
-        password: '123456',
-        position: '', // 职位
-        sexFlag: '',// 性别
-        orgid: '', // 归属网点
-        rolesId: [], // 权限角色
-        departmentId: '' // 归属部门
+        "bankCardNumber": "", //"银行卡号" 20
+        "bankName":  "", //"银行名称", 20
+        "companyName": "", // "公司名称", 25
+        "companyType": 2, // 公司类型 1：自然人 2：企业
+        "customerId": 0, // 当新增时，不传
+        "customerMobile": "", // 手机号码 11
+        "customerName": "", // 客户名称 25
+        "customerNum": "", // 客户编号 25
+        "customerType": 1, // 客户类型 1:发货人2:收货人
+        "customerUnit": "", // 客户单位 50
+        "detailedAddress": "", // 详细地址 50
+        // "fixPhone": "", // 固话 11
+        "idCardPositive": "", // 身份证正面图片地址
+        "idCardVerso": "", // 身份证反面图片地址
+        "idcard": "", // 身份证号码 18
+        "legalPersonname": "", // 公司法人 25
+        "licensePicture": "", // 营业执照图片地址
+        "openBank": "", // 开户行 20
+        "orgid": 0, // 所属机构ID
+        "vipNum": "" // VIP号 11
       },
-      formLabelWidth: '80px',
+      formLabelWidth: '90px',
       tooltip: false,
       rules: {
         name: [
@@ -144,7 +214,7 @@ export default {
           { max: 10,  message: '不能超过10个字符', trigger: 'blur' }
         ]
       },
-      popTitle: '新增员工',
+      popTitle: '新增发货人',
       orgArr: [],
       rolesArr: [],
       departmentArr: [],
@@ -161,6 +231,9 @@ export default {
     if(!this.inited){
       this.inited = true
       this.initInfo()
+      setTimeout(() => {
+      this.form.fixPhone = '123456789'        
+      }, 200);
     }
   },
   watch: {
@@ -175,14 +248,14 @@ export default {
     },
     userInfo () {
       if(this.isModify){
-        this.popTitle = '修改员工'
+        this.popTitle = '修改发货人'
         let data = Object.assign({},this.userInfo)
         for(let i in this.form){
           this.form[i] = this.userInfo[i]
         }
         this.form.rolesId = this.userInfo.rolesIdList === '0' ? '' : this.userInfo.rolesIdList
       } else {
-        this.popTitle = '新增员工'
+        this.popTitle = '新增发货人'
         for(let i in this.form){
           this.form[i] = i === 'password' ? '123456' : i === 'rolesId' ? [] : ''
         }
@@ -192,15 +265,7 @@ export default {
   },
   methods: {
     initInfo () {
-      this.loading = true
-      return Promise.all([getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {
-        this.loading = false
-        this.roles = resArr[0].list
-        this.departments = resArr[1]
-      }).catch(err => {
-        this.loading = false
-        this.inited = false
-      })
+      this.loading = false
     },
     getOrgid (id) {
       this.form.orgid = id
@@ -211,13 +276,11 @@ export default {
           this.loading = true
           let data = Object.assign({},this.form)
           let promiseObj
-          data.rolesId = data.rolesId.join(',')
           // 判断操作，调用对应的函数
           if(this.isModify){
-            data.id = this.userInfo.id
-            promiseObj = putEmployeer(data)
+            promiseObj = putCustomer(data)
           } else {
-            promiseObj = postEmployeer(data)
+            promiseObj = postCustomer(data)
           }
 
           promiseObj.then(res => {
@@ -252,12 +315,125 @@ export default {
   left: auto;
   top: 50px;
   bottom: auto;
-  min-width: 600px;
-  max-width:  600px;
+  min-width: 546px;
+  max-width:  546px;
+
+  .el-form--inline .el-form-item{
+    margin-right: 0;
+    width: 100%;
+    display: flex;
+  }
+
+  .el-form-item__content{
+    flex:1;
+  }
+
+  .customerPhone .el-form-item__content{
+    display: flex;
+  }
+  .phoneshort{
+    width: 78px;
+  }
+  .phonelong{
+    flex:1;
+  }
+
+  .licensePicture{
+    height: 116px;
+    line-height: 1.2;
+  }
 
   .popRight-content{
-    padding: 20px 20px 0;
+    padding: 20px 24px 0;
     box-sizing: border-box;
+  }
+
+  .selectType{
+    width: 234px;
+    height: 118px;
+    padding-top: 32px;
+    border-radius: 4px;
+    border: solid 1px #d2d2d2;
+    float: left;
+    text-align: center;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+
+    &.checked{
+      border-color: #05e2ea;
+      &::before,&::after{
+        position: absolute;
+        top: 0;
+        right: 0;
+        content: '';
+      }
+      &::after{
+        border: #05e2ea 12px solid;
+        border-color: #05e2ea #05e2ea  transparent transparent;
+      }
+      &::before{
+        width: 18px;
+        height: 20px;
+        z-index: 2;
+        content: "\E611";
+        font-family: element-icons!important;
+        speak: none;
+        font-variant: normal;
+        text-transform: none;
+        font-weight: bold;
+        line-height: 1;
+        vertical-align: baseline;
+        -webkit-font-smoothing: antialiased;
+        color: #fff;
+      }
+    }
+
+    .icon{
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #456bf7;
+      color: #fff;
+      line-height: 34px;
+    }
+
+    &.single{
+      float: right;
+    }
+
+    &.single .icon{
+      background-color: #15e2e9;
+    }
+
+    .svg-icon{
+      font-size: 25px;
+      vertical-align: middle;
+    }
+    strong{
+      font-size: 24px;
+      line-height: 34px;
+    }
+    p{
+      font-size: 13px;
+    }
+  }
+
+  .idcard-pos,.idcard-ver{
+    width: 234px;
+    height: 136px;
+    float: left;
+    line-height: 1.2;
+
+    .upload-container{
+      height: 100%;
+    }
+  }
+  .idcard-ver{
+    float: right;
   }
 
   .el-select .el-input__inner{
