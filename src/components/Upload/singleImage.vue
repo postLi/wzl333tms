@@ -1,13 +1,17 @@
 <template>
     <div class="upload-container">
-        <el-upload class="image-uploader" :data="dataObj" drag :multiple="false" :show-file-list="false" action="https://httpbin.org/post"
+        <el-upload v-if="uploadUrl" class="image-uploader" :data="upload" :before-upload="beforeUpload" drag :multiple="false" :show-file-list="true" :action="uploadUrl"
             :on-success="handleImageScucess">
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <slot name="content">
+                <div v-if="title" class="upload__title">{{ title }}</div>
+                <el-button size="middle" type="primary">点击上传</el-button>
+                <div class="el-upload__text">将文件拖拽到此区域</div>
+                <div v-if="tip" class="upload__tip">{{ tip }}</div>
+            </slot>
         </el-upload>
-        <div class="image-preview">
-            <div class="image-preview-wrapper" v-show="imageUrl.length>1">
-                <img :src="imageUrl+'?imageView2/1/w/200/h/200'">
+        <div class="image-preview"  v-if="imageUrl">
+            <div class="image-preview-wrapper">
+                <img :src="imageUrl">
                 <div class="image-preview-action">
                     <i @click="rmImage" class="el-icon-delete"></i>
                 </div>
@@ -17,13 +21,22 @@
 </template>
 
 <script>
-// 预览效果见付费文章
-import { getToken } from '@/api/qiniu'
+// 上传接口
+import { getUploadPolicy } from '@/api/common'
+import fetch from '@/utils/fetch'
 
 export default {
   name: 'singleImageUpload',
   props: {
-    value: String
+    value: String,
+    title: {
+        type: String,
+        default: ''
+    },
+    tip: {
+        type: String,
+        default: '（jpg/png。小于5M）'
+    }
   },
   computed: {
     imageUrl() {
@@ -33,33 +46,82 @@ export default {
   data() {
     return {
       tempUrl: '',
-      dataObj: { token: '', key: '' }
+      dataObj: { token: '', key: '' },
+      // 上传参数文档
+      // https://help.aliyun.com/document_detail/31988.html
+      upload: {
+        'key': '', // 文件名称
+        'policy': '',
+        'OSSAccessKeyId': '',
+        'success_action_status': '201', //让服务端返回200,不然，默认会返回204;201会返回xml格式
+        //'callback': 'callbackbody',
+        'signature': ''
+      },
+      uploadUrl: '',
+      dir: ''
     }
   },
+  mounted () {
+    this.init()  
+  },
   methods: {
+    init(){
+        // 从后台获取policy
+        getUploadPolicy().then(data => {
+            this.upload.OSSAccessKeyId = data.accessid
+            this.upload.policy = data.policy
+            this.upload.signature = data.signature
+            this.uploadUrl = data.host
+            this.dir = data.dir
+            this.upload.key = data.dir + this.random_string() + type
+        }).catch(err => {
+        })
+    },
     rmImage() {
       this.emitInput('')
+    },
+    // 设置随机的文件名
+    random_string(len) {
+    　　len = len || 32
+    　　var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+    　　var maxPos = chars.length
+    　　var pwd = ''
+    　　for (var i = 0; i < len; i++) {
+            pwd += chars.charAt(Math.floor(Math.random() * maxPos))
+        }
+        return pwd
     },
     emitInput(val) {
       this.$emit('input', val)
     },
-    handleImageScucess() {
-      this.emitInput(this.tempUrl)
+    handleImageScucess(xml) {
+        let url = ''
+        if(xml.indexOf('Location') !== -1){
+            url = xml.match(/<Location>([^<]+)<\/Location>/m)
+            url = url ? url[1] : ''
+        }
+      this.emitInput(url)
+      this.imageUrl = url
     },
-    beforeUpload() {
+    beforeUpload(file) {
       const _self = this
+      const isJPG = /image\/\w+/.test(file.type) && /(jpeg|jpg|png)/i.test(file.type)
+      const isLt2M = file.size / 1024 / 1024 < 2
+      let type = file.name.match(/([^\.]+)$/)
+      type = type ? '.' + type[1] : ''
+
       return new Promise((resolve, reject) => {
-        getToken().then(response => {
-          const key = response.data.qiniu_key
-          const token = response.data.qiniu_token
-          _self._data.dataObj.token = token
-          _self._data.dataObj.key = key
-          this.tempUrl = response.data.qiniu_url
-          resolve(true)
-        }).catch(err => {
-          console.log(err)
-          reject(false)
-        })
+        if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
+            reject(false)
+        }else if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!')
+            reject(false)
+        } else {
+            // 设置文件名
+            this.upload.key = this.dir + this.random_string() + type
+            resolve(true)
+        }
       })
     }
   }
@@ -73,16 +135,16 @@ export default {
         position: relative;
         @include clearfix;
         .image-uploader {
-            width: 60%;
-            float: left;
+            width: 100%;
+            height: 100%;
         }
         .image-preview {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            border: 1px dashed #d9d9d9;
-            float: left;
-            margin-left: 50px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color:#fff;
+            top:0;
+            left:0;
             .image-preview-wrapper {
                 position: relative;
                 width: 100%;
@@ -117,6 +179,23 @@ export default {
                     opacity: 1;
                 }
             }
+        }
+        .el-button{
+            margin-top: 24px;
+        }
+        .el-upload__text{
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        .upload__tip{
+            font-size:12px;
+            color:#999;
+        }
+        .upload__title{
+            font-size:13px;
+            color:#666;
+            margin-top:14px;
         }
     }
 

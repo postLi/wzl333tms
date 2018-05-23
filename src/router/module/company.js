@@ -66,7 +66,7 @@ export default {
     {
       path: '/company/printManage',
       icon: 'dayin',
-      hidden: false,
+      hidden: true,
       name: '打印模版管理',
       component: _import('company/printManage/index'),
       meta: { title: '打印模版管理', stitle: '打印', noCache: true }
