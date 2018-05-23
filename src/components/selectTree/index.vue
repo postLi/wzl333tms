@@ -12,6 +12,9 @@
 </template>
 <script>
   import { getAllOrgInfo  } from '@/api/company/employeeManage'
+/**
+ * 将多层级树结构展开未扁平数组，并对每个元素添加层级值index
+ */
 function expandGroups (data, i) {
   let res = []
   data.map(el => {
@@ -26,7 +29,7 @@ function expandGroups (data, i) {
 
 export default {
   props: {
-    orgid: {
+    value: {
       type: [Number, String]
     },
     disabled: {
@@ -35,15 +38,14 @@ export default {
     }
   },
   watch: {
-    orgid (newVal) {
+    value (newVal) {
       this.aid = newVal
+      this.init()
     }
   },
   mounted () {
-    this.aid = this.orgid
-    getAllOrgInfo(this.orgid).then(data => {
-      this.groups = data
-    })
+    this.aid = this.value
+    this.init()
   },
   computed: {
     openGroups () {
@@ -61,8 +63,19 @@ export default {
     }
   },
   methods: {
+    init () {
+      if(this.aid && !this.inited){
+        this.inited = true
+        getAllOrgInfo(this.aid).then(data => {
+          this.groups = data
+        }).catch(err => {
+          this.inited = false
+        })
+      }
+    },
     change (val) {
       this.$emit('change', val)
+      this.$emit('input', val)
     }
   }
 }

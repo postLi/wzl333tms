@@ -20,7 +20,7 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree @change="getOrgid" :disabled="isModify" :orgid="isModify ?　companyId : (form.id || orgid)" />
+              <SelectTree v-model="form.parentId" :disabled="isModify" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType">
@@ -56,7 +56,7 @@
               <el-input v-model="form.collectionFee" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="提现基准" :label-width="formLabelWidth" prop="benchmark">
-              <el-input v-model="form.benchmark" :disabled="isModify"  auto-complete="off"></el-input>
+              <el-input v-model="form.benchmark"  auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth" prop="warningQuota">
               <el-input v-model="form.warningQuota" auto-complete="off"></el-input>
@@ -146,6 +146,7 @@
         if(newVal){
           this.popTitle = '修改网点'
           this.form = Object.assign({}, this.dotInfo)
+          this.form.parentId = this.dotInfo.parentId || this.companyId
         } else {
           this.popTitle = '新增网点'
           for(let i in this.form){
@@ -158,7 +159,7 @@
           this.form.orgType = 1
           this.form.status = 32
           this.form.manageType = 3
-          this.form.parentId = this.dotInfo.parentId
+          this.form.parentId = this.dotInfo.parentId || this.companyId
         }
       }
     },
@@ -243,7 +244,7 @@
           remarks:'',
           //默认值
           accountStatus: 0,
-          //id:1,
+          //id: '',
           parentId:0
 
 
@@ -306,8 +307,8 @@
       }
     },
     mounted(){
-      console.log(this.isModify);
-
+      //this.form.parentId = this.isModify ?　this.companyId : (this.form.id || this.orgid)
+      this.form.parentId = this.orgid || this.companyId
     },
     methods: {
       getCity (city) {
@@ -316,9 +317,12 @@
       getOrgid (id){
         this.form.parentId = id
       },
+      reset () {
+        this.$refs['ruleForm'].resetFields()
+      },
       closeMe(done){
         this.$emit('close')
-        this.$refs['ruleForm'].resetFields()
+        this.reset()
         if(typeof done === 'function'){
           done()
         }

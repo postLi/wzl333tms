@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <el-form-item label="归属网点">
-          <SelectTree @change="getOrgid" :orgid="orgid" />
+          <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
       <el-form-item label="员工名称">
           <el-input
@@ -57,7 +57,7 @@ export default {
 
     return {
       searchForm: {
-        orgid: this.orgid,
+        orgid: '',
         name: '',
         mobile: ''
       },
@@ -68,13 +68,15 @@ export default {
       }
     }
   },
+  watch: {
+    orgid (newVal) {
+      this.searchForm.orgid = newVal
+    }
+  },
   mounted () {
-
+    this.searchForm.orgid = this.orgid
   },
   methods: {
-    getOrgid (id){
-      this.searchForm.orgid = id
-    },
     onSubmit () {
       this.$emit('change', this.searchForm)
     },
