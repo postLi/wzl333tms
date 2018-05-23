@@ -18,11 +18,12 @@ export function postRoleInfo(data) {
  * 修改角色信息
  * data 要上传的信息
  *id: 1,
-  "menusId": [
+  "menusId": [   //menusId是按钮或菜单的id
     0
   ],
   "remark": "string",
   "roleName": "string",
+  "createrId":"string",
  */
 export function putRoleInfo(data) {
   return fetch.put('/api-system/system/role/v1/', data).then(res => {

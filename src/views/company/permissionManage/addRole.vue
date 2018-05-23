@@ -24,7 +24,9 @@
                   ref="tree"
                   highlight-current
                   :props="defaultProps"
+                  @check-change="handleCheckChange"
                   @node-click="getCheckedKeys"
+                  @click="getCheckedKeys"
                 >
                 </el-tree>
               </div>
@@ -103,7 +105,7 @@
     },
     mounted() {
       this.treeData = this.dotInfo
-      // console.log(this.dotInfo )
+      console.log(this.dotInfo+'' )
 
       // this.creatTime = getNowFormatDate
     },
@@ -139,10 +141,16 @@
           }
         })
       },
+      handleCheckChange(data, checked, indeterminate) {
+        console.log(data, checked, indeterminate);
+      },
       getCheckedKeys() {
         console.log(this.$refs.tree)
         alert(this.$refs.tree._data.currentNode.node.data.id)
-      }
+      },
+      getCheckedKeys() {
+        console.log(this.$refs.tree);
+      },
     }
   };
 

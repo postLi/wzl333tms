@@ -81,8 +81,7 @@
   </div>
 </template>
 <script>
-  import { getAuthInfo , getauthTreeInfo } from '@/api/company/permissionManage'
-  import { deleteEmployeer } from '@/api/company/employeeManage'
+  import { getAuthInfo , getauthTreeInfo , deleteRoleInfo } from '@/api/company/permissionManage'
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
@@ -120,6 +119,8 @@
         selected:[],
         usersArr: [],
         getTreeArr:[],
+        // 保存要修改的角色
+        theUser: {},
         //左边树形初始化数据
         dataTree:[],
         defaultProps: {
@@ -134,12 +135,11 @@
       }
     },
     mounted() {
-
       Promise.all([getAuthInfo(this.otherinfo.orgid), getauthTreeInfo(this.role_id)]).then( resArr => {
         this.loading = false
         // this.usersArr = resArr[0].list
         this.getTreeArr = resArr[1]
-        console.log( this.getTreeArr)
+        // console.log( this.getTreeArr)
       })
       this.getSeachInfo()
     },
@@ -162,11 +162,12 @@
       },
       doAction(type){
         //  判断是否有选中项
-        if(!this.selected.length && type === 'deletePeople') {
+        if(!this.selected.length && type === 'deletePeople' || type === 'roleNot' || type === 'relationPer') {
           this.$message({
             message: '请选择要操作的员工~',
             type: 'warning'
           })
+          console.log(this.selected.length);
           return false
         }
 
@@ -176,13 +177,15 @@
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = false
+            thia.theUser = {}
             break;
           //修改角色
           case 'roleNot':
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = true
-
+            this.theUser = this.selected[0]
+            console.log(this.theUser);
             break;
           //关联员工
           case 'relationPer':
@@ -211,7 +214,7 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              deleteEmployeer(id).then(res => {
+              deleteRoleInfo(id).then(res => {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
@@ -230,11 +233,6 @@
                 message: '已取消删除'
               })
             })
-            break;
-          //修改网点
-          case 'modifyDot':
-            this.isModify = true
-            this.addDoTotVisible = true
             break;
         }
       },

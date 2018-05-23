@@ -139,7 +139,7 @@
     watch: {
       dotInfo (newVal) {
         if(this.isModify){
-          this.form = Object.assign({}, this.dotInfo)      
+          this.form = Object.assign({}, this.dotInfo)
         }
       },
       isModify (newVal) {
@@ -214,7 +214,6 @@
 
       }
       var remarks = (rule, value, callback) => {
-        console.log(value);
         callback()
       }
 
@@ -330,7 +329,6 @@
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if(valid){
-            console.log(JSON.stringify(this.form));
             this.loading = true
             let reqPromise
             if(this.isModify){
