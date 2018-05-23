@@ -8,6 +8,7 @@ import fetch from '../../utils/fetch'
   ],
   "remark": "string",
   "roleName": "string",
+ "createrId":"string",
  */
 export function postRoleInfo(data) {
   return fetch.post('/api-system/system/role/v1/', data).then(res => {
@@ -23,7 +24,7 @@ export function postRoleInfo(data) {
   ],
   "remark": "string",
   "roleName": "string",
-  "createrId":"string",
+
  */
 export function putRoleInfo(data) {
   return fetch.put('/api-system/system/role/v1/', data).then(res => {
@@ -62,10 +63,10 @@ export function getAuthInfo(orgid, roleName, pageNum, pagesize) {
  * @param orgid 新增填0，修改对应id
  * @returns {Promise<AxiosResponse<any>>}
  */
-export function getauthTreeInfo(id) {
+export function getauthTreeInfo(role_id) {
   return fetch.get('/api-system/system/menu/v1/authTree/',{
     params: {
-      role_id: id
+      role_id: role_id || 0
     }
   }).then(res => {
     return res.data || []

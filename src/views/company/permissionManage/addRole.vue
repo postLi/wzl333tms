@@ -1,6 +1,6 @@
 <template>
 
-      <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="add-role-pop-content">
+      <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="add-role-pop-content" v-loading="loading">
         <template class="addEmployeerPop-content" slot="content">
           <div class="add-role" >
             <el-form ref="ruleForm">
@@ -10,7 +10,13 @@
                     <el-input v-model="formInline.roleName" placeholder="" clearable></el-input>
                   </el-form-item>
                   <el-form-item label="备注：">
-                    <el-input type="textarea" v-model="formInline.remark" placeholder=""></el-input>
+                    <el-input
+                      type="textarea"
+                      v-model="formInline.remark"
+                      placeholder=""
+                      >
+                      <!--:autosize="{ minRows: 2}"-->
+                    </el-input>
                   </el-form-item>
 
                 </el-form>
@@ -24,9 +30,6 @@
                   ref="tree"
                   highlight-current
                   :props="defaultProps"
-                  @check-change="handleCheckChange"
-                  @node-click="getCheckedKeys"
-                  @click="getCheckedKeys"
                 >
                 </el-tree>
               </div>
@@ -34,7 +37,7 @@
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+          <el-button type="primary" @click="getCheckedNodes()">保存</el-button>
           <el-button @click="closeMe">取 消</el-button>
         </div>
       </pop-right>
@@ -43,6 +46,7 @@
 
 <script>
   import popRight from '@/components/PopRight/index'
+  import {postRoleInfo,putRoleInfo} from '../../../api/company/permissionManage'
   export default {
     components: {
       popRight
@@ -56,23 +60,33 @@
         type: Boolean,
         default:false
       },
-      dotInfo: Array
+      dotInfo: Array,
+      theUser: Object,
+      createrId: [Number,String]
     },
     watch: {
       dotInfo (newVal) {
-        if(this.isModify){
-          this.form = Object.assign({}, this.dotInfo)
+        this.treeData = this.dotInfo
+      },
+      theUser (newVal) {
+        if(this.isModify) {
+          this.formInline = this.theUser
+          this.formInline.menusId = [3,4]
+          this.$refs.tree.setCheckedKeys(this.formInline.menusId)
+          console.log('this.theUser',this.theUser)
         }
       },
       isModify () {
         if(this.isModify){
-          console.log(this.dotInfo);
-          // this.form = this.dotInfo
+          this.formInline = this.theUser
           this.popTitle = '修改角色'
-          // this.treeData = this.dotInfo
         }else{
-          // this.treeData = this.dotInfo
-
+          this.formInline = {
+            roleName: '',
+            remark: '',
+            menusId: [],
+            createrId : this.createrId
+          }
           this.popTitle = '新增角色'
         }
       }
@@ -89,6 +103,7 @@
     },
     data() {
       return {
+        loading: false,
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -97,7 +112,8 @@
         formInline: {
           roleName: '',
           remark: '',
-          id:''
+          menusId: [],
+          createrId : this.createrId
         },
         popTitle: '新增角色',
         loading: false
@@ -105,52 +121,41 @@
     },
     mounted() {
       this.treeData = this.dotInfo
-      console.log(this.dotInfo+'' )
-
-      // this.creatTime = getNowFormatDate
     },
     methods: {
       closeMe(done){
-        // done()
         this.$emit('close')
         this.$refs['ruleForm'].resetFields()
         if(typeof done === 'function'){
           done()
         }
       },
-      submitForm(formName){
-        console.log(this.formInline.roleName)
-        console.log(this.$refs.tree.getCheckedNodes());
-        this.$refs[formName].validate((valid) => {
-          if ( valid ) {
-            this.loading = true
-            // postOrgSaveDate(this.form).then(res=>{
-            //   console.log(res);
-            //   this.$alert('保存成功', '提示', {
-            //     confirmButtonText: '确定',
-            //     callback: action => {
-            //       this.loading = false
-            //       this.closeMe()
-            //       this.$emit('success')
-            //     }
-            //   })
-            //
-            // })
-          } else {
-            return false
-          }
+      getCheckedNodes() {
+        this.loading = true
+        let getNodeId = this.$refs.tree.getCheckedNodes()
+        let promiseObj
+        this.formInline.menusId = getNodeId.map(el => {
+          return el.id
         })
-      },
-      handleCheckChange(data, checked, indeterminate) {
-        console.log(data, checked, indeterminate);
-      },
-      getCheckedKeys() {
-        console.log(this.$refs.tree)
-        alert(this.$refs.tree._data.currentNode.node.data.id)
-      },
-      getCheckedKeys() {
-        console.log(this.$refs.tree);
-      },
+        let data = Object.assign({},this.formInline)
+        if(this.isModify){
+          promiseObj = putRoleInfo(data)
+        }else{
+          promiseObj = postRoleInfo(data)
+        }
+        promiseObj.then(res => {
+          this.loading = false
+          this.$alert('操作成功', '提示', {
+            confirmButtonText: '确定',
+            callback: action => {
+              this.closeMe()
+              this.$emit('success')
+            }
+          });
+        }).catch(err => {
+          this.loading = false
+        })
+      }
     }
   };
 

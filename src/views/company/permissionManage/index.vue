@@ -75,7 +75,7 @@
 
       </div>
     </div>
-    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :popVisible="addDoRoleVisible" @close="closeAddRole" ></AddRole>
+    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
     <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDep"></DepMaintain>-->
   </div>
@@ -121,27 +121,22 @@
         getTreeArr:[],
         // 保存要修改的角色
         theUser: {},
-        //左边树形初始化数据
-        dataTree:[],
-        defaultProps: {
-          children: 'children',
-          label: 'name'
-        },
+        createrId:'',
         //左边树形初始化数据
         getOrgId: '',//根据组织id获取列表
-        role_id:0,
         // 缓存节点数据
         orgInfoCache: {}
       }
     },
     mounted() {
-      Promise.all([getAuthInfo(this.otherinfo.orgid), getauthTreeInfo(this.role_id)]).then( resArr => {
-        this.loading = false
-        // this.usersArr = resArr[0].list
-        this.getTreeArr = resArr[1]
-        // console.log( this.getTreeArr)
-      })
+      // Promise.all([getAuthInfo(this.otherinfo.orgid), getauthTreeInfo(this.role_id)]).then( resArr => {
+      //   this.loading = false
+      //   this.usersArr = resArr[0].list
+      //   this.getTreeArr = resArr[1]
+      //   console.log( this.getTreeArr)
+      // })
       this.getSeachInfo()
+      this.getTreeInfo()
     },
     methods: {
       getSeachInfo(orgid, roleName, pageNum, pagesize){
@@ -150,10 +145,24 @@
           this.searchDate.roleName = roleName
           getAuthInfo(this.otherinfo.orgid,this.searchDate.roleName).then(res=>{
             this.usersArr = res.list
+            this.createrId = this.usersArr[0].createrId
           })
         }else{
           getAuthInfo(this.otherinfo.orgid).then(res =>{
             this.usersArr = res.list
+            this.createrId = this.usersArr[0].createrId
+          })
+        }
+      },
+      getTreeInfo(){
+        this.loading = false
+        if (this.isModify) {
+          getauthTreeInfo(0).then( res=> {
+            this.getTreeArr = res
+          })
+        }else {
+          getauthTreeInfo(this.theUser.id).then(res=>{
+            this.getTreeArr = res
           })
         }
       },
@@ -162,12 +171,11 @@
       },
       doAction(type){
         //  判断是否有选中项
-        if(!this.selected.length && type === 'deletePeople' || type === 'roleNot' || type === 'relationPer') {
+        if(!this.selected.length && type !== 'addRole' && type !== 'depMaintain' && type !== 'deletePeople') {
           this.$message({
             message: '请选择要操作的员工~',
             type: 'warning'
           })
-          console.log(this.selected.length);
           return false
         }
 
@@ -177,7 +185,7 @@
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = false
-            thia.theUser = {}
+            this.theUser = {}
             break;
           //修改角色
           case 'roleNot':
@@ -185,7 +193,6 @@
             this.addRelatVisible = false
             this.isModify = true
             this.theUser = this.selected[0]
-            console.log(this.theUser);
             break;
           //关联员工
           case 'relationPer':

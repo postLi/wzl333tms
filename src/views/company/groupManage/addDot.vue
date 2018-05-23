@@ -111,11 +111,11 @@
     },
     props: {
       popVisible: {
-        type:Boolean,
+        type : Boolean,
         default:false
       },
       isModify: {
-        type:Boolean,
+        type : Boolean,
         default:false
       },
       dotInfo: Object,
