@@ -52,18 +52,13 @@
             label="发货人">
           </el-table-column>
           <el-table-column
-            prop="customerNum"
-            sortable
-            label="客户编号">
-          </el-table-column>
-          <el-table-column
             prop="customerMobile"
             sortable
             label="手机号码">
           </el-table-column>
           <el-table-column
             sortable
-            prop="orgName "
+            prop="orgName"
             label="归属组织">
           </el-table-column>
           <el-table-column
@@ -95,11 +90,18 @@
             sortable
             >
           </el-table-column>
+          <el-table-column
+            sortable
+            label="创建时间">
+            <template slot-scope="scope">
+                  {{ createTime ? new Date(createTime).toLocaleString() : ''}}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-    <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="searchQuery.vo.orgid || otherinfo.orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -121,7 +123,11 @@ export default {
   computed: {
       ...mapGetters([
           'otherinfo'
-      ])
+      ]),
+      orgid () {
+        console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      }
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid

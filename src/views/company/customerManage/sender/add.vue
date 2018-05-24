@@ -13,33 +13,30 @@
             <p>具备有效身份的自然人</p>
           </div>
         </el-form-item>
-        <div class="info" v-if="form.companyType === 2">公司名称</div>
-        <el-form-item v-if="form.companyType === 2">
-          <el-input v-model="form.companyName" placeholder="公司全称" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item >
-          <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
-        </el-form-item>
-        <div class="info" v-if="form.companyType === 2">公司法人信息</div>
-        <el-form-item prop="legalPersonname" v-if="form.companyType === 2">
-          <el-input v-model.trim="form.legalPersonname" placeholder="公司法人名称" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item class="clearfix" v-if="form.companyType === 2">
+        <!-- 公司信息 -->
+        <template v-if="form.companyType === 2">
+          <div class="info">公司名称</div>
+          <el-form-item >
+            <el-input v-model="form.companyName" placeholder="公司全称" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item >
+            <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
+          </el-form-item>
+          <div class="info" >公司法人信息</div>
+          <el-form-item prop="legalPersonname" >
+            <el-input v-model.trim="form.legalPersonname" placeholder="公司法人名称" auto-complete="off"></el-input>
+          </el-form-item>
+        </template>
+        <!-- 个人信息 -->
+        <el-form-item class="clearfix">
           <div class="idcard-pos">
-            <upload title="法人身份证正面" v-model="form.idCardPositive" />
+            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idCardPositive" />
           </div>
           <div class="idcard-ver">
-            <upload title="法人身份证反面" v-model="form.idCardVerso" />
+            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idCardVerso" />
           </div>
         </el-form-item>
-        <el-form-item class="clearfix" v-if="form.companyType === 1">
-          <div class="idcard-pos">
-            <upload title="自然人身份证正面" v-model="form.idCardPositive" />
-          </div>
-          <div class="idcard-ver">
-            <upload title="自然人身份证反面" v-model="form.idCardVerso" />
-          </div>
-        </el-form-item>
+
         <div class="info">发货信息</div>
         <el-form-item label="发货方" prop="customerUnit">
           <el-input v-model="form.customerUnit" auto-complete="off"></el-input>
@@ -108,7 +105,7 @@ export default {
       type: Boolean,
       default: false
     },
-    userInfo: {
+    info: {
       type: Object,
       default: () => {}
     }
@@ -119,10 +116,11 @@ export default {
       ]),
       "fixPhone": {
         get(){
-          return this.phoneshort+''+this.phonelong
+          return this.phoneshort+'-'+this.phonelong
         },
         set (val){
-          let names = val.match(/(.*)(.{7})$/)
+          //let names = val.match(/(.*)(.{7})$/)
+          let names = val.spilt('-')
           if(names){
             this.phoneshort = names[1]
             this.phonelong = names[2]
@@ -175,10 +173,10 @@ export default {
         "bankName":  "", //"银行名称", 20
         "companyName": "", // "公司名称", 25
         "companyType": 2, // 公司类型 1：自然人 2：企业
-        "customerId": 0, // 当新增时，不传
+        // "customerId": 0, // 当新增时，不传
         "customerMobile": "", // 手机号码 11
         "customerName": "", // 客户名称 25
-        "customerNum": "", // 客户编号 25
+        // "customerNum": "", // 客户编号 25
         "customerType": 1, // 客户类型 1:发货人2:收货人
         "customerUnit": "", // 客户单位 50
         "detailedAddress": "", // 详细地址 50
@@ -231,9 +229,6 @@ export default {
     if(!this.inited){
       this.inited = true
       this.initInfo()
-      setTimeout(() => {
-      this.form.fixPhone = '123456789'        
-      }, 200);
     }
   },
   watch: {
@@ -246,19 +241,22 @@ export default {
     orgid (newVal) {
       this.form.orgid = newVal
     },
-    userInfo () {
+    info () {
       if(this.isModify){
         this.popTitle = '修改发货人'
-        let data = Object.assign({},this.userInfo)
+        let data = Object.assign({},this.info)
         for(let i in this.form){
-          this.form[i] = this.userInfo[i]
+          this.form[i] = data[i]
         }
-        this.form.rolesId = this.userInfo.rolesIdList === '0' ? '' : this.userInfo.rolesIdList
+        this.form.customerId = data.customerId
       } else {
         this.popTitle = '新增发货人'
         for(let i in this.form){
-          this.form[i] = i === 'password' ? '123456' : i === 'rolesId' ? [] : ''
+          this.form[i] = ''
         }
+        delete this.form.customerId
+        this.form.companyType = 2 // 重置为选中公司
+        this.form.customerType = 1 // 重置为发货人
         this.form.orgid = this.orgid
       }
     }
@@ -300,8 +298,14 @@ export default {
         }
       });
     },
-    closeMe (done) {
+    reset () {
       this.$refs['ruleForm'].resetFields()
+      this.form.licensePicture = ''
+      this.form.idCardPositive = ''
+      this.form.idCardVerso = ''
+    },
+    closeMe (done) {
+      this.reset()
       this.$emit('update:popVisible', false);
       if(typeof done === 'function'){
         done()
@@ -326,6 +330,10 @@ export default {
 
   .el-form-item__content{
     flex:1;
+  }
+
+  .select-tree{
+    width: 100%;
   }
 
   .customerPhone .el-form-item__content{
