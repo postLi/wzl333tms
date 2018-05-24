@@ -40,7 +40,7 @@ module.exports = {
         pathRewrite: {'^/api': ''}
       }
     },
-    // vue-cli 
+    // vue-cli
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
