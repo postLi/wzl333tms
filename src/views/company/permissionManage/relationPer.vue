@@ -2,7 +2,7 @@
   <div class="relation-per" v-loading="loading">
   <pop-right :title='popTitle' :isShow="popRelatVisible" @close="closeMe" class='addRelationPop'>
     <template class='addRelationPop-content' slot="content">
-          <el-form  ref="form"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+          <el-form  ref="formName"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
             <table>
               <thead>
               <tr>
@@ -38,7 +38,7 @@
                   </el-select>
                   <td>
                     <el-input
-                      placeholder="请输入内容"
+                      placeholder=""
                       v-model="input10"
                       clearable>
                     </el-input>
@@ -59,7 +59,7 @@
           </el-form>
     </template>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+            <el-button type="primary" @click="submitForm('formName')">保存</el-button>
             <el-button @click="closeMe">取 消</el-button>
           </div>
   </pop-right>
@@ -176,10 +176,8 @@
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if(valid){
-            console.log(JSON.stringify(this.form));
             this.loading = true
             postOrgSaveDate(this.form).then(res=>{
-              console.log(res);
               this.$alert('保存成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {

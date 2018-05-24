@@ -75,7 +75,7 @@
 
       </div>
     </div>
-    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser"></AddRole>
+    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
     <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDep"></DepMaintain>-->
   </div>
@@ -114,6 +114,7 @@
         addDoTotVisible:false,
         addPeopleVisible:false,
         isModify: false,
+        isReference:false,
         formLabelWidth: '120px',
         //表格内容
         selected:[],
@@ -121,7 +122,6 @@
         getTreeArr:[],
         // 保存要修改的角色
         theUser: {},
-        createrId:'',
         //左边树形初始化数据
         getOrgId: '',//根据组织id获取列表
         // 缓存节点数据
@@ -146,20 +146,16 @@
           getAuthInfo(this.otherinfo.orgid,this.searchDate.roleName).then(res=>{
             this.loading = false
             this.usersArr = res.list
-            this.createrId = this.usersArr[0].createrId
           })
         }else{
           this.loading = false
           getAuthInfo(this.otherinfo.orgid).then(res =>{
             this.usersArr = res.list
-            this.createrId = this.usersArr[0].createrId
           })
         }
       },
       getTreeInfo(){
-        // console.log(typeof this.theUser);
-        if (this.isModify) {
-
+        if (this.isModify || this.isReference) {
           getauthTreeInfo(this.theUser.id).then( res=> {
             this.loading = false
             this.getTreeArr = res
@@ -190,6 +186,7 @@
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = false
+            this.isReference = false
             this.theUser = {}
             break;
           //修改角色
@@ -203,18 +200,36 @@
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = true
+            this.isReference = false
             this.theUser = this.selected[0]
-            console.log(this.selected + 'theUser');
+            this.getTreeInfo()
+            break;
+          //  参照isReference
+          case 'reference':
+            if(this.selected.length > 1){
+              this.$message({
+                message:'每次只能参照单条数据~',
+                type:'warning'
+              })
+            }
+            this.addDoRoleVisible = true
+            this.addRelatVisible = false
+            this.isModify = false
+            this.isReference = true
+            this.theUser = this.selected[0]
+            this.getTreeInfo()
             break;
           //关联员工
           case 'relationPer':
             this.addDoRoleVisible = false
             this.addRelatVisible = true
             this.isModify = false
+            this.isReference = false
             break;
           //  部门维护
           case 'depMaintain':
             this.isModify = false
+            this.isReference = false
             this.addDoRoleVisible = false
             this.adddepMaintainisible = true
             break;
@@ -238,7 +253,7 @@
                   type: 'success',
                   message: '删除成功!'
                 })
-                // this.getAuthInfo()
+                this.getSeachInfo()
               }).catch(err=>{
                 this.$message({
                   type: 'info',
@@ -254,6 +269,8 @@
             })
             break;
         }
+        // 清除选中状态，避免影响下个操作
+        this.$refs.multipleTable.clearSelection()
       },
       //表头筛选
       filterTag(value, row) {

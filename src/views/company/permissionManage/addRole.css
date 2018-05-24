@@ -17,6 +17,9 @@
 .add-role .add-role-top .el-form--inline .el-form-item:first-of-type{
   margin-bottom: 20px;
 }
+.add-role-top .el-form--inline .el-form-item{
+  margin-right: 0
+}
 .add-role .el-form-item .el-form-item__content{
   line-height: 26px;
 }

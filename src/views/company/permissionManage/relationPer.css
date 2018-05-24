@@ -14,10 +14,10 @@
 .el-select .el-input__inner{
   padding-right: 15px;
 }
-table{
+.relation-per table{
   width: 100%;
 }
-table thead tr th:nth-of-type(1){
+.relation-per table thead tr th:nth-of-type(1){
   width: 215px;
   height: 30px;
 }
@@ -30,7 +30,7 @@ table thead tr th:nth-of-type(1){
   border-radius: 0;
   border-color: #fff;
 }
-table thead th:last-of-type .el-input .el-input__inner{
+.relation-per table thead th:last-of-type .el-input .el-input__inner{
   height: 30px;
 }
 .relation-per .popRight-content tbody td:nth-of-type(1) .el-input.is-active .el-input__inner .el-input__inner:focus{
@@ -38,36 +38,36 @@ table thead th:last-of-type .el-input .el-input__inner{
 }
 .relation-per tbody td:nth-of-type(1) .el-input__inner, tbody td:last-of-type .el-input__inner{
   border-color: #fff;
-  height: 32px;
+  height:40px;
 }
-tbody td:last-of-type{
+.relation-per tbody td:last-of-type{
   padding: 0 2px;
 }
-tbody td:last-of-type .el-input__inner{
+.relation-per tbody td:last-of-type .el-input__inner{
   border-color: #d2d2d2;
 
 }
-table thead tr th:nth-of-type(2){
+.relation-per table thead tr th:nth-of-type(2){
   width: 280px;
   height: 30px;
 }
 
-tbody .el-select{
+.relation-per tbody .el-select{
   width: 280px;
 }
-table tbody .el-select .el-input__inner{
+.relation-per table tbody .el-select .el-input__inner{
   border-radius: 0;
 }
-tbody .el-select>.el-input{
-  padding: 1px;
+.relation-per tbody .el-select .el-input{
+  padding: 2px;
 }
-th,td{
+.relation-per th,td{
   border: 1px solid #ccc;
   padding: 2px;
   text-align: center;
   font-size: 14px;
 }
-thead th{
+.relation-per thead th{
   background: #eee;
 }
 
