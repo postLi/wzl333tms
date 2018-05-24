@@ -94,7 +94,7 @@
             sortable
             label="创建时间">
             <template slot-scope="scope">
-                  {{ createTime ? new Date(createTime).toLocaleString() : ''}}
+                  {{ scope.createTime ? new Date(scope.createTime).toLocaleString() : ''}}
             </template>
           </el-table-column>
         </el-table>

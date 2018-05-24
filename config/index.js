@@ -36,8 +36,11 @@ module.exports = {
     proxyTable: {
       '/api' : {
         target: "http://192.168.1.157:7010",
-        //target: "http://192.168.1.233:7010",
         pathRewrite: {'^/api': ''}
+      },
+      '/localapi' : {
+        target: "http://192.168.1.233:7010",
+        pathRewrite: {'^/localapi': ''}
       }
     },
     // vue-cli
