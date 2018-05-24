@@ -1,4 +1,4 @@
-<script src="../../../api/company/carrierManage.js"></script>
+
 <template>
   <div class="permManage" v-loading="loading">
     <div class="permManage-top">
@@ -140,14 +140,16 @@
     },
     methods: {
       getSeachInfo(orgid, roleName, pageNum, pagesize){
-        this.loading = false
+
         if(roleName){
           this.searchDate.roleName = roleName
           getAuthInfo(this.otherinfo.orgid,this.searchDate.roleName).then(res=>{
+            this.loading = false
             this.usersArr = res.list
             this.createrId = this.usersArr[0].createrId
           })
         }else{
+          this.loading = false
           getAuthInfo(this.otherinfo.orgid).then(res =>{
             this.usersArr = res.list
             this.createrId = this.usersArr[0].createrId
@@ -155,13 +157,16 @@
         }
       },
       getTreeInfo(){
-        this.loading = false
+        // console.log(typeof this.theUser);
         if (this.isModify) {
-          getauthTreeInfo(0).then( res=> {
+
+          getauthTreeInfo(this.theUser.id).then( res=> {
+            this.loading = false
             this.getTreeArr = res
           })
         }else {
-          getauthTreeInfo(this.theUser.id).then(res=>{
+          getauthTreeInfo(0).then(res=>{
+            this.loading = false
             this.getTreeArr = res
           })
         }
@@ -189,10 +194,17 @@
             break;
           //修改角色
           case 'roleNot':
+            if(this.selected.length > 1){
+              this.$message({
+                message:'每次只能修改单条数据~',
+                type:'warning'
+              })
+            }
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = true
             this.theUser = this.selected[0]
+            console.log(this.selected + 'theUser');
             break;
           //关联员工
           case 'relationPer':

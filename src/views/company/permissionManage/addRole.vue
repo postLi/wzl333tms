@@ -46,7 +46,7 @@
 
 <script>
   import popRight from '@/components/PopRight/index'
-  import {postRoleInfo,putRoleInfo} from '../../../api/company/permissionManage'
+  import { postRoleInfo,putRoleInfo} from '../../../api/company/permissionManage'
   export default {
     components: {
       popRight
@@ -103,7 +103,6 @@
     },
     data() {
       return {
-        loading: false,
         treeData: [],
         defaultProps: {
           children: 'children',
