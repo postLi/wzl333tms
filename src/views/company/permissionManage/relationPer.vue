@@ -16,14 +16,15 @@
                   <td>
                     <el-input
                       v-model="inputInfo.roleName"
-                      clearable>
+                      clearable
+                      disabled>
                     </el-input>
                   </td>
                     <el-autocomplete
                       popper-class="my-autocomplete"
-                      v-model="state3"
+                     v-model="selectInfo.name"
                       :fetch-suggestions="querySearch"
-                      placeholder="请输入内容"
+                      placeholder=""
                       @select="handleSelect">
                       <i
                         class="el-icon-edit el-input__icon"
@@ -31,28 +32,17 @@
                         @click="handleIconClick">
                       </i>
                       <template slot-scope="{ item }">
-                        <div class="name">{{ item.value }}</div>
-                        <span class="addr">{{ item.address }}</span>
+                        <div class="name">{{ item.name }}</div>
                       </template>
                     </el-autocomplete>
                   <td>
                     <el-input
                       placeholder=""
-                      v-model="inputInfo.roleName"
+                      v-model="selectInfo.mobilephone"
                       disabled >
                     </el-input>
                   </td>
                 </tr>
-              <!--<tr v-for="(user) in myusers" :key="user.username">-->
-                <!--<td>-->
-                  <!--{{user.name}}-->
-                <!--</td>-->
-                <!--<td>-->
-                  <!--<el-select size="mini" multiple v-model="form.users[user.id]" placeholder="请选择权限" @change="getId(user.id)">-->
-                    <!--<el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>-->
-                  <!--</el-select>-->
-                <!--</td>-->
-              <!--</tr>-->
               </tbody>
 
             </table>
@@ -73,33 +63,20 @@
 </template>
 
 <script>
-  import { postOrgSaveDate} from '../../../api/company/groupManage'
+  import { putEmployeerAuth} from '@/api/company/employeeManage'
   import popRight from '@/components/PopRight/index'
-  import SelectTree from '@/components/selectTree/index'
-  import SelectCity from '@/components/selectCity/index'
-  import {REGEX ,isvalidUsername} from '../../../utils/validate'
-  import { getAllOrgInfo } from '../../../api/company/employeeManage'
 
   export default {
     components: {
-      popRight,
-      SelectTree,
-      SelectCity
+      popRight
     },
     props: {
       popRelatVisible: {
         type:Boolean,
         default:false
       },
-      isModify: {
-        type:Boolean,
-        default:false
-      },
       dotInfo: Object,
       thePerAllUserInfo: [Object,Array],
-      orgid: {
-        type: Number
-      }
     },
     computed: {
       isShow: {
@@ -114,30 +91,9 @@
     watch: {
       dotInfo (newVal) {
         this.inputInfo = this.dotInfo
-        // this.form = Object.assign({}, this.dotInfo)
       },
       thePerAllUserInfo (newVal) {
         this.resInfo = this.thePerAllUserInfo
-        console.log(this.thePerAllUserInfo);
-        // this.form = Object.assign({}, this.dotInfo)
-      },
-      isModify (newVal) {
-        if(newVal){
-          this.popTitle = '修改网点'
-          this.form = Object.assign({}, this.dotInfo)
-        } else {
-          this.popTitle = '新增网点'
-          for(let i in this.form){
-            this.form[i] = ''
-          }
-          if(this.form.id){
-            delete  this.form.id
-          }
-          this.form.orgType = 1
-          this.form.status = 32
-          this.form.manageType = 3
-          this.form.parentId = this.dotInfo.parentId
-        }
       }
     },
     data() {
@@ -148,17 +104,18 @@
         },
         //下拉
         restaurants: [],
-        state3: '',
         resInfo:[
           {
-            name:'',
-            mobilephone:''
+            name:''
           }
         ],
+        selectInfo:{
+          name:'',
+          mobilephone:'',
+          rolesId:[],
+          id:''
+        },
         //
-        options4: [],
-        value9: [],
-        list: [],
         loading: false,
         popTitle: '关联员工',
         loading: false,
@@ -166,36 +123,24 @@
       }
     },
     mounted(){
-
-      this.restaurants = this.loadAll();
-      // this.restaurants = this.resInfo;
-      // this.list = this.states.map(item => {
-      //   return { value: item, label: item };
-      // });
+      this.resInfo = this.thePerAllUserInfo
     },
     methods: {
-      theper(){
-
-      },
-      loadAll() {
-        return [
-          { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-          { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" }
-          ]
-      },
       querySearch(queryString, cb) {
-        var restaurants = this.restaurants;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        var restaurants = this.resInfo;
+        var results = queryString ? restaurants.filter(item => {
+          return item.name ? item.name.indexOf(queryString) !== -1 : false
+        }) : restaurants;
         // 调用 callback 返回建议列表的数据
         cb(results);
       },
       createFilter(queryString) {
         return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+          return restaurant.name.indexOf(queryString) !== -1
         };
       },
       handleSelect(item) {
-        console.log(item);
+        this.selectInfo = item
       },
       handleIconClick(ev) {
         console.log(ev);
@@ -203,16 +148,21 @@
       //
       closeMe(done){
         this.$emit('close')
-        this.$refs['ruleForm'].resetFields()
+        // this.$refs['ruleForm'].resetFields()
         if(typeof done === 'function'){
           done()
         }
       },
       submitForm(formName){
-        this.$refs[formName].validate((valid) => {
-          if(valid){
+        // this.$refs[formName].validate((valid) => {
+        //   if(valid){
             this.loading = true
-            postOrgSaveDate(this.form).then(res=>{
+            let data = []
+              data.push({
+                "id": this.selectInfo.id,
+                "rolesId": this.selectInfo.rolesId
+              })
+            putEmployeerAuth(data).then(res=>{
               this.$alert('保存成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
@@ -223,10 +173,10 @@
               })
 
             })
-          }else{
-            return false
-          }
-        })
+        //   }else{
+        //     return false
+        //   }
+        // })
       }
     }
   };

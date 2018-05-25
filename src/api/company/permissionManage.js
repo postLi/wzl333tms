@@ -72,3 +72,18 @@ export function getauthTreeInfo(role_id) {
     return res.data || []
   })
 }
+
+/**
+ * 获取指定网点的部门信息
+ * @param {*} orgid 网点id
+ */
+export function getSelectDictInfo(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'menu_type',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}

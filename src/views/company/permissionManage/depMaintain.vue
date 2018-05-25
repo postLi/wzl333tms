@@ -1,21 +1,20 @@
 <template>
-  <PopFrame :title='popTitle' :isShow="popDepMainVisible" @close="closeMe" class='addpopDepMain'>
-    <template class='addRelationPop-content' slot="content">
-      <div ref="ruleForm" class="depmain-div">
-        <ul>
-          <li>123</li>
-          <li>123</li>
-          <li>123</li>
-        </ul>
+  <div class="dep-maintain">
+    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='addpopDepMain' v-loading="loading">
+      <template class='addRelationPop-content' slot="content">
+        <div ref="ruleForm" class="depmain-div">
+          <ul v-for="item in getMentInfo">
+            <li>{{item.dictName}}</li>
+            <!--<li>123</li>-->
+          </ul>
+        </div>
+      </template>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm('ruleForm')">添加</el-button>
+        <el-button @click="closeMe">编辑</el-button>
       </div>
-
-
-    </template>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-      <el-button @click="closeMe">取 消</el-button>
-    </div>
-  </PopFrame>
+    </PopFrame>
+  </div>
 </template>
 
 <script>
@@ -25,37 +24,52 @@
         PopFrame
       },
       props: {
-        popDepMainVisible: {
+        popVisible: {
           type: Boolean,
           default: false
-        }
+        },
+        dotInfo: [Object,Array]
       },
-      date() {
+      data() {
         return {
-          popTitle:'部门'
+          popTitle: '部门',
+          loading:false,
+          getMentInfo:[]
         }
       },
       computed: {
         isShow: {
           get(){
-            return this.popDepMainVisible
+            return this.popVisible
           },
           set(){
 
           }
         }
       },
+      watch: {
+        dotInfo (newVal) {
+          this.getMentInfo = this.dotInfo
+        },
+        popVisible (newVal) {
+          console.log('popVisible:', newVal)
+        }
+      },
+      mounted(){
+        console.log(this.dotInfo);
+        // this.fetchSlectDictInfo()
+      },
       methods: {
         closeMe(done){
           this.$emit('close')
-          this.$refs['ruleForm'].resetFields()
+          // this.$refs['ruleForm'].resetFields()
           if(typeof done === 'function'){
             done()
           }
         },
         submitForm(ruleForm){
-          this.$refs[ruleForm].validate((valid) => {
-            if(valid){
+          // this.$refs[ruleForm].validate((valid) => {
+          //   if(valid){
               console.log(JSON.stringify(this.form));
               this.loading = true
               // postOrgSaveDate(this.form).then(res=>{
@@ -70,32 +84,31 @@
               //   })
               //
               // })
-            }else{
-              return false
-            }
-          })
+            // }else{
+            //   return false
+            // }
+          // })
         }
       }
     }
 </script>
 
 <style lang="scss">
-  .addpopDepMain{
-    left: auto;
-    top: 50px;
+  .dep-maintain .addpopDepMain{
+    top: 29%;
     bottom: auto;
     min-width: 486px;
     max-width:  486px;
 
   }
-  .addRelationPop-content{
+  .dep-maintain .addRelationPop-content{
     padding: 20px 20px 0;
     box-sizing: border-box;
   }
-  .el-select .el-input__inner{
+  .dep-maintain .el-select .el-input__inner{
     padding-right: 15px;
   }
-  .depmain-div li{
+  .dep-maintain .depmain-div li{
     border-bottom: 1px solid #dcdcdc;
     padding: 10px 0 10px 10px;
     color: #333;

@@ -55,7 +55,7 @@ export default {
 .popRight-center{
   width: 400px;
   position: fixed;
-  right: $hideSidebarRight;
+  left: 50%;
   top: $hideSidebarTop;
   height: calc( 50% - 50px);
   z-index: 33;
@@ -67,11 +67,12 @@ export default {
     rgba(169, 169, 169, 0.78);
 
   transition: transform 0.6s ease;
-  transform: translate(100%,0);
+  transform: translate(-50%,0);
+  display: none;
 
 }
 .showPopRight{
-  transform: translate(0, 0);
+  display: block;
 }
 .popRight-header{
   height: 30px;

@@ -27,7 +27,7 @@
             <img src="../../../assets/icom/shanchu.png" alt="">
             <el-button type="primary" plain @click="doAction('relationPer')">关联员工 </el-button>
             <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-            <el-button type="primary" plain @click="doAction('depMaintain')" >部门维护</el-button>
+            <el-button type="primary" plain @click="doAction('depMain')">部门维护</el-button>
           </div>
         </div>
         <!--表格功能-->
@@ -76,12 +76,12 @@
       </div>
     </div>
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
-    <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot"></RelationPer>
-    <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDep"></DepMaintain>-->
+    <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot" @success="getSeachInfo"></RelationPer>
+    <DepMaintain :popVisible.sync="addDepMaintainisible" @close="closeDep" :dotInfo="theMentInfo" @success="getSeachInfo"></DepMaintain>
   </div>
 </template>
 <script>
-  import { getAuthInfo , getauthTreeInfo , deleteRoleInfo } from '@/api/company/permissionManage'
+  import { getAuthInfo , getauthTreeInfo , deleteRoleInfo ,getSelectDictInfo } from '@/api/company/permissionManage'
   import {getAllUser} from '../../../api/company/employeeManage'
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
@@ -111,7 +111,7 @@
         loading:true,
         addRelatVisible:false,
         addDoRoleVisible:false,
-        adddepMaintainisible:false,
+        addDepMaintainisible:false,
         addDoTotVisible:false,
         addPeopleVisible:false,
         isModify: false,
@@ -124,6 +124,7 @@
         // 保存要修改的角色
         theUser: {},
         thePer: {},
+        theMentInfo:{},
         thePerAllUser:{},
         //左边树形初始化数据
         getOrgId: '',//根据组织id获取列表
@@ -132,11 +133,10 @@
       }
     },
     mounted() {
-      Promise.all([getAuthInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then( resArr => {
+      Promise.all([getSelectDictInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then( resArr => {
         this.loading = false
+        this.theMentInfo = resArr[0]
         this.thePerAllUser = resArr[1].list
-        // this.getTreeArr = resArr[1]
-        // console.log(this.thePerAllUser)
       })
 
       this.getSeachInfo()
@@ -178,7 +178,7 @@
       },
       doAction(type){
         //  判断是否有选中项
-        if(!this.selected.length && type !== 'addRole' && type !== 'depMaintain' && type !== 'deletePeople') {
+        if(!this.selected.length && type !== 'addRole' && type !== 'depMain' && type !== 'deletePeople') {
           this.$message({
             message: '请选择要操作的员工~',
             type: 'warning'
@@ -191,6 +191,7 @@
           case 'addRole':
             this.addDoRoleVisible = true
             this.addRelatVisible = false
+            this.addDepMaintainisible = false
             this.isModify = false
             this.isReference = false
             this.theUser = {}
@@ -204,9 +205,10 @@
               })
             }
             this.addDoRoleVisible = true
+            this.addDepMaintainisible = false
             this.addRelatVisible = false
-            this.isModify = true
             this.isReference = false
+            this.isModify = true
             this.theUser = this.selected[0]
             this.getTreeInfo()
             break;
@@ -220,6 +222,7 @@
               return false
             }else{
               this.addDoRoleVisible = true
+              this.addDepMaintainisible = false
               this.addRelatVisible = false
               this.isModify = false
               this.isReference = true
@@ -236,19 +239,21 @@
               })
               return false
             }else{
-              this.addDoRoleVisible = false
               this.addRelatVisible = true
+              this.addDoRoleVisible = false
+              this.addDepMaintainisible = false
               this.isModify = false
               this.isReference = false
               this.thePer = this.selected[0]
             }
             break;
           //  部门维护
-          case 'depMaintain':
+          case 'depMain':
             this.isModify = false
             this.isReference = false
             this.addDoRoleVisible = false
-            this.adddepMaintainisible = true
+            this.addRelatVisible = false
+            this.addDepMaintainisible = true
             break;
           //    删除员工
           case 'deletePeople':
@@ -302,8 +307,8 @@
       closeAddDot(){
         this.addRelatVisible = false
       },
-      closeAddDep(){
-        this.adddepMaintainisible = false
+      closeDep(){
+        this.addDepMaintainisible = false
       },
       onSubmit() {
         this.getSeachInfo(this.otherinfo.orgid,this.searchDate.roleName)
