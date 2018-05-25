@@ -1,6 +1,6 @@
 <template>
-  <div class="driver-manager" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />  
+  <div class="truck-manager" v-loading="loading">
+    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :truckSources="truckSources" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
@@ -31,7 +31,7 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
+            prop="truckId"
             label="序号"
             width="80">
           </el-table-column>
@@ -42,61 +42,92 @@
             label="归属网点">
           </el-table-column>
           <el-table-column
-            prop="driverName"
+            prop="truckIdNumber"
             sortable
-            label="司机姓名">
+            label="车牌号">
           </el-table-column>
           <el-table-column
-            prop="driverMobile"
+            prop="truckSource"
             sortable
-            label="司机电话">
+            label="车辆来源">
           </el-table-column>
           <el-table-column
             sortable
-            prop="driverCardid"
-            label="身份证号码">
+            prop="truckLoad"
+            label="可载重（吨）">
           </el-table-column>
           <el-table-column
-            label="驾驶证类型"
+            label="可载体积"
             sortable
             >
             <template slot-scope="scope">
-              {{ getLicenType(scope.row.licenseType) }}
+              {{ getLicenType(scope.row.truckVolume) }}
             </template>
           </el-table-column>
           <el-table-column
-            label="驾驶证有效期"
+            label="车长"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.validityDate | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.truckHeight | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
-            prop="bankCardNumber"
-            label="银行卡号"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="银行名称"
+            prop="truckWidth"
+            label="车宽"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="openBank"
-            label="开户行"
+            prop="truckHeight"
+            label="车高"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="driverAddress"
-            label="地址"
+            prop="truckType"
+            label="车型"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="driverRemarks"
+            prop="truckRegisterDate"
+            label="车辆注册时间"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="truckScrapDate"
+            label="车辆报废时间"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="truckRemarks"
             label="备注"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="truckUnit"
+            label="车辆单位"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="truckUnitMobile"
+            label="单位电话"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="driverId"
+            label="司机"
+            sortable
+            >
+          </el-table-column>
+
+          <el-table-column
+            prop="dirverMobile"
+            label="司机电话"
             sortable
             >
           </el-table-column>
@@ -104,12 +135,12 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-    <AddCustomer :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
-import { getAllDriver, deleteSomeDriverInfo, getExportExcel, getDriverLiceseType } from '@/api/company/driverManage'
+import { getAllTrunk, deleteSomeTrunkInfo, getExportExcel, getTruckType, getTruckSource } from '@/api/company/trunkManage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -134,9 +165,10 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    Promise.all([this.fetchAllCustomer(this.otherinfo.orgid), getDriverLiceseType(this.otherinfo.orgid)]).then(resArr => {
+    Promise.all([this.fetchAllCustomer(this.otherinfo.orgid), getTruckType(this.otherinfo.orgid), getTruckSource(this.otherinfo.orgid)]).then(resArr => {
       this.loading = false
-      this.licenseTypes = resArr[1]
+      this.truckTypes = resArr[1]
+      this.truckSources = resArr[2]
     })
   },
   data () {
@@ -157,16 +189,17 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgid": 1,
-          driverMobile: '',
-          driverName: ''
+          truckIdNumber: '',
+          truckSource: ''
         }
       },
-      licenseTypes: []
+      truckSources: [],
+      truckTypes: []
     }
   },
   methods: {
     getLicenType(id){
-      let info = this.licenseTypes.filter(item => {
+      let info = this.truckSources.filter(item => {
         console.log(item,id)
         return parseInt(item.dictValue, 10) === id
               })
@@ -174,7 +207,7 @@ export default {
     },
     fetchAllCustomer () {
       this.loading = true
-      return getAllDriver(this.searchQuery).then(data => {
+      return getAllTrunk(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.totalCount
         this.loading = false
@@ -189,8 +222,8 @@ export default {
     },
     getSearchParam (obj) {
       this.searchQuery.vo.orgid = obj.orgid
-      this.searchQuery.vo.driverMobile = obj.mobile
-      this.searchQuery.vo.driverName = obj.name
+      this.searchQuery.vo.truckIdNumber = obj.truckIdNumber
+      this.searchQuery.vo.truckSource = obj.truckSource
       this.fetchAllCustomer()
     },
     showImport () {
@@ -238,7 +271,7 @@ export default {
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].driverName
                   //=>todo 删除多个
                   let ids = this.selected.map(item => {
-                      return item.id
+                      return item.truckId
                   })
                   ids = ids.join(',')
 
@@ -247,7 +280,7 @@ export default {
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                      deleteSomeDriverInfo(ids).then(res => {
+                      deleteSomeTrunkInfo(ids).then(res => {
                           this.$message({
                               type: 'success',
                               message: '删除成功!'
@@ -270,7 +303,7 @@ export default {
           // 导出数据
           case 'export':
               let ids2 = this.selected.map(el => {
-                return el.id
+                return el.truckId
               })
               getExportExcel(ids2.join(',')).then(res => {
                 this.$message({
@@ -305,14 +338,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .driver-manager{
+  .truck-manager{
     height: 100%;
     width: 100%;
     padding: 12px 0 20px;
   }
 </style>
 <style lang="scss">
-.driver-manager{
+.truck-manager{
     display: flex;
     flex-direction:column;
     position: relative;

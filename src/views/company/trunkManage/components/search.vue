@@ -3,19 +3,17 @@
       <el-form-item label="网点">
           <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
-      <el-form-item label="司机名称">
-          <el-input
-              placeholder="司机名称"
-              v-model="searchForm.name"
-              maxlength="15"
-              clearable>
-          </el-input>
+      <el-form-item label="车辆来源">
+          <el-select v-model="searchForm.truckSource" placeholder="全部">
+            <el-option label="全部" value=""></el-option>
+            <el-option v-for="item in truckSources" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+          </el-select>
       </el-form-item>
-      <el-form-item label="司机电话" prop="mobile">
+      <el-form-item label="车牌号">
           <el-input
-              placeholder="请输入司机电话"
+              placeholder="请输入车牌号"
               maxlength="11"
-              v-model="searchForm.mobile"
+              v-model="searchForm.truckIdNumber"
               clearable>
           </el-input>
       </el-form-item>
@@ -41,6 +39,10 @@ export default {
     },
     orgid: {
       type: Number
+    },
+    truckSources: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -65,11 +67,11 @@ export default {
     return {
       searchForm: {
         orgid: '',
-        name: '',
-        mobile: ''
+        truckSource: '',
+        truckIdNumber: ''
       },
       rules: {
-        mobile: [{
+        truckIdNumber: [{
           //validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }]
@@ -92,9 +94,9 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
-      this.searchForm.name = ''
+      this.searchForm.truckSource = ''
       this.searchForm.orgid = this.orgid
-      this.searchForm.mobile = ''
+      this.searchForm.truckIdNumber = ''
     }
   }
 }

@@ -17,7 +17,7 @@
         
         <el-form-item label="驾驶证类型" prop="licenseType">
           <el-select v-model="form.licenseType" placeholder="驾驶证类型">
-            <el-option v-for="item in licenseTypes" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+            <el-option v-for="item in licenseTypes" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="驾驶证有效期" prop="validityDate">

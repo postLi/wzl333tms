@@ -2,25 +2,30 @@
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading">
     <template class="addDriverPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
-        <el-form-item label="司机姓名" prop="driverName">
+        <el-form-item label="车牌号码" prop="driverName">
           <el-input v-model="form.driverName" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码" prop="driverMobile">
-          <el-input v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
+        <el-form-item label="车辆来源" prop="driverMobile">
+          <el-select v-model="form.truckSource" placeholder="请选择">
+            <el-option v-for="item in truckSources" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
+        <el-form-item label="车型" prop="driverMobile">
+          <el-select v-model="form.truckSource" placeholder="请选择">
+            <el-option v-for="item in truckTypes" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="身份证号" prop="driverCardid">
+        
+        <el-form-item label="可载重" prop="driverCardid">
           <el-input v-model="form.driverCardid" maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         
-        <el-form-item label="驾驶证类型" prop="licenseType">
-          <el-select v-model="form.licenseType" placeholder="驾驶证类型">
+        <el-form-item label="可载体积" prop="licenseType">
+          <el-select v-model="form.licenseType" placeholder="可载体积">
             <el-option v-for="item in licenseTypes" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="驾驶证有效期" prop="validityDate">
+        <el-form-item label="车长" prop="validityDate">
           <el-date-picker
             v-model="form.validityDate"
             align="right"
@@ -31,31 +36,53 @@
             >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="银行卡号" prop="bankCardNumber">
+        <el-form-item label="车宽" prop="bankCardNumber">
           <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="银行名称" prop="bankName">
+        <el-form-item label="车高" prop="bankName">
           <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="开户行" prop="openBank">
+        <el-form-item label="归属网点" prop="orgid">
+          <SelectTree v-model="form.orgid" />
+        </el-form-item>
+
+        <el-form-item label="车辆品牌" prop="openBank">
           <el-input maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="司机地址" prop="driverAddress">
+        <el-form-item label="车辆注册时间" prop="driverAddress">
+          <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="车辆报废时间" prop="driverAddress">
           <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
           <el-input type="textarea" maxlength="125" v-model="form.driverRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
+        <div class="hr"></div>
+        <el-form-item label="车辆单位" prop="bankCardNumber">
+          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="单位电话" prop="bankName">
+          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="司机" prop="orgid">
+          <SelectTree v-model="form.orgid" />
+        </el-form-item>
+
+        <el-form-item label="司机电话" prop="openBank">
+          <el-input maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
+        </el-form-item>
+        <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">
           <div class="idcard">
-            <upload :title="'身份证'" v-model="form.idcardPicture" />
+            <upload :title="'行驶证'" v-model="form.idcardPicture" />
           </div>
           <div class="drviercard">
-            <upload :title="'驾驶证'" v-model="form.drivingPicture" />
+            <upload :title="'营运执照'" v-model="form.drivingPicture" />
           </div>
           <div class="certcard">
-            <upload title="从业资格证" v-model="form.certification" />
+            <upload title="车辆照片" v-model="form.certification" />
           </div>
         </el-form-item>
       </el-form>
@@ -96,7 +123,11 @@ export default {
       type: Object,
       default: () => {}
     },
-    licenseTypes: {
+    truckTypes: {
+      type: Array,
+      default: () => []
+    },
+    truckSources: {
       type: Array,
       default: () => []
     }
@@ -166,7 +197,7 @@ export default {
           { validator: validateFormNumber, trigger: 'change'}
         ]
       },
-      popTitle: '新增司机',
+      popTitle: '新增车辆',
       orgArr: [],
       rolesArr: [],
       departmentArr: [],
@@ -204,14 +235,14 @@ export default {
     },
     info () {
       if(this.isModify){
-        this.popTitle = '修改司机'
+        this.popTitle = '修改车辆'
         let data = Object.assign({},this.info)
         for(let i in this.form){
           this.form[i] = data[i]
         }
         this.form.id = data.id
       } else {
-        this.popTitle = '新增司机'
+        this.popTitle = '新增车辆'
         for(let i in this.form){
           this.form[i] = ''
         }
@@ -308,6 +339,14 @@ export default {
 
   .select-tree{
     width: 100%;
+  }
+
+  .hr{
+    clear: both;
+    margin: 20px 0;
+    border-top: 1px dashed #ccc;
+    width: 100%;
+    height: 0;
   }
 
   .drviercard,.certcard,.idcard{

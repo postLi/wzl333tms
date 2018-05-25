@@ -168,7 +168,7 @@ export default {
     getLicenType(id){
       let info = this.licenseTypes.filter(item => {
         console.log(item,id)
-        return parseInt(item.dictValue, 10) === id
+        return parseInt(item.id, 10) === id
               })
       return info[0] ? info[0].dictName : id
     },

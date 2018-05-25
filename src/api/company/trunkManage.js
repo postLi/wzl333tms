@@ -38,7 +38,7 @@ import fetch from '../../utils/fetch'
  */
 export function getAllTrunk(params) {
   return fetch.post('/api-system/system/trunk/v1/list', params).then(res => {
-    return res.data
+    return res.data || { list: [], totalCount: 0 }
   })
 }
 /**
@@ -50,6 +50,35 @@ export function getTrunkInfo(id) {
     return res.data || {}
   })
 }
+/**
+ * 获取车型
+ * @param {*} orgid 网点id
+ */
+export function getTruckType(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'truck_type',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
+/**
+ * 获取车辆来源
+ * @param {*} orgid 网点id
+ */
+export function getTruckSource(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'truck_source',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
+
 /**
  * 根据车牌号获取车辆信息
  * @param {number} name 车辆name
@@ -85,26 +114,26 @@ export function getExportExcel(ids) {
  * 添加车辆
  * @param {object} info 车辆信息
 {
-  "createTime": "2018-05-22T02:16:04.647Z",
-  "dirverMobile": "string",
-  "driverId": 0,
-  "orgid": 0,
-  "truckBrand": "string",
-  "truckHeight": 0,
-  "truckId": 0,
-  "truckIdNumber": "string",
-  "truckLength": 0,
-  "truckLoad": 0,
-  "truckRegisterDate": "2018-05-22T02:16:04.647Z",
-  "truckRemarks": "string",
-  "truckScrapDate": "2018-05-22T02:16:04.647Z",
-  "truckSource": 0,
-  "truckType": 0,
-  "truckUnit": "string",
-  "truckUnitMobile": "string",
-  "truckVolume": 0,
-  "truckWidth": 0,
-  "updateTime": "2018-05-22T02:16:04.647Z"
+  "createTime": "2018-05-22T02:16:04.647Z", // 创建时间
+  "dirverMobile": "string", // 司机电话
+  "driverId": 0, // 司机ID
+  "orgid": 0, // 所属机构
+  "truckBrand": "string", // 车辆品牌
+  "truckHeight": 0, // 车高
+  "truckId": 0, // 车辆ID
+  "truckIdNumber": "string", // 车牌号码
+  "truckLength": 0, // 车长
+  "truckLoad": 0, // 可载重
+  "truckRegisterDate": "2018-05-22T02:16:04.647Z", // 车辆注册时间
+  "truckRemarks": "string", // 备注
+  "truckScrapDate": "2018-05-22T02:16:04.647Z", // 车辆报废时间
+  "truckSource": 0, // 车牌来源
+  "truckType": 0, // 车型
+  "truckUnit": "string", // 车辆单位
+  "truckUnitMobile": "string", // 单位电话
+  "truckVolume": 0, // 可载体积
+  "truckWidth": 0, // 车宽
+  "updateTime": "2018-05-22T02:16:04.647Z" // 修改时间
 }
  */
 export function postTrunk(info) {
