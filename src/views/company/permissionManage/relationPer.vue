@@ -15,32 +15,31 @@
                 <tr>
                   <td>
                     <el-input
-                      placeholder="请输入内容"
-                      v-model="input10"
+                      v-model="inputInfo.roleName"
                       clearable>
                     </el-input>
                   </td>
-                  <el-select
-                    v-model="value9"
-                    multiple
-                    filterable
-                    remote
-                    reserve-keyword
-                    placeholder="请输入关键词"
-                    :remote-method="remoteMethod"
-                    :loading="loading">
-                    <el-option
-                      v-for="item in options4"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
+                    <el-autocomplete
+                      popper-class="my-autocomplete"
+                      v-model="state3"
+                      :fetch-suggestions="querySearch"
+                      placeholder="请输入内容"
+                      @select="handleSelect">
+                      <i
+                        class="el-icon-edit el-input__icon"
+                        slot="suffix"
+                        @click="handleIconClick">
+                      </i>
+                      <template slot-scope="{ item }">
+                        <div class="name">{{ item.value }}</div>
+                        <span class="addr">{{ item.address }}</span>
+                      </template>
+                    </el-autocomplete>
                   <td>
                     <el-input
                       placeholder=""
-                      v-model="input10"
-                      clearable>
+                      v-model="inputInfo.roleName"
+                      disabled >
                     </el-input>
                   </td>
                 </tr>
@@ -55,7 +54,14 @@
                 <!--</td>-->
               <!--</tr>-->
               </tbody>
+
             </table>
+            <!--<div class="hiddenDiv">-->
+              <!--<ul>-->
+                <!--<li>1111111</li>-->
+                <!--<li>222222222</li>-->
+              <!--</ul>-->
+            <!--</div>-->
           </el-form>
     </template>
           <div slot="footer" class="dialog-footer">
@@ -90,6 +96,7 @@
         default:false
       },
       dotInfo: Object,
+      thePerAllUserInfo: [Object,Array],
       orgid: {
         type: Number
       }
@@ -106,7 +113,13 @@
     },
     watch: {
       dotInfo (newVal) {
-        this.form = Object.assign({}, this.dotInfo)
+        this.inputInfo = this.dotInfo
+        // this.form = Object.assign({}, this.dotInfo)
+      },
+      thePerAllUserInfo (newVal) {
+        this.resInfo = this.thePerAllUserInfo
+        console.log(this.thePerAllUserInfo);
+        // this.form = Object.assign({}, this.dotInfo)
       },
       isModify (newVal) {
         if(newVal){
@@ -130,42 +143,64 @@
     data() {
       return {
         //输入框
-        input10: '',
+        inputInfo: {
+          roleName:''
+        },
         //下拉
+        restaurants: [],
+        state3: '',
+        resInfo:[
+          {
+            name:'',
+            mobilephone:''
+          }
+        ],
+        //
         options4: [],
         value9: [],
         list: [],
         loading: false,
-        states: ["Alabama", "Wyoming"],
-        myusers:{
-          name:'调度角色',
-        },
         popTitle: '关联员工',
         loading: false,
         dialogVisible: 'false'
       }
     },
     mounted(){
-      // console.log(this.isModify);
-      this.list = this.states.map(item => {
-        return { value: item, label: item };
-      });
+
+      this.restaurants = this.loadAll();
+      // this.restaurants = this.resInfo;
+      // this.list = this.states.map(item => {
+      //   return { value: item, label: item };
+      // });
     },
     methods: {
-      remoteMethod(query) {
-        if (query !== '') {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-            this.options4 = this.list.filter(item => {
-              return item.label.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-            });
-          }, 200);
-        } else {
-          this.options4 = [];
-        }
+      theper(){
+
       },
+      loadAll() {
+        return [
+          { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
+          { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" }
+          ]
+      },
+      querySearch(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      handleIconClick(ev) {
+        console.log(ev);
+      },
+      //
       closeMe(done){
         this.$emit('close')
         this.$refs['ruleForm'].resetFields()

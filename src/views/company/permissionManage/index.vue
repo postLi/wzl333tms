@@ -76,12 +76,13 @@
       </div>
     </div>
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
-    <RelationPer :popRelatVisible="addRelatVisible" @close="closeAddDot"></RelationPer>
+    <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot"></RelationPer>
     <!--<DepMaintain :popDepMainVisible="adddepMaintainisible" @close="closeAddDep"></DepMaintain>-->
   </div>
 </template>
 <script>
   import { getAuthInfo , getauthTreeInfo , deleteRoleInfo } from '@/api/company/permissionManage'
+  import {getAllUser} from '../../../api/company/employeeManage'
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
@@ -122,6 +123,8 @@
         getTreeArr:[],
         // 保存要修改的角色
         theUser: {},
+        thePer: {},
+        thePerAllUser:{},
         //左边树形初始化数据
         getOrgId: '',//根据组织id获取列表
         // 缓存节点数据
@@ -129,18 +132,21 @@
       }
     },
     mounted() {
-      // Promise.all([getAuthInfo(this.otherinfo.orgid), getauthTreeInfo(this.role_id)]).then( resArr => {
-      //   this.loading = false
-      //   this.usersArr = resArr[0].list
-      //   this.getTreeArr = resArr[1]
-      //   console.log( this.getTreeArr)
-      // })
+      Promise.all([getAuthInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then( resArr => {
+        this.loading = false
+        this.thePerAllUser = resArr[1].list
+        // this.getTreeArr = resArr[1]
+        // console.log(this.thePerAllUser)
+      })
+
       this.getSeachInfo()
       this.getTreeInfo()
     },
     methods: {
+      fetchAllUser (orgid, username, mobilephone) {
+        return getAllUser(orgid, username||'', mobilephone||'')
+      },
       getSeachInfo(orgid, roleName, pageNum, pagesize){
-
         if(roleName){
           this.searchDate.roleName = roleName
           getAuthInfo(this.otherinfo.orgid,this.searchDate.roleName).then(res=>{
@@ -211,20 +217,31 @@
                 message:'每次只能参照单条数据~',
                 type:'warning'
               })
+              return false
+            }else{
+              this.addDoRoleVisible = true
+              this.addRelatVisible = false
+              this.isModify = false
+              this.isReference = true
+              this.theUser = this.selected[0]
+              this.getTreeInfo()
             }
-            this.addDoRoleVisible = true
-            this.addRelatVisible = false
-            this.isModify = false
-            this.isReference = true
-            this.theUser = this.selected[0]
-            this.getTreeInfo()
             break;
           //关联员工
           case 'relationPer':
-            this.addDoRoleVisible = false
-            this.addRelatVisible = true
-            this.isModify = false
-            this.isReference = false
+            if(this.selected.length > 1) {
+              this.$message({
+                message: '每次只能参照单条数据~',
+                type: 'warning'
+              })
+              return false
+            }else{
+              this.addDoRoleVisible = false
+              this.addRelatVisible = true
+              this.isModify = false
+              this.isReference = false
+              this.thePer = this.selected[0]
+            }
             break;
           //  部门维护
           case 'depMaintain':
@@ -278,10 +295,6 @@
       },
       clickDetails(row, event, column){
         this.$refs.multipleTable.toggleRowSelection(row)
-      },
-      getCheckedKeys() {
-        this.getOrgId = this.$refs.tree._data.currentNode.node.data.id
-        this.fetchOrgId(this.getOrgId)//根据组织id显示列表
       },
       closeAddRole(){
         this.addDoRoleVisible = false
