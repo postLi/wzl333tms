@@ -82,7 +82,6 @@ export default {
 </script>
 
 <style lang="scss">
-
   .indent{
     border-left: 1px dashed #aaa;
     padding-left: 5px;

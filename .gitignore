@@ -14,4 +14,3 @@ dist/
 *.sln
 .vscode
 .project
-/jsconfig.json

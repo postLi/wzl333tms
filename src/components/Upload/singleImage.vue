@@ -105,7 +105,7 @@ export default {
             url = url ? url[1] : ''
         }
       this.emitInput(url)
-      this.imageUrl = url
+      //this.imageUrl = url
     },
     beforeUpload(file) {
       const _self = this

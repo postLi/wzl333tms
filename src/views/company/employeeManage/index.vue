@@ -85,7 +85,7 @@
                     <el-table-column
                       sortable
                       label="创建日期">
-                      <template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>
+                      <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
                     </el-table-column>
                   </el-table>
             </div>

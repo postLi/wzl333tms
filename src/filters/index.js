@@ -21,6 +21,10 @@ export function parseTime(time, cFormat) {
     return null
   }
 
+  if (!time) {
+    return ''
+  }
+
   if ((time + '').length === 10) {
     time = +time * 1000
   }

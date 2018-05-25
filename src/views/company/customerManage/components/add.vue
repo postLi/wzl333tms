@@ -15,16 +15,16 @@
         </el-form-item>
         <!-- 公司信息 -->
         <template v-if="form.companyType === 2">
-          <div class="info">公司名称</div>
-          <el-form-item >
-            <el-input v-model="form.companyName" placeholder="公司全称" auto-complete="off"></el-input>
+          <div class="info info-require">公司名称</div>
+          <el-form-item prop="companyName">
+            <el-input v-model="form.companyName" maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item >
             <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
           </el-form-item>
           <div class="info" >公司法人信息</div>
           <el-form-item prop="legalPersonname" >
-            <el-input v-model.trim="form.legalPersonname" placeholder="公司法人名称" auto-complete="off"></el-input>
+            <el-input v-model.trim="form.legalPersonname" maxlength="25" placeholder="公司法人名称" auto-complete="off"></el-input>
           </el-form-item>
         </template>
         <!-- 个人信息 -->
@@ -37,36 +37,36 @@
           </div>
         </el-form-item>
 
-        <div class="info">发货信息</div>
-        <el-form-item label="发货方" prop="customerUnit">
-          <el-input v-model="form.customerUnit" auto-complete="off"></el-input>
+        <div class="info">{{ issender ? '发' : '收'}}货信息</div>
+        <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">
+          <el-input v-model="form.customerUnit" maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="联系人" prop="customerName">
-          <el-input v-model="form.customerName" auto-complete="off"></el-input>
+          <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
-          <el-input v-model="form.customerMobile" auto-complete="off"></el-input>
+          <el-input v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="电话" class="customerPhone" prop="customerName">
-          <el-input v-model="phoneshort" class="phoneshort" auto-complete="off"></el-input> - <el-input class="phonelong" v-model="phonelong" auto-complete="off"></el-input>
+        <el-form-item label="电话" class="customerPhone" prop="customerPhone">
+          <el-input v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
           <SelectTree v-model="form.orgid" />
         </el-form-item>
         <el-form-item label="客户VIP号" prop="vipNum">
-          <el-input v-model="form.vipNum" auto-complete="off"></el-input>
+          <el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
           <el-input v-model="form.idcard" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开户行" prop="openBank">
-          <el-input v-model="form.openBank" auto-complete="off"></el-input>
+          <el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行名称" prop="bankName">
-          <el-input v-model="form.bankName" auto-complete="off"></el-input>
+          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" auto-complete="off"></el-input>
+          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="detailedAddress">
           <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
@@ -108,6 +108,10 @@ export default {
     info: {
       type: Object,
       default: () => {}
+    },
+    issender: {
+      type: Boolean,
+      dafault: false
     }
   },
   computed: {
@@ -120,10 +124,10 @@ export default {
         },
         set (val){
           //let names = val.match(/(.*)(.{7})$/)
-          let names = val.spilt('-')
+          let names = val ?　val.split('-')　: ''
           if(names){
-            this.phoneshort = names[1]
-            this.phonelong = names[2]
+            this.phoneshort = names[1] ? names[0] : ''
+            this.phonelong = names[1] ? names[1] : names[0]
           } else {
             this.phoneshort = ''
             this.phonelong = ''
@@ -131,12 +135,8 @@ export default {
         }
       }
   },
-  watch: {
-    form (newVal) {
-      this.fixPhone = newVal.fixPhone
-    }
-  },
   data () {
+    const _this = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
@@ -149,19 +149,16 @@ export default {
     }
 
     const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
+      if(REGEX.MOBILE.test(value)){
         callback()
       } else {
         callback(new Error('请输入有效的手机号码'))
       }
     }
 
-    const validateusername = function (rule, value, callback) {
-      if(isvalidUsername(value)){
-        callback()
-      } else {
-        callback(new Error('用户名只能由中文，数字，字母组成'))
-      }
+    const validateFormNumber = function (rule, value, callback) {
+      _this.form.customerMobile = value.replace(REGEX.NO_NUMBER, '')
+      callback()
     }
 
     return {
@@ -177,10 +174,10 @@ export default {
         "customerMobile": "", // 手机号码 11
         "customerName": "", // 客户名称 25
         // "customerNum": "", // 客户编号 25
-        "customerType": 1, // 客户类型 1:发货人2:收货人
+        "customerType": this.issender ? 1 : 2, // 客户类型 1:发货人2:收货人
         "customerUnit": "", // 客户单位 50
         "detailedAddress": "", // 详细地址 50
-        // "fixPhone": "", // 固话 11
+        "fixPhone": "", // 固话 11
         "idCardPositive": "", // 身份证正面图片地址
         "idCardVerso": "", // 身份证反面图片地址
         "idcard": "", // 身份证号码 18
@@ -193,23 +190,20 @@ export default {
       formLabelWidth: '90px',
       tooltip: false,
       rules: {
-        name: [
-          { required: true, message: '请输入用户姓名', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        companyName: [
+          { required: true, message: '请输入公司名称', trigger: 'blur' },
+          { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        orgid: [
+          { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
-        mobilephone: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
+        customerMobile: [
+          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile },
+          { validator: validateFormNumber, trigger: 'change'}
         ],
-        username: [
-          { required: true, message: '请输入有效的登录账号', trigger: 'blur', validator: validateusername },
-          { max: 15, message: '不能超过15个字符', trigger: 'blur' },
-        ],
-        position: [
-          { max: 10,  message: '不能超过10个字符', trigger: 'blur' }
+        customerName: [
+          { required: true, message: '请输入联系人', trigger: 'blur' },
+          { max: 30, message: '不能超过30个字符', trigger: 'blur' }
         ]
       },
       popTitle: '新增发货人',
@@ -243,21 +237,24 @@ export default {
     },
     info () {
       if(this.isModify){
-        this.popTitle = '修改发货人'
+        this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
         let data = Object.assign({},this.info)
         for(let i in this.form){
           this.form[i] = data[i]
         }
         this.form.customerId = data.customerId
+        console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
+        this.fixPhone = this.form.fixPhone
       } else {
-        this.popTitle = '新增发货人'
+        this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
         for(let i in this.form){
           this.form[i] = ''
         }
         delete this.form.customerId
         this.form.companyType = 2 // 重置为选中公司
-        this.form.customerType = 1 // 重置为发货人
+        this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
         this.form.orgid = this.orgid
+        this.fixPhone = ''
       }
     }
   },
@@ -273,6 +270,7 @@ export default {
         if (valid) {
           this.loading = true
           let data = Object.assign({},this.form)
+          data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){

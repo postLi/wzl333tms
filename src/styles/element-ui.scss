@@ -44,3 +44,10 @@ $bodercolor: #d0d7e5;
     }
   }
 }
+
+.el-table thead th, .el-table thead tr{
+  background-color: #eaf0ff;  
+}
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
+  background-color: #eaf0ff;
+}

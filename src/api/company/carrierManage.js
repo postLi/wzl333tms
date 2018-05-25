@@ -31,7 +31,7 @@ import { exportWithIframe } from '../../utils/index'
  */
 export function getAllCarrier(params) {
   return fetch.post('/api-system/system/carrier/v1/list', params).then(res => {
-    return res.data
+    return res.data || { list: [], totalCount: 0 }
   })
 }
 /**
@@ -53,10 +53,10 @@ export function deleteCarrierInfo(id) {
 }
 /**
  * 根据ids批量删除承运商
- * @param {array} ids 多个承运商id用数组处理
+ * @param {array} ids 多个承运商id用逗号分隔
  */
 export function deleteSomeCarrierInfo(ids) {
-  return fetch.post('/api-system/system/carrier/v1/bathDelete/', ids)
+  return fetch.post('/api-system/system/carrier/v1/bathDelete/?ids=' + ids)
 }
 /**
  * 根据选中的ids导出对应的excel文件
@@ -74,7 +74,6 @@ export function getExportExcel(ids) {
  * @param {object} info 承运商信息
 {
   "carrierAddr": "string",
-  "carrierId": 0,
   "carrierMobile": "string",
   "carrierName": "string",
   "carrierRemarks": "string",

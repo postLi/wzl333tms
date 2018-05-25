@@ -39,17 +39,17 @@
             fixed
             sortable
             prop="companyName"
-            label="发货公司">
+            label="收货公司">
           </el-table-column>
           <el-table-column
             prop="customerUnit"
             sortable
-            label="发货方">
+            label="收货方">
           </el-table-column>
           <el-table-column
             prop="customerName"
             sortable
-            label="发货人">
+            label="收货人">
           </el-table-column>
           <el-table-column
             prop="customerMobile"
@@ -94,7 +94,7 @@
             sortable
             label="创建时间">
             <template slot-scope="scope">
-                  {{ scope.createTime ? new Date(scope.createTime).toLocaleString() : ''}}
+                  {{ scope.row.createTime | parseTime('{y}{m}{d}') }}
             </template>
           </el-table-column>
         </el-table>
@@ -107,9 +107,9 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import SearchForm from './search'
-import TableSetup from './tableSetup'
-import AddCustomer from './add'
+import SearchForm from './components/search'
+import TableSetup from './components/tableSetup'
+import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
@@ -153,7 +153,7 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgid": 1,
-          customerType: 1,
+          customerType: 2,
           customerMobile: '',
           customerName: ''
         }

@@ -3,17 +3,17 @@
       <el-form-item label="网点">
           <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
-      <el-form-item label="收货人">
+      <el-form-item label="司机名称">
           <el-input
-              placeholder="收货单位或收货人"
+              placeholder="司机名称"
               v-model="searchForm.name"
               maxlength="15"
               clearable>
           </el-input>
       </el-form-item>
-      <el-form-item label="手机号码">
+      <el-form-item label="司机电话" prop="mobile">
           <el-input
-              placeholder="请输入手机号码"
+              placeholder="请输入司机电话"
               maxlength="11"
               v-model="searchForm.mobile"
               clearable>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { validateMobile }  from '@/utils/validate'
+import { REGEX }  from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 
 export default {
@@ -44,6 +44,7 @@ export default {
     }
   },
   data () {
+    let _this = this
     const validateFormMobile = function (rule, value, callback) {
       if(validateMobile(value)){
         callback()
@@ -56,6 +57,11 @@ export default {
       callback()
     }
 
+    const validateFormNumber = function (rule, value, callback) {
+      _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
+      callback()
+    }
+
     return {
       searchForm: {
         orgid: '',
@@ -64,13 +70,14 @@ export default {
       },
       rules: {
         mobile: [{
-          validator: validateFormMobile, trigger: 'blur'
+          //validator: validateFormMobile, trigger: 'blur'
+          validator: validateFormNumber, trigger: 'change'
         }]
       }
     }
   },
   watch: {
-    orgid (newVal) {
+    orgid(newVal){
       this.searchForm.orgid = newVal
     }
   },
