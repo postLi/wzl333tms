@@ -47,9 +47,11 @@
             label="车牌号">
           </el-table-column>
           <el-table-column
-            prop="truckSource"
             sortable
             label="车辆来源">
+            <template slot-scope="scope">
+              {{ getLabelName(scope.row.truckSource, truckSources) }}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -58,17 +60,15 @@
           </el-table-column>
           <el-table-column
             label="可载体积"
+            prop="truckVolume"
             sortable
             >
-            <template slot-scope="scope">
-              {{ getLicenType(scope.row.truckVolume) }}
-            </template>
           </el-table-column>
           <el-table-column
             label="车长"
+            prop="truckHeight"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.truckHeight | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
             prop="truckWidth"
@@ -83,22 +83,24 @@
             >
           </el-table-column>
           <el-table-column
-            prop="truckType"
             label="车型"
             sortable
             >
+            <template slot-scope="scope">
+              {{ getLabelName(scope.row.truckType, truckTypes) }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="truckRegisterDate"
             label="车辆注册时间"
             sortable
             >
+            <template slot-scope="scope">{{ scope.row.truckRegisterDate | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
-            prop="truckScrapDate"
             label="车辆报废时间"
             sortable
             >
+            <template slot-scope="scope">{{ scope.row.truckScrapDate | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
             prop="truckRemarks"
@@ -119,7 +121,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop="driverId"
+            prop="driverName"
             label="司机"
             sortable
             >
@@ -198,10 +200,17 @@ export default {
     }
   },
   methods: {
+    getLabelName (id, data) {
+      console.log('data:', data)
+      let info = data.filter(item => {
+        return parseInt(item.id, 10) === id
+              })
+      return info[0] ? info[0].dictName : id
+    },
     getLicenType(id){
       let info = this.truckSources.filter(item => {
         console.log(item,id)
-        return parseInt(item.dictValue, 10) === id
+        return parseInt(item.id, 10) === id
               })
       return info[0] ? info[0].dictName : id
     },

@@ -1,33 +1,57 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading">
-    <template class="addDriverPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addTruckPop" v-loading="loading">
+    <template class="addTruckPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
-        <el-form-item label="车牌号码" prop="driverName">
-          <el-input v-model="form.driverName" maxlength="10" auto-complete="off"></el-input>
+        <el-form-item label="车牌号码" prop="truckIdNumber">
+          <el-input v-model="form.truckIdNumber" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="车辆来源" prop="driverMobile">
+        <el-form-item label="车辆来源" prop="truckSource">
           <el-select v-model="form.truckSource" placeholder="请选择">
-            <el-option v-for="item in truckSources" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+            <el-option v-for="item in truckSources" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="车型" prop="driverMobile">
-          <el-select v-model="form.truckSource" placeholder="请选择">
-            <el-option v-for="item in truckTypes" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+        <el-form-item label="车型" prop="truckType">
+          <el-select v-model="form.truckType" placeholder="请选择">
+            <el-option v-for="item in truckTypes" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         
-        <el-form-item label="可载重" prop="driverCardid">
-          <el-input v-model="form.driverCardid" maxlength="18" auto-complete="off"></el-input>
+        <el-form-item label="可载重" prop="truckLoad">
+          <el-input v-model.number="form.truckLoad" maxlength="18" auto-complete="off">
+            <template slot="append">吨</template>
+          </el-input>
         </el-form-item>
         
-        <el-form-item label="可载体积" prop="licenseType">
-          <el-select v-model="form.licenseType" placeholder="可载体积">
-            <el-option v-for="item in licenseTypes" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
-          </el-select>
+        <el-form-item label="可载体积" prop="truckVolume">
+          <el-input v-model.number="form.truckVolume" maxlength="18" auto-complete="off">
+            <template slot="append">方</template>
+          </el-input>
         </el-form-item>
-        <el-form-item label="车长" prop="validityDate">
+        <el-form-item label="车长" prop="truckLength">
+          <el-input v-model.number="form.truckLength" maxlength="18" auto-complete="off">
+            <template slot="append">米</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="车宽" prop="truckWidth">
+          <el-input v-model.number="form.truckWidth" maxlength="20" auto-complete="off">
+            <template slot="append">米</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="车高" prop="truckHeight">
+          <el-input v-model.number="form.truckHeight" maxlength="20" auto-complete="off">
+            <template slot="append">米</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="归属网点" prop="orgid">
+          <SelectTree v-model="form.orgid" @change="getTreeOrgid" />
+        </el-form-item>
+
+        <el-form-item label="车辆品牌" prop="truckBrand">
+          <el-input maxlength="20" v-model="form.truckBrand" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="车辆注册时间" prop="truckRegisterDate">
           <el-date-picker
-            v-model="form.validityDate"
+            v-model="form.truckRegisterDate"
             align="right"
             type="date"
             :picker-options="pickOption2"
@@ -36,42 +60,36 @@
             >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="车宽" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+        <el-form-item label="车辆报废时间" prop="truckScrapDate">
+          <el-date-picker
+            v-model="form.truckScrapDate"
+            align="right"
+            type="date"
+            :picker-options="pickOption2"
+            placeholder="选择日期"
+            value-format="timestamp"
+            >
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="车高" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
-        </el-form-item>
-
-        <el-form-item label="车辆品牌" prop="openBank">
-          <el-input maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="车辆注册时间" prop="driverAddress">
-          <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="车辆报废时间" prop="driverAddress">
-          <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.driverRemarks"></el-input>
+        <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
+          <el-input type="textarea" maxlength="125" v-model="form.truckRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <div class="hr"></div>
-        <el-form-item label="车辆单位" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+        <el-form-item label="车辆单位" prop="truckUnit">
+          <el-input v-model="form.truckUnit" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="单位电话" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
+        <el-form-item label="单位电话" prop="truckUnitMobile">
+          <el-input v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="司机" prop="orgid">
-          <SelectTree v-model="form.orgid" />
+        <el-form-item label="司机" prop="driverId">
+          <el-select v-model="form.driverId" filterable placeholder="请选择">
+            <el-option v-for="item in DriverList" :key="item.id" :label="item.driverName" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
 
-        <el-form-item label="司机电话" prop="openBank">
-          <el-input maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
+        <el-form-item label="司机电话" prop="driverMobile">
+          <el-input maxlength="20" v-model="form.driverMobile" auto-complete="off"></el-input>
         </el-form-item>
         <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">
@@ -82,7 +100,7 @@
             <upload :title="'营运执照'" v-model="form.drivingPicture" />
           </div>
           <div class="certcard">
-            <upload title="车辆照片" v-model="form.certification" />
+            <upload title="车辆照片" v-model="form.truckPicture" />
           </div>
         </el-form-item>
       </el-form>
@@ -95,7 +113,8 @@
 </template>
 <script>
 import { REGEX }  from '@/utils/validate'
-import { postDriver, putDriver } from '@/api/company/driverManage'
+import { postTrunk, putTrunk } from '@/api/company/trunkManage'
+import { getAllDriver } from '@/api/company/driverManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -166,35 +185,52 @@ export default {
 
     return {
       form: {
-        "bankCardNumber": "", // 银行卡号 20
-        "bankName": "", // 银行名称 20
-        "certification": "", // 从业资格证图片地址 125
-        "driverAddress": "", // 地址 50
-        "driverCardid": "", // 身份证号码 18
-        "driverMobile": "", // 手机号码 11
-        "driverName": "", // 司机姓名 10
-        "driverRemarks": "", // 备注 125
-        "drivingPicture": "", // 驾驶证图片地址 125
-        // "id": 0, // 司机ID 11
-        "idcardPicture": "", // 身份证图片地址 125
-        "licenseType": '', // 驾驶证类型 18
-        "licenseTypeName": "",
-        "openBank": "", // 开户行 20
-        "validityDate": "", // 驾驶证有效期
-        "orgid": 0 // 所属机构 11
+        "driverMobile": "", // 司机电话 11
+        "driverId": '', // 司机ID
+        "orgid": '', // 所属机构
+        "truckBrand": "", // 车辆品牌 20
+        "truckHeight": '', // 车高
+        // "truckId": 0, // 车辆ID
+        "truckIdNumber": "", // 车牌号码 12
+        "truckLength": '', // 车长
+        "truckLoad": '', // 可载重
+        "truckRegisterDate": "", // 车辆注册时间
+        "truckRemarks": "", // 备注 50
+        "truckScrapDate": "", // 车辆报废时间
+        "truckSource": '', // 车牌来源
+        "truckType": '', // 车型
+        "truckUnit": "", // 车辆单位 50
+        "truckUnitMobile": "", // 单位电话 11
+        "truckVolume": '', // 可载体积
+        "truckWidth": '' // 车宽
       },
       formLabelWidth: '100px',
       tooltip: false,
       rules: {
-        driverName: [
-          { required: true, message: '请输入司机名称', trigger: 'blur' }
+        truckIdNumber: [
+          { required: true, message: '请输入车牌号码', trigger: 'blur' }
         ],
         orgid: [
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile },
+          { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE },
           { validator: validateFormNumber, trigger: 'change'}
+        ],
+        truckLoad: [
+          { type: 'number', min:0, max: 1000, message: '吨数不能超过1000吨' }
+        ],
+        truckVolume: [
+          { type: 'number', min:0, max: 1000, message: '体积不能超过1000方'}
+        ],
+        truckLength: [
+          { type: 'number', min:0, max: 100, message: '车长不能超过100米'}
+        ],
+        truckHeight: [
+          { type: 'number', min:0, max: 20, message: '车高不能超过20米'}
+        ],
+        truckWidth: [
+          { type: 'number', min:0, max: 10, message: '车宽不能超过10米'}
         ]
       },
       popTitle: '新增车辆',
@@ -208,11 +244,10 @@ export default {
       inited: false,
 
       pickOption2: {
-        firstDayOfWeek:1,
-        disabledDate(time) {
-          return time.getTime() < Date.now()
-        }
-      }
+        firstDayOfWeek:1
+      },
+      cacheDriverList: {},
+      DriverList: []
 
     }
   },
@@ -230,8 +265,11 @@ export default {
         this.initInfo()
       }
     },
-    orgid (newVal) {
+    orgid (newVal, oldVal) {
       this.form.orgid = newVal
+      if(oldVal !== newVal){
+        
+      }
     },
     info () {
       if(this.isModify){
@@ -240,20 +278,25 @@ export default {
         for(let i in this.form){
           this.form[i] = data[i]
         }
-        this.form.id = data.id
+        this.form.truckId = data.truckId
       } else {
         this.popTitle = '新增车辆'
         for(let i in this.form){
-          this.form[i] = ''
+          this.form[i] = typeof this.form[i] === 'string' ? '' : ''
         }
-        delete this.form.id
+        delete this.form.truckId
         this.form.orgid = this.orgid
       }
     }
   },
   methods: {
+    getTreeOrgid (orgid) {
+      // 切换组织了列表时更新司机列表信息
+      this.getDriverList(orgid)
+    },
     initInfo () {
       this.loading = false
+      this.getTreeOrgid(this.orgid)
     },
     getOrgid (id) {
       this.form.orgid = id
@@ -263,13 +306,12 @@ export default {
         if (valid) {
           this.loading = true
           let data = Object.assign({},this.form)
-          data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
-            promiseObj = putDriver(data)
+            promiseObj = putTrunk(data)
           } else {
-            promiseObj = postDriver(data)
+            promiseObj = postTrunk(data)
           }
 
           promiseObj.then(res => {
@@ -299,11 +341,30 @@ export default {
         done()
       }
     },
+    getDriverList(orgid){
+      //缓存数据，减少切换组织列表造成的请求
+      //切换组织列表时，需要重置司机信息，避免不同组织的车辆司机混搭？
+      //还是可以绑定所有司机？
+      if(this.cacheDriverList[orgid]){
+        this.DriverList = this.cacheDriverList[orgid]
+      } else {
+        getAllDriver({
+          "currentPage": 1,
+          "pageSize": 200,
+          "vo": {
+            "orgid": orgid
+          }
+        }).then(data => {
+          this.DriverList = data.list
+          this.cacheDriverList[orgid] = data.list
+        })
+      }
+    }
   }
 }
 </script>
 <style lang="scss">
-.addDriverPop{
+.addTruckPop{
   left: auto;
   top: 50px;
   bottom: auto;
@@ -321,7 +382,7 @@ export default {
     width: 100%;
   }
 
-  .el-form--inline .driverRemarks{
+  .el-form--inline .truckRemarks{
     width: 100%;
   }
 

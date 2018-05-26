@@ -6,7 +6,7 @@
       <el-form-item label="车辆来源">
           <el-select v-model="searchForm.truckSource" placeholder="全部">
             <el-option label="全部" value=""></el-option>
-            <el-option v-for="item in truckSources" :key="item.dictValue" :label="item.dictName" :value="item.dictValue"></el-option>
+            <el-option v-for="item in truckSources" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select>
       </el-form-item>
       <el-form-item label="车牌号">
