@@ -3,10 +3,22 @@
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='addpopDepMain' v-loading="loading">
       <template class='addRelationPop-content' slot="content">
         <div ref="ruleForm" class="depmain-div">
-          <ul v-for="item in getMentInfo">
-            <li>{{item.dictName}}</li>
-            <!--<li>123</li>-->
-          </ul>
+          <div class="depmain-top" v-if="hiddenTop">
+            <el-input
+              placeholder="请输入内容"
+              v-model="inputDate"
+              >
+            </el-input>
+            <el-checkbox v-model="checked" text-color="#3e9ff1"></el-checkbox>
+            <el-checkbox v-model="checked1"></el-checkbox>
+          </div>
+          <div class="depmain-content" v-model="getMentInfo">
+            <ul>
+              <li v-for="item in getMentInfo">
+                <span>{{item.dictName}}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </template>
       <div slot="footer" class="dialog-footer">
@@ -34,7 +46,16 @@
         return {
           popTitle: '部门',
           loading:false,
-          getMentInfo:[]
+          getMentInfo:[],
+          //首行
+          checked: true,
+          checked1:true,
+          hiddenTop:false,
+          inputDate: ''
+       //首行
+       //   底部按钮
+
+       //   底部按钮
         }
       },
       computed: {
@@ -108,6 +129,81 @@
   .dep-maintain .el-select .el-input__inner{
     padding-right: 15px;
   }
+
+  /*首行头部*/
+
+  .depmain-top .el-input .el-input__inner{
+    width: 76%;
+    height: 30px;
+    line-height: 30px;
+  }
+  .depmain-top .el-checkbox:nth-of-type(1) .el-checkbox__input.is-checked .el-checkbox__inner{
+    background: #fff;
+    border-color: #3e9ff1;
+  }
+  .depmain-top .el-checkbox:nth-of-type(1) .el-checkbox__inner::after{
+    border-color:#3e9ff1;
+  }
+  .depmain-top .el-checkbox:nth-of-type(1){
+    top: -29px;
+    left: 345px;
+  }
+  .depmain-top .el-checkbox:nth-of-type(1) .el-checkbox__inner{
+    width: 28px;
+    height: 28px;
+  }
+  .depmain-top .el-checkbox:nth-of-type(1) .el-checkbox__inner::after{
+    height: 16px;
+    left: 9px;
+    top: 2px;
+    width: 8px;
+    border-width: 2px;
+  }
+  .depmain-top .el-checkbox:nth-of-type(2) .el-checkbox__input.is-checked .el-checkbox__inner{
+    background: #fff;
+    border-color: #3e9ff1;
+  }
+  .depmain-top .el-checkbox:nth-of-type(2) .el-checkbox__inner::after{
+    border-color:#3e9ff1;
+  }
+  .depmain-top .el-checkbox:nth-of-type(2){
+    top: -29px;
+    left: 318px;
+  }
+  .depmain-top .el-checkbox:nth-of-type(2) .el-checkbox__inner{
+    width: 28px;
+    height: 28px;
+  }
+  .depmain-top .el-checkbox:nth-of-type(2) .el-checkbox__inner::after{
+    height: 16px;
+    left: 9px;
+    top: 2px;
+    width: 8px;
+    border-width: 2px;
+  }
+  /*.depmain-top .el-checkbox__input .el-checkbox__inner:after{
+     box-sizing: content-box;
+     content: "";
+     border: 1px solid #fff;
+     border-left: 0;
+     border-top: 0;
+     height: 7px;
+     left: 4px;
+     position: absolute;
+     top: 1px;
+    background: #fff;
+    border-color: #3e9ff1;
+     -webkit-transform: rotate(45deg) scaleY(0);
+     transform: rotate(45deg) scaleY(0);
+     width: 3px;
+     -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+     transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+     -webkit-transform-origin: center;
+     transform-origin: center;
+   }
+   /*首行头部*/
   .dep-maintain .depmain-div li{
     border-bottom: 1px solid #dcdcdc;
     padding: 10px 0 10px 10px;
