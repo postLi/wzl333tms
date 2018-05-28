@@ -77,7 +77,7 @@
     </div>
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot" @success="getSeachInfo"></RelationPer>
-    <DepMaintain :popVisible.sync="addDepMaintainisible" @close="closeDep" :dotInfo="theMentInfo" @success="getSeachInfo"></DepMaintain>
+    <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="theMentInfo" @close="closeDep" @success="getSeachInfo" :createrId ="otherinfo.id"></DepMaintain>
   </div>
 </template>
 <script>
@@ -116,6 +116,7 @@
         addPeopleVisible:false,
         isModify: false,
         isReference:false,
+        isDepMain:false,
         formLabelWidth: '120px',
         //表格内容
         selected:[],
@@ -254,6 +255,7 @@
             this.addDoRoleVisible = false
             this.addRelatVisible = false
             this.addDepMaintainisible = true
+            this.isDepMain = true
             break;
           //    删除员工
           case 'deletePeople':
