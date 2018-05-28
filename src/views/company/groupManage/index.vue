@@ -79,6 +79,10 @@
               <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
               <img src="../../../assets/icom/xinzengwangdian.png" alt="">
               <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button>
+              <div v-if="hiddenDep" style="display: inline-block">
+                <img src="../../../assets/icom/xinzengwangdian.png" alt="">
+                <el-button type="primary" plain @click="doAction('depMain')" >部门维护</el-button>
+              </div>
             </div>
             <div class="btns_box_right">
               <p>广东广州员工</p>
@@ -164,22 +168,26 @@
       </div>
       <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
       <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
+      <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" @success="" :createrId ="otherinfo.id"></DepMaintain>
     </div>
   </div>
 </template>
 <script type="text/javascript">
     import AddPeople from '../employeeManage/add'
     import AddDot from './addDot'
+    import DepMaintain from './depMaintain'
     import { getOrgId } from '../../../api/company/groupManage'
     import { getAllOrgInfo, getAllUser, deleteEmployeer } from '../../../api/company/employeeManage'
     import { mapGetters } from 'vuex'
     import Pager from '@/components/Pagination/index'
+    import { getUserInfo } from '../../../utils/auth';
 
     export default {
       components: {
         AddDot,
         AddPeople,
-        Pager
+        Pager,
+        DepMaintain
       },
       computed: {
         ...mapGetters([
@@ -192,6 +200,9 @@
               loading:true,
               addDoTotVisible:false,
               addPeopleVisible:false,
+              addDepMaintainisible:false,
+              hiddenDep:false,
+              isDepMain:false,
               usersArr: [],
               total: 0,
               //
@@ -243,12 +254,18 @@
 
                 },
                   // 缓存节点数据
-                  orgInfoCache: {}
-              };
+                  orgInfoCache: {},
+                  userinfo: {}
+            };
             },
         mounted () {
           this.fetchOrg()//左边树形数据
-
+          //部门维护
+          this.userinfo = getUserInfo()
+          if(this.userinfo.companyId == this.userinfo.orgid ){
+            this.hiddenDep = true
+          }
+        //  部门维护
         },
         methods: {
           //左边树形数据
@@ -294,6 +311,7 @@
               return false
             }
 
+
             switch (type){
                 //新增员工
               case 'addPeople':
@@ -304,6 +322,15 @@
               case 'addNot':
                 this.isModify = false
                 this.addDoTotVisible = true
+                break;
+              //修改网点
+              case 'modifyNot':
+                this.isModify = true
+                this.addDoTotVisible = true
+                break;
+              case 'depMain':
+                this.isModify = false
+                this.addDepMaintainisible = true
                 break;
             //    删除员工
               case 'deletePeople':
@@ -341,11 +368,7 @@
                   })
                 })
               break;
-              //修改网点
-              case 'modifyNot':
-                this.isModify = true
-                this.addDoTotVisible = true
-                break;
+
             }
           },
           //表头筛选
@@ -361,6 +384,9 @@
           },
           closeAddPeople(){
             this.addPeopleVisible = false
+          },
+          closeDep(){
+            this.addDepMaintainisible = false
           },
           handlePageChange (obj) {
             this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
