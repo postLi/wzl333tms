@@ -11,7 +11,7 @@
               clearable>
           </el-input>
       </el-form-item>
-      <el-form-item label="手机号码" prop="mobile">
+      <el-form-item label="手机号码">
           <el-input
               v-numberOnly
               placeholder="请输入手机号码"

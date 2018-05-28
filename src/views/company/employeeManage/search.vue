@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { validateMobile }  from '@/utils/validate'
+import { validateMobile, REGEX }  from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 
 export default {
@@ -64,7 +64,7 @@ export default {
       },
       rules: {
         mobile: [{
-          validator: validateFormMobile
+          pattern: REGEX.MOBILE
         }]
       }
     }

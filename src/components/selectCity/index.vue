@@ -21,8 +21,13 @@ export default {
     }
   },
   computed: {
-    cityName(){
-      return this.city
+    cityName:{
+      get () {
+        return this.city
+      },
+      set () {
+        // this.city = this.cityName
+      }
     }
   },
   data () {

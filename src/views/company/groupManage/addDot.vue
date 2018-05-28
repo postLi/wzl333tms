@@ -260,7 +260,7 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           responsibleTelephone: [
-            {validator: responsibleTelephone, trigger: ['blur', 'change'] },
+            {pattern: REGEX.MOBILE, trigger: ['blur', 'change'] },
           ],
           serviceName: [
             { validator: callBackName, trigger: 'blur' },
@@ -268,7 +268,7 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           servicePhone: [
-            {validator: servicePhone, trigger: ['blur', 'change'] },
+            { pattern: REGEX.TELEPHONE, trigger: ['blur', 'change'] },
             { max: 13, message: '不可超过13个字符', trigger: 'blur' }
           ],
           //网点代码

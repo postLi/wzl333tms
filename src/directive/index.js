@@ -1,11 +1,21 @@
 import Vue from 'vue'
+import { MessageBox } from 'element-ui'
+import Clipboard from './clipboard'
+import DragDialog from './el-dragDialog'
+import Waves from './waves'
+import vueSticky from './sticky'
+
+Clipboard.install()
+DragDialog.install()
+Waves.install()
+vueSticky.install()
 
 const VueDirectiveObject = {
   findInput: function(el) {
     return el.classList.contains('el-input') ? el.querySelector('input') : el
   },
   keepNumber: function() {
-    this.value = this.value.replace(/\D+/, '')
+    this.value = this.value.replace(/\D/g, '')
   },
   onkeydown: function(event) {
     // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode), /[\d]/.test(String.fromCharCode(event.keyCode)))
@@ -27,5 +37,24 @@ Vue.directive('numberOnly', {
   unbind: function(el) {
     VueDirectiveObject.findInput(el).removeEventListener('input', VueDirectiveObject.keepNumber)
     VueDirectiveObject.findInput(el).removeEventListener('keydown', VueDirectiveObject.onkeydown)
+  }
+})
+
+Vue.directive('showPicture', {
+  bind: function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault()
+      e.stopPropagation()
+      MessageBox.alert('<div class="showPictureBox"><img src="' + (this.getAttribute('imgurl') || el.src || el.href) + '" /></div>', {
+        dangerouslyUseHTMLString: true,
+        showConfirmButton: false,
+        closeOnClickModal: true,
+        center: true,
+        customClass: 'showPictureWrapper'
+      })
+    })
+  },
+  unbind: function(el) {
+
   }
 })

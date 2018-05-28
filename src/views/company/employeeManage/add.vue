@@ -49,7 +49,7 @@
   </pop-right>
 </template>
 <script>
-import { validateMobile, isvalidUsername }  from '@/utils/validate'
+import { validateMobile, REGEX }  from '@/utils/validate'
 import { postEmployeer, putEmployeer,  getAuthInfo, getDepartmentInfo } from '../../../api/company/employeeManage'
 import popRight from '@/components/PopRight/index'
 import SelectTree from '@/components/selectTree/index'
@@ -134,10 +134,10 @@ export default {
           { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
         ],
         mobilephone: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
+          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
         ],
         username: [
-          { required: true, message: '请输入有效的登录账号', trigger: 'blur', validator: validateusername },
+          { required: true, message: '请输入有效的登录账号', trigger: 'blur', pattern: REGEX.USERNAME },
           { max: 15, message: '不能超过15个字符', trigger: 'blur' },
         ],
         position: [

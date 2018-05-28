@@ -158,16 +158,7 @@ export default {
   },
   data () {
     const _this = this
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
-        }
-        callback();
-      }
-    }
+
 
     const validateFormMobile = function (rule, value, callback) {
       if(REGEX.MOBILE.test(value)){
@@ -177,11 +168,16 @@ export default {
       }
     }
 
-    const validateFormNumber = function (rule, value, callback) {
-      console.log('rule:', rule)
-      _this.form[rule.field] = value.replace(REGEX.NO_NUMBER, '')
-      callback()
+    const createValidate = function (max, tip) {
+      return function (rule, value, callback) {
+        if(value > max){
+          callback(new Error(tip))
+        } else {
+          callback()
+        }
+      }
     }
+
 
     return {
       form: {
@@ -214,23 +210,22 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         driverMobile: [
-          { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE },
-          { validator: validateFormNumber, trigger: 'change'}
+          { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
         ],
         truckLoad: [
-          { type: 'number', min:0, max: 1000, message: '吨数不能超过1000吨' }
+          { validator: createValidate(1000, '吨数不能超过1000吨'), type: 'number' }
         ],
         truckVolume: [
-          { type: 'number', min:0, max: 1000, message: '体积不能超过1000方'}
+          { validator: createValidate(1000, '体积不能超过1000方'), type: 'number'}
         ],
         truckLength: [
-          { type: 'number', min:0, max: 100, message: '车长不能超过100米'}
+          { validator: createValidate(100, '车长不能超过100米'),type: 'number'}
         ],
         truckHeight: [
-          { type: 'number', min:0, max: 20, message: '车高不能超过20米'}
+          { validator: createValidate(20, '车高不能超过20米'),type: 'number'}
         ],
         truckWidth: [
-          { type: 'number', min:0, max: 10, message: '车宽不能超过10米'}
+          { validator: createValidate(10, '车宽不能超过10米'),type: 'number'}
         ]
       },
       popTitle: '新增车辆',

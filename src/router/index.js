@@ -18,6 +18,9 @@ import Operation from './module/operation'
 // 报表
 import Report from './module/report'
 
+// components DEMO
+import  Components from './module/componentsDemo'
+
 Vue.use(Router)
 
  /**
@@ -44,6 +47,10 @@ export const constantRouterMap = [
     }]
   }
 ]
+// 用来展示自定义组件、指令、过滤器等
+if (process.env.NODE_ENV === 'development') {
+  constantRouterMap.push(Components)
+}
 
 export default new Router({
   mode: 'history', // 后端支持可开

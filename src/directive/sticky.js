@@ -1,6 +1,8 @@
+import Vue from 'vue'
+
 const vueSticky = {}
 let listenAction
-vueSticky.install = Vue => {
+vueSticky.install = () => {
   Vue.directive('sticky', {
     inserted(el, binding) {
       const params = binding.value || {}

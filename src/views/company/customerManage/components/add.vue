@@ -198,7 +198,7 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
+          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
          // { validator: validateFormNumber, trigger: 'change'}
         ],
         customerName: [

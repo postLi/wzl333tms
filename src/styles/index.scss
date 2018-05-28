@@ -121,4 +121,16 @@ table{
   fill: currentColor;
   overflow: hidden;
 }
+// 弹窗大图样式
+.showPictureWrapper{
+  width: auto;
+  min-width: 100px;
+  max-width: 80%;
+
+  .showPictureBox{
+    img{
+      width: 100%;
+    }
+  }
+}
 

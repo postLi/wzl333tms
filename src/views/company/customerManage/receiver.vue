@@ -102,6 +102,15 @@
             sortable
             >
           </el-table-column>
+          <el-table-column
+            label="身份证图片"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">
+                <span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    

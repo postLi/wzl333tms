@@ -11,7 +11,7 @@
               clearable>
           </el-input>
       </el-form-item>
-      <el-form-item label="司机电话" prop="mobile">
+      <el-form-item label="司机电话" >
           <el-input
               placeholder="请输入司机电话"
               maxlength="11"

@@ -1,0 +1,46 @@
+import Layout from '@/views/layout/Layout'
+const _import = require('../_import_' + process.env.NODE_ENV)
+
+export default {
+  name: 'components',
+  path: '/components',
+  component: _import('componentsDemo/index'),
+  hidden: true,
+  children: [
+    {
+      path: '/components/dirctive',
+      name: '自定义指令',
+      component: _import('componentsDemo/dirctive')
+    },
+    {
+      path: '/components/uploadImage',
+      name: '上传图片',
+      component: _import('componentsDemo/uploadImage')
+    },
+    {
+      path: '/components/pagination',
+      name: '翻页',
+      component: _import('componentsDemo/pagination')
+    },
+    {
+      path: '/components/selectTree',
+      name: '下拉网点树',
+      component: _import('componentsDemo/selectTree')
+    },
+    {
+      path: '/components/selectCity',
+      name: '城市选择器',
+      component: _import('componentsDemo/selectCity')
+    },
+    {
+      path: '/components/popRight',
+      name: '右边弹窗',
+      component: _import('componentsDemo/popRight')
+    },
+    {
+      path: '/components/popCenter',
+      name: '中间弹窗',
+      component: _import('componentsDemo/popCenter')
+    }
+  ]
+}
