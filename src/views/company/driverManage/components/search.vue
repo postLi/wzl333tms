@@ -16,6 +16,7 @@
               placeholder="请输入司机电话"
               maxlength="11"
               v-model="searchForm.mobile"
+              v-numberOnly
               clearable>
           </el-input>
       </el-form-item>

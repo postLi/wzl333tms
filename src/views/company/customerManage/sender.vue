@@ -39,30 +39,36 @@
             fixed
             sortable
             prop="companyName"
+            width="120"
             label="发货公司">
           </el-table-column>
           <el-table-column
             prop="customerUnit"
+            width="120"
             sortable
             label="发货方">
           </el-table-column>
           <el-table-column
             prop="customerName"
             sortable
+            width="120"
             label="发货人">
           </el-table-column>
           <el-table-column
             prop="customerMobile"
             sortable
+            width="120"
             label="手机号码">
           </el-table-column>
           <el-table-column
             sortable
             prop="orgName"
+            width="120"
             label="归属组织">
           </el-table-column>
           <el-table-column
             label="公司法人"
+            width="120"
             prop="legalPersonname"
             sortable
             >
@@ -70,32 +76,43 @@
           <el-table-column
             prop="vipNum"
             label="VIP号"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             sortable
             prop="idcard"
+            width="200"
             label="身份证号码">
           </el-table-column>
           <el-table-column
             prop="bankName"
             label="银行名称"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="bankCardNumber"
             label="银行卡号"
+            width="180"
             sortable
             >
           </el-table-column>
           <el-table-column
+            prop="openBank"
+            label="开户行"
+            width="120"
             sortable
-            label="创建时间">
-            <template slot-scope="scope">
-                  {{ scope.row.createTime | parseTime('{y}{m}{d}') }}
-            </template>
+            >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="详细地址"
+            width="300"
+            sortable
+            >
           </el-table-column>
         </el-table>
       </div>

@@ -6,7 +6,7 @@
           <el-input v-model="form.driverName" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
-          <el-input v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
           <SelectTree v-model="form.orgid" />
@@ -162,8 +162,8 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile },
-          { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
+          // { validator: validateFormNumber, trigger: 'change'}
         ]
       },
       popTitle: '新增司机',

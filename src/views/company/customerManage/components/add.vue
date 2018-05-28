@@ -45,10 +45,10 @@
           <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
-          <el-input v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话" class="customerPhone" prop="customerPhone">
-          <el-input v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
           <SelectTree v-model="form.orgid" />
@@ -198,8 +198,8 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile },
-          { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
+         // { validator: validateFormNumber, trigger: 'change'}
         ],
         customerName: [
           { required: true, message: '请输入联系人', trigger: 'blur' },

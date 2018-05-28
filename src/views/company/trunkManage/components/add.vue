@@ -80,7 +80,7 @@
           <el-input v-model="form.truckUnit" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="单位电话" prop="truckUnitMobile">
-          <el-input v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机" prop="driverId">
           <el-select v-model="form.driverId" filterable placeholder="请选择">
@@ -89,7 +89,7 @@
         </el-form-item>
 
         <el-form-item label="司机电话" prop="driverMobile">
-          <el-input maxlength="20" v-model="form.driverMobile" auto-complete="off"></el-input>
+          <el-input maxlength="20" v-numberOnly v-model="form.driverMobile" auto-complete="off"></el-input>
         </el-form-item>
         <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">

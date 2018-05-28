@@ -15,6 +15,7 @@
               placeholder="请输入手机号码"
               maxlength="11"
               v-model="searchForm.mobile"
+              v-numberOnly
               clearable>
           </el-input>
       </el-form-item>

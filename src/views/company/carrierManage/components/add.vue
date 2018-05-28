@@ -12,13 +12,13 @@
           <el-input v-model="form.carrierName" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
-          <el-input v-model="form.carrierMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.carrierMobile" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="liableName">
           <el-input v-model="form.liableName" maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="负责人手机" prop="liablePhone">
-          <el-input v-model="form.liablePhone" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.liablePhone" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="合同起始日" prop="contractStarttime">
           <el-date-picker
@@ -43,7 +43,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="客服电话" prop="customerServicePhone">
-          <el-input maxlength="11" v-model="form.customerServicePhone" auto-complete="off"></el-input>
+          <el-input v-numberOnly maxlength="11" v-model="form.customerServicePhone" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="地址" prop="carrierAddr">
           <el-input v-model="form.carrierAddr" maxlength="50" auto-complete="off"></el-input>
@@ -151,12 +151,11 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         carrierMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile },
-          { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
         ],
         liablePhone: [
-          { message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile },
-          { validator: validateFormNumber, trigger: 'change'}
+          { message: '请输入手机号码', trigger: 'blur', validator: validateFormMobile }
+          //{ validator: validateFormNumber, trigger: 'change'}
         ]
       },
       popTitle: '新增承运商',

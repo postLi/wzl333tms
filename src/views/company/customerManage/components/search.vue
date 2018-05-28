@@ -13,6 +13,7 @@
       </el-form-item>
       <el-form-item label="手机号码" prop="mobile">
           <el-input
+              v-numberOnly
               placeholder="请输入手机号码"
               maxlength="11"
               v-model="searchForm.mobile"

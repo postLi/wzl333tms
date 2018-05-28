@@ -91,11 +91,16 @@
             >
           </el-table-column>
           <el-table-column
+            prop="openBank"
+            label="开户行"
             sortable
-            label="创建时间">
-            <template slot-scope="scope">
-                  {{ scope.row.createTime | parseTime('{y}{m}{d}') }}
-            </template>
+            >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="详细地址"
+            sortable
+            >
           </el-table-column>
         </el-table>
       </div>
