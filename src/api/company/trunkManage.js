@@ -134,6 +134,9 @@ export function getExportExcel(ids) {
   "truckVolume": 0, // 可载体积
   "truckWidth": 0, // 车宽
   "updateTime": "2018-05-22T02:16:04.647Z" // 修改时间
+  `drivingLicense` varchar(128) DEFAULT NULL COMMENT '行驶证',
+  `operatingLicense` varchar(128) DEFAULT NULL COMMENT '营运执照',
+  `vehiclePic` varchar(128) DEFAULT NULL COMMENT '车辆照片',
 }
  */
 export function postTrunk(info) {

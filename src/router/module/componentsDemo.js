@@ -13,6 +13,11 @@ export default {
       component: _import('componentsDemo/dirctive')
     },
     {
+      path: '/components/filters',
+      name: '自定义过滤器',
+      component: _import('componentsDemo/filters')
+    },
+    {
       path: '/components/uploadImage',
       name: '上传图片',
       component: _import('componentsDemo/uploadImage')

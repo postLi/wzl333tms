@@ -94,13 +94,13 @@
         <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">
           <div class="idcard">
-            <upload :title="'行驶证'" v-model="form.idcardPicture" />
+            <upload :title="'行驶证'" v-model="form.drivingLicense" />
           </div>
           <div class="drviercard">
-            <upload :title="'营运执照'" v-model="form.drivingPicture" />
+            <upload :title="'营运执照'" v-model="form.operatingLicense" />
           </div>
           <div class="certcard">
-            <upload title="车辆照片" v-model="form.truckPicture" />
+            <upload title="车辆照片" v-model="form.vehiclePic" />
           </div>
         </el-form-item>
       </el-form>
@@ -198,7 +198,10 @@ export default {
         "truckUnit": "", // 车辆单位 50
         "truckUnitMobile": "", // 单位电话 11
         "truckVolume": '', // 可载体积
-        "truckWidth": '' // 车宽
+        "truckWidth": '', // 车宽
+        "drivingLicense": '', //行驶证
+        "operatingLicense": '', //营运执照
+        "vehiclePic": '' //车辆照片
       },
       formLabelWidth: '100px',
       tooltip: false,
