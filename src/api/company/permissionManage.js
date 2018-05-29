@@ -64,7 +64,7 @@ export function getAuthInfo(orgid, roleName, pageNum, pagesize) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function getauthTreeInfo(role_id) {
-  return fetch.get('/api-system/system/menu/v1/authTree/',{
+  return fetch.get('/api-system/system/menu/v1/menuTree/',{
     params: {
       role_id: role_id || 0
     }
@@ -88,23 +88,3 @@ export function getSelectDictInfo(orgid) {
   })
 }
 
-/**
- *插入字典信息
- * @param "dictType":"department_type",
- * @param "dictName":"name",
- * @param "dictRemark":"部门类型"
- * @param "orgid":3,
- */
-export function postDict(orgid,dictName) {
-  return fetch.post('/api-system/system/dict/v1/', {
-    params: {
-      dictType: 'department_type',
-      dictRemark: '部门类型',
-      orgid,
-      dictName
-
-    }
-  }).then(res => {
-    return res.data || []
-  })
-}

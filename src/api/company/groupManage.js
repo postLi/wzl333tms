@@ -41,3 +41,24 @@ export function getSelectDictInfo(orgid) {
     return res.data || []
   })
 }
+
+/**
+ *插入字典信息
+ * @param "dictType":"department_type",
+ * @param "dictName":"name",
+ * @param "dictRemark":"部门类型"
+ * @param "orgid":3,
+ */
+export function postDict(orgid,dictName) {
+  return fetch.post('/api-system/system/dict/v1/', {
+
+      dictType: 'department_type',
+      dictRemark: '部门类型',
+      orgid,
+      dictName
+
+
+  }).then(res => {
+    return res.data || []
+  })
+}

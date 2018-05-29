@@ -26,8 +26,8 @@
             <el-button type="primary" plain @click="doAction('reference')">参照</el-button>
             <img src="../../../assets/icom/shanchu.png" alt="">
             <el-button type="primary" plain @click="doAction('relationPer')">关联员工 </el-button>
-            <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-            <el-button type="primary" plain @click="doAction('depMain')">部门维护</el-button>
+            <!--<img src="../../../assets/icom/xinzengwangdian.png" alt="">-->
+            <!--<el-button type="primary" plain @click="doAction('depMain')">部门维护</el-button>-->
           </div>
         </div>
         <!--表格功能-->
@@ -77,7 +77,7 @@
     </div>
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot" @success="getSeachInfo"></RelationPer>
-    <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="theMentInfo" @close="closeDep" @success="getSeachInfo" :createrId ="otherinfo.id"></DepMaintain>
+    <!--<DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="theMentInfo" @close="closeDep" @success="getSeachInfo" :createrId ="otherinfo.id"></DepMaintain>-->
   </div>
 </template>
 <script>
@@ -99,7 +99,6 @@
       ])
     },
     created() {
-      // console.log(this.otherinfo)
     },
     data() {
       return {

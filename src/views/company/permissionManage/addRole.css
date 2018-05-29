@@ -56,7 +56,7 @@
 /*border-bottom:1px solid #cddde9;*/
 /*}*/
 .add-role-tree .el-tree .el-tree-node.is-expanded>.el-tree-node__children{
-  display: flex;
+  /*display: flex;*/
 }
 .add-role-tree .el-tree .el-tree-node__label{
   color: #666;
@@ -70,4 +70,7 @@
 }
 .add-role-tree .el-tree--highlight-current .is-focusable > .el-tree-node__children{
   /*overflow-x: scroll;*/
+}
+.add-role-tree .custom-tree-node span img{
+  /*vertical-align: center;*/
 }

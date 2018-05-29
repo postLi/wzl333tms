@@ -31,6 +31,20 @@
                   highlight-current
                   :props="defaultProps"
                 >
+                  <span class="custom-tree-node" slot-scope="{ node, data }">
+                    <span v-if="data.type=='0'">
+                      <img src="../../../assets/icom/link.png" alt="">
+                      {{ node.label }}</span>
+                     <span v-else>
+                      <img src="../../../assets/icom/btn.png" alt="">
+                      {{ node.label }}</span>
+                  <!--</span>-->
+                  </span>
+
+                  <!--<span class="custom-tree-node" slot-scope="{ node, data }">-->
+                    <!--&lt;!&ndash;<span>{{ node.name }}</span>&ndash;&gt;-->
+                    <!--<img src="../../../assets/icom/link.png" alt="">-->
+                <!--</span>-->
                 </el-tree>
               </div>
             </el-form>
@@ -59,6 +73,20 @@
     })
     return res
   }
+  /**
+   * 将多层级树结构展开未扁平数组
+   */
+  // function expandTree (data) {
+  //   let res = []
+  //   data.map(el => {
+  //     if(el.type == 0){
+  //       res.push(el.id)
+  //     } else if(el.children){
+  //       res = res.concat(expandGroups(el.children))
+  //     }
+  //   })
+  //   return res
+  // }
 
   import popRight from '@/components/PopRight/index'
   import { postRoleInfo,putRoleInfo} from '../../../api/company/permissionManage'
@@ -92,7 +120,6 @@
       theUser (newVal) {
         if(this.isModify) {
           this.formInline = this.theUser
-          // this.formInline.menusId = []
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
         if(this.reference){
