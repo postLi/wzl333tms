@@ -317,19 +317,24 @@
               case 'addPeople':
                 this.addPeopleVisible = true
                 this.isModify = false
+                this.isDepMain = false
                 break;
               //  新增网点
               case 'addNot':
                 this.isModify = false
+                this.isDepMain = false
                 this.addDoTotVisible = true
                 break;
               //修改网点
               case 'modifyNot':
                 this.isModify = true
+                this.isDepMain = false
                 this.addDoTotVisible = true
                 break;
+              //  部门维护
               case 'depMain':
                 this.isModify = false
+                this.isDepMain = true
                 this.addDepMaintainisible = true
                 break;
             //    删除员工

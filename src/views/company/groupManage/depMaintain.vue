@@ -94,7 +94,6 @@
           popTitle: '部门',
           loading:false,
           getMentInfo:[],
-          getMentInfo:[],
           //首行
           checked: true,
           checked2:true,
@@ -140,36 +139,43 @@
           }
         },
         dotInfo (newVal) {
-          this.getMentInfo = this.dotInfo
+          // this.getMentInfo = this.dotInfo
         },
         popVisible (newVal) {
           console.log('popVisible:', newVal)
         }
       },
       mounted() {
-        Promise.all([getSelectDictInfo(this.createrId), this.fetchSelectDict(this.createrId)]).then( resArr => {
-          this.loading = false
-          this.getMentInfo = resArr[0]
-          this.getMentInfo = resArr[1]
-          console.log(resArr);
-        })
-        console.log(this.dictName);
-        this.getAddDate(this.createrId,this.dictName)
+        // Promise.all([getSelectDictInfo(this.createrId),getSelectDictInfo(this.createrId)]).then( resArr => {
+        //   this.loading = false
+        //   this.getMentInfo = resArr[0]
+        //   this.getMentInfo = resArr[1]
+        //   console.log(resArr);
+        // })
+        this.getAddDate()
       },
       methods: {
-        // fetchSelectDict (orgid, username, mobilephone) {
-        //   return getSelectDictInfo(orgid, username||'', mobilephone||'')
-        // },
-
-        getAddDate(orgid,dictName) {
+        getAddDate(orgid) {
           this.createrId = orgid
-          this.dictName = dictName
-          postDict(this.createrId , this.dictName).then(res => {
+          getSelectDictInfo(this.createrId).then(res => {
             this.loading = true
+            this.getMentInfo = res
             console.log(res);
           })
 
         },
+        // fetchAllUser (orgid, username, mobilephone) {
+        //   return getAllUser(orgid, username||'', mobilephone||'')
+        // },
+        // getAddDate(orgid,dictName) {
+        //   this.createrId = orgid
+        //   this.dictName = dictName
+        //   postDict(this.createrId , this.dictName).then(res => {
+        //     this.loading = true
+        //     console.log(res);
+        //   })
+        //
+        // },
         closeMe(done){
           this.$emit('close')
           // this.$refs['ruleForm'].resetFields()

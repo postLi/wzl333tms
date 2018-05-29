@@ -74,7 +74,7 @@ export function getauthTreeInfo(role_id) {
 }
 
 /**
- * 获取指定网点的部门信息
+ * 获取指定网点的部门信息    （迁移）
  * @param {*} orgid 网点id
  */
 export function getSelectDictInfo(orgid) {
