@@ -38,13 +38,7 @@
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
                       {{ node.label }}</span>
-                  <!--</span>-->
                   </span>
-
-                  <!--<span class="custom-tree-node" slot-scope="{ node, data }">-->
-                    <!--&lt;!&ndash;<span>{{ node.name }}</span>&ndash;&gt;-->
-                    <!--<img src="../../../assets/icom/link.png" alt="">-->
-                <!--</span>-->
                 </el-tree>
               </div>
             </el-form>
@@ -73,20 +67,6 @@
     })
     return res
   }
-  /**
-   * 将多层级树结构展开未扁平数组
-   */
-  // function expandTree (data) {
-  //   let res = []
-  //   data.map(el => {
-  //     if(el.type == 0){
-  //       res.push(el.id)
-  //     } else if(el.children){
-  //       res = res.concat(expandGroups(el.children))
-  //     }
-  //   })
-  //   return res
-  // }
 
   import popRight from '@/components/PopRight/index'
   import { postRoleInfo,putRoleInfo} from '../../../api/company/permissionManage'
@@ -112,10 +92,10 @@
       createrId: [Number,String]
     },
     watch: {
-
       dotInfo (newVal) {
         this.treeData = this.dotInfo
         this.$refs.tree.setCheckedKeys(expandGroups(this.treeData))
+        console.log(this.treeData);
       },
       theUser (newVal) {
         if(this.isModify) {

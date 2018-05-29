@@ -43,7 +43,7 @@
                     </el-input>
                     <div class="dep-img">
                       <img src="../../../assets/icom/groupManage-checked.png" @click="addDep" >
-                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item.id)" :data-id="item.id">
+                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id">
                     </div>
                   </div>
                 </li>
@@ -65,8 +65,7 @@
 
 <script>
     import PopFrame from '@/components/PopFrame/index'
-    import { getSelectDictInfo,postDict } from '../../../api/company/groupManage'
-    import {deleteEmployeer} from '../../../api/company/employeeManage'
+    import { getSelectDictInfo,postDict,deletePerManage } from '../../../api/company/groupManage'
     import { mapGetters } from 'vuex'
     export default {
       computed: {
@@ -169,7 +168,7 @@
         },
         getAddDate() {
           this.loading = true
-          postDict(this.createrId , this.dictName).then(res => {
+          return postDict(this.createrId , this.dictName).then(res => {
             this.loading = false
             this.dictName = ''
           })
@@ -205,27 +204,48 @@
             })
             return false
           } else {
-            this.getAddDate()
+            let reqPromise = this.getAddDate()
+            reqPromise.then(res=>{
+              this.$alert('添加成功', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.loading = false
+                  this.getSelectDict()
+                }
+              })
 
-            //
-            // let reqPromise
-            // reqPromise = this.getAddDate()
-            // reqPromise.then(res=>{
-            //   this.$alert('保存成功', '提示', {
-            //     confirmButtonText: '确定',
-            //     callback: action => {
-            //       this.loading = false
-            //       this.closeMe()
-            //       this.$emit('success')
-            //     }
-            //   })
-            //
-            // })
+            })
           }
 
         },
-        delDep(){
-          console.log(this.data-id)
+        delDep(item){
+          console.log(item.id)
+          let _id = item.id
+          let deleteItem = item.dictName
+          this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deletePerManage(_id).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getSelectDict()
+            }).catch(err=>{
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
         }
 
       }

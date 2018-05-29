@@ -34,7 +34,7 @@ export function putOrgData(data) {
 export function getSelectDictInfo(orgid) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
-      dictType: 'menu_type',
+      dictType: 'department_type',
       orgid
     }
   }).then(res => {
@@ -56,9 +56,17 @@ export function postDict(orgid,dictName) {
       dictRemark: '部门类型',
       orgid,
       dictName
-
-
   }).then(res => {
     return res.data || []
   })
+}
+/**
+ *插入字典信息
+ * @param "dictType":"department_type",
+ * @param "dictName":"name",
+ * @param "dictRemark":"部门类型"
+ * @param "orgid":3,
+ */
+export function deletePerManage(id) {
+  return fetch.delete('/api-system/system/user/v1/' + id)
 }
