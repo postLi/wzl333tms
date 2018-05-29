@@ -38,6 +38,11 @@ export default {
       component: _import('componentsDemo/selectCity')
     },
     {
+      path: '/components/selectType',
+      name: '类型下拉框',
+      component: _import('componentsDemo/selectType')
+    },
+    {
       path: '/components/popRight',
       name: '右边弹窗',
       component: _import('componentsDemo/popRight')

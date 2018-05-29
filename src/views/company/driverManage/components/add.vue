@@ -16,9 +16,7 @@
         </el-form-item>
         
         <el-form-item label="驾驶证类型" prop="licenseType">
-          <el-select v-model="form.licenseType" placeholder="驾驶证类型">
-            <el-option v-for="item in licenseTypes" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-          </el-select>
+          <SelectType v-model="form.licenseType" type="driving_type" placeholder="驾驶证类型" />
         </el-form-item>
         <el-form-item label="驾驶证有效期" prop="validityDate">
           <el-date-picker
@@ -72,13 +70,15 @@ import { postDriver, putDriver } from '@/api/company/driverManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
+import SelectType from '@/components/SelectType/index'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
     Upload,
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     popVisible: {

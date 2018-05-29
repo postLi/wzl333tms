@@ -10,7 +10,8 @@ import fetch from '../../utils/fetch'
   "type": ''
 }
 module:模块	order:运单设置,base:基础设置
-type:	shipNo:运单号规则,cargoNo:货号规则,shipFee:运费合计规则,shipPageFunc:运单页面功能设置,shipPermission:运单权限设置,approvalPocess:审批流程设置,queryShip:查询运单设置
+
+type:	shipNo:运单号规则,cargoNo:货号规则,shipFee:运费合计规则,shipPageFunc:运单页面功能设置,shipPermission:运单权限设置
  */
 export function getAllSetting(params) {
   return fetch.get('/api-system/system/setting/v1/', params).then(res => {
@@ -21,63 +22,60 @@ export function getAllSetting(params) {
  * 修改系统设置
  * @param {object} info 系统设置信息
 {
-  "approvalPocess": {
-    "controlShipReceipt": "string",
-    "shipSignForNotAllowUpdate": "string"
-  },
-  "cargoNo": {
-    "manualInput": "string",
-    "orgIdAndShipNoAndNumberOfUnits": "string",
-    "shipNoAndNumberOfUnits": "string",
-    "systemNumberNotAllowUpdate": "string"
-  },
-  "module": "string",
-  "orgid": 0,
-  "queryShip": {
-    "onlyQueryOwnOrgShip": "string"
-  },
-  "shipFee": {
-    "brokerageFee": "string",
-    "commissionFee": "string",
-    "customsFee": "string",
-    "deliveryFee": "string",
-    "forkliftCharge": "string",
-    "goupstairsFee": "string",
-    "handlingFee": "string",
-    "housingFee": "string",
-    "insuranceFee": "string",
-    "otherFee": "string",
-    "packageFee": "string",
-    "pickupFee": "string",
-    "productPrice": "string",
-    "shipFee": "string",
-    "stampTax": "string",
-    "taxes": "string"
-  },
-  "shipNo": {
-    "companyNumberAutoIncrementByYMDSign": "string",
-    "companyNumberAutoIncrementByYMDValue": "string",
-    "companyNumberAutoIncrementSign": "string",
-    "companyNumberAutoIncrementValue": "string",
-    "manualInput": "string",
-    "systemNumberImmutable": "string",
-    "waterDigitsSignByTwoYMDWaterSign": "string",
-    "waterDigitsSignByTwoYMDWaterValue": "string"
-  },
-  "shipPageFunc": {
-    "fromCityByAdministrativeRegion": "string",
-    "notifyCargoRule": "string",
-    "shipFieldSign": "string",
-    "shipFieldValue": "string",
-    "shipTimeRule": "string"
-  },
-  "shipPermission": {
-    "onlyDeleteOwnShip": "string",
-    "onlyInvalidOwnShip": "string",
-    "onlyUpdateOwnShip": "string",
-    "shipFromOrgAllowUpdate": "string",
-    "shipTimeAllowUpdate": "string"
-  }
+    "printSetting": {
+        "ship": "0",
+        "label": "0",
+        "inventory": "0"
+    },
+    "shipNo": {
+        "manualInput": "0",
+        "companyNumberAutoIncrementSign": "0",
+        "companyNumberAutoIncrementByTwoYMSign": "1",
+        "companyNumberAutoIncrementByTwoYMDSign": "0",
+        "systemNumberImmutable": "0",
+        "companyNumberAutoIncrementValue": "000001",
+        "companyNumberAutoIncrementByTwoYMValue": "0001",
+        "companyNumberAutoIncrementByTwoYMDValue": "0001"
+    },
+    "shipPermission": {
+        "onlyInvalidOwnShip": "0",
+        "onlyUpdateOwnShip": "0",
+        "onlyDeleteOwnShip": "0"
+    },
+    "module": "order",
+    "cargoNo": {
+        "orgIdAndShipNoAndNumberOfUnitsSign": "0",
+        "manualInput": "0",
+        "systemNumberNotAllowUpdate": "0",
+        "orgIdAndShipNoAndNumberOfUnitsValue": "",
+        "shipNoAndNumberOfUnits": "1"
+    },
+    "shipFee": {
+        "customsFee": "0",
+        "commissionFee": "0",
+        "handlingFee": "1",
+        "otherFee": "0",
+        "brokerageFee": "1",
+        "goupstairsFee": "0",
+        "taxes": "0",
+        "shipFee": "1",
+        "housingFee": "0",
+        "deliveryFee": "1",
+        "insuranceFee": "0",
+        "forkliftCharge": "1",
+        "pickupFee": "1",
+        "stampTax": "0",
+        "productPrice": "0",
+        "packageFee": "0"
+    },
+    "shipPageFunc": {
+        "shipFieldValue": "",
+        "toCityByAdministrativeRegion": "0",
+        "notifyCargoRule": "37",
+        "shipTimeRule": "33",
+        "shipFieldSign": "0"
+    },
+    "orgid": 1
 }
  */
 export function putSetting(info) {
@@ -89,4 +87,46 @@ export function putSetting(info) {
  */
 export function putResetSetting(orgid) {
   return fetch.put('/api-system/system/setting/v1/resetSystemSetting', { orgid })
+}
+/**
+ * 开单时间规则
+ * @param {*} orgid 网点id
+ */
+export function getShipTimeRule(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'ship_time_rule',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
+/**
+ * 通知放货规则
+ * @param {*} orgid 网点id
+ */
+export function getCargoRule(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'notify_cargo_rule',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
+/**
+ * 获取车型
+ * @param {*} orgid 网点id
+ */
+export function getTruckType(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'truck_type',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
 }

@@ -35,9 +35,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属部门" :label-width="formLabelWidth">
-          <el-select v-model="form.departmentId" placeholder="请选择部门">
+          <SelectType v-model="form.departmentId" type="department_type" placeholder="请选择部门" />
+          <!-- <el-select v-model="form.departmentId" placeholder="请选择部门">
             <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
       </el-form>
       <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
@@ -54,11 +55,13 @@ import { postEmployeer, putEmployeer,  getAuthInfo, getDepartmentInfo } from '..
 import popRight from '@/components/PopRight/index'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
+import SelectType from '@/components/SelectType/index'
 
 export default {
   components: {
     popRight,
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     popVisible: {

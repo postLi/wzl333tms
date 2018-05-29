@@ -6,14 +6,16 @@
           <el-input v-model="form.truckIdNumber" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="车辆来源" prop="truckSource">
-          <el-select v-model="form.truckSource" placeholder="请选择">
+          <!-- <el-select v-model="form.truckSource" placeholder="请选择">
             <el-option v-for="item in truckSources" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-          </el-select>
+          </el-select> -->
+          <SelectType v-model="form.truckSource" type="truck_source" placeholder="请选择" />
         </el-form-item>
         <el-form-item label="车型" prop="truckType">
-          <el-select v-model="form.truckType" placeholder="请选择">
+          <!-- <el-select v-model="form.truckType" placeholder="请选择">
             <el-option v-for="item in truckTypes" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-          </el-select>
+          </el-select> -->
+          <SelectType v-model="form.truckType" type="truck_type" placeholder="请选择" />
         </el-form-item>
         
         <el-form-item label="可载重" prop="truckLoad">
@@ -119,12 +121,14 @@ import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
+import SelectType from '@/components/SelectType/index'
 
 export default {
   components: {
     popRight,
     Upload,
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     popVisible: {

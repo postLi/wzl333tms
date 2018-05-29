@@ -37,3 +37,19 @@ export function getUploadPolicy() {
     })
   }
 }
+
+/**
+ * 获取下拉框类型
+ * @param {*} type 下拉类型
+ * @param {*} orgid 网点id
+ */
+export function getSelectType(type = '', orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: type,
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
