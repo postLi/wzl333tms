@@ -107,20 +107,20 @@
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
       },
-      isModify () {
-        if(this.isModify){
-          this.formInline = this.theUser
-          this.popTitle = '修改角色'
-        }else{
-          this.formInline = {
-            roleName: '',
-            remark: '',
-            menusId: [],
-            createrId : this.createrId
-          }
-          this.popTitle = '新增角色'
-        }
-      },
+    //   isModify () {
+    //     if(this.isModify){
+    //       this.formInline = this.theUser
+    //       this.popTitle = '修改角色'
+    //     }else{
+    //       this.formInline = {
+    //         roleName: '',
+    //         remark: '',
+    //         menusId: [],
+    //         createrId : this.createrId
+    //       }
+    //       this.popTitle = '新增角色'
+    //     }
+    //   },
       reference(){
         if(this.reference){
           this.formInline = {

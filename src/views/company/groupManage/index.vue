@@ -176,7 +176,7 @@
         </div>
       </div>
       <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
-      <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
+      <!-- <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" /> -->
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" @success="" :createrId ="otherinfo.id"></DepMaintain>
     </div>
   </div>
