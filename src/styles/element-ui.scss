@@ -32,6 +32,20 @@ $bodercolor: #d0d7e5;
   border-left: 1px solid #409EFF;
 }
 
+.el-table{
+  table{
+      th,td{
+          text-align:center;
+      }
+  }
+  .unauth{
+      color: #f00;
+  }
+}
+.el-table td, .el-table th{
+  padding: 5px 0;
+}
+
 //element ui upload
 .upload-container {
   height: 116px;
