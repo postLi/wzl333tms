@@ -78,8 +78,6 @@ color: #ddd;
 }
 .relation-per tbody .el-autocomplete{
   padding: 2px;
-}
-.relation-per tbody .el-autocomplete .el-input--suffix{
   width: 280px;
 }
 .relation-per .el-autocomplete .el-input__inner{

@@ -31,11 +31,11 @@ export function putOrgData(data) {
  * 获取指定网点的部门信息
  * @param {*} orgid 网点id
  */
-export function getSelectDictInfo(orgid) {
+export function getSelectDictInfo(orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: 'department_type',
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []
@@ -54,6 +54,7 @@ export function postDict(orgid,dictName) {
 
       dictType: 'department_type',
       dictRemark: '部门类型',
+      dict_value: '',
       orgid,
       dictName
   }).then(res => {
@@ -61,12 +62,28 @@ export function postDict(orgid,dictName) {
   })
 }
 /**
- *插入字典信息
- * @param "dictType":"department_type",
- * @param "dictName":"name",
- * @param "dictRemark":"部门类型"
- * @param "orgid":3,
+ *根据ID设置字典不可用
+ * @param "id":"",
  */
 export function deletePerManage(id) {
-  return fetch.delete('/api-system/system/user/v1/' + id)
+  return fetch.delete('/api-system/system/dict/v1/' + id)
+}
+/**
+ *修改字典信息
+ * @param "dictType":"upType",
+ * @param "dictName":"upName",
+ * @param "dictRemark":"部门类型"
+ * @param "orgid":3,
+ * @param  "id":16,
+ */
+export function putDict(orgid,dictName,id) {
+  return fetch.put('/api-system/system/dict/v1/', {
+    dictType: 'department_type',
+    dictRemark: '部门类型',
+    id,
+    orgid,
+    dictName
+  }).then(res => {
+    return res.data || []
+  })
 }

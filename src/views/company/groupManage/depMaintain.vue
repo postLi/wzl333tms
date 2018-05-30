@@ -67,14 +67,8 @@
 
 <script>
     import PopFrame from '@/components/PopFrame/index'
-    import { getSelectDictInfo,postDict,deletePerManage } from '../../../api/company/groupManage'
-    import { mapGetters } from 'vuex'
+    import { getSelectDictInfo,postDict,deletePerManage,putDict } from '../../../api/company/groupManage'
     export default {
-      computed: {
-        ...mapGetters([
-          'otherinfo'
-        ])
-      },
       components: {
         PopFrame
       },
@@ -156,10 +150,11 @@
         }
       },
       mounted() {
-        this.getSelectDict()
+        this.getSelectDict(this.createrId)
       },
       methods: {
-        getSelectDict() {
+        getSelectDict(orgId) {
+
           this.loading = true
           getSelectDictInfo(this.createrId).then(res => {
             this.loading = false
@@ -176,10 +171,14 @@
 
         },
         closeMe(done){
-          this.$emit('close')
-          // if(typeof done === 'function'){
-          //   done()
-          // }
+          if(this.popTitle === '部门'){
+            this.$emit('close')
+            if(typeof done === 'function'){
+              done()
+            }
+          } else {
+            this.reset()
+          }
         },
         editMe(){
           this.popTitle = '编辑'
@@ -197,6 +196,14 @@
           this.hiddenEdit = false
           this.showDate = false
         },
+        reset(){
+          this.popTitle = '部门'
+          this.remBotton = false
+          this.showBotton = true
+          this.hiddenAdd = false
+          this.hiddenEdit = false
+          this.showDate = true
+        },
         addDep(){
           if(!this.dictName){
             this.$message({
@@ -211,17 +218,16 @@
                 confirmButtonText: '确定',
                 callback: action => {
                   this.loading = false
-                  this.getSelectDict()
+                  this.getSelectDict(this.createrId)
                 }
               })
-
             })
           }
-
         },
         editDep(item){
+         let id = item.id
           this.dictName = item.dictName
-          let reqPromise = this.getAddDate(this.dictName)
+          let reqPromise = putDict(this.createrId,this.dictName,id)
           reqPromise.then(res=>{
             this.$alert('修改成功', '提示', {
               confirmButtonText: '确定',
@@ -230,7 +236,6 @@
                 this.getSelectDict()
               }
             })
-
           })
         },
         delDep(item){
@@ -261,7 +266,6 @@
             })
           })
         }
-
       }
     }
 </script>
@@ -284,30 +288,9 @@
 
   /*首行头部*/
   /*添加*/
-
-
-  .my-autocomplete {
-    li {
-      line-height: normal;
-      padding: 7px;
-
-      .name {
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-      .addr {
-        font-size: 12px;
-        color: #b4b4b4;
-      }
-
-      .highlighted .addr {
-        color: #ddd;
-      }
-    }
-  }
 /*depmain-add*/
   .add-fixed{
-    display: flex;
+    position: fixed;
   }
 .depmain-add .el-input{
   width: 340px;
@@ -318,7 +301,6 @@
     height: 30px;
   }
   .depmain-add .depmain-list{
-    margin-top: -32px;
     overflow: hidden;
   }
 
@@ -366,38 +348,36 @@
 
   }
   /*dep-img*/
-  depmain-add .dep-img ,.depmain-edit .dep-img{
+
+  .depmain-add .add-fixed .dep-img , .depmain-edit .dep-img{
     display: inline-block;
     width: 26px;
     height: 26px;
   }
-  depmain-add .dep-img img,.depmain-edit .dep-img img{
+  .depmain-add .add-fixed .dep-img img, .depmain-edit .dep-img img{
     width: 100%;
     height: 100%;
   }
-  depmain-add .dep-img img:nth-of-type(1),.depmain-edit .dep-img img:nth-of-type(1){
+  .depmain-add .add-fixed .dep-img img:nth-of-type(1), .depmain-edit .dep-img img:nth-of-type(1){
     position: relative;
-    top: 4px;
+    top: 2px;
     left: 12px;
     width: 26px;
     height: 25px;
-
+    cursor: pointer;
   }
-  depmain-add .dep-img img:nth-of-type(2){
+  .depmain-add .add-fixed .dep-img img:nth-of-type(2),.depmain-edit .dep-img img:nth-of-type(2){
     position: relative;
-    top: -24px;
+    top: -26px;
     left: 45px;
     width: 23px;
-    height: 23px
+    height: 23px;
+    cursor: pointer;
   }
   /*dep-img*/
 
   .depmain-edit .dep-img img:nth-of-type(2){
-    position: relative;
-    top: -23px;
-    left: 45px;
-    width: 23px;
-    height: 23px
+    top: -25px;
   }
    /*首行头部*/
   .dep-maintain .depmain-content li{
