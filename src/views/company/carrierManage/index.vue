@@ -36,40 +36,48 @@
             width="80">
           </el-table-column>
           <el-table-column
+            prop="carrierName"
             fixed
             sortable
+            width="120"
+            label="承运商名称">
+          </el-table-column>
+          <el-table-column
+            sortable
             prop="orgName"
+            width="120"
             label="归属网点">
           </el-table-column>
           <el-table-column
             prop="carrierSn"
             sortable
+            width="120"
             label="承运商编码">
           </el-table-column>
-          <el-table-column
-            prop="carrierName"
-            sortable
-            label="承运商名称">
-          </el-table-column>
+          
           <el-table-column
             sortable
             prop="liableName"
+            width="120"
             label="负责人">
           </el-table-column>
           <el-table-column
             label="负责人手机"
+            width="120"
             prop="liablePhone"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="carrierMobile"
+            width="120"
             label="客服电话"
             sortable
             >
           </el-table-column>
           <el-table-column
             sortable
+            width="200"
             label="合同起始日">
             <template slot-scope="scope">
                   {{ scope.row.contractStarttime | parseTime('{y}{m}{d}') }}
@@ -77,6 +85,7 @@
           </el-table-column>
           <el-table-column
             sortable
+            width="200"
             label="合同终止日">
             <template slot-scope="scope">
                   {{ scope.row.contractEndtime | parseTime('{y}{m}{d}') }}
@@ -85,6 +94,7 @@
           <el-table-column
             prop="carrierAddr"
             label="地址"
+            width="200"
             sortable
             >
           </el-table-column>

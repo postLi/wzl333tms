@@ -38,30 +38,36 @@
                       fixed
                       sortable
                       prop="name"
+                      width="150"
                       label="姓名">
                     </el-table-column>
                     <el-table-column
                       prop="orgName"
                       sortable
+                      width="150"
                       label="归属网点">
                     </el-table-column>
                     <el-table-column
                       prop="departmentName"
                       sortable
+                      width="150"
                       label="归属部门">
                     </el-table-column>
                     <el-table-column
                       prop="position"
                       sortable
+                      width="150"
                       label="职务">
                     </el-table-column>
                     <el-table-column
                       prop="username"
                       sortable
+                      width="150"
                       label="登录账号">
                     </el-table-column>
                     <el-table-column
                       sortable
+                      width="200"
                       label="权限角色">
                        <template slot-scope="scope">
                            <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
@@ -70,6 +76,7 @@
                     </el-table-column>
                     <el-table-column
                       label="性别"
+                      width="120"
                       sortable
                       >
                       <template slot-scope="scope">
@@ -79,6 +86,7 @@
                     <el-table-column
                       prop="mobilephone"
                       label="联系手机"
+                      width="150"
                       sortable
                       >
                     </el-table-column>

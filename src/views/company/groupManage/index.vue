@@ -122,26 +122,31 @@
               <el-table-column
                 fixed
                 prop="name"
-                width="100"
+                width="150"
                 label="姓名">
               </el-table-column>
               <el-table-column
                 prop="orgName"
+                width="150"
                 label="归属网点">
               </el-table-column>
               <el-table-column
                 prop="departmentName"
+                width="150"
                 label="归属部门">
               </el-table-column>
               <el-table-column
                 prop="position"
+                width="150"
                 label="职务">
               </el-table-column>
               <el-table-column
                 prop="username"
+                width="150"
                 label="登录账号">
               </el-table-column>
               <el-table-column
+                width="200"
                 label="权限角色">
                 <template slot-scope="scope">
                   <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
@@ -158,7 +163,7 @@
               <el-table-column
                 prop="mobilephone"
                 label="联系手机"
-                width="200">
+                >
               </el-table-column>
             </el-table>
           </div>

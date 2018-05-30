@@ -39,25 +39,30 @@
             fixed
             sortable
             prop="orgName"
+            width="120"
             label="归属网点">
           </el-table-column>
           <el-table-column
             prop="driverName"
             sortable
+            width="120"
             label="司机姓名">
           </el-table-column>
           <el-table-column
             prop="driverMobile"
             sortable
+            width="120"
             label="司机电话">
           </el-table-column>
           <el-table-column
             sortable
+            width="200"
             prop="driverCardid"
             label="身份证号码">
           </el-table-column>
           <el-table-column
             label="驾驶证类型"
+            width="120"
             sortable
             >
             <template slot-scope="scope">
@@ -66,6 +71,7 @@
           </el-table-column>
           <el-table-column
             label="驾驶证有效期"
+            width="180"
             sortable
             >
             <template slot-scope="scope">{{ scope.row.validityDate | parseTime('{y}{m}{d}') }}</template>
@@ -73,24 +79,28 @@
           <el-table-column
             prop="bankCardNumber"
             label="银行卡号"
+            width="200"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="bankName"
             label="银行名称"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="openBank"
             label="开户行"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="driverAddress"
             label="地址"
+            width="120"
             sortable
             >
           </el-table-column>

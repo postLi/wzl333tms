@@ -36,18 +36,21 @@
             width="80">
           </el-table-column>
           <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            label="归属网点">
-          </el-table-column>
-          <el-table-column
             prop="truckIdNumber"
+            fixed            
             sortable
+            width="120"
             label="车牌号">
           </el-table-column>
           <el-table-column
             sortable
+            prop="orgName"
+            width="120"
+            label="归属网点">
+          </el-table-column>
+          <el-table-column
+            sortable
+            width="130"
             label="车辆来源">
             <template slot-scope="scope">
               {{ getLabelName(scope.row.truckSource, truckSources) }}
@@ -56,34 +59,40 @@
           <el-table-column
             sortable
             prop="truckLoad"
+            width="130"
             label="可载重（吨）">
           </el-table-column>
           <el-table-column
             label="可载体积"
             prop="truckVolume"
+            width="130"
             sortable
             >
           </el-table-column>
           <el-table-column
             label="车长"
             prop="truckHeight"
+            width="100"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="truckWidth"
             label="车宽"
+            width="100"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="truckHeight"
             label="车高"
+            width="100"
             sortable
             >
           </el-table-column>
           <el-table-column
             label="车型"
+            width="100"
             sortable
             >
             <template slot-scope="scope">
@@ -92,12 +101,14 @@
           </el-table-column>
           <el-table-column
             label="车辆注册时间"
+            width="150"
             sortable
             >
             <template slot-scope="scope">{{ scope.row.truckRegisterDate | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
             label="车辆报废时间"
+            width="150"
             sortable
             >
             <template slot-scope="scope">{{ scope.row.truckScrapDate | parseTime('{y}{m}{d}') }}</template>
@@ -105,24 +116,28 @@
           <el-table-column
             prop="truckRemarks"
             label="备注"
+            width="100"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="truckUnit"
             label="车辆单位"
+            width="130"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="truckUnitMobile"
             label="单位电话"
+            width="130"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="driverName"
             label="司机"
+            width="100"
             sortable
             >
           </el-table-column>
@@ -130,6 +145,7 @@
           <el-table-column
             prop="dirverMobile"
             label="司机电话"
+            width="130"
             sortable
             >
           </el-table-column>
