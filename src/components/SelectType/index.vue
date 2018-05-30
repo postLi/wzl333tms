@@ -87,6 +87,11 @@ export default {
       types: []
     }
   },
+  watch: {
+    value (newVal) {
+      this.val = newVal
+    }
+  },
   mounted () {
     this.val = this.value
     getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(data => {

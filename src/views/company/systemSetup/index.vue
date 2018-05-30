@@ -130,27 +130,11 @@
               <el-form-item>
                 开单时间规则
                 <SelectType type="ship_time_rule" v-model="form.shipPageFunc.shipTimeRule">
-                  <template slot-scope="{ item }">
-                    <el-option
-                      :key="item.id + ''"
-                      :label="item.dictName"
-                      :value="item.id + ''">
-                      {{ form.shipPageFunc.shipTimeRule === (item.id + '') }}
-                    </el-option>
-                  </template>
                 </SelectType>
               </el-form-item>
               <el-form-item>
                 通知放货规则
                 <SelectType type="notify_cargo_rule" v-model="form.shipPageFunc.notifyCargoRule" >
-                  <template slot-scope="{ item }">
-                    <el-option
-                      :key="item.id + ''"
-                      :label="item.dictName"
-                      :value="item.id + ''">
-                      {{ form.shipPageFunc.notifyCargoRule === (item.id + '') }}
-                    </el-option>
-                  </template>
                 </SelectType>
               </el-form-item>
             </div>
@@ -273,8 +257,8 @@ export default {
         "shipPageFunc": {
             "shipFieldValue": "",
             "toCityByAdministrativeRegion": "0",
-            "notifyCargoRule": "37",
-            "shipTimeRule": "33",
+            "notifyCargoRule": "",
+            "shipTimeRule": "",
             "shipFieldSign": "0"
         },
         "orgid": 1
@@ -297,6 +281,8 @@ export default {
         module
       }).then(data => {
         this.form = data
+        this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
+        this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
       })
     },
     setShipNo () {
