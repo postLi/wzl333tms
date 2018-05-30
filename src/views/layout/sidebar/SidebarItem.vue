@@ -26,7 +26,7 @@
               :class="{'is-active': item.path === $route.path}"
               class="submenu-item">
               <router-link :to="item.path" :index="item.path" :key="item.name">
-                <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{ item.meta.title }}</span>
+                <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
               </router-link>
             </li>
           </ul>
@@ -45,7 +45,7 @@
               :path="item.path"
               :class="{'is-active': item.path === $route.path}"
               class="submenu-item submenu-item-tab">
-                <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{ item.meta.title }}</span>
+                <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
             </li>
           </ul>
         </template>  

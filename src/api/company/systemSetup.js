@@ -14,7 +14,9 @@ module:模块	order:运单设置,base:基础设置
 type:	shipNo:运单号规则,cargoNo:货号规则,shipFee:运费合计规则,shipPageFunc:运单页面功能设置,shipPermission:运单权限设置
  */
 export function getAllSetting(params) {
-  return fetch.get('/api-system/system/setting/v1/', params).then(res => {
+  return fetch.get('/api-system/system/setting/v1/', {
+    params
+  }).then(res => {
     return res.data
   })
 }
@@ -87,46 +89,4 @@ export function putSetting(info) {
  */
 export function putResetSetting(orgid) {
   return fetch.put('/api-system/system/setting/v1/resetSystemSetting', { orgid })
-}
-/**
- * 开单时间规则
- * @param {*} orgid 网点id
- */
-export function getShipTimeRule(orgid) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'ship_time_rule',
-      orgid
-    }
-  }).then(res => {
-    return res.data || []
-  })
-}
-/**
- * 通知放货规则
- * @param {*} orgid 网点id
- */
-export function getCargoRule(orgid) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'notify_cargo_rule',
-      orgid
-    }
-  }).then(res => {
-    return res.data || []
-  })
-}
-/**
- * 获取车型
- * @param {*} orgid 网点id
- */
-export function getTruckType(orgid) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'truck_type',
-      orgid
-    }
-  }).then(res => {
-    return res.data || []
-  })
 }

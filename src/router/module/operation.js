@@ -21,5 +21,17 @@ export default {
   },
   {
     path: '/operation/order/pickClip', icon: 'QQ', name: '挑单夹', component: _import('operation/order/pickClip/index'), meta: { role: ['admin'], title: '挑单夹', noCache: true }
-  }]
+  },
+  {
+    path: '/operation/service',
+    redirect: '/operation/service/abnormal',
+    icon: 'QQ', name: '客服中心', meta: { role: ['admin'], title: '客服中心', noCache: true, stitle: '客服' },
+    children: [{
+      path: '/operation/service/abnormal', icon: 'QQ', name: '异常管理', component: _import('operation/service/abnormal/index'), meta: { role: ['admin'], title: '异常管理', noCache: true }
+    },
+    {
+      path: '/operation/service/controlgoods', icon: 'QQ', name: '控货管理', component: _import('operation/service/controlgoods/index'), meta: { role: ['admin'], title: '控货管理', noCache: true }
+    }]
+  }
+  ]
 }
