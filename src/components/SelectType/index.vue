@@ -1,6 +1,13 @@
 <template>
   <el-select @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs">
-    <el-option v-for="item in types" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+    <template v-for="item in types">
+      <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
+      <slot v-bind:item="item">
+        <!-- 回退的内容 -->
+        <el-option :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+      </slot>
+    </template>
+    
   </el-select>
 </template>
 <script>

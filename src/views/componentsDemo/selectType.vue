@@ -7,6 +7,22 @@
       引用地址：
       component/SelectType/index.vue
     </blockquote>
+
+    <h3>SLOT</h3>
+    <p>作用域插槽： item</p>
+    <SelectType v-model="selected2" type="driving_type" >
+      <template slot-scope="{ item }">
+        <el-option
+          :key="item.id"
+          :label="item.dictName"
+          :value="item.id">
+          <span style="float: left">{{ item.dictName }}</span>
+          <span style="float: right; color: #8492a6; font-size: 13px">id: {{ item.id }}</span>
+        </el-option>
+      </template>
+    </SelectType>
+    <p>选中的值： {{ selected2 }}</p>
+
     <h3>prop</h3>
     <ul>
       <li class="info-require">v-model<div class="type"> [Number, String]</div>用来绑定值</li>
