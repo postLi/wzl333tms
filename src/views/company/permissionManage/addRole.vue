@@ -92,10 +92,10 @@
       createrId: [Number,String]
     },
     watch: {
+
       dotInfo (newVal) {
         this.treeData = this.dotInfo
         this.$refs.tree.setCheckedKeys(expandGroups(this.treeData))
-        console.log(this.treeData);
       },
       theUser (newVal) {
         if(this.isModify) {

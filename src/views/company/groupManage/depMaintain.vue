@@ -10,16 +10,18 @@
               </li>
             </ul>
           </div>
-          <div class="depmain-add" v-if="hiddenAdd" v-model='resInfo'>
-            <el-input
-              placeholder="请输入内容"
-              v-model="dictName"
-              >
-            </el-input>
 
-            <div class="dep-img">
-              <img src="../../../assets/icom/groupManage-checked.png" @click="addDep">
-              <img src="../../../assets/icom/groupManage-false.png" @click="delDep">
+          <div class="depmain-add" v-if="hiddenAdd" v-model='resInfo'>
+            <div class="add-fixed">
+              <el-input
+                placeholder="请输入内容"
+                v-model="dictName"
+              >
+              </el-input>
+              <div class="dep-img">
+                <img src="../../../assets/icom/groupManage-checked.png" @click="addDep">
+                <img src="../../../assets/icom/groupManage-false.png" @click="delDep">
+              </div>
             </div>
             <div class="depmain-list">
               <ul>
@@ -42,7 +44,7 @@
                     >
                     </el-input>
                     <div class="dep-img">
-                      <img src="../../../assets/icom/groupManage-checked.png" @click="addDep" >
+                      <img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >
                       <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id">
                     </div>
                   </div>
@@ -162,7 +164,6 @@
           getSelectDictInfo(this.createrId).then(res => {
             this.loading = false
             this.getMentInfo = res
-
           })
 
         },
@@ -176,9 +177,9 @@
         },
         closeMe(done){
           this.$emit('close')
-          if(typeof done === 'function'){
-            done()
-          }
+          // if(typeof done === 'function'){
+          //   done()
+          // }
         },
         editMe(){
           this.popTitle = '编辑'
@@ -218,16 +219,29 @@
           }
 
         },
+        editDep(item){
+          this.dictName = item.dictName
+          let reqPromise = this.getAddDate(this.dictName)
+          reqPromise.then(res=>{
+            this.$alert('修改成功', '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.loading = false
+                this.getSelectDict()
+              }
+            })
+
+          })
+        },
         delDep(item){
-          console.log(item.id)
-          let _id = item.id
+          let id = item.id
           let deleteItem = item.dictName
           this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            deletePerManage(_id).then(res => {
+            deletePerManage(id).then(res => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -292,6 +306,9 @@
     }
   }
 /*depmain-add*/
+  .add-fixed{
+    display: flex;
+  }
 .depmain-add .el-input{
   width: 340px;
   float: left;
@@ -302,10 +319,7 @@
   }
   .depmain-add .depmain-list{
     margin-top: -32px;
-    border-top: 1px solid #dcdcdc;
-  }
-  .depmain-add .depmain-list .edit-hidden{
-    /*display: none;*/
+    overflow: hidden;
   }
 
    /*edit*/
@@ -316,6 +330,7 @@
   }
   .depmain-edit .el-input .el-input__inner{
     height: 30px;
+    padding-left: 8px;
   }
   .depmain-edit .depmain-list{
   }
@@ -342,6 +357,7 @@
   .depmain-edit .depmain-list .edit-hidden{
     position: relative;
     top: -8px;
+    left: -9px;;
   }
   .dep-maintain .depmain-edit .depmain-list li:focus{
     background: #0a84ff;
@@ -349,23 +365,39 @@
   .depmain-edit .el-input.is-active .el-input__inner, .el-input__inner:focus{
 
   }
-  /*depmain-list*/
-  .dep-img {
+  /*dep-img*/
+  depmain-add .dep-img ,.depmain-edit .dep-img{
     display: inline-block;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
-  .dep-img img{
+  depmain-add .dep-img img,.depmain-edit .dep-img img{
     width: 100%;
     height: 100%;
   }
-  .dep-img img:nth-of-type(1){
-    margin-left: 10px;
-  }
-  .dep-img img:nth-of-type(2){
+  depmain-add .dep-img img:nth-of-type(1),.depmain-edit .dep-img img:nth-of-type(1){
     position: relative;
-    top: -30px;
+    top: 4px;
+    left: 12px;
+    width: 26px;
+    height: 25px;
+
+  }
+  depmain-add .dep-img img:nth-of-type(2){
+    position: relative;
+    top: -24px;
     left: 45px;
+    width: 23px;
+    height: 23px
+  }
+  /*dep-img*/
+
+  .depmain-edit .dep-img img:nth-of-type(2){
+    position: relative;
+    top: -23px;
+    left: 45px;
+    width: 23px;
+    height: 23px
   }
    /*首行头部*/
   .dep-maintain .depmain-content li{
