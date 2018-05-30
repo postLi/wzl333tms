@@ -65,7 +65,7 @@
 <script>
     import PopFrame from '@/components/PopFrame/index'
     import { getSelectDictInfo } from '../../../api/company/groupManage'
-    import {postDict} from '../../../api/company/permissionManage'
+    // import {postDict} from '../../../api/company/permissionManage'
     import { mapGetters } from 'vuex'
     export default {
       computed: {
