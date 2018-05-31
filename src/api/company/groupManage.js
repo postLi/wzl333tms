@@ -87,3 +87,53 @@ export function putDict(orgid,dictName,id) {
     return res.data || []
   })
 }
+
+/**
+ * 获取指定网点的网点类型
+ * @param {*} orgid 网点id
+ * 营业网点 0
+ * 分拨中心 1
+ */
+export function getNetWorkTypeInfo(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'network_type',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
+
+/**
+ * 获取指定网点的经营类型
+ * @param {*} orgid 网点id
+ * 自营 0
+ * 加盟 1
+ */
+export function getManageTypeInfo(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'manage_type',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}
+/**
+ * 获取指定网点的网点状态
+ * @param {*} orgid 网点id
+ * 无效   0
+ * 有效   1
+ */
+export function getNetworkStatusInfo(orgid) {
+  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+    params: {
+      dictType: 'network_status',
+      orgid
+    }
+  }).then(res => {
+    return res.data || []
+  })
+}

@@ -15,85 +15,88 @@
       </div>
 
       <div class="side_right">
-        <div class="side_right_top">
-          <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-            <el-form-item label="网点名称" :label-width="formLabelWidth" >
-              <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="网点类型" :label-width="formLabelWidth">
-              <el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>
-            </el-form-item>
-            <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
-              <el-input :value='form.status ==="32" ? "有效" : "有效"' disabled></el-input>
-            </el-form-item>
-            <el-form-item label="客服人员" :label-width="formLabelWidth" >
-              <el-input v-model="form.serviceName" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth" >
-              <el-input v-model="form.servicePhone" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <el-input v-model="form.parentName || form.orgName" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="经营类型" :label-width="formLabelWidth">
-              <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
-            </el-form-item>
-            <el-form-item label="创建时间" :label-width="formLabelWidth" >
-              <el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="网点代码" :label-width="formLabelWidth" >
-              <el-input v-model="form.networkCode" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="代收款限额" :label-width="formLabelWidth">
-              <el-input v-model="form.collectionFee" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="负责人" :label-width="formLabelWidth" >
-              <el-input v-model="form.responsibleName" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="负责人电话" :label-width="formLabelWidth" >
-              <el-input  v-model="form.responsibleTelephone"  auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="所在城市" :label-width="formLabelWidth">
-              <el-input v-model="form.city" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="锁机额度" :label-width="formLabelWidth">
-              <el-input v-model="form.lockMachineQuota" auto-complete="off" disabled></el-input>
-            </el-form-item>
+        <el-collapse accordion>
+          <el-collapse-item>
+            <div class="side_right_top">
+              <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+                <el-form-item label="网点名称" :label-width="formLabelWidth" >
+                  <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="网点类型" :label-width="formLabelWidth">
+                  <el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>
+                </el-form-item>
+                <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
+                  <el-input :value='form.status ==="32" ? "有效" : "有效"' disabled></el-input>
+                </el-form-item>
+                <el-form-item label="客服人员" :label-width="formLabelWidth" >
+                  <el-input v-model="form.serviceName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="客服电话" :label-width="formLabelWidth" >
+                  <el-input v-model="form.servicePhone" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="上级网点" :label-width="formLabelWidth">
+                  <el-input v-model="form.parentName || form.orgName" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="经营类型" :label-width="formLabelWidth">
+                  <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
+                </el-form-item>
+                <el-form-item label="创建时间" :label-width="formLabelWidth" >
+                  <el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="网点代码" :label-width="formLabelWidth" >
+                  <el-input v-model="form.networkCode" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="代收款限额" :label-width="formLabelWidth">
+                  <el-input v-model="form.collectionFee" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="负责人" :label-width="formLabelWidth" >
+                  <el-input v-model="form.responsibleName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="负责人电话" :label-width="formLabelWidth" >
+                  <el-input  v-model="form.responsibleTelephone"  auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="所在城市" :label-width="formLabelWidth">
+                  <el-input v-model="form.city" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="锁机额度" :label-width="formLabelWidth">
+                  <el-input v-model="form.lockMachineQuota" auto-complete="off" disabled></el-input>
+                </el-form-item>
 
-            <el-form-item label="预警额度" :label-width="formLabelWidth">
-              <el-input v-model="form.warningQuota" auto-complete="off" disabled></el-input>
-            </el-form-item>
+                <el-form-item label="预警额度" :label-width="formLabelWidth">
+                  <el-input v-model="form.warningQuota" auto-complete="off" disabled></el-input>
+                </el-form-item>
 
 
-          </el-form>
-        </div>
+              </el-form>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+
+
         <div class="side_right_bottom clearfix">
+          <!--表格功能-->
           <div class="btns_box clearfix">
-            <!--表格功能-->
-            <div class="btns_box_left">
-              <img src="../../../assets/icom/xinzeng.png" alt="">
-              <el-button type="primary" plain @click="doAction('addPeople')">新增员工</el-button>
-              <img src="../../../assets/icom/shanchu.png" alt="">
-              <el-button type="primary" plain @click="doAction('deletePeople')">删除员工</el-button>
-              <img src="../../../assets/icom/xiugai.png" alt="">
-              <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
-              <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-              <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button>
-              <div v-if="hiddenDep" style="display: inline-block">
-                <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-                <el-button type="primary" plain @click="doAction('depMain')" >部门维护</el-button>
-              </div>
-            </div>
-            <div class="btns_box_right">
-              <p>广东广州员工</p>
-            </div>
-            <div class="Pagination ">
-              <div class="block">
-                <span class="user-length">共计:{{ total }}</span>
-                <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div>
+            <el-row :gutter="0">
+              <el-col :span="2">
+                <img src="../../../assets/icom/xinzeng.png" alt="">
+                <el-button type="primary" plain @click="doAction('addPeople')">新增员工</el-button>
+              </el-col>
+              <el-col :span="2" class="dele-peo">
+                <img src="../../../assets/icom/shanchu.png" alt="">
+                <el-button type="primary" plain @click="doAction('deletePeople')">删除员工</el-button>
+              </el-col>
+              <el-col :span="2">
+                <img src="../../../assets/icom/xiugai.png" alt="">
+                <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
+              </el-col>
+              <el-col :span="2"><img src="../../../assets/icom/xinzengwangdian.png" alt="">
+                <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button></el-col>
+              <el-col :span="2"> <img src="../../../assets/icom/xinzengwangdian.png" alt="">
+                <el-button type="primary" plain @click="doAction('depMain')" >部门维护</el-button></el-col>
+              <el-col class="org-name"> <p>{{form.orgName}}</p></el-col>
+            </el-row>
 
-              </div>
-            </div>
+            <!--表格功能-->
           </div>
           <!--表格功能-->
           <!--表格内容-->
@@ -104,6 +107,7 @@
               :data="usersArr"
               stripe
               border
+              height="580"
               tooltip-effect="dark"
               @row-click="clickDetails"
               @selection-change="seleClick"
@@ -168,7 +172,7 @@
             </el-table>
           </div>
           <!--表格内容-->
-
+          <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
         </div>
       </div>
       <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
@@ -210,6 +214,7 @@
               isDepMain:false,
               usersArr: [],
               total: 0,
+              orgName:'',
               //
               isModify: false,
               //新建网点
@@ -321,6 +326,8 @@
                 //新增员工
               case 'addPeople':
                 this.addPeopleVisible = true
+                this.addDoTotVisible = false
+                this.addDepMaintainisible = false
                 this.isModify = false
                 this.isDepMain = false
                 break;
@@ -329,6 +336,8 @@
                 this.isModify = false
                 this.isDepMain = false
                 this.addDoTotVisible = true
+                this.addPeopleVisible = false
+                this.addDepMaintainisible = false
                 break;
               //修改网点
               case 'modifyNot':
@@ -341,6 +350,8 @@
                 this.isModify = false
                 this.isDepMain = true
                 this.addDepMaintainisible = true
+                this.addDoTotVisible = false
+                this.addPeopleVisible = false
                 break;
             //    删除员工
               case 'deletePeople':
@@ -411,11 +422,4 @@
 <style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";
   @import "./index.css";
-
-  .show_pager{
-    float: right;
-  }
-  .unauth{
-    color:#f00;
-  }
 </style>

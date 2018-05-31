@@ -31,6 +31,7 @@
               </ul>
             </div>
           </div>
+
           <div class="depmain-edit" v-model='resInfo' v-if="hiddenEdit">
 
             <div class="depmain-list" v-model="getMentInfo">
@@ -52,13 +53,14 @@
               </ul>
             </div>
           </div>
+
         </div>
       </template>
-      <div slot="footer" class="dialog-footer" v-if="showBotton">
+      <div slot="footer" class="dialog-footer-frame" v-if="showBotton">
         <el-button type="primary" @click="submitForm('ruleForm')">{{addText}}</el-button>
         <el-button @click="editMe">{{editText}}</el-button>
       </div>
-      <div slot="footer" class="dialog-footer" v-if="remBotton">
+      <div slot="footer" class="dialog-footer-frame" v-if="remBotton">
         <el-button @click="closeMe">{{remText}}</el-button>
       </div>
     </PopFrame>
@@ -286,7 +288,6 @@
     padding-right: 15px;
   }
 
-  /*首行头部*/
   /*添加*/
 /*depmain-add*/
   .add-fixed{

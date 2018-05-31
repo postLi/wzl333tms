@@ -26,8 +26,6 @@
             <el-button type="primary" plain @click="doAction('reference')">参照</el-button>
             <img src="../../../assets/icom/shanchu.png" alt="">
             <el-button type="primary" plain @click="doAction('relationPer')">关联员工 </el-button>
-            <!--<img src="../../../assets/icom/xinzengwangdian.png" alt="">-->
-            <!--<el-button type="primary" plain @click="doAction('depMain')">部门维护</el-button>-->
           </div>
         </div>
         <!--表格功能-->
@@ -38,6 +36,7 @@
             :data="usersArr"
             stripe
             border
+            height="700"
             tooltip-effect="dark"
             @row-click="clickDetails"
             @selection-change="seleClick"
@@ -77,7 +76,6 @@
     </div>
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot" @success="getSeachInfo"></RelationPer>
-    <!--<DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="theMentInfo" @close="closeDep" @success="getSeachInfo" :createrId ="otherinfo.id"></DepMaintain>-->
   </div>
 </template>
 <script>
@@ -110,12 +108,10 @@
         loading:true,
         addRelatVisible:false,
         addDoRoleVisible:false,
-        addDepMaintainisible:false,
         addDoTotVisible:false,
         addPeopleVisible:false,
         isModify: false,
         isReference:false,
-        isDepMain:false,
         formLabelWidth: '120px',
         //表格内容
         selected:[],
@@ -191,7 +187,6 @@
           case 'addRole':
             this.addDoRoleVisible = true
             this.addRelatVisible = false
-            this.addDepMaintainisible = false
             this.isModify = false
             this.isReference = false
             this.theUser = {}
@@ -203,9 +198,9 @@
                 message:'每次只能修改单条数据~',
                 type:'warning'
               })
+              return false
             }
             this.addDoRoleVisible = true
-            this.addDepMaintainisible = false
             this.addRelatVisible = false
             this.isReference = false
             this.isModify = true
@@ -222,7 +217,6 @@
               return false
             }else{
               this.addDoRoleVisible = true
-              this.addDepMaintainisible = false
               this.addRelatVisible = false
               this.isModify = false
               this.isReference = true
@@ -241,20 +235,10 @@
             }else{
               this.addRelatVisible = true
               this.addDoRoleVisible = false
-              this.addDepMaintainisible = false
               this.isModify = false
               this.isReference = false
               this.thePer = this.selected[0]
             }
-            break;
-          //  部门维护
-          case 'depMain':
-            this.isModify = false
-            this.isReference = false
-            this.addDoRoleVisible = false
-            this.addRelatVisible = false
-            this.addDepMaintainisible = true
-            this.isDepMain = true
             break;
           //    删除员工
           case 'deletePeople':
@@ -307,9 +291,6 @@
       },
       closeAddDot(){
         this.addRelatVisible = false
-      },
-      closeDep(){
-        this.addDepMaintainisible = false
       },
       onSubmit() {
         this.getSeachInfo(this.otherinfo.orgid,this.searchDate.roleName)

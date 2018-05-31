@@ -83,10 +83,16 @@
   left: 183px;
 
 }
-.add-dot .spanDiv span:nth-of-type(3){
+.add-dot .spanDiv .span-hidden{
   position: relative;
   top: -123px;
   left: 409px;
+
+}
+.add-dot .spanDiv .span-last{
+  position: relative;
+  top: -170px;
+  left: 650px;
 
 }
 

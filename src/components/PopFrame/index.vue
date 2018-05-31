@@ -116,11 +116,11 @@ popRight-content .popRight-footer{
   padding-right: 9px;
   background: #e6e6e6;
 }
-  .dialog-footer .el-button--primary,.dialog-footer .el-button--default{
+  .dialog-footer-frame .el-button--primary,.dialog-footer-frame .el-button--default{
     font-size: 12px;
     padding: 6px 11px;
   }
-.dialog-footer .el-button--default{
+.dialog-footer-frame .el-button--default{
   background: #e6e6e6;
   border-color: #3e9ff1;
 }

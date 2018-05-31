@@ -8,12 +8,13 @@
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
               <el-select v-model="form.orgType">
-                <el-option label="营业网点" :value="1"></el-option>
-                <el-option label="分拨中心" :value="2"></el-option>
+                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+                <!--<el-option label="分拨中心" :value="2"></el-option>-->
               </el-select>
             </el-form-item>
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
               <el-select v-model="form.status" :disabled="isModify ? false : true">
+                <!--<el-option v-for="item in netWorkStatus" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
                 <el-option label="有效" :value="32"></el-option>
                 <el-option label="无效" :value="31"></el-option>
               </el-select>
@@ -24,6 +25,7 @@
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType">
+                <!--<el-option v-for="item in manageType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
                 <el-option label="自营" :value="3"></el-option>
                 <el-option label="加盟" :value="4"></el-option>
               </el-select>
@@ -37,7 +39,7 @@
             <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="所在城市" :label-width="formLabelWidth" >
+            <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
               <SelectCity :city="form.city" @change="getCity" />
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
@@ -66,7 +68,7 @@
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
-              <el-checkbox checked :true-label="0" :false-label="1" v-model="form.accountStatus">开通管理员账号</el-checkbox>
+              <el-checkbox checked :true-label="0" :false-label="1" v-model="form.accountStatus" disabled>开通管理员账号</el-checkbox>
               <p>登录账号：网点名称 密码：123456</p>
             </div>
 
@@ -84,7 +86,8 @@
       <div class="spanDiv">
         <span>元</span>
         <span>元</span>
-        <span>元</span>
+        <span v-if="isModify" class="span-hidden">元</span>
+        <span v-if="!isModify"  class="span-last">元</span>
       </div>
     </template>
           <div slot="footer" class="dialog-footer">
@@ -96,14 +99,18 @@
 </template>
 
 <script>
-  import { postOrgSaveDate, putOrgData } from '../../../api/company/groupManage'
+  import { postOrgSaveDate, putOrgData,getNetWorkTypeInfo, getManageTypeInfo,getNetworkStatusInfo} from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
   import SelectCity from '@/components/selectCity/index'
-  import {REGEX ,isvalidUsername} from '../../../utils/validate'
-  import { getAllOrgInfo } from '../../../api/company/employeeManage'
-
+  import {REGEX } from '../../../utils/validate'
+  import { mapGetters } from 'vuex'
   export default {
+    computed: {
+      ...mapGetters([
+        'otherinfo'
+      ])
+    },
     components: {
       popRight,
       SelectTree,
@@ -175,20 +182,6 @@
       var callBackName = (rule, value, callback) => {
         callback()
       }
-      var responsibleTelephone = (rule, value, callback) => {
-        if (!REGEX.MOBILE.test(value) && !value) {
-          return callback(new Error('请输入正确的手机号码'));
-        } else {
-          callback();
-        }
-      }
-      var servicePhone = (rule, value, callback) => {
-        if (!REGEX.TELEPHONE.test(value) && !value == '') {
-          return callback(new Error('请输入正确的电话号码'));
-        } else {
-          callback();
-        }
-      }
       var collectionFee = (rule, value, callback) => {
         if (!REGEX.ONLY_NUMBER.test(value) && !value == '') {
           return callback(new Error('请输入数字'));
@@ -216,12 +209,21 @@
       var remarks = (rule, value, callback) => {
         callback()
       }
-
+      // var city = (rule, value,callback) => {
+      //   if (!value) {
+      //     return callback(new Error('请选择城市~'));
+      //   } else{
+      //     callback();
+      //   }
+      // }
       return {
         popTitle: '新增网点',
         //多选框
         checked: true,
         loading: false,
+        netWorkType:[],
+        manageType:[],
+        netWorkStatus:[],
         form: {
           orgName: '',
           orgType:1,
@@ -277,6 +279,9 @@
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
+          city: [
+            { required: true, trigger: 'blur' }
+          ],
           collectionFee: [
             { validator: collectionFee, trigger: 'blur' },
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
@@ -299,7 +304,7 @@
             { validator: remarks, trigger: 'blur' },
             { min: 2,  message: '最少2个字符', trigger: 'blur' },
             { max: 300, message: '不可超过300个字符', trigger: 'blur' }
-          ]
+          ],
         },
         dialogVisible: false,
         formLabelWidth: '120px'
@@ -308,6 +313,12 @@
     mounted(){
       //this.form.parentId = this.isModify ?　this.companyId : (this.form.id || this.orgid)
       this.form.parentId = this.orgid || this.companyId
+      Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
+        this.loading = false
+        this.netWorkType = resArr[0]
+        this.manageType = resArr[1]
+        this.netWorkStatus = resArr[2]
+      })
     },
     methods: {
       getCity (city) {
@@ -334,6 +345,11 @@
             if(this.isModify){
               reqPromise = putOrgData(this.form)
             } else {
+              if(this.form.accountStatus == true){
+                this.form.accountStatus = 0
+              }else{
+                this.form.accountStatus = 1
+              }
               reqPromise = postOrgSaveDate(this.form)
             }
             reqPromise.then(res=>{
