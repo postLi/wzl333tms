@@ -43,34 +43,34 @@
             sortable
             prop="companyName"
             width="120"
-            label="发货公司">
+            label="订单号">
           </el-table-column>
           <el-table-column
             prop="customerUnit"
             width="120"
             sortable
-            label="发货方">
+            label="订单状态">
           </el-table-column>
           <el-table-column
             prop="customerName"
             sortable
             width="120"
-            label="发货人">
+            label="关联运单号">
           </el-table-column>
           <el-table-column
             prop="customerMobile"
             sortable
             width="120"
-            label="手机号码">
+            label="订单类型">
           </el-table-column>
           <el-table-column
             sortable
             prop="orgName"
             width="120"
-            label="归属组织">
+            label="紧急度">
           </el-table-column>
           <el-table-column
-            label="公司法人"
+            label="提货方式"
             width="120"
             prop="legalPersonname"
             sortable
@@ -78,7 +78,7 @@
           </el-table-column>
           <el-table-column
             prop="vipNum"
-            label="VIP号"
+            label="货品名"
             width="120"
             sortable
             >
@@ -87,11 +87,11 @@
             sortable
             prop="idcard"
             width="200"
-            label="身份证号码">
+            label="件数">
           </el-table-column>
           <el-table-column
             prop="bankName"
-            label="银行名称"
+            label="重量"
             width="120"
             sortable
             >
@@ -105,27 +105,167 @@
           </el-table-column>
           <el-table-column
             prop="openBank"
-            label="开户行"
+            label="体积"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="detailedAddress"
-            label="详细地址"
+            label="包装"
             width="300"
             sortable
             >
           </el-table-column>
           <el-table-column
-            label="身份证图片"
-            width="120"
+            prop="detailedAddress"
+            label="品种规格"
+            width="300"
             sortable
-            >
-            <template slot-scope="scope">
-                <span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>
-            </template>
+          >
           </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="运费"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="付款方式"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="创建时间"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="发货人"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="发货人电话"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="收货人"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="收货人电话"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="拒绝原因"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="备注"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="出发城市"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="目的城市"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="开单网点"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="目的网点"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="声明价值"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="代收款  "
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="代收款手续费"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="件数单价"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="重量单价"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="detailedAddress"
+            label="体积单价"
+            width="300"
+            sortable
+          >
+          </el-table-column>
+          <!--<el-table-column-->
+            <!--label="品种规格"-->
+            <!--width="120"-->
+            <!--sortable-->
+            <!--&gt;-->
+            <!--<template slot-scope="scope">-->
+                <!--<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
