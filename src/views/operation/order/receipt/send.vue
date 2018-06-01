@@ -356,7 +356,7 @@ export default {
                     "currentPage":1,
                     "pageSize":10,
                     "vo":{
-                        "pageType":1
+                        "pageType":2
                     }
                 },
                 total: 0

@@ -320,7 +320,8 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
     components: {
-        SearchForm
+        SearchForm,
+        Pager
     },
     computed: {
         ...mapGetters([
@@ -358,8 +359,8 @@ export default {
         fetchAllreceipt() {
             // this.loading = true
             return postReceipt(this.searchQuery).then(data => {
-                // this.usersArr = data.list
-                // this.total = data.totalCount
+                this.dataset = data.list
+                this.total = data.totalCount
                 // this.loading = false
                 console.log(data);
             })
@@ -376,7 +377,10 @@ export default {
             // this.searchQuery.vo.customerMobile = obj.mobile
             // this.searchQuery.vo.customerName = obj.name
             this.fetchAllreceipt()
-        }
+        },
+        setTable(){},
+        clickDetails(){},
+        getSelection(){}
     }
 }
 </script>

@@ -201,7 +201,7 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {postReceipt} from '@/api/operation/receipt'
+// import {postReceipt} from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
@@ -219,10 +219,10 @@ export default {
         }
     },
     mounted () {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+        // this.searchQuery.vo.orgid = this.otherinfo.orgid
+            // this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            })
+            // })
         },
         data() {
             return {
@@ -235,7 +235,7 @@ export default {
                     "currentPage":1,
                     "pageSize":10,
                     "vo":{
-                        "pageType":1
+                        "status":1
                     }
                 },
                 total: 0

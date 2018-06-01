@@ -29,10 +29,10 @@ export default {
     
     },
     mounted () {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
+        // this.searchQuery.vo.orgid = this.otherinfo.orgid
+            // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            })
+            // })
         },
         data() {
             return {

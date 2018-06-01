@@ -49,17 +49,29 @@ export function PutXiuGai(params) {
 /**
  * 控货列表
  * @param {*} params 
- * {"currentPage":1,
-		"pageSize":10,
-		"vo":{
-			"startTime":"2018-05-30",
-			"shipSn": "45",
-			"shipFromOrgid":[5,6]
-		}
+{
+  "currentPage": 0,
+  "pageSize": 0,
+  "vo": {
+    "createTime": "2018-06-01T11:23:05.335Z",
+    "endTime": "string",
+    "id": 0,
+    "shipFromCityCode": "string",
+    "shipFromOrgid": [
+      "string"
+    ],
+    "shipId": 0,
+    "shipSn": "string",
+    "shipToCityCode": "string",
+    "shipToOrgid": 0,
+    "startTime": "string",
+    "status": 0,
+    "updateTime": "2018-06-01T11:23:05.335Z"
+  }
 }
  */
 export function PostControlgoods(params) {
-  return fetch.post('/api-order/controlgoods/v1/getLists', params).then(res => {
+  return fetch.post('/api-order/order/controlgoods/v1/getLists', params).then(res => {
                 // console.log(res);
     return res.data || { list: [], totalCount: 0 }
   })
@@ -69,8 +81,8 @@ export function PostControlgoods(params) {
  * 放货
  */
 
-export function PutFh(params) {
-  return fetch.put('/api-order/controlgoods/v1/1', params).then(res => {
+export function PutFh(id) {
+  return fetch.put('/api-order/controlgoods/v1/' + id).then(res => {
                 // console.log(res);
     return res.data || { list: [], totalCount: 0 }
   })
