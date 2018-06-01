@@ -11,7 +11,7 @@ export default {
   children: [{
     path: '/operation/index', icon: 'quanxian', name: '运营管理', component: _import('table/index'), meta: { role: ['admin'], title: '运营管理', noCache: true }
   }, {
-    path: '/operation/order', icon: 'QQ', name: '订单管理1', component: _import('operation/order/index'), meta: { role: ['admin'], title: '订单管理1', noCache: true }
+    path: '/operation/receipt', icon: 'QQ', name: '回单管理', component: _import('operation/receipt/index'), meta: { role: ['admin'], title: '回单管理', noCache: true }
   },
   {
     path: '/operation/order/manage', icon: 'QQ', name: '订单管理', component: _import('operation/order/manage/index'), meta: { role: ['admin'], title: '订单管理', noCache: true }
