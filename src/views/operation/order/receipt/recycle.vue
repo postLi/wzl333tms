@@ -31,50 +31,51 @@
           <el-table-column
             fixed
             sortable
-            prop="customerId"
+            prop="shipId"
             label="序号"
             width="80">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="companyName"
+            prop="shipFromOrgid"
             width="120"
             label="开单网点">
-          </el-table-column>
+          </el-table-column>f
           <el-table-column
-            prop="customerUnit"
+            prop="shipToOrgid"
             width="120"
             sortable
             label="目的网点">
           </el-table-column>
           <el-table-column
-            prop="customerName"
+            prop=""
             sortable
             width="120"
             label="开单日期">
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
-            prop="customerMobile"
+            prop="shipSn"
             sortable
             width="120"
             label="运单号">
           </el-table-column>
           <el-table-column
             sortable
-            prop="orgName"
+            prop="shipFromOrgid"
             width="120"
             label="出发城市">
           </el-table-column>
           <el-table-column
             label="到达城市"
             width="120"
-            prop="legalPersonname"
+            prop="shipToCityCode"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="vipNum"
+            prop="recStatus"
             label="寄出状态"
             width="120"
             sortable
@@ -82,12 +83,13 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="idcard"
+            prop=""
             width="120"
             label="回收日期">
+            <template slot-scope="scope">{{ scope.row.acceptTypeId | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="receiptId"
             label="回单状态"
             width="120"
             sortable
@@ -101,33 +103,209 @@
             >
           </el-table-column>
           <el-table-column
-            prop="openBank"
+            prop="shipReceiptNum"
             label="回单数量"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="sendName"
             label="发货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="recName"
             label="收货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
-            label="货物名称"
+            prop="cargoName"
+            label="货品名"
             width="120"
             sortable
             >
           </el-table-column>
+          <el-table-column
+            prop="cargoAmount"
+            label="件数"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="cargoWeight"
+            label="重量"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="cargoVolume"
+            label="体积"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="acceptRemark"
+            label="回收备注"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipPayWay"
+            label="付款方式"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipReceiptpayFee"
+            label="回单付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipMonthpayFee"
+            label="月结"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <!-- 这里没有找到对应的字段 -->
+          <el-table-column
+            prop="cargoName"
+            label="多笔付"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="cargoName"
+            label="carrierName"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="中转日期"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.transferTime | parseTime('{y}{m}{d}') }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="oddNumbers"
+            label="中转单号"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+           <!-- 这里没有找到对应的字段 -->
+          <el-table-column
+            prop="cargoName"
+            label="到达省"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipFromCityCode"
+            label="到达市"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <!-- 这里没有找到对应的字段 -->
+          <el-table-column
+            prop="cargoName"
+            label="到达县区"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="sendMobile"
+            label="发货人电话"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="sendAddress"
+            label="发货地址"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="recMobile"
+            label="收货人电话"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="recAddress"
+            label="收货地址"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="寄出日期"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}{m}{d}') }}</template>
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="接收日期"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}{m}{d}') }}</template>
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="发放日期"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}{m}{d}') }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="recRemark"
+            label="回收备注"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    

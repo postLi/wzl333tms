@@ -25,6 +25,7 @@ export default {
   {
     path: '/operation/service',
     redirect: '/operation/service/abnormal',
+    component: _import('operation/service/index'),
     icon: 'QQ', name: '客服中心', meta: { role: ['admin'], title: '客服中心', noCache: true, stitle: '客服' },
     children: [{
       path: '/operation/service/abnormal', icon: 'QQ', name: '异常管理', component: _import('operation/service/abnormal/index'), meta: { role: ['admin'], title: '异常管理', noCache: true }

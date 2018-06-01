@@ -1,10 +1,10 @@
 <template>
   <div class="customer-manager">
     <div class="eltab clearfix">
-        <span @click="component = 'Recycle'" class="tab-label" :class="{'active-tab': component.indexOf('ecycle')!==-1}">回单回收</span>
-        <span @click="component = 'Send'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}">回单寄出</span>
-        <span @click="component = 'Accept'" class="tab-label" :class="{'active-tab': component.indexOf('ccept')!==-1}">回单接收</span>
-        <span @click="component = 'Grant'" class="tab-label" :class="{'active-tab': component.indexOf('rant')!==-1}">回单发放</span>
+        <span @click="component = 'Recycle'" class="tab-label" :class="{'active-tab': component.indexOf('Recycle')!==-1}">回单回收</span>
+        <span @click="component = 'Send'" class="tab-label" :class="{'active-tab': component.indexOf('Send')!==-1}">回单寄出</span>
+        <span @click="component = 'Accept'" class="tab-label" :class="{'active-tab': component.indexOf('Accept')!==-1}">回单接收</span>
+        <span @click="component = 'Grant'" class="tab-label" :class="{'active-tab': component.indexOf('Grant')!==-1}">回单发放</span>
     </div>
     <keep-alive>
         <component v-bind:is="component"></component>
@@ -36,10 +36,10 @@ export default {
     
     },
     mounted () {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
+        // this.searchQuery.vo.orgid = this.otherinfo.orgid
+            // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            })
+            // })
         },
         data() {
             return {
