@@ -23,7 +23,6 @@
 <script>
 // 上传接口
 import { getUploadPolicy } from '@/api/common'
-import fetch from '@/utils/fetch'
 
 export default {
   name: 'singleImageUpload',
