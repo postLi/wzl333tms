@@ -59,6 +59,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true,
       favicon: resolveApp('favicon.ico'),
+      excludeChunks: ['polyfills'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,

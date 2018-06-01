@@ -34,6 +34,7 @@ module.exports = merge(baseWebpackConfig, {
       filename: 'index.html',
       template: 'index.html',
       favicon: resolveApp('favicon.ico'),
+      excludeChunks: ['polyfills'],
       inject: true
     }),
     new FriendlyErrorsPlugin()
