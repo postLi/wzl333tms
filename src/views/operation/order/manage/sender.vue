@@ -41,219 +41,214 @@
           <el-table-column
             fixed
             sortable
-            prop="companyName"
-            width="120"
+            prop="orderSn"
+            width="90"
             label="订单号">
           </el-table-column>
           <el-table-column
-            prop="customerUnit"
-            width="120"
+            prop="orderStatus"
+            width="110"
             sortable
             label="订单状态">
+            <!--订单状态 0:未受理 1:已受理-->
           </el-table-column>
           <el-table-column
-            prop="customerName"
+            prop="shipSn"
             sortable
             width="120"
             label="关联运单号">
           </el-table-column>
           <el-table-column
-            prop="customerMobile"
+            prop="orderType"
             sortable
-            width="120"
+            width="110"
             label="订单类型">
           </el-table-column>
           <el-table-column
             sortable
-            prop="orgName"
-            width="120"
+            prop="orderEffective"
+            width="100"
             label="紧急度">
           </el-table-column>
           <el-table-column
             label="提货方式"
-            width="120"
-            prop="legalPersonname"
+            width="110"
+            prop="orderPickupMethod"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="vipNum"
+            prop="cargoName"
             label="货品名"
-            width="120"
+            width="90"
             sortable
             >
           </el-table-column>
           <el-table-column
             sortable
-            prop="idcard"
-            width="200"
+            prop="cargoAmount"
+            width="80"
             label="件数">
           </el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="cargoWeight"
             label="重量"
-            width="120"
+            width="90"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="bankCardNumber"
-            label="银行卡号"
-            width="180"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="openBank"
+            prop="cargoVolume"
             label="体积"
-            width="120"
+            width="80"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="cargoPack"
             label="包装"
-            width="300"
+            width="80"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="description"
             label="品种规格"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="deliveryFee"
             label="运费"
-            width="300"
+            width="80"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderPayWay"
             label="付款方式"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
+          <!--创建时间-->
           <el-table-column
             prop="detailedAddress"
             label="创建时间"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderSenderId"
             label="发货人"
-            width="300"
+            width="90"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="senderMobile"
             label="发货人电话"
-            width="300"
+            width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderReceiverId"
             label="收货人"
-            width="300"
+            width="90"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="receiverMobile"
             label="收货人电话"
-            width="300"
+            width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="refuseReason"
             label="拒绝原因"
-            width="300"
+            width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderRemarks"
             label="备注"
-            width="300"
+            width="80"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderFromCityCode"
             label="出发城市"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderToCityCode"
             label="目的城市"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderFromOrgid"
             label="开单网点"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="orderToOrgid"
             label="目的网点"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="productPrice"
             label="声明价值"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
-            label="代收款  "
-            width="300"
+            prop="agencyFund"
+            label="代收款"
+            width="90"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="commissionFee"
             label="代收款手续费"
-            width="300"
+            width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="cargoAmount"
             label="件数单价"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="weightFee"
             label="重量单价"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="volumeFee"
             label="体积单价"
-            width="300"
+            width="110"
             sortable
           >
           </el-table-column>
@@ -276,6 +271,7 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+import { getPostlist } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -303,6 +299,10 @@ export default {
     this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
       this.loading = false
     })
+    this.fetchAllList(this.otherinfo.orgid).then(res => {
+      this.loading = false
+    })
+    // this.fetchAllList(this.otherinfo.orgid)
   },
   data () {
     return {
@@ -326,14 +326,29 @@ export default {
           customerMobile: '',
           customerName: ''
         }
+      },
+      searchForms: {
+        "currentPage": 1,
+        "pageSize": 100,
+        "vo": {
+          "orgid": 1
+        }
       }
     }
   },
   methods: {
+    fetchAllList() {
+      this.loading = true
+      return getPostlist(this.searchForms).then(data => {
+        this.usersArr = data.list
+        // this.total = data.totalCount
+        this.loading = false
+      })
+    },
     fetchAllCustomer () {
       this.loading = true
       return getAllCustomer(this.searchQuery).then(data => {
-        this.usersArr = data.list
+        // this.usersArr = data.list
         this.total = data.totalCount
         this.loading = false
       })

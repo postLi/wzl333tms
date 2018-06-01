@@ -1,26 +1,53 @@
-<script src="../../../../../router/module/operation.js"></script>
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-      <el-form-item label="网点">
-          <SelectTree v-model="searchForm.orgid" />
+  <!--label-width="80px"-->
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
+      <el-form-item label="创建时间:">
+        <div class="block">
+          <el-date-picker
+            v-model="searchCreatTime"
+            type="datetimerange"
+            align="right"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
+          <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
-      <el-form-item :label="title+'货人'">
-          <el-input
-              :placeholder="title+'货单位或'+title+'货人'"
-              v-model="searchForm.name"
-              maxlength="15"
-              clearable>
-          </el-input>
-      </el-form-item>
-      <el-form-item label="手机号码">
-          <el-input
-              v-numberOnly
-              placeholder="请输入手机号码"
-              maxlength="11"
-              v-model="searchForm.mobile"
-              clearable>
-          </el-input>
-      </el-form-item>
+      <!--<el-form-item :label="title+'货人'">-->
+          <!--<el-input-->
+              <!--:placeholder="title+'货单位或'+title+'货人'"-->
+              <!--v-model="searchForm.name"-->
+              <!--maxlength="15"-->
+              <!--clearable>-->
+          <!--</el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="订单状态:">-->
+          <!--<el-input-->
+              <!--v-numberOnly-->
+              <!--placeholder=""-->
+              <!--maxlength="11"-->
+              <!--v-model="searchForm.mobile"-->
+              <!--clearable>-->
+          <!--</el-input>-->
+      <!--</el-form-item>-->
+    <el-form-item label="订单状态：">
+      <el-select v-model="searchForm.mobile">
+        <!--<el-option v-for="item in manageType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
+        <el-option label="已受理" :value="3"></el-option>
+        <el-option label="未受理" :value="4"></el-option>
+        <el-option label="已拒绝" :value="4"></el-option>
+        <el-option label="全部" :value="4"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="运单号:">
+      <el-input
+        v-numberOnly
+        placeholder=""
+        maxlength="11"
+        v-model="searchForm.name"
+        clearable>
+      </el-input>
+    </el-form-item>
       <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -74,6 +101,7 @@ export default {
     }
 
     return {
+      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       searchForm: {
         orgid: '',
         name: '',

@@ -1,14 +1,20 @@
 <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">受理</el-button>
+        <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导入运单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+          <!--<el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>-->
+          <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
+          <!--<el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>-->
+          <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>-->
+          <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>-->
+          <!--<el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>-->
       </div>
       <div class="info_tab">
         <el-table
@@ -38,82 +44,213 @@
           <el-table-column
             fixed
             sortable
-            prop="companyName"
-            label="收货公司">
+            prop="orderSn"
+            label="订单号"
+            width="90">
           </el-table-column>
           <el-table-column
-            prop="customerUnit"
+            prop="orderStatus"
             sortable
-            label="收货方">
+            label="订单状态"
+            width="110">
+          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="customerName"-->
+            <!--sortable-->
+            <!--label="关联运单号"-->
+            <!--width="120">-->
+          <!--</el-table-column>-->
+          <el-table-column
+            prop="orderEffective"
+            sortable
+            label="紧急度"
+            width="90">
           </el-table-column>
           <el-table-column
-            prop="customerName"
             sortable
-            label="收货人">
+            prop="orderPickupMethod"
+            label="提货方式"
+            width="110">
           </el-table-column>
           <el-table-column
-            prop="customerMobile"
+            label="货品名"
+            prop="cargoName"
             sortable
-            label="手机号码">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="orgName"
-            label="归属组织">
-          </el-table-column>
-          <el-table-column
-            label="公司法人"
-            prop="legalPersonname"
-            sortable
+            width="90"
             >
           </el-table-column>
           <el-table-column
-            prop="vipNum"
-            label="VIP号"
+            prop="cargoAmount"
+            label="件数"
             sortable
+            width="80"
             >
           </el-table-column>
           <el-table-column
             sortable
             prop="idcard"
-            label="身份证号码">
+            label="重量"
+            width="80">
           </el-table-column>
           <el-table-column
             prop="bankName"
-            label="银行名称"
+            label="体积"
             sortable
+            width="80"
             >
           </el-table-column>
           <el-table-column
             prop="bankCardNumber"
-            label="银行卡号"
+            label="包装"
             sortable
+            width="80"
             >
           </el-table-column>
           <el-table-column
-            prop="openBank"
-            label="开户行"
+            prop="description"
+            label="品种规格"
             sortable
+            width="110"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="orderTotalFee"
+            label="运费"
+            sortable
+            width="80"
             >
           </el-table-column>
           <el-table-column
             prop="detailedAddress"
-            label="详细地址"
+            label="创建时间"
             sortable
-            >
+            width="110"
+          >
           </el-table-column>
           <el-table-column
-            label="身份证图片"
-            width="120"
+            prop="orderSenderId"
+            label="发货人"
             sortable
-            >
-            <template slot-scope="scope">
-                <span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>
-            </template>
+            width="90"
+          >
           </el-table-column>
+          <el-table-column
+            prop="senderMobile;"
+            label="发货人电话"
+            sortable
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderReceiverId"
+            label="收货人"
+            sortable
+            width="100"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="receiverMobile"
+            label="收货人电话"
+            sortable
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="refuseReason"
+            label="拒绝原因"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderRemarks"
+            label="备注"
+            sortable
+            width="100"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderFromCityCode"
+            label="出发城市"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderToCityCode"
+            label="目的城市"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderFromOrgid"
+            label="开单网点"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderToOrgid"
+            label="目的网点"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="productPrice"
+            label="声明价值"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderAgencyFund"
+            label="代收款"
+            sortable
+            width="100"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orderProcedureFee"
+            label="代收款手续费"
+            sortable
+            width="130"
+          >
+          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="cargoAmount"-->
+            <!--label="件数单价"-->
+            <!--sortable-->
+            <!--width="110"-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <el-table-column
+            prop="weightFee"
+            label="重量单价"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="volumeFee"
+            label="体积单价"
+            sortable
+            width="110"
+          >
+          </el-table-column>
+          <!--<el-table-column-->
+            <!--label="身份证图片"-->
+            <!--width="120"-->
+            <!--sortable-->
+            <!--&gt;-->
+            <!--<template slot-scope="scope">-->
+                <!--<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
@@ -121,6 +258,7 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+import { getPostlist } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -148,6 +286,9 @@ export default {
     this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
       this.loading = false
     })
+    this.fetchAllList(this.otherinfo.orgid).then(res => {
+      this.loading = false
+    })
   },
   data () {
     return {
@@ -171,15 +312,30 @@ export default {
           customerMobile: '',
           customerName: ''
         }
+      },
+      searchForm: {
+        "currentPage": 1,
+        "pageSize": 100,
+        "vo": {
+          "orgid": 1
+        }
       }
     }
   },
   methods: {
+    fetchAllList() {
+      this.loading = true
+      return getPostlist(this.searchForm).then(data => {
+        this.usersArr = data.list
+        this.total = data.totalCount
+        this.loading = false
+      })
+    },
     fetchAllCustomer () {
       this.loading = true
       return getAllCustomer(this.searchQuery).then(data => {
-        this.usersArr = data.list
-        this.total = data.totalCount
+        // this.usersArr = data.list
+        // this.total = data.totalCount
         this.loading = false
       })
     },
@@ -215,7 +371,7 @@ export default {
       }
 
       console.log("this.selected:", this.selected)
-      
+
 
       switch (type) {
           // 添加客户
@@ -260,14 +416,14 @@ export default {
                           this.$message({
                               type: 'info',
                               message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })  
+                          })
                       })
-                      
+
                   }).catch(() => {
                       this.$message({
                           type: 'info',
                           message: '已取消删除'
-                      })          
+                      })
                   })
               break;
           // 导出数据
@@ -335,7 +491,7 @@ export default {
             width: 100%;
             height: calc(100% - 68px);
             flex-grow: 1;
-            
+
             .el-table{
                 table{
                     th,td{

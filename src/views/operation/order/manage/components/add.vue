@@ -36,7 +36,30 @@
             <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idCardVerso" />
           </div>
         </el-form-item>
-
+        <!--<el-form-item>-->
+          <!--<table>-->
+            <!--<thead>-->
+            <!--<tr>-->
+              <!--<th>发货方</th>-->
+              <!--<th>收货方</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<td>-->
+              <!--<el-form-item label="发货人:">-->
+                <!--<el-input-->
+                  <!--placeholder=""-->
+                  <!--maxlength="11"-->
+                  <!--v-model="searchForm.name"-->
+                  <!--clearable>-->
+                <!--</el-input>-->
+              <!--</el-form-item>-->
+            <!--</td>-->
+            <!--<td>1</td>-->
+            <!--<td>1</td>-->
+            <!--</tbody>-->
+          <!--</table>-->
+        <!--</el-form-item>-->
         <div class="info">{{ issender ? '发' : '收'}}货信息</div>
         <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">
           <el-input v-model="form.customerUnit" maxlength="25" auto-complete="off"></el-input>
@@ -206,7 +229,7 @@ export default {
           { max: 30, message: '不能超过30个字符', trigger: 'blur' }
         ]
       },
-      popTitle: '新增发货人',
+      popTitle: '新建',
       orgArr: [],
       rolesArr: [],
       departmentArr: [],

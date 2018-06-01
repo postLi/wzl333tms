@@ -41,7 +41,8 @@
                   <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" :label-width="formLabelWidth" >
-                  <el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
+                  <!--<el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>-->
+                 <el-input :value=" form.createTime| parseTime('{y}/{m}/{d}')" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="网点代码" :label-width="formLabelWidth" >
                   <el-input v-model="form.networkCode" auto-complete="off" disabled></el-input>
@@ -107,7 +108,7 @@
               :data="usersArr"
               stripe
               border
-              height="580"
+              height="100%"
               tooltip-effect="dark"
               @row-click="clickDetails"
               @selection-change="seleClick"
@@ -172,13 +173,14 @@
             </el-table>
           </div>
           <!--表格内容-->
-          <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+
         </div>
       </div>
       <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
-      <!-- <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" /> -->
+       <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" @success="" :createrId ="otherinfo.id"></DepMaintain>
     </div>
+    <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
   </div>
 </template>
 <script type="text/javascript">

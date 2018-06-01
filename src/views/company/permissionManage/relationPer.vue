@@ -24,7 +24,7 @@
                       popper-class="my-autocomplete"
                      v-model="selectInfo.name"
                       :fetch-suggestions="querySearch"
-                      placeholder=""
+                      placeholder="请选择员工~"
                       @select="handleSelect">
                       <i
                         class="el-icon-edit el-input__icon"
@@ -45,12 +45,6 @@
               </tbody>
 
             </table>
-            <!--<div class="hiddenDiv">-->
-              <!--<ul>-->
-                <!--<li>1111111</li>-->
-                <!--<li>222222222</li>-->
-              <!--</ul>-->
-            <!--</div>-->
           </el-form>
     </template>
           <div slot="footer" class="dialog-footer">
