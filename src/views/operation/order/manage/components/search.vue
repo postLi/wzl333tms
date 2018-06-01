@@ -1,3 +1,4 @@
+<script src="../../../../../router/module/operation.js"></script>
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <el-form-item label="网点">
@@ -108,7 +109,7 @@ export default {
     }
   }
 }
-</script> 
+</script>
 
 
 <style lang="scss">
@@ -119,7 +120,7 @@ export default {
         .el-form-item{
             margin-bottom: 0;
         }
-        
+
     }
     .staff_searchinfo--btn{
         float: right;
