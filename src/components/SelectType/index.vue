@@ -55,6 +55,7 @@ truck_type	车型
 ship_other	其他
 type	备注
 department_type	部门类型
+order_status 订单状态
  */
 
 export default {
