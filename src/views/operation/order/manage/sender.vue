@@ -46,11 +46,13 @@
             label="订单号">
           </el-table-column>
           <el-table-column
-            prop="orderStatus"
+            prop='orderStatus ==="1" ? "已受理" :"未受理"'
             width="110"
             sortable
             label="订单状态">
             <!--订单状态 0:未受理 1:已受理-->
+            <!--orderStatus-->
+            <!--<el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>-->
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -296,12 +298,9 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
-      this.loading = false
-    })
-    this.fetchAllList(this.otherinfo.orgid).then(res => {
-      this.loading = false
-    })
+    // this.fetchAllList(this.otherinfo.orgid).then(res => {
+    //   this.loading = false
+    // })
     // this.fetchAllList(this.otherinfo.orgid)
   },
   data () {
@@ -317,6 +316,7 @@ export default {
       selectInfo: {},
       // 选中的行
       selected: [],
+
       searchQuery: {
         "currentPage": 1,
         "pageSize": 100,
@@ -331,7 +331,11 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgid": 1
+          "orgid": 1,
+          orderStatus: '',
+          orderSn: '',
+          createTime: '',
+          endTime: ''
         }
       }
     }
@@ -341,7 +345,7 @@ export default {
       this.loading = true
       return getPostlist(this.searchForms).then(data => {
         this.usersArr = data.list
-        // this.total = data.totalCount
+        this.total = data.totalCount
         this.loading = false
       })
     },
@@ -350,6 +354,7 @@ export default {
       return getAllCustomer(this.searchQuery).then(data => {
         // this.usersArr = data.list
         this.total = data.totalCount
+
         this.loading = false
       })
     },
@@ -361,10 +366,10 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchQuery.vo.orgid = obj.orgid
-      this.searchQuery.vo.customerMobile = obj.mobile
-      this.searchQuery.vo.customerName = obj.name
-      this.fetchAllCustomer()
+      // console.log("getSearchParam：", obj)
+
+      this.searchForms.vo = Object.assign(this.searchForms.vo, obj)
+      this.fetchAllList()
     },
     showImport () {
       // 显示导入窗口

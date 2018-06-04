@@ -1,6 +1,6 @@
 <template>
   <!--label-width="80px"-->
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
+  <el-form :inline="true" :size="btnsize" label-position="right" :model="searchForm"  class="staff_searchinfo clearfix">
       <el-form-item label="创建时间:">
         <div class="block">
           <el-date-picker
@@ -8,35 +8,19 @@
             type="datetimerange"
             align="right"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+          >
           </el-date-picker>
         </div>
           <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
-      <!--<el-form-item :label="title+'货人'">-->
-          <!--<el-input-->
-              <!--:placeholder="title+'货单位或'+title+'货人'"-->
-              <!--v-model="searchForm.name"-->
-              <!--maxlength="15"-->
-              <!--clearable>-->
-          <!--</el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="订单状态:">-->
-          <!--<el-input-->
-              <!--v-numberOnly-->
-              <!--placeholder=""-->
-              <!--maxlength="11"-->
-              <!--v-model="searchForm.mobile"-->
-              <!--clearable>-->
-          <!--</el-input>-->
-      <!--</el-form-item>-->
     <el-form-item label="订单状态：">
-      <el-select v-model="searchForm.mobile">
-        <!--<el-option v-for="item in manageType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
-        <el-option label="已受理" :value="3"></el-option>
-        <el-option label="未受理" :value="4"></el-option>
-        <el-option label="已拒绝" :value="4"></el-option>
-        <el-option label="全部" :value="4"></el-option>
+      <el-select v-model="searchForm.orderStatus">
+        <el-option v-for="item in orderStatusInfo" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+        <!--<el-option label="已受理" :value="1"></el-option>-->
+        <!--<el-option label="未受理" :value="2"></el-option>-->
+        <!--<el-option label="已拒绝" :value="3"></el-option>-->
+        <!--<el-option label="全部" :value="4"></el-option>-->
       </el-select>
     </el-form-item>
     <el-form-item label="运单号:">
@@ -44,7 +28,7 @@
         v-numberOnly
         placeholder=""
         maxlength="11"
-        v-model="searchForm.name"
+        v-model="searchForm.orderSn"
         clearable>
       </el-input>
     </el-form-item>
@@ -56,13 +40,8 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
-import SelectTree from '@/components/selectTree/index'
-
+import {getOrderStatusInfo} from '../../../../../api/operation/manage'
 export default {
-  components: {
-    SelectTree
-  },
   props: {
     btnsize: {
       type: String,
@@ -77,41 +56,14 @@ export default {
     }
   },
   computed: {
-    title () {
-      return this.issender ? '发' : '收'
-    }
   },
   data () {
-    let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
-
-    const validateFormEmployeer = function (rule, value, callback) {
-      callback()
-    }
-
-    const validateFormNumber = function (rule, value, callback) {
-      _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
-      callback()
-    }
-
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
+      orderStatusInfo:[],
+      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        orgid: '',
-        name: '',
-        mobile: ''
-      },
-      rules: {
-        mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
-          validator: validateFormNumber, trigger: 'change'
-        }]
+        orderStatus: '',
+        orderSn: ''
       }
     }
   },
@@ -120,20 +72,31 @@ export default {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted (){
+    this.loading = true
     this.searchForm.orgid = this.orgid
+    Promise.all([getOrderStatusInfo(this.orgid)]).then(resArr => {
+      this.loading = false
+      this.orderStatusInfo = resArr[0]
+      // this.manageType = resArr[1]
+      // this.netWorkStatus = resArr[2]
+    })
+    this.onSubmit()
   },
   methods: {
     getOrgid (id){
       this.searchForm.orgid = id
     },
     onSubmit () {
-      this.$emit('change', this.searchForm)
+      this.searchForm.createTime = this.searchCreatTime[0]
+      this.searchForm.endTime = this.searchCreatTime[1]
+      // this.$emit('change', this.searchForm)
     },
     clearForm () {
-      this.searchForm.name = ''
-      this.searchForm.orgid = this.orgid
-      this.searchForm.mobile = ''
+      this.searchForm.createTime = ''
+      this.searchForm.endTime = ''
+      this.searchForm.orderStatus = ''
+      this.searchForm.orderSn = ''
     }
   }
 }
