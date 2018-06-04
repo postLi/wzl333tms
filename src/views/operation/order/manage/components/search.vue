@@ -15,13 +15,7 @@
           <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
     <el-form-item label="订单状态：">
-      <el-select v-model="searchForm.orderStatus">
-        <el-option v-for="item in orderStatusInfo" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-        <!--<el-option label="已受理" :value="1"></el-option>-->
-        <!--<el-option label="未受理" :value="2"></el-option>-->
-        <!--<el-option label="已拒绝" :value="3"></el-option>-->
-        <!--<el-option label="全部" :value="4"></el-option>-->
-      </el-select>
+      <SelectType v-model="searchForm.orderStatus" type="order_status" />
     </el-form-item>
     <el-form-item label="运单号:">
       <el-input
@@ -40,8 +34,11 @@
 </template>
 
 <script>
-import {getOrderStatusInfo} from '../../../../../api/operation/manage'
+import SelectType from '@/components/SelectType/index'
 export default {
+  components: {
+    SelectType
+  },
   props: {
     btnsize: {
       type: String,
@@ -62,7 +59,7 @@ export default {
       orderStatusInfo:[],
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        orderStatus: '',
+        orderStatus: 213,
         orderSn: ''
       }
     }
@@ -70,17 +67,16 @@ export default {
   watch: {
     orgid(newVal){
       this.searchForm.orgid = newVal
-    }
+    },
+
   },
   mounted (){
     this.loading = true
     this.searchForm.orgid = this.orgid
-    Promise.all([getOrderStatusInfo(this.orgid)]).then(resArr => {
-      this.loading = false
-      this.orderStatusInfo = resArr[0]
-      // this.manageType = resArr[1]
-      // this.netWorkStatus = resArr[2]
-    })
+    // Promise.all([getOrderStatusInfo(this.orgid)]).then(resArr => {
+    //   this.loading = false
+    //   this.orderStatusInfo = resArr[0]
+    // })
     this.onSubmit()
   },
   methods: {
@@ -90,7 +86,7 @@ export default {
     onSubmit () {
       this.searchForm.createTime = this.searchCreatTime[0]
       this.searchForm.endTime = this.searchCreatTime[1]
-      // this.$emit('change', this.searchForm)
+      this.$emit('change', this.searchForm)
     },
     clearForm () {
       this.searchForm.createTime = ''

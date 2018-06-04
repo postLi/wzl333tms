@@ -1,99 +1,209 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
-        <el-form-item  v-if="!isModify" class="clearfix">
-          <div class="selectType" :class="{checked: form.companyType === 2}" @click.stop="form.companyType=2">
-            <span class="icon"><icon-svg icon-class="qiye" /></span>
-             <strong>企业</strong>
-            <p>有合法营业执照等企业</p>
-          </div>
-          <div class="selectType single" :class="{checked: form.companyType === 1}" @click.stop="form.companyType=1">
-            <span class="icon"><icon-svg icon-class="geren" /></span> <strong>个人</strong>
-            <p>具备有效身份的自然人</p>
-          </div>
-        </el-form-item>
-        <!-- 公司信息 -->
-        <template v-if="form.companyType === 2">
-          <div class="info info-require">公司名称</div>
-          <el-form-item prop="companyName">
-            <el-input v-model="form.companyName" maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item >
-            <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
-          </el-form-item>
-          <div class="info" >公司法人信息</div>
-          <el-form-item prop="legalPersonname" >
-            <el-input v-model.trim="form.legalPersonname" maxlength="25" placeholder="公司法人名称" auto-complete="off"></el-input>
-          </el-form-item>
-        </template>
-        <!-- 个人信息 -->
-        <el-form-item class="clearfix">
-          <div class="idcard-pos">
-            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idCardPositive" />
-          </div>
-          <div class="idcard-ver">
-            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idCardVerso" />
-          </div>
-        </el-form-item>
-        <!--<el-form-item>-->
-          <!--<table>-->
-            <!--<thead>-->
-            <!--<tr>-->
-              <!--<th>发货方</th>-->
-              <!--<th>收货方</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--<td>-->
-              <!--<el-form-item label="发货人:">-->
-                <!--<el-input-->
-                  <!--placeholder=""-->
-                  <!--maxlength="11"-->
-                  <!--v-model="searchForm.name"-->
-                  <!--clearable>-->
-                <!--</el-input>-->
-              <!--</el-form-item>-->
-            <!--</td>-->
-            <!--<td>1</td>-->
-            <!--<td>1</td>-->
-            <!--</tbody>-->
-          <!--</table>-->
-        <!--</el-form-item>-->
-        <div class="info">{{ issender ? '发' : '收'}}货信息</div>
-        <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">
-          <el-input v-model="form.customerUnit" maxlength="25" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="联系人" prop="customerName">
-          <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="customerMobile">
-          <el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" class="customerPhone" prop="customerPhone">
-          <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
-        </el-form-item>
-        <el-form-item label="客户VIP号" prop="vipNum">
-          <el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号码" prop="idcard">
-          <el-input v-model="form.idcard" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="开户行" prop="openBank">
-          <el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="银行名称" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="detailedAddress">
-          <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
-        </el-form-item>
+      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add">
+        <table class="manage-add-table-top">
+          <thead>
+          <tr>
+            <th>发货方</th>
+            <th>收货方</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>
+              <el-form-item label="发货人:">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="收货人:">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="联系号码:">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="联系号码:">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="发货地址:">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="收货地址:">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          </tbody>
+
+        </table>
+
+
+        <table class="manage-add-table-center">
+          <thead>
+          <tr>
+            <th>货物信息</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>
+              <el-form-item label="货品名">
+                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="件数">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+
+            <td>
+              <el-form-item label="重量">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="体积">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="包装">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="品种规格">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+
+            <td>
+              <el-form-item label="">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          </tbody>
+
+        </table>
+        <div class="info">订单信息</div>
+        <table class="manage-add-table-foot">
+          <tbody>
+          <tr>
+            <td>
+              <el-form-item label="出发城市">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="到达城市">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="开单网点">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+
+            <td>
+              <el-form-item label="目的网点">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="提货方式">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="紧急度">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+
+            <td>
+              <el-form-item label="代收款">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="代收款手续费">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="付款方式">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+
+            <td>
+              <el-form-item label="运费">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="声明价值">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="备注">
+                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          </tbody>
+
+        </table>
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
@@ -210,7 +320,7 @@ export default {
         "orgid": 0, // 所属机构ID
         "vipNum": "" // VIP号 11
       },
-      formLabelWidth: '90px',
+      formLabelWidth: '100px',
       tooltip: false,
       rules: {
         companyName: [
@@ -259,26 +369,26 @@ export default {
       this.form.orgid = newVal
     },
     info () {
-      if(this.isModify){
-        this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
-        let data = Object.assign({},this.info)
-        for(let i in this.form){
-          this.form[i] = data[i]
-        }
-        this.form.customerId = data.customerId
-        console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
-        this.fixPhone = this.form.fixPhone
-      } else {
-        this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
-        for(let i in this.form){
-          this.form[i] = ''
-        }
-        delete this.form.customerId
-        this.form.companyType = 2 // 重置为选中公司
-        this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
-        this.form.orgid = this.orgid
-        this.fixPhone = ''
-      }
+      // if(this.isModify){
+      //   this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
+      //   let data = Object.assign({},this.info)
+      //   for(let i in this.form){
+      //     this.form[i] = data[i]
+      //   }
+      //   this.form.customerId = data.customerId
+      //   console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
+      //   this.fixPhone = this.form.fixPhone
+      // } else {
+      //   this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
+      //   for(let i in this.form){
+      //     this.form[i] = ''
+      //   }
+      //   delete this.form.customerId
+      //   this.form.companyType = 2 // 重置为选中公司
+      //   this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
+      //   this.form.orgid = this.orgid
+      //   this.fixPhone = ''
+      // }
     }
   },
   methods: {
@@ -340,12 +450,12 @@ export default {
   left: auto;
   top: 50px;
   bottom: auto;
-  min-width: 546px;
-  max-width:  546px;
+  min-width: 700px;
+  max-width:  700px;
 
   .el-form--inline .el-form-item{
     margin-right: 0;
-    width: 100%;
+    width: 90%;
     display: flex;
   }
 
@@ -373,83 +483,10 @@ export default {
   }
 
   .popRight-content{
-    padding: 20px 24px 0;
+    /*padding: 20px 24px 0;*/
     box-sizing: border-box;
   }
 
-  .selectType{
-    width: 234px;
-    height: 118px;
-    padding-top: 32px;
-    border-radius: 4px;
-    border: solid 1px #d2d2d2;
-    float: left;
-    text-align: center;
-    color: #666;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-
-
-    &.checked{
-      border-color: #05e2ea;
-      &::before,&::after{
-        position: absolute;
-        top: 0;
-        right: 0;
-        content: '';
-      }
-      &::after{
-        border: #05e2ea 12px solid;
-        border-color: #05e2ea #05e2ea  transparent transparent;
-      }
-      &::before{
-        width: 18px;
-        height: 20px;
-        z-index: 2;
-        content: "\E611";
-        font-family: element-icons!important;
-        speak: none;
-        font-variant: normal;
-        text-transform: none;
-        font-weight: bold;
-        line-height: 1;
-        vertical-align: baseline;
-        -webkit-font-smoothing: antialiased;
-        color: #fff;
-      }
-    }
-
-    .icon{
-      display: inline-block;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #456bf7;
-      color: #fff;
-      line-height: 34px;
-    }
-
-    &.single{
-      float: right;
-    }
-
-    &.single .icon{
-      background-color: #15e2e9;
-    }
-
-    .svg-icon{
-      font-size: 25px;
-      vertical-align: middle;
-    }
-    strong{
-      font-size: 24px;
-      line-height: 34px;
-    }
-    p{
-      font-size: 13px;
-    }
-  }
 
   .idcard-pos,.idcard-ver{
     width: 234px;
@@ -466,8 +503,81 @@ export default {
   }
 
   .el-select .el-input__inner{
-    padding-right: 15px;
+    /*padding-right: 15px;*/
   }
 }
+  /*收货-发货方*/
+.manage-add-table-top,.manage-add-table-center,.manage-add-table-foot{
+  height: 100%;
+  width: 100%;
+}
+.manage-add-table-foot{
+  margin: 10px 0 0 5px;
+}
+.manage-add-table-top th,.manage-add-table-center th,.manage-add-table-foot th{
+  width: 50%;
+  height: 30px;
+  background: #eee;
+  margin-left: 10px;
+  font-size: 14px;
+  padding: 2px 2px 2px 5px !important;
+}
+.manage-add-table-center th,.manage-add-table-foot th{
+  background:transparent;
+  width: 0;
+}
+.manage-add-table-foot{}
+.manage-add-table-top th, .manage-add-table-top td , .manage-add-table-center td{
+  border: 1px solid #ccc;
+  padding: 2px;
+  text-align: left;
+  font-size: 14px;
+}
+.manage-add-table-top th:nth-of-type(1) {
+  padding-left: 10px !important;
+}
+.manage-add-table-top .el-input--mini .el-input__inner,.manage-add-table-center .el-input--mini .el-input__inner{
+  height: 40px;
+  line-height: 40px;
+  padding: 0;
+}
+.manage-add-table-center .el-input--mini .el-input__inner{
+  height: 40px;
+  line-height: 40px;
+  padding-left: 5px;
+}
+.manage-add-table-top .el-form-item,.manage-add-table-center .el-form-item{
+  margin-bottom: 0;
+
+}
+.manage-add-table-top .el-form-item__label,.manage-add-table-center .el-form-item__label{
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  padding-left: 10px;
+}
+.manage-add-table-top .el-input__inner,.manage-add-table-center .el-input__inner{
+  border-color: transparent;
+}
+.manage-add-table-top .el-input__inner:hover,.manage-add-table-center .el-input__inner:hover{
+  border-color: transparent;
+}
+.manage-add-table-top .el-input__inner:focus,.manage-add-table-center .el-input__inner:focus{
+  border-color: transparent;
+}
+.info {
+  height: 36px;
+  line-height: 36px;
+  border: 1px solid #ccc;
+  margin-top: 12px;
+  padding-left: 10px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+
+}
+  .manage-add div.el-form-item{
+    width: 40%;
+  }
 </style>
 

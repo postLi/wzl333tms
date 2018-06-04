@@ -4,8 +4,8 @@
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新建</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>受理</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>拒绝</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('acceptance')" plain>受理</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('refuse')" plain>拒绝</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>作废</el-button>
           <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
@@ -273,7 +273,7 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { getPostlist } from '../../../../api/operation/manage'
+import { getPostlist,putRefuse,deletebatchDelete,postAddOrder } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -292,12 +292,12 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        console.log(this.selectInfo.orgid , this.searchForms.vo.orgid , this.otherinfo.orgid)
+        return this.isModify ? this.selectInfo.orgid : this.searchForms.vo.orgid || this.otherinfo.orgid
       }
   },
   mounted () {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchForms.vo.orgid = this.otherinfo.orgid
     // this.fetchAllList(this.otherinfo.orgid).then(res => {
     //   this.loading = false
     // })
@@ -316,17 +316,6 @@ export default {
       selectInfo: {},
       // 选中的行
       selected: [],
-
-      searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgid": 1,
-          customerType: 1,
-          customerMobile: '',
-          customerName: ''
-        }
-      },
       searchForms: {
         "currentPage": 1,
         "pageSize": 100,
@@ -349,21 +338,12 @@ export default {
         this.loading = false
       })
     },
-    fetchAllCustomer () {
-      this.loading = true
-      return getAllCustomer(this.searchQuery).then(data => {
-        // this.usersArr = data.list
-        this.total = data.totalCount
-
-        this.loading = false
-      })
-    },
     fetchData () {
-      this.fetchAllCustomer()
+      this.fetchAllList()
     },
     handlePageChange (obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
+      this.searchForms.currentPage = obj.pageNum
+      this.searchForms.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
       // console.log("getSearchParam：", obj)
@@ -391,7 +371,6 @@ export default {
 
       console.log("this.selected:", this.selected)
 
-
       switch (type) {
           // 添加客户
           case 'add':
@@ -399,6 +378,18 @@ export default {
               this.selectInfo = {}
               this.openAddCustomer()
               break;
+              //受理  acceptance
+        case 'acceptance':
+          this.isModify = true
+          if(this.selected.length > 1){
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          }
+          this.selectInfo = this.selected[0]
+          this.openAddCustomer()
+          break;
           // 修改客户信息
           case 'modify':
               this.isModify = true
@@ -411,21 +402,55 @@ export default {
               this.selectInfo = this.selected[0]
               this.openAddCustomer()
               break;
+          //  拒绝
+        // case 'refuse':
+          case 'refuse':
+            let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
+            //=>todo 删除多个
+            let ids = this.selected.map(item => {
+              return item.customerId
+            })
+            ids = ids.join(',')
+            this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              deleteSomeCustomerInfo(ids).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.fetchData()
+              }).catch(err=>{
+                this.$message({
+                  type: 'info',
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
+              })
+
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              })
+            })
+            break;
           // 删除客户
           case 'delete':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
+                  let deleteIt = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
                   //=>todo 删除多个
-                  let ids = this.selected.map(item => {
+                  let _ids = this.selected.map(item => {
                       return item.customerId
                   })
-                  ids = ids.join(',')
+                  _ids = _ids.join(',')
 
-                  this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
+                  this.$confirm('确定要删除 ' + deleteIt + ' 客户吗？', '提示', {
                       confirmButtonText: '删除',
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                      deleteSomeCustomerInfo(ids).then(res => {
+                      deleteSomeCustomerInfo(_ids).then(res => {
                           this.$message({
                               type: 'success',
                               message: '删除成功!'
