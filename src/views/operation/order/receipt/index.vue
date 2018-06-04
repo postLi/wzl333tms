@@ -18,12 +18,14 @@ import Send from './send'//寄出
 import Recycle from './recycle'//回收
 import Grant from './grant'//发放
 import Accept from './accept'//接收
+// import Flow from './flow'
 export default {
     components: {
         Send,
         Recycle,
         Grant,
         Accept
+        // Flow
 
     },
     props: {

@@ -1,8 +1,17 @@
 <template>
     <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-        <el-form-item label="开单时间">
-            <SelectTree v-model="searchForm.time" />
-        </el-form-item>
+         <el-form-item label="创建时间:">
+        <div class="block">
+          <el-date-picker
+            v-model="searchCreatTime"
+            type="datetimerange"
+            align="right"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
+          <!--<SelectTree v-model="searchForm.orgid" />-->
+      </el-form-item>
         <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.orgid" />
         </el-form-item>
@@ -94,6 +103,7 @@ export default {
     }
 
     return {
+      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       searchForm: {
         orgid: '',
         // name: '',

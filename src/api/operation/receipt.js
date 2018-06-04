@@ -29,8 +29,8 @@ export function postReceipt(params) {
     "errorInfo": null
 }
  */
-export function postUpdateReceip(params) {
-  return fetch.post('/api-order/order/receipt/v1/updateReceip', params).then(res => {
+export function postUpdateReceip(id) {
+  return fetch.post('/api-order/order/receipt/v1/updateReceip' + id).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 
@@ -40,8 +40,8 @@ export function postUpdateReceip(params) {
  * @param {*} params 
  * 
  */
-export function postUpdateCancelReceipt(params) {
-  return fetch.post('/api-order/order/receipt/v1/updateCancelReceipt', params).then(res => {
+export function postCancelReceipt(id) {
+  return fetch.post('/api-order/order/receipt/v1/updateCancelReceipt' + id).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 

@@ -1,11 +1,12 @@
 <template>
     <div class="tab-content">
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
-        <div class="tab_info">
+      <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize"  plain @click="doAction('recycle')">回单回收</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消回收</el-button>
-          <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
+          <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">加入挑单夹</el-button>
+          <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>回单寄出</el-button>
+          <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消寄出</el-button>
+          <!-- <el-button type="danger" :size="btnsize"  @click="doAction('delete')" plain>取消寄出</el-button> -->
           <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -300,7 +301,14 @@
           </el-table-column>
           <el-table-column
             prop="recRemark"
-            label="回收备注"
+            label="寄出备注"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="cargoName"
+            label="发放备注"
             width="120"
             sortable
             >
@@ -308,14 +316,14 @@
 
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
-    </div>
-        <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>  
+      </div>
+
     </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt,postUpdateReceip,postCancelReceipt } from '@/api/operation/receipt'
+import {postReceipt} from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
@@ -328,7 +336,7 @@ export default {
             'otherinfo'
         ]),
         orgid () {
-            console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+            // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
             return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
         }
     },
@@ -344,17 +352,15 @@ export default {
                 component: 'Send',
                 selectInfo: {},
                 dataset:[],
-                selected:[],
                 // loading:false,
                 searchQuery: {
                     "currentPage":1,
                     "pageSize":10,
                     "vo":{
-                        "pageType":1
+                        "pageType":2
                     }
                 },
                 total: 0
-                
             }
         },
         methods: {
@@ -380,42 +386,10 @@ export default {
             // this.searchQuery.vo.customerName = obj.name
             this.fetchAllreceipt()
         },
-        doAction(type){
-          // 判断是否有选中项
-          if(!this.selected.length){
-            this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-            })
-            return false
-          }
-          switch (type) {
-              //回单寄出
-            case 'recycle': 
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能寄出单条数据',
-                      type: 'warning'
-                  })
-              }else{
-                let id = this.selected.map(el => {
-                  return el.shipId
-                })
-                postUpdateReceip(id.join(',')).then(res=>{
-                  this.$message({
-                    message: '回单寄出成功~',
-                    type: 'success'
-                  })
-                  return false
-                }) 
-              }
-            }
-          // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
         setTable(){},
         clickDetails(){},
         getSelection(){}
+
     }
 }
 </script>
