@@ -31,7 +31,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="创建时间" v-if="isModify" :label-width="formLabelWidth">
-              <el-input :disabled="isModify" :value="form.createTime ? new Date(form.createTime).toLocaleString() : ''"></el-input>
+              <el-input :disabled="isModify" :value="form.createTime | parseTime('{y}/{m}/{d}')"></el-input>
             </el-form-item>
             <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
               <el-input v-model="form.responsibleName" auto-complete="off"></el-input>
