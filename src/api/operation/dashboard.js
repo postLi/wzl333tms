@@ -137,8 +137,8 @@ export function PutFh(id) {
 /**
  * 根据公司id自动生成编号/order/abnormal/v1/getabnormalNo
  */
-export function GetAbnormalNo(params) {
-  return fetch.get('/order/abnormal/v1/getabnormalNo' + params).then(res => {
+export function GetAbnormalNo() {
+  return fetch.get('/tmsorderservice/order/abnormal/v1/getabnormalNo').then(res => {
                 // console.log(res);
     return res.data || { list: [], totalCount: 0 }
   })

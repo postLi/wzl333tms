@@ -12,6 +12,7 @@
 </template>
 <script>
   import { getAllOrgInfo  } from '@/api/company/employeeManage'
+  import { mapGetters } from 'vuex'
 /**
  * 将多层级树结构展开未扁平数组，并对每个元素添加层级值index
  */
@@ -48,6 +49,9 @@ export default {
     this.init()
   },
   computed: {
+    ...mapGetters([
+          'otherinfo'
+      ]),
     openGroups () {
       // 用来标记是第几层
       let index = 1
@@ -64,9 +68,9 @@ export default {
   },
   methods: {
     init () {
-      if(this.aid && !this.inited){
+      if(!this.inited){
         this.inited = true
-        getAllOrgInfo(this.aid).then(data => {
+        getAllOrgInfo(this.otherinfo.companyId).then(data => {
           this.groups = data
         }).catch(err => {
           this.inited = false

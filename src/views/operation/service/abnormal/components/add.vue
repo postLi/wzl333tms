@@ -5,11 +5,11 @@
         <div class="box1">
           <h4 class="titles">运单信息</h4>
           <el-form-item label="运单号" prop="shipSn">
-            <el-input v-model="form.shipSn" maxlength="20" auto-complete="off"></el-input>
+            <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" maxlength="20" auto-complete="off"></el-input>
           </el-form-item>
           
           <el-form-item label="货号" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn" maxlength="20" auto-complete="off"></el-input>
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off"></el-input>
           </el-form-item>
   
           <el-form-item label="开单时间" prop="createTime">
@@ -37,10 +37,19 @@
             <SelectTree v-model="form.orgId" disabled="disabled"/>
           </el-form-item>
           <el-form-item label="登记人" prop="disposeName" >
-            <el-input maxlength="20" v-model="form.disposeName" auto-complete="off"  disabled="disabled" ></el-input>
+            <el-autocomplete
+              popper-class="my-autocomplete"
+              v-model="form.disposeName"
+              :fetch-suggestions="querySearch"
+              placeholder="请选择员工~"
+              @select="handleSelect">
+              <template slot-scope="{ item }">
+                <div class="name">{{ item.name }}</div>
+              </template>
+            </el-autocomplete>
           </el-form-item>
-          <el-form-item label="异常类型" prop="abnormalTypeName">
-            <el-input maxlength="20" v-model="form.abnormalTypeName" auto-complete="off"  disabled="disabled" ></el-input>
+          <el-form-item label="异常类型" prop="abnormalType">
+            <SelectType v-model="form.abnormalType" type="abnormal_type" />
           </el-form-item>
           <el-form-item label="异常件数" prop="abnormalAmount">
             <el-input v-model="form.abnormalAmount" maxlength="20" auto-complete="off"></el-input>
@@ -66,6 +75,19 @@
           </div>
         </el-form-item>
         
+        <!-- <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :file-list="fileList2"
+          list-type="picture">
+          <el-button size="small" type="primary"  v-model="form.abnormalPicture">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload> -->
+
+
+        
         </div>
       </el-form>
     </template>
@@ -78,10 +100,12 @@
 <script>
 import { REGEX }  from '@/utils/validate'
 import {GetAbnormalNo, PostNewAbnormal, PutXiuGai,GetLook } from '@/api/operation/dashboard'
+import {getAllUser} from '@/api/company/employeeManage'
+import orderManage from '@/api/operation/orderManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
-import SelectType from '@/components/SelectType/index'
+import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -104,6 +128,9 @@ export default {
       default: false
     },
     id: {
+      type: [Number,String]
+    },
+    companyId: {
       type: [Number,String]
     },
     info: {
@@ -149,25 +176,25 @@ export default {
 
     return {
       form: {
-        "abnormalAmount": 0,
+        "abnormalAmount": "",
         "abnormalDescribe": "",
         "abnormalNo": "",
         "abnormalPicture": "",
-        "abnormalStatus": 0,
-        "abnormalType": 0,
-        "childShipId": 0,
+        "abnormalStatus": "",
+        "abnormalType": '',
+        "childShipId": "",
         "createTime": "",
         "disposeOpinion": "",
-        "disposeOrgId": 0,
+        "disposeOrgId": "",
         "disposePicture": "",
-        "disposeResult": 0,
+        "disposeResult": "",
         "disposeTime": "",
-        "disposeUserId": 0,
-        "dutyOrgId": 0,
-        "orgId": 0,
-        "registerFee": 0,
-        "registerUserId": 0,
-        "shipId": 0
+        "disposeUserId": "",
+        "dutyOrgId": "",
+        "orgId": "",
+        "registerFee": "",
+        "registerUserId": "",
+        "shipId": ""
       },
       formLabelWidth: '80px',
       tooltip: false,
@@ -183,7 +210,8 @@ export default {
           // { validator: validateFormNumber, trigger: 'change'}
         ]
       },
-      popTitle: '异常登记',
+      // fileList2:[],
+      popTitle: '',
       orgArr: [],
       rolesArr: [],
       departmentArr: [],
@@ -193,10 +221,11 @@ export default {
       groups: [],
       inited: false,
       disabled:'',
+      resInfo: [],
       pickOption2: {
         firstDayOfWeek:1,
         disabledDate(time) {
-          return time.getTime() < Date.now()
+          return time .getTime() < Date.now()
         }
       }
 
@@ -208,51 +237,105 @@ export default {
       this.inited = true
       this.initInfo()
     }
+   
+     
   },
   watch: {
     popVisible (newVal, oldVal) {
       if(!this.inited){
         this.inited = true
-        this.initInfo()
+        this.initInfo();
       }
     },
     orgid (newVal) {
       this.form.orgid = newVal
     },
-    isModify () {
-      if(this.isModify){
-        this.popTitle = '异常修改'
-        GetLook(this.id).then(res => {
-          this.form = res
-        })
-      } else {
-        this.popTitle = '异常登记'
-      }
-    },
-    info () {
-      if(this.isModify){
-        this.popTitle = '异常修改'
-        let data = Object.assign({},this.info)
-        for(let i in this.form){
-          this.form[i] = data[i]
+    isModify: {
+      handler(newVal) {
+        if(this.isModify){
+          this.popTitle = '异常修改'
+          GetLook(this.id).then(res => {
+            this.form = res;
+          })
+        }else{
+          this.popTitle = '异常登记'
+          this.form.orgId = this.orgid
+          this.form.registerTime = new Date()
+          this.dengji();
+          
         }
-        this.form.id = data.id
-      } else {
-        this.popTitle = '异常登记'
-        for(let i in this.form){
-          this.form[i] = ''
-        }
-        delete this.form.id
-        this.form.orgid = this.orgid
-      }
+      },
+      immediate: true
     }
+    // info () {
+    //   if(this.isModify){
+    //     this.popTitle = '异常修改'
+    //     let data = Object.assign({},this.info)
+    //     for(let i in this.form){
+    //       this.form[i] = data[i]
+    //     }
+    //     this.form.id = data.id
+    //   } else {
+    //     this.popTitle = '异常登记'
+    //     for(let i in this.form){
+    //       this.form[i] = ''
+    //     }
+    //     delete this.form.id
+    //     this.form.orgid = this.orgid
+    //   }
+    // }
   },
   methods: {
+    // handleRemove(file, fileList) {
+    //     console.log(file, fileList);
+    // },
+    // handlePreview(file) {
+    //   console.log(file);
+    // },
+    dengji(){
+      return GetAbnormalNo().then(res=>{
+          // this.form = res;
+          this.form.abnormalNo = res
+          console.log(res, "this.form.abnormalNo: ", this.form);
+        })
+    },
+    querySearch(queryString, cb) {
+        var restaurants = this.resInfo;
+        var results = queryString ? restaurants.filter(item => {
+          return item.name ? item.name.indexOf(queryString) !== -1 : false
+        }) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return restaurant.name.indexOf(queryString) !== -1
+        };
+      },
+      handleSelect(item) {
+        this.form.disposeName = item.name
+      },
     initInfo () {
       this.loading = false
+      getAllUser(this.orgid, '', '').then(res=>{
+        this.resInfo = res.list
+      })
     },
     getOrgid (id) {
       this.form.orgid = id
+    },
+    fetchShipInfo (type) {
+      orderManage.getFindByShipSnOrGoodSn({
+        [type]: this.form[type]
+      }).then(res => {
+        let data = res.data
+        this.form.shipSn = data.shipSn
+        this.form.shipGoodsSn = data.shipGoodsSn
+        this.form.createTime = data.createTime
+        this.form.cargoName = data.cargoName
+        this.form.cargoPack = data.cargoPack
+        this.form.cargoAmount = data.cargoAmount
+      })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -286,7 +369,11 @@ export default {
       });
     },
     reset () {
+      const oldVal = this.form.abnormalNo
       this.$refs['ruleForm'].resetFields()
+      if(!this.isModify){
+        this.form.abnormalNo = oldVal
+      }
     },
     closeMe (done) {
       this.reset()

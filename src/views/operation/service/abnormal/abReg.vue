@@ -189,7 +189,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-        <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :id="id" :orgid="orgid" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+        <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
         <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </template>
@@ -212,7 +212,7 @@ export default {
             'otherinfo'
         ]),
         orgid () {
-            console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+            // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
             return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
         }
     },
@@ -292,6 +292,7 @@ export default {
               //登记
               case 'reg':
                 this.isModify = false
+                console.log(this.isModify)
                 this.selectInfo = {}
                 this.openAddAbnormal()
                 break;
