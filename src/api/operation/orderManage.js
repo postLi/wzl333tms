@@ -108,7 +108,7 @@ export default {
    */
   getAllShip(param) {
     return fetch.post('/api-order/order/v1/findAllShip', param).then(res => {
-      return res.data ? res.data : {}
+      return res.data ? res.data : { total: 0, list: [] }
     })
   },
   /**
