@@ -4,7 +4,7 @@
     <SelectTree v-model="orgid" @change="getOrgid" />
     <blockquote>
       引用地址：
-      component/selectTree/index.vue
+      components/selectTree/index.vue
     </blockquote>
     <h3>prop</h3>
     <ul>

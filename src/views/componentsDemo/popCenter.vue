@@ -5,7 +5,7 @@
     <button @click="show = true">展示弹窗</button>
     <blockquote>
       引用地址：
-      component/PopFrame/index.vue
+      components/PopFrame/index.vue
     </blockquote>
     <h3>prop</h3>
     <ul>

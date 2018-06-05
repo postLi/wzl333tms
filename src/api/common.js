@@ -3,9 +3,11 @@ import fetch from '@/utils/fetch'
 /**
  * 获取城市数据
  */
-export function getCityInfo(params) {
-  return fetch.get('/getcity', {
-    params
+export function getCityInfo(name) {
+  return fetch.get('/tmsorderservice/order/region/v1/name', {
+    params: {
+      name: name
+    }
   }).then(res => {
     return res.data || []
   })

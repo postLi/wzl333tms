@@ -4,7 +4,7 @@
     <Pagination :sizes="[100, 200, 300, 400]" :total="1000" @change="getPageInfo" />
     <blockquote>
       引用地址：
-      component/Pagination/index.vue
+      components/Pagination/index.vue
     </blockquote>
     <h3>prop</h3>
     <ul>

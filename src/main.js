@@ -14,7 +14,7 @@ import * as filters from './filters'
 import './directive'
 
 // mock
-import './mock/'
+// import './mock/'
 
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)

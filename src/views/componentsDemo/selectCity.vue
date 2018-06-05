@@ -4,7 +4,7 @@
     <SelectCity :city="city" @change="getcity" />
     <blockquote>
       引用地址：
-      component/selectCity/index.vue
+      components/selectCity/index.vue
     </blockquote>
     <h3>prop</h3>
     <ul>
@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      city: '广州'
+      city: '广州,广东省'
     }
   },
   methods: {
@@ -34,7 +34,7 @@ export default {
       //   pageSize: 100
       // }
       console.log('pagenation', obj)
-      this.city = obj
+      this.city = obj.longAddr
     }
   }
 }

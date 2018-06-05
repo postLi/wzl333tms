@@ -5,12 +5,12 @@
     <p>选中的值： {{ selected }}</p>
     <blockquote>
       引用地址：
-      component/SelectType/index.vue
+      components/selectType/index.vue
     </blockquote>
 
     <h3>SLOT</h3>
     <p>作用域插槽： item</p>
-    <SelectType v-model="selected2" type="driving_type" >
+    <select-type v-model="selected2" type="driving_type" >
       <template slot-scope="{ item }">
         <el-option
           :key="item.id"
@@ -20,8 +20,26 @@
           <span style="float: right; color: #8492a6; font-size: 13px">id: {{ item.id }}</span>
         </el-option>
       </template>
-    </SelectType>
+    </select-type>
     <p>选中的值： {{ selected2 }}</p>
+    <p>插槽： head</p>
+    <p>插入到所有选项的前面</p>
+    <select-type v-model="selected3" type="driving_type" >
+      <template slot="head">
+        <el-option label="全部" value=""></el-option>
+      </template>
+      <template slot-scope="{ item }">
+        <el-option
+          :key="item.id"
+          :label="item.dictName"
+          :value="item.id">
+          <span style="float: left">{{ item.dictName }}</span>
+          <span style="float: right; color: #8492a6; font-size: 13px">id: {{ item.id }}</span>
+        </el-option>
+      </template>
+    </select-type>
+    <p>插槽： foot</p>
+    <p>插入到所有选项的后面</p>
 
     <h3>prop</h3>
     <ul>
@@ -75,15 +93,18 @@ department_type	部门类型
   </div>
 </template>
 <script>
-import SelectType from '@/components/SelectType/index'
+import SelectType from '@/components/selectType/index'
 export default {
+  name: 'SelectTypeDemo',
   components: {
     SelectType
   },
   data () {
     return {
       orgid: 1,
-      selected: ''
+      selected: '',
+      selected3: '',
+      selected2: ''
     }
   },
   methods: {

@@ -14,7 +14,7 @@
 
     <blockquote>
       引用地址：
-      component/Upload/singleImage.vue
+      components/Upload/singleImage.vue
     </blockquote>
     <h3>prop</h3>
     <ul>

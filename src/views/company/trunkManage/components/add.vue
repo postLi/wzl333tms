@@ -121,7 +121,7 @@ import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
-import SelectType from '@/components/SelectType/index'
+import SelectType from '@/components/selectType/index'
 
 export default {
   components: {

@@ -185,7 +185,7 @@
 </template>
 <script>
 import { getAllSetting, putSetting, putResetSetting } from '@/api/company/systemSetup'
-import SelectType from '@/components/SelectType/index'
+import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 
 export default {

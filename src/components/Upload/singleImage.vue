@@ -1,6 +1,7 @@
 <template>
     <div class="upload-container">
         <el-upload v-if="uploadUrl" class="image-uploader" :data="upload" :before-upload="beforeUpload" drag :multiple="false" :show-file-list="false" :action="uploadUrl"
+        :on-error="handleError"
             :on-success="handleImageScucess">
             <slot name="content">
                 <div v-if="title" class="upload__title">{{ title }}</div>
@@ -105,6 +106,9 @@ export default {
         }
       this.emitInput(url)
       //this.imageUrl = url
+    },
+    handleError (err) {
+        this.$emit('error', err)
     },
     beforeUpload(file) {
       const _self = this
