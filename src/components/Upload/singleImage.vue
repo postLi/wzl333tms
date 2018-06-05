@@ -1,16 +1,29 @@
 <template>
-    <div class="upload-container">
-        <el-upload v-if="uploadUrl" class="image-uploader" :data="upload" :before-upload="beforeUpload" drag :multiple="false" :show-file-list="false" :action="uploadUrl"
-        :on-error="handleError"
+    <div class="upload-container" :class="{'uploadlist': showFileList}">
+        <el-upload 
+            class="image-uploader" 
+            v-if="uploadUrl" 
+            :data="upload" 
+            :action="uploadUrl"
+            :multiple="false" 
+            :drag="!showFileList" 
+            :show-file-list="showFileList" 
+            :file-list="filelist"
+            :limit="limit"
+            :before-upload="beforeUpload" 
+            :list-type="listtype"
+            :on-exceed="onexceed"
+            :on-remove="handleRemove"
+            :on-error="handleError"
             :on-success="handleImageScucess">
             <slot name="content">
-                <div v-if="title" class="upload__title">{{ title }}</div>
+                <div v-if="title && !showFileList" class="upload__title">{{ title }}</div>
                 <el-button :size="size" type="primary">点击上传</el-button>
-                <div class="el-upload__text">将文件拖拽到此区域</div>
+                <div class="el-upload__text" v-if="!showFileList">将文件拖拽到此区域</div>
                 <div v-if="tip" class="upload__tip">{{ tip }}</div>
             </slot>
         </el-upload>
-        <div class="image-preview"  v-if="imageUrl">
+        <div class="image-preview" v-if="imageUrl && !showFileList">
             <div class="image-preview-wrapper">
                 <img :src="imageUrl">
                 <div class="image-preview-action">
@@ -28,7 +41,7 @@ import { getUploadPolicy } from '@/api/common'
 export default {
   name: 'singleImageUpload',
   props: {
-    value: String,
+    value: [String, Array],
     title: {
         type: String,
         default: ''
@@ -40,6 +53,19 @@ export default {
     size: {
         type: String,
         default: 'mini'
+    },
+    "showFileList": {
+        type: Boolean,
+        default: false
+    },
+    limit: {
+        type:Number,
+        default: 1
+    },
+    listtype: {
+        type: String,
+        default: 'picture',
+        enum: ['text', 'picture', 'picture-card']
     }
   },
   computed: {
@@ -62,7 +88,23 @@ export default {
         'signature': ''
       },
       uploadUrl: '',
-      dir: ''
+      dir: '',
+      filelist: []
+    }
+  },
+  watch: {
+    value: {
+        handler(newVal){
+            if(this.showFileList){
+                let arr = Array.isArray(newVal) ? newVal : newVal.split(',')
+                this.filelist = arr.map(el => {
+                    let obj = {}
+                    obj.url = el
+                    return obj
+                })
+            }
+        },
+        immediate: true
     }
   },
   mounted () {
@@ -84,6 +126,16 @@ export default {
     rmImage() {
       this.emitInput('')
     },
+    // 超出上传数量
+    onexceed (file, filelist) {
+        this.$message.error(`最多上传 ${this.limit} 张!`)
+    },
+    // 删除列表
+    handleRemove (file, fileList) {
+        console.log("handleRemove:", file, fileList)
+        this.filelist = fileList
+        this.emitInput()
+    },
     // 设置随机的文件名
     random_string(len) {
     　　len = len || 32
@@ -96,7 +148,15 @@ export default {
         return pwd
     },
     emitInput(val) {
-      this.$emit('input', val)
+      if(val){
+        this.filelist.push({
+            url: val
+        })
+      }
+      
+      this.$emit('input', this.showFileList ? this.filelist.map(el => {
+          return el.url
+      }).join(',') : val)
     },
     handleImageScucess(xml) {
         let url = ''
@@ -112,7 +172,7 @@ export default {
     },
     beforeUpload(file) {
       const _self = this
-      const isJPG = /image\/\w+/.test(file.type) && /(jpeg|jpg|png)/i.test(file.type)
+      const isJPG = /image\/\w+/.test(file.type) && /(jpe?g|png)/i.test(file.type)
       const isLt5M = file.size / 1024 / 1024 < 5
       let type = file.name.match(/([^\.]+)$/)
       type = type ? '.' + type[1] : ''
@@ -134,9 +194,25 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.uploadlist{
+    display: inline-block;
+    width: auto !important;
+    height: auto;
+
+    .el-upload {
+        width: auto;
+
+        .el-button{
+            margin-top: 0;
+        }
+    }
+}
+</style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
     @import "src/styles/mixin.scss";
+    
     .upload-container {
         width: 100%;
         position: relative;
