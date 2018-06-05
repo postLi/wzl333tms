@@ -1,28 +1,45 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-      <el-form-item label="网点">
-          <SelectTree v-model="searchForm.orgid" />
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
+      <el-form-item label="开单时间:">
+        <div class="block">
+          <el-date-picker
+            v-model="searchCreatTime"
+            :default-value="defaultTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions2"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
       </el-form-item>
-      <el-form-item :label="title+'货人'">
-          <el-input
-              :placeholder="title+'货单位或'+title+'货人'"
-              v-model="searchForm.name"
-              maxlength="15"
-              clearable>
-          </el-input>
+      <el-form-item label="开单网点:">
+        <select-tree v-model="searchForm.orgid" />
       </el-form-item>
-      <el-form-item label="手机号码">
-          <el-input
-              v-numberOnly
-              placeholder="请输入手机号码"
-              maxlength="11"
-              v-model="searchForm.mobile"
-              clearable>
-          </el-input>
+      <el-form-item class="searchinfo--order">
+        <el-select v-model="searchForm.type">
+          <el-option label="运单号" value="shipSn"></el-option>
+          <el-option label="发货人" value="senderCustomerName"></el-option>
+          <el-option label="发货人手机" value="senderCustomerMobile"></el-option>
+          <el-option label="收货人" value="receiverCustomerName"></el-option>
+          <el-option label="收货人手机" value="receiverCustomerName"></el-option>
+        </el-select>
+        <el-input
+            v-model="searchForm.value"
+            maxlength="15"
+            @keyup.enter="onSubmit"
+            clearable>
+        </el-input>
       </el-form-item>
+    <el-form-item label="订单状态：">
+      <select-type v-model="searchForm.shipStatus" type="ship_status" >
+        <el-option slot="head" label="全部" value=""></el-option>
+      </select-type>
+    </el-form-item>
       <el-form-item class="staff_searchinfo--btn">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="info" @click="clearForm" plain>清空</el-button>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="info" @click="clearForm" plain>清空</el-button>
       </el-form-item>
   </el-form>
 </template>
@@ -30,10 +47,13 @@
 <script>
 import { REGEX }  from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import SelectType from '@/components/selectType/index'
 
 export default {
+  name: 'order-manage-search',
   components: {
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     btnsize: {
@@ -48,40 +68,49 @@ export default {
       dafault: false
     }
   },
-  computed: {
-    title () {
-      return this.issender ? '发' : '收'
-    }
-  },
   data () {
     let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
-
-    const validateFormEmployeer = function (rule, value, callback) {
-      callback()
-    }
-
-    const validateFormNumber = function (rule, value, callback) {
-      _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
-      callback()
-    }
 
     return {
+      searchCreatTime: [],
+      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
         orgid: '',
-        name: '',
-        mobile: ''
+        value: '',
+        type: 'shipSn',
+        shipStatus: ''
       },
       rules: {
         mobile: [{
           //validator: validateFormMobile, trigger: 'blur'
-          validator: validateFormNumber, trigger: 'change'
+         // validator: validateFormNumber, trigger: 'change'
+        }]
+      },
+      pickerOptions2: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
         }]
       }
     }
@@ -93,22 +122,28 @@ export default {
   },
   mounted () {
     this.searchForm.orgid = this.orgid
+    this.onSubmit()
   },
   methods: {
-    getOrgid (id){
-      this.searchForm.orgid = id
-    },
     onSubmit () {
-      this.$emit('change', this.searchForm)
+      let searchObj = {}
+      searchObj.orgid = this.searchForm.orgid
+      searchObj.shipStatus = this.searchForm.shipStatus
+      searchObj.startTime = this.searchCreatTime[0]
+      searchObj.endTime = this.searchCreatTime[1]
+      searchObj[this.searchForm.type] = this.searchForm.value
+
+      this.$emit('change', searchObj)
     },
     clearForm () {
-      this.searchForm.name = ''
+      this.searchForm.shipStatus = ''
       this.searchForm.orgid = this.orgid
-      this.searchForm.mobile = ''
+      this.searchForm.value = ''
+      this.searchForm.type = 'shipSn'
     }
   }
 }
-</script> 
+</script>
 
 
 <style lang="scss">
@@ -119,7 +154,15 @@ export default {
         .el-form-item{
             margin-bottom: 0;
         }
-        
+
+    }
+    .searchinfo--order{
+      .el-select{
+        width: 100px;
+      }
+      .el-form-item__content>.el-input{
+        width: 200px;
+      }
     }
     .staff_searchinfo--btn{
         float: right;

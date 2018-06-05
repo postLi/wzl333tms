@@ -1,6 +1,6 @@
 <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
@@ -39,30 +39,36 @@
             fixed
             sortable
             prop="companyName"
-            label="收货公司">
+            width="120"
+            label="发货公司">
           </el-table-column>
           <el-table-column
             prop="customerUnit"
+            width="120"
             sortable
-            label="收货方">
+            label="发货方">
           </el-table-column>
           <el-table-column
             prop="customerName"
             sortable
-            label="收货人">
+            width="120"
+            label="发货人">
           </el-table-column>
           <el-table-column
             prop="customerMobile"
             sortable
+            width="120"
             label="手机号码">
           </el-table-column>
           <el-table-column
             sortable
             prop="orgName"
+            width="120"
             label="归属组织">
           </el-table-column>
           <el-table-column
             label="公司法人"
+            width="120"
             prop="legalPersonname"
             sortable
             >
@@ -70,35 +76,41 @@
           <el-table-column
             prop="vipNum"
             label="VIP号"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             sortable
             prop="idcard"
+            width="200"
             label="身份证号码">
           </el-table-column>
           <el-table-column
             prop="bankName"
             label="银行名称"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="bankCardNumber"
             label="银行卡号"
+            width="180"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="openBank"
             label="开户行"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="detailedAddress"
             label="详细地址"
+            width="300"
             sortable
             >
           </el-table-column>
@@ -115,8 +127,8 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-    <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
@@ -167,7 +179,7 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgid": 1,
-          customerType: 2,
+          customerType: 1,
           customerMobile: '',
           customerName: ''
         }

@@ -1,8 +1,9 @@
 <template>
-  <div class="customer-manager">
+  <div class="order-manager">
     <div class="eltab clearfix">
-      <span @click="component = 'Sender'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}">发货人</span>
-      <span @click="component = 'Receiver'" class="tab-label" :class="{'active-tab': component.indexOf('eceiver')!==-1}">收货人</span>
+      <span @click="component = 'All'" class="tab-label" :class="{'active-tab': component.indexOf('All')!==-1}">全部订单</span>
+      <span @click="component = 'History'" class="tab-label" :class="{'active-tab': component.indexOf('History')!==-1}">改单记录</span>
+      <span @click="component = 'Dashboard'" class="tab-label" :class="{'active-tab': component.indexOf('Dashboard')!==-1}">草稿箱</span>
     </div>
     <keep-alive>
       <component v-bind:is="component"></component>
@@ -11,13 +12,15 @@
 </template>
 
 <script>
-import Sender from './sender'
-import Receiver from './receiver'
+import All from './all'
+import Dashboard from './dashboard'
+import History from './history'
 
 export default {
   components: {
-    Sender,
-    Receiver
+    All,
+    Dashboard,
+    History
   },
   props: {
     isShow: {
@@ -27,13 +30,13 @@ export default {
   },
   data() {
     return {
-      component: 'Sender'
+      component: 'All'
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-  .customer-manager{
+  .order-manager{
     height: 100%;
     padding-top: 12px;
     .eltab{
