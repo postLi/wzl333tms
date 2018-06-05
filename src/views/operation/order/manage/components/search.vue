@@ -56,7 +56,6 @@ export default {
   },
   data () {
     return {
-      orderStatusInfo:[],
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
         orderStatus: 213,
@@ -66,17 +65,13 @@ export default {
   },
   watch: {
     orgid(newVal){
-      this.searchForm.orgid = newVal
+      // this.searchForm.orgid = newVal
     },
 
   },
   mounted (){
     this.loading = true
     this.searchForm.orgid = this.orgid
-    // Promise.all([getOrderStatusInfo(this.orgid)]).then(resArr => {
-    //   this.loading = false
-    //   this.orderStatusInfo = resArr[0]
-    // })
     this.onSubmit()
   },
   methods: {

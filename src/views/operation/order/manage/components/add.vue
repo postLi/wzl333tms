@@ -9,40 +9,46 @@
             <th>收货方</th>
           </tr>
           </thead>
+          <!--senderName:'',-->
+          <!--senderMobile:'',-->
+          <!--detailedAddress:'',-->
+          <!--receiverName:'',//收货人-->
+          <!--receiverMobile:''//receiverMobile
+          detailedAddress:''-->
           <tbody>
           <tr>
             <td>
               <el-form-item label="发货人:">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='form.senderName' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货人:">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='form.receiverName' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="联系号码:">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='form.senderMobile' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="联系号码:">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='form.receiverMobile' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="发货地址:">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='form.detailedAddress'  maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货地址:">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='form.detailedAddress' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -51,7 +57,7 @@
         </table>
 
 
-        <table class="manage-add-table-center">
+        <table class="manage-add-table-center" :model='tmsOrderCargoList'>
           <thead>
           <tr>
             <th>货物信息</th>
@@ -66,61 +72,61 @@
             </td>
             <td>
               <el-form-item label="件数">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input  auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="重量">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="体积">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="包装">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="品种规格">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderCargoList.cargoName" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderCargoList.cargoAmount" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderCargoList.cargoWeight" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderCargoList.cargoVolume" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderCargoList.cargoPack" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderCargoList.description" maxlength="20" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -128,76 +134,77 @@
 
         </table>
         <div class="info">订单信息</div>
-        <table class="manage-add-table-foot">
+        <table class="manage-add-table-foot" :model="tmsOrderPre">
           <tbody>
           <tr>
             <td>
               <el-form-item label="出发城市">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.orderFromCityCode" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="到达城市">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.orderToCityCode" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="开单网点">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input  v-model="tmsOrderPre.orderFromOrgid" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="目的网点">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+
+                <el-input v-model="tmsOrderPre.orderToOrgid" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="提货方式">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.orderPickupMethod" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="紧急度">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.orderEffective" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="代收款">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.agencyFund" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="代收款手续费">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.commissionFee" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.orderPayWay" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="运费">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.deliveryFee" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="声明价值">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.productPrice" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
-            <td>
+            <td class="add-textarea">
               <el-form-item label="备注">
-                <el-input maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -214,7 +221,7 @@
 </template>
 <script>
 import { REGEX }  from '@/utils/validate'
-import { postCustomer, putCustomer } from '@/api/company/customerManage'
+import { postCustomer, putCustomer , getAllCustomer} from '@/api/company/customerManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -295,30 +302,33 @@ export default {
     }
 
     return {
+      searchSend: {
+        "currentPage": 1,
+        "pageSize": 100,
+        "vo": {
+          "orgid": 1,
+          customerType: 1
+        }
+      },
+      searchShou: {
+        "currentPage": 1,
+        "pageSize": 100,
+        "vo": {
+          "orgid": 1,
+          customerType: 2
+        }
+      },
       phoneshort: '', // 固话区号
       phonelong: '', // 固话号码
       //fixPhone: '',
       form: {
-        "bankCardNumber": "", //"银行卡号" 20
-        "bankName":  "", //"银行名称", 20
-        "companyName": "", // "公司名称", 25
-        "companyType": 2, // 公司类型 1：自然人 2：企业
-        // "customerId": 0, // 当新增时，不传
-        "customerMobile": "", // 手机号码 11
-        "customerName": "", // 客户名称 25
-        // "customerNum": "", // 客户编号 25
-        "customerType": this.issender ? 1 : 2, // 客户类型 1:发货人2:收货人
-        "customerUnit": "", // 客户单位 50
-        "detailedAddress": "", // 详细地址 50
-        "fixPhone": "", // 固话 11
-        "idCardPositive": "", // 身份证正面图片地址
-        "idCardVerso": "", // 身份证反面图片地址
-        "idcard": "", // 身份证号码 18
-        "legalPersonname": "", // 公司法人 25
-        "licensePicture": "", // 营业执照图片地址
-        "openBank": "", // 开户行 20
-        "orgid": 0, // 所属机构ID
-        "vipNum": "" // VIP号 11
+
+        // senderName:'',
+        // senderMobile:'',
+        // detailedAddress:'',
+        // receiverName:'',//收货人
+        // receiverMobile:'',//receiverMobile
+        // detailedAddress:''
       },
       formLabelWidth: '100px',
       tooltip: false,
@@ -347,8 +357,54 @@ export default {
       roles: [],
       departments: [],
       groups: [],
-      inited: false
+      inited: false,
 
+    //保存表单
+      customerList: [
+        //发货人
+        { senderName:'',
+         senderMobile:'',
+         detailedAddress:''
+        },
+        //收货人
+        {
+          receiverName:'',
+          receiverMobile:'',//
+          detailedAddress:''
+        }
+      ],
+      //货物信息
+      tmsOrderCargoList: [
+        {
+          cargoName:'',  // 货品名
+          cargoAmount:'',  // 件数
+          cargoWeight:'',  // 重量
+          cargoVolume:'',  // 体积
+          cargoPack:'',  // 包装
+          description:''  // 品种规格
+        }
+      ],
+      //订单信息
+      tmsOrderPre: {
+        orderFromCityCode:'',
+        orderToCityCode:'',
+        orderFromOrgid:'',
+        orderToOrgid:'',//目的网点
+        orderPickupMethod:'',//提货方式
+        orderEffective:'',//紧急度
+        agencyFund:'',//代收款
+        commissionFee:'',//代收款手续费
+        orderPayWay:'',//付款方式
+        deliveryFee:'',//运费
+        productPrice:'',//声明价值
+        orderRemarks:''//声明价值
+
+      },
+      tmsOrderTransfer: {
+        receiverName:'',//收货人
+        receiverMobile:'',//receiverMobile
+        detailedAddress:''
+      }
     }
   },
   mounted () {
@@ -357,6 +413,12 @@ export default {
       this.inited = true
       this.initInfo()
     }
+    this.fetchAllCustomerFa(this.orgid).then(res => {
+      this.loading = false
+    })
+    this.fetchAllCustomerShou(this.orgid).then(res => {
+      this.loading = false
+    })
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -392,6 +454,24 @@ export default {
     }
   },
   methods: {
+    fetchAllCustomerFa () {
+      this.loading = true
+      return getAllCustomer(this.searchSend).then(data => {
+        this.customerList[0] = data.list
+        // this.total = data.totalCount
+        this.loading = false
+        console.log(data)
+      })
+    },
+    fetchAllCustomerShou () {
+      this.loading = true
+      return getAllCustomer(this.searchShou).then(data => {
+        this.customerList[1] = data.list
+        // this.total = data.totalCount
+        this.loading = false
+        console.log(data)
+      })
+    },
     initInfo () {
       this.loading = false
     },
@@ -512,7 +592,7 @@ export default {
   width: 100%;
 }
 .manage-add-table-foot{
-  margin: 10px 0 0 5px;
+  margin-top: 10px;
 }
 .manage-add-table-top th,.manage-add-table-center th,.manage-add-table-foot th{
   width: 50%;
@@ -578,6 +658,10 @@ export default {
 }
   .manage-add div.el-form-item{
     width: 40%;
+  }
+  .add-textarea .el-textarea__inner {
+    width: 570%;
+    padding: 15px 0 0 10px;
   }
 </style>
 
