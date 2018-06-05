@@ -32,6 +32,7 @@
           </el-form-item>
           <el-form-item label="登记时间" prop="registerTime">
             <el-input v-model="form.registerTime" maxlength="20" auto-complete="off" disabled="disabled" ></el-input>
+            <!-- <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}{m}{d}') }}</template> -->
           </el-form-item>
           <el-form-item label="登记网点" prop="orgId"  >
             <SelectTree v-model="form.orgId" disabled="disabled"/>
@@ -69,24 +70,9 @@
           <p><label>图片上传</label><em class="ts">注：最多可上传6张图片，每张图片不能大于5M</em></p>
         </el-form-item>
 
-        <el-form-item class="clearfix uploadcard">
-          <div class="idcard">
-            <upload :title="'本地上传'" v-model="form.abnormalPicture" />
-          </div>
-        </el-form-item>
-        
-        <!-- <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :file-list="fileList2"
-          list-type="picture">
-          <el-button size="small" type="primary"  v-model="form.abnormalPicture">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload> -->
-
-
+        <div class="clearfix uploadcard">
+          <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" />
+        </div>
         
         </div>
       </el-form>
@@ -260,7 +246,7 @@ export default {
         }else{
           this.popTitle = '异常登记'
           this.form.orgId = this.orgid
-          this.form.registerTime = new Date()
+          this.form.registerTime = new Date().toString();
           this.dengji();
           
         }
@@ -386,12 +372,24 @@ export default {
 }
 </script>
 <style lang="scss">
+.uploadlist{
+  width: 100%;
+  li{
+    float: left;
+    width: 200px;
+    margin-right: 10px;
+    &:nth-child(4){
+      clear: left;
+    }
+  }
+}
 .addDriverPop{
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 880px;
   max-width:  880px;
+   
   .box1{
     border:1px solid #C6E2FF;
     border-top:none;
@@ -406,9 +404,7 @@ export default {
       }
     }
 
-    .el-form--inline .uploadcard{
-      width: 100%;
-    }
+   
 
     .el-form--inline .driverRemarks{
       width: 600px;
@@ -432,7 +428,7 @@ export default {
 
     .drviercard,.certcard,.idcard{
       float: left;
-      width: 254px;
+      width: 100%;
       height: 136px;
       margin-bottom: 14px;
       margin-left:13%;

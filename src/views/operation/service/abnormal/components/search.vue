@@ -1,47 +1,31 @@
 <template>
     <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-        <el-form-item label="登记时间">
-            <SelectTree v-model="searchForm.time" />
+      
+        <el-form-item label="登记时间:">
+          <div class="block">
+            <el-date-picker
+              v-model="searchForm.time"
+              type="datetimerange"
+              align="right"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </div>
+            <!--<SelectTree v-model="searchForm.orgid" />-->
         </el-form-item>
+        
         <el-form-item label="运单号">
-            <el-input v-model="searchForm.number" maxlength="20" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="登记网点">
             <SelectTree v-model="searchForm.orgid" />
         </el-form-item>
+
         <el-form-item label="异常状态">
-            <SelectTree v-model="searchForm.statu"  placeholder="请选择" />
+          <selectType v-model="searchForm.abnormalStatus" type="abnormal_type" />
         </el-form-item>
         
-        <!-- <el-form-item label="出发城市">
-            <el-input v-model="searchForm.startcity" maxlength="10" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="到达城市">
-            <el-input v-model="searchForm.endcity" maxlength="10" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="发货人">
-            <el-input v-model="searchForm.sendpepole" maxlength="15" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="收货人">
-            <el-input v-model="searchForm.recivepepole" maxlength="15" auto-complete="off"></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item :label="title+'货人'">
-            <el-input
-                :placeholder="title+'货单位或'+title+'货人'"
-                v-model="searchForm.name"
-                maxlength="15"
-                clearable>
-            </el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="手机号码">
-            <el-input
-                v-numberOnly
-                placeholder="请输入手机号码"
-                maxlength="11"
-                v-model="searchForm.mobile"
-                clearable>
-            </el-input>
-        </el-form-item> -->
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -52,10 +36,12 @@
 <script>
 import { REGEX }  from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import SelectType from '@/components/selectType/index'
 
 export default {
   components: {
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     btnsize: {
@@ -77,17 +63,17 @@ export default {
   },
   data () {
     let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
+    // const validateFormMobile = function (rule, value, callback) {
+    //   if(validateMobile(value)){
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
 
-    const validateFormEmployeer = function (rule, value, callback) {
-      callback()
-    }
+    // const validateFormEmployeer = function (rule, value, callback) {
+    //   callback()
+    // }
 
     const validateFormNumber = function (rule, value, callback) {
       _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
@@ -95,17 +81,21 @@ export default {
     }
 
     return {
+      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        orgid: '',
+        orgid: '',//网点
+        shipSn:'' ,//  运单号
+        abnormalStatus:'',//异常状态
         // name: '',
         // mobile: '',
-        time:'',
+        time:'',//登记时间
         statu:'',
         number:'',
         startcity:'',
         endcity:'',
         sendpepole:'',
         recivepepole:''
+       
       },
       rules: {
         mobile: [{
@@ -131,9 +121,9 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
-    //   this.searchForm.name = ''
+      this.searchForm.shipId = ''
       this.searchForm.orgid = this.orgid
-    //   this.searchForm.mobile = ''
+      this.searchForm.abnormalStatus = ''
     }
   }
 }

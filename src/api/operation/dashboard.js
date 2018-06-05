@@ -143,3 +143,15 @@ export function GetAbnormalNo() {
     return res.data || { list: [], totalCount: 0 }
   })
 }
+
+
+
+/**
+ * 根据id删除/order/abnormal/v1/
+ */
+export function delAbnormal(id) {
+  return fetch.delete('/api-order/order/abnormal/v1/' + id).then(res => {
+                // console.log(res);
+    return res.data || { list: [], totalCount: 0 }
+  })
+}

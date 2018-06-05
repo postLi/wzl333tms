@@ -44,7 +44,7 @@
             label="异常编号">
           </el-table-column>
           <el-table-column
-            prop="shipId"
+            prop="shipSn"
             width="120"
             sortable
             label="运单号">
@@ -62,7 +62,7 @@
             label="货品名">
           </el-table-column>
           <el-table-column
-            prop="abnormalStatus"
+            prop="abnormalStatusName"
             label="异常状态"
             width="120"
             sortable
@@ -70,7 +70,7 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="abnormalType"
+            prop="abnormalTypeName"
             width="120"
             label="异常类型">
           </el-table-column>
@@ -89,13 +89,14 @@
             >
           </el-table-column>
           <el-table-column
+            prop="createTime"
             sortable
             width="120"
             label="登记时间">
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
+            <!-- <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template> -->
           </el-table-column>
           <el-table-column
-            prop="registerUserId"
+            prop="registerName"
             label="登记人"
             width="120"
             sortable
@@ -123,21 +124,21 @@
             >
           </el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="shipGoodsSn"
             label="货号"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="cargoName"
+            prop="cargoPack"
             label="包装"
             width="120"
             sortable
             >
           </el-table-column>
            <el-table-column
-            prop="cargoPack"
+            prop="cargoAmount"
             label="件数"
             width="120"
             sortable
@@ -156,6 +157,7 @@
             width="120"
             sortable
             >
+            <!-- <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('yyyy-MM-dd HH:mm:ss') }}</template> -->
           </el-table-column>
           <el-table-column
             prop="disposeResult"
@@ -195,7 +197,7 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {PostGetAbnormalList} from '@/api/operation/dashboard'
+import {PostGetAbnormalList,delAbnormal} from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
@@ -262,18 +264,22 @@ export default {
                 this.loading = false
             })
         },
-        fetchData () {
-          this.fetchAllreceipt()
-        },
+        // fetchData () {
+        //   this.fetchAllreceipt()
+        // },
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize
         },
-        getSearchParam (obj) {
-            this.searchQuery.vo.orgid = obj.orgid
-            // this.searchQuery.vo.customerMobile = obj.mobile
-            // this.searchQuery.vo.customerName = obj.name
+        fetchData () {
             this.fetchAllreceipt()
+        },
+         // 获取组件返回的搜索参数
+        getSearchParam (searchParam) {
+            // 根据搜索参数请求后台获取数据
+            Object.assign(this.searchQuery.vo, searchParam)
+            this.searchQuery.vo.id = searchParam.id
+            this.fetchData()
         },
         doAction(type){
           if(type==='export'){
@@ -297,28 +303,53 @@ export default {
                 this.openAddAbnormal()
                 break;
               //修改
-            case 'xiugai': 
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能寄出单条数据',
-                      type: 'warning'
-                  })
-              }
+              case 'xiugai': 
+                if(this.selected.length > 1){
+                    this.$message({
+                        message: '每次只能寄出单条数据',
+                        type: 'warning'
+                    })
+                }
               
                 this.isModify = true
                 this.id = this.selected[0].id
                 this.openAddAbnormal();
                 break;
-                //PostGetAbnormalList(id.join(',')).then(res=>{
-                  // this.$message({
-                  //   message: '回单寄出成功~',
-                  //   type: 'success'
-                  // })
-                  // return false
-                  // console.log(id);
-                // }) 
-              
-            }
+                //删除
+                case 'delete':
+                    let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+                    //=>todo 删除多个
+                    let ids = this.selected.map(item => {
+                        return item.id
+                    })
+                    ids = ids.join(',')
+
+                    this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+                        confirmButtonText: '删除',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        delAbnormal(ids).then(res => {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            })
+                            this.fetchData()
+                        }).catch(err=>{
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                            })  
+                        })
+                        
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        })          
+                    })
+                break;
+              }
           // 清除选中状态，避免影响下个操作
           this.$refs.multipleTable.clearSelection()
         },
