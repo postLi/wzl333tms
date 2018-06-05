@@ -97,6 +97,7 @@ export default {
         handler(newVal){
             if(this.showFileList){
                 let arr = Array.isArray(newVal) ? newVal : newVal.split(',')
+                arr = arr.filter(el => el)
                 this.filelist = arr.map(el => {
                     let obj = {}
                     obj.url = el
