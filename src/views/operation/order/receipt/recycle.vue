@@ -397,7 +397,8 @@ export default {
                       message: '每次只能寄出单条数据',
                       type: 'warning'
                   })
-              }else{
+              }
+              else{
                 let id = this.selected.map(el => {
                   return el.shipId
                 })

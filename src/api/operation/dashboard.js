@@ -28,22 +28,67 @@ export function PostGetAbnormalList(params) {
 export function GetLook(id) {
   return fetch.get('/api-order/order/abnormal/v1/' + id).then(res => {
                 // console.log(res);
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || { }
   })
 }
 
 /**
  * 修改或处理异常
  * @param {*} params 
- * {"id":1,
-		"disposeOrgId":7
+{
+  "abnormalAmount": 0,
+  "abnormalDescribe": "string",
+  "abnormalNo": "string",
+  "abnormalPicture": "string",
+  "abnormalStatus": 0,
+  "abnormalType": 0,
+  "childShipId": 0,
+  "createTime": "2018-06-04T11:51:14.137Z",
+  "disposeOpinion": "string",
+  "disposeOrgId": 0,
+  "disposePicture": "string",
+  "disposeResult": 0,
+  "disposeTime": "2018-06-04T11:51:14.137Z",
+  "disposeUserId": 0,
+  "dutyOrgId": 0,
+  "id": 0,
+  "orgId": 0,
+  "registerFee": 0,
+  "registerUserId": 0,
+  "shipId": 0
 }
  */
 export function PutXiuGai(params) {
-  return fetch.put('/api-order/order/abnormal/v1/', params).then(res => {
-                // console.log(res);
-    return res.data || { list: [], totalCount: 0 }
-  })
+  return fetch.put('/api-order/order/abnormal/v1/', params)
+}
+
+/**
+ * 新建异常
+ * @param {*} params 参数
+ {
+  "abnormalAmount": 0,
+  "abnormalDescribe": "string",
+  "abnormalNo": "string",
+  "abnormalPicture": "string",
+  "abnormalStatus": 0,
+  "abnormalType": 0,
+  "childShipId": 0,
+  "createTime": "2018-06-04T09:51:48.943Z",
+  "disposeOpinion": "string",
+  "disposeOrgId": 0,
+  "disposePicture": "string",
+  "disposeResult": 0,
+  "disposeTime": "2018-06-04T09:51:48.943Z",
+  "disposeUserId": 0,
+  "dutyOrgId": 0,
+  "orgId": 0,
+  "registerFee": 0,
+  "registerUserId": 0,
+  "shipId": 0
+}
+ */
+export function PostNewAbnormal(params) {
+  return fetch.post('/api-order/order/abnormal/v1/', params)
 }
 
 /**
@@ -83,6 +128,17 @@ export function PostControlgoods(params) {
 
 export function PutFh(id) {
   return fetch.put('/api-order/controlgoods/v1/' + id).then(res => {
+                // console.log(res);
+    return res.data || { list: [], totalCount: 0 }
+  })
+}
+
+
+/**
+ * 根据公司id自动生成编号/order/abnormal/v1/getabnormalNo
+ */
+export function GetAbnormalNo(params) {
+  return fetch.get('/order/abnormal/v1/getabnormalNo' + params).then(res => {
                 // console.log(res);
     return res.data || { list: [], totalCount: 0 }
   })

@@ -1,11 +1,11 @@
 <template>
-    <div class="tab-content">
+    <div class="tab-content" v-loading="loading">
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">异常登记</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>异常修改</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>查看明细</el-button>
+          <el-button type="primary" :size="btnsize"  plain @click="doAction('reg')">异常登记</el-button>
+          <el-button type="primary" :size="btnsize"  @click="doAction('xiugai')" plain>异常修改</el-button>
+          <el-button type="primary" :size="btnsize"  @click="doAction('check')" plain>查看明细</el-button>
           <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
           <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
           
@@ -44,7 +44,7 @@
             label="异常编号">
           </el-table-column>
           <el-table-column
-            prop="abnormalNo"
+            prop="shipId"
             width="120"
             sortable
             label="运单号">
@@ -123,7 +123,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop="shipSn"
+            prop="bankName"
             label="货号"
             width="120"
             sortable
@@ -189,18 +189,23 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-        <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+        <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :id="id" :orgid="orgid" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+        <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </template>
 <script>
 import SearchForm from './components/search'
 import {PostGetAbnormalList} from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
+// import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
+import Addabnormal from './components/add'
 export default {
     components: {
         SearchForm,
-        Pager
+        Pager,
+        // TableSetup,
+        Addabnormal
     },
     computed: {
         ...mapGetters([
@@ -213,16 +218,23 @@ export default {
     },
     mounted () {
         this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                // this.loading = false
-            })
+        Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+            this.loading = false
+            this.licenseTypes = resArr[1]
+          })
         },
         data() {
             return {
                 btnsize: 'mini',
                 component: 'Send',
                 selectInfo: {},
+                loading: true,
                 dataset:[],
+                isModify: false,
+                AddAbnormalVisible:false,
+                setupTableVisible: false,
+                licenseTypes: [],
+                selected:[],
                 // loading:false,
                 searchQuery: {
                     "currentPage":1,
@@ -230,21 +242,28 @@ export default {
                     "vo":{ 
                     }
                 },
-                total: 0
+                total: 0,
+                id:''
             }
         },
-        methods: {
+      methods: {
+        getLicenType(id){
+          let info = this.licenseTypes.filter(item => {
+            console.log(item,id)
+            return parseInt(item.id, 10) === id
+            })
+          return info[0] ? info[0].dictName : id
+        },
         fetchAllreceipt() {
-            // this.loading = true
+            this.loading = true
             return PostGetAbnormalList(this.searchQuery).then(data => {
                 this.dataset = data.list
                 this.total = data.totalCount
-                // this.loading = false
-                console.log(data);
+                this.loading = false
             })
         },
         fetchData () {
-        this.fetchAllreceipt()
+          this.fetchAllreceipt()
         },
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
@@ -256,9 +275,70 @@ export default {
             // this.searchQuery.vo.customerName = obj.name
             this.fetchAllreceipt()
         },
-        setTable(){},
-        clickDetails(){},
-        getSelection(){}
+        doAction(type){
+          if(type==='export'){
+            this.showImport()
+            return false
+          }
+          // 判断是否有选中项
+          if(!this.selected.length &&type !== "reg"){
+            this.$message({
+              message: '请选择要操作的项~',
+              type: 'warning'
+            })
+            return false
+          }
+          switch (type) {
+              //登记
+              case 'reg':
+                this.isModify = false
+                this.selectInfo = {}
+                this.openAddAbnormal()
+                break;
+              //修改
+            case 'xiugai': 
+              if(this.selected.length > 1){
+                  this.$message({
+                      message: '每次只能寄出单条数据',
+                      type: 'warning'
+                  })
+              }
+              
+                this.isModify = true
+                this.id = this.selected[0].id
+                this.openAddAbnormal();
+                break;
+                //PostGetAbnormalList(id.join(',')).then(res=>{
+                  // this.$message({
+                  //   message: '回单寄出成功~',
+                  //   type: 'success'
+                  // })
+                  // return false
+                  // console.log(id);
+                // }) 
+              
+            }
+          // 清除选中状态，避免影响下个操作
+          this.$refs.multipleTable.clearSelection()
+        },
+        openAddAbnormal () {
+          this.AddAbnormalVisible = true
+        },
+        closeAddAbnormal () {
+          this.AddAbnormalVisible = false
+        },
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        getSelection (selection) {
+          this.selected = selection
+        },
+        setTable () {
+          this.setupTableVisible = true
+        },
+        closeSetupTable () {
+          this.setupTableVisible = false
+        },
     }
 }
 </script>
