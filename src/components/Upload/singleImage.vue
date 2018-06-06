@@ -13,6 +13,7 @@
             :before-upload="beforeUpload" 
             :list-type="listtype"
             :on-exceed="onexceed"
+            :disabled="disabled"
             :on-remove="handleRemove"
             :on-error="handleError"
             :on-success="handleImageScucess">
@@ -66,6 +67,10 @@ export default {
         type: String,
         default: 'picture',
         enum: ['text', 'picture', 'picture-card']
+    },
+    disabled:{
+      type: Boolean,
+      default: false
     }
   },
   computed: {

@@ -53,7 +53,7 @@
             sortable
             width="120"
             label="开单时间">
-             <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
           <el-table-column
             prop="cargoName"
@@ -75,25 +75,25 @@
             label="异常类型">
           </el-table-column>
           <el-table-column
-            label="处理网点"
+            label="登记网点"
             width="120"
-            prop="disposeOrgId"
+            prop="orgName"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="disposeOrgName"
+            prop="dutyOrgName"
             label="责任网点"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="createTime"
+            prop="registerTime"
             sortable
             width="120"
             label="登记时间">
-            <!-- <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template> -->
+            <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop="registerName"
@@ -148,7 +148,7 @@
             prop="abnormalDescribe"
             label="异常描述"
             width="120"
-            sortable
+            sortables
             >
           </el-table-column>
           <el-table-column
@@ -167,14 +167,14 @@
             >
           </el-table-column>
            <el-table-column
-            prop="disposeOrgId"
+            prop="disposeOrgName"
             label="处理网点"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="disposeUserId"
+            prop="disposeName"
             label="处理人"
             width="120"
             sortable
@@ -191,7 +191,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-        <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+        <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
         <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </template>
@@ -219,7 +219,7 @@ export default {
         }
     },
     mounted () {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
+        this.searchQuery.vo.orgId = this.otherinfo.orgid
         Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
             this.loading = false
             this.licenseTypes = resArr[1]
@@ -233,10 +233,12 @@ export default {
                 loading: true,
                 dataset:[],
                 isModify: false,
+                isCheck:false,
                 AddAbnormalVisible:false,
                 setupTableVisible: false,
                 licenseTypes: [],
                 selected:[],
+                
                 // loading:false,
                 searchQuery: {
                     "currentPage":1,
@@ -260,7 +262,7 @@ export default {
             this.loading = true
             return PostGetAbnormalList(this.searchQuery).then(data => {
                 this.dataset = data.list
-                this.total = data.totalCount
+                this.total = data.total
                 this.loading = false
             })
         },
@@ -278,7 +280,7 @@ export default {
         getSearchParam (searchParam) {
             // 根据搜索参数请求后台获取数据
             Object.assign(this.searchQuery.vo, searchParam)
-            this.searchQuery.vo.id = searchParam.id
+            //this.searchQuery.vo.orgId = searchParam.orgid
             this.fetchData()
         },
         doAction(type){
@@ -298,6 +300,7 @@ export default {
               //登记
               case 'reg':
                 this.isModify = false
+                this.isCheck = false
                 console.log(this.isModify)
                 this.selectInfo = {}
                 this.openAddAbnormal()
@@ -311,11 +314,25 @@ export default {
                   })
                 }else{
                   this.isModify = true
+                  this.isCheck = false
                   this.id = this.selected[0].id
                   this.openAddAbnormal();
                 }
                 break;
-                
+                //查看明细
+                case 'check':
+                  if(this.selected.length>1){
+                    this.$message({
+                      message:'每次自能查看单条数据',
+                      type:'warning'
+                    })
+                  }else{
+                    this.isModify = false
+                    this.isCheck = true
+                    this.id = this.selected[0].id
+                    this.openAddAbnormal();
+                  }
+                break;
                 //删除
                 case 'delete':
                     let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id

@@ -4,11 +4,13 @@
         <el-form-item label="登记时间:">
           <div class="block">
             <el-date-picker
-              v-model="searchForm.time"
+              v-model="searchCreatTime"
               type="datetimerange"
+              value-format="yyyy-MM-dd hh:mm:ss"
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              :picker-options="pickerOptions1"
             >
             </el-date-picker>
           </div>
@@ -19,13 +21,12 @@
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="登记网点">
-            <SelectTree v-model="searchForm.orgid" />
+            <SelectTree v-model="searchForm.orgId" type="org_id"/>
         </el-form-item>
 
         <el-form-item label="异常状态">
-          <selectType v-model="searchForm.abnormalStatus" type="abnormal_type" />
+          <selectType v-model="searchForm.abnormalStatus" type="abnormal_status" />
         </el-form-item>
-        
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -57,23 +58,9 @@ export default {
     }
   },
   computed: {
-    // title () {
-    //   return this.issender ? '发' : '收'
-    // }
   },
   data () {
     let _this = this
-    // const validateFormMobile = function (rule, value, callback) {
-    //   if(validateMobile(value)){
-    //     callback()
-    //   } else {
-    //     callback(new Error('请输入有效的手机号码'))
-    //   }
-    // }
-
-    // const validateFormEmployeer = function (rule, value, callback) {
-    //   callback()
-    // }
 
     const validateFormNumber = function (rule, value, callback) {
       _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
@@ -81,14 +68,15 @@ export default {
     }
 
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      pickerOptions1:{},
+      searchCreatTime: [],
       searchForm: {
-        orgid: '',//网点
+        orgId: '',//网点
         shipSn:'' ,//  运单号
         abnormalStatus:'',//异常状态
         // name: '',
         // mobile: '',
-        time:'',//登记时间
+        registerTime:'',//登记时间
         statu:'',
         number:'',
         startcity:'',
@@ -107,22 +95,24 @@ export default {
   },
   watch: {
     orgid(newVal){
-      this.searchForm.orgid = newVal
+      this.searchForm.orgId = newVal
     }
   },
   mounted () {
-    this.searchForm.orgid = this.orgid
+    this.searchForm.orgId = this.orgid
   },
   methods: {
     getOrgid (id){
-      this.searchForm.orgid = id
+      this.searchForm.orgId = id
     },
     onSubmit () {
+      this.$set(this.searchForm, 'createTime', this.searchCreatTime[0])
+      this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
       this.$emit('change', this.searchForm)
     },
     clearForm () {
       this.searchForm.shipId = ''
-      this.searchForm.orgid = this.orgid
+      this.searchForm.orgId = this.orgid
       this.searchForm.abnormalStatus = ''
     }
   }
