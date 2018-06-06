@@ -46,7 +46,7 @@
             label="订单号">
           </el-table-column>
           <el-table-column
-            prop='orderStatus ==="1" ? "已受理" :"未受理"'
+            prop='orderStatus'
             width="110"
             sortable
             label="订单状态">
@@ -292,7 +292,7 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        console.log(this.selectInfo.orgid , this.searchForms.vo.orgid , this.otherinfo.orgid)
+        // console.log(this.selectInfo.orgid , this.searchForms.vo.orgid , this.otherinfo.orgid)
         return this.isModify ? this.selectInfo.orgid : this.searchForms.vo.orgid || this.otherinfo.orgid
       }
   },
@@ -320,7 +320,7 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgid": 1,
+
           orderStatus: '',
           orderSn: '',
           createTime: '',
@@ -396,7 +396,38 @@ export default {
               })
             }
             this.selectInfo = this.selected[0]
-            this.openAddCustomer()
+            if(this.selectInfo.orderStatus === 210){
+              this.openAddCustomer()
+            }else if(this.selectInfo.orderStatus === 214){
+              this.$message({
+                message: '订单已经受理了~',
+                type: 'warning'
+              })
+              return false
+            }else if(this.selectInfo.orderStatus === 213){
+              this.$prompt('拒绝原因', '拒绝订单', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                // inputErrorMessage: '邮箱格式不正确'
+              }).then(({ value }) => {
+                this.$message({
+                  type: 'success',
+                  message: '拒绝原因是: ' + value
+                });
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '取消输入'
+                });
+              });
+            }
+              // this.$message({
+              //   message: '订单已经受理了~',
+              //   type: 'warning'
+              // })
+              // return false
+            // }
             break;
           // 修改客户信息
           case 'modify':

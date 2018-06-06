@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">受理</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('accept')">受理</el-button>
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
         <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
@@ -54,12 +54,12 @@
             label="订单状态"
             width="110">
           </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="customerName"-->
-            <!--sortable-->
-            <!--label="关联运单号"-->
-            <!--width="120">-->
-          <!--</el-table-column>-->
+          <el-table-column
+            prop="shipSn"
+            sortable
+            label="关联运单号"
+            width="120">
+          </el-table-column>
           <el-table-column
             prop="orderEffective"
             sortable
@@ -218,13 +218,13 @@
             width="130"
           >
           </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="cargoAmount"-->
-            <!--label="件数单价"-->
-            <!--sortable-->
-            <!--width="110"-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
+          <el-table-column
+            prop="cargoAmount"
+            label="件数单价"
+            sortable
+            width="110"
+          >
+          </el-table-column>
           <el-table-column
             prop="weightFee"
             label="重量单价"
@@ -239,15 +239,6 @@
             width="110"
           >
           </el-table-column>
-          <!--<el-table-column-->
-            <!--label="身份证图片"-->
-            <!--width="120"-->
-            <!--sortable-->
-            <!--&gt;-->
-            <!--<template slot-scope="scope">-->
-                <!--<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
@@ -283,9 +274,6 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
-      this.loading = false
-    })
     this.fetchAllList(this.otherinfo.orgid).then(res => {
       this.loading = false
     })
@@ -331,26 +319,18 @@ export default {
         this.loading = false
       })
     },
-    fetchAllCustomer () {
-      this.loading = true
-      return getAllCustomer(this.searchQuery).then(data => {
-        // this.usersArr = data.list
-        // this.total = data.totalCount
-        this.loading = false
-      })
-    },
     fetchData () {
-      this.fetchAllCustomer()
+      this.fetchAllList()
     },
     handlePageChange (obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchQuery.vo.orgid = obj.orgid
-      this.searchQuery.vo.customerMobile = obj.mobile
-      this.searchQuery.vo.customerName = obj.name
-      this.fetchAllCustomer()
+      // this.searchQuery.vo.orgid = obj.orgid
+      // this.searchQuery.vo.customerMobile = obj.mobile
+      // this.searchQuery.vo.customerName = obj.name
+      this.fetchAllList()
     },
     showImport () {
       // 显示导入窗口
@@ -361,13 +341,21 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length){
+      if(!this.selected.length && type !== 'accept'){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
               type: 'warning'
           })
           return false
+      }
+      else if(!this.selected.length && type === 'accept'){
+        this.closeAddCustomer()
+        this.$message({
+          message: '请选择要受理的订单~',
+          type: 'warning'
+        })
+        return false
       }
 
       console.log("this.selected:", this.selected)
@@ -379,16 +367,20 @@ export default {
               this.openAddCustomer()
               break;
           // 修改客户信息
-          case 'modify':
-              this.isModify = true
+          case 'accept':
+              // this.isModify = true
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
                       type: 'warning'
                   })
               }
-              this.selectInfo = this.selected[0]
-              this.openAddCustomer()
+              this.selectInfo = this.selected[0];
+              if(this.selectInfo.orderStatus == 1){
+
+              }
+            console.log(this.selectInfo);
+            // this.openAddCustomer()
               break;
           // 删除客户
           case 'delete':

@@ -19,36 +19,36 @@
           <tr>
             <td>
               <el-form-item label="发货人:">
-                <el-input v-model='customerList[0].senderName' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='customSend.senderName' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货人:">
-                <el-input v-model='customerList[1].receiverName' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='customRece.receiverName' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
-              <el-form-item label="联系号码:">
-                <el-input v-model='customerList[0].senderMobile' maxlength="25" auto-complete="off" clearable></el-input>
+              <el-form-item label="联系号码:" prop="">
+                <el-input v-numberOnly v-model='customSend.senderMobile' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="联系号码:">
-                <el-input v-model='customerList[1].receiverMobile' maxlength="25" auto-complete="off" clearable></el-input>
+              <el-form-item label="联系号码:"  prop="">
+                <el-input v-model='customRece.receiverMobile' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="发货地址:">
-                <el-input v-model='customerList[0].detailedAddress'  maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='customSend.detailedAddress'  maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货地址:">
-                <el-input v-model='customerList[1].detailedAddress' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model='customRece.detailedAddress' maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -57,7 +57,7 @@
         </table>
 
 
-        <table class="manage-add-table-center" :model='tmsOrderCargoList'>
+        <table class="manage-add-table-center">
           <thead>
           <tr>
             <th>货物信息</th>
@@ -99,34 +99,34 @@
           </tr>
           <tr>
             <td>
-              <el-form-item label="">
-                <el-input v-model="tmsOrderCargoList.cargoName" maxlength="25" auto-complete="off" clearable></el-input>
+              <el-form-item label="" prop="">
+                <el-input v-model="form.tmsOrderCargoList.cargoName" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input v-model="tmsOrderCargoList.cargoAmount" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderCargoList.cargoAmount" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="">
-                <el-input v-model="tmsOrderCargoList.cargoWeight" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderCargoList.cargoWeight" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input v-model="tmsOrderCargoList.cargoVolume" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderCargoList.cargoVolume" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input v-model="tmsOrderCargoList.cargoPack" maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderCargoList.cargoPack" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="">
-                <el-input v-model="tmsOrderCargoList.description" maxlength="20" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderCargoList.description" maxlength="20" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -134,77 +134,78 @@
 
         </table>
         <div class="info">订单信息</div>
-        <table class="manage-add-table-foot" :model="tmsOrderPre">
+        <table class="manage-add-table-foot">
           <tbody>
           <tr>
             <td>
               <el-form-item label="出发城市">
-                <el-input v-model="tmsOrderPre.orderFromCityCode" maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.orderFromCityCode" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="到达城市">
-                <el-input v-model="tmsOrderPre.orderToCityCode" maxlength="25" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.orderToCityCode" maxlength="25" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="开单网点">
-                <el-input  v-model="tmsOrderPre.orderFromOrgid" maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input v-model="form.tmsOrderPre.orderFromOrgid" maxlength="25" auto-complete="off" clearable></el-input>-->
+                <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" />
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="目的网点">
-                <SelectTree v-model="tmsOrderPre.orderToOrgid" />
-                <!--<el-input v-model="tmsOrderPre.orderToOrgid" maxlength="25" auto-complete="off" clearable></el-input>-->
+                <SelectTree v-model="form.tmsOrderPre.orderToOrgid" />
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="提货方式">
-                <el-input v-model="tmsOrderPre.orderPickupMethod" maxlength="25" auto-complete="off" clearable></el-input>
+
+                <SelectType v-model="form.tmsOrderPre.orderPickupMethod" type="order_pickup_method" placeholder="请选择" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="紧急度">
-                <el-input v-model="tmsOrderPre.orderEffective" type='number' maxlength="8" auto-complete="off" clearable></el-input>
+                <SelectType v-model="form.tmsOrderPre.orderEffective" type="order_effective" placeholder="请选择" />
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="代收款">
-                <el-input v-model="tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="代收款手续费">
-                <el-input v-model="tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <el-input v-model="tmsOrderPre.orderPayWay" maxlength="25" auto-complete="off" clearable></el-input>
+                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="order_pay_way" placeholder="请选择付款方式" />
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="运费">
-                <el-input v-model="tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="声明价值">
-                <el-input v-model="tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="add-textarea">
               <el-form-item label="备注">
-                <el-input v-model="tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -220,19 +221,21 @@
   </pop-right>
 </template>
 <script>
-import { REGEX }  from '@/utils/validate'
-import { postCustomer, putCustomer , getAllCustomer} from '@/api/company/customerManage'
-import { postAddOrder, putCustomer , getAllCustomer} from '@/api/company/customerManage'
+import { REGEX } from '@/utils/validate'
+import { getAllCustomer } from '@/api/company/customerManage'
+import { postAddOrder , postModifyOrder } from '@/api/operation/manage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
+import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
     Upload,
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     popVisible: {
@@ -323,17 +326,55 @@ export default {
       phonelong: '', // 固话号码
       //fixPhone: '',
       form: {
+        customerList:[{},{}],
+        //货物信息
+        tmsOrderCargoList: [
+          {
+            cargoName:'',  // 货品名
+            cargoAmount:'',  // 件数
+            cargoWeight:'',  // 重量
+            cargoVolume:'',  // 体积
+            cargoPack:'',  // 包装
+            description:''  // 品种规格
+          }
+        ],
+        //订单信息
+        tmsOrderPre: {
+          orderFromCityCode:'',
+          orderToCityCode:'',
+          orderFromOrgid:'',
+          orderToOrgid:'',//目的网点
+          orderPickupMethod:'',//提货方式
+          orderEffective:'',//紧急度
+          agencyFund:'',//代收款
+          commissionFee:'',//代收款手续费
+          orderPayWay:'',//付款方式
+          deliveryFee:'',//运费
+          productPrice:'',//声明价值
+          orderRemarks:''//声明价值
 
-        // senderName:'',
-        // senderMobile:'',
-        // detailedAddress:'',
-        // receiverName:'',//收货人
-        // receiverMobile:'',//receiverMobile
-        // detailedAddress:''
+        }
       },
+      customSend:{
+        // 发货人
+        senderName:'',
+        senderMobile:'',
+        detailedAddress:'',
+        customerType:1
+      },
+      customRece:{
+        receiverName:'',
+        receiverMobile:'',//
+        detailedAddress:'',
+        customerType:2
+      },
+
       formLabelWidth: '100px',
       tooltip: false,
       rules: {
+        cargoName: [
+          { message: '请输入输入数字', trigger: 'blur' , pattern: REGEX.ONLY_NUMBER_GT}
+        ],
         companyNumber: [
           { message: '请输入输入数字', trigger: 'blur' , pattern: REGEX.ONLY_NUMBER_GT}
           // { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
@@ -345,7 +386,11 @@ export default {
         orgid: [
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
-        customerMobile: [
+        mobile: [
+          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: validateFormMobile }
+          // { validator: validateFormNumber, trigger: 'change'} REGEX.MOBILE
+        ],
+        receiverMobile: [
           { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
          // { validator: validateFormNumber, trigger: 'change'}
         ],
@@ -359,71 +404,36 @@ export default {
       rolesArr: [],
       departmentArr: [],
       loading: false,
-      roles: [],
       departments: [],
       groups: [],
       inited: false,
 
     //保存表单
-      customerList: [
-        //发货人
-        { senderName:'',
-         senderMobile:'',
-         detailedAddress:''
-        },
-        //收货人
-        {
-          receiverName:'',
-          receiverMobile:'',//
-          detailedAddress:''
-        }
-      ],
-      //货物信息
-      tmsOrderCargoList: [
-        {
-          cargoName:'',  // 货品名
-          cargoAmount:'',  // 件数
-          cargoWeight:'',  // 重量
-          cargoVolume:'',  // 体积
-          cargoPack:'',  // 包装
-          description:''  // 品种规格
-        }
-      ],
-      //订单信息
-      tmsOrderPre: {
-        orderFromCityCode:'',
-        orderToCityCode:'',
-        orderFromOrgid:'',
-        orderToOrgid:'',//目的网点
-        orderPickupMethod:'',//提货方式
-        orderEffective:'',//紧急度
-        agencyFund:'',//代收款
-        commissionFee:'',//代收款手续费
-        orderPayWay:'',//付款方式
-        deliveryFee:'',//运费
-        productPrice:'',//声明价值
-        orderRemarks:''//声明价值
 
-      },
-      tmsOrderTransfer: {
-        receiverName:'',//收货人
-        receiverMobile:'',//receiverMobile
-        detailedAddress:''
-      }
     }
   },
   mounted () {
-    this.form.orgid = this.orgid
+    // this.form.orgid = this.orgid
     if(!this.inited){
       this.inited = true
       this.initInfo()
     }
+    // console.log(this.form.customerList[0].senderName)
+    // this.form.parentId = this.orgid || this.companyId
+    // Promise.all([getAllCustomer(this.form.parentId), getAllCustomer(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
+    //   this.loading = false
+    //   this.netWorkType = resArr[0]
+    //   this.manageType = resArr[1]
+    //   this.netWorkStatus = resArr[2]
+    // })
     this.fetchAllCustomerFa(this.orgid).then(res => {
       this.loading = false
     })
     this.fetchAllCustomerShou(this.orgid).then(res => {
       this.loading = false
     })
+    this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
+    // this.form.tmsOrderPre.orderEffective =
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -433,7 +443,7 @@ export default {
       }
     },
     orgid (newVal) {
-      this.form.orgid = newVal
+      // this.form.orgid = newVal
     },
     info () {
       // if(this.isModify){
@@ -446,7 +456,7 @@ export default {
       //   console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
       //   this.fixPhone = this.form.fixPhone
       // } else {
-      //   this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
+      //   this.popTitle = '新增'
       //   for(let i in this.form){
       //     this.form[i] = ''
       //   }
@@ -462,39 +472,56 @@ export default {
     fetchAllCustomerFa () {
       this.loading = true
       return getAllCustomer(this.searchSend).then(data => {
-        this.customerList[0] = data.list
-        // this.total = data.totalCount
+        let res = data.list[0]
+        if(res){
+          this.customSend.senderName = res.customerName
+          this.customSend.senderMobile = res.customerMobile
+          this.customSend.detailedAddress = res.detailedAddress
+          this.customSend.customerType = res.customerType
+          // customerType:1
+        }
+
         this.loading = false
-        console.log(data)
       })
     },
     fetchAllCustomerShou () {
       this.loading = true
       return getAllCustomer(this.searchShou).then(data => {
-        this.customerList[1] = data.list
-        // this.total = data.totalCount
+        let res = data.list[0]
+        if(res){
+          for(var i in this.customRece){
+            this.customRece[i] = res[i]
+          }
+        }
         this.loading = false
-        console.log(data)
       })
     },
     initInfo () {
       this.loading = false
     },
     getOrgid (id) {
-      this.form.orgid = id
+      // this.form.orgid = id
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({},this.form)
-          data.fixPhone = this.fixPhone
+          // let data = {
+          //   tmsOrderPre: this.form
+          // }
+          // data.fixPhone = this.fixPhone
+          this.form.customerList = []
+          this.form.customerList[0] = this.customSend
+          this.form.customerList[1] = this.customRece
+          console.log(this.customSend,this.customRece)
+          let datas = this.form
+          console.log(datas)
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
-            promiseObj = putCustomer(data)
+            // promiseObj = postModifyOrder(data)
           } else {
-            promiseObj = postAddOrder(data)
+            promiseObj = postAddOrder(datas)
           }
 
           promiseObj.then(res => {
@@ -649,6 +676,29 @@ export default {
 }
 .manage-add-table-top .el-input__inner:focus,.manage-add-table-center .el-input__inner:focus{
   border-color: transparent;
+}
+
+
+/*.manage-add-table-top .el-input--mini .el-input__inner, .manage-add-table-center .el-input--mini .el-input__inner{*/
+  /**/
+/*}*/
+
+.manage-add-table-top .el-form-item--mini .el-form-item__content{
+  line-height: 0;
+}
+.manage-add-table-top .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus{
+  border-color: transparent;
+  /*height: 30px;*/
+  line-height: 30px;
+}
+manage-add-table-top .el-form-item__error {
+  color: #f56c6c;
+  font-size: 12px;
+  line-height: 1;
+  padding-top: 4px;
+  position: absolute;
+  top: 37%;
+  left: 59%;
 }
 .info {
   height: 36px;
