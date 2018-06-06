@@ -305,16 +305,17 @@ export default {
               //修改
               case 'xiugai': 
                 if(this.selected.length > 1){
-                    this.$message({
-                        message: '每次只能寄出单条数据',
-                        type: 'warning'
-                    })
+                  this.$message({
+                      message: '每次只能寄出单条数据',
+                      type: 'warning'
+                  })
+                }else{
+                  this.isModify = true
+                  this.id = this.selected[0].id
+                  this.openAddAbnormal();
                 }
-              
-                this.isModify = true
-                this.id = this.selected[0].id
-                this.openAddAbnormal();
                 break;
+                
                 //删除
                 case 'delete':
                     let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id

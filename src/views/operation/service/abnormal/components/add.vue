@@ -247,8 +247,7 @@ export default {
           this.popTitle = '异常登记'
           this.form.orgId = this.orgid
           this.form.registerTime = new Date().toString();
-          this.dengji();
-          
+          this.dengji();   
         }
       },
       immediate: true
