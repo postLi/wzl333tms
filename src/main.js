@@ -12,6 +12,8 @@ import * as $const from './utils/constant'
 
 import * as filters from './filters'
 
+import './mixins'
+
 import './directive'
 
 // mock
