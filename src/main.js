@@ -8,6 +8,7 @@ import store from './store'
 import '@/icons' // icon
 import './errorLog'// error
 import '@/permission' // permission
+import * as $const from './utils/constant'
 
 import * as filters from './filters'
 
@@ -20,6 +21,7 @@ import './directive'
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.prototype.$const = $const
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {
