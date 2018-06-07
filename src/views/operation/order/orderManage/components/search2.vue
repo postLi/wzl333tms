@@ -17,26 +17,22 @@
       <el-form-item label="开单网点:">
         <select-tree v-model="searchForm.orgid" />
       </el-form-item>
-      <el-form-item class="searchinfo--order">
-        <el-select v-model="searchForm.type">
-          <el-option label="运单号" value="shipSn"></el-option>
-          <el-option label="发货人" value="senderCustomerName"></el-option>
-          <el-option label="发货人手机" value="senderCustomerMobile"></el-option>
-          <el-option label="收货人" value="receiverCustomerName"></el-option>
-          <el-option label="收货人手机" value="receiverCustomerName"></el-option>
-        </el-select>
+      <el-form-item label="运单号" class="searchinfo--order">
         <el-input
-            v-model="searchForm.value"
+            v-model="searchForm.shipSn"
             maxlength="15"
             @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
-    <el-form-item label="订单状态：">
-      <select-type v-model="searchForm.shipStatus" type="ship_status" >
-        <el-option slot="head" label="全部" value=""></el-option>
-      </select-type>
-    </el-form-item>
+    <el-form-item label="出发城市" class="searchinfo--order">
+        <el-input
+            v-model="searchForm.shipFormCityName"
+            maxlength="15"
+            @change="onSubmit"
+            clearable>
+        </el-input>
+      </el-form-item>
       <el-form-item class="staff_searchinfo--btn">
         <el-button type="primary" @click="onSubmit">查询</el-button>
         <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -76,9 +72,8 @@ export default {
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
         orgid: '',
-        value: '',
-        type: 'shipSn',
-        shipStatus: ''
+        shipSn: '',
+        shipFormCityName: ''
       },
       rules: {
         mobile: [{
@@ -159,18 +154,19 @@ export default {
     onSubmit () {
       let searchObj = {}
       searchObj.shipFromOrgid = this.searchForm.orgid
-      searchObj.shipStatus = this.searchForm.shipStatus
+      searchObj.shipFormCityName = this.searchForm.shipFormCityName
       searchObj.startTime = this.searchCreatTime[0]
       searchObj.endTime = this.searchCreatTime[1]
-      searchObj[this.searchForm.type] = this.searchForm.value
+      searchObj.shipSn = this.searchForm.shipSn
 
       this.$emit('change', searchObj)
     },
     clearForm () {
-      this.searchForm.shipStatus = ''
-      this.searchForm.shipFromOrgid = this.orgid
-      this.searchForm.value = ''
-      this.searchForm.type = 'shipSn'
+      this.searchForm.orgid = this.orgid
+      this.searchForm.shipFormCityName = ''
+      this.searchForm.startTime = ''
+      this.searchForm.endTime = ''
+      this.searchForm.shipSn = ''
     }
   }
 }

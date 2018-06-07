@@ -3,11 +3,12 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">创建运单</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>运单修改</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain>运单作废</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('delete')" plain>运单删除</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -51,15 +52,6 @@
               </template>
             </el-table-column>
           </template>
-          <el-table-column
-            label="身份证图片"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">
-                <span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>
-            </template>
-          </el-table-column>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
@@ -116,7 +108,7 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgid": 1,
+          "shipFromOrgid": 1,
           shipStatus: 2,
           startTime: '',
           endTime: ''
@@ -159,10 +151,7 @@ export default {
       },{
         "label": "发货人电话",
         "prop": "senderCustomerMobile",
-        "width": "150",
-        slot: function(scope){
-          return `<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>`
-        }
+        "width": "150"
       },{
         "label": "收货人",
         "prop": "receiverCustomerName",
@@ -416,7 +405,7 @@ export default {
       this.loading = true
       return orderManageApi.getAllShip(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },
@@ -433,14 +422,8 @@ export default {
       this.loading = false
       this.fetchData()
     },
-    showImport () {
-      // 显示导入窗口
-    },
     doAction (type) {
-      if(type==='import'){
-        this.showImport()
-        return false
-      }
+
       // 判断是否有选中项
       if(!this.selected.length && type !== 'add'){
           this.closeAddOrder()
@@ -455,13 +438,13 @@ export default {
       
 
       switch (type) {
-          // 添加客户
+          // 添加运单
           case 'add':
               this.isModify = false
               this.selectInfo = {}
               this.openAddOrder()
               break;
-          // 修改客户信息
+          // 修改运单信息
           case 'modify':
               this.isModify = true
               if(this.selected.length > 1){
@@ -473,21 +456,23 @@ export default {
               this.selectInfo = this.selected[0]
               this.openAddOrder()
               break;
-          // 删除客户
+          // 删除运单
           case 'delete':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
-                  //=>todo 删除多个
-                  let ids = this.selected.map(item => {
-                      return item.customerId
-                  })
-                  ids = ids.join(',')
+                  if(this.selected.length > 1){
+                      this.$message({
+                          message: '每次只能操作单条数据~',
+                          type: 'warning'
+                      })
+                  }
+                  let deleteItem = this.selected[0].shipSn
+                  let id = this.selected[0].id
 
-                  this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
+                  this.$confirm('确定要删除 ' + deleteItem + ' 运单吗？', '提示', {
                       confirmButtonText: '删除',
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                      orderManageApi.deleteSomeCustomerInfo(ids).then(res => {
+                      orderManageApi.deleteOrderInfoById(id).then(res => {
                           this.$message({
                               type: 'success',
                               message: '删除成功!'
@@ -504,6 +489,41 @@ export default {
                       this.$message({
                           type: 'info',
                           message: '已取消删除'
+                      })          
+                  })
+              break;
+          // 作废运单
+          case 'cancel':
+              if(this.selected.length > 1){
+                    this.$message({
+                        message: '每次只能操作单条数据~',
+                        type: 'warning'
+                    })
+                }
+                let cancelItem = this.selected[0].shipSn
+                let theid = this.selected[0].id
+              this.$confirm('确定要作废 ' + cancelItem + ' 运单吗？', '提示', {
+                      confirmButtonText: '作废',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                  }).then(() => {
+                      orderManageApi.deleteCancleOrderById(theid).then(res => {
+                          this.$message({
+                              type: 'success',
+                              message: '作废成功!'
+                          })
+                          this.fetchData()
+                      }).catch(err=>{
+                          this.$message({
+                              type: 'info',
+                              message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                          })  
+                      })
+                      
+                  }).catch(() => {
+                      this.$message({
+                          type: 'info',
+                          message: '已取消作废'
                       })          
                   })
               break;
