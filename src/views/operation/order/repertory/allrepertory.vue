@@ -13,12 +13,13 @@
       <el-table 
       ref="multipleTable"
       :data="repertoryArr"
-      stripe
       border
       @row-click="clickDetails"
       @selection-change="getSelection"
       height="100%"
       tooltip-effect="dark"
+      :row-style="tableRowColor"
+      :key="tablekey"
       style="width:100%;"
       :default-sort = "{prop: 'id', order: 'ascending'}">
       <el-table-column
@@ -88,28 +89,29 @@
       </el-table-column>
       <el-table-column
       sortable width="120"
-      prop="shipFromCityCode" label="出发城市">
+      prop="shipFromCityName" label="出发城市">
       </el-table-column>
       <el-table-column
       sortable width="120"
-      prop="shipToCityCode" label="到达城市">
+      prop="shipToCityName" label="到达城市">
       </el-table-column>
       <el-table-column
       sortable width="120"
       prop="shipSenderId" label="发货人">
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column
       width="120"
-      prop="orgId"label="发货人电话">
-      </el-table-column> -->
+      prop="receiverCustomerMobile"
+      label="发货人电话">
+      </el-table-column>
       <el-table-column
       sortable width="120"
       prop="shipReceiverId" label="收货人">
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column
       width="120"
-      prop="orgId" label="收货人电话">
-      </el-table-column> -->
+      prop="senderCustomerMobile" label="收货人电话">
+      </el-table-column>
       <el-table-column
       sortable width="120"
       prop="shipDeliveryMethodName" label="交接方式">
@@ -187,17 +189,17 @@
       sortable width="120"
       prop="shipSenderId" label="发货方">
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column
       width="120"
-      prop="orgId" label="发货地址">
-      </el-table-column> -->
+      prop="senderDetailedAddress" label="发货地址">
+      </el-table-column>
       <el-table-column
       sortable width="120"
       prop="shipReceiverId" label="收货方">
       </el-table-column>
-     <!--  <el-table-column
-      prop="orgId" label="收获地址">
-      </el-table-column> -->
+      <el-table-column
+      prop="receiverDetailedAddress" label="收货地址">
+      </el-table-column>
       <el-table-column
       sortable width="120"
       prop="shipGoodsSn" label="货号">
@@ -285,8 +287,8 @@
             <Pager :total="total" @change="handlePageChange" />
         </div> 
     </div> 
-    <Colorpicker :popVisible="colorpickerVisible"
-    @close="closeColorpicker" @success="fetchAllOrderRepertory"></Colorpicker>
+    <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect"
+    @close="closeColorpicker" @success="setColumColor"></Colorpicker>
     </div>
   </div>
 </template>
@@ -303,17 +305,20 @@ export default {
     SearchForm,
     Colorpicker
   },
-  data () {
-  	return {
+  data() {
+    return {
       total: 0,
-  	  btnsize: 'mini',
-  	  setupTableVisible: false,
+      tablekey: '',
+      btnsize: 'mini',
+      setupTableVisible: false,
       repertoryArr: [],
       selected: [],
       loading: false,
       colorpickerVisible: false,
       isModify: false,
-      selectInfo: {},
+      selectInfo: [],
+      selectionColorSetting: {},
+      reportorSelect: {},
       searchQuery: {
         'currentPage': 1,
         'pageSize': 100,
@@ -321,140 +326,170 @@ export default {
           'orgid': 1
         }
       }
-  	}
+    }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
-    orgid () {
+    orgid() {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
-  mounted () {
+  mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllOrderRepertory()
   },
   methods: {
-  	getSearchParam (obj) {
-      console.log('objSearch', obj)
+    tableRowColor({ row, rowIndex }) {
+      let orgTime = new Date().getTime() - row.repertoryCreateTime
+      let timeOne = this.selectionColorSetting.sectionOne * 3600
+      let timeTwo = this.selectionColorSetting.sectionTwo * 3600
+      let timeThree = this.selectionColorSetting.sectionThree *3600
+      if (orgTime < timeOne || orgTime === timeOne) {
+        return { "background-color": this.selectionColorSetting.sectionOneColour }
+      } else if (orgTime > timeThree) {
+        return { "background-color": this.selectionColorSetting.sectionThreeColour }
+      } else {
+        return { "background-color": this.selectionColorSetting.sectionTwoColour }
+      }
+    },
+    getSearchParam(obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllOrderRepertory()
     },
-  	doAction (type) {
-      if (type !== 'colorpicker') {
-        if (this.selected.length !== 1) {
-          this.$message({
-            message: '请选择一条数据~',
-            type: 'warning'
-          })
-        }
+    doAction(type) {
+      if (type !== 'colorpicker' && this.selected.length !== 1) {
+        this.closeColorpicker()
+        this.$message({
+          message: '请选择一条数据~',
+          type: 'warning'
+        })
       }
       switch (type) {
-        case 'colorpicker': 
-          this.colorpickerVisible = true
+        case 'colorpicker':
+          this.reportorSelect = this.selected
+          this.openColor()
           break
         case 'print':
-          this.$message({type: 'warning', message: '暂无此功能，敬请期待~'})
+          this.closeColorpicker()
+          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
         case 'export':
-          this.$message({type: 'warning', message: '暂无此功能，敬请期待~'})
+          this.closeColorpicker()
+          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
       }
     },
-  	setTable () {
-    },
-    clickDetails (row) {
+    setTable() {},
+    clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection (list) {
+    getSelection(list) {
       this.selected = list
     },
-    handlePageChange (obj) {
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    fetchAllOrderRepertory () {
+    fetchAllOrderRepertory() {
       this.getAllOrderRepertory()
     },
-    closeColorpicker () {
+    openColor() {
+      this.colorpickerVisible = true
+    },
+    closeColorpicker() {
       this.colorpickerVisible = false
     },
-    getAllOrderRepertory () {
+    getAllOrderRepertory() {
       this.loading = true
       return postAllOrderRepertory(this.searchQuery).then(data => {
         this.repertoryArr = data.list
         this.total = data.total
         this.loading = false
       })
+      .catch(error => {
+        this.$message({type: 'danger', message: '获取列表失败'})
+        this.loading = false
+      })
+    },
+    setColumColor(obj) {
+      this.selectionColorSetting = obj
+      this.closeColorpicker()
+      this.fetchAllOrderRepertory()
+      this.tablekey = Math.random()
     }
   }
 }
 </script>
 
 <style lang="scss">
-.tab-content{
-    height: calc(100% - 33px);
+.tab-content {
+  height: calc(100% - 33px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .tab_info {
+    padding: 10px 30px 40px;
+    height: 100%;
+    flex-grow: 1;
     display: flex;
-    flex-direction:column;
-    position: relative;
+    flex-direction: column;
 
-    .tab_info{
-        padding:10px 30px 40px;
-        height: 100%;
-        flex-grow: 1;
-        display: flex;
-        flex-direction:column;
-
-        .btns_box{
-            margin-bottom:10px;
-            .el-button{
-                margin-right:0;
-            }
-            .table_setup{
-                float: right;
-                margin-right: 0;
-            }
-        }
-        .info_tab{
-            width: 100%;
-            height: calc(100% - 68px);
-            flex-grow: 1;
-            
-            .el-table{
-                table{
-                    th,td{
-                        text-align:center;
-                    }
-                }
-                .unauth{
-                    color: #f00;
-                }
-            }
-            .el-table td, .el-table th{
-                padding: 5px 0;
-            }
-        }
-    }
-   .info_tab_footer{
-        padding-left: 20px;
-        background: #eee;
-        height: 40px;
-        line-height: 40px;
-        box-shadow: 0 -2px 2px rgba(0,0,0,.1);
-        position: relative;
-        z-index: 10;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-    }
-
-    .show_pager{
+    .btns_box {
+      margin-bottom: 10px;
+      .el-button {
+        margin-right: 0;
+      }
+      .table_setup {
         float: right;
-        line-height: 40px;
-        height: 40px;
-        overflow: hidden;
+        margin-right: 0;
+      }
     }
+    .info_tab {
+      width: 100%;
+      height: calc(100% - 68px);
+      flex-grow: 1;
+
+      .el-table {
+        table {
+          th,
+          td {
+            text-align: center;
+          }
+        }
+        .unauth {
+          color: #f00;
+        }
+      }
+      .el-table td,
+      .el-table th {
+        padding: 5px 0;
+      }
+    }
+  }
+  .info_tab_footer {
+    padding-left: 20px;
+    background: #eee;
+    height: 40px;
+    line-height: 40px;
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
+    position: relative;
+    z-index: 10;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .show_pager {
+    float: right;
+    line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+  }
 }
+
 </style>
+

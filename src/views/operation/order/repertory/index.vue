@@ -8,7 +8,7 @@
 		</div>
 		<keep-alive>
 	      <component v-bind:is="component"></component>
-	    </keep-alive>
+	   </keep-alive>
 	</div>
 </template>
 

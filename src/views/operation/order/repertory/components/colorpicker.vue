@@ -1,18 +1,19 @@
 <template>
-	<el-dialog :title="popTitle" :visible.sync="isShow" :close-on-click-modal="false"
+	<el-dialog :title="popTitle" v-loading="loading" :visible.sync="isShow" 
+  :close-on-click-modal="false"
 	 :before-close="closeMe" class="setupTablePop">
-	 <el-form ref="ruleForm" :model="formColor" :rules="rules" class="colorpickerForm">
-	 	<el-form-item class="colorpickerItem" prop="pretime">
-	 		<b>超过：</b><el-input v-model="formColor.pretime"></el-input><b>小时的库存颜色</b>
-	 		<el-color-picker v-model.number="formColor.pretimepicker" :predefine="predefineColors"></el-color-picker>
+	 <el-form ref="ruleForm" :model="repertorySetting" :rules="rules" class="colorpickerForm">
+	 	<el-form-item class="colorpickerItem" prop="sectionOne">
+	 		<b>超过：</b><el-input v-model="repertorySetting.sectionOne"></el-input><b>小时的库存颜色</b>
+	 		<el-color-picker v-model.number="repertorySetting.sectionOneColour" :predefine="predefineColors"></el-color-picker>
 	 	</el-form-item>
-	 	<el-form-item class="colorpickerItem" prop="timing">
-	 		<b>超过：</b><el-input v-model="formColor.timing"></el-input><b>小时的库存颜色</b>
-	 		<el-color-picker v-model.number="formColor.timingpicker" :predefine="predefineColors"></el-color-picker>
+	 	<el-form-item class="colorpickerItem" prop="sectionTwo">
+	 		<b>超过：</b><el-input v-model="repertorySetting.sectionTwo"></el-input><b>小时的库存颜色</b>
+	 		<el-color-picker v-model.number="repertorySetting.sectionTwoColour" :predefine="predefineColors"></el-color-picker>
 	 	</el-form-item>
-	 	<el-form-item class="colorpickerItem" prop="outtime">
-	 		<b>超过：</b><el-input v-model="formColor.outtime"></el-input><b>小时的库存颜色</b>
-	 		<el-color-picker v-model.number="formColor.outtimepicker" :predefine="predefineColors"></el-color-picker>
+	 	<el-form-item class="colorpickerItem" prop="sectionThree">
+	 		<b>超过：</b><el-input v-model="repertorySetting.sectionThree"></el-input><b>小时的库存颜色</b>
+	 		<el-color-picker v-model.number="repertorySetting.sectionThreeColour" :predefine="predefineColors"></el-color-picker>
 	 	</el-form-item>
 	 </el-form>
     <div slot="footer" class="dialog-footer">
@@ -24,10 +25,12 @@
 
 <script>
 import popRight from '@/components/PopRight/index'
-// import { REGEX }  from '@/utils/validate'
+import { getRepertoryColor, putRepertoryColor } from '@/api/operation/repertory'
+import { REGEX } from '@/utils/validate'
+import { mapGetters } from 'vuex'
 export default {
-  data () {
-  	const pretimeIdentifier = (rule, value, callback) => {
+  data() {
+    const pretimeIdentifier = (rule, value, callback) => {
       if (value < 0 || value > 12) {
         callback(new Error('请输入0-12的数字'))
       } else {
@@ -50,19 +53,15 @@ export default {
     }
     return {
       popTitle: '提醒颜色设置',
-      formColor: {
-      	pretime: 2,
-      	pretimepicker: '#333333',
-      	timing: 24,
-      	timingpicker: '#ff9900',
-      	outtime: 48,
-      	outtimepicker: '#ff0000'
-      },
+      repertorySetting: {},
+      inited: false,
+      loading: false,
       rules: {
-        pretime: [{validator: pretimeIdentifier, tigger: 'blur'}],
-        timing: [{validator: timingIdentifier, tigger: 'blur'}],
-        outtime: [{validator: outtimeIdentifier, tigger: 'blur'}]
+        sectionOne: [{ validator: pretimeIdentifier, tigger: 'blur' }],
+        sectionTwo: [{ validator: timingIdentifier, tigger: 'blur' }],
+        sectionThree: [{ validator: outtimeIdentifier, tigger: 'blur' }]
       },
+      colorSetting: [],
       miniInput: '70px',
       predefineColors: [
         '#ff4500',
@@ -76,37 +75,78 @@ export default {
     }
   },
   props: {
-  	popVisible: {
-  	  type: Boolean,
-  	  default: false
-  	}
+    popVisible: {
+      type: Boolean,
+      default: false
+    }
   },
-  watch: {},
+  watch: {
+    popVisible(newVal) {
+      if (!this.inited) {
+        this.inited = true
+        this.getColor()
+      }
+    }
+  },
+  mounted() {
+    if (!this.inited) {
+      this.inited = true
+      this.getColor()
+    }
+  },
   computed: {
-  	isShow: {
-  	  get () {
-  	    return this.popVisible
-  	  },
-  	  set () {}
-  	}
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    isShow: {
+      get() {
+        return this.popVisible
+      },
+      set() {}
+    }
   },
   methods: {
-    closeMe (done) {
+    closeMe(done) {
       this.$emit('close')
       if (typeof done === 'function') {
-      	done()
+        done()
       }
     },
-    submitForm (formName) {
+    getColor() {
+      return getRepertoryColor(this.otherinfo.orgid).then(data => {
+        if (data) {
+          let list = data.data.repertorySetting
+          this.$nextTick(() => {
+            this.repertorySetting = Object.assign(this.repertorySetting, list)
+            this.colorSetting = data.data
+            this.$emit('success', this.colorSetting.repertorySetting)
+          })
+        }
+      })
+    },
+    submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log('sdfsdfs')
+          this.loading = true
+          let colorData = {}
+          this.$set(colorData, 'repertorySetting', this.repertorySetting)
+          putRepertoryColor(colorData, this.otherinfo.orgid, this.colorSetting.id).then(data => {
+            this.$message({type: 'success', message: '修改成功'})
+            this.loading = false
+            this.$emit('success', colorData.repertorySetting)
+          })
+          .catch(error => {
+            this.$message({type: 'danger', message: '修改失败' })
+            this.loading = false
+          })
         }
       })
     }
   }
 }
+
 </script>
+
 
 <style lang="scss">
 .setupTablePop{
