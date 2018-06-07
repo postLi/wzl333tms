@@ -12,181 +12,176 @@
             <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
-          <el-table
-            ref="multipleTable"
-            :data="dataset"
-            stripe
-            border
-            @row-click="clickDetails"
-            @selection-change="getSelection"
-            height="100%"
-            tooltip-effect="dark"
-            :default-sort = "{prop: 'id', order: 'ascending'}"
-            style="width: 100%">
-            <el-table-column
-              fixed
-              sortable
-              type="selection"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              fixed
-              sortable
-              prop="id"
-              label="序号"
-              width="80">
-            </el-table-column>
-            <el-table-column
-              fixed
-              sortable
-              prop="abnormalNo"
-              width="120"
-              label="异常编号">
-            </el-table-column>
-            <el-table-column
-              prop="abnormalNo"
-              width="120"
-              sortable
-              label="运单号">
-            </el-table-column>
-            <el-table-column
-              prop="createTime"
-              sortable
-              width="120"
-              label="开单时间">
-            </el-table-column>
-            <el-table-column
-              prop="cargoName"
-              sortable
-              width="120"
-              label="货品名">
-            </el-table-column>
-            <el-table-column
-              prop="abnormalStatus"
-              label="异常状态"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              sortable
-              prop="abnormalType"
-              width="120"
-              label="异常类型">
-            </el-table-column>
-            <el-table-column
-              label="处理网点"
-              width="120"
-              prop="disposeOrgId"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeOrgName"
-              label="责任网点"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              sortable
-              prop="createTime"
-              width="120"
-              label="登记时间">
-            </el-table-column>
-            <el-table-column
-              prop="registerUserId"
-              label="登记人"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="registerFee"
-              label="登记金额"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="abnormalAmount"
-              label="异常件数"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeTime"
-              label="处理时间"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="shipSn"
-              label="货号"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="cargoName"
-              label="包装"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="cargoPack"
-              label="件数"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="abnormalDescribe"
-              label="异常描述"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeTime"
-              label="处理时间"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeResult"
-              label="处理结果"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeOrgId"
-              label="处理网点"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeUserId"
-              label="处理人"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-            <el-table-column
-              prop="disposeOpinion"
-              label="处理意见"
-              width="120"
-              sortable
-              >
-            </el-table-column>
-          </el-table>
-        </div>
+        <el-table
+          ref="multipleTable"
+          :data="dataset"
+          stripe
+          border
+          @row-click="clickDetails"
+          @selection-change="getSelection"
+          height="100%"
+          tooltip-effect="dark"
+          :default-sort = "{prop: 'id', order: 'ascending'}"
+          style="width: 100%">
+          <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="id"
+            label="序号"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            width="120"
+            label="异常编号">
+          </el-table-column>
+          <el-table-column
+            prop="shipSn"
+            width="120"
+            sortable
+            label="运单号">
+          </el-table-column>
+          <el-table-column
+            sortable
+            width="120"
+            label="开单时间">
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="cargoName"
+            sortable
+            width="120"
+            label="货品名">
+          </el-table-column>
+          <el-table-column
+            prop="abnormalStatusName"
+            label="异常状态"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="abnormalTypeName"
+            width="120"
+            label="异常类型">
+          </el-table-column>
+          <el-table-column
+            label="登记网点"
+            width="120"
+            prop="orgName"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="dutyOrgName"
+            label="责任网点"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop=""
+            sortable
+            width="120"
+            label="登记时间">
+            <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+          </el-table-column>
+          <el-table-column
+            prop="registerName"
+            label="登记人"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="registerFee"
+            label="登记金额"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="abnormalAmount"
+            label="异常件数"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipGoodsSn"
+            label="货号"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="cargoPack"
+            label="包装"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+           <el-table-column
+            prop="cargoAmount"
+            label="件数"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="abnormalDescribe"
+            label="异常描述"
+            width="120"
+            sortables
+            >
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="处理时间"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+          </el-table-column>
+          <el-table-column
+            prop="disposeResult"
+            label="处理结果"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+           <el-table-column
+            prop="disposeOrgName"
+            label="处理网点"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="disposeName"
+            label="处理人"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="disposeOpinion"
+            label="处理意见"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+        </el-table>
+      </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
         <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :isCheck="isCheck" :isDeal="isDeal" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
       </div>
@@ -215,9 +210,10 @@ export default {
     },
     mounted () {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                // this.loading = false
-            })
+        Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+            this.loading = false
+            this.licenseTypes = resArr[1]
+          })
         },
         data() {
           return {
@@ -256,17 +252,18 @@ export default {
             })
         },
         fetchData () {
-        this.fetchAllreceipt()
+          this.fetchAllreceipt()
+        },
+         // 获取组件返回的搜索参数
+        getSearchParam (searchParam) {
+            // 根据搜索参数请求后台获取数据
+            Object.assign(this.searchQuery.vo, searchParam)
+            //this.searchQuery.vo.orgId = searchParam.orgid
+            this.fetchData()
         },
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize
-        },
-        getSearchParam (obj) {
-            this.searchQuery.vo.orgId = obj.orgid
-            // this.searchQuery.vo.customerMobile = obj.mobile
-            // this.searchQuery.vo.customerName = obj.name
-            this.fetchAllreceipt()
         },
         doAction(type){
           if(type==='export'){

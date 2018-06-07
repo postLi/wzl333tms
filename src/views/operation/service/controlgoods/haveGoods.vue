@@ -3,11 +3,7 @@
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">回单寄出</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消寄出</el-button>
-          <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
           <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -36,14 +32,50 @@
             width="80">
           </el-table-column>
           <el-table-column
-            fixed
+            prop="shipSn"
             sortable
-            prop="shipFromOrgid"
             width="120"
-            label="开单网点">
-          </el-table-column>f
+            label="运单号">
+          </el-table-column>
           <el-table-column
-            prop="shipToOrgid"
+            prop="status"
+            label="控货状态"
+            width="120"
+            sortable
+            >
+             <template slot-scope="scope">
+               {{ scope.row.status === 1 ? "未放货" : "已放货" }}
+             </template>
+          </el-table-column>
+          <el-table-column
+            prop=""
+            sortable
+            width="120"
+            label="放货时间">
+            <template slot-scope="scope">{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="shipStatusName"
+            label="运单状态"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipIdentifying"
+            label="运单标识"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="fromOrgName"
+            width="120"
+            sortable
+            label="开单网点">
+          </el-table-column>
+          <el-table-column
+            prop="toOrgName"
             width="120"
             sortable
             label="目的网点">
@@ -52,80 +84,54 @@
             prop=""
             sortable
             width="120"
-            label="开单日期">
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
+            label="开单时间">
+            <template slot-scope="scope">{{ scope.row.startTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
-          <el-table-column
-            prop="shipSn"
-            sortable
-            width="120"
-            label="运单号">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="shipFromOrgid"
-            width="120"
-            label="出发城市">
-          </el-table-column>
-          <el-table-column
-            label="到达城市"
-            width="120"
-            prop="shipToCityCode"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="recStatus"
-            label="寄出状态"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop=""
-            width="120"
-            label="回收日期">
-            <template slot-scope="scope">{{ scope.row.acceptTypeId | parseTime('{y}{m}{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="receiptId"
-            label="回单状态"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="bankCardNumber"
-            label="回单类型"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shipReceiptNum"
-            label="回单数量"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="sendName"
+           <el-table-column
+            prop="senderCustomerName"
             label="发货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="recName"
+            prop="senderCustomerMobile"
+            label="发货人电话"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="receiverCustomerName"
             label="收货人"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+           <el-table-column
+            prop="receiverCustomerMobile"
+            label="收货人电话"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipDeliveryMethodName"
+            label="交接方式"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             prop="cargoName"
-            label="货品名"
+            label="货物名称"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="description"
+            label="品种规格"
             width="120"
             sortable
             >
@@ -152,8 +158,64 @@
             >
           </el-table-column>
           <el-table-column
-            prop="acceptRemark"
-            label="回收备注"
+            prop="amountFee"
+            label="件数单价"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="weightFee"
+            label="重量单价"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="volumeFee"
+            label="体积单价"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="shipFromCityName"
+            width="120"
+            label="出发城市">
+          </el-table-column>
+          <el-table-column
+            label="到达城市"
+            width="120"
+            prop="shipToCityName"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            label="送货方式"
+            width="120"
+            prop="shipDeliveryMethodName"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipReceiptRequireName"
+            label="回单要求"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipReceiptNum"
+            label="回单份数"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <!--代收款找不到-->
+          <el-table-column
+            prop="agencyFund"
+            label="代收货款"
             width="120"
             sortable
             >
@@ -193,121 +255,218 @@
             sortable
             >
           </el-table-column>
-          <!-- 这里没有找到对应的字段 -->
+        
           <el-table-column
-            prop="cargoName"
-            label="多笔付"
+            prop="shipTotalFee"
+            label="合计运费"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="cargoName"
-            label="carrierName"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop=""
-            label="中转日期"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.transferTime | parseTime('{y}{m}{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="oddNumbers"
-            label="中转单号"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-           <!-- 这里没有找到对应的字段 -->
-          <el-table-column
-            prop="cargoName"
-            label="到达省"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shipFromCityCode"
-            label="到达市"
+            prop="shipRemarks"
+            label="备注"
             width="120"
             sortable
             >
           </el-table-column>
           <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop="cargoName"
-            label="到达县区"
+            label="目的省"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>
+            
+          </el-table-column>
+          <el-table-column
+            label="目的市"
+            width="120"
+            sortable
+            >
+             <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template>
+          </el-table-column>
+          <el-table-column
+            label="目的区"
+            width="120"
+            sortable
+            >
+             <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template>
+          </el-table-column>
+           <el-table-column
+            prop="userName"
+            label="制单人"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <!-- 这里没有找到对应的字段 -->
+          <el-table-column
+            prop="senderCustomerUnit"
+            label="发货单位"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+         <el-table-column
+            prop="receiverCustomerUnit"
+            label="收货单位"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="sendMobile"
-            label="发货人电话"
+            prop="senderDetailedAddress"
+            label="发货人地址"
             width="120"
             sortable
             >
           </el-table-column>
+          
+         
           <el-table-column
-            prop="sendAddress"
-            label="发货地址"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="recMobile"
-            label="收货人电话"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="recAddress"
+            prop="receiverDetailedAddress"
             label="收货地址"
             width="120"
             sortable
             >
           </el-table-column>
+          <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop=""
-            label="寄出日期"
+            prop="brokerageFee"
+            label="回扣"
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
+         
           <el-table-column
-            prop=""
-            label="接收日期"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}{m}{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop=""
-            label="发放日期"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}{m}{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="recRemark"
-            label="寄出备注"
+            prop="deliveryFee"
+            label="送货费"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="cargoName"
-            label="发放备注"
+            prop="commissionFee"
+            label="代收手续费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+         
+          <el-table-column
+            prop="productPrice"
+            label="声明价值"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="insuranceFee"
+            label="保险费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+         
+          <el-table-column
+            prop="handlingFee"
+            label="装卸费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="packageFee"
+            label="包装费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="pickupFee"
+            label="提货费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+         
+          <el-table-column
+            prop="goupstairsFee"
+            label="上楼费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <!--实际提货费-->
+          <el-table-column
+            prop="shipFee"
+            label="实际提货费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+         
+          <el-table-column
+            prop="forkliftFee"
+            label="叉车费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="realityhandlingFee"
+            label="实际装卸费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="customsFee"
+            label="报关费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="otherfeeIn"
+            label="其他费收入"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="otherfeeOut"
+            label="其他费支出"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="taxRate"
+            label="税率"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="taxes"
+            label="税金"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="housingFee"
+            label="入仓费"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="stampTax"
+            label="印花税"
             width="120"
             sortable
             >
@@ -337,16 +496,23 @@ export default {
         ])
     },
     mounted () {
+      
         this.searchQuery.vo.orgid = this.otherinfo.orgid
-            //this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+        Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
+            this.loading = false
+            // this.licenseTypes = resArr[1]
+          })
+        },
+            //this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false
             //})
             //  this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
+            // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            })
+                // console.log(res);
+            // })
             // this.fetchAllPutFh(this.otherinfo.orgid)
-        },
+        // },
         data() {
             return {
                 btnsize: 'mini',
@@ -358,7 +524,7 @@ export default {
                     "currentPage":1,
                     "pageSize":10,
                     "vo":{
-                        "status":2
+                        // "status":2
                     }
                     
                 },
@@ -378,13 +544,13 @@ export default {
           fetchAllPutFh() {
             // this.loading = true
             return PostControlgoods(this.searchQuery).then(data => {
-                // this.dataset = data.list
-                // this.total = data.totalCount
-                // this.loading = false
+                this.dataset = data.list
+                this.total = data.total
+                this.loading = false
                 console.log(data);
             })
         },
-        // fetchAllreceipt() {
+        // fetchAllPutFh() {
         //     // this.loading = true
         //     return postReceipt(this.searchQuery).then(data => {
         //         this.dataset = data.list
@@ -394,18 +560,20 @@ export default {
         //     })
         // },
         fetchData () {
-        this.fetchAllreceipt()
+          this.fetchAllPutFh()
+        },
+         // 获取组件返回的搜索参数
+        getSearchParam (searchParam) {
+            // 根据搜索参数请求后台获取数据
+            Object.assign(this.searchQuery.vo, searchParam)
+            //this.searchQuery.vo.orgId = searchParam.orgid
+            this.fetchData()
         },
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize
         },
-        getSearchParam (obj) {
-            this.searchQuery.vo.orgid = obj.orgid
-            // this.searchQuery.vo.customerMobile = obj.mobile
-            // this.searchQuery.vo.customerName = obj.name
-            this.fetchAllreceipt()
-        },
+        
         setTable(){},
         clickDetails(){},
         getSelection(){}

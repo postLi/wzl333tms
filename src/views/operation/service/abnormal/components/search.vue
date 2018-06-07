@@ -106,7 +106,7 @@ export default {
       this.searchForm.orgId = id
     },
     onSubmit () {
-      this.$set(this.searchForm, 'createTime', this.searchCreatTime[0])
+      this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
       this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
       this.$emit('change', this.searchForm)
     },

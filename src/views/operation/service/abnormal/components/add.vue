@@ -32,16 +32,16 @@
           <el-input maxlength="20" v-model="form.abnormalNo" auto-complete="off"  :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="登记时间" prop="registerTime">
-            <el-input v-model="form.registerTime" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
+            <el-input :value="form.registerTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
             <!-- <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}{m}{d}') }}</template> -->
           </el-form-item>
           <el-form-item label="登记网点" prop="orgId"  >
             <SelectTree v-model="form.orgId" :disabled="true"/>
           </el-form-item>
-          <el-form-item label="登记人" prop="disposeName" >
+          <el-form-item label="登记人" prop="registerName" >
             <el-autocomplete
               popper-class="my-autocomplete"
-              v-model="form.disposeName"
+              v-model="form.registerName"
               :fetch-suggestions="querySearch"
               @select="handleSelect" :disabled="isCheck || isDeal ? true : false">
               <template slot-scope="{ item }">
@@ -55,14 +55,14 @@
           <el-form-item label="异常件数" prop="abnormalAmount" >
             <el-input v-model="form.abnormalAmount" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="处理网点" prop="disposeOrgId" >
-            <SelectTree v-model="form.disposeOrgId" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="处理网点" prop="orgName" >
+            <SelectTree v-model="form.orgName" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常金额" prop="registerFee" >
             <el-input v-model="form.registerFee" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="责任网点" prop="dutyOrgId" >
-            <SelectTree v-model="form.dutyOrgId" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="责任网点" prop="dutyOrgName" >
+            <SelectTree v-model="form.dutyOrgName" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item class="driverRemarks" label="异常描述" prop="abnormalDescribe" >
             <el-input type="textarea" maxlength="125" v-model="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
@@ -78,16 +78,16 @@
           <div class="titles">
               <h4>异常处理</h4>
               <el-form-item label="处理结果：" prop="disposeResult" class="result">
-                <SelectType v-model="form.disposeResult" type="abnormal_type" :disabled="isCheck ? true : false"/>
+                <SelectType v-model="form.disposeResult" type="dispose_result" :disabled="isCheck ? true : false"/>
               </el-form-item>
           </div>
           <el-form-item label="处理时间" prop="disposeTime">
-            <el-input :value="form.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
-          <el-form-item label="处理网点" prop="disposeOrgId" >
-            <SelectTree v-model="form.disposeOrgId" :disabled=" true"/>
+          <el-form-item label="处理网点" prop="orgName" >
+            <SelectTree v-model="form.orgName" :disabled=" true"/>
           </el-form-item>
-          <el-form-item label="处理人" prop="disposeUserId" >
+          <el-form-item label="处理人" prop="disposeName" >
             <el-autocomplete
               popper-class="my-autocomplete"
               v-model="form.disposeName"
@@ -99,13 +99,13 @@
             </el-autocomplete>
           </el-form-item>
           <el-form-item class="driverRemarks" label="处理意见" prop="disposeOpinion" >
-            <el-input type="textarea" maxlength="125" v-model="form.abnormalDescribe" :disabled="isCheck ? true : false"></el-input>
+            <el-input type="textarea" maxlength="125" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
             <p class="ts">注意：问题描述最多输入200字</p>
             <p><label>图片上传</label><em class="ts">注：最多可上传6张图片，每张图片不能大于5M</em></p>
           </el-form-item>
 
-          <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck || isDeal}">
-            <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" :disabled="isCheck || isDeal ? true : false"/>
+          <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck}">
+            <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
           </div>
           </div>
         </div>
@@ -208,20 +208,21 @@ export default {
         "abnormalDescribe": "",
         "abnormalNo": "",
         "abnormalPicture": "",
+        "disposePicture":"",
         "abnormalStatus": "",
         "abnormalType": '',
         "childShipId": "",
         "createTime": "",
         "disposeOpinion": "",
-        "disposeOrgId": "",
+        "orgName": "",
         "disposePicture": "",
         "disposeResult": "",
         "disposeTime": "",
-        "disposeUserId": "",
-        "dutyOrgId": "",
+        "disposeName": "",
+        "dutyOrgName": "",
         "orgId": "",
         "registerFee": "",
-        "registerUserId": "",
+        "registerName": "",
         "shipId": ""
       },
       formLabelWidth: '80px',
@@ -289,7 +290,7 @@ export default {
         }else if(!this.isModify && !this.isCheck){
           this.popTitle = '异常登记'
           this.form.orgId = this.orgid
-          this.form.registerTime = new Date().toString();
+          this.form.registerTime = new Date();
           this.dengji();   
         }
       },
@@ -298,7 +299,7 @@ export default {
 
     isCheck: {
       handler(newVal) {
-        if(this.isCheck){
+        if(newVal){
           this.popTitle = '查看明细'
           GetLook(this.id).then(res => {
             this.form = res;
@@ -307,6 +308,19 @@ export default {
       },
       immediate: true
     },
+
+    isDeal: {
+      handler(newVal) {
+        if(newVal){
+          this.popTitle = '异常处理'
+          GetLook(this.id).then(res => {
+            this.form = res;
+            this.form.disposeTime = new Date();             
+          })
+        }
+      },
+      immediate: true
+    }
 
 
 
@@ -356,7 +370,7 @@ export default {
         };
       },
       handleSelect(item) {
-        this.form.disposeName = item.name
+        this.form.registerName = item.name
       },
     initInfo () {
       this.loading = false
@@ -452,9 +466,6 @@ export default {
     float: left;
     width: 100px;
     margin-right: 10px;
-    // &:nth-child(4){
-    //   clear: left;
-    // }
   }
 }
 .disabledUpload{

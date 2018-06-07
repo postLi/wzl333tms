@@ -3,6 +3,7 @@
   popper-class="city-autocomplete"
   v-model="cityName"
   :fetch-suggestions="querySearch"
+  value-key="longAddr"
   placeholder="请输入内容"
   @select="handleSelect">
   <template slot-scope="{ item }">
@@ -58,6 +59,7 @@ export default {
       
     },
     handleSelect (info) {
+      
       this.$emit("input", info.id || 0)
       this.$emit('change', info)
     }

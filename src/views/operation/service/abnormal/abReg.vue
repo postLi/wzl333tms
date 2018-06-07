@@ -117,13 +117,6 @@
             >
           </el-table-column>
           <el-table-column
-            prop="disposeTime"
-            label="处理时间"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
             prop="shipGoodsSn"
             label="货号"
             width="120"
@@ -157,13 +150,14 @@
             width="120"
             sortable
             >
-            <!-- <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('yyyy-MM-dd HH:mm:ss') }}</template> -->
+            <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
           </el-table-column>
           <el-table-column
-            prop="disposeResult"
+            prop="disposeResultName"
             label="处理结果"
             width="120"
             sortable
+            type="dispose_result"
             >
           </el-table-column>
            <el-table-column
@@ -191,7 +185,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-        <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+        <Addabnormal :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
         <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </template>
@@ -222,7 +216,7 @@ export default {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
         Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
             this.loading = false
-            this.licenseTypes = resArr[1]
+            // this.licenseTypes = resArr[1]
           })
         },
         data() {
@@ -251,13 +245,13 @@ export default {
             }
         },
       methods: {
-        getLicenType(id){
-          let info = this.licenseTypes.filter(item => {
-            console.log(item,id)
-            return parseInt(item.id, 10) === id
-            })
-          return info[0] ? info[0].dictName : id
-        },
+        // getLicenType(id){
+        //   let info = this.licenseTypes.filter(item => {
+        //     console.log(item,id)
+        //     return parseInt(item.id, 10) === id
+        //     })
+        //   return info[0] ? info[0].dictName : id
+        // },
         fetchAllreceipt() {
             this.loading = true
             return PostGetAbnormalList(this.searchQuery).then(data => {
@@ -266,9 +260,7 @@ export default {
                 this.loading = false
             })
         },
-        // fetchData () {
-        //   this.fetchAllreceipt()
-        // },
+       
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize

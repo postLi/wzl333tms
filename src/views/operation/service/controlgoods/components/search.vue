@@ -1,48 +1,33 @@
 <template>
     <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-        <el-form-item label="开单时间">
-            <SelectTree v-model="searchForm.time" />
+        <el-form-item label="开单时间:">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              type="datetimerange"
+              
+              align="right"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="pickerOptions1"
+            >
+            </el-date-picker>
+          </div>
         </el-form-item>
         <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.orgid" />
+            <SelectTree v-model="searchForm.shipFromOrgid" />
         </el-form-item>
-        <el-form-item label="运单号">
-            <el-input v-model="searchForm.number" maxlength="20" auto-complete="off"></el-input>
+        <el-form-item label="运单号" prop="shipSn">
+            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
        
-        <el-form-item label="异常状态">
-            <SelectTree v-model="searchForm.statu"  placeholder="请选择" />
-        </el-form-item>
-        
-        <!-- <el-form-item label="出发城市">
-            <el-input v-model="searchForm.startcity" maxlength="10" auto-complete="off"></el-input>
+        <el-form-item label="出发城市">
+            <SelectCity @change="getFromCity" />
         </el-form-item>
         <el-form-item label="到达城市">
-            <el-input v-model="searchForm.endcity" maxlength="10" auto-complete="off"></el-input>
+            <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
+            <SelectCity @change="getToCity" />
         </el-form-item>
-         <el-form-item label="发货人">
-            <el-input v-model="searchForm.sendpepole" maxlength="15" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="收货人">
-            <el-input v-model="searchForm.recivepepole" maxlength="15" auto-complete="off"></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item :label="title+'货人'">
-            <el-input
-                :placeholder="title+'货单位或'+title+'货人'"
-                v-model="searchForm.name"
-                maxlength="15"
-                clearable>
-            </el-input>
-        </el-form-item>
-        <el-form-item label="手机号码">
-            <el-input
-                v-numberOnly
-                placeholder="请输入手机号码"
-                maxlength="11"
-                v-model="searchForm.mobile"
-                clearable>
-            </el-input>
-        </el-form-item> -->
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -53,10 +38,12 @@
 <script>
 import { REGEX }  from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import SelectCity from '@/components/selectCity/index'
 
 export default {
   components: {
-    SelectTree
+    SelectTree,
+    SelectCity
   },
   props: {
     btnsize: {
@@ -66,52 +53,45 @@ export default {
     orgid: {
       type: Number
     },
+    shipSn: {
+      type: Number
+    },
     issender: {
       type: Boolean,
       dafault: false
     }
   },
   computed: {
-    // title () {
-    //   return this.issender ? '发' : '收'
-    // }
+
   },
   data () {
     let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
+    const orgidIdentifier = (rule, value, callback) => {
+      let reg = REGEX.ONLY_NUMBER
+       if (value === '' || value === null || !value || value === undefined) {
         callback()
+      } else if (!(reg.test(value))) {
+        callback(new Error('请输入最多15位数字'))
       } else {
-        callback(new Error('请输入有效的手机号码'))
+        callback()
       }
     }
 
-    const validateFormEmployeer = function (rule, value, callback) {
-      callback()
-    }
-
-    const validateFormNumber = function (rule, value, callback) {
-      _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
-      callback()
-    }
-
     return {
+      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      pickerOptions1:'',
+    
       searchForm: {
-        orgid: '',
-        // name: '',
-        // mobile: '',
-        time:'',
-        statu:'',
-        number:'',
-        startcity:'',
-        endcity:'',
-        sendpepole:'',
-        recivepepole:''
+        // orgid: '',
+        shipFromOrgid:'',
+        shipSn:'',
+        shipFromCityCode:'',
+        shipToCityCode:''
       },
       rules: {
-        mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
-          validator: validateFormNumber, trigger: 'change'
+        shipSn: [{
+          
+          validator: orgidIdentifier, trigger: 'change'
         }]
       }
     }
@@ -125,16 +105,32 @@ export default {
     this.searchForm.orgid = this.orgid
   },
   methods: {
-    getOrgid (id){
-      this.searchForm.orgid = id
+    getFromCity(city){
+     
+      this.searchForm.shipFromCityCode = city.id.toString() 
     },
+    getToCity(city){
+      this.searchForm.shipToCityCode =  city.id.toString() 
+    },
+    // getOrgid (id){
+    //   this.searchForm.orgid = id
+    // },
     onSubmit () {
-      this.$emit('change', this.searchForm)
+      // this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
+      // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
+      this.searchForm.createTime = this.searchCreatTime ? this.searchCreatTime[0] : ""
+      this.searchForm.endTime = this.searchCreatTime ? this.searchCreatTime[1] : ""
+      let data = Object.assign({},this.searchForm)
+      data.shipFromOrgid =[this.searchForm.shipFromOrgid]
+      this.$emit('change', data)
     },
     clearForm () {
     //   this.searchForm.name = ''
       this.searchForm.orgid = this.orgid
-    //   this.searchForm.mobile = ''
+      this.searchForm.shipSn = ''
+      this.searchForm.shipFromCityCode = ''
+      this.searchForm.shipToCityCode = ''
+       this.searchForm.shipFromOrgid = ''
     }
   }
 }
