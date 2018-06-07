@@ -104,7 +104,7 @@ export default {
 
 
 <style lang="scss">
-.tab-content{
+
     .staff_searchinfo{
         padding:15px 20px;
         border-bottom:1px dashed #999;
@@ -116,7 +116,7 @@ export default {
     .staff_searchinfo--btn{
         float: right;
     }
-}
+
 @media screen and (max-width:1308px){
   .tab-content {
       .staff_searchinfo{

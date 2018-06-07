@@ -95,7 +95,7 @@ export default {
 .staff_manage{
     .staff_searchinfo{
         padding:10px 20px;
-        border-bottom:1px solid #ccc;
+        border-bottom:1px dashed #ccc;
         .el-form-item{
             margin-bottom: 0;
         }

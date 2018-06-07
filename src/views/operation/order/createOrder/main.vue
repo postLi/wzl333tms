@@ -14,8 +14,21 @@
       <el-button @click="doAction('printOrder')" icon="el-icon-tickets" type="primary" plain>打印运单（Ctrl+P）</el-button>
       <el-button @click="doAction('save')" icon="el-icon-document" type="primary" plain>保存（Ctrl+S）</el-button>
       <el-button @click="doAction('saveAndPrint')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（Ctrl+D）</el-button>
-      <el-button @click="doAction('setup')" icon="el-icon-setting" class="createOrder-setup" size="mini" type="primary" plain></el-button>
+      
+      <el-dropdown type="primary" trigger="click" class="createOrder-setup"  @command="handleCommand">
+        <span class="el-dropdown-link">
+          <el-button icon="el-icon-setting" size="mini" type="primary" plain></el-button>
+        </span>
+        
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="feeSetup">费用设置</el-dropdown-item>
+          <el-dropdown-item command="personalSetup">个人设置</el-dropdown-item>
+          <el-dropdown-item command="orderSetup">运单设置</el-dropdown-item>
+          <el-dropdown-item command="openInNewWindow">独立窗口</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
+    <FeeDialog :dialogVisible.sync="dialogVisible" />
   </div>
 </template>
 <script>
@@ -23,11 +36,15 @@
 //http://wangchujiang.com/hotkeys/
 //键盘事件
 import hotkeys from 'hotkeys-js'
+import FeeDialog from './components/feePop'
 
 export default {
+  components: {
+    FeeDialog
+  },
   data () {
     return {
-      
+      dialogVisible: false
     }
   },
   mounted () {
@@ -79,6 +96,22 @@ export default {
           break;
       
         default:
+          break;
+      }
+    },
+    // 右下角设置按钮菜单点击操作
+    handleCommand(command) {
+      switch(command) {
+        case 'feeSetup':
+          this.dialogVisible = true
+          break;
+        case 'personalSetup':
+          break;
+        case 'orderSetup':
+          this.$router.push('/company/systemSetup')          
+          break;
+        case 'openInNewWindow':
+          this.$message('暂不支持新开窗口创建运单~')
           break;
       }
     }
@@ -149,11 +182,15 @@ export default {
         }
       }
       .createOrder-setup{
-        font-size: 20px;
-        padding: 7px;
+        
         position: absolute;
         top: 8px;
         right: 8px;
+
+        .el-button{
+          font-size: 16px;
+          padding: 2px;
+        }
       }
     }
   }

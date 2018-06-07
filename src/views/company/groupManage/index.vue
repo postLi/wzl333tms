@@ -76,7 +76,7 @@
 
         <div class="side_right_bottom clearfix">
           <!--表格功能-->
-          <div class="btns_box clearfix">
+          <div class="btns_box_lrl clearfix">
             <el-row :gutter="0">
               <el-col :span="2">
                 <img src="../../../assets/icom/xinzeng.png" alt="">

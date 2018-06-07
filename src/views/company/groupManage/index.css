@@ -116,7 +116,7 @@ background-color: rgb(195,232,255);
   flex-direction: column;
   display: flex;
 }
-.side_right_bottom .btns_box{
+.side_right_bottom .btns_box_lrl{
   margin:26px 0 10px 25px;
   height: 32px;
 }
@@ -159,14 +159,14 @@ background-color: rgb(195,232,255);
 }
 
 /*分页*/
-.btns_box img{
+.btns_box_lrl img{
   position: relative;
   top: 1px;
   left: 31px;
-  wdith:13px;
+  width: 13px;
   height: 17px;
 }
-.btns_box .el-button--primary{
+.btns_box_lrl .el-button--primary{
   color:#3e9ff1;
   background: #fff;
   border-color: #3e9ff1;
