@@ -8,53 +8,68 @@
             车辆信息 {{truckMessage}}
           </template>
           <div class="clearfix loadFrom">
-            <el-form :model="formModel" ref="formModel" class="demo-form-inline" label-width="80px">
+            <el-form :model="formModel" ref="formModel" class="demo-form-inline" label-width="120px">
               <el-row :gutter="4">
-                <el-col :span="4">
-                  <el-form-item label="送货费">
-                    <el-input v-model="formModel.user" placeholder="送货费"></el-input>
+                <el-col :span="6">
+                  <el-form-item label="到达网点">
+                    <SelectTree v-model="formModel.orgid" clearable></SelectTree>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                   <el-form-item label="分摊方式">
-                    <el-select v-model="formModel.region" placeholder="分摊方式">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
+                    <selectType v-model="formModel.apportionTypeName" type="apportion_type" clearable :type="mini"></selectType>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                   <el-form-item label="车牌号码">
-                    <el-select v-model="formModel.region" placeholder="车牌号码">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
+                    <el-input :type="mini" v-model="formModel.truckIdNumber" placeholder="车牌号码" clearable></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                   <el-form-item label="司机名称">
-                    <el-select v-model="formModel.region" placeholder="司机名称">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
+                    <el-input :type="mini" v-model="formModel.dirverName" placeholder="司机名称" clearable></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                   <el-form-item label="司机电话">
-                    <el-select v-model="formModel.region" placeholder="司机电话">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
+                    <el-input :type="mini" v-model="formModel.dirverMobile" placeholder="司机电话" clearable></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
+                  <el-form-item label="可载重量">
+                    <el-input :type="mini" v-model="formModel.user" placeholder="可载重量" clearable></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="可载体积">
+                    <el-input :type="mini" v-model="formModel.user" placeholder="可载体积" clearable></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="短驳费">
+                    <el-input :type="mini" v-model="formModel.user" placeholder="短驳费" clearable></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
                   <el-form-item label="审批人">
-                    <el-input v-model="formModel.user" placeholder="审批人"></el-input>
+                    <el-input :type="mini" v-model="formModel.user" placeholder="审批人"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="要求到达日期">
+                    <el-date-picker v-model="formModel.time2" type="date" placeholder="要求到达日期">
+                    </el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="短驳日期">
+                    <el-date-picker v-model="formModel.time1" type="date" placeholder="短驳日期">
+                    </el-date-picker>
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="备注">
-                    <el-input type="textarea" :rows="1" v-model="formModel.desc"></el-input>
+                    <el-input type="textarea" :rows="2" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -62,30 +77,56 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-    </div>
-    <div class="load-table">
-    	<el-transfer v-model="loadTransfer" :data="loadTransferData">
-    		<template slot-scope="scope">
-    			<el-table :data="scope">
-    				<el-table-column :label="title">{{truckMessage}}</el-table-column>
-    			</el-table>
-    		</template>
-    	</el-transfer>
+      <div class="load_btn_boxs">
+        <el-button size="mini" icon="el-icon-goods" plain type="primary" @click="doAction('precent')">配载率</el-button>
+        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
+        <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')">完成并发车</el-button>
+      </div>
+      <dataTable @loadTable="getLoadTable"></dataTable>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
+import selectType from '@/components/selectType/index'
+import dataTable from './components/dataTable'
+import SelectTree from '@/components/selectTree/index'
 export default {
   data() {
     return {
+      tablekey: '',
       loadTruck: '',
-      truckMessage: 'sdfsdfsdfsdf',
+      truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
       loading: false,
-      loadTransfer: [1],
-      loadTransferData: []
+      selectedRight: [],
+      selectedLeft: [],
+      leftTable: [],
+      rightTable: [],
+      loadTableInfo: [],
+      mini: 'mini',
+      loadInfo: {
+        tmsOrderLoad: {},
+        tmsOrderLoadDetailsList: [],
+        tmsOrderLoadFee: {}
+      }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ])
+  },
+  components: {
+    selectType,
+    dataTable,
+    SelectTree
+  },
+  mounted() {
+    this.getLoadNo()
+    this.getSelectAddLoadRepertoryList()
   },
   methods: {
     onSubmit(formName) {
@@ -95,23 +136,73 @@ export default {
         }
       })
     },
-    handleChange () {}
+    getLoadNo() {
+      return getBatchNo(this.otherinfo.orgid).then(data => {
+        this.truckMessage = data.text
+      })
+    },
+    getSelectAddLoadRepertoryList() {
+      return getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+        this.leftTable = data.data
+      })
+    },
+    changeTableKey() {
+      this.tablekey = Math.random()
+    },
+    doAction(type) {
+      switch (type) {
+        case 'precent':
+          break
+        case 'finish':
+          this.finishLoadInfo()
+          break
+        case 'finishTruck':
+          break
+      }
+    },
+    finishLoadInfo() {
+      this.setData()
+      // let loadData = Object.assign({}, this.loadData)
+      // this.$set(loadData, 'tmsOrderLoad', this.formModel)
+      // this.$set(loadData, 'tmsOrderLoadDetailsList', this.loadTableInfo)
+      // this.$set(loadData, 'tmsOrderLoadFee', this.formModel)
+      // console.log('sdfsdfsdf', this.loadTableInfo)
+      this.$message({ type: 'warning', message: '要处理数据~' })
+      // postLoadInfo(this.loadInfo).then(data => {
+      //   console.log('添加啦')
+      // })
+    },
+    getLoadTable(obj) {
+      this.loadTableInfo = Object.assign(this.loadTableInfo, obj)
+      console.log('传回来的数据', obj)
+    },
+    setData() { // 处理数据格式。。。
+      console.log(this.loadInfo)
+    }
   }
 }
 
 </script>
 <style lang="scss">
 .load-steup {
+  height: calc(100%);
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100%;
-
   .load-steup-form {
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 10px 21px 0 12px;
+    padding: 10px 10px 0 10px;
+    height: 100%;
+    position: relative;
+    .load_btn_boxs {
+      position: absolute;
+      float: right;
+      right: 10px;
+      margin-top: 8px;
+      z-index: 33;
+    }
     .loadFrom {
       padding: 0 20px;
     }
@@ -136,42 +227,13 @@ export default {
     }
     .el-collapse-item__content {
       padding-bottom: 0;
-    } // .el-form-item__content>.el-input {
-    //   width: 70%;
-    // }
-    // .el-form-item__content>.el-select{
-    // 	width:70%;
-    // }
-    // .el-form-item__content>.el-textarea{
-    // 	width: 80%;
-    // }
+      .el-form-item__content>.el-input {
+        width: 150px;
+      }
+    }
     .el-form-item--mini.el-form-item {
       margin-bottom: 5px;
     }
-    .setup-table {
-      margin: 0 0 10px;
-      min-height: 64px;
-      display: flex;
-
-      .setup-left {
-        width: 144px;
-        text-align: center;
-        background: #EBEBEB;
-        padding-top: 20px;
-        font-size: 14px;
-        color: #333;
-        font-weight: bold;
-      }
-
-      .setup-right {
-        padding: 16px;
-      }
-    }
-  }
-
-  .load-steup-footer {
-    height: 70px;
-    text-align: center;
   }
 }
 
