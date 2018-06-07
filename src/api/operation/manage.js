@@ -23,17 +23,32 @@ export function getSearchOrder(id) {
  * @param ids
  * @returns {AxiosPromise<any>}
  */
-export function putRefuse(ids) {
-  return fetch.put('/api-order/order/pre/v1/refuse/'+ids)
+export function putRefuse(params) {
+  return fetch.put('/api-order/order/pre/v1/refuse', params).then(res => {
+    return res.data || {}
+  })
 }
 
 /**
- * 作废
+ *  根据ids批量删除
  * @param ids
  * @returns {AxiosPromise<any>}
+ *
+
  */
 export function deletebatchDelete(ids) {
-  return fetch.put('/api-order/order/pre/v1/refuse/'+ids)
+  return fetch.delete('/api-order/order/pre/v1/batchDelete/?ids=' + ids)
+}
+
+/**
+ *  根据ids修改订单状态为作废
+ * @param ids
+ * @returns {AxiosPromise<any>}
+ *
+
+ */
+export function putCancel(ids) {
+  return fetch.put('/api-order/order/pre/v1/cancel/?ids=' + ids)
 }
 
 /**
@@ -88,7 +103,7 @@ export function postAddOrder(params) {
  */
 
 export function postModifyOrder(params) {
-  return fetch.post('/api-order/order/pre/v1', params).then(res => {
+  return fetch.post('/api-order/order/pre/v1/updateOrder', params).then(res => {
     return res.data || {}
   })
 }

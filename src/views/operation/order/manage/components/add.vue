@@ -325,6 +325,14 @@ export default {
       phoneshort: '', // 固话区号
       phonelong: '', // 固话号码
       //fixPhone: '',
+      carObj: {
+        cargoName:'',  // 货品名
+        cargoAmount:'',  // 件数
+        cargoWeight:'',  // 重量
+        cargoVolume:'',  // 体积
+        cargoPack:'',  // 包装
+        description:''  // 品种规格
+      },
       form: {
         customerList:[{},{}],
         //货物信息
@@ -418,14 +426,6 @@ export default {
       this.inited = true
       this.initInfo()
     }
-    // console.log(this.form.customerList[0].senderName)
-    // this.form.parentId = this.orgid || this.companyId
-    // Promise.all([getAllCustomer(this.form.parentId), getAllCustomer(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
-    //   this.loading = false
-    //   this.netWorkType = resArr[0]
-    //   this.manageType = resArr[1]
-    //   this.netWorkStatus = resArr[2]
-    // })
     this.fetchAllCustomerFa(this.orgid).then(res => {
       this.loading = false
     })
@@ -446,29 +446,53 @@ export default {
       // this.form.orgid = newVal
     },
     info () {
-      // if(this.isModify){
-      //   this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
-      //   let data = Object.assign({},this.info)
-      //   for(let i in this.form){
-      //     this.form[i] = data[i]
-      //   }
-      //   this.form.customerId = data.customerId
-      //   console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
-      //   this.fixPhone = this.form.fixPhone
-      // } else {
-      //   this.popTitle = '新增'
-      //   for(let i in this.form){
-      //     this.form[i] = ''
-      //   }
-      //   delete this.form.customerId
-      //   this.form.companyType = 2 // 重置为选中公司
-      //   this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
-      //   this.form.orgid = this.orgid
-      //   this.fixPhone = ''
-      // }
+      console.log(this.info);
+      if(this.isModify){
+        this.popTitle = '修改'
+        this.customSend.senderName = this.info.customerName
+        this.customSend.senderMobile = this.info.customerMobile
+        this.customSend.detailedAddress = this.info.detailedAddress
+        this.customSend.customerType = this.info.customerType
+
+        this.customRece.senderName = this.info.customerName
+        this.customRece.senderMobile = this.info.customerMobile
+        this.customRece.detailedAddress = this.info.detailedAddress
+        this.customRece.customerType = this.info.customerType
+
+        this.form.tmsOrderCargoList.cargoName = this.info.cargoName
+        this.form.tmsOrderCargoList.cargoAmount = this.info.cargoAmount
+        this.form.tmsOrderCargoList.cargoWeight = this.info.cargoWeight
+        this.form.tmsOrderCargoList.cargoVolume = this.info.cargoVolume
+        this.form.tmsOrderCargoList.cargoPack = this.info.cargoPack
+        this.form.tmsOrderCargoList.description = this.info.description
+        // 订单信息
+        this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre, this.info)
+        // this.form.tmsOrderPre.orderFromCityCode = this.info.orderFromCityCode
+        // this.form.tmsOrderPre.orderToCityCode = this.info.orderToCityCode
+        // this.form.tmsOrderPre.orderFromOrgid = this.info.orderFromOrgid
+        // this.form.tmsOrderPre.orderToOrgid = this.info.orderToOrgid
+        // this.form.tmsOrderPre.orderPickupMethod = this.info.orderPickupMethod
+        // this.form.tmsOrderPre.orderEffective = this.info.orderEffective
+        // this.form.tmsOrderPre.agencyFund = this.info.agencyFund
+        // this.form.tmsOrderPre.commissionFee = this.info.commissionFee
+        // this.form.tmsOrderPre.orderPayWay = this.info.orderPayWay
+        // this.form.tmsOrderPre.deliveryFee = this.info.deliveryFee
+        // this.form.tmsOrderPre.productPrice = this.info.productPrice
+        // this.form.tmsOrderPre.orderRemarks = this.info.orderRemarks
+      } else {
+        this.popTitle = '新增'
+        this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
+        this.form.tmsOrderCargoList = [Object.assign({}, this.carObj)]
+      }
     }
   },
   methods: {
+    setObject(obj1, obj2) {
+      for (var i in obj1) {
+        obj1[i] = obj2 ? obj2[i] : ''
+      }
+      return obj1
+    },
     fetchAllCustomerFa () {
       this.loading = true
       return getAllCustomer(this.searchSend).then(data => {
@@ -489,9 +513,13 @@ export default {
       return getAllCustomer(this.searchShou).then(data => {
         let res = data.list[0]
         if(res){
-          for(var i in this.customRece){
-            this.customRece[i] = res[i]
-          }
+          // for(var i in this.customRece){
+          //   this.customRece[i] = res[i]
+          // }
+          this.customRece.senderName = res.customerName
+          this.customRece.senderMobile = res.customerMobile
+          this.customRece.detailedAddress = res.detailedAddress
+          this.customRece.customerType = res.customerType
         }
         this.loading = false
       })
@@ -506,22 +534,20 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          // let data = {
-          //   tmsOrderPre: this.form
-          // }
-          // data.fixPhone = this.fixPhone
-          this.form.customerList = []
           this.form.customerList[0] = this.customSend
           this.form.customerList[1] = this.customRece
           console.log(this.customSend,this.customRece)
-          let datas = this.form
-          console.log(datas)
+
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
-            // promiseObj = postModifyOrder(data)
+            this.form.customerList[0].customerId = 1
+            this.form.customerList[1].customerId = 1
+            let data = this.form
+            promiseObj = postModifyOrder(data)
           } else {
-            promiseObj = postAddOrder(datas)
+            let data = this.form
+            promiseObj = postAddOrder(data)
           }
 
           promiseObj.then(res => {

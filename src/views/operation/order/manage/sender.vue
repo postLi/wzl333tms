@@ -7,7 +7,7 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('acceptance')" plain>受理</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('refuse')" plain>拒绝</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>作废</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('cancel')" plain>作废</el-button>
           <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>-->
@@ -42,7 +42,7 @@
             fixed
             sortable
             prop="orderSn"
-            width="90"
+            width="130"
             label="订单号">
           </el-table-column>
           <el-table-column
@@ -57,7 +57,7 @@
           <el-table-column
             prop="shipSn"
             sortable
-            width="120"
+            width="130"
             label="关联运单号">
           </el-table-column>
           <el-table-column
@@ -227,8 +227,8 @@
           >
           </el-table-column>
           <el-table-column
-            prop=""
-            label=""
+            prop="orderProcedureFee"
+            label="代收款手续费"
             width="130"
             sortable
           >
@@ -254,15 +254,6 @@
             sortable
           >
           </el-table-column>
-          <!--<el-table-column-->
-            <!--label="品种规格"-->
-            <!--width="120"-->
-            <!--sortable-->
-            <!--&gt;-->
-            <!--<template slot-scope="scope">-->
-                <!--<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
@@ -272,8 +263,8 @@
   </div>
 </template>
 <script>
-import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { getPostlist,putRefuse,deletebatchDelete,postAddOrder } from '../../../../api/operation/manage'
+import { getExportExcel } from '@/api/company/customerManage'
+import { getPostlist,putRefuse,deletebatchDelete,putCancel } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -316,6 +307,7 @@ export default {
       selectInfo: {},
       // 选中的行
       selected: [],
+
       searchForms: {
         "currentPage": 1,
         "pageSize": 100,
@@ -377,7 +369,7 @@ export default {
         return false
       }
 
-      console.log("this.selected:", this.selected)
+      // console.log("this.selected:", this.selected)
 
       switch (type) {
           // 添加客户
@@ -389,125 +381,177 @@ export default {
               //受理  acceptance
           case 'acceptance':
             this.isModify = false
+            this.selectInfo = this.selected[0]
             if(this.selected.length > 1){
               this.$message({
                 message: '每次只能修改单条数据~',
                 type: 'warning'
               })
             }
-            this.selectInfo = this.selected[0]
-            if(this.selectInfo.orderStatus === 210){
-              this.openAddCustomer()
-            }else if(this.selectInfo.orderStatus === 214){
+
+            if(this.selected[0].orderStatus === 213){
+              console.log('跳转到开单页面')
+            //  订单至少需要一个预订单，点击受理跳转到开单页面
+            }else{
               this.$message({
                 message: '订单已经受理了~',
                 type: 'warning'
               })
               return false
-            }else if(this.selectInfo.orderStatus === 213){
-              this.$prompt('拒绝原因', '拒绝订单', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                // inputErrorMessage: '邮箱格式不正确'
-              }).then(({ value }) => {
-                this.$message({
-                  type: 'success',
-                  message: '拒绝原因是: ' + value
-                });
-              }).catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '取消输入'
-                });
-              });
             }
-              // this.$message({
-              //   message: '订单已经受理了~',
-              //   type: 'warning'
-              // })
-              // return false
-            // }
             break;
           // 修改客户信息
           case 'modify':
-              this.isModify = true
+
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
                       type: 'warning'
                   })
               }
-              this.selectInfo = this.selected[0]
+            else if(this.selected[0].orderStatus === 213){
               this.openAddCustomer()
+              this.isModify = true
+            }
+              this.selectInfo = this.selected[0]
+              // this.openAddCustomer()
               break;
-          //  拒绝
-        // case 'refuse':
-          case 'refuse':
-            let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
-            //=>todo 删除多个
-            let ids = this.selected.map(item => {
-              return item.customerId
+        // 作废
+        case 'cancel':
+          if(this.selected[0].orderStatus == 213){
+            let _deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
+            let _ids = this.selected.map(item => {
+              return item.id
             })
-            ids = ids.join(',')
-            this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-              confirmButtonText: '删除',
+            _ids = _ids.length > 1 ? _ids.join(',') : _ids
+            this.$confirm('确定要操作 ' + _deleteIt + ' 订单号吗？', '提示', {
+              confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              deleteSomeCustomerInfo(ids).then(res => {
+              putCancel(_ids).then(res => {
                 this.$message({
                   type: 'success',
-                  message: '删除成功!'
+                  message: '操作成功!'
                 })
                 this.fetchData()
               }).catch(err=>{
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
                 })
               })
 
             }).catch(() => {
               this.$message({
                 type: 'info',
-                message: '已取消删除'
+                message: '已取消操作'
               })
             })
+          }else if(this.selected[0].orderStatus === 214){
+            this.$message({
+              message: '已受理的订单不可以作废~',
+              type: 'warning'
+            })
+          }
+
+          break;
+        // 拒绝 'refuse':
+          case 'refuse':
+            this.loading = true
+            if(this.selected[0].orderStatus == 213){
+              //=>todo 删除多个
+              let ids = this.selected.map(item => {
+                return item.id
+              })
+              ids = ids.splice(',')
+              this.$prompt('拒绝原因', '拒绝订单', {
+
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then((value ) => {
+                let refuseReason = value.value
+                let data = {
+                    ids ,
+                    refuseReason
+                  }
+                 data.ids = ids
+                data.refuseReason = refuseReason
+                putRefuse(data).then(res => {
+                  this.loading = false
+                  this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                  })
+                  this.fetchData()
+                }).catch(err=>{
+                  this.$message({
+                    type: 'info',
+                    message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  })
+                })
+
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消操作'
+                })
+                this.loading = false
+              })
+            }else if(this.selected[0].orderStatus === 214){
+              this.$message({
+                message: '已受理的订单不可以拒绝~',
+                type: 'warning'
+              })
+            }
+
             break;
-          // 删除客户
+          // 删除
           case 'delete':
-                  let deleteIt = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
-                  //=>todo 删除多个
-                  let _ids = this.selected.map(item => {
-                      return item.customerId
-                  })
-                  _ids = _ids.join(',')
+            if(this.selected[0].orderStatus === 213 && this.selected[0].orderStatus === 215){
 
-                  this.$confirm('确定要删除 ' + deleteIt + ' 客户吗？', '提示', {
-                      confirmButtonText: '删除',
-                      cancelButtonText: '取消',
-                      type: 'warning'
-                  }).then(() => {
-                      deleteSomeCustomerInfo(_ids).then(res => {
-                          this.$message({
-                              type: 'success',
-                              message: '删除成功!'
-                          })
-                          this.fetchData()
-                      }).catch(err=>{
-                          this.$message({
-                              type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })
-                      })
-
-                  }).catch(() => {
-                      this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                      })
+              let deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
+              let ids = this.selected.map(item => {
+                return item.id
+              })
+              ids = ids.length > 1 ? ids.join(',') : ids
+              this.$confirm('确定要删除 ' + deleteIt + ' 订单号吗？', '提示', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                deletebatchDelete(ids).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
                   })
+                  this.fetchData()
+                }).catch(err=>{
+                  this.$message({
+                    type: 'info',
+                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  })
+                })
+
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                })
+              })
+            }else if(this.selected[0].orderStatus === 214){
+              this.$message({
+                message: '已受理的订单不可以删除~',
+                type: 'warning'
+              })
+            }
+            else{
+              this.$message({
+                message: '未受理和已拒绝订单才可以删除~',
+                type: 'warning'
+              })
+            }
               break;
           // 导出数据
           case 'export':

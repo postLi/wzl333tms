@@ -46,7 +46,7 @@
             sortable
             prop="orderSn"
             label="订单号"
-            width="90">
+            width="130">
           </el-table-column>
           <el-table-column
             prop="orderStatus"
@@ -58,7 +58,7 @@
             prop="shipSn"
             sortable
             label="关联运单号"
-            width="120">
+            width="130">
           </el-table-column>
           <el-table-column
             prop="orderEffective"
@@ -327,9 +327,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      // this.searchQuery.vo.orgid = obj.orgid
-      // this.searchQuery.vo.customerMobile = obj.mobile
-      // this.searchQuery.vo.customerName = obj.name
+      this.searchForm.vo = Object.assign(this.searchForm.vo, obj)
       this.fetchAllList()
     },
     showImport () {
@@ -358,7 +356,7 @@ export default {
         return false
       }
 
-      console.log("this.selected:", this.selected)
+      // console.log("this.selected:", this.selected)
       switch (type) {
           // 添加客户
           case 'add':

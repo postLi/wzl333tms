@@ -41,7 +41,7 @@
         <el-form-item prop="password">
           <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off"
                     :placeholder="holder.password" @focus='password()' clearable>
-            <template slot="prepend">密　码</template>          
+            <template slot="prepend">密　码</template>
           </el-input>
         </el-form-item>
 
@@ -159,7 +159,7 @@ export default {
     },
     forgetPsw() {
       // this.$router.push({ path: '/' })
-      console.log(5555)
+      // console.log(5555)
     },
     accNum() {
       this.holder = ''
