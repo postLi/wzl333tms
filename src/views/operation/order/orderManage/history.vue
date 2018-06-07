@@ -135,7 +135,7 @@ export default {
         "width": "150"
       },{
         "label": "修改人",
-        "prop": "userName",
+        "prop": "name",
         "width": "150"
       },{
         "label": "修改日期",
@@ -250,10 +250,6 @@ export default {
         "width": "150"
       },{
         "label": "制单人",
-        "prop": "userName",
-        "width": "150"
-      },{
-        "label": "业务员",
         "prop": "userName",
         "width": "150"
       },{

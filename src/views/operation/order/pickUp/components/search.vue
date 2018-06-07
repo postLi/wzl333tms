@@ -59,7 +59,7 @@
 
 <script>
 import { REGEX }  from '@/utils/validate'
-import SelectType from '@/components/SelectType/index'
+import SelectType from '@/components/selectType/index'
 export default {
   components: {
     SelectType
