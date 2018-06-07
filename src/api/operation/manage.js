@@ -57,24 +57,38 @@ export function deletebatchDelete(ids) {
 }
  */
 export function postAddOrder(params) {
-  return fetch.post('/api-order/order/pre/v1', params).then(res => {
+  return fetch.post('/api-order/order/pre/v1/', params).then(res => {
     return res.data || {}
   })
 }
 
 /**
- * order_status 订单状态
- * @param {*} orgid 网点id
- * 营业网点 0
- * 分拨中心 1
+ * 修改客户订单
+ *{
+  "tmsOrderCargoList": [{
+  	"id": 1,
+    "cargoName": "牙刷"
+  }],
+  "customerList": [{
+  	"customerId": 1,
+    "customerName": "安发",
+    "customerType": 1
+  }, {
+  	"customerId": 1,
+    "customerName": "前端",
+    "customerType": 2
+  }],
+  "tmsOrderPre":{
+  	"id":1,
+  	"orderSn":"123213"
+  }
+}
+ * @param params
+ * @returns {Promise<AxiosResponse<any>>}
  */
-export function getOrderStatusInfo(orgid) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'order_status',
-      orgid
-    }
-  }).then(res => {
-    return res.data || []
+
+export function postModifyOrder(params) {
+  return fetch.post('/api-order/order/pre/v1', params).then(res => {
+    return res.data || {}
   })
 }
