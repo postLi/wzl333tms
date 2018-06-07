@@ -148,7 +148,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .setupTablePop{
   .el-dialog{
     max-width: 546px;

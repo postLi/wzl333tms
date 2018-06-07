@@ -421,7 +421,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .tab-content {
   height: calc(100% - 33px);
   display: flex;

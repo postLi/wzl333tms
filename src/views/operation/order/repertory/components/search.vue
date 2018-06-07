@@ -109,7 +109,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .tab-content{
     .staff_searchinfo{
         padding:15px 20px;
