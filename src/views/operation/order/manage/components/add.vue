@@ -19,36 +19,126 @@
           <tr>
             <td>
               <el-form-item label="发货人:">
-                <el-input v-model='customSend.senderName' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="customSend.senderName"
+                  :fetch-suggestions="querySearchSender('customerName')"
+                  value-key="customerName"
+                  :maxlength="25"
+                  placeholder="请选择内容"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.customerName }}</span>
+                      <span class="addr">{{ item.customerMobile }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货人:">
-                <el-input v-model='customRece.receiverName' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="customRece.receiverName"
+                  :fetch-suggestions="querySearchSender('receiverName')"
+                  value-key="receiverName"
+                  :maxlength="25"
+                  placeholder="请选择内容"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.customerName }}</span>
+                      <span class="addr">{{ item.customerMobile }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="联系号码:" prop="">
-                <el-input v-numberOnly v-model='customSend.senderMobile' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="customSend.senderMobile"
+                  value-key="customerMobile"
+                  :fetch-suggestions="querySearchSender('customerMobile')"
+                  :maxlength="11"
+                  placeholder="请选择内容"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.customerName }}</span>
+                      <span class="addr">{{ item.customerMobile }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="联系号码:"  prop="">
-                <el-input v-model='customRece.receiverMobile' maxlength="25" auto-complete="off" clearable></el-input>
+              <el-form-item label="联系号码:" prop="">
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="customRece.receiverMobile"
+                  value-key="receiverMobile"
+                  :fetch-suggestions="querySearchSender('receiverMobile')"
+                  :maxlength="11"
+                  placeholder="请选择内容"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.customerName }}</span>
+                      <span class="addr">{{ item.customerMobile }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="发货地址:">
-                <el-input v-model='customSend.detailedAddress'  maxlength="25" auto-complete="off" clearable></el-input>
+                <el-autocomplete
+                  class="inline-input"
+                  value-key="detailedAddress"
+                  v-model="customSend.detailedAddress"
+                  :fetch-suggestions="querySearchSender('detailedAddress')"
+                  :maxlength="25"
+                  placeholder="请选择内容"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.customerName }}</span>
+                      <span class="addr">{{ item.detailedAddress }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货地址:">
-                <el-input v-model='customRece.detailedAddress' maxlength="25" auto-complete="off" clearable></el-input>
+                <el-autocomplete
+                  class="inline-input"
+                  value-key="detailedAddress"
+                  v-model="customRece.detailedAddress"
+                  :fetch-suggestions="querySearchSender('detailedAddress')"
+                  :maxlength="25"
+                  placeholder="请选择内容"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.customerName }}</span>
+                      <span class="addr">{{ item.detailedAddress }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
               </el-form-item>
             </td>
           </tr>
@@ -67,33 +157,27 @@
           <tr>
             <td>
               <el-form-item label="货品名">
-                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="件数">
-                <!--<el-input  auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="重量">
-                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="体积">
-                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="包装">
-                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
             <td>
               <el-form-item label="品种规格">
-                <!--<el-input maxlength="25" auto-complete="off" clearable></el-input>-->
               </el-form-item>
             </td>
           </tr>
@@ -261,51 +345,12 @@ export default {
   computed: {
       ...mapGetters([
           'otherinfo'
-      ]),
-      "fixPhone": {
-        get(){
-          return this.phoneshort+'-'+this.phonelong
-        },
-        set (val){
-          //let names = val.match(/(.*)(.{7})$/)
-          let names = val ?　val.split('-')　: ''
-          if(names){
-            this.phoneshort = names[1] ? names[0] : ''
-            this.phonelong = names[1] ? names[1] : names[0]
-          } else {
-            this.phoneshort = ''
-            this.phonelong = ''
-          }
-        }
-      }
+      ])
   },
   data () {
-    const _this = this
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
-        }
-        callback();
-      }
-    }
-
-    const validateFormMobile = function (rule, value, callback) {
-      if(REGEX.MOBILE.test(value)){
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
-
-    const validateFormNumber = function (rule, value, callback) {
-      _this.form.customerMobile = value.replace(REGEX.NO_NUMBER, '')
-      callback()
-    }
-
     return {
+      senderList: [],
+      receiverList: [],
       searchSend: {
         "currentPage": 1,
         "pageSize": 100,
@@ -380,32 +425,6 @@ export default {
       formLabelWidth: '100px',
       tooltip: false,
       rules: {
-        cargoName: [
-          { message: '请输入输入数字', trigger: 'blur' , pattern: REGEX.ONLY_NUMBER_GT}
-        ],
-        companyNumber: [
-          { message: '请输入输入数字', trigger: 'blur' , pattern: REGEX.ONLY_NUMBER_GT}
-          // { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
-        ],
-        companyName: [
-          { required: true, message: '请输入公司名称', trigger: 'blur' },
-          { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
-        ],
-        orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: validateFormMobile }
-          // { validator: validateFormNumber, trigger: 'change'} REGEX.MOBILE
-        ],
-        receiverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-         // { validator: validateFormNumber, trigger: 'change'}
-        ],
-        customerName: [
-          { required: true, message: '请输入联系人', trigger: 'blur' },
-          { max: 30, message: '不能超过30个字符', trigger: 'blur' }
-        ]
       },
       popTitle: '新建',
       orgArr: [],
@@ -416,24 +435,22 @@ export default {
       groups: [],
       inited: false,
 
-    //保存表单
-
     }
   },
   mounted () {
-    // this.form.orgid = this.orgid
     if(!this.inited){
       this.inited = true
       this.initInfo()
     }
     this.fetchAllCustomerFa(this.orgid).then(res => {
       this.loading = false
+      this.senderList = res
     })
     this.fetchAllCustomerShou(this.orgid).then(res => {
       this.loading = false
+      this.receiverList = res
     })
     this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
-    // this.form.tmsOrderPre.orderEffective =
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -443,21 +460,13 @@ export default {
       }
     },
     orgid (newVal) {
-      // this.form.orgid = newVal
     },
     info () {
       console.log(this.info);
       if(this.isModify){
         this.popTitle = '修改'
-        this.customSend.senderName = this.info.customerName
-        this.customSend.senderMobile = this.info.customerMobile
-        this.customSend.detailedAddress = this.info.detailedAddress
-        this.customSend.customerType = this.info.customerType
-
-        this.customRece.senderName = this.info.customerName
-        this.customRece.senderMobile = this.info.customerMobile
-        this.customRece.detailedAddress = this.info.detailedAddress
-        this.customRece.customerType = this.info.customerType
+        this.customSend = this.setObject(this.customSend, this.info)
+        this.customRece = this.setObject(this.customRece, this.info)
 
         this.form.tmsOrderCargoList.cargoName = this.info.cargoName
         this.form.tmsOrderCargoList.cargoAmount = this.info.cargoAmount
@@ -467,18 +476,6 @@ export default {
         this.form.tmsOrderCargoList.description = this.info.description
         // 订单信息
         this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre, this.info)
-        // this.form.tmsOrderPre.orderFromCityCode = this.info.orderFromCityCode
-        // this.form.tmsOrderPre.orderToCityCode = this.info.orderToCityCode
-        // this.form.tmsOrderPre.orderFromOrgid = this.info.orderFromOrgid
-        // this.form.tmsOrderPre.orderToOrgid = this.info.orderToOrgid
-        // this.form.tmsOrderPre.orderPickupMethod = this.info.orderPickupMethod
-        // this.form.tmsOrderPre.orderEffective = this.info.orderEffective
-        // this.form.tmsOrderPre.agencyFund = this.info.agencyFund
-        // this.form.tmsOrderPre.commissionFee = this.info.commissionFee
-        // this.form.tmsOrderPre.orderPayWay = this.info.orderPayWay
-        // this.form.tmsOrderPre.deliveryFee = this.info.deliveryFee
-        // this.form.tmsOrderPre.productPrice = this.info.productPrice
-        // this.form.tmsOrderPre.orderRemarks = this.info.orderRemarks
       } else {
         this.popTitle = '新增'
         this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
@@ -487,6 +484,21 @@ export default {
     }
   },
   methods: {
+    querySearchSender (name) {
+      let _this = this
+      return function(query, cb){
+        let data = _this.senderList.filter(el => {
+          return el[name].indexOf(query) !== -1
+        })
+        cb(data)
+      }
+    },
+    handleSelectSender(res){
+      this.customSend.senderName = res.customerName
+      this.customSend.senderMobile = res.customerMobile
+      this.customSend.detailedAddress = res.detailedAddress
+      this.customSend.customerType = res.customerType
+    },
     setObject(obj1, obj2) {
       for (var i in obj1) {
         obj1[i] = obj2 ? obj2[i] : ''
@@ -496,13 +508,14 @@ export default {
     fetchAllCustomerFa () {
       this.loading = true
       return getAllCustomer(this.searchSend).then(data => {
+        return data.list || []
+
         let res = data.list[0]
         if(res){
           this.customSend.senderName = res.customerName
           this.customSend.senderMobile = res.customerMobile
           this.customSend.detailedAddress = res.detailedAddress
           this.customSend.customerType = res.customerType
-          // customerType:1
         }
 
         this.loading = false
@@ -511,6 +524,8 @@ export default {
     fetchAllCustomerShou () {
       this.loading = true
       return getAllCustomer(this.searchShou).then(data => {
+        return data.list || []
+
         let res = data.list[0]
         if(res){
           // for(var i in this.customRece){
@@ -536,8 +551,6 @@ export default {
           this.loading = true
           this.form.customerList[0] = this.customSend
           this.form.customerList[1] = this.customRece
-          console.log(this.customSend,this.customRece)
-
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
@@ -584,12 +597,28 @@ export default {
 }
 </script>
 <style lang="scss">
+  .selectListOption_lrl{
+    clear:both;
+    span{
+      display: inline-block;
+      width: 50%;
+    }
+    .addr{
+      text-align: right;
+      color: #999;
+      font-size: 12px;
+    }
+  }
 .addCustomerPop{
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 700px;
   max-width:  700px;
+
+  .el-autocomplete{
+    width: 100%;
+  }
 
   .el-form--inline .el-form-item{
     margin-right: 0;

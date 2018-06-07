@@ -2,40 +2,17 @@
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
-        <el-form-item  v-if="!isModify" class="clearfix">
-          <div class="selectType" :class="{checked: form.companyType === 2}" @click.stop="form.companyType=2">
-            <span class="icon"><icon-svg icon-class="qiye" /></span>
-             <strong>企业</strong>
-            <p>有合法营业执照等企业</p>
-          </div>
-          <div class="selectType single" :class="{checked: form.companyType === 1}" @click.stop="form.companyType=1">
-            <span class="icon"><icon-svg icon-class="geren" /></span> <strong>个人</strong>
-            <p>具备有效身份的自然人</p>
-          </div>
-        </el-form-item>
-        <!-- 公司信息 -->
-        <template v-if="form.companyType === 2">
-          <div class="info info-require">公司名称</div>
-          <el-form-item prop="companyName">
-            <el-input v-model="form.companyName" maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item >
-            <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
-          </el-form-item>
-          <div class="info" >公司法人信息</div>
-          <el-form-item prop="legalPersonname" >
-            <el-input v-model.trim="form.legalPersonname" maxlength="25" placeholder="公司法人名称" auto-complete="off"></el-input>
-          </el-form-item>
-        </template>
-        <!-- 个人信息 -->
-        <el-form-item class="clearfix">
-          <div class="idcard-pos">
-            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idCardPositive" />
-          </div>
-          <div class="idcard-ver">
-            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idCardVerso" />
-          </div>
-        </el-form-item>
+        <!--<el-form-item  v-if="!isModify" class="clearfix">-->
+          <!--<div class="selectType" :class="{checked: form.companyType === 2}" @click.stop="form.companyType=2">-->
+            <!--<span class="icon"><icon-svg icon-class="qiye" /></span>-->
+             <!--<strong>企业</strong>-->
+            <!--<p>有合法营业执照等企业</p>-->
+          <!--</div>-->
+          <!--<div class="selectType single" :class="{checked: form.companyType === 1}" @click.stop="form.companyType=1">-->
+            <!--<span class="icon"><icon-svg icon-class="geren" /></span> <strong>个人</strong>-->
+            <!--<p>具备有效身份的自然人</p>-->
+          <!--</div>-->
+        <!--</el-form-item>-->
 
         <div class="info">{{ issender ? '发' : '收'}}货信息</div>
         <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">

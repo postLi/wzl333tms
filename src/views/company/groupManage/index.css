@@ -117,7 +117,7 @@ background-color: rgb(195,232,255);
   display: flex;
 }
 .side_right_bottom .btns_box_lrl{
-  margin:26px 0 10px 25px;
+  margin:10px 0 10px 14px;
   height: 32px;
 }
 
@@ -170,7 +170,7 @@ background-color: rgb(195,232,255);
   color:#3e9ff1;
   background: #fff;
   border-color: #3e9ff1;
-  padding: 8px 12px 8px 29px;
+  /*padding: 8px 12px 8px 10px;*/
   cursor: pointer;
 }
 .el-table {

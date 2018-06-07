@@ -77,26 +77,12 @@
         <div class="side_right_bottom clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-row :gutter="0">
-              <el-col :span="2">
-                <img src="../../../assets/icom/xinzeng.png" alt="">
-                <el-button type="primary" plain @click="doAction('addPeople')">新增员工</el-button>
-              </el-col>
-              <el-col :span="2" class="dele-peo">
-                <img src="../../../assets/icom/shanchu.png" alt="">
-                <el-button type="primary" plain @click="doAction('deletePeople')">删除员工</el-button>
-              </el-col>
-              <el-col :span="2">
-                <img src="../../../assets/icom/xiugai.png" alt="">
-                <el-button type="primary" plain @click="doAction('modifyNot')">修改网点</el-button>
-              </el-col>
-              <el-col :span="2"><img src="../../../assets/icom/xinzengwangdian.png" alt="">
-                <el-button type="primary" plain @click="doAction('addNot')" >新增网点</el-button></el-col>
-              <el-col :span="2"> <img src="../../../assets/icom/xinzengwangdian.png" alt="">
-                <el-button type="primary" plain @click="doAction('depMain')" >部门维护</el-button></el-col>
-              <el-col class="org-name"> <p>{{form.orgName}}</p></el-col>
-            </el-row>
-
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addPeople')">新增员工</el-button>
+            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除员工</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain>修改网点</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain>新增网点</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain>部门维护</el-button>
+            <el-col class="org-name"> <p>{{form.orgName}}</p></el-col>
             <!--表格功能-->
           </div>
           <!--表格功能-->
@@ -207,6 +193,7 @@
       },
         data() {
             return {
+              btnsize: 'mini',
               //加载状态
               loading:true,
               addDoTotVisible:false,

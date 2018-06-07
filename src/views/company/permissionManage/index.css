@@ -36,8 +36,8 @@
 }
 
 /*表格功能*/
-.side_right_bottom .btns_box{
-  margin:26px 0 10px 25px;
+.side_right_bottom .btns_box_lrl{
+  margin:10px 0 10px 15px;
 }
 .btns_box_left{
   float: left;
@@ -54,7 +54,6 @@
   color:#3e9ff1;
   background: #fff;
   border-color: #3e9ff1;
-  padding: 8px 12px 8px 29px;
   cursor: pointer;
 }
 .el-table {
