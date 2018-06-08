@@ -64,17 +64,17 @@ var _keyMap = { // 特殊键
   tab: 9,
   clear: 12,
   enter: 13,
-  return: 13,
+  // return: 13,
   esc: 27,
-  escape: 27,
+  // escape: 27,
   space: 32,
   left: 37,
   up: 38,
   right: 39,
   down: 40,
-  del: 46,
+  // del: 46,
   delete: 46,
-  ins: 45,
+  // ins: 45,
   insert: 45,
   home: 36,
   end: 35,
@@ -84,7 +84,7 @@ var _keyMap = { // 特殊键
   numlock: 144,
   'break': 19,
   'scrolllock': 145,
-  '⇪': 20,
+  // '⇪': 20,
   ',': 188,
   '.': 190,
   '/': 191,
@@ -99,16 +99,16 @@ var _keyMap = { // 特殊键
 }
 
 var _modifier = { // 修饰键
-  '⇧': 16,
+  // '⇧': 16,
   shift: 16,
-  '⌥': 18,
+  // '⌥': 18,
   alt: 18,
-  option: 18,
-  '⌃': 17,
+  // option: 18,
+  // '⌃': 17,
   ctrl: 17,
-  control: 17,
-  '⌘': isff ? 224 : 91,
-  cmd: isff ? 224 : 91,
+  // control: 17,
+  // '⌘': isff ? 224 : 91,
+  // cmd: isff ? 224 : 91,
   command: isff ? 224 : 91
 }
 var _downKeys = [] // 记录摁下的绑定键
@@ -136,8 +136,6 @@ for (var k = 1; k < 20; k++) {
   _keyMap['f' + k] = 111 + k
 }
 
-
-
 // 兼容Firefox处理
 modifierMap[isff ? 224 : 91] = 'metaKey'
 _mods[isff ? 224 : 91] = false
@@ -161,6 +159,38 @@ function getScope() {
 // 获取摁下绑定键的键值
 function getPressedKeyCodes() {
   return _downKeys.slice(0)
+}
+
+// 获取按下绑定键的键名
+function getPressedKey(keyEvent) {
+  var key = keyEvent.keyCode
+  var name = ''
+
+  // 用来判断是否为
+  const _mods = { altKey: 'alt', metaKey: 'command', ctrlKey: 'ctrl', shiftKey: 'shift' }
+  // 判断是否为组合按键
+  for (const i in _mods) {
+    name += keyEvent[i] ? _mods[i] + '+' : ''
+  }
+  // 当为特殊按键时不做处理
+  if (key !== 16 && key !== 17 && key !== 18 && key !== 91) {
+    let flag = true
+    for (const l in _keyMap) {
+      if (_keyMap[l] === key) {
+        flag = false
+        name += l
+      }
+    }
+    // 如果没有命中指定的按键，则直接取key值
+    if (flag) {
+      name += keyEvent.key
+    }
+  } else {
+    // 清除多余的 + 号
+    name = name.replace(/\+$/, '')
+  }
+
+  return name
 }
 
 // 表单控件控件判断 返回 Boolean
@@ -393,7 +423,8 @@ var _api = {
   getPressedKeyCodes: getPressedKeyCodes,
   isPressed: isPressed,
   filter: filter,
-  unbind: unbind
+  unbind: unbind,
+  getPressedKey: getPressedKey
 }
 for (var a in _api) {
   if (Object.prototype.hasOwnProperty.call(_api, a)) {

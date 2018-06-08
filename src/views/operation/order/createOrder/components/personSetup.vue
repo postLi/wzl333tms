@@ -153,7 +153,7 @@ export default {
         name = "numpad " + e.key
       }
       console.log("showkeycode:",e.code,e.key,e.keyCode,e)
-      this.$set(this.form, type, name)
+      this.$set(this.form, type, hotkeys.getPressedKey(e))
       e.preventDefault()
       //alert(e)
     }
