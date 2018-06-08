@@ -2,52 +2,155 @@
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
-        <!--<el-form-item  v-if="!isModify" class="clearfix">-->
-          <!--<div class="selectType" :class="{checked: form.companyType === 2}" @click.stop="form.companyType=2">-->
-            <!--<span class="icon"><icon-svg icon-class="qiye" /></span>-->
-             <!--<strong>企业</strong>-->
-            <!--<p>有合法营业执照等企业</p>-->
-          <!--</div>-->
-          <!--<div class="selectType single" :class="{checked: form.companyType === 1}" @click.stop="form.companyType=1">-->
-            <!--<span class="icon"><icon-svg icon-class="geren" /></span> <strong>个人</strong>-->
-            <!--<p>具备有效身份的自然人</p>-->
-          <!--</div>-->
-        <!--</el-form-item>-->
 
-        <div class="info">{{ issender ? '发' : '收'}}货信息</div>
-        <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">
-          <el-input v-model="form.customerUnit" maxlength="25" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="联系人" prop="customerName">
-          <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="customerMobile">
-          <el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" class="customerPhone" prop="customerPhone">
-          <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
-        </el-form-item>
-        <el-form-item label="客户VIP号" prop="vipNum">
-          <el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号码" prop="idcard">
-          <el-input v-model="form.idcard" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="开户行" prop="openBank">
-          <el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="银行名称" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="detailedAddress">
-          <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
-        </el-form-item>
+        <div class="pickUp-top">
+          <el-form-item label="提货批次" prop="customerUnit">
+            <el-input v-model="form.tmsOrderPickup.pickupBatchNumber" auto-complete="off" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="发货人" prop="" class="senderName_lrl">
+            <el-autocomplete
+              class="inline-input"
+              v-model="customSend.senderName"
+              :fetch-suggestions="querySearchSender('customerName')"
+              value-key="customerName"
+              :maxlength="25"
+              placeholder="请选择内容"
+              @select="handleSelectSender"
+            >
+              <template slot-scope="{ item }">
+                <div class="selectListOption_lrl">
+                  <span class="name">{{ item.customerName }}</span>
+                  <span class="addr">{{ item.customerMobile }}</span>
+                </div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
+          <el-form-item label="手机号" prop="" class="senderName_lrl">
+            <el-autocomplete
+              class="inline-input"
+              v-model="customSend.senderMobile"
+              :fetch-suggestions="querySearchSender('customerMobile')"
+              value-key="customerMobile"
+              :maxlength="25"
+              placeholder="请选择内容"
+              @select="handleSelectSender"
+            >
+              <template slot-scope="{ item }">
+                <div class="selectListOption_lrl">
+                  <span class="name">{{ item.customerMobile }}</span>
+                  <span class="addr">{{ item.customerName }}</span>
+                </div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
+          <el-form-item label="提货地址" prop="" class="senderName_lrl">
+            <el-autocomplete
+              class="inline-input"
+              v-model="customSend.detailedAddress"
+              :fetch-suggestions="querySearchSender('detailedAddress')"
+              value-key="detailedAddress"
+              :maxlength="25"
+              placeholder="请选择内容"
+              @select="handleSelectSender"
+            >
+              <template slot-scope="{ item }">
+                <div class="selectListOption_lrl">
+                  <span class="name">{{ item.detailedAddress }}</span>
+                  <span class="addr">{{ item.customerName }}</span>
+                </div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
+        </div>
+        <div class="pickUp-order">
+          <el-form-item label="货品名" prop="customerUnit">
+            <el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="件数" prop="customerUnit">
+            <el-input maxlength="8" v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="体积" prop="customerUnit">
+            <el-input maxlength="8" v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="重量" prop="customerUnit">
+            <el-input maxlength="8" v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="运费" prop="customerUnit">
+            <el-input maxlength="8" v-model="form.tmsOrderPickup.carriage" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="付款方式" prop="customerUnit">
+            <el-input v-model="form.tmsOrderPickup.payMethod" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="到达城市" prop="" class="order_toCityCode">
+            <el-input v-model="form.tmsOrderPickup.toCityCode" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="备注" prop="customerUnit" class="order_remark">
+            <el-input v-model="form.tmsOrderPickup.remark" maxlength="300" type="textarea" auto-complete="off" ></el-input>
+          </el-form-item>
+        </div>
+        <div class="pickUp-bottom">
+          <el-form-item label="车费" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="代收费用" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.collectionFee" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="车牌号" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.truckIdNumber" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="提货状态" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.pickupStatus" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="车辆类型" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="出车时间" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.arriveTime" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="车辆单位" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.truckUnit" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="出车时间" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="出车时间" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="出车时间" prop="customerUnit">
+            <el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" ></el-input>
+          </el-form-item>
+
+        </div>
+        <!--<el-form-item label="联系人" prop="customerName">-->
+          <!--<el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="手机" prop="customerMobile">-->
+          <!--<el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="电话" class="customerPhone" prop="customerPhone">-->
+          <!--<el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="归属网点" prop="orgid">-->
+          <!--<SelectTree v-model="form.orgid" />-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="客户VIP号" prop="vipNum">-->
+          <!--<el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="身份证号码" prop="idcard">-->
+          <!--<el-input v-model="form.idcard" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="开户行" prop="openBank">-->
+          <!--<el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="银行名称" prop="bankName">-->
+          <!--<el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="银行卡号" prop="bankCardNumber">-->
+          <!--<el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="详细地址" prop="detailedAddress">-->
+          <!--<el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
@@ -59,6 +162,8 @@
 <script>
 import { REGEX }  from '@/utils/validate'
 import { postCustomer, putCustomer } from '@/api/company/customerManage'
+import { getAllCustomer } from '@/api/company/customerManage'
+import { fetchGetPickUp  } from '@/api/operation/pickup'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -94,23 +199,23 @@ export default {
   computed: {
       ...mapGetters([
           'otherinfo'
-      ]),
-      "fixPhone": {
-        get(){
-          return this.phoneshort+'-'+this.phonelong
-        },
-        set (val){
-          //let names = val.match(/(.*)(.{7})$/)
-          let names = val ?　val.split('-')　: ''
-          if(names){
-            this.phoneshort = names[1] ? names[0] : ''
-            this.phonelong = names[1] ? names[1] : names[0]
-          } else {
-            this.phoneshort = ''
-            this.phonelong = ''
-          }
-        }
-      }
+      ])
+      // "fixPhone": {
+      //   get(){
+      //     return this.phoneshort+'-'+this.phonelong
+      //   },
+      //   set (val){
+      //     //let names = val.match(/(.*)(.{7})$/)
+      //     let names = val ?　val.split('-')　: ''
+      //     if(names){
+      //       this.phoneshort = names[1] ? names[0] : ''
+      //       this.phonelong = names[1] ? names[1] : names[0]
+      //     } else {
+      //       this.phoneshort = ''
+      //       this.phonelong = ''
+      //     }
+      //   }
+      // }
   },
   data () {
     const _this = this
@@ -139,32 +244,40 @@ export default {
     }
 
     return {
-      phoneshort: '', // 固话区号
-      phonelong: '', // 固话号码
-      //fixPhone: '',
       form: {
-        "bankCardNumber": "", //"银行卡号" 20
-        "bankName":  "", //"银行名称", 20
-        "companyName": "", // "公司名称", 25
-        "companyType": 2, // 公司类型 1：自然人 2：企业
-        // "customerId": 0, // 当新增时，不传
-        "customerMobile": "", // 手机号码 11
-        "customerName": "", // 客户名称 25
-        // "customerNum": "", // 客户编号 25
-        "customerType": this.issender ? 1 : 2, // 客户类型 1:发货人2:收货人
-        "customerUnit": "", // 客户单位 50
-        "detailedAddress": "", // 详细地址 50
-        "fixPhone": "", // 固话 11
-        "idCardPositive": "", // 身份证正面图片地址
-        "idCardVerso": "", // 身份证反面图片地址
-        "idcard": "", // 身份证号码 18
-        "legalPersonname": "", // 公司法人 25
-        "licensePicture": "", // 营业执照图片地址
-        "openBank": "", // 开户行 20
-        "orgid": 0, // 所属机构ID
-        "vipNum": "" // VIP号 11
+        tmsCustomer:{
+          customerName:'',
+          customerMobile:'',
+          detailedAddress:''
+        },
+        tmsDriver:{
+          collectionFee:'',// 代收费用
+          driverName:'',//司机姓名
+          dirverMobile:'',//司机手机 /
+          pickupStatus:'',//提货状态
+          arriveTime:'',//
+          //  发送短信给司机
+        },
+        tmsTruck:{
+          truckFee:'',//车费
+          truckIdNumber:'', //车牌号 /
+          truckType:'',//车辆类型
+          truckUnit:'',//车辆单位
+          outTime:'',//出车时间
+        },
+        tmsOrderPickup:{
+          pickupBatchNumber:'',//提货批次
+          pickupName:'',//货品名
+          pickupAmount:'',//件数
+          pickupVolume:'',// 体积
+          pickupWeight:'',// 重量
+          carriage:'',// 运费
+          payMethod:'',// 付款方式
+          toCityCode:'',// 到达城市
+          remark:''
+        }
       },
-      formLabelWidth: '90px',
+      formLabelWidth: '80px',
       tooltip: false,
       rules: {
         companyName: [
@@ -183,7 +296,7 @@ export default {
           { max: 30, message: '不能超过30个字符', trigger: 'blur' }
         ]
       },
-      popTitle: '新增发货人',
+      popTitle: '提货派车单',
       orgArr: [],
       rolesArr: [],
       departmentArr: [],
@@ -191,16 +304,39 @@ export default {
       roles: [],
       departments: [],
       groups: [],
-      inited: false
-
+      inited: false,
+      searchSend: {
+        "currentPage": 1,
+        "pageSize": 100,
+        "vo": {
+          "orgid": 1,
+          customerType: 1
+        }
+      },
+      senderList:[],
+      customSend:{
+        // 发货人
+        senderName:'',
+        senderMobile:'',
+        detailedAddress:'',
+        customerType:1
+      },
     }
   },
   mounted () {
-    this.form.orgid = this.orgid
+    // this.orgid
     if(!this.inited){
       this.inited = true
       this.initInfo()
     }
+    Promise.all([fetchGetPickUp()]).then(resArr => {
+      this.loading = false
+      this.form.tmsOrderPickup.pickupBatchNumber = resArr[0].data
+    })
+    this.fetchAllCustomerFa(this.orgid).then(res => {
+      this.loading = false
+      this.senderList = res
+    })
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -210,32 +346,68 @@ export default {
       }
     },
     orgid (newVal) {
-      this.form.orgid = newVal
+      // this.form.orgid = newVal
     },
     info () {
-      if(this.isModify){
-        this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
-        let data = Object.assign({},this.info)
-        for(let i in this.form){
-          this.form[i] = data[i]
-        }
-        this.form.customerId = data.customerId
-        console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
-        this.fixPhone = this.form.fixPhone
-      } else {
-        this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
-        for(let i in this.form){
-          this.form[i] = ''
-        }
-        delete this.form.customerId
-        this.form.companyType = 2 // 重置为选中公司
-        this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
-        this.form.orgid = this.orgid
-        this.fixPhone = ''
-      }
+      // if(this.isModify){
+      //   // this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
+      //   let data = Object.assign({},this.info)
+      //   for(let i in this.form){
+      //     this.form[i] = data[i]
+      //   }
+      //   this.form.customerId = data.customerId
+      //   console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
+      //   this.fixPhone = this.form.fixPhone
+      // } else {
+      //   this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
+      //   for(let i in this.form){
+      //     this.form[i] = ''
+      //   }
+      //   delete this.form.customerId
+      //   this.form.companyType = 2 // 重置为选中公司
+      //   this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
+      //   this.form.orgid = this.orgid
+      //   this.fixPhone = ''
+      // }
     }
   },
   methods: {
+    querySearchSender (name) {
+      let _this = this
+      return function(query, cb){
+        let data = _this.senderList.filter(el => {
+          return el[name].indexOf(query) !== -1
+        })
+        cb(data)
+      }
+    },
+    handleSelectSender(res){
+      this.customSend.senderName = res.customerName
+      this.customSend.senderMobile = res.customerMobile
+      this.customSend.detailedAddress = res.detailedAddress
+      this.customSend.customerType = res.customerType
+    },
+    setObject(obj1, obj2) {
+      for (var i in obj1) {
+        obj1[i] = obj2 ? obj2[i] : ''
+      }
+      return obj1
+    },
+    fetchAllCustomerFa () {
+      this.loading = true
+      return getAllCustomer(this.searchSend).then(data => {
+        return data.list || []
+        let res = data.list[0]
+        if(res){
+          this.customSend.senderName = res.customerName
+          this.customSend.senderMobile = res.customerMobile
+          this.customSend.detailedAddress = res.detailedAddress
+          this.customSend.customerType = res.customerType
+        }
+
+        this.loading = false
+      })
+    },
     initInfo () {
       this.loading = false
     },
@@ -290,138 +462,55 @@ export default {
 }
 </script>
 <style lang="scss">
-.addCustomerPop{
-  left: auto;
-  top: 50px;
-  bottom: auto;
-  min-width: 546px;
-  max-width:  546px;
-
-  .el-form--inline .el-form-item{
-    margin-right: 0;
-    width: 100%;
-    display: flex;
-  }
-
-  .el-form-item__content{
-    flex:1;
-  }
-
-  .select-tree{
-    width: 100%;
-  }
-
-  .customerPhone .el-form-item__content{
-    display: flex;
-  }
-  .phoneshort{
-    width: 78px;
-  }
-  .phonelong{
-    flex:1;
-  }
-
-  .licensePicture{
-    height: 116px;
-    line-height: 1.2;
-  }
-
-  .popRight-content{
-    padding: 20px 24px 0;
-    box-sizing: border-box;
-  }
-
-  .selectType{
-    width: 234px;
-    height: 118px;
-    padding-top: 32px;
-    border-radius: 4px;
-    border: solid 1px #d2d2d2;
-    float: left;
-    text-align: center;
-    color: #666;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-
-
-    &.checked{
-      border-color: #05e2ea;
-      &::before,&::after{
-        position: absolute;
-        top: 0;
-        right: 0;
-        content: '';
-      }
-      &::after{
-        border: #05e2ea 12px solid;
-        border-color: #05e2ea #05e2ea  transparent transparent;
-      }
-      &::before{
-        width: 18px;
-        height: 20px;
-        z-index: 2;
-        content: "\E611";
-        font-family: element-icons!important;
-        speak: none;
-        font-variant: normal;
-        text-transform: none;
-        font-weight: bold;
-        line-height: 1;
-        vertical-align: baseline;
-        -webkit-font-smoothing: antialiased;
-        color: #fff;
-      }
+  .addCustomerPop{
+    left: auto;
+    top: 50px;
+    bottom: auto;
+    min-width: 530px;
+    max-width:  530px;
+    .popRight-content{
+      padding: 20px 0px 0;
+      box-sizing: border-box;
     }
 
-    .icon{
+  }
+  .senderName_lrl{
+    .el-autocomplete{
+      width: 440px;
+    }
+  }
+    .selectListOption_lrl{
+    clear:both;
+    span{
       display: inline-block;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #456bf7;
-      color: #fff;
-      line-height: 34px;
+      width: 50%;
     }
-
-    &.single{
-      float: right;
-    }
-
-    &.single .icon{
-      background-color: #15e2e9;
-    }
-
-    .svg-icon{
-      font-size: 25px;
-      vertical-align: middle;
-    }
-    strong{
-      font-size: 24px;
-      line-height: 34px;
-    }
-    p{
-      font-size: 13px;
+    .addr{
+      text-align: right;
+      color: #999;
+      font-size: 12px;
     }
   }
+   .pickUp-order,.pickUp-bottom{
+     padding-top: 10px;
+     border-top: 1px solid #333;
+     .el-form-item--mini.el-form-item{
+       margin-right: 0;
+     }
+     .order_toCityCode {
+       margin-right: 35px !important;
+     }
+     .order_remark {
+       .el-form-item__content{
+         width: 440px;
+       }
+     }
+   }
+  /*.pickUp-bottom{*/
+    /*padding-top: 10px;*/
+    /*border-top: 1px solid #333;*/
+  /*}*/
 
-  .idcard-pos,.idcard-ver{
-    width: 234px;
-    height: 136px;
-    float: left;
-    line-height: 1.2;
 
-    .upload-container{
-      height: 100%;
-    }
-  }
-  .idcard-ver{
-    float: right;
-  }
-
-  .el-select .el-input__inner{
-    padding-right: 15px;
-  }
-}
 </style>
 

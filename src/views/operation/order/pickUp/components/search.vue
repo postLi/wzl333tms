@@ -66,7 +66,7 @@ export default {
   },
   props: {
     btnsize: {
-      type: String,
+      type: [String,Object],
       default: 'mini'
     },
     orgid: {
@@ -79,7 +79,7 @@ export default {
   },
   computed: {
     title () {
-      return this.issender ? '发' : '收'
+      // return this.issender ? '发' : '收'
     }
   },
   data () {
@@ -129,20 +129,20 @@ export default {
   },
   methods: {
     getOrgid (id){
-      this.searchForm.orgid = id
+      // this.searchForm.orgid = id
     },
     onSubmit () {
       this.searchForm.createTime = this.searchCreatTime[0]
       this.searchForm.endTime = this.searchCreatTime[1]
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.createTime = ''
       this.searchForm.endTime = ''
-      this.pickupBatchNumber = ''
-      this.truckIdNumber = ''
-      this.driverName = ''
-      this.orderStatus = ''
+      this.searchForm.pickupBatchNumber = ''
+      this.searchForm.truckIdNumber = ''
+      this.searchForm.driverName = ''
+      this.searchForm.orderStatus = ''
     }
   }
 }

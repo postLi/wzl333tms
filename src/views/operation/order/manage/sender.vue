@@ -46,7 +46,7 @@
             label="订单号">
           </el-table-column>
           <el-table-column
-            prop='orderStatus'
+            prop='orerStatusName'
             width="110"
             sortable
             label="订单状态">
@@ -61,21 +61,21 @@
             label="关联运单号">
           </el-table-column>
           <el-table-column
-            prop="orderType"
+            prop="orderTypeName"
             sortable
             width="110"
             label="订单类型">
           </el-table-column>
           <el-table-column
             sortable
-            prop="orderEffective"
+            prop="orderEffectiveName"
             width="100"
             label="紧急度">
           </el-table-column>
           <el-table-column
             label="提货方式"
             width="110"
-            prop="orderPickupMethod"
+            prop="orderPickupMethodName"
             sortable
             >
           </el-table-column>
@@ -128,7 +128,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orderPayWay"
+            prop="orderPayWayName"
             label="付款方式"
             width="110"
             sortable
@@ -143,7 +143,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orderSenderId"
+            prop="senderName"
             label="发货人"
             width="90"
             sortable
@@ -157,7 +157,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orderReceiverId"
+            prop="orderReceiverName"
             label="收货人"
             width="90"
             sortable
@@ -199,14 +199,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orderFromOrgid"
+            prop="orderFromOrgName"
             label="开单网点"
             width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="orderToOrgid"
+            prop="orderToOrgName"
             label="目的网点"
             width="110"
             sortable

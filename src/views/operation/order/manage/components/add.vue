@@ -9,12 +9,6 @@
             <th>收货方</th>
           </tr>
           </thead>
-          <!--senderName:'',-->
-          <!--senderMobile:'',-->
-          <!--detailedAddress:'',-->
-          <!--receiverName:'',//收货人-->
-          <!--receiverMobile:''//receiverMobile
-          detailedAddress:''-->
           <tbody>
           <tr>
             <td>
@@ -509,7 +503,6 @@ export default {
       this.loading = true
       return getAllCustomer(this.searchSend).then(data => {
         return data.list || []
-
         let res = data.list[0]
         if(res){
           this.customSend.senderName = res.customerName
@@ -525,7 +518,6 @@ export default {
       this.loading = true
       return getAllCustomer(this.searchShou).then(data => {
         return data.list || []
-
         let res = data.list[0]
         if(res){
           // for(var i in this.customRece){

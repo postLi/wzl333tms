@@ -5,9 +5,9 @@
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增提货</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>提货完成</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>关联运单</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-edit" @click="doAction('delete')" plain>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>提货完成</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('delete')" plain>关联运单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>-->
@@ -265,7 +265,7 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
         return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
   },
@@ -319,7 +319,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchForms.vo = Object.assign(this.searchForms.vo, obj)
+      this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
     showImport () {
@@ -340,7 +340,7 @@ export default {
           return false
       }
 
-      console.log("this.selected:", this.selected)
+      // console.log("this.selected:", this.selected)
 
 
       switch (type) {
