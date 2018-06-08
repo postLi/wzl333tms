@@ -127,13 +127,8 @@ export function PostControlgoods(params) {
  */
 
 export function PutFh(id) {
-  return fetch.put('/api-order/controlgoods/v1/' + id).then(res => {
-                // console.log(res);
-    return res.data || { list: [], totalCount: 0 }
-  })
+  return fetch.put('/api-order/order/controlgoods/v1/' + id)
 }
-
-
 /**
  * 根据公司id自动生成编号/order/abnormal/v1/getabnormalNo
  */

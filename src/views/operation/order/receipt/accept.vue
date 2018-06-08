@@ -38,12 +38,12 @@
           <el-table-column
             fixed
             sortable
-            prop="shipFromOrgid"
+            prop="fromOrgName"
             width="120"
             label="开单网点">
           </el-table-column>f
           <el-table-column
-            prop="shipToOrgid"
+            prop="toOrgName"
             width="120"
             sortable
             label="目的网点">
@@ -63,19 +63,19 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="shipFromOrgid"
+            prop="shipFromCityName"
             width="120"
             label="出发城市">
           </el-table-column>
           <el-table-column
             label="到达城市"
             width="120"
-            prop="shipToCityCode"
+            prop="shipToCityName"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="recStatus"
+            prop="sendStatusName"
             label="寄出状态"
             width="120"
             sortable
@@ -86,10 +86,10 @@
             prop=""
             width="120"
             label="回收日期">
-            <template slot-scope="scope">{{ scope.row.acceptTypeId | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
           <el-table-column
-            prop="receiptId"
+            prop="backStatusName"
             label="回单状态"
             width="120"
             sortable
@@ -144,15 +144,15 @@
             sortable
             >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="cargoVolume"
             label="体积"
             width="120"
             sortable
             >
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
-            prop="acceptRemark"
+            prop="recRemark"
             label="回收备注"
             width="120"
             sortable
@@ -195,26 +195,26 @@
           </el-table-column>
           <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop="cargoName"
+            prop=""
             label="多笔付"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="cargoName"
-            label="carrierName"
+            prop="carrierName"
+            label="中转承运商"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="transferTime"
             label="中转日期"
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.transferTime | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.transferTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
@@ -225,26 +225,27 @@
           </el-table-column>
            <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop="cargoName"
-            label="到达省"
-            width="120"
-            sortable
-            >
+              prop="oddNumbers"
+              label="到达省"
+              width="120"
+              sortable
+              >
+              <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>      -->
           </el-table-column>
           <el-table-column
-            prop="shipFromCityCode"
+            prop="oddNumbers"
             label="到达市"
             width="120"
             sortable
             >
+            <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template> -->
           </el-table-column>
-          <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop="cargoName"
-            label="到达县区"
+            label="到达县"
             width="120"
             sortable
             >
+            <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template> -->
           </el-table-column>
           <el-table-column
             prop="sendMobile"
@@ -275,32 +276,39 @@
             >
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="sendTime"
             label="寄出日期"
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="acceptTime"
             label="接收日期"
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="giveoutTime"
             label="发放日期"
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
           <el-table-column
             prop="recRemark"
             label="回收备注"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="acceptRemark"
+            label="接收备注"
             width="120"
             sortable
             >
@@ -310,7 +318,6 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-        <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
 </template>
 <script>
@@ -360,7 +367,7 @@ export default {
             // this.loading = true
             return postReceipt(this.searchQuery).then(data => {
                 this.dataset = data.list
-                this.total = data.totalCount
+                this.total = data.total
                 // this.loading = false
                 console.log(data);
             })

@@ -111,8 +111,10 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
+      
       this.searchForm.shipId = ''
-      this.searchForm.orgId = this.orgid
+      this.searchForm.orgId = ''
+      // this.searchForm.orgId = this.orgid
       this.searchForm.abnormalStatus = ''
     }
   }

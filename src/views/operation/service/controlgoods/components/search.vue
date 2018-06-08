@@ -37,6 +37,7 @@
 
 <script>
 import { REGEX }  from '@/utils/validate'
+import { parseTime }  from '@/utils/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 
@@ -71,7 +72,7 @@ export default {
        if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
-        callback(new Error('请输入最多15位数字'))
+        callback(new Error('请输入最多20位数字'))
       } else {
         callback()
       }
@@ -118,10 +119,15 @@ export default {
     onSubmit () {
       // this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
       // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
-      this.searchForm.createTime = this.searchCreatTime ? this.searchCreatTime[0] : ""
-      this.searchForm.endTime = this.searchCreatTime ? this.searchCreatTime[1] : ""
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
       let data = Object.assign({},this.searchForm)
-      data.shipFromOrgid =[this.searchForm.shipFromOrgid]
+      if(this.searchForm.shipFromOrgid){
+        data.shipFromOrgid =[this.searchForm.shipFromOrgid]
+      }else{
+        delete  data.shipFromOrgid
+      }
+      
       this.$emit('change', data)
     },
     clearForm () {

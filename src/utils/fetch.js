@@ -27,8 +27,8 @@ service.interceptors.request.use(config => {
 
   } else {
     // 统一加上/api 前缀，方便后台转发接口
-    config.url = '/api' + config.url
-    // config.url = '/localapi' + config.url
+    // config.url = '/api' + config.url
+    config.url = '/localapi' + config.url
   }
 
   return config

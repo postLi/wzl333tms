@@ -13,43 +13,26 @@
           <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
         <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.orgid" />
+            <SelectTree v-model="searchForm.shipFromOrgid" />
         </el-form-item>
         <el-form-item label="寄出状态">
-            <SelectTree v-model="searchForm.statu"  placeholder="请选择" />
+            <SelectTree v-model="searchForm.sendStatus"  placeholder="请选择" />
         </el-form-item>
-        <el-form-item label="运单号">
-            <el-input v-model="searchForm.number" maxlength="20" auto-complete="off"></el-input>
+        <el-form-item label="运单号" prop="shipSn">
+            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
-            <el-input v-model="searchForm.startcity" maxlength="10" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipFromCityCode" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="到达城市">
-            <el-input v-model="searchForm.endcity" maxlength="10" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipToCityCode" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="发货人">
-            <el-input v-model="searchForm.sendpepole" maxlength="15" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipSenderId" maxlength="15" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="收货人">
-            <el-input v-model="searchForm.recivepepole" maxlength="15" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipReceiverId" maxlength="15" auto-complete="off"></el-input>
         </el-form-item>
-        <!-- <el-form-item :label="title+'货人'">
-            <el-input
-                :placeholder="title+'货单位或'+title+'货人'"
-                v-model="searchForm.name"
-                maxlength="15"
-                clearable>
-            </el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="手机号码">
-            <el-input
-                v-numberOnly
-                placeholder="请输入手机号码"
-                maxlength="11"
-                v-model="searchForm.mobile"
-                clearable>
-            </el-input>
-        </el-form-item> -->
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -85,27 +68,22 @@ export default {
   },
   data () {
     let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
+    const validateFormNumber = (rule, value, callback) => {
+      let reg = REGEX.ONLY_NUMBER
+       if (value === '' || value === null || !value || value === undefined) {
         callback()
+      } else if (!(reg.test(value))) {
+        callback(new Error('请输入最多20个字符，只能输字母和数字'))
       } else {
-        callback(new Error('请输入有效的手机号码'))
+        callback()
       }
-    }
-
-    const validateFormEmployeer = function (rule, value, callback) {
-      callback()
-    }
-
-    const validateFormNumber = function (rule, value, callback) {
-      _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
-      callback()
     }
 
     return {
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       searchForm: {
         orgid: '',
+        shipSn:'',
         // name: '',
         // mobile: '',
         time:'',
@@ -119,7 +97,7 @@ export default {
       rules: {
         mobile: [{
           //validator: validateFormMobile, trigger: 'blur'
-          validator: validateFormNumber, trigger: 'change'
+          shipSn: validateFormNumber, trigger: 'change'
         }]
       }
     }
@@ -142,6 +120,7 @@ export default {
     clearForm () {
     //   this.searchForm.name = ''
       this.searchForm.orgid = this.orgid
+      this.searchForm.shipSn = ''
     //   this.searchForm.mobile = ''
     }
   }
