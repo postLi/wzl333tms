@@ -24,7 +24,7 @@ export default {}
   width: 100%;
   margin-top:-10px;
   padding:5px 0 0 0;
-  background-color:#E9F3FA;
+  // background-color:#E9F3FA;
   height: calc(100% - 400px);
   .transferTable_header {
     margin: 10px;

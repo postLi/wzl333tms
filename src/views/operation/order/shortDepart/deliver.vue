@@ -173,7 +173,7 @@ export default {
   	getSearchParam (obj) {},
   	doAction (type) {
       // if (type !== 'colorpicker') {
-        if (this.selected.length < 1) {
+        if (this.selected.length < 1 && type !== 'add') {
           this.$message({
             message: '请选择一条数据~',
             type: 'warning'
@@ -182,7 +182,7 @@ export default {
       // }
       switch (type) {
         case 'add':
-          this.$router.push({path: '././addShortDepart'})
+          this.$router.push({path: '././load'})
           break
         case 'truck':
           break
