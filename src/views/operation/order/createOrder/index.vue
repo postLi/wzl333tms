@@ -21,3 +21,13 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.createOrder-page{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 24px;
+  z-index: 1;
+  
+}
+</style>

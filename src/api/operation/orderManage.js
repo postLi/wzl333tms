@@ -371,5 +371,105 @@ export default {
   // 导出数据
   getExportExcel() {
     // 1
+  },
+  // 获取运费设置
+  getFeeSetup() {
+    return new Promise(resolve => {
+      resolve([{
+        name: '货物名',
+        ischeck: true,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '件数',
+        ischeck: false,
+        isfixed: true,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '重量(kg)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)是ojbk啦',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }, {
+        name: '超你妹长的名字体积(方)',
+        ischeck: false,
+        isfixed: false,
+        key: 'huowuming',
+        order: 0
+      }])
+    })
+  },
+  // 修改运费设置
+  putChangeFeeSetup() {
+
   }
 }

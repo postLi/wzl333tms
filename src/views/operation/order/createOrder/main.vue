@@ -29,22 +29,26 @@
       </el-dropdown>
     </div>
     <FeeDialog :dialogVisible.sync="dialogVisible" />
+    <PersonDialog :dialogVisiblePersion.sync="dialogVisiblePersion" />
   </div>
 </template>
 <script>
 //http://unixpapa.com/js/key.html
 //http://wangchujiang.com/hotkeys/
 //键盘事件
-import hotkeys from 'hotkeys-js'
+import hotkeys from '@/utils/hotkeys'
 import FeeDialog from './components/feePop'
+import PersonDialog from './components/personSetup'
 
 export default {
   components: {
-    FeeDialog
+    FeeDialog,
+    PersonDialog
   },
   data () {
     return {
-      dialogVisible: false
+      dialogVisible: false,
+      dialogVisiblePersion: false
     }
   },
   mounted () {
@@ -106,6 +110,7 @@ export default {
           this.dialogVisible = true
           break;
         case 'personalSetup':
+          this.dialogVisiblePersion = true
           break;
         case 'orderSetup':
           this.$router.push('/company/systemSetup')          
@@ -122,7 +127,6 @@ export default {
   .createOrder-main{
     margin-left: 12px;
     margin-right: 12px;
-    margin-top: 24px;
     box-shadow: 0px 0px 10px 0px 
     rgba(0, 0, 0, 0.47);
     padding-top: 28px;
@@ -130,6 +134,10 @@ export default {
     padding-right: 26px;
     padding-bottom: 58px;
     font-size: 12px;
+
+    .el-dialog__wrapper,.v-modal{
+      position: absolute;
+    }
     
     .createOrder-title{
       font-size: 24px;
