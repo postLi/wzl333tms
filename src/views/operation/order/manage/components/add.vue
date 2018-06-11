@@ -183,13 +183,13 @@
 
         </table>
 
-
+        <div class="info_order">货物信息</div>
         <table class="manage-add-table-center">
-          <thead>
-          <tr>
-            <th>货物信息</th>
-          </tr>
-          </thead>
+          <!--<thead>-->
+          <!--<tr>-->
+            <!--<th>货物信息</th>-->
+          <!--</tr>-->
+          <!--</thead>-->
           <tbody>
           <tr>
             <td>
@@ -685,7 +685,7 @@ export default {
   }
 
   .el-form--inline .el-form-item{
-    margin-right: 0;
+    margin-right: -9px;
     width: 90%;
     display: flex;
   }
@@ -819,7 +819,7 @@ manage-add-table-top .el-form-item__error {
   top: 37%;
   left: 59%;
 }
-.info {
+.info ,.info_order{
   height: 36px;
   line-height: 36px;
   border: 1px solid #ccc;
@@ -830,6 +830,14 @@ manage-add-table-top .el-form-item__error {
   font-weight: 600;
 
 }
+.info_order{
+  margin-top:0;
+  border: 1px solid transparent;
+}
+.manage-add-table-foot .el-form-item--mini {
+  margin-left: 12px;
+}
+
   .manage-add div.el-form-item{
     width: 40%;
   }
