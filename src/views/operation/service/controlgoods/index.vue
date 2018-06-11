@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager">
+  <div class="controlgoods-manager">
     <div class="eltab clearfix">
         <span @click="component = 'NoGoods'" class="tab-label" :class="{'active-tab': component.indexOf('NoGoods')!==-1}">未放货</span>
         <span @click="component = 'HaveGoods'" class="tab-label" :class="{'active-tab': component.indexOf('HaveGoods')!==-1}">已放货</span>
@@ -46,7 +46,7 @@ export default {
     }
 </script>
 <style lang="scss" scoped>
-  .customer-manager{
+  .controlgoods-manager{
     height: 100%;
     padding-top: 12px;
     .eltab{

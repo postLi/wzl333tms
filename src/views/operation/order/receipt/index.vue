@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager">
+  <div class="receipt-manager">
     <div class="eltab clearfix">
         <span @click="component = 'Recycle'" class="tab-label" :class="{'active-tab': component.indexOf('Recycle')!==-1}">回单回收</span>
         <span @click="component = 'Send'" class="tab-label" :class="{'active-tab': component.indexOf('Send')!==-1}">回单寄出</span>
@@ -55,7 +55,7 @@ export default {
     }
 </script>
 <style lang="scss" scoped>
-  .customer-manager{
+  .receipt-manager{
     height: 100%;
     padding-top: 12px;
     .eltab{

@@ -1,6 +1,6 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading">
-    <template class="addDriverPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addAbnormalPop" v-loading="loading">
+    <template class="addAbnormalPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
@@ -473,7 +473,7 @@ export default {
     display: none;
   }
 }
-.addDriverPop{
+.addAbnormalPop{
   left: auto;
   top: 50px;
   bottom: auto;

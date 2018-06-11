@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="controlgoods_searchinfo clearfix">
         <el-form-item label="开单时间:">
           <div class="block">
             <el-date-picker
@@ -28,7 +28,7 @@
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
             <SelectCity @change="getToCity" />
         </el-form-item>
-        <el-form-item class="staff_searchinfo--btn">
+        <el-form-item class="controlgoods_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
         </el-form-item>
@@ -145,7 +145,7 @@ export default {
 
 <style lang="scss">
 .tab-content{
-    .staff_searchinfo{
+    .controlgoods_searchinfo{
         padding:15px 20px;
         border-bottom:1px dashed #999;
         .el-form-item{
@@ -154,18 +154,18 @@ export default {
         }
         
     }
-    .staff_searchinfo--btn{
+    .controlgoods_searchinfo--btn{
         float: right;
     }
 }
 @media screen and (max-width:1308px){
   .tab-content {
-      .staff_searchinfo{
+      .controlgoods_searchinfo{
           .el-form-item{
               margin-bottom: 10px;
           }
       }
-      .staff_searchinfo--btn{
+      .controlgoods_searchinfo--btn{
           float: none;
       }
   }

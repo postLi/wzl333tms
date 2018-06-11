@@ -34,7 +34,7 @@
       data() {
         return {
           checked1: true,
-          popTitle: '部门',
+          popTitle: '回单回收',
           loading:false,
      
         }
@@ -116,7 +116,6 @@
     bottom: auto;
     min-width: 486px;
     max-width:  486px;
-
   }
   .dep-maintain .addRelationPop-content{
     padding: 20px 20px 0;
@@ -125,8 +124,25 @@
   .dep-maintain .el-select .el-input__inner{
     padding-right: 15px;
   }
-
-
+  // .popRight-header{
+  //   height: 45px;
+  //   line-height: 45px;
+  // }
+  .popRight-header {
+    height: 30px;
+    line-height: 30px;
+    background-color: #e6e6e6;
+    color: #333;
+    text-align: left;
+    font-weight: 600;
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    border-radius: 6px 0px 0px 0px;
+    /* padding-left: 22px; */
+    text-align: center;
+}
 
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager">
+  <div class="abnormal-manager">
     <div class="eltab clearfix">
         <span @click="component = 'AbReg'" class="tab-label" :class="{'active-tab': component.indexOf('AbReg')!==-1}">异常登记</span>
         <span @click="component = 'AbDeal'" class="tab-label" :class="{'active-tab': component.indexOf('AbDeal')!==-1}">异常处理</span>
@@ -46,7 +46,7 @@ export default {
     }
 </script>
 <style lang="scss" scoped>
-  .customer-manager{
+  .abnormal-manager{
     height: 100%;
     padding-top: 12px;
     .eltab{
