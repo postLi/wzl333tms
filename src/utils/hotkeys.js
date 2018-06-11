@@ -270,7 +270,6 @@ function unbind(key, scope) {
 
     // 判断是否传入范围，没有就获取范围
     if (!scope) scope = getScope()
-
     // 如何key不在 _handlers 中返回不做处理
     if (!_handlers[key]) return
 
@@ -369,7 +368,6 @@ function hotkeys(key, option, method) {
   var scope = 'all' // scope默认为all，所有范围都有效
   var element = document // 快捷键事件绑定节点
   var i = 0
-
 
   // 对为设定范围的判断
   if (method === undefined && typeof option === 'function') {

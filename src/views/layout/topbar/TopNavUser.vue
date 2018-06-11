@@ -80,7 +80,7 @@ export default {
         top: ($topNavHeight - 20px) / 2;
         height: 20px;
         width: 1px;
-        background: #87cfff;
+        background: #eee;
         left: 0;
       }
 
@@ -119,7 +119,7 @@ export default {
       border-radius: 50%;
       width: 80px;
       height: 80px;
-      border: 2px solid rgb(0, 151, 189);
+      border: 2px solid #42485B;
     }
   }
   .popover-btns{

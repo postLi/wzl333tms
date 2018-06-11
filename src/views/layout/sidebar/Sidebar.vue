@@ -47,12 +47,12 @@ export default {
 .sidebar-container{
   min-height: 100%;
   padding-top: 40px;
-  background: #002039;
+  background: #42485B;
   border-radius: 0;
 
   .el-menu{
     border-right: 0;
-    background: #002039;
+    background: #333744;
   }
 
   .sidebar-userinfo{

@@ -110,8 +110,9 @@ export default {
 .sidebar-menu{
   color: rgba(255, 255, 255, 0.8);
   &>.menu-item,&>.sidebar-submenu{
-    border-left: 4px solid #002039;
+    border-left: 4px solid #42485b;
     padding-left: 20px;
+    background: #42485b;
   }
   .sidebar-submenu{
     display: none;
@@ -151,9 +152,18 @@ export default {
     font-size: $sidebarFontSize - 2px;
   }
 
-  &>.is-active, &>.isOpen{
-    border-left: 4px solid #104193;
-    background: #031523;
+  &>.is-active{
+    border-left: 4px solid #42485b;
+    background: #00c1de;
+
+    .is-active{
+      border: none;
+    }
+  }
+
+   &>.isOpen{
+    border-left: 4px solid #42485b;
+    background: #333744;
 
     .is-active{
       border: none;
@@ -162,7 +172,7 @@ export default {
 
   .is-active{
     &>a {
-      color: #3e9ff1;
+      color: #fff;
     }
   }
 
@@ -173,9 +183,18 @@ export default {
 
 
   .menu-item:focus, .menu-item:hover, .sidebar-nav-title:hover{
-    background: #031523;
-    border-left-color: #104193;
+    background: #00c1de;
+    border-left-color: #42485b;
   }
+
+  &>.isOpen:hover{
+    background: #333744;
+
+    .is-active{
+      border: none;
+    }
+  }
+
   .svg-icon {
     margin-right: 6px;
     font-size: 1.2em;
@@ -214,7 +233,7 @@ export default {
   }
   .menu-item:hover{
     .sidebar-submenu{
-      background: #031523;
+      background: #42485b;
       display: block;
     }
   }
@@ -228,7 +247,7 @@ export default {
     width: 150px;
   }
   .el-menu--popup{
-    background: #031523;
+    background: #42485b;
   }
   .el-submenu__icon-arrow{
     display: none;

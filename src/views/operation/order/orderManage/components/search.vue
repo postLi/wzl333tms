@@ -5,7 +5,7 @@
           <el-date-picker
             v-model="searchCreatTime"
             :default-value="defaultTime"
-            type="datetimerange"
+            type="daterange"
             align="right"
             value-format="yyyy-MM-dd hh:mm:ss"
             start-placeholder="开始日期"
@@ -131,7 +131,9 @@ export default {
         .el-form-item{
             margin-bottom: 0;
         }
-
+      .el-date-editor--daterange.el-input__inner{
+        width: 200px;
+      }
     }
     .searchinfo--order{
       .el-select{

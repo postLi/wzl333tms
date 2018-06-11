@@ -66,7 +66,7 @@ export default {
       border-bottom: none;
     }
     .el-menu{
-      background: #003863;
+      background: #373d41;
     }
   }
   #app .page-top-nav .el-menu-item{
@@ -76,7 +76,7 @@ export default {
     font-size: $topNavFontSize;
 
     &.is-active{
-      background: #002C4E;
+      background: #2a2f32;
       border-bottom: none;
     }
 
@@ -87,7 +87,7 @@ export default {
     }
 
     &:hover{
-      background: #002C4E;
+      background: #2a2f32;
     }
   }
   #app .page-top-nav .el-submenu>.el-menu{

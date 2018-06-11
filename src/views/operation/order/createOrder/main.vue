@@ -3,68 +3,51 @@
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">0100001</span></div>
-      <div class="create-num">开单日期： <span class="create-num-info">2018-1-29</span></div>
+      <div class="create-num">开单日期： <span class="create-num-info">
+         <el-date-picker
+            v-model="value1"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker>
+      </span></div>
     </div>
     <div class="order-main">
       <textarea name="" id="" cols="30" rows="10" @keyup.ctrl.65.stop.exact="doAction('cleanKey')">1111</textarea>
     </div>
     <!-- 底部按钮操作部分 -->
-    <div class="order-btns">
-      <el-button @click="doAction('cleanKey')" icon="el-icon-circle-close-outline" type="danger" plain>清空（{{keys.cleanKey}}）</el-button>
-      <el-button @click="doAction('printLibkey')" icon="el-icon-printer" type="primary" plain>打印标签（{{keys.printLibkey}}）</el-button>
-      <el-button @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
-      <el-button @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
-      <el-button @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
-      
-      <el-dropdown type="primary" trigger="click" class="createOrder-setup"  @command="handleCommand">
-        <span class="el-dropdown-link">
-          <el-button icon="el-icon-setting" size="mini" type="primary" plain></el-button>
-        </span>
-        
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="feeSetup">费用设置</el-dropdown-item>
-          <el-dropdown-item command="personalSetup">个人设置</el-dropdown-item>
-          <el-dropdown-item command="orderSetup">运单设置</el-dropdown-item>
-          <el-dropdown-item command="openInNewWindow">独立窗口</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+    <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
+    <!-- 弹窗 -->
     <FeeDialog :dialogVisible.sync="dialogVisible" />
-    <PersonDialog @success="getKeySetup" :dialogVisiblePersion.sync="dialogVisiblePersion" />
+    <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
   </div>
 </template>
 <script>
-//http://unixpapa.com/js/key.html
-//http://wangchujiang.com/hotkeys/
-//键盘事件
-import hotkeys from '@/utils/hotkeys'
 import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import OrderApi from  '@/api/operation/orderManage'
+import { getAllSetting } from '@/api/company/systemSetup'
+import FooterBtns from './components/btns'
 
 export default {
   components: {
     FeeDialog,
-    PersonDialog
+    PersonDialog,
+    FooterBtns
   },
   data () {
     return {
+      // 费用设置弹窗
       dialogVisible: false,
-      dialogVisiblePersion: false,
-      keys: {
-        "printLibkey": "",
-        "savePrintKey": "",
-        "saveShipKey": "",
-        "cleanKey": "",
-        "printShipKey": ""
-      }
+      // 个人设置弹窗
+      dialogVisiblePerson: false,
+      // 标记个人设置是否有改动
+      changeFlag: Math.random(),
+      form: {}
     }
   },
   mounted () {
-    this.getKeySetup()
   },
   beforeDestroy () {
-    this.unbindKey()
   },
   methods: {
     // 底部按钮操作
@@ -95,7 +78,7 @@ export default {
           this.dialogVisible = true
           break;
         case 'personalSetup':
-          this.dialogVisiblePersion = true
+          this.dialogVisiblePerson = true
           break;
         case 'orderSetup':
           this.$router.push('/company/systemSetup')          
@@ -105,35 +88,8 @@ export default {
           break;
       }
     },
-    // 获取快捷键设置
     getKeySetup () {
-      return OrderApi.getPersonalSetup(this.otherinfo.id, 'printKey').then(res => {
-        this.keys = res
-        if(this.inited){
-          // 清除上一次绑定的快捷键
-          this.unbindKey()
-        } else {
-          this.inited = true
-        }
-        
-        // 重新绑定新的快捷键
-        this.bindKey()
-      })
-    },
-    // 绑定快捷键
-    bindKey() {
-      for(const i in this.keys){
-        hotkeys(this.keys[i], (e)=>{
-          e.preventDefault()
-          this.doAction(i)
-        })
-      }
-    },
-    // 取消绑定快捷键
-    unbindKey(){
-      for(const i in this.keys){
-        hotkeys.unbind(this.keys[i])
-      }
+      this.changeFlag = Math.random()
     }
   }
 }

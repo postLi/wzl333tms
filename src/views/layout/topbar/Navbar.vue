@@ -35,7 +35,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/variate.scss";
     .navbar {
-        background: #003863;
+        background: #373d41;
         border-radius: 0;
 
         .errLog-container {

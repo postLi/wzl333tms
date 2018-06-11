@@ -155,6 +155,7 @@ export default {
       return OrderApi.putPersonalSetup(data).then(res => {
         this.$message("修改成功！")
         this.$emit('success')
+        this.close()
       })
     },
     // 显示按键对应键名
