@@ -5,25 +5,31 @@
       <el-collapse v-model="loadTruck">
         <el-collapse-item name="loadTruckOne">
           <template slot="title">
-            车辆信息 {{truckMessage}}
+            车辆信息&nbsp; <b>发车批次：{{truckMessage}} 合同编号：{{contractNo}}</b>
           </template>
           <div class="clearfix loadFrom">
             <el-form :model="formModel" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
+              <div class="loadFrom-type">
+                <el-checkbox-group v-model="formModel.types">
+                  <el-checkbox label="直送" name="types"></el-checkbox>
+                  <el-checkbox label="投车整保" name="types"></el-checkbox>
+                </el-checkbox-group>
+              </div>
               <!-- 基本信息 -->
               <el-row :gutter="4">
                 <el-col :span="6">
-                  <el-form-item label="到达网点">
+                  <el-form-item label="到达网点" prop="arriveOrgid">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini">
                     </SelectTree>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="分摊方式">
+                  <el-form-item label="分摊方式" prop="apportionTypeName">
                     <selectType v-model="formModel.apportionTypeName" type="apportion_type" clearable size="mini"></selectType>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="车牌号码">
+                  <el-form-item label="车牌号码" prop="truckIdNumber">
                     <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
@@ -33,7 +39,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="司机名称">
+                  <el-form-item label="司机名称" prop="dirverName">
                     <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
@@ -44,7 +50,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="司机电话">
+                  <el-form-item label="司机电话" prop="dirverMobile">
                     <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话">
                       <i slot="suffix" class="el-input__icon el-icon-plus" @click="doAction('addDriver')"></i>
                     </el-input>
@@ -57,7 +63,7 @@
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="可载体积">
-                    <el-input size="mini" v-model="formModel.truckVolume" placeholder="可载体积" clearable></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -80,7 +86,7 @@
               </el-row>
             </el-form>
             <!-- 费用参数 -->
-            <el-form label-width="0px" :model="formFee" :rules="formFeeRules">
+            <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee">
               <ul class="feeList">
                 <li>
                   <p>现付运费</p>
@@ -155,10 +161,13 @@
       </el-collapse>
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
+        <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button>
         <el-button size="mini" icon="el-icon-goods" plain type="primary" @click="doAction('precent')">配载率</el-button>
         <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
         <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')">完成并发车</el-button>
       </div>
+      <!-- 配载率 -->
+      <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
       <!-- 穿梭框 -->
       <dataTable @loadTable="getLoadTable"></dataTable>
       <!-- 添加车辆信息 -->
@@ -179,18 +188,9 @@ import dataTable from './components/dataTable'
 import SelectTree from '@/components/selectTree/index'
 import addTruckInfo from './components/addTruckInfo'
 import addDriverInfo from './components/addDriverInfo'
+import loadChart from './components/loadChart'
 export default {
   data() {
-    const validatetruckIdNumber = function(rule, value, callback) {}
-    const validateFormMobile = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('不能为空'))
-      } else if (REGEX.MOBILE.test(value)) {
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
     const validateInt = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('不能为空'))
@@ -209,25 +209,51 @@ export default {
         callback(new Error('请输入最多两位小数'))
       }
     }
+    const validateFormMobile = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('不能为空'))
+      } else if (REGEX.MOBILE.test(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入有效的手机号码'))
+      }
+    }
+    const validateStringEight = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('不能为空'))
+      } else if (value.length > 8) {
+        callback(new Error('不能超过8个字符'))
+      } else {
+        callback()
+      }
+    }
+    const validateStringTen = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('不能为空'))
+      } else if (value.length > 10) {
+        callback(new Error('不能超过10个字符'))
+      } else {
+        callback()
+      }
+    }
     return {
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
+      contractNo: '',
       formModel: {
-        'orgid': '',
-        tmsOrderLoadFee: {},
-        tmsOrderLoad: {
-          arriveOrgid: ''
-        }
+        'orgid': ''
       },
       formFee: {},
       loadTruck: 'loadTruckOne',
+      showRightTablePercent: false,
       loading: false,
       selectedRight: [],
       selectedLeft: [],
       leftTable: [],
       rightTable: [],
       loadTableInfo: [],
+      loadInfoPercent: [],
       mini: 'mini',
       loadInfo: {
         tmsOrderLoad: {},
@@ -249,8 +275,15 @@ export default {
       cacheTruckList: {},
       Drivers: [],
       Trucks: [],
+      submitvalidate: false,
       inited: false,
-      formModelRules: {},
+      formModelRules: {
+        arriveOrgid: [{ required: true, trigger: 'blur', message: '非直送不能为空' }],
+        apportionTypeName: [{ required: true, trigger: 'blur', message: '必选' }],
+        truckIdNumber: [{ required: true, trigger: 'blur', validator: validateStringEight }],
+        dirverName: [{ required: true, trigger: 'blur', validator: validateStringTen }],
+        dirverMobile: [{ required: true, trigger: 'blur', validator: validateFormMobile }]
+      },
       formFeeRules: {
         nowpayCarriage: [{ required: true, trigger: 'blur', validator: validateInt }],
         nowpayOilCard: [{ required: true, trigger: 'blur', validator: validateInt }],
@@ -271,17 +304,21 @@ export default {
       'otherinfo'
     ]),
     arriveOrgid(newVal) {
-      this.formModel.tmsOrderLoad.arriveOrgid = newVal
-      // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      this.formModel.arriveOrgid = newVal
     },
-    orgid() {}
+    orgid() {},
+    loadTruckInfo () {
+      let data = Object.assign({}, this.formModel)
+      return data
+    }
   },
   components: {
     selectType,
     dataTable,
     SelectTree,
     addTruckInfo,
-    addDriverInfo
+    addDriverInfo,
+    loadChart
   },
   mounted() {
     this.getLoadNo()
@@ -295,16 +332,10 @@ export default {
     }
   },
   methods: {
-    onSubmit(formName) {
-      this.$refs[formName].validator(valid => {
-        if (valid) {
-          console.log('load form truck')
-        }
-      })
-    },
     getLoadNo() {
       return getBatchNo(this.otherinfo.orgid).then(data => {
-        this.truckMessage = data.text
+        this.truckMessage = data.text // 批次号
+        this.contractNo = data.text // 合同编号？？？？？
       })
     },
     getSelectAddLoadRepertoryList() {
@@ -317,7 +348,12 @@ export default {
     },
     doAction(type) {
       switch (type) {
+        case 'reset':
+          this.resetFieldsForm('formModel')
+          this.resetFieldsForm('formFee')
+          break
         case 'precent': // 设置配载率
+          this.showPercent()
           break
         case 'finish': // 完成配载
           this.finishLoadInfo()
@@ -334,24 +370,65 @@ export default {
           this.addOrg()
       }
     },
-    finishLoadInfo() {
-      this.setData()
-      console.log('postInfo', this.loadInfo)
-      this.$nextTick(() => {
-        this.$message({ type: 'warning', message: '功能未完成，敬请期待~' })
-        // postLoadInfo(this.loadInfo).then(data => {
-        //   this.$message({ type: 'success', message: '操作成功' })
-        // })
+    showPercent() {
+      this.showRightTablePercent = true
+    },
+    formValidate() { // 判断表单验证
+      this.$refs['formModel'].validate((valid) => {
+        if (valid) {
+          this.$refs['formFee'].validate((validFee) => {
+            if (validFee) {
+              if (this.loadTableInfo.length < 1) {
+                this.submitvalidate = false
+                console.log(this.loadTableInfo.length, this.submitvalidate, 'length')
+                this.$message({ type: 'warning', message: '右边数据表格不能为空' })
+              } else {
+                this.submitvalidate = true
+              }
+            } else {
+              this.$message({ type: 'warning', message: '请填写完整费用表单' })
+              this.submitvalidate = false
+            }
+          })
+        } else {
+          this.$message({ type: 'warning', message: '请填写完整表单' })
+          this.submitvalidate = false
+        }
       })
     },
-    getLoadTable(obj) {
-      this.loadTableInfo = Object.assign(this.loadTableInfo, obj)
+    finishLoadInfo() {
+      this.formValidate() // 表单验证
+      if (this.submitvalidate) {
+        this.setData() // 处理数据
+        this.$nextTick(() => {
+          postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
+            this.$message({ type: 'success', message: '操作成功' })
+            this.resetFieldsForm('formModel')
+            this.resetFieldsForm('formFee')
+          })
+        })
+      }
+    },
+    getLoadTable(obj) { // 获取穿梭框表格数据列表
+      this.loadTableInfo = Object.assign([], obj)
+      this.loadInfoPercent = Object.assign([], obj)
+    },
+    resetFieldsForm(formName) { // 5秒后resetFields表单验证
+      clearInterval(timer)
+      let count = 5
+      let timer = setInterval(() => {
+        count--
+        if (count < 1) {
+          this.$refs[formName].resetFields()
+          clearInterval(timer)
+        }
+      }, 1000)
     },
     setData() { // 处理数据格式。。。
-      this.$set(this.formModel.tmsOrderLoad, 'batchNo', this.truckMessage)
-      this.$set(this.formModel.tmsOrderLoad, 'orgid', this.otherinfo.orgid)
-      this.$set(this.formModel.tmsOrderLoad, 'loadTypeId', 1) // 配载类型： 1-干线
-      this.$set(this.formModel.tmsOrderLoad, 'batchTypeId', 1) // 批次状态： 1-干线
+      this.$set(this.formModel, 'batchNo', this.truckMessage)
+      this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
+      this.$set(this.formModel, 'loadTypeId', 1) // 配载类型： 1-干线
+      this.$set(this.formModel, 'batchTypeId', 1) // 批次状态： 1-干线
       this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
       this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
@@ -417,21 +494,21 @@ export default {
       }
     },
     handleSelect(item) {
-      this.formModel.tmsOrderLoad.dirverMobile = item.driverMobile
-      this.formModel.tmsOrderLoad.dirverName = item.driverName
+      this.formModel.dirverMobile = item.driverMobile
+      this.formModel.dirverName = item.driverName
     },
     handleSelectTruck(item) {
-      this.formModel.tmsOrderLoad.truckIdNumber = item.truckIdNumber
+      this.formModel.truckIdNumber = item.truckIdNumber
     },
     querySearch(queryString, cb) {
-      var driverList = this.Drivers
-      var results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
+      let driverList = this.Drivers
+      let results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
       // 调用 callback 返回司机列表的数据
       cb(results)
     },
     querySearchTruck(queryString, cb) {
-      var truckList = this.Trucks
-      var results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
+      let truckList = this.Trucks
+      let results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
       // 调用 callback 返回车辆列表的数据
       cb(results)
     },
@@ -457,7 +534,6 @@ export default {
     padding: 10px 10px 0 10px;
     height: 100%;
     position: relative;
-
     .load_btn_boxs {
       position: absolute;
       float: right;
@@ -468,14 +544,20 @@ export default {
     .loadFrom {
       padding: 0 20px 20px 0;
       .el-form-item {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
+      }
+      .loadFrom-type {
+        position: absolute;
+        z-index: 33;
+        right: 40px;
+        top: 20px;
       }
     }
     .el-collapse {
       border: 1px solid #E0E0E0;
     }
     .el-collapse-item__header {
-      background: #E9F3FA;
+      background-color: #E9F3FA;
       padding: 2px 0 0 60px;
       height: 42px;
       line-height: 42px;
@@ -493,7 +575,7 @@ export default {
     .el-collapse-item__content {
       padding-bottom: 0;
       .el-form-item__content>.el-input {
-        width: 150px;
+        width: 99%;
       }
     }
     .el-form-item--mini.el-form-item {
@@ -531,7 +613,7 @@ ul.feeList {
   display: flex;
   flex-direction: row;
   li {
-    border: 1px solid #eeeeee;
+    border-right: 1px solid #eeeeee;
     width: 10%;
     p {
       text-align: center;

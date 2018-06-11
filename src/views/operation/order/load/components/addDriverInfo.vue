@@ -251,7 +251,7 @@ export default {
       if (typeof done === 'function') {
         done()
       }
-    },
+    }
   }
 }
 

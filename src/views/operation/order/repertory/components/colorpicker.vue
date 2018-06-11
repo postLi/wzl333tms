@@ -115,6 +115,7 @@ export default {
     getColor() {
       return getRepertoryColor(this.otherinfo.orgid).then(data => {
         if (data) {
+          console.log(data)
           let list = data.data.repertorySetting
           this.$nextTick(() => {
             this.repertorySetting = Object.assign(this.repertorySetting, list)
@@ -130,9 +131,12 @@ export default {
           this.loading = true
           let colorData = {}
           this.$set(colorData, 'repertorySetting', this.repertorySetting)
+          console.log('colorData1', JSON.stringify(colorData))
           putRepertoryColor(colorData, this.otherinfo.orgid, this.colorSetting.id).then(data => {
             this.$message({type: 'success', message: '修改成功'})
             this.loading = false
+            console.log('colorData2', JSON.stringify(colorData))
+            this.getColor()
             this.$emit('success', colorData.repertorySetting)
           })
           .catch(error => {

@@ -58,10 +58,19 @@
         <el-table-column prop="shipSn" label="运单号" width="120">
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
+          <template slot-scope="scope">
+            <el-input type="number" :value="scope.row.loadAmount" @change="changLoadAmount" required></el-input>
+          </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
+           <template slot-scope="scope">
+            <el-input type="number" :value="scope.row.loadWeight" @change="changLoadWeight"></el-input>
+          </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
+          <template slot-scope="scope">
+            <el-input type="number" :value="scope.row.loadVolume" @change="changLoadVolume"></el-input>
+          </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
@@ -203,10 +212,10 @@ export default {
     clickDetailsLeft(row) {
       this.$refs.multipleTableLeft.toggleRowSelection(row)
     },
-    getSelectionRight(list) {
+    getSelectionRight(list) { // 获取右边表格打勾的数据列表
       this.selectedRight = list
     },
-    getSelectionLeft(list) {
+    getSelectionLeft(list) { // 获取左边表格打勾的数据列表
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
@@ -222,11 +231,36 @@ export default {
           break
       }
     },
+    changLoadAmount (newVal) { // 修改配载件数
+      if (this.rightTable && newVal) {
+        this.rightTable.forEach((e) => {
+          e.loadAmount = Number(newVal)
+        })
+      }
+    },
+    changLoadWeight (newVal) { // 修改配载重量
+      if (this.rightTable && newVal) {
+        this.rightTable.forEach((e) => {
+          e.loadWeight = Number(newVal)
+        })
+      }
+    },
+    changLoadVolume (newVal) { // 修改配载体积
+      if (this.rightTable && newVal) {
+        this.rightTable.forEach((e) => {
+          e.loadVolume = Number(newVal)
+        })
+      }
+    },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
+           // 默认设置配载重量,配载体积,配载数量
+          e.loadAmount = e.repertoryAmount
+          e.loadWeight = e.repertoryWeight
+          e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) {
