@@ -14,7 +14,7 @@
               :fetch-suggestions="querySearchSender('customerName')"
               value-key="customerName"
               :maxlength="25"
-              placeholder="请选择内容"
+              placeholder="请选择"
               @select="handleSelectSender"
             >
               <template slot-scope="{ item }">
@@ -32,7 +32,7 @@
               :fetch-suggestions="querySearchSender('customerMobile')"
               value-key="customerMobile"
               :maxlength="25"
-              placeholder="请选择内容"
+              placeholder="请选择"
               @select="handleSelectSender"
             >
               <template slot-scope="{ item }">
@@ -50,7 +50,7 @@
               :fetch-suggestions="querySearchSender('detailedAddress')"
               value-key="detailedAddress"
               :maxlength="25"
-              placeholder="请选择内容"
+              placeholder="请选择"
               @select="handleSelectSender"
             >
               <template slot-scope="{ item }">
@@ -79,7 +79,9 @@
             <el-input maxlength="8" v-model="form.tmsOrderPickup.carriage" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="付款方式" prop="customerUnit">
-            <el-input v-model="form.tmsOrderPickup.payMethod" auto-complete="off" ></el-input>
+            <!--<el-input v-model="form.tmsOrderPickup.payMethod" auto-complete="off" ></el-input>-->
+            <!--默认为现付-->
+            <SelectType v-model="form.tmsOrderPickup.payMethod" type="order_pay_way" placeholder="请选择" class="pickup-way" />
           </el-form-item>
           <el-form-item label="到达城市" prop="" class="order_toCityCode">
             <el-input v-model="form.tmsOrderPickup.toCityCode" auto-complete="off" ></el-input>
@@ -90,7 +92,7 @@
         </div>
         <div class="pickUp-bottom">
           <el-form-item label="车费" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.truckFee" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="代收费用" prop="customerUnit">
             <el-input v-model="form.tmsDriver.collectionFee" maxlength="8" auto-complete="off" ></el-input>
@@ -102,24 +104,44 @@
             <el-input v-model="form.tmsDriver.driverName" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆类型" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>
+            <!--<el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>-->
+            <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" />
           </el-form-item>
           <el-form-item label="司机手机" prop="customerUnit">
-            <el-input v-model="form.tmsDriver.dirverMobile" maxlength="8" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsDriver.dirverMobile" maxlength="11" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆单位" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" maxlength="8" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsTruck.truckUnit" maxlength="18" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="提货状态" prop="customerUnit">
-            <el-input v-model="form.tmsDriver.pickupStatus" maxlength="8" auto-complete="off" ></el-input>
+            <!--<el-input v-model="form.tmsDriver.pickupStatus" maxlength="8" auto-complete="off" ></el-input>-->
+            <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" />
           </el-form-item>
-          <el-form-item label="出车时间" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.arriveTime" maxlength="8" auto-complete="off" class="customer-unit"></el-input>
+          <el-form-item label="出车时间" prop="customerUnit" class="customerunit">
+            <!--<el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" class="customer-unit"></el-input>-->
+              <el-date-picker
+                v-model="newDate"
+                type="datetime"
+                placeholder=""
+                align="right"
+                start-placeholder="开始日期"
+              >
+                <!--:picker-options="pickerOptions1"-->
+              </el-date-picker>
           </el-form-item>
 
 
           <el-form-item label="要求到达时间" prop="customerUnit" class="arrive-time">
-            <el-input v-model="form.tmsDriver.arriveTime" maxlength="8" auto-complete="off" ></el-input>
+            <el-date-picker
+              v-model="endDate"
+              type="datetime"
+              placeholder=""
+              align="right"
+              end-placeholder="结束日期"
+            >
+              <!--:picker-options="pickerOptions1"-->
+            </el-date-picker>
+            <!--<el-input v-model="form.tmsDriver.arriveTime" maxlength="8" auto-complete="off" ></el-input>-->
           </el-form-item>
 
         </div>
@@ -127,6 +149,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button @click="submit">保存并打印</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -134,19 +157,20 @@
 </template>
 <script>
 import { REGEX }  from '@/utils/validate'
-import { postCustomer, putCustomer } from '@/api/company/customerManage'
 import { getAllCustomer } from '@/api/company/customerManage'
-import { fetchGetPickUp  } from '@/api/operation/pickup'
+import { fetchGetPickUp , putUpdatePickup ,postAddPickup} from '@/api/operation/pickup'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
+import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
     Upload,
-    SelectTree
+    SelectTree,
+    SelectType
   },
   props: {
     popVisible: {
@@ -227,16 +251,13 @@ export default {
           collectionFee:'',// 代收费用
           driverName:'',//司机姓名
           dirverMobile:'',//司机手机 /
-          pickupStatus:'',//提货状态
-          arriveTime:'',//
+          arriveTime:''//
           //  发送短信给司机
         },
         tmsTruck:{
-          truckFee:'',//车费
           truckIdNumber:'', //车牌号 /
           truckType:'',//车辆类型
-          truckUnit:'',//车辆单位
-          outTime:'',//出车时间
+          truckUnit:''//车辆单位
         },
         tmsOrderPickup:{
           pickupBatchNumber:'',//提货批次
@@ -247,9 +268,14 @@ export default {
           carriage:'',// 运费
           payMethod:'',// 付款方式
           toCityCode:'',// 到达城市
-          remark:''
+          remark:'',
+          truckFee:'',//车费
+          outTime:'',//出车时间
+          pickupStatus:''//提货状态
         }
       },
+      newDate: +new Date(),
+      endDate: +new Date(),
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
@@ -260,7 +286,7 @@ export default {
         orgid: [
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
-        customerMobile: [
+        dirverMobile: [
           { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
          // { validator: validateFormNumber, trigger: 'change'}
         ],
@@ -305,6 +331,7 @@ export default {
     Promise.all([fetchGetPickUp()]).then(resArr => {
       this.loading = false
       this.form.tmsOrderPickup.pickupBatchNumber = resArr[0].data
+      console.log(this.form.tmsOrderPickup.pickupBatchNumber);
     })
     this.fetchAllCustomerFa(this.orgid).then(res => {
       this.loading = false
@@ -322,26 +349,13 @@ export default {
       // this.form.orgid = newVal
     },
     info () {
-      // if(this.isModify){
-      //   // this.popTitle = '修改'+(this.issender ? '发' : '收')+'货人'
-      //   let data = Object.assign({},this.info)
-      //   for(let i in this.form){
-      //     this.form[i] = data[i]
-      //   }
-      //   this.form.customerId = data.customerId
-      //   console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
-      //   this.fixPhone = this.form.fixPhone
-      // } else {
-      //   this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
-      //   for(let i in this.form){
-      //     this.form[i] = ''
-      //   }
-      //   delete this.form.customerId
-      //   this.form.companyType = 2 // 重置为选中公司
-      //   this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
-      //   this.form.orgid = this.orgid
-      //   this.fixPhone = ''
-      // }
+      if (this.isModify) {
+        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
+        this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
+        this.form.tmsDriver = this.setObject(this.form.tmsDriver,this.info)
+      } else {
+        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+      }
     }
   },
   methods: {
@@ -385,20 +399,27 @@ export default {
       this.loading = false
     },
     getOrgid (id) {
-      this.form.orgid = id
+      // this.form.orgid = id
+    },
+    submit(){
+      console.log('保存并打印')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({},this.form)
-          data.fixPhone = this.fixPhone
+          this.form.tmsCustomer = this.customSend
+          this.form.tmsOrderPickup.outTime = this.newDate
+          this.form.tmsDriver.arriveTime = this.endDate
+          let data = this.form
+          // let data = Object.assign({},this.form)
+          // data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
-            promiseObj = putCustomer(data)
+            // promiseObj = putUpdatePickup(data)
           } else {
-            promiseObj = postCustomer(data)
+            promiseObj = postAddPickup(data)
           }
 
           promiseObj.then(res => {
@@ -494,10 +515,13 @@ export default {
     width: 96px !important;
   }
   .pickUp-top .el-input.is-disabled .el-input__inner{
-    color: transparent;
     background-color: transparent;
   }
-
-
+.pickup-way .el-input__suffix{
+  right: 20px;
+}
+.customerunit .el-date-editor.el-input{
+  width: 180px;
+}
 </style>
 

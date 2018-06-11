@@ -132,12 +132,12 @@ export default {
       // this.searchForm.orgid = id
     },
     onSubmit () {
-      this.searchForm.createTime = this.searchCreatTime[0]
+      this.searchForm.startTime = this.searchCreatTime[0]
       this.searchForm.endTime = this.searchCreatTime[1]
       this.$emit('change', this.searchForm)
     },
     clearForm() {
-      this.searchForm.createTime = ''
+      this.searchForm.startTime = ''
       this.searchForm.endTime = ''
       this.searchForm.pickupBatchNumber = ''
       this.searchForm.truckIdNumber = ''

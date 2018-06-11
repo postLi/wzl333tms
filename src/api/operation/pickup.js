@@ -19,6 +19,29 @@ export function fetchPostlist(params) {
 export function fetchGetPickUp() {
   return fetch.get('/api-order/order/pickup/v1/getPickupBatch')
 }
+
+/**
+ * /order/pickup/v1/
+ 新增提货单
+ * @param params
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export function postAddPickup(params) {
+  return fetch.post('/api-order/order/pickup/v1/', params).then(res => {
+    return res.data || {}
+  })
+}
+/**
+ * /order/pickup/v1/update
+ 修改提货单
+ * @param params
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export function putUpdatePickup(params) {
+  return fetch.put('/api-order/order/pickup/v1/update/', params).then(res => {
+    return res.data || {}
+  })
+}
 // /**
 //  *
 //  */

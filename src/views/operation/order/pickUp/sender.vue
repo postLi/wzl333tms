@@ -5,8 +5,8 @@
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增提货</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-edit" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>提货完成</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('finishPick')" plain>提货完成</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('delete')" plain>关联运单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印</el-button>
@@ -294,7 +294,7 @@ export default {
         "vo": {
           "orgid": 1,
           orderStatus: '',
-          createTime: '',
+          startTime: '',
           pickupBatchNumber: '',
           truckIdNumber: '',
           driverName: ''
@@ -339,10 +339,6 @@ export default {
           })
           return false
       }
-
-      // console.log("this.selected:", this.selected)
-
-
       switch (type) {
           // 添加客户
           case 'add':
@@ -362,6 +358,41 @@ export default {
               this.selectInfo = this.selected[0]
               this.openAddCustomer()
               break;
+          //    finishPick
+        // 删除客户
+        case 'finishPick':
+          let _deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
+          //=>todo 删除多个
+          let _ids = this.selected.map(item => {
+            return item.customerId
+          })
+          _ids = _ids.join(',')
+
+          this.$prompt('确定要删除 ' + _deleteItem + ' 客户吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteSomeCustomerInfo(_ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err=>{
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
+          break;
           // 删除客户
           case 'delete':
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName

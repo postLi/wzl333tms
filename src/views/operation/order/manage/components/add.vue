@@ -307,7 +307,7 @@
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="order_pay_way" placeholder="请选择付款方式" />
+                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="order_pay_way" placeholder="请选择" />
               </el-form-item>
             </td>
 
@@ -515,6 +515,7 @@ export default {
         this.form.tmsOrderCargoList.cargoVolume = this.info.cargoVolume
         this.form.tmsOrderCargoList.cargoPack = this.info.cargoPack
         this.form.tmsOrderCargoList.description = this.info.description
+        // this.form.tmsOrderCargoList = this.setObject(this.form.tmsOrderCargoList,this.info)
         // 订单信息
         this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre, this.info)
       } else {
