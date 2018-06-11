@@ -36,11 +36,11 @@
                 <el-autocomplete
                   class="inline-input"
                   v-model="customRece.receiverName"
-                  :fetch-suggestions="querySearchSender('receiverName')"
-                  value-key="receiverName"
+                  :fetch-suggestions="querySearchReceiver('customerName')"
+                  value-key="customerName"
                   :maxlength="25"
                   placeholder="请选择内容"
-                  @select="handleSelectSender"
+                  @select="handleSelectReceiver"
                 >
                   <template slot-scope="{ item }">
                     <div class="selectListOption_lrl">
@@ -78,11 +78,11 @@
                 <el-autocomplete
                   class="inline-input"
                   v-model="customRece.receiverMobile"
-                  value-key="receiverMobile"
-                  :fetch-suggestions="querySearchSender('receiverMobile')"
+                  value-key="customerMobile"
+                  :fetch-suggestions="querySearchReceiver('customerMobile')"
                   :maxlength="11"
                   placeholder="请选择内容"
-                  @select="handleSelectSender"
+                  @select="handleSelectReceiver"
                 >
                   <template slot-scope="{ item }">
                     <div class="selectListOption_lrl">
@@ -121,10 +121,10 @@
                   class="inline-input"
                   value-key="detailedAddress"
                   v-model="customRece.detailedAddress"
-                  :fetch-suggestions="querySearchSender('detailedAddress')"
+                  :fetch-suggestions="querySearchReceiver('detailedAddress')"
                   :maxlength="25"
                   placeholder="请选择内容"
-                  @select="handleSelectSender"
+                  @select="handleSelectReceiver"
                 >
                   <template slot-scope="{ item }">
                     <div class="selectListOption_lrl">
@@ -227,7 +227,6 @@
             </td>
             <td>
               <el-form-item label="开单网点">
-                <!--<el-input v-model="form.tmsOrderPre.orderFromOrgid" maxlength="25" auto-complete="off" clearable></el-input>-->
                 <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" />
               </el-form-item>
             </td>
@@ -438,7 +437,11 @@ export default {
     }
     this.fetchAllCustomerFa(this.orgid).then(res => {
       this.loading = false
+      // return res || []
       this.senderList = res
+      // if(res == null){
+      //
+      // }
     })
     this.fetchAllCustomerShou(this.orgid).then(res => {
       this.loading = false
@@ -456,11 +459,10 @@ export default {
     orgid (newVal) {
     },
     info () {
-      console.log(this.info);
       if(this.isModify){
         this.popTitle = '修改'
-        this.customSend = this.setObject(this.customSend, this.info)
-        this.customRece = this.setObject(this.customRece, this.info)
+        // this.customSend = this.setObject(this.customSend, this.info)
+        // this.customRece = this.setObject(this.customRece, this.info)
 
         this.form.tmsOrderCargoList.cargoName = this.info.cargoName
         this.form.tmsOrderCargoList.cargoAmount = this.info.cargoAmount
@@ -474,7 +476,9 @@ export default {
         this.popTitle = '新增'
         this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
         this.form.tmsOrderCargoList = [Object.assign({}, this.carObj)]
+        this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
       }
+      // this.form.tmsOrderPre.orderPickupMethod = this.otherinfo.orgid
     }
   },
   methods: {
@@ -493,12 +497,28 @@ export default {
       this.customSend.detailedAddress = res.detailedAddress
       this.customSend.customerType = res.customerType
     },
+    querySearchReceiver (name) {
+      let _this = this
+      return function(query, cb){
+        let data = _this.receiverList.filter(el => {
+          return el[name].indexOf(query) !== -1
+        })
+        cb(data)
+      }
+    },
+    handleSelectReceiver(res){
+      this.customRece.senderName = res.customerName
+      this.customRece.senderMobile = res.customerMobile
+      this.customRece.detailedAddress = res.detailedAddress
+      this.customRece.customerType = res.customerType
+    },
     setObject(obj1, obj2) {
       for (var i in obj1) {
         obj1[i] = obj2 ? obj2[i] : ''
       }
       return obj1
     },
+    //
     fetchAllCustomerFa () {
       this.loading = true
       return getAllCustomer(this.searchSend).then(data => {

@@ -93,31 +93,33 @@
             <el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="代收费用" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.collectionFee" maxlength="8" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsDriver.collectionFee" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="customerUnit">
             <el-input v-model="form.tmsTruck.truckIdNumber" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
-          <el-form-item label="提货状态" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.pickupStatus" maxlength="8" auto-complete="off" ></el-input>
+          <el-form-item label="司机姓名" prop="customerUnit">
+            <el-input v-model="form.tmsDriver.driverName" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆类型" prop="customerUnit">
             <el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
-          <el-form-item label="出车时间" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.arriveTime" maxlength="8" auto-complete="off" ></el-input>
+          <el-form-item label="司机手机" prop="customerUnit">
+            <el-input v-model="form.tmsDriver.dirverMobile" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆单位" prop="customerUnit">
             <el-input v-model="form.tmsTruck.truckUnit" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
-          <el-form-item label="出车时间" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" ></el-input>
+          <el-form-item label="提货状态" prop="customerUnit">
+            <el-input v-model="form.tmsDriver.pickupStatus" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="出车时间" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsTruck.arriveTime" maxlength="8" auto-complete="off" class="arrive-time"></el-input>
           </el-form-item>
-          <el-form-item label="出车时间" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" ></el-input>
+
+
+          <el-form-item label="要求到达时间" prop="customerUnit">
+            <el-input v-model="form.tmsDriver.arriveTime" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
 
         </div>
@@ -493,9 +495,9 @@ export default {
   }
    .pickUp-order,.pickUp-bottom{
      padding-top: 10px;
-     border-top: 1px solid #333;
+     border-top: 1px solid #e4e7ed;
      .el-form-item--mini.el-form-item{
-       margin-right: 0;
+       margin-right: -9px;
      }
      .order_toCityCode {
        margin-right: 35px !important;
@@ -504,6 +506,14 @@ export default {
        .el-form-item__content{
          width: 440px;
        }
+     }
+     .el-form-item--mini{
+       .el-input__inner{
+         width: 90%;
+       }
+     }
+     .arrive-time{
+       width: 80%;
      }
    }
   /*.pickUp-bottom{*/
