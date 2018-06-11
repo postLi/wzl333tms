@@ -4,13 +4,56 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add">
         <table class="manage-add-table-top">
           <thead>
+          <!--<tr>-->
+            <!--<th>发货方</th>-->
+            <!--<th>收货方</th>-->
+          <!--</tr>-->
           <tr>
-            <th>发货方</th>
-            <th>收货方</th>
+            <td>
+              <el-form-item label="发货方:">
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="customSend.companyName"
+                  :fetch-suggestions="querySearchSender('companyName')"
+                  value-key="companyName"
+                  :maxlength="25"
+                  placeholder="请选择"
+                  @select="handleSelectSender"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.companyName }}</span>
+                      <span class="addr">{{ item.customerName }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="收货方:">
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="customRece.companyName"
+                  :fetch-suggestions="querySearchReceiver('companyName')"
+                  value-key="companyName"
+                  :maxlength="25"
+                  placeholder="请选择"
+                  @select="handleSelectReceiver"
+                >
+                  <template slot-scope="{ item }">
+                    <div class="selectListOption_lrl">
+                      <span class="name">{{ item.companyName }}</span>
+                      <span class="addr">{{ item.customerName }}</span>
+                    </div>
+                  </template>
+                </el-autocomplete>
+              </el-form-item>
+            </td>
           </tr>
           </thead>
           <tbody>
           <tr>
+
             <td>
               <el-form-item label="发货人:">
                 <el-autocomplete
@@ -19,7 +62,7 @@
                   :fetch-suggestions="querySearchSender('customerName')"
                   value-key="customerName"
                   :maxlength="25"
-                  placeholder="请选择内容"
+                  placeholder="请选择"
                   @select="handleSelectSender"
                 >
                   <template slot-scope="{ item }">
@@ -39,7 +82,7 @@
                   :fetch-suggestions="querySearchReceiver('customerName')"
                   value-key="customerName"
                   :maxlength="25"
-                  placeholder="请选择内容"
+                  placeholder="请选择"
                   @select="handleSelectReceiver"
                 >
                   <template slot-scope="{ item }">
@@ -61,7 +104,7 @@
                   value-key="customerMobile"
                   :fetch-suggestions="querySearchSender('customerMobile')"
                   :maxlength="11"
-                  placeholder="请选择内容"
+                  placeholder="请选择"
                   @select="handleSelectSender"
                 >
                   <template slot-scope="{ item }">
@@ -81,7 +124,7 @@
                   value-key="customerMobile"
                   :fetch-suggestions="querySearchReceiver('customerMobile')"
                   :maxlength="11"
-                  placeholder="请选择内容"
+                  placeholder="请选择"
                   @select="handleSelectReceiver"
                 >
                   <template slot-scope="{ item }">
@@ -103,7 +146,7 @@
                   v-model="customSend.detailedAddress"
                   :fetch-suggestions="querySearchSender('detailedAddress')"
                   :maxlength="25"
-                  placeholder="请选择内容"
+                  placeholder="请选择"
                   @select="handleSelectSender"
                 >
                   <template slot-scope="{ item }">
@@ -123,7 +166,7 @@
                   v-model="customRece.detailedAddress"
                   :fetch-suggestions="querySearchReceiver('detailedAddress')"
                   :maxlength="25"
-                  placeholder="请选择内容"
+                  placeholder="请选择"
                   @select="handleSelectReceiver"
                 >
                   <template slot-scope="{ item }">
@@ -403,12 +446,14 @@ export default {
       },
       customSend:{
         // 发货人
+        companyName:'',
         senderName:'',
         senderMobile:'',
         detailedAddress:'',
         customerType:1
       },
       customRece:{
+        companyName:'',
         receiverName:'',
         receiverMobile:'',//
         detailedAddress:'',
@@ -478,7 +523,7 @@ export default {
         this.form.tmsOrderCargoList = [Object.assign({}, this.carObj)]
         this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
       }
-      // this.form.tmsOrderPre.orderPickupMethod = this.otherinfo.orgid
+      // this.form.tmsOrderPre.orderPickupMethod = 1
     }
   },
   methods: {
@@ -493,6 +538,7 @@ export default {
     },
     handleSelectSender(res){
       this.customSend.senderName = res.customerName
+      this.customSend.companyName = res.companyName
       this.customSend.senderMobile = res.customerMobile
       this.customSend.detailedAddress = res.detailedAddress
       this.customSend.customerType = res.customerType
@@ -507,8 +553,12 @@ export default {
       }
     },
     handleSelectReceiver(res){
-      this.customRece.senderName = res.customerName
-      this.customRece.senderMobile = res.customerMobile
+      // receiverName:'',
+      //   receiverMobile:'',//
+      //   detailedAddress:'',
+      this.customRece.receiverName = res.customerName
+      this.customRece.companyName = res.companyName
+      this.customRece.receiverMobile = res.customerMobile
       this.customRece.detailedAddress = res.detailedAddress
       this.customRece.customerType = res.customerType
     },
@@ -526,6 +576,7 @@ export default {
         let res = data.list[0]
         if(res){
           this.customSend.senderName = res.customerName
+          this.customSend.companyName = res.companyName
           this.customSend.senderMobile = res.customerMobile
           this.customSend.detailedAddress = res.detailedAddress
           this.customSend.customerType = res.customerType
@@ -544,6 +595,7 @@ export default {
           //   this.customRece[i] = res[i]
           // }
           this.customRece.senderName = res.customerName
+          this.customRece.companyName = res.companyName
           this.customRece.senderMobile = res.customerMobile
           this.customRece.detailedAddress = res.detailedAddress
           this.customRece.customerType = res.customerType

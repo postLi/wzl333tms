@@ -114,45 +114,16 @@
             <el-input v-model="form.tmsDriver.pickupStatus" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="出车时间" prop="customerUnit">
-            <el-input v-model="form.tmsTruck.arriveTime" maxlength="8" auto-complete="off" class="arrive-time"></el-input>
+            <el-input v-model="form.tmsTruck.arriveTime" maxlength="8" auto-complete="off" class="customer-unit"></el-input>
           </el-form-item>
 
 
-          <el-form-item label="要求到达时间" prop="customerUnit">
+          <el-form-item label="要求到达时间" prop="customerUnit" class="arrive-time">
             <el-input v-model="form.tmsDriver.arriveTime" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
 
         </div>
-        <!--<el-form-item label="联系人" prop="customerName">-->
-          <!--<el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="手机" prop="customerMobile">-->
-          <!--<el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="电话" class="customerPhone" prop="customerPhone">-->
-          <!--<el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="归属网点" prop="orgid">-->
-          <!--<SelectTree v-model="form.orgid" />-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="客户VIP号" prop="vipNum">-->
-          <!--<el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="身份证号码" prop="idcard">-->
-          <!--<el-input v-model="form.idcard" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="开户行" prop="openBank">-->
-          <!--<el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="银行名称" prop="bankName">-->
-          <!--<el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="银行卡号" prop="bankCardNumber">-->
-          <!--<el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="详细地址" prop="detailedAddress">-->
-          <!--<el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
+
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
@@ -512,14 +483,20 @@ export default {
          width: 90%;
        }
      }
-     .arrive-time{
+     .customer-unit{
        width: 80%;
      }
+
+
+
    }
-  /*.pickUp-bottom{*/
-    /*padding-top: 10px;*/
-    /*border-top: 1px solid #333;*/
-  /*}*/
+  .pickUp-bottom .arrive-time .el-form-item__label{
+    width: 96px !important;
+  }
+  .pickUp-top .el-input.is-disabled .el-input__inner{
+    color: transparent;
+    background-color: transparent;
+  }
 
 
 </style>
