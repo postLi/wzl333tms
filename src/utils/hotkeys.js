@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2018 kenny wong <wowohoo@qq.com>
  * http://jaywcjlove.github.io/hotkeys
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js
  *
  * Licensed under the MIT license.
  */
@@ -369,6 +370,7 @@ function hotkeys(key, option, method) {
   var element = document // 快捷键事件绑定节点
   var i = 0
 
+
   // 对为设定范围的判断
   if (method === undefined && typeof option === 'function') {
     method = option
@@ -395,7 +397,6 @@ function hotkeys(key, option, method) {
 
     // 判断key是否在_handlers中，不在就赋一个空数组
     if (!(key in _handlers)) _handlers[key] = []
-
     _handlers[key].push({
       scope: scope,
       mods: mods,

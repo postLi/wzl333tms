@@ -46,6 +46,7 @@
 
 <script>
 import { REGEX }  from '@/utils/validate'
+import { pickerOptions2 } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 
@@ -87,62 +88,7 @@ export default {
         }]
       },
       pickerOptions2: {
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date(end.getFullYear()+'-'+(end.getMonth()+1)+"-"+end.getDate() + " 00:00:00")
-            picker.$emit('pick', [start, end]);
-          }
-        },{
-          text: '昨天',
-          onClick(picker) {
-            const day = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-            const end = new Date(day.getFullYear()+'-'+(day.getMonth()+1)+"-"+day.getDate() + " 23:59:59")
-            const start = new Date(day.getFullYear()+'-'+(day.getMonth()+1)+"-"+day.getDate() + " 00:00:00")
-            picker.$emit('pick', [start, end]);
-          }
-        },{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        },{
-          text: '本月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date(end.getFullYear(),end.getMonth(),1);
-            picker.$emit('pick', [start, end]);
-          }
-        },{
-          text: '上个月',
-          onClick(picker) {
-            let day = new Date()
-            day = new Date(day.getFullYear(), day.getMonth(), 1)
-            const start = new Date(day.getFullYear(),day.getMonth()-1,1);
-            const end = new Date(day.getFullYear(),day.getMonth()-1,(day.getTime() - start.getTime())/(24*60*60*1000));
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
+        shortcuts: pickerOptions2
       }
     }
   },

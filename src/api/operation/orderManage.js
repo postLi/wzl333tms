@@ -1,4 +1,4 @@
-import fetch from '../../utils/fetch'
+import fetch from '@/utils/fetch'
 
 export default {
   /**
@@ -471,5 +471,50 @@ export default {
   // 修改运费设置
   putChangeFeeSetup() {
 
+  },
+  /**
+   * 查询个人设置
+   * @param {number} userId 用户ID
+   */
+  getPersonalSetup(userId, type) {
+    return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(res => {
+      return res.data ? (type ? (res.data[type] || {}) : res.data) : {}
+    })
+  },
+  /**
+   * 修改个人设置
+   * @param {*} data 设置数据
+{
+  "shipDefault": {
+      "openOrderAndTransferInfo": "0",
+      "aloneWindow": "0"
+  },
+  "printKey": {
+      "printLibkey": "Ctrl+O",
+      "savePrintKey": "Ctrl+D",
+      "saveShipKey": "Ctrl+S",
+      "cleanKey": "Ctrl+E",
+      "printShipKey": "Ctrl+P"
+  },
+  "shipSetKey": {
+      "receiptType": "",
+      "receiptNum": "2",
+      "handoverMode": "68",
+      "paymentMode": "76",
+      "transportMode": "87",
+      "businessType": ""
+  },
+  "userId": 1
+}
+   */
+  putPersonalSetup(data) {
+    return fetch.put('/api-order/order/tmsshipsetting/v1/', data)
+  },
+  /**
+   * 重置个人设置
+   * @param {*} userId 用户ID
+   */
+  resetPersonalSetup(userId) {
+    return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId)
   }
 }

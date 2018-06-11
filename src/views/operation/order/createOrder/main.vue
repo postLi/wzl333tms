@@ -1,19 +1,20 @@
 <template>
-  <div class="createOrder-main" @keyup.ctrl.65.exact.stop="doAction('clear')">
+  <div class="createOrder-main">
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">0100001</span></div>
       <div class="create-num">开单日期： <span class="create-num-info">2018-1-29</span></div>
     </div>
     <div class="order-main">
-      <textarea name="" id="" cols="30" rows="10" @keyup.ctrl.65.stop.exact="doAction('clear')">1111</textarea>
+      <textarea name="" id="" cols="30" rows="10" @keyup.ctrl.65.stop.exact="doAction('cleanKey')">1111</textarea>
     </div>
+    <!-- 底部按钮操作部分 -->
     <div class="order-btns">
-      <el-button @click="doAction('clear')" icon="el-icon-circle-close-outline" type="danger" plain>清空（Ctrl+E）</el-button>
-      <el-button @click="doAction('printTag')" icon="el-icon-printer" type="primary" plain>打印标签（Ctrl+O）</el-button>
-      <el-button @click="doAction('printOrder')" icon="el-icon-tickets" type="primary" plain>打印运单（Ctrl+P）</el-button>
-      <el-button @click="doAction('save')" icon="el-icon-document" type="primary" plain>保存（Ctrl+S）</el-button>
-      <el-button @click="doAction('saveAndPrint')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（Ctrl+D）</el-button>
+      <el-button @click="doAction('cleanKey')" icon="el-icon-circle-close-outline" type="danger" plain>清空（{{keys.cleanKey}}）</el-button>
+      <el-button @click="doAction('printLibkey')" icon="el-icon-printer" type="primary" plain>打印标签（{{keys.printLibkey}}）</el-button>
+      <el-button @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
+      <el-button @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
+      <el-button @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
       
       <el-dropdown type="primary" trigger="click" class="createOrder-setup"  @command="handleCommand">
         <span class="el-dropdown-link">
@@ -29,7 +30,7 @@
       </el-dropdown>
     </div>
     <FeeDialog :dialogVisible.sync="dialogVisible" />
-    <PersonDialog :dialogVisiblePersion.sync="dialogVisiblePersion" />
+    <PersonDialog @success="getKeySetup" :dialogVisiblePersion.sync="dialogVisiblePersion" />
   </div>
 </template>
 <script>
@@ -39,6 +40,7 @@
 import hotkeys from '@/utils/hotkeys'
 import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
+import OrderApi from  '@/api/operation/orderManage'
 
 export default {
   components: {
@@ -48,58 +50,41 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      dialogVisiblePersion: false
+      dialogVisiblePersion: false,
+      keys: {
+        "printLibkey": "",
+        "savePrintKey": "",
+        "saveShipKey": "",
+        "cleanKey": "",
+        "printShipKey": ""
+      }
     }
   },
   mounted () {
-    hotkeys('ctrl+e', (e)=>{
-      e.preventDefault()
-      this.doAction('clear')
-    })
-    hotkeys('ctrl+o', (e)=>{
-      e.preventDefault()
-      this.doAction('printTag')
-    })
-    hotkeys('ctrl+p', (e)=>{
-      e.preventDefault()
-      this.doAction('printOrder')
-    })
-    hotkeys('ctrl+s', (e)=>{
-      e.preventDefault()
-      this.doAction('save')
-    })
-    hotkeys('ctrl+d', (e)=>{
-      e.preventDefault()
-      this.doAction('saveAndPrint')
-    })
+    this.getKeySetup()
   },
   beforeDestroy () {
-    hotkeys.unbind('ctrl+e,ctrl+o,ctrl+p,ctrl+s,ctrl+d')
+    this.unbindKey()
   },
   methods: {
+    // 底部按钮操作
     doAction (type) {
       alert(type)
       switch (type) {
-        case 'clear':
+        case 'cleanKey':
           
           break;
-        case 'printTag':
+        case 'printLibkey':
           
           break;
-        case 'printOrder':
+        case 'printShipKey':
           
           break;
-        case 'save':
+        case 'saveShipKey':
           
           break;
-        case 'saveAndPrint':
+        case 'savePrintKey':
           
-          break;
-        case 'setup':
-          
-          break;
-      
-        default:
           break;
       }
     },
@@ -118,6 +103,36 @@ export default {
         case 'openInNewWindow':
           this.$message('暂不支持新开窗口创建运单~')
           break;
+      }
+    },
+    // 获取快捷键设置
+    getKeySetup () {
+      return OrderApi.getPersonalSetup(this.otherinfo.id, 'printKey').then(res => {
+        this.keys = res
+        if(this.inited){
+          // 清除上一次绑定的快捷键
+          this.unbindKey()
+        } else {
+          this.inited = true
+        }
+        
+        // 重新绑定新的快捷键
+        this.bindKey()
+      })
+    },
+    // 绑定快捷键
+    bindKey() {
+      for(const i in this.keys){
+        hotkeys(this.keys[i], (e)=>{
+          e.preventDefault()
+          this.doAction(i)
+        })
+      }
+    },
+    // 取消绑定快捷键
+    unbindKey(){
+      for(const i in this.keys){
+        hotkeys.unbind(this.keys[i])
       }
     }
   }

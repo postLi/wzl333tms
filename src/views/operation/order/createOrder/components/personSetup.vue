@@ -6,58 +6,60 @@
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
     :modal-append-to-body="false"
-    @open="getFeeSetup"
+    @open="getPersonalSetup"
     width="600px"
     :before-close="close">
     <el-form :model="form" label-width="100px" ref="ruleForm" :inline="true" label-position="right" size="mini">
      <el-collapse v-model="activeNames">
       <el-collapse-item name="setup1" title="运单默认值设置">
         <el-form-item>
-          <el-checkbox true-label="1"  false-label="0" v-model="form.shipFee">开单页面附带中转信息</el-checkbox>
+          <el-checkbox true-label="1"  false-label="0" v-model="form.shipDefault.openOrderAndTransferInfo">开单页面附带中转信息</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipFee">开单页面独立窗口</el-checkbox>
+          <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipDefault.aloneWindow">开单页面独立窗口</el-checkbox>
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item name="setup2" title="快捷键设置">
+        <div @keydown.stop.prevent @keyup.stop.prevent @keypress.stop.prevent>
         <el-form-item label="清空">
-          <el-input v-model="form.clear" @keydown.native="showkeycode('clear', $event)" placeholder=""></el-input>
+          <el-input v-model="form.printKey.cleanKey" @keydown.stop.prevent.native="showkeycode('cleanKey', $event)" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="打印标签">
-          <el-input v-model="form.printTag" placeholder="" @keydown.native="showkeycode('printTag', $event)"></el-input>
+          <el-input v-model="form.printKey.printLibkey" placeholder="" @keydown.prevent.stop.native="showkeycode('printLibkey', $event)"></el-input>
         </el-form-item>
         <el-form-item label="打印运单">
-          <el-input v-model="form.printOrder" placeholder="" @keydown.native="showkeycode('printOrder', $event)"></el-input>
+          <el-input v-model="form.printKey.printShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('printShipKey', $event)"></el-input>
         </el-form-item>
         <el-form-item label="保存运单">
-          <el-input v-model="form.save" placeholder="" @keydown.native="showkeycode('save', $event)"></el-input>
+          <el-input v-model="form.printKey.saveShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveShipKey', $event)"></el-input>
         </el-form-item>
         <el-form-item label="保存并打印">
-          <el-input v-model="form.saveAndPrint" placeholder="" @keydown.native="showkeycode('saveAndPrint', $event)"></el-input>
+          <el-input v-model="form.printKey.savePrintKey" placeholder="" @keydown.prevent.stop.native="showkeycode('savePrintKey', $event)"></el-input>
         </el-form-item>
+        </div>
       </el-collapse-item>
       <el-collapse-item name="setup3" title="运单默认值设置">
         <el-form-item label="交接方式">
-          <SelectType type="ship_delivery_method" v-model="form.shipPageFunc">
+          <SelectType type="ship_delivery_method" v-model="form.shipSetKey.handoverMode">
           </SelectType>
         </el-form-item>
         <el-form-item label="回单类型">
-          <SelectType type="ship_receipt_require" v-model="form.shipPageFunc">
+          <SelectType type="ship_receipt_require" v-model="form.shipSetKey.receiptType">
           </SelectType>
         </el-form-item>
         <el-form-item label="回单份数">
-          <el-input v-model="form.cargoNo" placeholder=""></el-input>
+          <el-input v-model="form.shipSetKey.receiptNum" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="付款方式">
-          <SelectType type="ship_pay_way" v-model="form.shipPageFunc">
+          <SelectType type="ship_pay_way" v-model="form.shipSetKey.paymentMode">
           </SelectType>
         </el-form-item>
         <el-form-item label="运输方式">
-          <SelectType type="ship_shipping_type" v-model="form.shipPageFunc">
+          <SelectType type="ship_shipping_type" v-model="form.shipSetKey.transportMode">
           </SelectType>
         </el-form-item>
         <el-form-item label="业务类型">
-          <SelectType type="ship_business_type" v-model="form.shipPageFunc">
+          <SelectType type="ship_business_type" v-model="form.shipSetKey.businessType">
           </SelectType>
         </el-form-item>
         
@@ -65,9 +67,9 @@
     </el-collapse>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button size="mini" @click="close">恢复默认设置</el-button>
+      <el-button size="mini" @click="resetSetup">恢复默认设置</el-button>
+      <el-button size="mini" type="primary" @click="submitFeeSetup">确 定</el-button>
       <el-button size="mini" @click="close">取 消</el-button>
-      <el-button size="mini" type="primary" @click="close">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -86,18 +88,6 @@ export default {
       default: false
     }
   },
-  computed: {
-    // 搜索项不参与拖拉排序
-    searchList () {
-      if(this.query){
-        return this.feeData.filter(el=>{
-          return el.name.indexOf(this.query) !== -1
-        })
-      } else {
-        return []
-      }
-    }
-  },
   data () {
     return {
       feeData: [],
@@ -109,11 +99,32 @@ export default {
         dataIdAttr: ''
       },
       activeNames: ['setup1','setup2','setup3','setup4'],
-      form: {}
+      form: {
+        "shipDefault": {
+            "openOrderAndTransferInfo": "0",
+            "aloneWindow": "0"
+        },
+        "printKey": {
+            "printLibkey": "",
+            "savePrintKey": "",
+            "saveShipKey": "",
+            "cleanKey": "",
+            "printShipKey": ""
+        },
+        "shipSetKey": {
+            "receiptType": "",
+            "receiptNum": "",
+            "handoverMode": "",
+            "paymentMode": "",
+            "transportMode": "",
+            "businessType": ""
+        }
+      },
+      "userId": 1
     }
   },
   mounted () {
-
+    this.userId = this.otherinfo.id
   },
   methods: {
     close(done){
@@ -124,38 +135,35 @@ export default {
       }
     },
     // 当打开设置窗口时，从后台获取最新的设置
-    getFeeSetup() {
-      return OrderApi.getFeeSetup().then(res => {
-        this.feeData = res
+    getPersonalSetup() {
+      return OrderApi.getPersonalSetup(this.userId).then(res => {
+        this.form = res
       })
     },
+    // 重置
+    resetSetup () {
+      return OrderApi.resetPersonalSetup(this.userId).then(res => {
+        this.$message('重置成功！')
+        this.getPersonalSetup(this.userId)
+        //this.close()
+      })
+    },
+    // 提交修改
     submitFeeSetup() {
-      return OrderApi.putChangeFeeSetup()
+      let data = Object.assign({}, this.form)
+      data.userId = this.userId
+      return OrderApi.putPersonalSetup(data).then(res => {
+        this.$message("修改成功！")
+        this.$emit('success')
+      })
     },
-    changeList(el){
-
-      console.log(this.feeData)
-    },
-    search () {
-      
-    },
-    canDragStart(list){
-      return !list.draggedContext.element.isfixed
-    },
+    // 显示按键对应键名
     showkeycode (type, e) {
-      let name = e.code
-      let code = e.keyCode
-      // 数字0-9 字母a-z
-      if((code >= 65 && code <= 90) || (code >= 48 && code <= 57)){
-        name = e.key
-      } else if(code >= 96 && code <= 105) {
-        // 小键盘0-9
-        name = "numpad " + e.key
-      }
-      console.log("showkeycode:",e.code,e.key,e.keyCode,e)
-      this.$set(this.form, type, hotkeys.getPressedKey(e))
       e.preventDefault()
-      //alert(e)
+      e.stopPropagation()
+      console.log('showkeycode:', e)
+      this.$set(this.form.printKey, type, hotkeys.getPressedKey(e))
+      return false
     }
   }
 }
