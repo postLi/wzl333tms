@@ -12,12 +12,10 @@
 
 <script>
 import Sender from './sender'
-import Receiver from './receiver'
 
 export default {
   components: {
-    Sender,
-    Receiver
+    Sender
   },
   props: {
     isShow: {

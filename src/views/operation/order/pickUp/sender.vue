@@ -58,15 +58,15 @@
             label="运费核销状态">
           </el-table-column>
           <el-table-column
-            prop="senderName"
+            prop="customerName"
             sortable
             width="90"
             label="发货人">
           </el-table-column>
           <el-table-column
             sortable
-            prop="senderMobile"
-            width="100"
+            prop="customerMobile"
+            width="120"
             label="手机号">
           </el-table-column>
           <el-table-column
@@ -224,7 +224,7 @@
           <el-table-column
             prop="outTime"
             label="出车时间"
-            width="110"
+            width="130"
             sortable
           >
           </el-table-column>
