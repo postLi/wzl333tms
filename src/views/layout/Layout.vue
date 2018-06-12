@@ -84,19 +84,19 @@ export default {
         .sidebar-wrapper {
             width: $sidebarWidth;
             position: fixed;
-            top: $topNavHeight;
+            height: 100%;
+            padding-top: $topNavHeight;
             bottom: 0;
             left: 0;
             z-index: 1001;
             transition: all .1s ease-out;
+            box-sizing: border-box;
         }
         .sidebar-container {
             transition: all .1s ease-out;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            position: relative;
+            height: 100%;
+            width: 100%;
         }
         .main-container {
             height: 100%;
@@ -119,7 +119,7 @@ export default {
             line-height: $topNavHeight;
             border-radius: 0px !important;
             background: #373d41;
-            z-index: 999;
+            z-index: 1009;
             min-width: 1180px;
         }
     }

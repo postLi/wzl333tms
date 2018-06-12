@@ -19,6 +19,19 @@
   }
 }
 
+@mixin hiddenScrollBar {
+  &::-webkit-scrollbar-track-piece {
+    background: transparent;
+  }
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0;
+  }
+}
+
 @mixin relative {
   position: relative;
   width: 100%;

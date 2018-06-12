@@ -67,6 +67,12 @@ export default {
 $height: 24px;
 
 .sidebar-menu-search{
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  height: 30px;
+
   padding-left: 3px;
   .el-input{
     width: 120px;

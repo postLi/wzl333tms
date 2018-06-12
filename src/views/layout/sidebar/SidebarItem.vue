@@ -14,7 +14,7 @@
         </router-link>
         <!-- 带子菜单展示 -->
         <template v-if="isFolder(route)">
-          <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
+          <span class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav"  @click.stop="toggle($event)" >
             <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
             <i class="el-icon-caret-bottom dropdownIcon" ></i>
            </span>
@@ -94,6 +94,50 @@ export default {
       const el = closest(event.target, 'li')
       el.classList.toggle('isOpen')
     },
+    setSubNav(type, event){
+      let parentEle = document.querySelector('.sidebar-menu')
+      let isHide = document.querySelector('.hideSidebar') ? true : false
+      let showBox = document.querySelector('.subNavWrapper')
+
+      if(type === 'show'){
+        if(isHide){
+          let el = closest(event.target, 'li.menu-item')
+          let ul = el ? el.querySelector('.sidebar-submenu') : ''
+
+          if(ul){
+            showBox.innerHTML = ''
+            showBox.appendChild(ul.cloneNode(true))
+            let elHeight = showBox.offsetHeight
+            let winHeight = window.innerHeight
+            let parentY = el.offsetTop + parentEle.offsetTop - parentEle.scrollTop
+            // 50 为顶部导航的高度
+            // 保证底端对齐
+            // 当子菜单为超长时，需要设置滚动条显示
+            if((parentY + elHeight + 50) > winHeight){
+              parentY = winHeight - elHeight - 50
+            }
+            showBox.style.display = "block"
+            showBox.style.top = parentY + 'px'
+          }
+          
+        }
+      } else {
+        showBox.innerHTML = ''
+      }
+    },
+    clearTimer () {
+      clearTimeout(this.subMenuTimer)
+    },
+    showSubNav (event) {
+      this.clearTimer()
+      this.setSubNav('show', event)  
+    },
+    hideSubNav (event) {
+      this.clearTimer()
+      this.subMenuTimer = setTimeout(() => {
+        this.setSubNav('hide')   
+      }, 200);
+    },
     showTab (event) {
       let el = closest(event.target, 'li.submenu-item-tab')
       
@@ -107,12 +151,17 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 @import "src/styles/variate.scss";
+$backgroundColor: #333744;
+$hoverBackgroundColor: #00c1de;
+$sidebarBackgroundColor: #42485b;
+
 .sidebar-menu{
   color: rgba(255, 255, 255, 0.8);
   &>.menu-item,&>.sidebar-submenu{
-    border-left: 4px solid #42485b;
-    padding-left: 20px;
-    background: #42485b;
+    background: $sidebarBackgroundColor;
+  }
+  &>.menu-item>a{
+    padding-left: 24px;
   }
   .sidebar-submenu{
     display: none;
@@ -148,13 +197,12 @@ export default {
 
   .sidebar-submenu .submenu-item{
     min-width: 100%;
-    padding-left: $sidebarFontSize * 1.2 + 10px;
+    padding-left: $sidebarFontSize * 1.2 + 34px;
     font-size: $sidebarFontSize - 2px;
   }
 
   &>.is-active{
-    border-left: 4px solid #42485b;
-    background: #00c1de;
+    background: $hoverBackgroundColor;
 
     .is-active{
       border: none;
@@ -162,8 +210,7 @@ export default {
   }
 
    &>.isOpen{
-    border-left: 4px solid #42485b;
-    background: #333744;
+    background: $backgroundColor;
 
     .is-active{
       border: none;
@@ -179,16 +226,15 @@ export default {
   .sidebar_menu_toggle, .submenu-item-tab{
     cursor: pointer;
     display: block;
+    padding-left: 24px;
   }
 
-
-  .menu-item:focus, .menu-item:hover, .sidebar-nav-title:hover{
-    background: #00c1de;
-    border-left-color: #42485b;
+  .menu-item:focus, .menu-item:hover,.sidebar_menu_toggle:hover, .sidebar-submenu .submenu-item:hover, .submenu-item.is-active{
+    background: $hoverBackgroundColor;
   }
 
   &>.isOpen:hover{
-    background: #333744;
+    background: $backgroundColor;
 
     .is-active{
       border: none;
@@ -208,79 +254,101 @@ export default {
     transition: transform .6s ease;
   }
 }
-.hideSidebar .sidebar-menu{
-  position: relative;
-  z-index: 99;
-
-  .menu-item{
-    padding-top: 5px;
-    padding-bottom: 25px;
-    height: auto;
-    font-size: 12px;
-    min-height: 40px;
-    margin-bottom: 10px;
-
-    &>a>.sidebar-nav-title{
-      line-height: 20px;
-      min-height: auto;
+/** 收缩边栏时的样式 **/
+.hideSidebar{
+  .sidebar-menu{
+    position: relative;
+    z-index: 99;
+    .sidebar_menu_toggle{
+      text-align: center;
     }
-  }
-  .isOpen{
+    .menu-item{
+      padding-top: 5px;
+      padding-bottom: 25px;
+      height: auto;
+      font-size: 12px;
+      min-height: 40px;
+      margin-bottom: 0px;
+
+      &>a>.sidebar-nav-title{
+        line-height: 20px;
+        min-height: auto;
+      }
+    }
+    .isOpen{
+      &:hover{
+        background: $hoverBackgroundColor;
+      }
+      .sidebar-submenu{
+        display: none;
+      }
+    }
+    .menu-item:hover{
+      .sidebar-submenu{
+        background: $sidebarBackgroundColor;
+        display: none;
+      }
+    }
+    .svg-icon{
+      margin-left: -4px;
+    }
     .sidebar-submenu{
       display: none;
     }
     
-  }
-  .menu-item:hover{
-    .sidebar-submenu{
-      background: #42485b;
-      display: block;
+    .el-menu--popup{
+      background: $sidebarBackgroundColor;
     }
+    .el-submenu__icon-arrow{
+      display: none;
+    }
+
+    a:hover{
+      color: #3e9ff1;
+    }
+
+    .dropdownIcon{
+      display: none;
+    }
+
+    .menu-item>a>.sidebar-nav-title,.sidebar_menu_toggle .sidebar-nav-title{
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 20px;
+      text-align: center;
+      line-height: 22px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .el-menu-item, .sidebar-nav-title{
+      min-height: 44px;
+      height: auto;
+    }
+    .el-submenu{
+      min-width: auto;
+    }
+    
   }
-  .svg-icon{
-    margin-left: -4px;
-  }
+  
   .sidebar-submenu{
-    position: absolute;
-    left: $hideSidebarWidth - 4px;
-    top: 0;
-    width: 150px;
-  }
-  .el-menu--popup{
-    background: #42485b;
-  }
-  .el-submenu__icon-arrow{
-    display: none;
-  }
+    width: 130px;
+    background: $sidebarBackgroundColor;
 
-  a:hover{
-    color: #3e9ff1;
-  }
+    .submenu-item{
+      line-height: 40px;
+      color: #fff;
+      font-size: 12px;
 
-  .dropdownIcon{
-    display: none;
-  }
-
-  .menu-item>a>.sidebar-nav-title{
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: 20px;
-    text-align: center;
-    line-height: 22px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .el-menu-item, .sidebar-nav-title{
-    min-height: 44px;
-    height: auto;
-  }
-  .el-submenu{
-    min-width: auto;
-  }
-  .el-submenu .el-menu-item{
-    padding-left: 20px !important;
+      a{
+        display: block;
+        padding-left: 34px;
+      }
+      &.is-active, &:hover{
+        background: $hoverBackgroundColor;
+      }
+    }
   }
 }
 

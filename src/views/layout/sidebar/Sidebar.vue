@@ -6,7 +6,8 @@
       </div> -->
       <SidebarMenuSearch :searchItem="sidebarRouters" />
       <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-      <sidebar-item :routes='sidebarRouters'></sidebar-item>
+      <sidebar-item ref="sidebaritem" :routes='sidebarRouters'></sidebar-item>
+      <div @mouseover="showSubnav" @mouseout="hideSubnav" class="subNavWrapper"></div>
   </div>
   
 </template>
@@ -29,6 +30,12 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
+    },
+    showSubnav () {
+      this.$refs.sidebaritem.clearTimer()
+    },
+    hideSubnav () {
+      this.$refs.sidebaritem.hideSubNav()
     }
   }
 }
@@ -36,8 +43,16 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 @import "src/styles/variate.scss";
+@import "src/styles/mixin.scss";
+
 #app .sidebar-menu{
-  min-height: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: visible;
+  width: 100%;
+
+  @include hiddenScrollBar;
+
   .router-link-exact-active{
     .el-menu-item{
       color: #20a0ff;
@@ -46,7 +61,7 @@ export default {
 }
 .sidebar-container{
   min-height: 100%;
-  padding-top: 40px;
+  padding-top: 70px;
   background: #42485B;
   border-radius: 0;
 
@@ -83,6 +98,14 @@ export default {
     position: absolute;
     top: 40px;
     right: 10px;
+  }
+
+  .subNavWrapper{
+    display: none;
+    position: absolute;
+    left: 100%;
+    max-height: 100%;
+    overflow: auto;
   }
 }
 
