@@ -1,9 +1,9 @@
 <template>
     <div class="tab-content">
-        <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+        <SearchForm :orgid="otherinfo.orgid" title="寄出" type="send_status"  @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">加入挑单夹</el-button>
+          <!-- <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">加入挑单夹</el-button> -->
           <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">回单寄出</el-button>
           <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消寄出</el-button>
           <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
@@ -78,6 +78,13 @@
           <el-table-column
             prop="sendStatusName"
             label="寄出状态"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="acceptStatusName"
+            label="接收状态"
             width="120"
             sortable
             >
@@ -302,13 +309,13 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>  
+      <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
     </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt,postUpdateReceip,postCancelReceipt } from '@/api/operation/receipt'
+import { postReceipt,putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
@@ -321,12 +328,12 @@ export default {
             'otherinfo'
         ]),
         orgid () {
-            console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+            // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+            // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
         }
     },
     mounted () {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
+        // this.searchQuery.vo.orgid = this.otherinfo.orgid
             this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
                 this.loading = false
             })
@@ -340,10 +347,11 @@ export default {
                 dataset:[],
                 // loading:false,
                 searchQuery: {
-                    "currentPage":1,
-                    "pageSize":10,
+                    // "currentPage":1,
+                    // "pageSize":10,
                     "vo":{
-                        "pageType":2
+                        "pageType":2,
+                        "receiptIds":[]
                     }
                 },
                 total: 0
@@ -354,7 +362,7 @@ export default {
             // this.loading = true
             return postReceipt(this.searchQuery).then(data => {
                 this.dataset = data.list
-                this.total = data.totalCount
+                this.total = data.total
             })
         },
         fetchData () {
@@ -364,11 +372,9 @@ export default {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize
         },
-        getSearchParam (obj) {
-            this.searchQuery.vo.orgid = obj.orgid
-            // this.searchQuery.vo.customerMobile = obj.mobile
-            // this.searchQuery.vo.customerName = obj.name
-            this.fetchAllreceipt()
+        getSearchParam (searchParam) {
+          Object.assign(this.searchQuery.vo, searchParam)
+          this.fetchAllreceipt()
         },
         doAction (type) {
           if(type==='import'){
@@ -387,25 +393,58 @@ export default {
           switch (type) {
               //回单寄出
             case 'send': 
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能寄出单条数据',
-                      type: 'warning'
-                  })
-              }else{
-                let id = this.selected.map(el => {
-                  return el.shipId
+              let ids = this.selected.filter(el=>{
+                  return el.sendStatus === 107
+                }).map(el => {
+                  return  el.receiptId
                 })
-                postUpdateReceip(id.join(',')).then(res=>{
-                  this.$message({
-                    message: '回单寄出成功~',
-                    type: 'success'
+                console.log(ids);
+                if(ids.length){
+                  this.searchQuery.vo.receiptIds = ids
+                  this.dotInfo = ids
+                  this.popVisible = true
+                  this.isAccept = true
+                  this.isModify = false
+                  this.searchQuery.vo.receiptIds = ids
+                  putUpdateReceipt(this.searchQuery.vo).then(res=>{
+                    this.$message({
+                      message: '回单接收成功~',
+                      type: 'success'
+                    })
+                    return false
                   })
-                  return false
-                }) 
+                }else{
+                  this.$message.warning('请选择未回收项~')
+                }
+              break;
+            case 'cancel':
+              let _ids = this.selected.filter(el=>{
+                  return el.sendStatus === 108  && el.acceptStatus === 109
+                }).map(el => {
+                return  el.receiptId
+              })
+
+              console.log(this.selected)
+
+              if(_ids.length){
+                  this.searchQuery.vo.receiptIds = _ids
+                  putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
+                    this.$message({
+                      message: '取消寄出成功~',
+                      type: 'success'
+                    })
+                    this.fetchAllreceipt()
+                    return false
+                  }).catch(err => {
+                    this.$message.error(err)
+                    this.closeAddDot()
+                  })
+                }else{
+                  this.$message.warning('回单已经寄出~')
+                }
+              
+              break;
               }
-            break;
-            }
           // 清除选中状态，避免影响下个操作
           this.$refs.multipleTable.clearSelection()
         },

@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+        <SearchForm :orgid="otherinfo.orgid" title="发放" type="giveout_status" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize"  plain @click="doAction('recycle')">回单发放</el-button>
@@ -75,8 +75,8 @@
             >
           </el-table-column>
           <el-table-column
-            prop="recStatus"
-            label="寄出状态"
+            prop="giveoutStatusName"
+            label="发放状态"
             width="120"
             sortable
             >
@@ -308,14 +308,13 @@
 
         </el-table>
       </div>
-      <!-- <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>     -->
     </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import {postReceipt} from '@/api/operation/receipt'
+import { postReceipt,putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
@@ -328,14 +327,14 @@ export default {
             'otherinfo'
         ]),
         orgid () {
-            console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+            // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+            // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
         }
     },
     mounted () {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
+        // this.searchQuery.vo.orgid = this.otherinfo.orgid
             this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                // this.loading = false
+                this.loading = false
             })
         },
         data() {
@@ -343,13 +342,15 @@ export default {
                 btnsize: 'mini',
                 component: 'Send',
                 selectInfo: {},
+                selected:[],
                 dataset:[],
                 // loading:false,
                 searchQuery: {
-                    "currentPage":1,
-                    "pageSize":10,
+                    // "currentPage":1,
+                    // "pageSize":10,
                     "vo":{
-                        "pageType":4
+                        "pageType":4,
+                        "receiptIds":[]
                     }
                 },
                 total: 0
@@ -360,9 +361,7 @@ export default {
             // this.loading = true
             return postReceipt(this.searchQuery).then(data => {
                 this.dataset = data.list
-                this.total = data.totalCount
-                // this.loading = false
-                console.log(data);
+                this.total = data.total
             })
         },
         fetchData () {
@@ -372,15 +371,67 @@ export default {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize
         },
-        getSearchParam (obj) {
-            this.searchQuery.vo.orgid = obj.orgid
-            // this.searchQuery.vo.customerMobile = obj.mobile
-            // this.searchQuery.vo.customerName = obj.name
-            this.fetchAllreceipt()
+        getSearchParam (searchParam) {
+          Object.assign(this.searchQuery.vo, searchParam)
+          this.fetchAllreceipt()
+        },
+        doAction (type) {
+          if(type==='import'){
+            this.showImport()
+            return false
+          }
+          // 判断是否有选中项
+          if(!this.selected.length ){
+              this.$message({
+                  message: '请选择要操作的项~',
+                  type: 'warning'
+              })
+               return false
+          }
+
+          switch (type) {
+              //回单寄出
+            case 'send': 
+              let ids = this.selected.map(el => {
+                return el.receiptId
+              })
+              this.searchQuery.vo.receiptIds = ids
+               putUpdateReceipt(this.searchQuery.vo).then(res=>{
+                this.$message({
+                  message: '回单接收成功~',
+                  type: 'success'
+                })
+                return false
+              })
+            break;
+              case 'cancel':
+                // this.popVisible = true
+                // this.isModify = false
+                
+                let _ids = this.selected.map(el => {
+                  return el.receiptId
+                })
+                // let id = this.selected[0].receiptId
+                //  ids = ids.length > 1 ? ids.join(',') : ids
+                this.searchQuery.vo.receiptIds = _ids
+                putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
+                  this.$message({
+                    message: '取消接收成功~',
+                    type: 'success'
+                  })
+                  return false
+                })
+                break;
+              }
+          // 清除选中状态，避免影响下个操作
+          this.$refs.multipleTable.clearSelection()
         },
         setTable(){},
         clickDetails(){},
-        getSelection(){}
+        getSelection(selected){
+          this.selected = selected
+        }
+
     }
 }
 </script>

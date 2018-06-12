@@ -103,10 +103,8 @@
             <p class="ts">注意：问题描述最多输入200字</p>
             <p><label>图片上传</label><em class="ts">注：最多可上传6张图片，每张图片不能大于5M</em></p>
           </el-form-item>
-
           <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck}">
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
-          </div>
           </div>
         </div>
       </el-form>
@@ -267,8 +265,6 @@ export default {
       this.inited = true
       this.initInfo()
     }
-   
-     
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -415,7 +411,7 @@ export default {
         if (valid) {
           this.loading = true
           let data = Object.assign({},this.form)
-          data.fixPhone = this.fixPhone
+          // data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){

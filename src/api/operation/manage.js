@@ -15,7 +15,7 @@ export function getPostlist(params) {
  * @param id
  */
 export function getSearchOrder(id) {
-  return fetch.get('/api-order/order/pre/v1/'+id)
+  return fetch.get('/api-order/order/pre/v1/' + id)
 }
 
 /**

@@ -1,148 +1,272 @@
 <template>
   <div class="dep-maintain">
-    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='addpopDepMain' v-loading="loading">
-      <template class='addRelationPop-content' slot="content">
-        
-      </template>
-      <div slot="footer" class="dialog-footer-frame">
-        <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-        <el-button @click="closeMe">取消</el-button>
-      </div>
-    
-    </PopFrame>
+      <PopFrame :title='popTitle' :isShow="popVisible" @close="closeMe" class='addpopDepMain'>
+        <template class='addRelationPop-content' slot="content">
+           <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+            <div class="addMark" v-if="isModify">
+              <el-form-item label="回收情况" prop="abnormalType" :cols="45">
+                <SelectType type="rec_type" v-model="form.recTypeId" />
+              </el-form-item>
+              <el-form-item label="回收备注" :label-width="formLabelWidth" prop="recRemark">
+                <el-input
+                  type="textarea"
+                  :rows="7"
+                  :cols="30"
+                  placeholder="最多20个字符"
+                  v-model="form.recRemark"
+                  auto-complete="off"></el-input>
+              </el-form-item>
+            </div>   
+            <div class="addMark" v-if="isAccept">
+              <el-form-item label="接收情况" prop="acceptTypeId" :cols="45">
+                <SelectType type="accept_type" v-model="form.acceptTypeId" />
+              </el-form-item>
+              <el-form-item label="接收备注" :label-width="formLabelWidth" prop="acceptRemark">
+                <el-input
+                  type="textarea"
+                  :rows="7"
+                  :cols="30"
+                  placeholder="最多20个字符"
+                  v-model="form.acceptRemark"
+                  auto-complete="off"></el-input>
+              </el-form-item>
+            </div>
+          </el-form>
+        </template>
+        <div slot="footer" class="dialog-footer-frame">
+          <el-button type="primary" @click="submitForm('ruleForm')" class="btn">确定</el-button>
+          <el-button @click="closeMe" class="btn">取消</el-button>
+        </div>
+      </PopFrame>
   </div>
 </template>
 <script>
-    import PopFrame from '@/components/PopFrame/index'
-    import { getSelectDictInfo,postDict,deletePerManage,putDict } from '@/api/company/groupManage'
-    export default {
-      components: {
-        PopFrame
+import PopFrame from '@/components/PopFrame/index'
+import SelectTree from '@/components/selectTree/index'
+import SelectType from '@/components/selectType/index'
+import { putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
+import { REGEX }  from '@/utils/validate'
+import { mapGetters } from 'vuex'
+import { exportWithIframe } from '@/utils';
+export default {
+  // computed: {
+  // ...mapGetters([
+  //     'otherinfo'
+  //   ])
+  // },
+  computed: {
+    isShow: {
+      get(){
+        return this.popVisible
       },
-      props: {
-        popVisible: {
-          type: Boolean,
-          default: false
-        },
-        dotInfo: [Object,Array],
-        isDepMain:{
-          type:Boolean,
-          default:false
-        },
-        createrId: [Number,String]
-      },
-      data() {
-        return {
-          checked1: true,
-          popTitle: '回单回收',
-          loading:false,
-     
-        }
-      },
-      computed: {
-        isShow: {
-          get(){
-            return this.popVisible
-          },
-          set(){
-
-          }
-        }
-      },
-      watch: {
-        isDepMain(){
-          
-        },
-        dotInfo (newVal) {
-          // this.getMentInfo = this.dotInfo
-        },
-        popVisible (newVal) {
-         
-        },
-        createrId(newVal){
-
-        }
-      },
-      mounted() {
-        // this.getSelectDict(this.createrId)
-      },
-      methods: {
-      closeMe(done){
-        this.$emit('close')
-        this.reset()
-        if(typeof done === 'function'){
-          done()
-        }
-      },
-      submitForm(formName){
-        this.$refs[formName].validate((valid) => {
-          if(valid){
-            this.loading = true
-            let reqPromise
-            if(this.isModify){
-              // reqPromise = putOrgData(this.form)
-            } else {
-              if(this.form.accountStatus == true){
-                this.form.accountStatus = 0
-              }else{
-                this.form.accountStatus = 1
-              }
-              // reqPromise = postOrgSaveDate(this.form)
-            }
-            reqPromise.then(res=>{
-              this.$alert('保存成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.loading = false
-                  this.closeMe()
-                  this.$emit('success')
-                }
-              })
-
-            })
-          }else{
-            return false
-          }
-        })
-      }
+      set(){
 
       }
     }
+  },
+  components: {
+    PopFrame,
+    SelectTree,
+    SelectType
+  },
+  props: {
+    popVisible: {
+      type: Boolean,
+      default: false
+    },
+    dotInfo: [Object,Array],
+    searchQuery:[Object,Array],
+    isDepMain:{
+      type:Boolean,
+      default:false
+    },
+    createrId: [Number,String],
+      isModify: {
+      type: Boolean,
+      default: false
+    },
+    isAccept: {
+      type: Boolean,
+      default: false
+    }
+  },
+  
+  data() {
+    return {
+      form:{
+        "pageType":'',
+        "recTypeId":'',
+        "recRemark":'',
+        "acceptTypeId":'',
+        "acceptRemark":''
+      },
+      formLabelWidth: '80px',
+      tooltip: false,
+      rules: {
+       
+      },
+      checked1: true,
+      popTitle: '',
+      loading:false,
+      type:''
+  
+    }
+  },
+  computed: {
+    isShow: {
+      get(){
+        return this.popVisible
+      },
+      set(){
+
+      }
+    }
+  },
+  mounted() {
+   
+  },
+  watch: {
+    isDepMain(){
+      
+    },
+    dotInfo (newVal) {
+      this.getMentInfo = this.dotInfo
+    },
+    searchQuery(newVal){
+       this.form.pageType = this.searchQuery.vo.pageType
+      //  console.log(this.form.pageType);
+    },
+    orgid (newVal) {
+      this.form.orgid = newVal
+    },
+    isModify: {
+      handler(newVal) {
+        if(this.isModify){
+          this.popTitle = '回单回收'
+          this.form.pageType = this.searchQuery.vo.pageType
+          console.log(888);
+        }
+      },
+      immediate: true
+    },
+    isAccept: {
+      handler(newVal) {
+        if(!this.isAccept){
+          this.popTitle = '回单接收'
+          this.form.pageType = this.searchQuery.vo.pageType
+          console.log(888);
+        }
+      },
+      immediate: true
+    },
+    createrId(newVal){
+    }
+    
+  },
+  methods: {
+  reset () {
+    this.$refs['ruleForm'].resetFields()
+  },
+  closeMe(done){
+    this.$emit('close')
+    this.reset()
+    if(typeof done === 'function'){
+      done()
+    }
+  },
+  submitForm(formName){
+    this.$refs[formName].validate((valid) => {
+      if(valid){
+        this.loading = true
+        let data = Object.assign({},this.form)
+        data.receiptIds = this.dotInfo
+        let promiseObj
+        promiseObj = putUpdateReceipt(data)
+        promiseObj.then(res=>{
+          this.$alert('保存成功', '提示', {
+            confirmButtonText: '确定',
+            callback: action => {
+              this.loading = false
+              this.closeMe()
+              this.$emit('success')
+            }
+          })
+        })
+      }else{
+        return false
+      }
+    })
+  }
+
+  }
+}
 </script>
 
 <style lang="scss">
   .dep-maintain .addpopDepMain{
     top: 29%;
     bottom: auto;
-    min-width: 486px;
+    min-width: 426px;
     max-width:  486px;
+    .dep-maintain .addRelationPop-content{
+      margin: 20px 20px 0;
+      box-sizing: border-box;
+    }
+    // .dep-maintain .el-select .el-input__inner{
+    //   padding-right: 15px;
+    // }
+
+
+    .popRight-header {
+      height: 45px;
+      line-height: 45px;
+      background-color: #e6e6e6;
+      color: #333;
+      text-align: left;
+      font-weight: 600;
+      top: 0;
+      left: 0;
+      width: 100%;
+      position: absolute;
+      border-radius: 6px 0px 0px 0px;
+      /* padding-left: 22px; */
+      text-align: center;
+      
+    }
+    .popRight-header i{
+      position: absolute;
+      top: 6px;
+      right: 9px;
+      line-height: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    .popRight-content{
+      width:426px;
+      height: 308px;
+    }
+    .addMark{
+      margin:50px 38px;
+      .el-form--inline .el-form-item{
+        margin-top:10px;
+      }
+      .el-input--mini .el-input__inner{
+          padding-right: 67px;
+      }
+    }
+    .dialog-footer-frame{
+        text-align: center;
+        .btn{
+          width: 107px;
+          height: 35px;
+        }
+    }
   }
-  .dep-maintain .addRelationPop-content{
-    padding: 20px 20px 0;
-    box-sizing: border-box;
-  }
-  .dep-maintain .el-select .el-input__inner{
-    padding-right: 15px;
-  }
+  
   // .popRight-header{
   //   height: 45px;
   //   line-height: 45px;
   // }
-  .popRight-header {
-    height: 30px;
-    line-height: 30px;
-    background-color: #e6e6e6;
-    color: #333;
-    text-align: left;
-    font-weight: 600;
-    top: 0;
-    left: 0;
-    width: 100%;
-    position: absolute;
-    border-radius: 6px 0px 0px 0px;
-    /* padding-left: 22px; */
-    text-align: center;
-}
-
-
+  
+  
 </style>

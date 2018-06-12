@@ -20,29 +20,16 @@ export function postReceipt(params) {
 }
 
 /**
- *修改回单
+ *回收
  * @param {*} params 
- * {
-    "status": 100,
-    "data": null,
-    "text": "fail",
-    "errorInfo": null
-}
  */
-export function postUpdateReceip(id) {
-  return fetch.post('/api-order/order/receipt/v1/updateReceip' + id).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
-
+export function putUpdateReceipt(params) {
+  return fetch.put('/api-order/order/receipt/v1/updateReceipt', params)
 }
 /**
  * 取消回单
  * @param {*} params 
- * 
  */
-export function postCancelReceipt(id) {
-  return fetch.post('/api-order/order/receipt/v1/updateCancelReceipt' + id).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
-
+export function putUpdateCancelReceipt(params) {
+  return fetch.put('/api-order/order/receipt/v1/updateCancelReceipt/',params)
 }

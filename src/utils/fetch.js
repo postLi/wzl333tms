@@ -27,8 +27,8 @@ service.interceptors.request.use(config => {
 
   } else {
     // 统一加上/api 前缀，方便后台转发接口
-    config.url = '/api' + config.url
-    // config.url = '/localapi' + config.url
+    // config.url = '/api' + config.url
+    config.url = '/localapi' + config.url
   }
 
   return config
@@ -48,7 +48,7 @@ service.interceptors.response.use(
 
     if (res.status !== 200 && response.config.url.indexOf('/uaa/oauth/token') === -1) {
       Message({
-        message: ((res.errorInfo || '') + ' : ' + (res.msg || '') + ' : ' + (res.code || '') + ' : ' + (res.status || '')),
+        message: ((res.errorInfo || '') + ' : ' + (res.msg || '') + ' : ' + (res.code || '') + ' : ' + (res.text || '') + ' : ' + (res.status || '')),
         type: 'error',
         duration: 5 * 1000
       })
