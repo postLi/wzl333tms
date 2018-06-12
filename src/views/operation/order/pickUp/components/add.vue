@@ -5,7 +5,7 @@
 
         <div class="pickUp-top">
           <el-form-item label="提货批次" prop="customerUnit">
-            <el-input v-model="form.tmsOrderPickup.pickupBatchNumber" auto-complete="off" disabled></el-input>
+            <el-input v-model="pickupBatchNumber" auto-complete="off" disabled></el-input>
           </el-form-item>
           <el-form-item label="发货人" prop="" class="senderName_lrl">
             <el-autocomplete
@@ -108,7 +108,7 @@
             <!--<el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>-->
             <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" />
           </el-form-item>
-          <el-form-item label="司机手机" prop="customerUnit">
+          <el-form-item label="司机手机" prop="dirverMobile">
             <el-input v-model="form.tmsDriver.dirverMobile" maxlength="11" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆单位" prop="customerUnit">
@@ -124,6 +124,7 @@
                 v-model="newDate"
                 type="datetime"
                 placeholder=""
+                picker-options="pickoption1"
                 align="right"
                 start-placeholder="开始日期"
               >
@@ -138,6 +139,7 @@
               type="datetime"
               placeholder=""
               align="right"
+              picker-options="pickoption2"
               end-placeholder="结束日期"
             >
               <!--:picker-options="pickerOptions1"-->
@@ -247,6 +249,26 @@ export default {
     }
 
     return {
+      pickoption1: {
+        firstDayOfWeek:1,
+        disabledDate(time) {
+          // 小于终止日
+          return _this.form.tmsOrderPickup.outTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
+        }
+        // disabledDate(now) {
+        //   return +this.form.tmsOrderPickup.outTime < +this.form.tmsOrderPickup.arriveTime
+        // }
+      },
+      pickoption2: {
+        firstDayOfWeek:1,
+        disabledDate(time) {
+          // 小于终止日
+          return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.arriveTime : false
+        }
+        // disabledDate(now) {
+        //   return +this.form.tmsOrderPickup.outTime < +this.form.tmsOrderPickup.arriveTime
+        // }
+      },
       form: {
         tmsCustomer:{
           customerName:'',
@@ -296,7 +318,7 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         dirverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          { message: '请输入手机号码', trigger: '[blur,change]', pattern: REGEX.MOBILE }
          // { validator: validateFormNumber, trigger: 'change'}
         ],
         customerName: [
@@ -313,6 +335,7 @@ export default {
       departments: [],
       groups: [],
       inited: false,
+      pickupBatchNumber:'',
       searchSend: {
         "currentPage": 1,
         "pageSize": 100,
@@ -336,11 +359,12 @@ export default {
       this.inited = true
       this.initInfo()
     }
-    Promise.all([fetchGetPickUp()]).then(resArr => {
-      this.loading = false
-      this.form.tmsOrderPickup.pickupBatchNumber = resArr[0].data
-      console.log(this.form.tmsOrderPickup.pickupBatchNumber);
-    })
+    // Promise.all([fetchGetPickUp()]).then(resArr => {
+    //   this.loading = false
+    //   this.form.tmsOrderPickup.pickupBatchNumber = resArr[0].data
+    //   // console.log(this.form.tmsOrderPickup.pickupBatchNumber);
+    // })
+    this.fetchGetPickUp()
     this.fetchAllCustomerFa(this.orgid).then(res => {
       this.loading = false
       this.senderList = res
@@ -358,15 +382,18 @@ export default {
     },
     info () {
       if (this.isModify) {
-        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
-        // this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
+        // console.log(this.info);
+        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
+        this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
+        this.form.tmsOrderPickup.id = this.info.id
         // this.form.tmsDriver = this.setObject(this.form.tmsDriver,this.info)
       } else {
         // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
 
-        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
-        this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
-        this.form.tmsDriver = this.setObject(this.form.tmsDriver,this.info)
+        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+        this.form.tmsTruck = this.setObject(this.form.tmsTruck)
+        this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+
       }
     }
   },
@@ -390,6 +417,15 @@ export default {
         obj1[i] = obj2 ? obj2[i] : ''
       }
       return obj1
+    },
+    fetchGetPickUp(){
+      this.loading = true
+      return fetchGetPickUp().then(data => {
+        this.pickupBatchNumber = data.data
+        // this.form.tmsOrderPickup.pickupBatchNumber = data
+
+        this.loading = false
+      })
     },
     fetchAllCustomerFa () {
       this.loading = true
@@ -421,9 +457,11 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
+          this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
           this.form.tmsCustomer = this.customSend
           this.form.tmsOrderPickup.outTime = this.newDate
           this.form.tmsOrderPickup.arriveTime = this.endDate
+          // console.log(this.form)
           let data = this.form
           // let data = Object.assign({},this.form)
           // data.fixPhone = this.fixPhone

@@ -7,7 +7,7 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
           <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('finishPick')" plain>提货完成</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('delete')" plain>关联运单</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relevance')" plain>关联运单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>-->
@@ -46,7 +46,7 @@
             label="提货批次">
           </el-table-column>
           <el-table-column
-            prop="pickupStatus"
+            prop="pickupStatusName"
             width="110"
             sortable
             label="提货状态">
@@ -241,15 +241,20 @@
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" ></PickupMain>
+    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" ></PickupRelevance>
+
   </div>
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { fetchPostlist } from '@/api/operation/pickup'
+import { fetchPostlist , deletebatchDelete } from '@/api/operation/pickup'
 
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
+import PickupMain from './components/pickupMain'
+import PickupRelevance from './components/pickupRelevance'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
@@ -258,7 +263,9 @@ export default {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    PickupMain,
+    PickupRelevance
   },
   computed: {
       ...mapGetters([
@@ -284,7 +291,10 @@ export default {
       loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
+      pickMaintainisible:false,
+      releMaintainisible:false,
       isModify: false,
+      isDepMain: false,
       selectInfo: {},
       // 选中的行
       selected: [],
@@ -354,51 +364,46 @@ export default {
                       message: '每次只能修改单条数据~',
                       type: 'warning'
                   })
+                return false
               }
               this.selectInfo = this.selected[0]
               this.openAddCustomer()
               break;
-          //    finishPick
-        // 删除客户
+        // 提货完成
         case 'finishPick':
-          let _deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
-          //=>todo 删除多个
-          let _ids = this.selected.map(item => {
-            return item.customerId
-          })
-          _ids = _ids.join(',')
-
-          this.$prompt('确定要删除 ' + _deleteItem + ' 客户吗？', '提示', {
-            confirmButtonText: '删除',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            deleteSomeCustomerInfo(_ids).then(res => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.fetchData()
-            }).catch(err=>{
-              this.$message({
-                type: 'info',
-                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-              })
-            })
-
-          }).catch(() => {
+          if(this.selected.length > 1){
             this.$message({
-              type: 'info',
-              message: '已取消删除'
+              message: '每次只能生成单条数据~',
+              type: 'warning'
             })
-          })
+            return false
+          }
+          if(this.selected[0].pickupStatusName === '提货完成'){
+            this.$message({
+              message: '已经提货完成了~',
+              type: 'warning'
+            })
+            return false
+          }
+          this.openpickMaintainisible()
+          break;
+          //关联运单
+        case 'relevance':
+          if(this.selected.length > 1){
+            this.$message({
+              message: '每次只能生成单条数据~',
+              type: 'warning'
+            })
+            return false
+          }
+          this.openpickReletainisible()
           break;
           // 删除客户
           case 'delete':
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
                   //=>todo 删除多个
                   let ids = this.selected.map(item => {
-                      return item.customerId
+                      return item.id
                   })
                   ids = ids.join(',')
 
@@ -407,7 +412,7 @@ export default {
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                      deleteSomeCustomerInfo(ids).then(res => {
+                    deletebatchDelete(ids).then(res => {
                           this.$message({
                               type: 'success',
                               message: '删除成功!'
@@ -452,8 +457,17 @@ export default {
     openAddCustomer () {
       this.AddCustomerVisible = true
     },
+
     closeAddCustomer () {
       this.AddCustomerVisible = false
+    },
+    openpickMaintainisible(){
+      this.pickMaintainisible = true
+      this.releMaintainisible = false
+    },
+    openpickReletainisible() {
+      this.releMaintainisible = true
+      this.pickMaintainisible = false
     },
     clickDetails(row, event, column){
       this.$refs.multipleTable.toggleRowSelection(row)

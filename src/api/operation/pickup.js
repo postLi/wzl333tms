@@ -42,6 +42,36 @@ export function putUpdatePickup(params) {
     return res.data || {}
   })
 }
+
+/**
+ * /order/pickup/v1/batchDelete
+ 根据ids批量删除
+ * @param params
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+
+export function deletebatchDelete(ids) {
+  return fetch.delete('/api-order/order/pickup/v1/batchDelete/?ids=' + ids)
+}
+
+/**
+ * /order/pickup/v1/relevancyShip
+ 提货单关联运单号加入列表
+ */
+export function putRelevancyShip(params) {
+  return fetch.put('/api-order/order/pickup/v1/relevancyShip/', params).then(res => {
+    return res.data || {}
+  })
+}
+/**
+ * /order/pickup/v1/removeShip
+ 提货单关联运单号从列表移除
+ */
+export function putRremoveShip(params) {
+  return fetch.put('/api-order/order/pickup/v1/relevancyShip/', params).then(res => {
+    return res.data || {}
+  })
+}
 // /**
 //  *
 //  */
