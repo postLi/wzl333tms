@@ -1,39 +1,38 @@
 <template>
-  <el-form refs="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="短驳时间">
-      <el-date-picker v-model="searchForm.createTime" type="datetime" placeholder="选择日期" clearable></el-date-picker>
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker>
     </el-form-item>
-    <el-form-item label="批次状态" prop="billing_type">
-      <el-select v-model="searchForm.billing_type" clearable size="small" clearable>
-        <el-option v-for="(value, key) in $const.SHORT_STATE" :key="key" :label="value" :value="key">
-        </el-option>
-      </el-select>
+    <el-form-item label="批次状态" prop="batchTypeId">
+      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable></selectBatchType>
     </el-form-item>
-    <el-form-item label="发车批次" prop="orgid">
-      <el-input v-model="searchForm.orgid" maxlength="15" auto-complete="off" clearable></el-input>
+    <el-form-item label="发车批次" prop="batchNo">
+      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-input v-model="searchForm.shipToCityCode" maxlength="8" auto-complete="off" clearable></el-input>
+      <el-input v-model="searchForm.truckIdNumber" maxlength="8" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="司机名称">
-      <el-input v-model="searchForm.shipToCityCode" maxlength="8" auto-complete="off" clearable></el-input>
+      <el-input v-model="searchForm.dirverName" maxlength="8" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="发车网点">
-      <el-input v-model="searchForm.shipToCityCode" maxlength="15" auto-complete="off" clearable></el-input>
+      <SelectTree v-model="searchForm.orgId"></SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
-      <el-button type="info" @click="clearForm" plain>清空</el-button>
+      <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
     </el-form-item>
   </el-form>
 </template>
-
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import selectBatchType from '@/components/selectType/index'
 export default {
   components: {
-    SelectTree
+    SelectTree,
+    selectBatchType
   },
   props: {
     btnsize: {
@@ -44,10 +43,10 @@ export default {
       type: Number
     }
   },
-  data () {
+  data() {
     const orgidIdentifier = (rule, value, callback) => {
       let reg = REGEX.ONLY_NUMBER
-       if (value === '' || value === null || !value || value === undefined) {
+      if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
         callback(new Error('请输入最多15位数字'))
@@ -56,50 +55,108 @@ export default {
       }
     }
     return {
-      searchForm: {},
-      rules:{
-        orgid: [{validator: orgidIdentifier, tigger: 'blur'}]
+      searchTime: [],
+      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchForm: {
+        "orgId": '',
+        "loadTypeId": 38,
+        "loadStartTime": '',
+        "loadEndTime": '',
+        "departureStartTime": '',
+        "departureEndTime": '',
+        "batchTypeId": '',
+        "arriveOrgid": '',
+        "batchNo": '',
+        "truckIdNumber": '',
+        "dirverName": ''
+      },
+      query: {
+        "orgId": '',
+        "loadTypeId": 38,
+        "loadStartTime": '',
+        "loadEndTime": '',
+        "departureStartTime": '',
+        "departureEndTime": '',
+        "batchTypeId": '',
+        "arriveOrgid": '',
+        "batchNo": '',
+        "truckIdNumber": '',
+        "dirverName": ''
+      },
+      rules: {
+        orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近两个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
       }
     }
   },
   methods: {
-    onSubmit () {
-      this.$emit('change', this.searchForm)
+    onSubmit() {
+      let searchObj = {}
+      searchObj = Object.assign({}, this.searchForm)
+      this.$set(searchObj, 'departureStartTime', this.searchTime[0])
+      this.$set(searchObj, 'departureEndTime', this.searchTime[1])
+      this.$emit('change', searchObj)
     },
-    clearForm () {
-      // this.$refs['searchForm'].resetFields()
-      this.searchForm.orgid = ''
-      this.searchForm.shipFromCityCode = ''
-      this.searchForm.shipToCityCode = ''
+    clearForm(formName) {
+      this.$refs[formName].resetFields()
+      this.searchForm = Object.assign({}, this.query)
+      this.searchTime = []
     }
   }
 }
-</script>
 
+</script>
 <style lang="scss">
-.tab-content{
-    .staff_searchinfo{
-        padding:15px 20px;
-        border-bottom:1px dashed #999;
-        .el-form-item{
-            margin-bottom: 0;
-        }
-        
+.tab-content {
+  .staff_searchinfo {
+    padding: 15px 20px;
+    border-bottom: 1px dashed #999;
+    .el-form-item {
+      margin-bottom: 0;
     }
-    .staff_searchinfo--btn{
-        float: right;
-    }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .staff_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .staff_searchinfo--btn{
-          float: none;
-      }
+  }
+  .staff_searchinfo--btn {
+    float: right;
   }
 }
+
+@media screen and (max-width:1308px) {
+  .tab-content {
+    .staff_searchinfo {
+      .el-form-item {
+        margin-bottom: 10px;
+      }
+    }
+    .staff_searchinfo--btn {
+      float: none;
+    }
+  }
+}
+
 </style>

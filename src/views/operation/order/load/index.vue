@@ -359,6 +359,7 @@ export default {
           this.finishLoadInfo()
           break
         case 'finishTruck': // 完成并发车
+        this.finishTruckInfo()
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -409,6 +410,19 @@ export default {
         })
       }
     },
+    finishTruckInfo () {
+       this.formValidate() // 表单验证
+      if (this.submitvalidate) {
+        this.setDataFinishTruck() // 处理数据
+        this.$nextTick(() => {
+          postLoadInfo(this.loadInfo).then(data => { // 完成并发车
+            this.$message({ type: 'success', message: '操作成功' })
+            this.resetFieldsForm('formModel')
+            this.resetFieldsForm('formFee')
+          })
+        })
+      }
+    },
     getLoadTable(obj) { // 获取穿梭框表格数据列表
       this.loadTableInfo = Object.assign([], obj)
       this.loadInfoPercent = Object.assign([], obj)
@@ -424,26 +438,35 @@ export default {
         }
       }, 1000)
     },
-    setData() { // 处理数据格式。。。
+    setData() { // 完成配载 ：处理数据格式。。。
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
-      this.$set(this.formModel, 'loadTypeId', 1) // 配载类型： 1-干线
-      this.$set(this.formModel, 'batchTypeId', 1) // 批次状态： 1-干线
+      this.$set(this.formModel, 'loadTypeId', 39) // 配载类型：38-短驳 39-干线 40-送货
+      this.$set(this.formModel, 'batchTypeId', 52) // 批次状态： 干线(52已装车,53在途中)
+      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
+      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
+      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+    },
+    setDataFinishTruck () { // 完成并发车 ：处理数据格式。。。
+      this.$set(this.formModel, 'batchNo', this.truckMessage)
+      this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
+      this.$set(this.formModel, 'loadTypeId', 39) // 配载类型：38-短驳 39-干线 40-送货
+      this.$set(this.formModel, 'batchTypeId', 53) // 批次状态： 干线(52已装车,53在途中)
       this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
       this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
     },
     addTruck() {
-      console.log('添加车辆信息')
+      // console.log('添加车辆信息')
       this.addTruckVisible = true
     },
     addDriver() {
       this.infoDriver = {}
       this.addDriverVisible = true
-      console.log('添加司机信息')
+      // console.log('添加司机信息')
     },
     addOrg() {
-      console.log('添加网点信息')
+      // console.log('添加网点信息')
     },
     fetchData() {},
     closeAddDriver() {

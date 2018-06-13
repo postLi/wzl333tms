@@ -18,7 +18,7 @@
       <el-input v-model="searchForm.shipToCityName" maxlength="15" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
-      <el-button type="primary" @click="onSubmit('searchForm')">查询</el-button>
+      <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
     </el-form-item>
   </el-form>
@@ -90,7 +90,7 @@ export default {
     }
   },
   methods: {
-    onSubmit(formName) {
+    onSubmit() {
       let searchObj = {}
       searchObj = Object.assign({}, this.searchForm)
       this.$set(searchObj, 'createTime', this.searchTime[0])

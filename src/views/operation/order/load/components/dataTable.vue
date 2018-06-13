@@ -1,15 +1,15 @@
 <template>
   <transferTable>
-    <!-- 左右按钮区 -->
-    <div slot="btnDirection">
-      <el-button icon="el-icon-arrow-right" type="primary" circle size="mini" @click="doAction('goRight')"></el-button>
-      <el-button icon="el-icon-arrow-left" type="primary" circle size="mini" @click="doAction('goLeft')"></el-button>
-    </div>
     <!-- 左边表格区 -->
-    <div style="height:100%;" slot="tableLeft">
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" 
-      :show-summary="true">
-        <el-table-column fixed width="50" sortable type="selection">
+    <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+      <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
+      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
+        <el-table-column fixed type="index" width="50">
+        </el-table-column>
+        <el-table-column fixed width="50">
+          <template slot-scope="scope">
+            <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+          </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
@@ -48,10 +48,15 @@
       </el-table>
     </div>
     <!-- 右边表格区 -->
-    <div style="height:100%;" slot="tableRight">
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" 
-      :show-summary='true'>
-        <el-table-column fixed width="50" sortable type="selection">
+    <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn">
+      <el-button icon="el-icon-minus" class="tableAllBtn" size="mini" @click="minusAllList"></el-button>
+      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
+        <el-table-column fixed type="index" width="50">
+        </el-table-column>
+        <el-table-column fixed width="50">
+          <template slot-scope="scope">
+            <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+          </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
@@ -63,7 +68,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
-           <template slot-scope="scope">
+          <template slot-scope="scope">
             <el-input type="number" :value="scope.row.loadWeight" @change="changLoadWeight"></el-input>
           </template>
         </el-table-column>
@@ -223,29 +228,29 @@ export default {
     },
     doAction(type) {
       switch (type) {
-        case 'goLeft': // 左边数据勾选到右边
-          this.goRight()
-          break
-        case 'goRight': // 右边数据勾选到左边
+        case 'goLeft': // 右边数据勾选到左边
           this.goLeft()
+          break
+        case 'goRight': // 左边数据勾选到右边
+          this.goRight()
           break
       }
     },
-    changLoadAmount (newVal) { // 修改配载件数
+    changLoadAmount(newVal) { // 修改配载件数
       if (this.rightTable && newVal) {
         this.rightTable.forEach((e) => {
           e.loadAmount = Number(newVal)
         })
       }
     },
-    changLoadWeight (newVal) { // 修改配载重量
+    changLoadWeight(newVal) { // 修改配载重量
       if (this.rightTable && newVal) {
         this.rightTable.forEach((e) => {
           e.loadWeight = Number(newVal)
         })
       }
     },
-    changLoadVolume (newVal) { // 修改配载体积
+    changLoadVolume(newVal) { // 修改配载体积
       if (this.rightTable && newVal) {
         this.rightTable.forEach((e) => {
           e.loadVolume = Number(newVal)
@@ -257,7 +262,7 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-           // 默认设置配载重量,配载体积,配载数量
+          // 默认设置配载重量,配载体积,配载数量
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
@@ -289,8 +294,47 @@ export default {
         this.selectedLeft = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }
+    },
+    addItem(row, index) { // 添加单行
+      this.selectedRight = []
+      this.selectedRight[index] = row
+      this.doAction('goLeft')
+    },
+    minusItem(row, index) { // 减去单行
+      this.selectedLeft = []
+      this.selectedLeft[index] = row
+      this.doAction('goRight')
+    },
+    addALLList() { // 添加全部
+      this.selectedRight = Object.assign([], this.leftTable)
+      this.doAction('goLeft')
+    },
+    minusAllList() { // 减去全部
+      this.selectedLeft = Object.assign([], this.rightTable)
+      this.doAction('goRight')
     }
   }
 }
 
 </script>
+<style lang="scss" scoped>
+.tableHeadItemBtn {
+  position: relative;
+  .tableItemBtn {
+    width: 30px;
+    padding-left: 8px;
+  }
+  .tableAllBtn {
+    width: 30px;
+    padding-left: 8px;
+    position: absolute;
+    z-index: 33;
+    top: 8px;
+    left: 61px;
+  }
+  .showAllTable {
+    width: calc(100% - 100px);
+  }
+}
+
+</style>
