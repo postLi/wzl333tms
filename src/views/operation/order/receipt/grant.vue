@@ -1,10 +1,10 @@
 <template>
     <div class="tab-content">
-        <SearchForm :orgid="otherinfo.orgid" title="发放" type="giveout_status" @change="getSearchParam" :btnsize="btnsize" />
+        <SearchForm :orgid="otherinfo.orgid" title="发放" type="giveout_status" status="giveoutStatus" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize"  plain @click="doAction('recycle')">回单发放</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消发放</el-button>
+          <el-button type="primary" :size="btnsize"  plain @click="doAction('grant')">回单发放</el-button>
+          <!-- <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消发放</el-button> -->
           <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
           <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>打印</el-button>
@@ -225,26 +225,25 @@
           </el-table-column>
            <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop="cargoName"
             label="到达省"
             width="120"
             sortable
             >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
           </el-table-column>
           <el-table-column
-            prop="shipFromCityCode"
             label="到达市"
             width="120"
             sortable
             >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
           </el-table-column>
-          <!-- 这里没有找到对应的字段 -->
           <el-table-column
-            prop="cargoName"
-            label="到达县区"
+            label="到达区"
             width="120"
             sortable
             >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
           </el-table-column>
           <el-table-column
             prop="sendMobile"
@@ -390,38 +389,55 @@ export default {
           }
 
           switch (type) {
-              //回单寄出
-            case 'send': 
-              let ids = this.selected.map(el => {
-                return el.receiptId
-              })
-              this.searchQuery.vo.receiptIds = ids
-               putUpdateReceipt(this.searchQuery.vo).then(res=>{
-                this.$message({
-                  message: '回单接收成功~',
-                  type: 'success'
+              //回单发放
+            case 'grant': 
+                 let ids = this.selected.filter(el=>{
+                  return el.giveoutStatus === 111
+                }).map(el => {
+                  return  el.receiptId
                 })
-                return false
-              })
-            break;
-              case 'cancel':
-                // this.popVisible = true
-                // this.isModify = false
-                
-                let _ids = this.selected.map(el => {
-                  return el.receiptId
-                })
-                // let id = this.selected[0].receiptId
-                //  ids = ids.length > 1 ? ids.join(',') : ids
-                this.searchQuery.vo.receiptIds = _ids
-                putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
-                  this.$message({
-                    message: '取消接收成功~',
-                    type: 'success'
+                if(ids.length){
+                  this.searchQuery.vo.receiptIds = ids
+                  this.dotInfo = ids
+                  this.popVisible = true
+                  this.isAccept = true
+                  this.isModify = false
+                  this.searchQuery.vo.receiptIds = ids
+                  putUpdateReceipt(this.searchQuery.vo).then(res=>{
+                    this.$message({
+                      message: '回单发放成功~',
+                      type: 'success'
+                    })
+                    this.fetchAllreceipt()
+                    return false
                   })
-                  return false
-                })
-                break;
+                }else{
+                  this.$message.warning('请选择未发放项~')
+                }
+              break;
+              // case 'cancel':
+              //  let _ids = this.selected.filter(el=>{
+              //     return el.giveoutStatus === 112 
+              //   }).map(el => {
+              //   return  el.receiptId
+              // })
+
+              // console.log(this._ids)
+
+              // if(_ids.length){
+              //     this.searchQuery.vo.receiptIds = _ids
+              //     putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
+              //       this.$message({
+              //         message: '取消发放成功~',
+              //         type: 'success'
+              //       })
+              //       this.fetchAllreceipt()
+              //       return false
+              //     })
+                
+              //   }
+              
+              // break;
               }
           // 清除选中状态，避免影响下个操作
           this.$refs.multipleTable.clearSelection()

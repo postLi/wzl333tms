@@ -133,10 +133,12 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
-      this.searchForm.shipSenderId = ''
+      this.searchForm.shipFromOrgid = ''
       this.searchForm.orgid = this.orgid
       this.searchForm.shipSn = ''
       this.searchForm.shipReceiverId = ''
+      this.searchForm.shipSenderId = ''
+       this.searchForm.searchCreatTime = ''
     }
   }
 }

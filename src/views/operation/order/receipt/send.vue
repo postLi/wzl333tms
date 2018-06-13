@@ -1,6 +1,6 @@
 <template>
-    <div class="tab-content">
-        <SearchForm :orgid="otherinfo.orgid" title="寄出" type="send_status"  @change="getSearchParam" :btnsize="btnsize" />
+    <div class="tab-content" @success="fetchAllreceipt">
+        <SearchForm :orgid="otherinfo.orgid" title="寄出" type="send_status" status="sendStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
           <!-- <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">加入挑单夹</el-button> -->
@@ -233,27 +233,25 @@
           </el-table-column>
            <!-- 这里没有找到对应的字段 -->
           <el-table-column
-              prop="oddNumbers"
-              label="到达省"
-              width="120"
-              sortable
-              >
-              <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>      -->
+          label="到达省"
+          width="120"
+          sortable
+          >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
             label="到达市"
             width="120"
             sortable
             >
-            <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template> -->
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
           </el-table-column>
           <el-table-column
-            label="到达县"
+            label="到达区"
             width="120"
             sortable
             >
-            <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template> -->
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
           </el-table-column>
           <el-table-column
             prop="sendMobile"
@@ -398,7 +396,6 @@ export default {
                 }).map(el => {
                   return  el.receiptId
                 })
-                console.log(ids);
                 if(ids.length){
                   this.searchQuery.vo.receiptIds = ids
                   this.dotInfo = ids
@@ -408,13 +405,14 @@ export default {
                   this.searchQuery.vo.receiptIds = ids
                   putUpdateReceipt(this.searchQuery.vo).then(res=>{
                     this.$message({
-                      message: '回单接收成功~',
+                      message: '回单寄出成功~',
                       type: 'success'
                     })
+                    this.fetchAllreceipt()
                     return false
                   })
                 }else{
-                  this.$message.warning('请选择未回收项~')
+                  this.$message.warning('回单已寄出请选择未寄出项~')
                 }
               break;
             case 'cancel':
@@ -437,10 +435,10 @@ export default {
                     return false
                   }).catch(err => {
                     this.$message.error(err)
-                    this.closeAddDot()
+                    // this.closeAddDot()
                   })
                 }else{
-                  this.$message.warning('回单已经寄出~')
+                  this.$message.warning('回单已接收不可取消~')
                 }
               
               break;

@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" @change="getSearchParam" :btnsize="btnsize" />
+        <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize"  plain @click="doAction('accept')">回单接收</el-button>
@@ -225,27 +225,25 @@
               </el-table-column>
               <!-- 这里没有找到对应的字段 -->
               <el-table-column
-                  prop="oddNumbers"
-                  label="到达省"
-                  width="120"
-                  sortable
-                  >
-                  <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>      -->
+                label="到达省"
+                width="120"
+                sortable
+                >
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
               </el-table-column>
               <el-table-column
-                prop="oddNumbers"
                 label="到达市"
                 width="120"
                 sortable
                 >
-                <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template> -->
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
               </el-table-column>
               <el-table-column
-                label="到达县"
+                label="到达区"
                 width="120"
                 sortable
                 >
-                <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template> -->
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
               </el-table-column>
               <el-table-column
                 prop="sendMobile"
@@ -428,7 +426,7 @@ export default {
             case 'cancel':
             
               let _ids = this.selected.filter(el=>{
-                  return el.acceptStatus === 110
+                  return el.acceptStatus === 110 && el.giveoutStatus === 111
                 }).map(el => {
                 return  el.receiptId
               })
@@ -449,7 +447,7 @@ export default {
                     this.closeAddDot()
                   })
                 }else{
-                  this.$message.warning('请选择接收项~')
+                  this.$message.warning('回单已发放不可取消~')
                 }
               
               break;

@@ -104,7 +104,7 @@
                 >
               </el-table-column>
               <el-table-column
-                prop="bankCardNumber"
+                prop="shipReceiptRequire"
                 label="回单类型"
                 width="120"
                 sortable
@@ -233,27 +233,25 @@
               </el-table-column>
               <!-- 这里没有找到对应的字段 -->
               <el-table-column
-                  prop="oddNumbers"
                   label="到达省"
                   width="120"
                   sortable
                   >
-                  <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>      -->
+                  <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
               </el-table-column>
               <el-table-column
-                prop="oddNumbers"
                 label="到达市"
                 width="120"
                 sortable
                 >
-                <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template> -->
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
               </el-table-column>
               <el-table-column
-                label="到达县"
+                label="到达区"
                 width="120"
                 sortable
                 >
-                <!-- <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template> -->
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
               </el-table-column>
               <el-table-column
                 prop="sendMobile"
