@@ -12,6 +12,14 @@ export function getCityInfo(name = '') {
     return res.data || []
   })
 }
+/**
+ * 获取后台时间
+ */
+export function getSystemTime() {
+  return fetch.get('/api-order/order/v1/orderCreateDate/').then(res => {
+    return res.data
+  })
+}
 
 /**
  * 获取图片上传的policy
@@ -34,8 +42,8 @@ export function getUploadPolicy() {
     })
   } else {
     return fetch.get('/anfacommonservice/common/oss/v1/policy').then(res => {
-      UPLOADPOLICYDATA = res.data || ''
-      return res.data || {}
+      UPLOADPOLICYDATA = res.data || {}
+      return UPLOADPOLICYDATA
     })
   }
 }

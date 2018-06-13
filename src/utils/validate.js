@@ -61,7 +61,6 @@ export function validateMobile(mobile) {
   return re.test(mobile)
 }
 
-
 // 正则匹配
 export const REGEX = {
   // 用户名

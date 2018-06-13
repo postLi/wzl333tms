@@ -106,8 +106,12 @@ export function getAuthInfo(orgid, pagesize) {
  * @param {*} orgid 组织ID
  */
 export function getAllUser(orgid, name, mobilephone, pageSize = 100, pageNum = 1) {
+  let params = orgid
+  if (typeof orgid !== 'object') {
+    params = { name, orgid, mobilephone, pageSize, pageNum }
+  }
   return fetch.get('/api-system/system/user/v1/', {
-    params: { name, orgid, mobilephone, pageSize, pageNum }
+    params
   }).then(res => {
     return res.data || { total: 0, list: [] }
   })

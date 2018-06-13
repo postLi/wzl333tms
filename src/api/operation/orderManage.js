@@ -136,7 +136,6 @@ export default {
       "bankName": "string",
       "companyName": "string",
       "companyType": 0,
-      "createTime": "2018-06-04T07:08:52.754Z",
       "customerId": 0,
       "customerMobile": "string",
       "customerName": "string",
@@ -152,7 +151,6 @@ export default {
       "licensePicture": "string",
       "openBank": "string",
       "orgid": 0,
-      "updateTime": "2018-06-04T07:08:52.754Z",
       "vipNum": "string"
     }
   ],
@@ -194,33 +192,6 @@ export default {
       "weightFee": 0
     }
   ],
-  "tmsOrderPickup": {
-    "arriveTime": "2018-06-04T07:08:52.755Z",
-    "cancelStatus": 0,
-    "carriage": 0,
-    "collectionFee": 0,
-    "differVolume": 0,
-    "differWeight": 0,
-    "id": 0,
-    "orderId": "string",
-    "outTime": "2018-06-04T07:08:52.755Z",
-    "payMethod": 0,
-    "pickupAmount": 0,
-    "pickupBatchNumber": "string",
-    "pickupFee": 0,
-    "pickupFromOrgid": 0,
-    "pickupName": "string",
-    "pickupStatus": 0,
-    "pickupVolume": 0,
-    "pickupWeight": 0,
-    "realVolume": 0,
-    "realWeight": 0,
-    "remark": "string",
-    "senderId": 0,
-    "toCityCode": "string",
-    "truckFee": 0,
-    "truckId": 0
-  },
   "tmsOrderPre": {
     "createTime": "2018-06-04T07:08:52.755Z",
     "id": 0,

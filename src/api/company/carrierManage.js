@@ -1,6 +1,6 @@
-import fetch from '../../utils/fetch'
-import { getToken } from '../../utils/auth'
-import { exportWithIframe } from '../../utils/index'
+import fetch from '@/utils/fetch'
+import { getToken } from '@/utils/auth'
+import { exportWithIframe } from '@/utils/index'
 
 /**
  * 根据条件获取承运商列表

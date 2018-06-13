@@ -17,7 +17,7 @@ export function getAllSetting(params) {
   return fetch.get('/api-system/system/setting/v1/', {
     params
   }).then(res => {
-    return res.data
+    return res.data || {}
   })
 }
 /**

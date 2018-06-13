@@ -2,7 +2,7 @@
   <el-dialog
     title="个人设置"
     class="personalPopSetup"
-    :visible="dialogVisiblePersion"
+    :visible="dialogVisiblePerson"
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
     :modal-append-to-body="false"
@@ -83,7 +83,7 @@ export default {
     SelectType
   },
   props: {
-    dialogVisiblePersion: {
+    dialogVisiblePerson: {
       type: Boolean,
       default: false
     }
@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     close(done){
-      this.$emit('update:dialogVisiblePersion', false)
+      this.$emit('update:dialogVisiblePerson', false)
       this.$emit('close')
       if(typeof done === 'function'){
         done()
@@ -195,28 +195,7 @@ export default {
     color: #409EFF;
   }
 
-  .el-collapse-item__header{
-    background: #E9F3FA;
-    text-align: left;
-    text-indent: 40px;
-    height: 30px;
-    line-height: 30px;
-    font-size: 12px;
-    color: #333;
-    position: relative;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .el-collapse-item__arrow{
-    position: absolute;
-    left: 12px;
-    top: 0;
-    line-height: 30px;
-    text-indent: 0;
-  }
-  .el-collapse-item__content{
-    padding-bottom: 10px;
-  }
+  
 
   .el-select{
     width: 178px;
