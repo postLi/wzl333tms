@@ -10,7 +10,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+        <el-table ref="multipleTable" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="shipSn" label="运单号">
@@ -219,11 +219,11 @@ export default {
       let timeTwo = this.selectionColorSetting.sectionTwo * 3600
       let timeThree = this.selectionColorSetting.sectionThree * 3600
       if (orgTime < timeOne || orgTime === timeOne) {
-        return { "background-color": this.selectionColorSetting.sectionOneColour }
+        return { "color": this.selectionColorSetting.sectionOneColour }
       } else if (orgTime > timeThree) {
-        return { "background-color": this.selectionColorSetting.sectionThreeColour }
+        return { "color": this.selectionColorSetting.sectionThreeColour }
       } else {
-        return { "background-color": this.selectionColorSetting.sectionTwoColour }
+        return { "color": this.selectionColorSetting.sectionTwoColour }
       }
     },
     getSearchParam(obj) {

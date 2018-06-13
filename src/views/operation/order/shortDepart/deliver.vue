@@ -82,7 +82,6 @@ export default {
     Pager,
     SearchForm,
     postAllshortDepartList
-    // Colorpicker
   },
   data() {
     return {
