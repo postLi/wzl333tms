@@ -34,7 +34,7 @@
           <el-table-column
             fixed
             sortable
-            prop="customerId"
+            prop="id"
             label="序号"
             width="80">
           </el-table-column>

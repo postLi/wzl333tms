@@ -34,7 +34,7 @@
           <el-table-column
             fixed
             sortable
-            prop="customerId"
+            prop="id"
             label="序号"
             width="80">
           </el-table-column>
@@ -242,7 +242,7 @@
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
     <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" ></PickupMain>
-    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" ></PickupRelevance>
+    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
 
   </div>
 </template>
@@ -385,6 +385,7 @@ export default {
             })
             return false
           }
+          this.selectInfo = this.selected[0]
           this.openpickMaintainisible()
           break;
           //关联运单
@@ -396,6 +397,7 @@ export default {
             })
             return false
           }
+          this.selectInfo = this.selected[0]
           this.openpickReletainisible()
           break;
           // 删除客户

@@ -118,33 +118,29 @@
             <!--<el-input v-model="form.tmsDriver.pickupStatus" maxlength="8" auto-complete="off" ></el-input>-->
             <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" />
           </el-form-item>
-          <el-form-item label="出车时间" prop="customerUnit" class="customerunit">
-            <!--<el-input v-model="form.tmsTruck.outTime" maxlength="8" auto-complete="off" class="customer-unit"></el-input>-->
+          <el-form-item label="出车时间" prop="outTime" class="customerunit">
               <el-date-picker
-                v-model="newDate"
-                type="datetime"
-                placeholder=""
-                picker-options="pickoption1"
+                v-model="form.tmsOrderPickup.outTime"
                 align="right"
-                start-placeholder="开始日期"
+                type="date"
+                placeholder="选择日期"
+                value-format="timestamp"
+                :picker-options="pickOption"
               >
-                <!--:picker-options="pickerOptions1"-->
               </el-date-picker>
           </el-form-item>
 
 
-          <el-form-item label="要求到达时间" prop="customerUnit" class="arrive-time">
+          <el-form-item label="要求到达时间" prop="arriveTime" class="arrive-time">
             <el-date-picker
-              v-model="endDate"
-              type="datetime"
-              placeholder=""
+              v-model="form.tmsOrderPickup.arriveTime"
               align="right"
-              picker-options="pickoption2"
-              end-placeholder="结束日期"
+              type="date"
+              :picker-options="pickOption2"
+              placeholder="选择日期"
+              value-format="timestamp"
             >
-              <!--:picker-options="pickerOptions1"-->
             </el-date-picker>
-            <!--<el-input v-model="form.tmsDriver.arriveTime" maxlength="8" auto-complete="off" ></el-input>-->
           </el-form-item>
           <el-form-item class='checked'>
             <el-checkbox v-model="checked">发送短信给司机</el-checkbox>
@@ -249,25 +245,19 @@ export default {
     }
 
     return {
-      pickoption1: {
+      pickOption: {
         firstDayOfWeek:1,
         disabledDate(time) {
           // 小于终止日
-          return _this.form.tmsOrderPickup.outTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
+          return _this.form.contractEndtime ? time.getTime() > _this.form.contractEndtime : false
         }
-        // disabledDate(now) {
-        //   return +this.form.tmsOrderPickup.outTime < +this.form.tmsOrderPickup.arriveTime
-        // }
       },
-      pickoption2: {
+      pickOption2: {
         firstDayOfWeek:1,
         disabledDate(time) {
-          // 小于终止日
-          return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.arriveTime : false
+          // 大于起始日
+          return _this.form.contractStarttime ? time.getTime() < _this.form.contractStarttime : false
         }
-        // disabledDate(now) {
-        //   return +this.form.tmsOrderPickup.outTime < +this.form.tmsOrderPickup.arriveTime
-        // }
       },
       form: {
         tmsCustomer:{
@@ -305,8 +295,6 @@ export default {
         }
       },
       checked: true,
-      newDate: +new Date(),
-      endDate: +new Date(),
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
@@ -459,8 +447,8 @@ export default {
           this.loading = true
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
           this.form.tmsCustomer = this.customSend
-          this.form.tmsOrderPickup.outTime = this.newDate
-          this.form.tmsOrderPickup.arriveTime = this.endDate
+          // this.form.tmsOrderPickup.outTime = this.newDate
+          // this.form.tmsOrderPickup.arriveTime = this.endDate
           // console.log(this.form)
           let data = this.form
           // let data = Object.assign({},this.form)

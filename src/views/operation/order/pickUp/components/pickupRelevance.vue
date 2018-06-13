@@ -4,28 +4,28 @@
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div ref="ruleForm" class="depmain-div">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline" :label-width="formLabelWidth">
+          <el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth">
             <el-form-item label="提货批次">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="派车费用">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="车牌号码">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.truckIdNumber" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="司机姓名">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.driverName" placeholder="审批人"></el-input>
             </el-form-item>
           </el-form>
           <el-table
             ref="multipleTable"
-            :data="usersArr"
+            :data="getMentInfo"
             stripe
             border
             @row-click="clickDetails"
             @selection-change="getSelection"
-            height="100%"
+            height="110"
             tooltip-effect="dark"
             :default-sort = "{prop: 'id', order: 'ascending'}"
             style="width: 100%">
@@ -38,7 +38,7 @@
             <el-table-column
               fixed
               sortable
-              prop="customerId"
+              prop="shipSn"
               label="运单号"
               width="160">
             </el-table-column>
@@ -52,7 +52,7 @@
             <el-table-column
               fixed
               sortable
-              prop="pickupBatchNumber"
+              prop="pickupFee"
               width="150"
               label="实际提货费">
             </el-table-column>
@@ -73,8 +73,8 @@
         </div>
       </template>
       <div slot="footer" class="dialog-footer-frame" >
-        <el-button type="primary" @click="submitForm('ruleForm')">生成</el-button>
-        <el-button @click="closeMe">不生成</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">加入列表</el-button>
+        <el-button @click="closeMe">从列表移除</el-button>
       </div>
 
     </PopFrame>
@@ -111,9 +111,13 @@
         checked1: true,
         popTitle: '关联运单',
         loading:false,
-        getMentInfo:[
-          {dictName:'',id:''}
-        ],
+        getMentInfo:
+          {
+            pickupBatchNumber:'',
+          //派车费用
+            truckIdNumber:'',//车牌
+            driverName:''//司机姓名
+          },
         //首行
         input: '',
         orderId: '',
@@ -143,7 +147,8 @@
         }
       },
       dotInfo (newVal) {
-        // this.getMentInfo = this.dotInfo
+        this.getMentInfo = this.dotInfo
+        console.log(typeof this.dotInfo)
       },
       popVisible (newVal) {
         console.log('popVisible:', newVal)
@@ -235,27 +240,35 @@
     bottom: auto;
     min-width: 550px;
     max-width:  550px;
-    min-height: 520px;
-    max-height:  520px;
+    /*min-height: 450px;*/
+    /*max-height:  100%;*/
 
   }
   .pick-maintain .popRight-content{
-    padding: 20px 0 20px 10px;
+    padding: 20px 0 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{
       margin-right: -8px;
+      /*margin-bottom: 15px;*/
     }
     .el-input{
       width: 90%;
+
     }
     .order_bottom{
+      margin-top: 10px;
       .el-form-item{
-
+        margin-right: 10px;
       }
       .el-input{
-        width: 50%;
+        width: 100px;
 
       }
+    }
+    .el-input__inner{
+      height: 30px;
+      font-size: 14px;
+
     }
   }
   .pick_center{
