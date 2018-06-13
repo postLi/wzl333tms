@@ -190,6 +190,7 @@ export default {
     },
     commonTruckData(type) {
       let data = {}
+      this.isBatch = true
       this.$set(data, 'loadTypeId', 38) // 短驳
       this.$set(data, 'loadIds', [])
       this.selected.forEach((e, index) => {
@@ -211,7 +212,7 @@ export default {
           this.selected = {}
         })
       } else {
-        this.$message({ type: 'success', message: '已装车状态才可以发车确认' })
+        this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
       }
     },
     chanelTruck() {
@@ -223,7 +224,7 @@ export default {
           this.selected = {}
         })
       } else {
-        this.$message({ type: 'success', message: '在途中状态才可以取消发车' })
+        this.$message({ type: 'warning', message: '短驳中状态才可以取消发车' })
       }
     },
     chanelRepertory() {
@@ -235,7 +236,7 @@ export default {
           this.selected = {}
         })
       } else {
-        this.$message({ type: 'success', message: '已装车状态才可以取消装车' })
+        this.$message({ type: 'warning', message: '已装车状态才可以取消装车' })
       }
     },
     edit() {}

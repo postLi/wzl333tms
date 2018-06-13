@@ -345,11 +345,11 @@ export default {
       let timeTwo = this.selectionColorSetting.sectionTwo * 3600
       let timeThree = this.selectionColorSetting.sectionThree *3600
       if (orgTime < timeOne || orgTime === timeOne) {
-        return { "background-color": this.selectionColorSetting.sectionOneColour }
+        return { "color": this.selectionColorSetting.sectionOneColour }
       } else if (orgTime > timeThree) {
-        return { "background-color": this.selectionColorSetting.sectionThreeColour }
+        return { "color": this.selectionColorSetting.sectionThreeColour }
       } else {
-        return { "background-color": this.selectionColorSetting.sectionTwoColour }
+        return { "color": this.selectionColorSetting.sectionTwoColour }
       }
     },
     getSearchParam(obj) {

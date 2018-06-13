@@ -14,52 +14,52 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="repertoryArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+        <el-table ref="multipleTable" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
           <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="shipSn" label="发货批次">
+          <el-table-column fixed sortable width="110" prop="batchNo" label="发货批次">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipStatusName" label="批次状态">
+          <el-table-column sortable width="120" prop="batchTypeName" label="批次状态">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipIdentifying" label="车牌号">
+          <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipIdentifying" label="司机">
+          <el-table-column sortable width="120" prop="dirverName" label="司机">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipIdentifying" label="司机电话">
+          <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
           </el-table-column>
-          <el-table-column sortable width="155" prop="repertoryCreateTime" label="短驳时间">
+          <el-table-column sortable width="155" prop="departureTime" label="短驳时间">
             <template slot-scope="scope">
-              {{ scope.row.repertoryCreateTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
             </template>
           </el-table-column>
-          <el-table-column sortable width="120" prop="hashours" label="目的网点">
+          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
           </el-table-column>
           <el-table-column sortable width="155" prop="createTime" label="接收时间">
             <template slot-scope="scope">
-              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.arriveOrgName | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
             </template>
           </el-table-column>
-          <el-table-column sortable width="120" prop="cargoName" label="短驳费">
+          <el-table-column sortable width="120" prop="shortFee" label="短驳费">
           </el-table-column>
-          <el-table-column sortable width="120" prop="repertoryAmount" label="实到件数">
+          <el-table-column sortable width="120" prop="actualAmountall" label="实到件数">
           </el-table-column>
-          <el-table-column sortable width="120" prop="repertoryWeight" label="实到重量">
+          <el-table-column sortable width="120" prop="actualWeigntall" label="实到重量">
           </el-table-column>
-          <el-table-column sortable width="120" prop="repertoryVolume" label="实到体积">
+          <el-table-column sortable width="120" prop="actualVolumeall" label="实到体积">
           </el-table-column>
-          <el-table-column sortable width="120" prop="cargoAmount" label="配载总件数">
+          <el-table-column sortable width="120" prop="loadAmountall" label="配载总件数">
           </el-table-column>
-          <el-table-column sortable width="120" prop="cargoWeight" label="配载总重量">
+          <el-table-column sortable width="120" prop="loadWeightall" label="配载总重量">
           </el-table-column>
-          <el-table-column sortable width="120" prop="cargoVolume" label="配载总体积">
+          <el-table-column sortable width="120" prop="loadVolumeall" label="配载总体积">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipFromCityCode" label="重量装载率">
+          <el-table-column sortable width="120" prop="weightLoadRate" label="重量装载率">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipToCityCode" label="体积装载率">
+          <el-table-column sortable width="120" prop="volumeLoadRate" label="体积装载率">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipSenderId" label="短驳经办人">
+          <el-table-column sortable width="120" prop="userName" label="短驳经办人">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipReceiverId" label="备注">
+          <el-table-column sortable width="120" prop="remark" label="备注">
           </el-table-column>
         </el-table>
       </div>
@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-import { postAllOrderRepertory } from '@/api/operation/repertory'
+import { postAllshortDepartList, putTruckDepart, putTruckChanel, putTruckLoad } from '@/api/operation/shortDepart'
 import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
@@ -87,17 +87,26 @@ export default {
       total: 0,
       btnsize: 'mini',
       setupTableVisible: false,
-      repertoryArr: [],
       selected: [],
+      tableKey: 0, 
       loading: false,
       isModify: false,
       selectInfo: {},
+      isBatch: true,
+      commonTruck: {},
+      infoList: [],
       searchQuery: {
-        'currentPage': 1,
-        'pageSize': 100,
-        vo: {
-          'orgid': 1
-        }
+        "orgId": 1,
+        "loadTypeId": 38,
+        "loadStartTime": '',
+        "loadEndTime": '',
+        "departureStartTime": '',
+        "departureEndTime": '',
+        "batchTypeId": 48,
+        "arriveOrgid": '',
+        "batchNo": '',
+        "truckIdNumber": '',
+        "dirverName": ''
       }
     }
   },
@@ -110,9 +119,9 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
-    // this.fetchAllOrderRepertory()
-    // postAllOrderRepertory(this.searchQuery).then(res => {})
+    this.searchQuery.orgId = this.otherinfo.orgid
+    // this.fetchShortDepartList()
+    this.fetchShortDepartList()
   },
   methods: {
     getSearchParam(obj) {},
@@ -148,26 +157,108 @@ export default {
     },
     getSelection(list) {
       this.selected = list
-      console.log('selected', this.selected)
     },
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    fetchAllOrderRepertory() {
-      this.getAllOrderRepertory()
+    fetchShortDepartList() {
+      this.dataList = []
+      this.total = 0
+      this.getAllListOne()
+      this.getAllListTwo()
+      this.getAllListThree()
     },
-    // closeColorpicker () {
-    //   this.colorpickerVisible = false
-    // },
-    getAllOrderRepertory() {
+    getAllListOne () {
+       this.loading = true
+      let dataOne = Object.assign({}, this.searchQuery) // 短驳中 48
+      dataOne.batchTypeId = 48
+      return postAllshortDepartList(dataOne).then(data => {
+        if (data) {
+          data.list.forEach(e => {
+            this.infoList.push(e)
+          })
+          this.total += data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
+      })
+    },
+    getAllListTwo() {
       this.loading = true
-      return postAllOrderRepertory(this.searchQuery).then(data => {
-        this.repertoryArr = data.list
-        this.total = data.total
-        this.loading = false
+      let dataTwo = Object.assign({}, this.searchQuery) // 已到车 49
+      dataTwo.batchTypeId = 49
+      return postAllshortDepartList(dataTwo).then(data => {
+        if (data) {
+          data.list.forEach(e => {
+            this.infoList.push(e)
+          })
+          this.total += data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
+      })
+    },
+    getAllListThree() {
+      this.loading = true
+      let dataThree = Object.assign({}, this.searchQuery) // 已入库 50
+      dataThree.batchTypeId = 50
+      return postAllshortDepartList(dataThree).then(data => {
+        if (data) {
+          data.list.forEach(e => {
+            this.infoList.push(e)
+          })
+          this.total += data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
       })
     }
+    // getAllList() {
+    //   this.loading = true
+    //   let dataOne = Object.assign({}, this.searchQuery) // 短驳中 48
+    //   let dataTwo = Object.assign({}, this.searchQuery) // 已到车 49
+    //   let dataThree = Object.assign({}, this.searchQuery) // 已入库 50
+    //   dataOne.batchTypeId = 48
+    //   dataTwo.batchTypeId = 49
+    //   dataThree.batchTypeId = 50
+    //   postAllshortDepartList(dataOne).then(data => {
+    //     if (data) {
+    //       data.list.forEach(e => {
+    //         this.infoList.push(e)
+    //       })
+    //       this.total += data.total
+    //       this.loading = false
+    //     } else {
+    //       this.loading = false
+    //     }
+    //   })
+    //   postAllshortDepartList(dataTwo).then(data => {
+    //     if (data) {
+    //       data.list.forEach(e => {
+    //         this.infoList.push(e)
+    //       })
+    //       this.total += data.total
+    //       this.loading = false
+    //     } else {
+    //       this.loading = false
+    //     }
+    //   })
+    //   postAllshortDepartList(dataThree).then(data => {
+    //     if (data) {
+    //       data.list.forEach(e => {
+    //         this.infoList.push(e)
+    //       })
+    //       this.total += data.total
+    //       this.loading = false
+    //     } else {
+    //       this.loading = false
+    //     }
+    //   })
+    // }
   }
 }
 
