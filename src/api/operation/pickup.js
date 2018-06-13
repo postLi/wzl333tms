@@ -6,7 +6,7 @@ import fetch from '../../utils/fetch'
  */
 
 export function fetchPostlist(params) {
-  return fetch.post('/api-order//order/pickup/v1/list', params).then(res => {
+  return fetch.post('/api-order/order/pickup/v1/list', params).then(res => {
     return res.data || {}
   })
 }
@@ -72,6 +72,18 @@ export function putRremoveShip(params) {
     return res.data || {}
   })
 }
+
+
+//
+// http://localhost:7010/api-system/system/trunk/v1/list?access_token=
+// {
+//   "currentPage":1,
+//   "pageSize":3,
+//   "vo":{"orgid":1,"truckIdNumber":"1234"}
+// }
+// post
+
+
 // /**
 //  *
 //  */

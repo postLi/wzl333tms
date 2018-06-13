@@ -6,21 +6,21 @@
         <div ref="ruleForm" class="depmain-div">
           <el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth">
             <el-form-item label="提货批次">
-              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="派车费用">
-              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="车牌号码">
-              <el-input v-model="getMentInfo.truckIdNumber" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.truckIdNumber" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="司机姓名">
-              <el-input v-model="getMentInfo.driverName" placeholder="审批人"></el-input>
+              <el-input v-model="getMentInfo.driverName" placeholder=""></el-input>
             </el-form-item>
           </el-form>
           <el-table
             ref="multipleTable"
-            :data="getMentInfo"
+            :data="userar"
             stripe
             border
             @row-click="clickDetails"
@@ -84,7 +84,7 @@
 
 <script>
   import PopFrame from '@/components/PopFrame/index'
-  import { getSelectDictInfo,postDict,deletePerManage,putDict } from '@/api/company/groupManage'
+  // import { getSelectDictInfo,postDict,deletePerManage,putDict } from '@/api/company/groupManage'
   export default {
     components: {
       PopFrame
@@ -94,7 +94,10 @@
         type: Boolean,
         default: false
       },
-      dotInfo: [Object,Array],
+      dotInfo: {
+        type: Object,
+        default: false
+      },
       isDepMain:{
         type:Boolean,
         default:false
@@ -147,8 +150,8 @@
         }
       },
       dotInfo (newVal) {
-        this.getMentInfo = this.dotInfo
-        console.log(typeof this.dotInfo)
+        // this.getMentInfo = this.dotInfo
+        // console.log(typeof this.dotInfo)
       },
       popVisible (newVal) {
         console.log('popVisible:', newVal)

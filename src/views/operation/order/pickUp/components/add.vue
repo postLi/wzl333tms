@@ -105,17 +105,15 @@
             <el-input v-model="form.tmsDriver.driverName" maxlength="8" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆类型" prop="customerUnit">
-            <!--<el-input v-model="form.tmsTruck.truckFee" maxlength="8" auto-complete="off" ></el-input>-->
             <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" />
           </el-form-item>
-          <el-form-item label="司机手机" prop="dirverMobile">
-            <el-input v-model="form.tmsDriver.dirverMobile" maxlength="11" auto-complete="off" ></el-input>
+          <el-form-item label="司机手机" prop="driverMobile">
+            <el-input v-model="form.tmsDriver.driverMobile" maxlength="11" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="车辆单位" prop="customerUnit">
             <el-input v-model="form.tmsTruck.truckUnit" maxlength="18" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="提货状态" prop="customerUnit">
-            <!--<el-input v-model="form.tmsDriver.pickupStatus" maxlength="8" auto-complete="off" ></el-input>-->
             <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" />
           </el-form-item>
           <el-form-item label="出车时间" prop="outTime" class="customerunit">
@@ -249,14 +247,14 @@ export default {
         firstDayOfWeek:1,
         disabledDate(time) {
           // 小于终止日
-          return _this.form.contractEndtime ? time.getTime() > _this.form.contractEndtime : false
+          return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
         }
       },
       pickOption2: {
         firstDayOfWeek:1,
         disabledDate(time) {
           // 大于起始日
-          return _this.form.contractStarttime ? time.getTime() < _this.form.contractStarttime : false
+          return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
         }
       },
       form: {
@@ -268,7 +266,7 @@ export default {
         tmsDriver:{
 
           driverName:'',//司机姓名
-          dirverMobile:'',//司机手机 /
+          driverMobile:'',//司机手机 /
 
           //  发送短信给司机
         },
@@ -305,7 +303,7 @@ export default {
         orgid: [
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
-        dirverMobile: [
+        driverMobile: [
           { message: '请输入手机号码', trigger: '[blur,change]', pattern: REGEX.MOBILE }
          // { validator: validateFormNumber, trigger: 'change'}
         ],

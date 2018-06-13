@@ -58,7 +58,7 @@
             label="运费核销状态">
           </el-table-column>
           <el-table-column
-            prop="customerName"
+            prop="sendtomerName"
             sortable
             width="90"
             label="发货人">
@@ -220,20 +220,22 @@
             prop="truckType"
             label="车辆类型"
             width="110"
-            sortable
+            sortable>
+
+          </el-table-column>
           <el-table-column
-            prop="outTime"
             label="出车时间"
             width="130"
             sortable
           >
+            <template slot-scope="scope">{{ new Date(scope.row.outTime).toLocaleDateString() }}</template>
           </el-table-column>
           <el-table-column
-            prop="arriveTime"
             label="要求到达司机"
             width="150"
             sortable
           >
+            <template slot-scope="scope">{{ new Date(scope.row.arriveTime).toLocaleDateString() }}</template>
           </el-table-column>
         </el-table>
       </div>
@@ -242,7 +244,7 @@
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
     <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" ></PickupMain>
-    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
+    <!--<PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>-->
 
   </div>
 </template>
