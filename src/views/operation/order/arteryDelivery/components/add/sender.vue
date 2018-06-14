@@ -1,18 +1,111 @@
 <template>
-  <!--v-loading="loading"-->
-  <div class="tab-content" >
-    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
+  <div class="tab-content" v-loading="loading">
+    <div class="info_form">
+      <!--<el-form-item label="网点">-->
+        <!--<SelectTree v-model="otherinfo.orgid" />-->
+      <!--</el-form-item>-->
+      <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">
+        <el-form-item label="到达网点:" >
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="车牌号码:">
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="司机姓名:" >
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="司机电话:">
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="可载体积:" >
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="可载重量:" >
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="分摊方式:">
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="配载日期:">
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="要求到达日期:" class="art_arriveTime">
+          <el-input
+            maxlength="15"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="备注:" class="art_remk">
+          <el-input
+            clearable
+            maxlength="300"
+            auto-complete="off"
+            type="textarea"
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="info_table">
+      <table border="1">
+        <tr>
+          <th>现付运费</th>
+          <th>现付油卡</th>
+          <th>回付运费</th>
+          <th>回付油卡</th>
+          <th>到付运费</th>
+          <th>到付油卡</th>
+          <th>整车保险费</th>
+          <th>发站装卸费</th>
+          <th>发站其他费</th>
+          <th>到站装卸费</th>
+          <th>到站其他费</th>
+        </tr>
+        <td>1</td>
+        <td>2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </table>
+    </div>
+    <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">到车确定</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">到货入库</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">到车确定</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>取消到车</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deleteStor')" plain>取消入库</el-button>
-          <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>-->
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导入批次</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导入配载</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>打印配载清单</el-button>
+          <!--<el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>-->
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain class="table_import">批量导入</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -36,249 +129,119 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
+            prop="customerId"
             label="序号"
             width="80">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="batchTypeId"
+            prop="companyName"
             width="120"
-            label="发车批次">
+            label="开单网点">
           </el-table-column>
           <el-table-column
-            prop="truckIdNumber"
-            width="110"
+            prop="customerUnit"
+            width="120"
             sortable
-            label="车牌号">
+            label="运单号">
           </el-table-column>
           <el-table-column
             prop="customerName"
             sortable
-            width="110"
-            label="发车网点">
+            width="120"
+            label="子运单号">
           </el-table-column>
           <el-table-column
-            prop="arriveOrgid"
+            prop="customerMobile"
             sortable
-            width="110"
-            label="目的网点">
+            width="120"
+            label="实到件数">
           </el-table-column>
           <el-table-column
             sortable
             prop="orgName"
-            width="110"
-            label="车辆状态">
+            width="120"
+            label="实到重量">
           </el-table-column>
           <el-table-column
-            label="发车时间"
-            width="110"
+            label="实到体积"
+            width="120"
             prop="legalPersonname"
             sortable
             >
           </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="vipNum"-->
-            <!--label="车牌号"-->
-            <!--width="110"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
           <el-table-column
-            sortable
-            prop="dirverName"
-            width="110"
-            label="司机名称">
-          </el-table-column>
-          <el-table-column
-            prop="dirverMobile"
-            label="司机电话"
-            width="110"
+            prop="vipNum"
+            label="配载件数"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="actualAmount"
-            label="实到件数"
+            sortable
+            prop="idcard"
             width="110"
+            label="配载重量">
+          </el-table-column>
+          <el-table-column
+            prop="bankName"
+            label="配载体积"
+            width="120"
             sortable
             >
           </el-table-column>
-
           <el-table-column
-            prop="truckLoad"
-            label="实到重量"
-            width="110"
+            prop="bankCardNumber"
+            label="出发城市"
+            width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="truckVolume"
-            label="实到体积"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="amountall"
-            label="配载总件数"
+            prop="openBank"
+            label="到达城市"
             width="120"
             sortable
-          >
+            >
           </el-table-column>
           <el-table-column
-            prop="weightall"
-            label="配载总重量"
-            width="120"
+            prop="detailedAddress"
+            label="发货人"
+            width="100"
             sortable
-          >
+            >
           </el-table-column>
           <el-table-column
-            prop="volumeall"
-            label="配载总体积"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="weightRate"
-            label="重量装载率"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="volumeRate"
-            label="体积装载率"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="nowpayCarriage"
-            label="现付运费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="nowpayOilCard"
-            label="现付油卡"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arrivepayCarriage"
-            label="到付运费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arrivepayOilCard"
-            label="到付油卡"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="backpayCarriage"
-            label="回付运费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="backpayOilCard"
-            label="回付油卡"
-            width="110"
+            prop="detailedAddress"
+            label="收货人电话"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="detailedAddress"
-            label="运费合计"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="carloadInsuranceFee"
-            label="整车保险费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="leaveHandlingFee"
-            label="发站装卸费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="leaveOtherFee"
-            label="发站其他费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arriveHandlingFee"
-            label="到站装卸费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arriveOtherFee"
-            label="到站其他费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="DateTimeFormat"
-            label="配载时间"
-            width="110"
+            label="货品名"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="detailedAddress"
-            label="配载人"
-            width="90"
+            label="货号"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="detailedAddress"
-            label="发车人"
-            width="90"
+            label="运单备注"
+            width="100"
             sortable
           >
           </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="80"
-            sortable
-          >
-          </el-table-column>
-          <!--<el-table-column-->
-            <!--label="身份证图片"-->
-            <!--width="120"-->
-            <!--sortable-->
-            <!--&gt;-->
-            <!--<template slot-scope="scope">-->
-                <!--<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
@@ -286,19 +249,23 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { postArtList } from '@/api/operation/arteryDelivery'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/add/index'
+import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
-import Pager from '@/components/Pagination/index'
-
+import SelectTree from '@/components/selectTree/index'
 export default {
+  props: {
+    // btnsize: {
+    //   type: String,
+    //   default: 'mini'
+    // }
+  },
   components: {
     SearchForm,
-    Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    SelectTree
   },
   computed: {
       ...mapGetters([
@@ -306,21 +273,20 @@ export default {
       ]),
       orgid () {
         // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+
+        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
   },
   mounted () {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-    this.fetchAllCustomer(this.otherinfo.arriveOrgid).then(res => {
+    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
       this.loading = false
     })
   },
   data () {
     return {
-      loading: false,
       btnsize: 'mini',
       usersArr: [],
-      total: 0,
       //加载状态
       loading: true,
       setupTableVisible: false,
@@ -334,13 +300,9 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgid": 1,
-          dirverName: '',
-          truckIdNumber:'',//车牌号
-          batchTypeId: '',//批次状态
-          batchNo:'',//发车批次
-          loadTypeId:39,//配载类型
-          endTime:'',//结束时间
-          beginTime:''
+          customerType: 1,
+          customerMobile: '',
+          customerName: ''
         }
       }
     }
@@ -348,9 +310,8 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      return postArtList(this.searchQuery).then(data => {
+      return getAllCustomer(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
         this.loading = false
       })
     },
@@ -362,7 +323,9 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
+      this.searchQuery.vo.orgid = obj.orgid
+      this.searchQuery.vo.customerMobile = obj.mobile
+      this.searchQuery.vo.customerName = obj.name
       this.fetchAllCustomer()
     },
     showImport () {
@@ -374,36 +337,37 @@ export default {
         return false
       }
       // 判断是否有选中项
-      // if(!this.selected.length){
-      //     this.closeAddCustomer()
-      //     this.$message({
-      //         message: '请选择要操作的项~',
-      //         type: 'warning'
-      //     })
-      //     return false
-      // }
+      if(!this.selected.length && type !== 'add'){
+          this.closeAddCustomer()
+          this.$message({
+              message: '请选择要操作的项~',
+              type: 'warning'
+          })
+          return false
+      }
+
+      console.log("this.selected:", this.selected)
+
 
       switch (type) {
           // 添加客户
-          case 'storage':
+          case 'add':
               this.isModify = false
               this.selectInfo = {}
               this.openAddCustomer()
               break;
-          // // 修改客户信息
-          // case 'modify':
-          //     this.isModify = true
-          //     if(this.selected.length > 1){
-          //         this.$message({
-          //             message: '每次只能修改单条数据~',
-          //             type: 'warning'
-          //         })
-          //     }
-          //     this.selectInfo = this.selected[0]
-          //     this.openAddCustomer()
-          //     break;
-        // sure 到车确定   deselectCar取消到车  deleteStor取消入库
-
+          // 修改客户信息
+          case 'modify':
+              this.isModify = true
+              if(this.selected.length > 1){
+                  this.$message({
+                      message: '每次只能修改单条数据~',
+                      type: 'warning'
+                  })
+              }
+              this.selectInfo = this.selected[0]
+              this.openAddCustomer()
+              break;
           // 删除客户
           case 'delete':
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
@@ -483,7 +447,7 @@ export default {
     position: relative;
 
     .tab_info{
-        padding:10px 30px 40px;
+        /*padding:10px 30px 40px;*/
         height: 100%;
         flex-grow: 1;
         display: flex;
@@ -498,6 +462,12 @@ export default {
                 float: right;
                 margin-right: 0;
             }
+          .table_export{
+            margin-left: 440px;
+          }
+          /*.table_ixport{*/
+            /*margin-left: 400px;*/
+          /*}*/
         }
         .info_tab{
             width: 100%;
@@ -539,5 +509,39 @@ export default {
         height: 40px;
         overflow: hidden;
     }
+  .info_form{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dcdfe6;
+    .sta_searchinfo{
+      .el-form-item--mini.el-form-item{
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      .art_arriveTime{
+        .el-form-item__label{
+          width: 104px !important;
+        }
+      }
+      .art_remk{
+        .el-form-item__content{
+          width: 750px !important;
+        }
+
+      }
+    }
+
+  }
+  .info_table{
+    margin: 10px 0 0 10px;
+    border-color: #dcdfe6;
+      th,td,tr{
+        padding: 8px;
+        font-size: 14px;
+        color: #606266;
+        font-weight: normal;
+        border-color: #dcdfe6;
+      }
+  }
+
 }
 </style>

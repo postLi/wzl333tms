@@ -1,19 +1,81 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-      <div class="customer-manager">
-        <div class="eltab clearfix">
-          <span @click="component = 'Sender'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}">发货人</span>
-          <span @click="component = 'Receiver'" class="tab-label" :class="{'active-tab': component.indexOf('eceiver')!==-1}">收货人</span>
-        </div>
-        <keep-alive>
-          <component v-bind:is="component"></component>
-        </keep-alive>
-      </div>
+      <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
+        <el-form-item  v-if="!isModify" class="clearfix">
+          <div class="selectType" :class="{checked: form.companyType === 2}" @click.stop="form.companyType=2">
+            <span class="icon"><icon-svg icon-class="qiye" /></span>
+             <strong>企业</strong>
+            <p>有合法营业执照等企业</p>
+          </div>
+          <div class="selectType single" :class="{checked: form.companyType === 1}" @click.stop="form.companyType=1">
+            <span class="icon"><icon-svg icon-class="geren" /></span> <strong>个人</strong>
+            <p>具备有效身份的自然人</p>
+          </div>
+        </el-form-item>
+        <!-- 公司信息 -->
+        <template v-if="form.companyType === 2">
+          <div class="info info-require">公司名称</div>
+          <el-form-item prop="companyName">
+            <el-input v-model="form.companyName" maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item >
+            <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
+          </el-form-item>
+          <div class="info" >公司法人信息</div>
+          <el-form-item prop="legalPersonname" >
+            <el-input v-model.trim="form.legalPersonname" maxlength="25" placeholder="公司法人名称" auto-complete="off"></el-input>
+          </el-form-item>
+        </template>
+        <!-- 个人信息 -->
+        <el-form-item class="clearfix">
+          <div class="idcard-pos">
+            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idCardPositive" />
+          </div>
+          <div class="idcard-ver">
+            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idCardVerso" />
+          </div>
+        </el-form-item>
+
+        <div class="info">{{ issender ? '发' : '收'}}货信息</div>
+        <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">
+          <el-input v-model="form.customerUnit" maxlength="25" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人" prop="customerName">
+          <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="customerMobile">
+          <el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" class="customerPhone" prop="customerPhone">
+          <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="归属网点" prop="orgid">
+          <SelectTree v-model="form.orgid" />
+        </el-form-item>
+        <el-form-item label="客户VIP号" prop="vipNum">
+          <el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号码" prop="idcard">
+          <el-input v-model="form.idcard" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="开户行" prop="openBank">
+          <el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="银行名称" prop="bankName">
+          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="银行卡号" prop="bankCardNumber">
+          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="detailedAddress">
+          <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <!--<el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>-->
-      <!--<el-button @click="closeMe">取 消</el-button>-->
+      <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
+      <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
 </template>
@@ -23,17 +85,13 @@ import { postCustomer, putCustomer } from '@/api/company/customerManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
-import Sender from './add/sender'
-import Receiver from './add/receiver'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     popRight,
     Upload,
-    SelectTree,
-    Sender,
-    Receiver
+    SelectTree
   },
   props: {
     popVisible: {
@@ -60,22 +118,22 @@ export default {
       ...mapGetters([
           'otherinfo'
       ]),
-      // "fixPhone": {
-      //   get(){
-      //     return this.phoneshort+'-'+this.phonelong
-      //   },
-      //   set (val){
-      //     //let names = val.match(/(.*)(.{7})$/)
-      //     let names = val ?　val.split('-')　: ''
-      //     if(names){
-      //       this.phoneshort = names[1] ? names[0] : ''
-      //       this.phonelong = names[1] ? names[1] : names[0]
-      //     } else {
-      //       this.phoneshort = ''
-      //       this.phonelong = ''
-      //     }
-      //   }
-      // }
+      "fixPhone": {
+        get(){
+          return this.phoneshort+'-'+this.phonelong
+        },
+        set (val){
+          //let names = val.match(/(.*)(.{7})$/)
+          let names = val ?　val.split('-')　: ''
+          if(names){
+            this.phoneshort = names[1] ? names[0] : ''
+            this.phonelong = names[1] ? names[1] : names[0]
+          } else {
+            this.phoneshort = ''
+            this.phonelong = ''
+          }
+        }
+      }
   },
   data () {
     const _this = this
@@ -104,7 +162,6 @@ export default {
     }
 
     return {
-      component: 'Sender',
       phoneshort: '', // 固话区号
       phonelong: '', // 固话号码
       //fixPhone: '',
@@ -149,7 +206,7 @@ export default {
           { max: 30, message: '不能超过30个字符', trigger: 'blur' }
         ]
       },
-      popTitle: '批次:',
+      popTitle: '新增发货人',
       orgArr: [],
       rolesArr: [],
       departmentArr: [],
@@ -189,7 +246,7 @@ export default {
         console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
         this.fixPhone = this.form.fixPhone
       } else {
-        this.popTitle = '新增11'+(this.issender ? '发' : '收')+'货人'
+        this.popTitle = '新增'+(this.issender ? '发' : '收')+'货人'
         for(let i in this.form){
           this.form[i] = ''
         }
@@ -387,53 +444,6 @@ export default {
 
   .el-select .el-input__inner{
     padding-right: 15px;
-  }
-}
-
-.customer-manager{
-  height: 100%;
-  padding-top: 12px;
-  .eltab{
-    width: 100%;
-    height: 32px;
-    line-height: 30px;
-    border-bottom: 1px solid #91cbf7;
-  }
-  .tab-label:first-child{
-    margin-left: 1px;
-    border-left-width: 1px;
-
-  }
-  .tab-label{
-    float: left;
-    padding-left: 12px;
-    padding-right: 12px;
-    border-radius: 3px 3px 0px 0px;
-    border: solid 1px #d2d2d2;
-    font-size: 14px;
-    border-left-width: 0;
-    border-bottom: 1px solid #3e9ff1;
-    position: relative;
-    top: 0px;
-    cursor: pointer;
-
-    &:hover{
-      background: #ffffee;
-    }
-  }
-  .active-tab{
-    color:#3e9ff1;
-    border-color: #3e9ff1;
-    border-bottom-color: #fff;
-    z-index: 2;
-    left: -1px;
-    top: -1px;
-    border-left: 1px solid #3e9ff1;
-    border-top-width: 2px;
-  }
-  .tab-content{
-    width: 100%;
-    padding: 0 20px;
   }
 }
 </style>

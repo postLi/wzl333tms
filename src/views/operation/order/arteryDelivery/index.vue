@@ -32,6 +32,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .customer-manager{
+
     height: 100%;
     padding-top: 12px;
     .eltab{
