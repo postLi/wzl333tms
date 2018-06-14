@@ -175,29 +175,28 @@ export default {
     }
   },
   submitForm(formName){
-    this.$refs[formName].validate((valid) => {
-      if(valid){
-        this.loading = true
-        let data = Object.assign({},this.form)
-        data.receiptIds = this.dotInfo
-        let promiseObj
-        promiseObj = putUpdateReceipt(data)
-        promiseObj.then(res=>{
-          this.$alert('保存成功', '提示', {
-            confirmButtonText: '确定',
-            callback: action => {
-              this.loading = false
-              this.closeMe()
-              this.$emit('success')
-            }
+      this.$refs[formName].validate((valid) => {
+        if(valid){
+          this.loading = true
+          let data = Object.assign({},this.form)
+          data.receiptIds = this.dotInfo
+          let promiseObj
+          promiseObj = putUpdateReceipt(data)
+          promiseObj.then(res=>{
+            this.$alert('保存成功', '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.loading = false
+                this.closeMe()
+                this.$emit('success')
+              }
+            })
           })
-        })
-      }else{
-        return false
-      }
-    })
-  }
-
+        }else{
+          return false
+        }
+      })
+    }
   }
 }
 </script>

@@ -251,9 +251,9 @@ export default {
       // disabled:'',
       resInfo: [],
       pickOption2: {
-        firstDayOfWeek:1,
-        disabledDate(time) {
-          return time .getTime() < Date.now()
+      firstDayOfWeek:1,
+      disabledDate(time) {
+        return time .getTime() < Date.now()
         }
       }
 
@@ -292,7 +292,6 @@ export default {
       },
       immediate: true
     },
-
     isCheck: {
       handler(newVal) {
         if(newVal){

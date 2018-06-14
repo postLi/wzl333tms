@@ -16,11 +16,11 @@
             <SelectTree v-model="searchForm.shipFromOrgid" />
         </el-form-item>
         
-        <el-form-item label="签收状态"  prop="recStatus">
-          <selectType v-model="thestatus"  />
+        <el-form-item label="签收状态"  prop="signStatus">
+          <selectType v-model="searchForm.signStatus"  type="sign_status"/>
         </el-form-item>
         <el-form-item label="凭证状态"  prop="recStatus">
-          <selectType v-model="thestatus" type="" />
+          <selectType v-model="searchForm.thestatus" type="" />
         </el-form-item>
         <el-form-item label="运单号">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
@@ -89,7 +89,8 @@ export default {
         shipFromCityCode:'',
         shipToCityCode:'',
         shipSenderId:'',
-        shipReceiverId:''
+        shipReceiverId:'',
+        signStatus:''
       },
       rules: {
         mobile: [{

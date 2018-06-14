@@ -164,6 +164,13 @@
             sortable
             >
           </el-table-column>
+          <!-- <el-table-column
+            prop="backStatus"
+            label="回单状态"
+            width="120"
+            sortable
+            >
+          </el-table-column> -->
           <el-table-column
             prop="signTypeName"
             label="签收类型"
@@ -193,7 +200,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop="shipReceiptRequire"
+            prop="shipReceiptRequireName"
             label="回单类型"
             width="120"
             sortable
@@ -515,21 +522,24 @@
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      <Addsign :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData"></Addsign>
+      <Addsign :issender="true" :isModify="isModify" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData"></Addsign>
+      <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify"></Addbatch>
       <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import {postPickuplist } from '@/api/operation/sign'
+import {postPickuplist,postPickupSign,postCancelPickupSign } from '@/api/operation/sign'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 // import TableSetup from './components/tableSetup'
 import Addsign from './components/add'
+import Addbatch from './components/batch'
 export default {
     components: {
         SearchForm,
         Addsign,
+        Addbatch,
         // TableSetup,
         Pager
     },
@@ -556,13 +566,19 @@ export default {
                 selected:[],
                 dataset:[],
                 AddSignVisible:false,
+                AddBatchVisible:false,
                 setupTableVisible: false,
-                 isModify: false,
+                popVisible:false,
+                isModify: false,
+                dotInfo: [],
+                repertoryId:'',
                 // loading:false,
                 searchQuery: {
                   "currentPage":1,
                   "pageSize":10000,
                   "vo":{
+                    "repertoryId":'',
+	                  "signId":''
                   }
                 },
                 total: 0
@@ -603,7 +619,23 @@ export default {
 
           switch (type) {
               //签收
-            case 'pick': 
+            case 'pick':
+              let ids = this.selected.map(el => {
+                return el.repertoryId
+              })
+              // console.log(ids.length)
+              if(ids.length > 1 ){
+                this.searchQuery.vo.repertoryId = ids
+                this.dotInfo = ids
+                // console.log(ids);
+                this.popVisible = true
+                this.isModify = true
+              }else{
+                this.repertoryId = this.selected[0]
+                this.openAddSign()
+              }
+            break;
+            case 'amend': 
               // let ids = this.selected.filter(el=>{
               //     return el.sendStatus === 107
               //   }).map(el => {
@@ -628,21 +660,22 @@ export default {
               //     this.$message.warning('回单已寄出请选择未寄出项~')
               //   }
               this.openAddSign()
+              this.selectInfo = this.selected[0]
               break;
             case 'cancel':
               let _ids = this.selected.filter(el=>{
-                  return el.sendStatus === 108  && el.acceptStatus === 109
+                  return el.backStatus >= 240 &&  el.backStatus != ''
                 }).map(el => {
-                return  el.receiptId
+                return  el.repertoryId
               })
 
               console.log(this.selected)
 
               if(_ids.length){
-                  this.searchQuery.vo.receiptIds = _ids
-                  putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
+                  this.searchQuery.vo.repertoryId = _ids
+                  postCancelPickupSign(this.searchQuery.vo).then(res=>{
                     this.$message({
-                      message: '取消寄出成功~',
+                      message: '取消签收成功~',
                       type: 'success'
                     })
                     this.fetchAllreceipt()
@@ -652,7 +685,7 @@ export default {
                     // this.closeAddDot()
                   })
                 }else{
-                  this.$message.warning('回单已接收不可取消~')
+                  this.$message.warning('回单已寄出不可取消~')
                 }
               
               break;
@@ -671,6 +704,13 @@ export default {
         },
         closeAddSign () {
           this.AddSignVisible = false
+        },
+        openAddBatch () {
+          this.AddBatchVisible = true
+        },
+        closeAddBacth () {
+          // this.AddBacthVisible = false
+           this.popVisible = false;
         },
         clickDetails(){},
         getSelection(selected){
