@@ -1,5 +1,5 @@
 <template>
-<span>
+<span class="autocomplete-input">
 <el-autocomplete
   v-if="show === 'input'"
   popper-class="query-input-autocomplete"
@@ -225,6 +225,18 @@ export default {
           break
         case 'repertory':
           fn = postAllOrderRepertory
+          break
+        case 'batch':
+          this.queryParam = this.getOrgid
+          fn = orderManageApi.getBatchList
+          break
+        case 'cargoName':
+          this.queryParam = '1'
+          fn = orderManageApi.getRecently
+          break
+        case 'cargoPack':
+          this.queryParam = '2'
+          fn = orderManageApi.getRecently
           break
       }
       // 设定pageSize参数

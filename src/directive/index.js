@@ -10,17 +10,20 @@ DragDialog.install()
 Waves.install()
 vueSticky.install()
 
+let hasPoint = false
 const VueDirectiveObject = {
   findInput: function(el) {
     return el.classList.contains('el-input') ? el.querySelector('input') : el
   },
   keepNumber: function() {
-    this.value = this.value.replace(/\D/g, '')
+    // 如果第一位为小数点，则补0
+    this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.') : this.value.replace(/\D/g, '')
   },
   onkeydown: function(event) {
-    // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode), /[\d]/.test(String.fromCharCode(event.keyCode)))
-
-    if (!(event.keyCode === 46) && !(event.keyCode === 8) && !(event.keyCode === 37) && !(event.keyCode === 39) && !(event.keyCode === 9)) {
+    // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode),event.key,event.code, /[\d]/.test(String.fromCharCode(event.keyCode)))
+    // 左右、删除、tab键
+    if (!(event.keyCode === 46) && !(event.keyCode === 8) && !(event.keyCode === 37) && !(event.keyCode === 39) && !(event.keyCode === 9) && !(event.key === '.' && hasPoint)) {
+      // 数字 小键盘数字
       if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
         event.stopPropagation()
         event.preventDefault()
@@ -30,7 +33,8 @@ const VueDirectiveObject = {
 }
 // 限制只能输入数字
 Vue.directive('numberOnly', {
-  bind: function(el) {
+  bind: function(el, binding) {
+    hasPoint = binding.arg === 'point'
     VueDirectiveObject.findInput(el).addEventListener('input', VueDirectiveObject.keepNumber)
     VueDirectiveObject.findInput(el).addEventListener('keydown', VueDirectiveObject.onkeydown)
   },

@@ -141,6 +141,18 @@
     <querySelect search="cargoName" type="repertory" :name="city" @change="getcity" />
     <pre class="code">&lt;querySelect search=&quot;cargoName&quot; type=&quot;repertory&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
+    <h4>获取批次列表</h4>
+    <querySelect search="batchNumber" keyvalue="bathId" show="select" type="batch" :name="city" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;batchNumber&quot; keyvalue=&quot;bathId&quot; show=&quot;select&quot; type=&quot;batch&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
+
+    <h4>获取货品名称</h4>
+    <querySelect search="name" show="select" keyvalue="name" type="cargoName" :name="city" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;name&quot; show=&quot;select&quot; keyvalue=&quot;name&quot; type=&quot;cargoName&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
+
+    <h4>获取货品包装</h4>
+    <querySelect search="name" show="select" keyvalue="name" type="cargoPack" :name="city" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;name&quot; show=&quot;select&quot; keyvalue=&quot;name&quot; type=&quot;cargoPack&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
+
 
     <h3>prop</h3>
     <hr>
@@ -182,6 +194,9 @@
       <li>pickup 提货</li>
       <li>receipt 回单</li>
       <li>repertory 库存</li>
+      <li>batch 获取批次列表</li>
+      <li>cargoName 获取货品名称</li>
+      <li>cargoPack 获取货品包装</li>
     </ul>
   </div>
 </template>

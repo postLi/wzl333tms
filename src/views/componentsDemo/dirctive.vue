@@ -12,6 +12,8 @@
     <blockquote>
       只适用于input、el-input标签
     </blockquote>
+    <p>修饰符 v-number-only:point 允许小数点</p>
+    <input v-number-only:point type="text">
 
     <h3>v-showPicture</h3>
     <p>弹窗展示图片</p>

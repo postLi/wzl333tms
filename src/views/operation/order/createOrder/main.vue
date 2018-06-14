@@ -139,134 +139,155 @@
 
       </div>
       <!-- 其它项 -->
-      <div class="order-other-form">
-        <div class="order-form-item">
-          <span class="order-form-label">运费合计</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">付款方式</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">现付</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">到付</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">回单付</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">月结</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-
-        <div class="order-form-item">
-          <span class="order-form-label">回单要求</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">货号</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">打印标签</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">客户单号</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">运输方式</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">业务类型</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-
-        <div class="order-form-item">
-          <span class="order-form-label">时效</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">提货车号</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">提货司机</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-        <div class="order-form-item">
-          <span class="order-form-label">制单员</span>
-          <el-form-item prop="tmsOrderShip.shipSn">
-            <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
-          </el-form-item>
-        </div>
-
-        <div class="order-form-item">
-          <span class="order-form-label">其他</span>
-          <el-checkbox-group v-model="checkList">
-            <el-checkbox label="控货"></el-checkbox>
-            <el-checkbox label="贵重物品"></el-checkbox>
-            <el-checkbox label="现付尚欠"></el-checkbox>
-            <el-checkbox label="回扣已返" disabled></el-checkbox>
-          </el-checkbox-group>
-        </div>
+      <div class="order-other-form clearfix">
+        <table>
+          <tbody>
+            <tr>
+              <th>运费合计</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>付款方式</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="ship_pay_way" />
+                </el-form-item>
+              </td>
+              <th>现付</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>到付</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>回单付</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>月结</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+            </tr>
+            <tr>
+              <th>回单要求</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="ship_receipt_require" />
+                </el-form-item>
+              </td>
+              <th>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" placeholder="回单号" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>打印标签</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>客户单号</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>运输方式</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="ship_shipping_type" />
+                </el-form-item>
+              </td>
+              <th>业务类型</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="ship_business_type" />
+                </el-form-item>
+              </td>
+            </tr>
+            <tr>
+              <th>时效</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="ship_effective" />
+                </el-form-item>
+              </td>
+              <th>提货批次</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <querySelect  size="mini" search="carrierName" type="carrier" show="select" valuekey="carrierId" @change="getCarrier" v-model="form.tmsOrderTransfer.carrierId" />
+                </el-form-item>
+              </td>
+              <th>车牌号</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+              <th>制单员</th>
+              <td>
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <querySelect  size="mini" search="name"  v-model="form.tmsOrderTransfer.carrierId" />
+                </el-form-item>
+              </td>
+              <th>其他</th>
+              <td colspan="3">
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-checkbox-group v-model="checkList">
+                      <el-checkbox label="控货"></el-checkbox>
+                      <el-checkbox label="贵重物品"></el-checkbox>
+                      <el-checkbox label="现付尚欠"></el-checkbox>
+                      <el-checkbox label="回扣已返" disabled></el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+              </td>
+            </tr>
+            <tr>
+              <th>备注</th>
+              <td colspan="11">
+                <el-form-item prop="tmsOrderShip.shipSn">
+                  <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+                </el-form-item>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <!-- 中转信息 -->
-      <div class="order-transfer-form">
+      <div class="order-transfer-form" v-if="shouldInputTransfer">
         <el-collapse v-model="activeNames" >
           <el-collapse-item title="中转信息" name="1">
             <table class="order-transfer-table">
               <thead>
                 <tr>
-                  <th>中转日期</th>
-                  <th>中转单号</th>
-                  <th>承运商</th>
-                  <th>承运商电话</th>
-                  <th>中转到站电话</th>
-                  <th>中转费</th>
-                  <th>中转送货费</th>
-                  <th>中转费合计</th>
-                  <th>代收货款</th>
-                  <th>中转付款方式</th>
-                  <th>中转备注</th>
+                  <th style="min-width:100px">中转日期</th>
+                  <th style="min-width:100px">中转单号</th>
+                  <th style="min-width:100px">承运商</th>
+                  <th style="min-width:100px">承运商电话</th>
+                  <th style="min-width:100px">中转到站电话</th>
+                  <th style="min-width:100px">中转费</th>
+                  <th style="min-width:100px">中转送货费</th>
+                  <th style="min-width:100px">中转费合计</th>
+                  <th style="min-width:100px">代收货款</th>
+                  <th style="min-width:100px">中转付款方式</th>
+                  <th style="min-width:100px">中转备注</th>
                 </tr>
               </thead>
               <tbody>
@@ -287,7 +308,7 @@
                     @change="setOddNumbers" v-model="form.tmsOrderTransfer.oddNumbers" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="20"  v-model="form.tmsOrderTransfer.carrierId" />
+                    <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier" v-model="form.tmsOrderTransfer.carrierId" />
                   </td>
                   <td>
                     <el-input size="mini" maxlength="20"  v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
@@ -296,19 +317,19 @@
                     <el-input size="mini" maxlength="13"  v-numberOnly v-model="form.tmsOrderTransfer.arrivalMobile" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="8"  v-numberOnly v-model="form.tmsOrderTransfer.transferCharge" />
+                    <el-input size="mini" maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.transferCharge" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="8"  v-numberOnly v-model="form.tmsOrderTransfer.deliveryExpense" />
+                    <el-input size="mini" maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.deliveryExpense" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="8"  v-numberOnly v-model="form.tmsOrderTransfer.codService" />
+                    <el-input size="mini" maxlength="8" disabled v-model="form.tmsOrderTransfer.totalCost" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="20" disabled v-model="form.tmsOrderTransfer.totalCost" />
+                    <el-input size="mini" maxlength="20"  v-model="form.tmsOrderTransfer.codService" />
                   </td>
                   <td>
-                    <SelectType v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
+                    <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
                   </td>
                   <td>
                     <el-input size="mini" maxlength="250"  v-model="form.tmsOrderTransfer.remark" />
@@ -341,6 +362,7 @@ import orderManage from '@/api/operation/orderManage'
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
+import querySelect from '@/components/querySelect/index'
 
 export default {
   components: {
@@ -349,7 +371,8 @@ export default {
     FooterBtns,
     SelectType,
     SelectTree,
-    SelectCity
+    SelectCity,
+    querySelect
   },
   data () {
     let _this = this
@@ -528,21 +551,22 @@ export default {
           "shipUserid": 0
         },
         "tmsOrderTransfer": {
-          "arrivalMobile": "string",
-          "carrierId": 0,
-          "carrierMobile": "string",
-          "codService": 0,
-          "createTime": "2018-06-04T07:08:52.755Z",
-          "deliveryExpense": 0,
-          "id": 0,
-          "oddNumbers": "string",
-          "paymentId": 0,
-          "remark": "string",
-          "shipId": 0,
-          "totalCost": 0,
-          "transferCharge": 0,
-          "transferTime": "2018-06-04T07:08:52.755Z",
-          "updateTime": "2018-06-04T07:08:52.755Z"
+          "arrivalMobile": "",
+          "carrierId": '',
+          "carrierMobile": "",
+          "codService": '',
+          "createTime": "",
+          "deliveryExpense": '',
+          // 当修改运单时，是否可以修改中转信息
+          // "id": '',
+          "oddNumbers": "",
+          "paymentId": '',
+          "remark": "",
+          "shipId": '',
+          "totalCost": '',
+          "transferCharge": '',
+          "transferTime": "",
+          "updateTime": ""
         }
       },
       // 系统设置
@@ -557,7 +581,19 @@ export default {
       canChangeOrderNum: true,
       // 是否允许修改开单日期
       canChangeOrderDate: true,
+      // 是否需要填写中转信息
+      shouldInputTransfer: false,
       nowTime: ''
+    }
+  },
+  computed: {
+    'transferTotalFee' () {
+      return this.form.tmsOrderTransfer.transferCharge + this.form.tmsOrderTransfer.deliveryExpense
+    }
+  },
+  watch: {
+    transferTotalFee (newVal) {
+      this.form.tmsOrderTransfer.totalCost = newVal
     }
   },
   mounted () {
@@ -566,7 +602,7 @@ export default {
       orgid: this.otherinfo.orgid,
       type: '',
       module: 'order'
-    }), OrderApi.getFeeSetup(), OrderApi.getPersonalSetup(this.otherinfo.id), getSystemTime()]).then(dataArr => {
+    }), OrderApi.getFeeSetup(), OrderApi.getPersonalSetup(this.otherinfo.id), orderManage.getCreateOrderDate()]).then(dataArr => {
       // 获取全局设置
       this.config = dataArr[0]
       // 获取费用设置
@@ -622,7 +658,7 @@ export default {
     },
     // 设置中转表单
     setOrderTransfer () {
-
+      this.shouldInputTransfer = this.personConfig.shipDefault.openOrderAndTransferInfo === "1" ? true : false
     },
     // 检查运单号是否唯一
     detectOrderNum () {
@@ -638,6 +674,9 @@ export default {
     // 中转信息
     setOddNumbers(val){
       this.form.tmsOrderTransfer.oddNumbers = val.replace(/\s/g, '')
+    },
+    getCarrier (item) {
+      this.form.tmsOrderTransfer.carrierMobile = item.carrierMobile
     },
     // 底部按钮操作
     doAction (type) {
@@ -684,6 +723,7 @@ export default {
 }
 </script>
 <style lang="scss">
+$bordercolor: #d4d4d4;
   .createOrder-main{
     margin-left: 12px;
     margin-right: 12px;
@@ -694,6 +734,9 @@ export default {
     padding-right: 26px;
     padding-bottom: 58px;
     font-size: 12px;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
 
     .el-dialog__wrapper,.v-modal{
       position: absolute;
@@ -714,6 +757,8 @@ export default {
       letter-spacing: 9px;
       color: #000;
       text-align: center;
+      height: 28px;
+
       span{
         border-bottom:1px solid rgba(0, 0, 0, 0.43);
       }
@@ -748,6 +793,21 @@ export default {
       min-height: 400px;
       border: solid 2px #000827;
       margin-top: 8px;
+      // max-height: calc(100% - 38px);
+      flex: 1;
+      overflow-y: auto;
+    }
+    &>.el-form{
+      //height: calc( 100% - 100px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .order-form-item{
+      float: left;
+    }
+    .createOrder-info{
+      height: 30px;
     }
     /* 收发货表单 */
     .sender-form,.receiver-form{
@@ -758,11 +818,31 @@ export default {
       float: right;
     }
 
+    /* 中转信息 */
+    .order-transfer-form{
+      .el-collapse,.el-collapse-item__wrap{
+        border-bottom: none;
+      }
+      .el-collapse-item__content{
+        overflow-x: auto;
+      }
+      th{
+        height: 30px;
+        line-height: 30px;
+        background: #eee;
+      }
+      table,td,th{
+        border: 1px solid $bordercolor;
+      }
+    }
+    
+
     /* 底部按钮部分 */
     .order-btns{
       padding-top: 21px;
       text-align: center;
       position: relative;
+      height: 72px;
 
       .el-button{
         font-size: 16px;

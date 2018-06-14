@@ -487,5 +487,28 @@ export default {
    */
   resetPersonalSetup(userId) {
     return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId)
+  },
+  /**
+   * 获取批次信息
+   * @param {*} orgid 组织id
+   */
+  getBatchList(orgid) {
+    return fetch.get('/api-order/order/v1/bath/' + orgid)
+  },
+  /**
+   * type为1是货品名 2是包装
+   * @param {*} type 获取的类型
+   */
+  getRecently(Type) {
+    return fetch.get('/api-order/order/v1/findRecently', {
+      params: {
+        Type
+      }
+    })
+  },
+  getCreateOrderDate() {
+    return fetch.get('/api-order/order/v1/orderCreateDate').then(res => {
+      return res.data || ''
+    })
   }
 }
