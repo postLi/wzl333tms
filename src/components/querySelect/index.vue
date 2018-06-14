@@ -5,7 +5,7 @@
   popper-class="query-input-autocomplete"
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
-  :value-key="valuekey"
+  :value-key="showkey"
   :placeholder="placeholder"
   @select="handleSelect"
   v-bind="$attrs"
@@ -13,29 +13,49 @@
   <template slot-scope="{ item }">
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
-      {{ item[label] }}
+      {{ item[showkey] }}
     </slot>
   </template>
 </el-autocomplete>
 <el-select
-    v-if="show === 'select'"
-    v-model="value9"
+    v-if="show === 'select' && remote"
+    v-model="handlevalue"
     popper-class="query-select-autocomplete"
     filterable
     remote
     :placeholder="placeholder"
-    :remote-method="remoteMethod"
+    :remote-method="querySearch"
     :loading="loading"
     v-bind="$attrs"
     >
     <el-option
-      v-for="item in options4"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-      <template slot-scope="{ item }">
-        {{ item.area }}
-      </template>
+      v-for="item in searchData"
+      :key="item[valuekey]"
+      :label="item[showkey]"
+      :value="item[valuekey]">
+        <slot name="select-remote" v-bind:item="item">
+          <!-- 回退的内容 -->
+          {{ item[showkey] }}
+        </slot>
+    </el-option>
+  </el-select>
+  <el-select
+    v-if="show === 'select' && !remote"
+    v-model="handlevalue"
+    popper-class="query-select-autocomplete"
+    filterable
+    :placeholder="placeholder"
+    v-bind="$attrs"
+    >
+    <el-option
+      v-for="item in allData"
+      :key="item[valuekey]"
+      :label="item[showkey]"
+      :value="item[valuekey]">
+        <slot name="select" v-bind:item="item">
+          <!-- 回退的内容 -->
+          {{ item[showkey] }}
+        </slot>
     </el-option>
   </el-select>
   </span>
@@ -97,7 +117,7 @@ export default {
       default: 100
     },
     // 指定需要获得的value对应的字段
-    'value-key': {
+    'valuekey': {
       type: String,
       default: 'id'
     },
@@ -120,8 +140,17 @@ export default {
     },
     // 网点id
     orgid: {
-      type: String,
+      type: [String, Number],
       default: ''
+    },
+    // 额外的请求参数，默认是合并到vo中
+    param: {
+      type: Object,
+      default: () => {}
+    },
+    // 自定义的搜索函数，传入的参数为当前项，函数执行需返回true/false
+    searchFn: {
+      type: Function
     }
   },
   watch: {
@@ -136,11 +165,11 @@ export default {
     getOrgid () {
       return this.orgid || this.otherinfo.orgid
     },
-    valuekey () {
-      return this['value-key']
+    showkey () {
+      return this.label || this.search
     },
     queryFn () {
-      this.queryParam.pageSize = this.count
+      let fn
       switch(this.type){
         case 'user':
           delete this.queryParam.vo
@@ -148,47 +177,83 @@ export default {
           this.queryParam.mobilephone = ''
           this.queryParam.name = ''
 
-          return getAllUser
+          fn = getAllUser
           break
         case 'city':
-          return getCityInfo
+          this.queryParam = ''
+          fn = getCityInfo
           break
         case 'carrier':
-          return getAllCarrier
+          fn = getAllCarrier
           break
         case 'sender':
-          return getAllCustomer
+          this.queryParam.vo.customerType = 1
+          this.queryParam.vo.orgid = this.getOrgid
+          fn = getAllCustomer
           break
         case 'receiver':
-          return getAllCustomer
+          this.queryParam.vo.customerType = 2
+          this.queryParam.vo.orgid = this.getOrgid
+          fn = getAllCustomer
           break
         case 'driver':
-          return getAllDriver
+          this.queryParam.vo.orgid = this.getOrgid
+          fn = getAllDriver
           break
         case 'trunk':
-          return getAllTrunk
+          this.queryParam.vo.orgid = this.getOrgid
+          fn = getAllTrunk
           break
         case 'abnormal':
-          return PostGetAbnormalList
+          fn = PostGetAbnormalList
           break
         case 'controlgoods':
-          return PostControlgoods
+          fn = PostControlgoods
           break
         case 'preorder':
-          return getPostlist
+          fn = getPostlist
           break
         case 'order':
-          return orderManageApi.getAllShip
+          fn = orderManageApi.getAllShip
           break
         case 'pickup':
-          return fetchPostlist
+          fn = fetchPostlist
           break
         case 'receipt':
-          return postReceipt
+          this.queryParam.vo.pageType = 1
+          fn = postReceipt
           break
         case 'repertory':
-          return postAllOrderRepertory
+          fn = postAllOrderRepertory
           break
+      }
+      // 设定pageSize参数
+      if(typeof this.queryParam === 'object') {
+        this.queryParam.pageSize = this.count
+        // 处理传过来的额外参数
+        if(typeof this.queryParam.vo === 'object') {
+          this.queryParam.vo = Object.assign(this.queryParam.vo, this.param)
+          // 当有传入组织id时，表示需要控制获取指定组织id的数据
+          if(this.orgid !== ''){
+            this.queryParam.vo.orgid = this.orgid
+          }
+        } else {
+          this.queryParam = Object.assign(this.queryParam, this.param)
+          if(this.orgid !== ''){
+            this.queryParam.orgid = this.orgid
+          }
+        }
+      }
+
+      return fn
+    },
+    shouldremote () {
+      // 智障侦测。。？要不要
+      // 通过判断返回的总数跟设置的总数对比，如果返回的总数小于设置的总数则表示不用每次都请求
+      if(this.remote){
+        return true
+      } else {
+        return false
       }
     }
   },
@@ -196,6 +261,8 @@ export default {
     return {
       handlevalue: "",
       allData: [],
+      searchData: [],
+      loading: false,
       queryParam: {
         pageSize: 100,
         pageNum: 1,
@@ -209,43 +276,56 @@ export default {
     }
   },
   mounted () {
+    // 初始化请求、请求参数等
+    this.remoteFn = this.queryFn
     // 判断是否需要每次都请求
     if(!this.remote){
       this.fetchFn().then(data => {
         this.allData = data
+        this.searchData = data
       })
     }
   },
   methods: {
     fetchFn () {
-      return this.queryFn(this.queryParam).then(res => {
+      return this.remoteFn(this.queryParam).then(res => {
         let data = res.data ? res.data : res
         if(data.list){
-          return data.list
+          return data.list || []
         } else {
-          return data
+          return data || []
         }
       })
     },
-    querySearch (queryString, cb) {
+    querySearch (queryString, cb = ()=>{}) {
+      // 缓存最近一次请求数据
       if(queryString === this.lastQuery){
         cb(this.lastRequest)
       }else{
         if(this.queryParam.vo){
           this.queryParam.vo[this.search] = queryString
-        } else {
+        } else if(typeof this.queryParam === 'object') {
           this.queryParam[this.search] = queryString
+        } else {
+          this.queryParam = queryString
         }
         if(this.remote){
           this.fetchFn().then( data => {
             this.lastQuery = queryString
             this.lastRequest = data
+            this.searchData = data
             cb(data)
           })
         } else {
           this.lastQuery = queryString
           this.lastRequest = this.allData.filter(el => {
-            return el[this.search].indexOf(queryString) !== -1
+            // 如果有自定义的搜索函数，则调用其进行判断
+            if(typeof this.searchFn === 'function'){
+              return this.searchFn(el, queryString)
+            }
+            // 字符串  布尔值 空值 数值
+            // 模糊匹配 全等于
+            return el[this.search] ? el[this.search].toString().indexOf(queryString) !== -1 : false
           })
           console.log(this.allData, this.lastRequest)
           cb(this.lastRequest)
@@ -256,36 +336,9 @@ export default {
     },
     handleSelect (info) {
       
-      this.$emit("input", info.id || 0)
+      this.$emit("input", info[this.valuekey] || '')
       this.$emit('change', info)
     }
   }
 }
 </script>
-<style lang="scss">
-.city-name{
-  float: left;
-}
-.city-longname{
-  float: right;
-  font-size: 12px;
-  color: #666;
-}
-.city-autocomplete{
-  width: auto !important;
-  max-width: 400px;
-  .el-autocomplete-suggestion__list li{
-    clear: both;
-    display: flex;
-    span{
-      flex: 1;
-      white-space: nowrap;
-      color: #333;
-    }
-    .city-province{
-      text-align: right;
-      color: #999;
-    }
-  }
-}
-</style>

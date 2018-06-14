@@ -55,11 +55,6 @@ export default {
       path: '/components/querySelect',
       name: '下拉框查询',
       component: _import('componentsDemo/querySelect')
-    },
-    {
-      path: '/components/queryInput',
-      name: '输入框查询',
-      component: _import('componentsDemo/queryInput')
     }
   ]
 }
