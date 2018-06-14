@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="短驳时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
@@ -17,7 +17,7 @@
       <el-input v-model="searchForm.dirverName" maxlength="8" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="发车网点">
-      <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
+      <SelectTree v-model="searchForm.orgid" clearable></SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -58,78 +58,88 @@ export default {
       searchTime: [],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        "orgId": '',
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+        orgid: '',
+        loadTypeId: 38,
+        apportionTypeId: '',
+        arriveOrgid: '',
+        batchNo: '',
+        batchTypeId: '',
+        beginTime: '',
+        contractNo: '',
+        createTime: '',
+        dirverMobile: '',
+        dirverName: '',
+        endTime: '',
+        loadTime: '',
+        truckIdNumber: '',
+        truckLoad: '',
+        truckVolume: ''
       },
       query: {
-        "orgId": '',
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+        orgid: '',
+        loadTypeId: 38,
+        apportionTypeId: '',
+        arriveOrgid: '',
+        batchNo: '',
+        batchTypeId: '',
+        beginTime: '',
+        contractNo: '',
+        createTime: '',
+        dirverMobile: '',
+        dirverName: '',
+        endTime: '',
+        loadTime: '',
+        truckIdNumber: '',
+        truckLoad: '',
+        truckVolume: ''
+        },
+        rules: {
+          orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近两个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        }
+      }
+    },
+    methods: {
+      onSubmit() {
+        let searchObj = {}
+        searchObj = Object.assign({}, this.searchForm)
+        this.$set(searchObj, 'beginTime', this.searchTime[0])
+        this.$set(searchObj, 'endTime', this.searchTime[1])
+        this.$emit('change', searchObj)
       },
-      rules: {
-        orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
-      },
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近两个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
+      clearForm(formName) {
+        this.$refs[formName].resetFields()
+        this.searchForm = Object.assign({}, this.query)
+        this.searchTime = []
       }
     }
-  },
-  methods: {
-    onSubmit() {
-      let searchObj = {}
-      searchObj = Object.assign({}, this.searchForm)
-      this.$set(searchObj, 'departureStartTime', this.searchTime[0])
-      this.$set(searchObj, 'departureEndTime', this.searchTime[1])
-      this.$emit('change', searchObj)
-    },
-    clearForm(formName) {
-      this.$refs[formName].resetFields()
-      this.searchForm = Object.assign({}, this.query)
-      this.searchTime = []
-    }
   }
-}
 
 </script>
 <style lang="scss">

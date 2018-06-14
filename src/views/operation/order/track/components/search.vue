@@ -1,28 +1,31 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="短驳时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="批次状态" prop="batchTypeId">
-      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable></selectBatchType>
-    </el-form-item>
-    <el-form-item label="发车批次" prop="batchNo">
-      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
-    </el-form-item>
-    <el-form-item label="车牌号">
-      <el-input v-model="searchForm.truckIdNumber" maxlength="8" auto-complete="off" clearable></el-input>
-    </el-form-item>
-    <el-form-item label="司机名称">
-      <el-input v-model="searchForm.dirverName" maxlength="8" auto-complete="off" clearable></el-input>
-    </el-form-item>
-    <el-form-item label="发车网点">
-      <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
-    </el-form-item>
-    <el-form-item class="staff_searchinfo--btn">
-      <el-button type="primary" @click="onSubmit">查询</el-button>
-      <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
-    </el-form-item>
+    <el-row>
+      <el-col :span="20">
+        <el-form-item label="开单时间">
+          <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="批次状态" prop="batchTypeId">
+          <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type" clearable></selectBatchType>
+        </el-form-item>
+        <el-form-item label="发车批次">
+          <el-input v-model="searchForm.deliveryBatchType" maxlength="15" auto-complete="off" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="车牌号">
+          <el-input v-model="searchForm.truckIdNumber" maxlength="15" auto-complete="off" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="司机名称">
+          <el-input v-model="searchForm.dirverName" maxlength="15" auto-complete="off" clearable></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item class="staff_searchinfo--btn">
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
 </template>
 <script>
@@ -55,37 +58,28 @@ export default {
       }
     }
     return {
-      searchTime: [],
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        "orgId": '',
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+        loadTypeId: 38,
+        orgId: 0
+        // batchNo: '',
+        // batchTypeId: '',
+        // deliveryBatchType: '',
+        // dirverName: '',
+        // endTime: '',
+        // mainBatchType: '',
+        // shortBatchType: '',
+        // startTime: '',
+        // truckIdNumber: ''
       },
-      query: {
-        "orgId": '',
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+      searchData: {
+        loadTypeId: 38,
+        orgId: 0
       },
       rules: {
-        orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
+        shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
+      searchTime: [],
+      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -119,26 +113,28 @@ export default {
     onSubmit() {
       let searchObj = {}
       searchObj = Object.assign({}, this.searchForm)
-      this.$set(searchObj, 'departureStartTime', this.searchTime[0])
-      this.$set(searchObj, 'departureEndTime', this.searchTime[1])
+      if (this.searchTime) {
+        this.$set(searchObj, 'startTime', this.searchTime[0])
+        this.$set(searchObj, 'endTime', this.searchTime[1])
+      }
       this.$emit('change', searchObj)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchForm = Object.assign({}, this.query)
       this.searchTime = []
+      this.searchForm = Object.assign({}, this.searchData)
     }
   }
 }
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .tab-content {
   .staff_searchinfo {
     padding: 15px 20px;
     border-bottom: 1px dashed #999;
     .el-form-item {
-      margin-bottom: 0;
+      margin-bottom: 5px;
     }
   }
   .staff_searchinfo--btn {
