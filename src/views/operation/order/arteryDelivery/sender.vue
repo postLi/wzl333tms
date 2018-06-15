@@ -67,14 +67,14 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="orgName"
+            prop="batchTypeId"
             width="110"
-            label="车辆状态">
+            label="批次状态">
           </el-table-column>
           <el-table-column
             label="发车时间"
             width="110"
-            prop="legalPersonname"
+            prop="departureTime"
             sortable
             >
           </el-table-column>
@@ -198,7 +198,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="totalFee"
             label="运费合计"
             width="110"
             sortable
@@ -247,14 +247,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="username"
             label="配载人"
             width="90"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="detailedAddress"
+            prop="truckName"
             label="发车人"
             width="90"
             sortable
@@ -374,14 +374,14 @@ export default {
         return false
       }
       // 判断是否有选中项
-      // if(!this.selected.length){
-      //     this.closeAddCustomer()
-      //     this.$message({
-      //         message: '请选择要操作的项~',
-      //         type: 'warning'
-      //     })
-      //     return false
-      // }
+      if(!this.selected.length){
+          this.closeAddCustomer()
+          this.$message({
+              message: '请选择要操作的项~',
+              type: 'warning'
+          })
+          return false
+      }
 
       switch (type) {
           // 添加客户
@@ -389,6 +389,7 @@ export default {
               this.isModify = false
               this.selectInfo = {}
               this.openAddCustomer()
+            this.selectInfo = this.selected[0]
               break;
           // // 修改客户信息
           // case 'modify':

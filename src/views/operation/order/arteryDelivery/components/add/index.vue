@@ -1,10 +1,10 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="arteryDeliveryPop" v-loading="loading">
+  <pop-right :title="'批次:'+popTitle" :isShow="popVisible" @close="closeMe" class="arteryDeliveryPop" v-loading="loading">
     <template class="arteryDeliveryPop-content" slot="content">
       <div class="customer-manager">
 
         <div class="eltab clearfix">
-          <span @click="component = 'Sender'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}">批次详情</span>
+          <span @click="component = 'Sender'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}" :info="sender">批次详情</span>
           <span @click="component = 'Receiver'" class="tab-label" :class="{'active-tab': component.indexOf('eceiver')!==-1}">批次跟踪</span>
           <span @click="component = 'Receiver'" class="tab-label" :class="{'active-tab': component.indexOf('eceiver')!==-1}">运输合同</span>
         </div>
@@ -14,27 +14,30 @@
       </div>
     </template>
     <div slot="footer">
-      <!--<el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>-->
-      <!--<el-button @click="closeMe">取 消</el-button>-->
     </div>
   </pop-right>
-  <!--<div class="customer-manager">-->
-    <!--<div class="eltab clearfix">-->
-      <!--<span @click="component = 'Sender'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}">发货人</span>-->
-      <!--<span @click="component = 'Receiver'" class="tab-label" :class="{'active-tab': component.indexOf('eceiver')!==-1}">收货人</span>-->
-    <!--</div>-->
-    <!--<keep-alive>-->
-      <!--<component v-bind:is="component"></component>-->
+
     <!--</keep-alive>-->
   <!--</div>-->
 </template>
 
 <script>
-  import popRight from '@/components/PopRight/index'
+import popRight from '@/components/PopRight/index'
 import Sender from './sender'
 import Receiver from './receiver'
-
+import {getBatchNoId} from '@/api/operation/arteryDelivery'
+import { mapGetters } from 'vuex'
 export default {
+
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid () {
+      // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+      return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+    }
+  },
   components: {
     Sender,
     Receiver,
@@ -49,16 +52,42 @@ export default {
     popVisible: {
       type: Boolean,
       default: false
+    },
+    info: {
+      type: Object,
+      default: () => {}
+    },
+  },
+  watch:{
+    info(){
+      this.sender = this.info
+      // console.log(this.info)
     }
   },
   data() {
     return {
-      popTitle: '新增发货人',
+      sender:{},
+      popTitle: '',
       component: 'Sender'
     }
   },
+  mounted(){
+    this.fetchAllCustomer()
+  },
   methods: {
-    submitForm(formName) {
+    fetchAllCustomer() {
+      // this.loading = true
+      this.batchNo.orgid = this.otherinfo.orgid
+      console.log(this.batchNo.orgid)
+      return getBatchNoId(this.otherinfo.orgid,39).then(data => {
+        this.popTitle = data.data
+        // this.total = data.totalCount
+        console.log(this.popTitle)
+        // this.loading = false
+      })
+
+    },
+      submitForm(formName) {
       // this.$refs[formName].validate((valid) => {
       //   if (valid) {
       //     this.loading = true

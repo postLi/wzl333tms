@@ -256,6 +256,10 @@ import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
 export default {
   props: {
+    info: {
+      type: Object,
+      default: () => {}
+    },
     // btnsize: {
     //   type: String,
     //   default: 'mini'
@@ -266,6 +270,11 @@ export default {
     TableSetup,
     AddCustomer,
     SelectTree
+  },
+  watch:{
+    info(){
+      console.log(this.info)
+    }
   },
   computed: {
       ...mapGetters([
@@ -515,7 +524,7 @@ export default {
     .sta_searchinfo{
       .el-form-item--mini.el-form-item{
         margin-right: 0;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
       .art_arriveTime{
         .el-form-item__label{
