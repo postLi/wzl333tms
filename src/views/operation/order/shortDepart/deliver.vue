@@ -8,7 +8,7 @@
         <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">发车</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消发车</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消装车</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain>修改</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn">修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -94,6 +94,8 @@ export default {
       isBatch: true,
       commonTruck: {},
       selectInfo: {},
+      isDisBtn: true,
+      selectedData: {},
       dataList: [],
       searchQuery: {
         "orgId": 1,
@@ -139,7 +141,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '././load' })
+          this.$router.push({ path: '././load', query: { loadTypeId: 38 } })
           break
         case 'truck': // 发车
           this.truck()
@@ -166,7 +168,16 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
-      this.selected = list
+      if (list.length === 1) {
+        this.selected = Object.assign([], list)
+        this.isDisBtn = false
+        let tid = 0
+        this.selected.forEach(e => {
+          this.selectedData = Object.assign({}, e)
+        })
+      } else {
+        this.isDisBtn = true
+      }
       this.isBatch = true
     },
     handlePageChange(obj) {
@@ -239,7 +250,14 @@ export default {
         this.$message({ type: 'warning', message: '已装车状态才可以取消装车' })
       }
     },
-    edit() {}
+    edit() {
+      let batchTypeId = this.selectedData.batchTypeId
+      if (batchTypeId === 47 || batchTypeId === 48) {
+        this.$router.push({ path: '././load', query: { loadTypeId: 38, info: this.selectedData } })
+      } else {
+        this.$message({type:'warning', message: '【 '+this.selectedData.batchNo+' 】已【 '+this.selectedData.batchTypeName+' 】不可以修改'})
+      }
+    }
   }
 }
 

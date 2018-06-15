@@ -7,44 +7,7 @@
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="批次详情" name="first">
-            {{info}}
-            <div class="info">
-              <p>{{info.item_name}}</p>
-              <span>{{info.create_time}}</span>
-              <div class="info-content">
-                <el-row>
-                  <el-col :span="4">
-                  </el-col>
-                  <el-col :span="20">
-                    <el-row>
-                      <el-col :span="5" :offset="3"><b>抽奖ID</b></el-col>
-                      <el-col :span="16">{{info.id}}
-                      </el-col>
-                    </el-row>
-                    <el-row>
-                      <el-col :span="5" :offset="3"><b>抽奖人ID</b></el-col>
-                      <el-col :span="16">{{info.user_id}}
-                      </el-col>
-                    </el-row>
-                    <el-row>
-                      <el-col :span="5" :offset="3"><b>抽奖商品ID</b></el-col>
-                      <el-col :span="16">{{info.item_id}}
-                      </el-col>
-                    </el-row>
-                  </el-col>
-                </el-row>
-              </div>
-              <div class="info-content">
-                <el-row>
-                  <el-col :span="6"><b>入口/类型/状态</b></el-col>
-                  <el-col :span="18">
-                    <el-tag>{{info.id}}</el-tag> 
-                  </el-col>
-                </el-row>
-              </div>
-              <div class="info-content">
-              </div>
-            </div>
+            <Detail :info="info" :isShow="popVisible"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="tab_box">
@@ -127,9 +90,11 @@ import popRight from '@/components/PopRight/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
+import Detail from './detail'
 export default {
   components: {
-    popRight
+    popRight,
+    Detail
   },
   props: {
     popVisible: {

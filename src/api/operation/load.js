@@ -5,10 +5,11 @@ import fetch from '../../utils/fetch'
 /**
  * 获得配载批次号
  */
-export function getBatchNo(id) {
+export function getBatchNo(id, loadTypeId) {
   return fetch.get('/api-order/order/load/v1/getBatchNo/', {
     params: {
-      orgId: id
+      orgId: id,
+      loadTypeId: loadTypeId
     }
   })
 }
@@ -60,7 +61,9 @@ export function getSelectLoadDetailList(loadid) {
  * 查询配载主信息及费用记录列表
  */
 export function selectLoadMainInfoList (data) {
-  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', data)
+  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', data).then(data => {
+    return data.list
+  })
 }
 /**
  * 配载发车(批量)

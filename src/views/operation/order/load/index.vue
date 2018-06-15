@@ -67,14 +67,14 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="配载日期">
-                    <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" placeholder="配载日期">
+                  <el-form-item label="短驳日期">
+                    <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" placeholder="短驳日期">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="预计到达日期">
-                    <el-date-picker size="mini" v-model="formModel.planArrivedTime" type="datetime" placeholder="预计到达日期">
+                  <el-form-item label="要求到达日期">
+                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" type="datetime" placeholder="要求到达日期">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -260,6 +260,8 @@ export default {
         tmsOrderLoadDetailsList: [],
         tmsOrderLoadFee: {}
       },
+      orgData: [],
+      isEdit: false,
       isModify: false,
       addTruckVisible: false,
       truckSources: [],
@@ -276,6 +278,9 @@ export default {
       Drivers: [],
       Trucks: [],
       submitvalidate: false,
+      loadTypeId: 38,
+      batchTypeIdFinish: 47,
+      batchTypeIdFinishTruck: 48,
       inited: false,
       formModelRules: {
         arriveOrgid: [{ required: true, trigger: 'blur', message: '非直送不能为空' }],
@@ -307,7 +312,11 @@ export default {
       this.formModel.arriveOrgid = newVal
     },
     orgid() {},
-    loadTruckInfo () {
+    typeid() {
+      this.typeid = this.$route.params.loadTypeId
+      console.log(this.$route.params.loadTypeId)
+    },
+    loadTruckInfo() {
       let data = Object.assign({}, this.formModel)
       return data
     }
@@ -321,6 +330,8 @@ export default {
     loadChart
   },
   mounted() {
+    this.setLoadTypeId()
+    this.initIsEdit()
     this.getLoadNo()
     this.getSelectAddLoadRepertoryList()
     this.formModel.orgid = this.orgid
@@ -332,8 +343,19 @@ export default {
     }
   },
   methods: {
+    initIsEdit() {
+    this.orgData = this.$route.query.info
+      if (this.orgData) {
+        this.isEdit = true
+        console.log(this.orgData, this.isEdit)
+      } else {
+        this.isEdit = false
+        console.log(this.orgData, this.isEdit)
+      }
+    },
     getLoadNo() {
-      return getBatchNo(this.otherinfo.orgid).then(data => {
+      console.log('批次号查询', this.loadTypeId)
+      return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
         this.truckMessage = data.text // 批次号
         this.contractNo = data.text // 合同编号？？？？？
       })
@@ -359,7 +381,7 @@ export default {
           this.finishLoadInfo()
           break
         case 'finishTruck': // 完成并发车
-        this.finishTruckInfo()
+          this.finishTruckInfo()
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -410,8 +432,8 @@ export default {
         })
       }
     },
-    finishTruckInfo () {
-       this.formValidate() // 表单验证
+    finishTruckInfo() {
+      this.formValidate() // 表单验证
       if (this.submitvalidate) {
         this.setDataFinishTruck() // 处理数据
         this.$nextTick(() => {
@@ -438,20 +460,58 @@ export default {
         }
       }, 1000)
     },
-    setData() { // 完成配载 ：处理数据格式。。。
-      this.$set(this.formModel, 'batchNo', this.truckMessage)
-      this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
-      this.$set(this.formModel, 'loadTypeId', 39) // 配载类型：38-短驳 39-干线 40-送货
-      this.$set(this.formModel, 'batchTypeId', 52) // 批次状态： 干线(52已装车,53在途中)
-      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
-      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
-      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+    /**
+     * load_type_id：配载类型（字典表38-40）
+     * batch_type_id：批次状态（字典表46-58，短驳和干线配载完就是已装车，短驳发车是短驳中，干线发车是在途中，送货为送货中）
+     */
+    setLoadTypeId() {
+      let typeid = this.$route.query.loadTypeId
+      if (typeid) {
+        this.loadTypeId = typeid
+        switch (typeid) {
+          case 38: // 短驳
+            this.batchTypeIdFinish = 47 // 完成配载
+            this.batchTypeIdFinishTruck = 48 // 配载并发车
+            break
+          case 39: // 干线
+            this.batchTypeIdFinish = 52
+            this.batchTypeIdFinishTruck = 53
+            break
+          case 40: // 送货
+            this.batchTypeIdFinish = 57
+            this.batchTypeIdFinishTruck = 57
+            break
+        }
+      } else {
+        this.loadTypeId = 38 // 默认是新增短驳
+      }
     },
-    setDataFinishTruck () { // 完成并发车 ：处理数据格式。。。
+    setData() { // 完成配载 ：处理数据格式。。。
+      this.setLoadTypeId()
+      if (this.isEdit) {
+        this.$set(this.formModel, 'batchNo', this.orgData)
+        this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
+        this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
+        this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish) // 批次状态： 干线(52已装车,53在途中)
+        this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
+        this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
+        this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      } else {
+        this.$set(this.formModel, 'batchNo', this.truckMessage)
+        this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
+        this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
+        this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish) // 批次状态： 干线(52已装车,53在途中)
+        this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
+        this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
+        this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      }
+    },
+    setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
+      // if () {}
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
-      this.$set(this.formModel, 'loadTypeId', 39) // 配载类型：38-短驳 39-干线 40-送货
-      this.$set(this.formModel, 'batchTypeId', 53) // 批次状态： 干线(52已装车,53在途中)
+      this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
+      this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinishTruck) // 批次状态： 干线(52已装车,53在途中)
       this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
       this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
