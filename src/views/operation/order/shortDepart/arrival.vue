@@ -97,7 +97,7 @@ export default {
       infoList: [],
       searchQuery: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 100,
         vo: {
           loadTypeId: 38,
           orgid: 0

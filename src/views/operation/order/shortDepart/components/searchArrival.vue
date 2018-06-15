@@ -73,7 +73,9 @@ export default {
         loadTime: '',
         truckIdNumber: '',
         truckLoad: '',
-        truckVolume: ''
+        truckVolume: '',
+        arrivedbeginDate: '',
+        arrivedEndDate: ''
       },
       query: {
         orgid: '',
@@ -91,55 +93,57 @@ export default {
         loadTime: '',
         truckIdNumber: '',
         truckLoad: '',
-        truckVolume: ''
-        },
-        rules: {
-          orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
-        },
-        pickerOptions: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近两个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        }
-      }
-    },
-    methods: {
-      onSubmit() {
-        let searchObj = {}
-        searchObj = Object.assign({}, this.searchForm)
-        this.$set(searchObj, 'beginTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
-        this.$emit('change', searchObj)
+        truckVolume: '',
+        arrivedbeginDate: '',
+        arrivedEndDate: ''
       },
-      clearForm(formName) {
-        this.$refs[formName].resetFields()
-        this.searchForm = Object.assign({}, this.query)
-        this.searchTime = []
+      rules: {
+        orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近两个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
       }
     }
+  },
+  methods: {
+    onSubmit() {
+      let searchObj = {}
+      searchObj = Object.assign({}, this.searchForm)
+      this.$set(searchObj, 'beginTime', this.searchTime[0])
+      this.$set(searchObj, 'endTime', this.searchTime[1])
+      this.$emit('change', searchObj)
+    },
+    clearForm(formName) {
+      this.$refs[formName].resetFields()
+      this.searchForm = Object.assign({}, this.query)
+      this.searchTime = []
+    }
   }
+}
 
 </script>
 <style lang="scss">
