@@ -21,7 +21,8 @@
     v-if="show === 'select' && remote"
     v-model="handlevalue"
     popper-class="query-select-autocomplete"
-    filterable
+    :filterable="filterable"
+    @change="handleSelect"
     remote
     :placeholder="placeholder"
     :remote-method="querySearch"
@@ -42,8 +43,9 @@
   <el-select
     v-if="show === 'select' && !remote"
     v-model="handlevalue"
+    @change="handleSelect"
     popper-class="query-select-autocomplete"
-    filterable
+    :filterable="filterable"
     :placeholder="placeholder"
     v-bind="$attrs"
     >
@@ -156,6 +158,11 @@ export default {
     nochangeparam: {
       type: Boolean,
       default: false
+    },
+    // select是否开启搜索
+    filterable: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {
@@ -353,6 +360,7 @@ export default {
               data = data.filter(searchFunction)
             }
             this.searchData = data
+            this.allData = data
             cb(data)
           })
         } else {
@@ -366,8 +374,15 @@ export default {
       
     },
     handleSelect (info) {
-      
-      this.$emit("input", info[this.valuekey] || '')
+      let old = info
+      // select 只传值过来，不符合需求
+      if(this.show === 'select'){
+        info = this.allData.filter(el => {
+          return el[this.valuekey] === info
+        })
+        info = info[0] || old
+      }
+      this.$emit("input", info[this.valuekey] ? info[this.valuekey]: info ? info : '')
       this.$emit('change', info)
     }
   }

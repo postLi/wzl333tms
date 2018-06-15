@@ -513,5 +513,63 @@ export default {
     return fetch.get('/api-order/order/v1/orderCreateDate').then(res => {
       return res.data || ''
     })
+  },
+  /**
+   * 获取备注列表
+   */
+  getRemarkList() {
+    return fetch.get('/api-order/order/recently/v1/')
+  },
+  /**
+   * 新增备注
+   * @param {*} id 备注id
+   * @param {*} data 备注内容
+{
+  "type": 3,
+  "userId": 2,
+  "value": "shlfhring"
+}
+   */
+  postRemark(id, data) {
+    return fetch.post('/api-order/order/recently/v1/' + id, data)
+  },
+  /**
+   * 修改备注
+   * @param {*} id 备注id
+   * @param {*} data 备注内容
+{
+  "value": "shlfhring"
+}
+   */
+  putRemark(id, data) {
+    return fetch.put('/api-order/order/recently/v1/' + id, data)
+  },
+  /**
+   * 删除备注
+   * @param {*} id 备注id
+   */
+  deleteRemark(id) {
+    return fetch.delete('/api-order/order/recently/v1/' + id)
+  },
+  /**
+   * 获取货品设置
+   * @param {*} orgId 组织id
+   */
+  getCargoSetting(orgId) {
+    return fetch.get('/api-order/order/tmsorderfield/v1/', {
+      params: {
+        orgId,
+        Type: 'orderCargoSetting'
+      }
+    }).then(res => {
+      return res.data || []
+    })
+  },
+  /**
+   * 修改货品设置
+   * @param {*} data 货品设置数据
+   */
+  putCargoSetting(data) {
+    return fetch.put('/api-order/order/tmsorderfield/v1/', data)
   }
 }

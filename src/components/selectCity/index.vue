@@ -3,7 +3,7 @@
   popper-class="city-autocomplete"
   v-model="cityName"
   :fetch-suggestions="querySearch"
-  value-key="longAddr"
+  value-key="id"
   placeholder="请输入内容"
   @select="handleSelect">
   <template slot-scope="{ item }">

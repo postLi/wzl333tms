@@ -90,12 +90,14 @@ export default {
     }
   },
   watch: {
-    value (newVal) {
-      this.val = newVal
+    value: {
+      handler(newVal) {
+        this.val = parseInt(newVal, 10) || ''
+      },
+      immediate: true
     }
   },
   mounted () {
-    this.val = this.value
     getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(data => {
       this.types = data
     })
