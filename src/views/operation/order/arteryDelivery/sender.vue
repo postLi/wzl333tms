@@ -280,7 +280,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -289,7 +289,7 @@ import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/co
 import { postArtList } from '@/api/operation/arteryDelivery'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/add/index'
+import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
@@ -321,6 +321,7 @@ export default {
       btnsize: 'mini',
       usersArr: [],
       total: 0,
+      trackId:'',
       //加载状态
       loading: true,
       setupTableVisible: false,
@@ -386,11 +387,22 @@ export default {
       switch (type) {
           // 添加客户
           case 'storage':
-              this.isModify = false
-              this.selectInfo = {}
+            if(this.selected.length > 1){
+              this.$message({
+                message: '只能选择一条数据进行跟踪设置~',
+                type: 'warning'
+              })
+              return false
+
+            }else if(this.selected.length === 1){
+
+              this.selectInfo = this.selected[0]
+              this.trackId = this.selected[0].id
               this.openAddCustomer()
-            this.selectInfo = this.selected[0]
+            }
+
               break;
+          //
           // // 修改客户信息
           // case 'modify':
           //     this.isModify = true
