@@ -151,6 +151,11 @@ export default {
     // 自定义的搜索函数，传入的参数为当前项，函数执行需返回true/false
     searchFn: {
       type: Function
+    },
+    // 是否需要处理参数
+    nochangeparam: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -227,14 +232,17 @@ export default {
           fn = postAllOrderRepertory
           break
         case 'batch':
+          this.canchangeparam = false
           this.queryParam = this.getOrgid
           fn = orderManageApi.getBatchList
           break
         case 'cargoName':
+          this.canchangeparam = false
           this.queryParam = '1'
           fn = orderManageApi.getRecently
           break
         case 'cargoPack':
+          this.canchangeparam = false
           this.queryParam = '2'
           fn = orderManageApi.getRecently
           break
@@ -282,13 +290,15 @@ export default {
 
         }
       },
+      canchangeparam: true,
       // 缓存最近一次的请求数据
-      lastQuery: '',
+      lastQuery: '*',
       lastRequest: []
     }
   },
   mounted () {
     // 初始化请求、请求参数等
+    this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
     // 判断是否需要每次都请求
     if(!this.remote){
@@ -311,26 +321,21 @@ export default {
     },
     querySearch (queryString, cb = ()=>{}) {
       // 缓存最近一次请求数据
-      if(queryString === this.lastQuery){
+      // 如果设定了不修改参数，则不缓存记录
+      if(queryString === this.lastQuery && this.canchangeparam){
         cb(this.lastRequest)
       }else{
-        if(this.queryParam.vo){
-          this.queryParam.vo[this.search] = queryString
-        } else if(typeof this.queryParam === 'object') {
-          this.queryParam[this.search] = queryString
-        } else {
-          this.queryParam = queryString
+        if(this.canchangeparam){
+          if(this.queryParam.vo){
+            this.queryParam.vo[this.search] = queryString
+          } else if(typeof this.queryParam === 'object') {
+            this.queryParam[this.search] = queryString
+          } else {
+            this.queryParam = queryString
+          }
         }
-        if(this.remote){
-          this.fetchFn().then( data => {
-            this.lastQuery = queryString
-            this.lastRequest = data
-            this.searchData = data
-            cb(data)
-          })
-        } else {
-          this.lastQuery = queryString
-          this.lastRequest = this.allData.filter(el => {
+
+        let searchFunction = (el) => {
             // 如果有自定义的搜索函数，则调用其进行判断
             if(typeof this.searchFn === 'function'){
               return this.searchFn(el, queryString)
@@ -338,8 +343,22 @@ export default {
             // 字符串  布尔值 空值 数值
             // 模糊匹配 全等于
             return el[this.search] ? el[this.search].toString().indexOf(queryString) !== -1 : false
+          }
+        
+        if(this.remote){
+          this.fetchFn().then( data => {
+            this.lastQuery = queryString
+            this.lastRequest = data
+            if(!this.canchangeparam && data.length){
+              data = data.filter(searchFunction)
+            }
+            this.searchData = data
+            cb(data)
           })
-          console.log(this.allData, this.lastRequest)
+        } else {
+          this.lastQuery = queryString
+          this.lastRequest = this.allData.filter(searchFunction)
+          console.log('this.allData, this.lastRequest:', this.allData, this.lastRequest)
           cb(this.lastRequest)
         }
         

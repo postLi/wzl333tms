@@ -146,12 +146,12 @@
     <pre class="code">&lt;querySelect search=&quot;batchNumber&quot; keyvalue=&quot;bathId&quot; show=&quot;select&quot; type=&quot;batch&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取货品名称</h4>
-    <querySelect search="name" show="select" keyvalue="name" type="cargoName" :name="city" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;name&quot; show=&quot;select&quot; keyvalue=&quot;name&quot; type=&quot;cargoName&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="name" :remote="true" keyvalue="name" type="cargoName" />
+    <pre class="code">&lt;querySelect search=&quot;name&quot; keyvalue=&quot;name&quot; type=&quot;cargoName&quot;  /&gt;</pre>
 
     <h4>获取货品包装</h4>
-    <querySelect search="name" show="select" keyvalue="name" type="cargoPack" :name="city" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;name&quot; show=&quot;select&quot; keyvalue=&quot;name&quot; type=&quot;cargoPack&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="name" keyvalue="name" type="cargoPack" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;name&quot; keyvalue=&quot;name&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
 
     <h3>prop</h3>
@@ -169,6 +169,7 @@
       <li>orgid<div class="type">  [String, Number]</div>网点id，不传就获取当前用户的组织id</li>
       <li>param<div class="type">  Object</div>额外的请求参数，用来合并到vo中</li>
       <li>searchFn<div class="type">  Function</div>自定义的搜索函数，传入的参数为当前项，函数执行需返回true/false</li>
+      <li>nochangeparam<div class="type">  Boolean</div>是否需要处理参数，默认false</li>
     </ul>
 
     <h3>event</h3>

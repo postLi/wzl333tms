@@ -506,6 +506,9 @@ export default {
       }
     })
   },
+  /**
+   * 获取创建订单的时间
+   */
   getCreateOrderDate() {
     return fetch.get('/api-order/order/v1/orderCreateDate').then(res => {
       return res.data || ''
