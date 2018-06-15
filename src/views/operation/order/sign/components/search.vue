@@ -22,7 +22,7 @@
         <el-form-item label="凭证状态"  prop="recStatus">
           <selectType v-model="searchForm.thestatus" type="" />
         </el-form-item>
-        <el-form-item label="运单号">
+        <el-form-item label="运单号" prop="shipSn">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
@@ -93,10 +93,14 @@ export default {
         signStatus:''
       },
       rules: {
-        mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
-          shipSn: validateFormNumber, trigger: 'change'
-        }]
+        shipSn: [
+          { required: true, message: '请输入用户姓名', trigger: 'change' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ]
+        // mobile: [{
+        //   //validator: validateFormMobile, trigger: 'blur'
+        //   shipSn: validateFormNumber, trigger: 'change'
+        // }]
       }
     }
   },

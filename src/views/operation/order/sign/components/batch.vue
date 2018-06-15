@@ -154,8 +154,20 @@ export default {
     },
     dotInfo (newVal) {
       // this.form = this.dotInfo
-      // console.log(this.searchQuery);
-     this.form.num = this.dotInfo.length
+      console.log(this.dotInfo);
+      // this.form = this.dotInfo
+      this.form.num = this.dotInfo.length
+      let total = 0
+      this.dotInfo.map(el => {
+        total += el.shipArrivepayFee
+      })
+      this.form.shipArrivepayFee = total
+
+      total = 0
+      this.dotInfo.map(el => {
+        total += el.agencyFund
+      })
+      this.form.agencyFund = total
     },
     // searchQuery(newVal){
     //    this.form.repertoryId = this.searchQuery.vo.repertoryId
@@ -169,7 +181,7 @@ export default {
         if(this.isModify){
           this.popTitle = '批量签收'
           // this.form.pageType = this.searchQuery.vo.pageType
-          // console.log(888);
+          // console.log(this.dotInfo);
         }
       },
       immediate: true
@@ -205,7 +217,9 @@ export default {
       if(valid){
         this.loading = true
         let data = Object.assign({},this.form)
-        data.repertoryIds = this.dotInfo
+        data.repertoryIds = this.dotInfo.map(el => {
+          return el.repertoryId
+        })
         // console.log();
         let promiseObj
         promiseObj = postPickupBatchSign(data)//批量

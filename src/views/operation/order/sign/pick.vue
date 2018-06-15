@@ -102,35 +102,42 @@
             >
           </el-table-column>
           <el-table-column
-            prop="sendName"
+            prop="form.sender_customer_name"
             label="发货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="sendMobile"
+            prop="form.sender_customer_mobile"
             label="发货人电话"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="recName"
+            prop="form.sender_detailed_address"
+            label="发货人地址"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="form.receiver_customer_name"
             label="收货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="recMobile"
+            prop="form.eceiver_customer_mobile"
             label="收货人电话"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="recAddress"
+            prop="receiver_detailed_address"
             label="收货地址"
             width="120"
             sortable
@@ -620,12 +627,12 @@ export default {
           switch (type) {
               //签收
             case 'pick':
-              let ids = this.selected.map(el => {
-                return el.repertoryId
-              })
+              let ids = this.selected
               // console.log(ids.length)
               if(ids.length > 1 ){
-                this.searchQuery.vo.repertoryId = ids
+               /*  this.searchQuery.vo.repertoryId = ids.map(el => {
+                  return el.repertoryId
+                }) */
                 this.dotInfo = ids
                 // console.log(ids);
                 this.popVisible = true
@@ -663,16 +670,19 @@ export default {
               this.selectInfo = this.selected[0]
               break;
             case 'cancel':
-              let _ids = this.selected.filter(el=>{
-                  return el.backStatus >= 240 &&  el.backStatus != ''
-                }).map(el => {
-                return  el.repertoryId
+              // let _ids = this.selected.filter(el=>{
+              //     return el.backStatus >= 240 &&  el.backStatus != ''
+              //   }).map(el => {
+              //   return  el.repertoryId
+              // })
+              let _ids = this.selected.map(el => {
+                return el.repertoryId
               })
-
               console.log(this.selected)
 
               if(_ids.length){
                   this.searchQuery.vo.repertoryId = _ids
+                  // console.log( this.searchQuery.vo.repertoryId);
                   postCancelPickupSign(this.searchQuery.vo).then(res=>{
                     this.$message({
                       message: '取消签收成功~',

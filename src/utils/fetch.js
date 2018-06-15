@@ -52,7 +52,8 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-      return Promise.reject(res)
+      // return Promise.reject(res)
+      return res
     } else {
       return response.data
     }

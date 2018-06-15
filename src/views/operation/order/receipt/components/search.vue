@@ -12,9 +12,9 @@
         </div>
           <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
-        <el-form-item label="开单网点">
+        <!-- <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.shipFromOrgid" />
-        </el-form-item>
+        </el-form-item> -->
         
         <el-form-item :label="title+'状态'"  prop="recStatus">
           <selectType v-model="thestatus" :type="type" />

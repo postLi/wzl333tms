@@ -191,6 +191,8 @@ export default {
                 this.$emit('success')
               }
             })
+          }).catch(res => {
+            alert(res)
           })
         }else{
           return false

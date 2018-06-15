@@ -30,9 +30,7 @@ export function postPickuplist(params) {
 }
  */
 export function postPickupSign(id) {
-  return fetch.post('/api-order/order/sign/v1/pickupSign', id).then(res => {
-    return res.data || {}
-  })
+  return fetch.post('/api-order/order/sign/v1/pickupSign', id)
 }
 /**
  * 修改签收
