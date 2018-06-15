@@ -13,10 +13,10 @@
           <el-input v-model="searchForm.deliveryBatchType" maxlength="15" auto-complete="off" clearable></el-input>
         </el-form-item>
         <el-form-item label="车牌号">
-          <el-input v-model="searchForm.truckIdNumber" maxlength="15" auto-complete="off" clearable></el-input>
+          <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
         </el-form-item>
         <el-form-item label="司机名称">
-          <el-input v-model="searchForm.dirverName" maxlength="15" auto-complete="off" clearable></el-input>
+          <querySelect search="driverName" type="driver" v-model="searchForm.dirverName"  label="driverName" :remote="true" clearable />
         </el-form-item>
       </el-col>
       <el-col :span="4">
@@ -31,11 +31,13 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import querySelect from '@/components/querySelect/index'
 import selectBatchType from '@/components/selectType/index'
 export default {
   components: {
     SelectTree,
-    selectBatchType
+    selectBatchType,
+    querySelect
   },
   props: {
     btnsize: {
@@ -59,7 +61,7 @@ export default {
     }
     return {
       searchForm: {
-        loadTypeId: 38,
+        loadTypeId: 40,
         orgId: 0
         // batchNo: '',
         // batchTypeId: '',
@@ -72,9 +74,10 @@ export default {
         // truckIdNumber: ''
       },
       searchData: {
-        loadTypeId: 38,
+        loadTypeId: 40,
         orgId: 0
       },
+      cityName: {},
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },

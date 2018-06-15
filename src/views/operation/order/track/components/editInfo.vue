@@ -8,38 +8,82 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="批次详情" name="first">
             {{info}}
+            <div class="info">
+              <p>{{info.item_name}}</p>
+              <span>{{info.create_time}}</span>
+              <div class="info-content">
+                <el-row>
+                  <el-col :span="4">
+                  </el-col>
+                  <el-col :span="20">
+                    <el-row>
+                      <el-col :span="5" :offset="3"><b>抽奖ID</b></el-col>
+                      <el-col :span="16">{{info.id}}
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="5" :offset="3"><b>抽奖人ID</b></el-col>
+                      <el-col :span="16">{{info.user_id}}
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="5" :offset="3"><b>抽奖商品ID</b></el-col>
+                      <el-col :span="16">{{info.item_id}}
+                      </el-col>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </div>
+              <div class="info-content">
+                <el-row>
+                  <el-col :span="6"><b>入口/类型/状态</b></el-col>
+                  <el-col :span="18">
+                    <el-tag>{{info.id}}</el-tag> 
+                  </el-col>
+                </el-row>
+              </div>
+              <div class="info-content">
+              </div>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="tab_box">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
-                  <el-col :span="3" :offset="6"><b>操作时间</b></el-col>
-                  <el-col :span="4"><b>操作网点</b></el-col>
-                  <el-col :span="3"><b>操作人</b></el-col>
+                  <el-col :span="4" :offset="4"><b>操作时间</b></el-col>
+                  <el-col :span="3"><b>操作网点</b></el-col>
+                  <el-col :span="2"><b>操作人</b></el-col>
                   <el-col :span="3"><b>操作信息</b></el-col>
                 </el-row>
                 <el-steps direction="vertical">
                   <el-step v-for="(item, index) in trackDetail" :key="item.key" icon="el-icon-location">
                     <template slot="description">
                       <el-row class="stepItem">
-                        <el-col :span="6">
-                          <p>{{item.loadStatus}}
-                            <div class="tab_box_item_btn" v-if="isShowBtn">
-                              <el-button type="text" icon="el-icon-edit-outline"></el-button>
-                              <el-button type="text" icon="el-icon-delete" @click="deleteTrack(item)"></el-button>
-                            </div>
-                          </p>
-                        </el-col>
                         <el-col :span="4">
+                          <el-popover placement="right" width="50" trigger="hover" v-if="item.addStatus===1?true:false">
+                            <el-tooltip class="item" effect="dark" content="修改" placement="bottom">
+                              <el-button type="text" icon="el-icon-edit-outline" @click="editItem(item)"></el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
+                              <el-button type="text" icon="el-icon-delete" @click="deleteTrack(item)"></el-button>
+                            </el-tooltip>
+                            <el-button size="mini" slot="reference">{{item.loadStatus}}</el-button>
+                          </el-popover>
+                          <el-button size="mini" v-else>{{item.loadStatus}}</el-button>
+                        </el-col>
+                        <el-col :span="5">
                           <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
                         </el-col>
-                        <el-col :span="4">
-                          <p>{{item.operatorOrgid}}</p>
+                        <el-col :span="3">
+                          <p>{{item.orgName}}</p>
                         </el-col>
-                        <el-col :span="4">
-                          <p>{{item.operatorUsername}}</p>
+                        <el-col :span="3">
+                          <p>
+                            <i class="icon_man" v-if="item.addStatus===1?true:false"></i>
+                            <i class="icon_blank" v-else></i> {{item.operatorUsername}}
+                          </p>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="8">
                           <p>{{item.operatorInfo}}</p>
                         </el-col>
                       </el-row>
@@ -57,8 +101,8 @@
     </template>
     <div slot="footer" class="dialog-footer stepFrom" v-if="isFootEdit">
       <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
-        <el-form-item label="审批人" prop="operatorUserid">
-          <el-input v-model="formModel.operatorUserid" placeholder="审批人" size="mini"></el-input>
+        <el-form-item label="类型" prop="loadStatus">
+          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
           <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
@@ -80,7 +124,9 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
-import { getLoadDetail, deleteTrack, postAddTrack } from '@/api/operation/track'
+import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
+import { getAllOrgInfo } from '@/api/company/employeeManage'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     popRight
@@ -114,15 +160,15 @@ export default {
       isShowBtn: true,
       isFootEdit: true,
       formModel: {
-      	addStatus: 1,
-      	id: 0,
-      	loadId: 0,
-      	loadStatus: '',
-      	operatorInfo: '',
-      	operatorOrgid: 0,
-      	operatorTime: '',
-      	operatorUserid: 0,
-      	transferId: 0
+        addStatus: 1,
+        id: 0,
+        loadId: 0,
+        loadStatus: '',
+        operatorInfo: '',
+        operatorOrgid: 1,
+        operatorTime: '',
+        operatorUserid: 0
+        // transferId: 0
       }
     }
   },
@@ -141,12 +187,20 @@ export default {
     }
   },
   methods: {
+    showBtnBox() {
+      console.log('show')
+    },
+    hideBtnBox() {
+      console.log('hide')
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          postAddTrack(this.formModel).then(data => {
-            this.$message({ type: 'success', message: '添加成功' })
-          })
+          if (this.formModel.id) {
+            this.editTrack()
+          } else {
+            this.addTrack()
+          }
         }
       })
     },
@@ -171,18 +225,61 @@ export default {
         this.getDetail()
       })
     },
+    editItem(item) {
+      console.log(item)
+      this.resetForm()
+      this.formModel = Object.assign({}, item)
+    },
+    editTrack() {
+      console.log('修改')
+      this.formModel.transferId = 0
+      return putUpdateTrack(this.formModel).then(data => {
+        this.$message({ type: 'success', message: '修改成功' })
+        this.getDetail()
+        this.resetForm()
+      })
+    },
+    addTrack() {
+      console.log('添加')
+      this.formModel.loadId = this.id
+      return postAddTrack(this.formModel).then(data => {
+        this.$message({ type: 'success', message: '添加成功' })
+        this.getDetail()
+        this.resetForm()
+      })
+    },
     handleClick() {
       if (this.activeName === 'second') {
         this.isFootEdit = true
       } else {
         this.isFootEdit = false
       }
+    },
+    resetForm() {
+      this.$refs['formModel'].resetFields()
     }
   }
 }
 
 </script>
 <style lang="scss" scoped>
+.icon_man {
+  background-image: url(../../../../../assets/icom/human.svg);
+  background-size: 24px;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+}
+
+.icon_blank {
+  background-size: 24px;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+}
+
 .popRight {
   width: 800px !important;
 }
@@ -212,6 +309,27 @@ export default {
 
 .editInfoPop_content {
   padding: 0 10px 0 10px;
+  .tab_descript {}
+  .info {
+    background-color: rgb(238, 241, 246);
+    margin-top: -30px;
+    padding: 10px;
+  }
+  .info p {
+    font-weight: 900;
+    font-size: 16px;
+    margin-bottom: 0px;
+  }
+  .info-content {
+    margin-top: 10px;
+    padding: 20px 10px 10px;
+    background-color: #FFF;
+    border: 2px dotted rgb(238, 241, 246);
+  }
+  .itemRecharge {
+    background-color: rgb(238, 241, 246);
+    padding: 10px;
+  }
   .tab_box {
     padding-left: 10px;
     display: flex;
@@ -219,7 +337,7 @@ export default {
     .stepItem_title {
       margin: 10px 0 10px 10px;
       font-size: 14px;
-      width: 160%;
+      width: 165%;
     }
     .stepItem {
       font-size: 14px;
@@ -228,9 +346,8 @@ export default {
       width: 160%;
       p {
         word-wrap: break-word;
-        word-break: break-all;
-        overflow: hidden;
-        .tab_box_item_btn {}
+        word-break: normal;
+        display: block;
       }
     }
   }

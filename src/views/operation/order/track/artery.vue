@@ -95,7 +95,7 @@
   </div>
 </template>
 <script>
-import SearchForm from './components/search'
+import SearchForm from './components/searchArtery'
 import { mapGetters } from 'vuex'
 import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
@@ -167,8 +167,10 @@ export default {
           this.trackInfo = Object.assign({}, e)
         })
         this.trackId = tid
-      } else {
+      } else if (list.length > 1){
         this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
+        this.isDisBtn = true
+      } else {
         this.isDisBtn = true
       }
     },

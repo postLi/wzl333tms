@@ -43,7 +43,15 @@ export function deleteTrack (id) {
  * 插入批次跟踪信息
  */
 export function postAddTrack (data) {
-	return fecth.post('/api-order/order/track/v1/insertTrack', data).then(res => {
+	return fecth.post('/api-order/order/track/v1/insertTrack/', data).then(res => {
 		return res.data
 	})
+}
+/**
+ * 
+ */
+export function putUpdateTrack (data) {
+  return fecth.put('/api-order/order/track/v1/updateById/', data).then(res => {
+    return res.data
+  })
 }

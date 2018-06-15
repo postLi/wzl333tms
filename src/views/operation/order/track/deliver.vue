@@ -95,7 +95,7 @@
   </div>
 </template>
 <script>
-import SearchForm from './components/search'
+import SearchForm from './components/searchDeliver'
 import { mapGetters } from 'vuex'
 import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
@@ -158,18 +158,19 @@ export default {
       this.fetchList()
     },
     getSelection(list) {
-      
       if (list.length === 1) {
         this.selectInfo = Object.assign([], list)
         this.isDisBtn = false
         let tid = 0
-          this.selectInfo.forEach(e => {
-            tid = e.id
-          })
+        this.selectInfo.forEach(e => {
+          tid = e.id
+          this.trackInfo = Object.assign({}, e)
+        })
         this.trackId = tid
-        console.log('info', this.selectInfo, this.trackId)
-      } else {
+      } else if (list.length > 1){
         this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
+        this.isDisBtn = true
+      } else {
         this.isDisBtn = true
       }
     },
@@ -179,6 +180,7 @@ export default {
     setTable() {},
     setInfo() {
       this.editInfoVisible = true
+      this.$refs.multipleTable.clearSelection()
     },
     closeMe() {
       this.editInfoVisible = false

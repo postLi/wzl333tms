@@ -13,71 +13,41 @@
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">
           </el-table-column>
+          <el-table-column fixed sortable width="110" prop="batchTypeId" label="批次状态">
+          </el-table-column>
           <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckIdNumber" label="发车网点">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="batchTypeId" label="车辆状态">
-          </el-table-column>
-          <el-table-column sortable width="160" prop="departureTime" label="发车时间">
-            <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="dirverName" label="司机">
           </el-table-column>
           <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
           </el-table-column>
-          <el-table-column sortable width="120" prop="actualAmountall" label="实载总件数">
+          <el-table-column sortable width="160" prop="departureTime" label="短驳时间">
+            <template slot-scope="scope">
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
-          <el-table-column sortable width="120" prop="actualWeigntall" label="实载总重量">
+          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
           </el-table-column>
-          <el-table-column sortable width="120" prop="actualVolumeall" label="实载总体积">
+          <el-table-column sortable width="160" prop="receivingTime" label="接收时间">
+            <template slot-scope="scope">
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipAmount" label="运单总件数">
+          <el-table-column sortable width="120" prop="shortFee" label="短驳费">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipWeigntall" label="运单总重量">
+          <el-table-column sortable width="120" prop="actualAmountall" label="总件数">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipVolumeall" label="运单总体积">
+          <el-table-column sortable width="120" prop="actualWeigntall" label="总重量">
+          </el-table-column>
+          <el-table-column sortable width="120" prop="actualVolumeall" label="总体积">
+          </el-table-column>
+          <el-table-column sortable width="120" prop="shipAmount" label="总件数">
           </el-table-column>
           <el-table-column sortable width="120" prop="weightLoadRate" label="重量装载率">
           </el-table-column>
           <el-table-column sortable width="120" prop="volumeLoadRate" label="体积装载率">
           </el-table-column>
-          <el-table-column sortable width="120" prop="nowpayCarriage" label="现付运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="nowpayOilCard" label="现付油卡">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arrivepayCarriage" label="到付运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arrivepayOilCard" label="到付油卡">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="backpayOilCard" label="回付油卡">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="backpayOilCard" label="回付运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="运费合计">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="carloadInsuranceFee" label="整车保险费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="leaveHandlingFee" label="发站装卸费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="leaveOtherFee" label="发站其他费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveHandlingFee" label="到站装卸费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOtherFee" label="到站其他费">
-          </el-table-column>
-          <el-table-column sortable width="160" prop="loadTime" label="配载时间">
-            <template slot-scope="scope">
-              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="username" label="配载人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckUsername" label="发车人">
+          <el-table-column sortable width="120" prop="username" label="短驳经办人">
           </el-table-column>
           <el-table-column sortable width="120" prop="remark" label="备注">
           </el-table-column>
@@ -95,7 +65,7 @@
   </div>
 </template>
 <script>
-import SearchForm from './components/search'
+import SearchForm from './components/searchShort'
 import { mapGetters } from 'vuex'
 import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
@@ -153,23 +123,24 @@ export default {
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.vo.orgId) {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
-        this.searchQuery.vo.loadTypeId = 39
+        this.searchQuery.vo.loadTypeId = 38
       }
       this.fetchList()
     },
     getSelection(list) {
-      
       if (list.length === 1) {
         this.selectInfo = Object.assign([], list)
         this.isDisBtn = false
         let tid = 0
-          this.selectInfo.forEach(e => {
-            tid = e.id
-          })
+        this.selectInfo.forEach(e => {
+          tid = e.id
+          this.trackInfo = Object.assign({}, e)
+        })
         this.trackId = tid
-        console.log('info', this.selectInfo, this.trackId)
-      } else {
+      } else if (list.length > 1){
         this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
+        this.isDisBtn = true
+      } else {
         this.isDisBtn = true
       }
     },
@@ -179,6 +150,7 @@ export default {
     setTable() {},
     setInfo() {
       this.editInfoVisible = true
+      this.$refs.multipleTable.clearSelection()
     },
     closeMe() {
       this.editInfoVisible = false

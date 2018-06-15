@@ -95,7 +95,7 @@
   </div>
 </template>
 <script>
-import SearchForm from './components/search'
+import SearchForm from './components/searchTransfer'
 import { mapGetters } from 'vuex'
 import { postTransferList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
