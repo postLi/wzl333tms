@@ -6,7 +6,7 @@
       </div>
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="批次详情" name="first">
+          <el-tab-pane label="批次详情" name="first"  height="100%">
             <Detail :info="info" :isShow="popVisible"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
@@ -119,7 +119,7 @@ export default {
       loading: false,
       infoId: {},
       trackDetail: [],
-      activeName: 'second',
+      activeName: 'first',
       formModel: {},
       ruleForm: {},
       isShowBtn: true,
@@ -273,9 +273,16 @@ export default {
 }
 
 .editInfoPop_content {
-  padding: 0 10px 0 10px;
-  .tab_descript {}
-  .info {
+  padding: 0 10px;
+  width:100%;
+  height:93%;
+  .el-tabs {
+    height:100%;
+    .el-tabs__content{
+      height:100%;
+    }
+  }
+    .info {
     background-color: rgb(238, 241, 246);
     margin-top: -30px;
     padding: 10px;

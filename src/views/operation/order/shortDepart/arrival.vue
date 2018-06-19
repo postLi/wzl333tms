@@ -19,7 +19,7 @@
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="batchNo" label="发货批次">
           </el-table-column>
-          <el-table-column sortable width="120" prop="batchTypeId" label="批次状态">
+          <el-table-column sortable width="120" prop="bathStatusName" label="批次状态">
           </el-table-column>
           <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
           </el-table-column>
@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-import { postLoadList } from '@/api/operation/shortDepart'
+import { postLoadList, postCancelLoad } from '@/api/operation/shortDepart'
 import { mapGetters } from 'vuex'
 import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
@@ -117,6 +117,9 @@ export default {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchShortDepartList()
   },
+  created () {
+    this.fetchShortDepartList()
+  },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
@@ -126,7 +129,7 @@ export default {
       this.fetchShortDepartList()
     },
     doAction(type) {
-      if (this.selected.length < 1) {
+      if (this.selected.length !== 1) {
         this.$message({
           message: '请选择一条数据~',
           type: 'warning'
@@ -138,6 +141,7 @@ export default {
         case 'repertory':
           break
         case 'chanelTruck':
+        this.chanelTruck()
           break
         case 'chanelRepertory':
           break
@@ -165,8 +169,22 @@ export default {
     fetchShortDepartList() {
       this.getAllList()
     },
+    chanelTruck () {
+      let data = {}
+      this.$set(data, 'id', this.selected[0].id)
+      this.$set(data, 'loadType', 38) // 装载类型：短驳
+      postCancelLoad(data).then(data => {
+        this.$message({type: 'success', message: '操作成功'})
+        this.fetchShortDepartList()
+        this.$refs.multipleTable.clearSelection()
+      })
+      .catch(error => {
+        this.$message({type: 'success', message: '操作失败'})
+      })
+    },
     getAllList() {
       this.loading = true
+      console.log(this.searchQuery)
       return postLoadList(this.searchQuery).then(data => {
         if (data) {
           this.infoList = data.list

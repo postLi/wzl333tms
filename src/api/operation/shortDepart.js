@@ -1,6 +1,6 @@
 import fetch from '../../utils/fetch'
 /**
- * 短驳管理
+ * 短驳发车
  */
 export function postAllshortDepartList(params) {
   return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', params).then(res => {
@@ -32,4 +32,10 @@ export function postLoadList(data) {
 	return fetch.post('/api-order/order/load/v1/list/', data).then(res => {
 		return res.data || { list: [], totalCount: 0 }
 	})
+}
+/**
+ * 根据配载单ID配载类型取消到车
+ */
+export function postCancelLoad(data) {
+  return fetch.post('/api-order/order/load/v1/cancelLoad/' + data.id + '/'+ data.loadType )
 }
