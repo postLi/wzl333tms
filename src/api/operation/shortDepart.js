@@ -39,3 +39,15 @@ export function postLoadList(data) {
 export function postCancelLoad(data) {
   return fetch.post('/api-order/order/load/v1/cancelLoad/' + data.id + '/'+ data.loadType )
 }
+/**
+ * 取消入库
+ */
+export function postCancelPut (data) {
+	return fetch.post('/api-order/order/load/v1/cancelPut/'+data.id+'/'+data.loadType)
+}
+/**
+ * 到库入库
+ */
+export function postAddRepertory (typeId, data) {
+	return fetch.post('/api-order/order/load/v1/addRepertory/' + typeId, data)
+}

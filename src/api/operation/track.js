@@ -8,7 +8,7 @@ export function postTrackList(data) {
   })
 }
 /**
- * 中转跟踪
+ * 在途跟踪中转列表
  */
 export function postTransferList(data) {
   return fecth.post('/api-order/order/track/v1/transferList/', data).then(res => {
@@ -48,7 +48,7 @@ export function postAddTrack(data) {
   })
 }
 /**
- * 
+ * 根据ID修改批次跟踪信息
  */
 export function putUpdateTrack(data) {
   return fecth.put('/api-order/order/track/v1/updateById/', data).then(res => {
@@ -67,7 +67,15 @@ export function getSelectLoadList(loadId) {
  * 根据配载ID获取批次跟踪信息
  */
 export function getLoadTrack(loadId) {
-  return fecth.get('/order/track/v1/getLoadTrack/' + loadId).then(res => {
+  return fecth.get('/api-order/order/track/v1/getLoadTrack/' + loadId).then(res => {
+    return res.data
+  })
+}
+/**
+ * 根据中转ID获取批次跟踪信息
+ */
+export function getTransferTrack(transferId) {
+  return fecth.get('/api-order/order/track/v1/getTransferTrack/' + transferId).then(res => {
     return res.data
   })
 }

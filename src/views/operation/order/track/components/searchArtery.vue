@@ -2,7 +2,7 @@
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-row>
       <el-col :span="20">
-        <el-form-item label="开单时间">
+        <el-form-item label="发车时间">
           <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
@@ -16,7 +16,7 @@
           <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
         </el-form-item>
         <el-form-item label="司机名称">
-          <querySelect search="driverName" type="driver" v-model="searchForm.dirverName"  label="driverName" :remote="true" clearable />
+          <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" label="driverName" :remote="true" clearable />
         </el-form-item>
       </el-col>
       <el-col :span="4">
@@ -114,13 +114,24 @@ export default {
   },
   methods: {
     onSubmit() {
-      let searchObj = {}
-      searchObj = Object.assign({}, this.searchForm)
-      if (this.searchTime) {
-        this.$set(searchObj, 'startTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
+      // let searchObj = {}
+      // searchObj = Object.assign({}, this.searchForm)
+      // if (this.searchTime) {
+      //   this.$set(searchObj, 'startTime', this.searchTime[0])
+      //   this.$set(searchObj, 'endTime', this.searchTime[1])
+      // }
+      if (this.searchForm.truckIdNumber) {
+        this.searchForm.truckIdNumber = this.searchForm.truckIdNumber.truckIdNumber
       }
-      this.$emit('change', searchObj)
+      // if (this.searchForm.dirverName) {
+      //   this.searchForm.dirverName = this.searchForm.dirverName.dirverName
+      // }
+      if (this.searchTime) {
+        this.searchForm.startTime = this.searchTime[0]
+        this.searchForm.endTime = this.searchTime[1]
+      }
+      this.$emit('change', this.searchForm)
+      this.searchForm = Object.assign({}, this.searchData)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

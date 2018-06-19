@@ -19,7 +19,7 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
           </el-table-column>
-          <el-table-column sortable width="120" prop="batchTypeId" label="车辆状态">
+          <el-table-column sortable width="120" prop="batchTypeName" label="车辆状态">
           </el-table-column>
           <el-table-column sortable width="160" prop="departureTime" label="发车时间">
             <template slot-scope="scope">
@@ -153,7 +153,7 @@ export default {
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.vo.orgId) {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
-        this.searchQuery.vo.loadTypeId = 39
+        this.searchQuery.vo.loadTypeId = 40
       }
       this.fetchList()
     },

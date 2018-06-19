@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-import { postLoadList, postCancelLoad } from '@/api/operation/shortDepart'
+import { postLoadList, postCancelLoad, postCancelPut } from '@/api/operation/shortDepart'
 import { mapGetters } from 'vuex'
 import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
@@ -117,9 +117,6 @@ export default {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchShortDepartList()
   },
-  created () {
-    this.fetchShortDepartList()
-  },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
@@ -137,13 +134,16 @@ export default {
       }
       switch (type) {
         case 'truck':
+        this.truck()
           break
         case 'repertory':
+        this.repertory()
           break
         case 'chanelTruck':
         this.chanelTruck()
           break
         case 'chanelRepertory':
+        this.chanelRepertory()
           break
         case 'printPaper':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
@@ -169,12 +169,35 @@ export default {
     fetchShortDepartList() {
       this.getAllList()
     },
+    truck () {
+      let data = {}
+      // postAddRepertory(this.selected[0].id, data).then(data =>{
+      //   this.$message({type: 'success', message: '到库入库'})
+      // })
+      this.$message({type: 'warning', message: '功能未完善'})
+    },
+    repertory () {
+      this.$message({type: 'warning', message: '功能未完善'})
+    },
     chanelTruck () {
       let data = {}
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       postCancelLoad(data).then(data => {
-        this.$message({type: 'success', message: '操作成功'})
+        this.$message({type: 'success', message: '取消到车成功'})
+        this.fetchShortDepartList()
+        this.$refs.multipleTable.clearSelection()
+      })
+      .catch(error => {
+        this.$message({type: 'success', message: '操作失败'})
+      })
+    },
+    chanelRepertory () {
+      let data = {}
+      this.$set(data, 'id', this.selected[0].id)
+      this.$set(data, 'loadType', 38) // 装载类型：短驳
+      postCancelPut(data).then(data => {
+        this.$message({type: 'success', message: '取消入库成功'})
         this.fetchShortDepartList()
         this.$refs.multipleTable.clearSelection()
       })

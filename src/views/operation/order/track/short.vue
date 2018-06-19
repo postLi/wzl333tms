@@ -13,7 +13,7 @@
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchTypeId" label="批次状态">
+          <el-table-column fixed sortable width="110" prop="batchTypeName" label="批次状态">
           </el-table-column>
           <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
           </el-table-column>

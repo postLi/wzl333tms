@@ -19,7 +19,7 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
           </el-table-column>
-          <el-table-column sortable width="120" prop="batchTypeId" label="车辆状态">
+          <el-table-column sortable width="120" prop="batchTypeName" label="车辆状态">
           </el-table-column>
           <el-table-column sortable width="160" prop="departureTime" label="发车时间">
             <template slot-scope="scope">
@@ -131,15 +131,6 @@ export default {
         vo: {
           loadTypeId: 39,
           orgId: 0
-          // batchNo: '',
-          // batchTypeId: '',
-          // deliveryBatchType: '',
-          // dirverName: '',
-          // endTime: '',
-          // mainBatchType: '',
-          // shortBatchType: '',
-          // startTime: '',
-          // truckIdNumber: ''
         }
       }
     }
@@ -161,12 +152,9 @@ export default {
       if (list.length === 1) {
         this.selectInfo = Object.assign([], list)
         this.isDisBtn = false
-        let tid = 0
-        this.selectInfo.forEach(e => {
-          tid = e.id
-          this.trackInfo = Object.assign({}, e)
-        })
+        let tid = this.selectInfo[0].id
         this.trackId = tid
+        this.trackInfo = Object.assign({}, this.selectInfo[0])
       } else if (list.length > 1){
         this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
         this.isDisBtn = true

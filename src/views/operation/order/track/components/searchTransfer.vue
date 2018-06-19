@@ -2,21 +2,12 @@
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-row>
       <el-col :span="20">
-        <el-form-item label="开单时间">
+        <el-form-item label="中转时间">
           <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="批次状态" prop="batchTypeId">
-          <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type" clearable></selectBatchType>
-        </el-form-item>
-        <el-form-item label="发车批次">
-          <el-input v-model="searchForm.deliveryBatchType" maxlength="15" auto-complete="off" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="车牌号">
-          <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
-        </el-form-item>
-        <el-form-item label="司机名称">
-          <querySelect search="driverName" type="driver" v-model="searchForm.dirverName"  label="driverName" :remote="true" clearable />
+        <el-form-item label="承运商" prop="carrierName">
+         <querySelect v-model="searchForm.carrierName" search="carrierName" type="carrier" label="carrierName" :name="city" @change="getcity" :remote="true" clearable ></querySelect>
         </el-form-item>
       </el-col>
       <el-col :span="4">
@@ -32,11 +23,9 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import selectBatchType from '@/components/selectType/index'
 export default {
   components: {
     SelectTree,
-    selectBatchType,
     querySelect
   },
   props: {
@@ -60,29 +49,26 @@ export default {
       }
     }
     return {
+      carrierName: {},
       searchForm: {
-        loadTypeId: 38,
-        orgId: 0
-        // batchNo: '',
-        // batchTypeId: '',
-        // deliveryBatchType: '',
-        // dirverName: '',
-        // endTime: '',
-        // mainBatchType: '',
-        // shortBatchType: '',
-        // startTime: '',
-        // truckIdNumber: ''
+        orgId: 0,
+        carrierName: '',
+        startTime: '',
+        endTime: ''
       },
+      city: '',
       searchData: {
-        loadTypeId: 38,
-        orgId: 0
+        orgId: 0,
+        carrierName: '',
+        startTime: '',
+        endTime: ''
       },
       cityName: {},
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [],
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      defaultTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -113,14 +99,17 @@ export default {
     }
   },
   methods: {
+    getcity () {},
     onSubmit() {
-      let searchObj = {}
-      searchObj = Object.assign({}, this.searchForm)
-      if (this.searchTime) {
-        this.$set(searchObj, 'startTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
+      if (this.searchForm.carrierName) {
+        this.searchForm.carrierName = this.searchForm.carrierName.carrierName
       }
-      this.$emit('change', searchObj)
+      if (this.searchTime) {
+        this.searchForm.startTime = this.searchTime[0]
+        this.searchForm.endTime = this.searchTime[1]
+      }
+      this.$emit('change', this.searchForm)
+      this.searchForm = Object.assign({}, this.searchData)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

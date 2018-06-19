@@ -6,7 +6,7 @@
       </div>
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="批次详情" name="first"  height="100%">
+          <el-tab-pane label="批次详情" name="first" height="100%">
             <Detail :info="info" :isShow="popVisible"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
@@ -121,9 +121,13 @@ export default {
       trackDetail: [],
       activeName: 'first',
       formModel: {},
-      ruleForm: {},
+      ruleForm: {
+        loadStatus: [{required: true, trigger: 'blur', message: '不能为空'}],
+        operatorTime: [{required: true, trigger: 'blur', message: '不能为空'}],
+        operatorInfo: [{required: true, trigger: 'blur', message: '不能为空'}]
+      },
       isShowBtn: true,
-      isFootEdit: true,
+      isFootEdit: false,
       formModel: {
         addStatus: 1,
         id: 0,
@@ -133,7 +137,6 @@ export default {
         operatorOrgid: 1,
         operatorTime: '',
         operatorUserid: 0
-        // transferId: 0
       }
     }
   },
@@ -184,19 +187,17 @@ export default {
       }
     },
     deleteTrack(item) {
-      console.log(item)
       return deleteTrack(item.id).then(data => {
         this.$message({ type: 'success', message: '删除成功' })
         this.getDetail()
       })
     },
     editItem(item) {
-      console.log(item)
       this.resetForm()
       this.formModel = Object.assign({}, item)
     },
     editTrack() {
-      console.log('修改')
+      console.log('修改', this.formModel)
       this.formModel.transferId = 0
       return putUpdateTrack(this.formModel).then(data => {
         this.$message({ type: 'success', message: '修改成功' })
@@ -208,6 +209,7 @@ export default {
       console.log('添加')
       this.formModel.loadId = this.id
       return postAddTrack(this.formModel).then(data => {
+        console.log(this.formModel, 'MODE')
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
@@ -222,6 +224,7 @@ export default {
     },
     resetForm() {
       this.$refs['formModel'].resetFields()
+      this.formModel = this.$options.data().formModel
     }
   }
 }
@@ -274,15 +277,15 @@ export default {
 
 .editInfoPop_content {
   padding: 0 10px;
-  width:100%;
-  height:93%;
+  width: 100%;
+  height: 93%;
   .el-tabs {
-    height:100%;
-    .el-tabs__content{
-      height:100%;
+    height: 100%;
+    .el-tabs__content {
+      height: 100%;
     }
   }
-    .info {
+  .info {
     background-color: rgb(238, 241, 246);
     margin-top: -30px;
     padding: 10px;
