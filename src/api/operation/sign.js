@@ -36,10 +36,8 @@ export function postPickupSign(id) {
  * 修改签收
  * 根据ID修改运单签收信息
  */
-export function postXiugai(id) {
-  return fetch.post('/order/sign/v1/', id).then(res => {
-    return res.data || {}
-  })
+export function putXiugai(id,params) {
+  return fetch.post('/api-order/order/sign/v1/?id=' + id,params)
 }
 /**
  * 自提取消签收,需要传递签收id,库存id

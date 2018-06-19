@@ -308,6 +308,7 @@ export default {
                   this.isModify = true
                   this.isCheck = false
                   this.id = this.selected[0].id
+                  console.log(this.id);
                   this.openAddAbnormal();
                 }
                 break;

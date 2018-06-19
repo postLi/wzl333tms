@@ -165,7 +165,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="signStatusName"
+            prop="shipStatusName"
             label="签收状态"
             width="120"
             sortable
@@ -529,7 +529,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      <Addsign :issender="true" :isModify="isModify" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData"></Addsign>
+      <Addsign :issender="true" :isModify="isModify" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
       <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify"></Addbatch>
       <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
@@ -556,14 +556,15 @@ export default {
         ]),
         orgid () {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+            return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
         }
     },
     mounted () {
-        // this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                this.loading = false
-            })
+        this.searchQuery.vo.orgId = this.otherinfo.orgid
+        Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+            this.loading = false
+            // this.licenseTypes = resArr[1]
+          })
         },
         data() {
             return {
@@ -579,6 +580,7 @@ export default {
                 isModify: false,
                 dotInfo: [],
                 repertoryId:'',
+                signId:'',
                 // loading:false,
                 searchQuery: {
                   "currentPage":1,
@@ -588,19 +590,21 @@ export default {
 	                  "signId":''
                   }
                 },
-                total: 0
+                total: 0,
+                id:''
             }
         },
         methods: {
         fetchAllreceipt() {
-            // this.loading = true
+            this.loading = true
             return postPickuplist(this.searchQuery).then(data => {
                 this.dataset = data.list
                 this.total = data.total
+                this.signId = data.signId
             })
         },
         fetchData () {
-        this.fetchAllreceipt()
+          this.fetchAllreceipt()
         },
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
@@ -636,70 +640,49 @@ export default {
                 this.dotInfo = ids
                 // console.log(ids);
                 this.popVisible = true
-                this.isModify = true
+                this.isModify = false
               }else{
                 this.repertoryId = this.selected[0]
                 this.openAddSign()
               }
             break;
             case 'amend': 
-              // let ids = this.selected.filter(el=>{
-              //     return el.sendStatus === 107
-              //   }).map(el => {
-              //     return  el.receiptId
-              //   })
-              //   if(ids.length){
-              //     this.searchQuery.vo.receiptIds = ids
-              //     this.dotInfo = ids
-              //     this.popVisible = true
-              //     this.isAccept = true
-              //     this.isModify = false
-              //     this.searchQuery.vo.receiptIds = ids
-              //     putUpdateReceipt(this.searchQuery.vo).then(res=>{
-              //       this.$message({
-              //         message: '回单寄出成功~',
-              //         type: 'success'
-              //       })
-              //       this.fetchAllreceipt()
-              //       return false
-              //     })
-              //   }else{
-              //     this.$message.warning('回单已寄出请选择未寄出项~')
-              //   }
-              this.openAddSign()
-              this.selectInfo = this.selected[0]
-              break;
-            case 'cancel':
-              // let _ids = this.selected.filter(el=>{
-              //     return el.backStatus >= 240 &&  el.backStatus != ''
-              //   }).map(el => {
-              //   return  el.repertoryId
-              // })
-              let _ids = this.selected.map(el => {
-                return el.repertoryId
-              })
-              console.log(this.selected)
-
-              if(_ids.length){
-                  this.searchQuery.vo.repertoryId = _ids
-                  // console.log( this.searchQuery.vo.repertoryId);
-                  postCancelPickupSign(this.searchQuery.vo).then(res=>{
-                    this.$message({
-                      message: '取消签收成功~',
-                      type: 'success'
-                    })
-                    this.fetchAllreceipt()
-                    return false
-                  }).catch(err => {
-                    this.$message.error(err)
-                    // this.closeAddDot()
+              // this.repertoryId = this.selected[0]
+              // this.openAddSign()
+              if(this.selected.length > 1){
+                  this.$message({
+                      message: '每次只能修改单条数据',
+                      type: 'warning'
                   })
                 }else{
-                  this.$message.warning('回单已寄出不可取消~')
+                  this.isModify = true
+                  this.repertoryId = this.selected[0]
+                  this.id = this.selected[0].signId
+                  console.log(this.id);
+                  this.openAddSign()
                 }
-              
               break;
-              }
+             
+            case 'cancel':
+              let repertoryId = this.selected[0].repertoryId
+              let signId = this.selected[0].signId
+          
+              this.searchQuery.vo.repertoryId = repertoryId
+              this.searchQuery.vo.signId = signId
+                // console.log(repertoryId);
+              postCancelPickupSign(this.searchQuery.vo).then(res=>{
+                this.$message({
+                  message: '取消签收成功~',
+                  type: 'success'
+                })
+                  this.fetchAllreceipt()
+                  return false
+                }).catch(err => {
+                  this.$message.error(err)
+                  // this.closeAddDot()
+                })
+              break;
+            }
           // 清除选中状态，避免影响下个操作
           this.$refs.multipleTable.clearSelection()
         },

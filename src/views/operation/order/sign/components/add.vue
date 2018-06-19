@@ -43,8 +43,8 @@
           </td>
           <td>
             <el-form-item label="收货人电话:" prop="eceiver_customer_mobile">
-                <el-input maxlength="20" v-model="form.eceiver_customer_mobile" auto-complete="off" :disabled="true"></el-input>
-              </el-form-item>
+              <el-input maxlength="20" v-model="form.eceiver_customer_mobile" auto-complete="off" :disabled="true"></el-input>
+            </el-form-item>
           </td>
         </tr>
         <tr>
@@ -71,7 +71,7 @@
           </td>
           <td>
             <el-form-item label="到付款:" prop="shipArrivepayFee">
-                <el-input maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off"></el-input>
+                <el-input maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off" :disabled="true"></el-input>
               </el-form-item>
           </td>
           <td>
@@ -104,12 +104,12 @@
         </tr>
         <tr>
           <td>备注</td>
-          <td colspan="7"><input type="text" v-model="form.signRemark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%"/></td>
+          <td colspan="7"><input type="text" v-model="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%"/></td>
         </tr>
         <tr style="height:152px">
           <td>签收凭证</td>
           <td colspan="7" class="imgshow">
-        
+            
             
           </td>
         </tr> 
@@ -117,15 +117,15 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm1('ruleForm')">修改签收</el-button>
-      <el-button type="primary" @click="submitForm2('ruleForm')">签 收</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">修改签收</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">签 收</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import {postPickuplist,postPickupSign,postCancelPickupSign } from '@/api/operation/sign'
+import {postPickuplist,postPickupSign,putXiugai } from '@/api/operation/sign'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -147,6 +147,9 @@ export default {
     // dotInfo: [Object,Array],
     orgid: {
       required: true
+    },
+    id: {
+      type: [Number,String]
     },
     isModify: {
       type: Boolean,
@@ -180,6 +183,8 @@ export default {
       dataset:[],
       searchCreatTime: [ +new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickOption2:'',
+      form:{},
+      dataform:{},
       // getrepertoryId:'',
       form: {
         "repertoryId":'',
@@ -191,6 +196,18 @@ export default {
         "signTypeId":'',
         "remark":"",
         "signPic":""
+      },
+      obj:{
+        "repertoryId":'',
+        "signTime":"",
+        "signName":"",
+        "signCocumentTypeId":'',
+        "shipsignNameSn": "",
+        "documentNum":"",
+        "signTypeId":'',
+        "remark":"",
+        "signPic":"",
+        "signId":""
       },
       rules: {
         shipsignNameSn: [
@@ -210,15 +227,19 @@ export default {
       departments: [],
       groups: [],
       inited: false,
-      plId:'',
+      plId:''
+      // disabled:false
     }
   },
   mounted () {
-    this.form.orgid = this.orgid
+    this.form.signId = this.orgid
     if(!this.inited){
       this.inited = true
       this.initInfo()
+
+     
     }
+    
   },
   watch: {
     // dotInfo (newVal) {
@@ -226,36 +247,63 @@ export default {
     // },
     repertoryId(newVal){
       this.form = this.repertoryId
-      console.log(this.form.repertoryId);
+      this.obj.repertoryId = this.repertoryId.repertoryId
+      this.obj.signTime = this.repertoryId.signTime
+      this.obj.signName = this.repertoryId.signName
+      this.obj.signCocumentTypeId = this.repertoryId.signCocumentTypeId
+      this.obj.shipsignNameSn = this.repertoryId.shipsignNameSn
+      this.obj.documentNum = this.repertoryId.documentNum
+      this.obj.signTypeId = this.repertoryId.signTypeId
+      this.obj.remark = this.repertoryId.remark
+      this.obj.signPic = this.repertoryId.signPic
+
+      // this.chanshu()
+      console.log(this.form);
+      // console.log(this.repertoryId);
     },
+    
     popVisible (newVal, oldVal) {
       if(!this.inited){
         this.inited = true
-        this.initInfo()
+        // this.initInfo()
       }
     },
-  //   orgid (newVal) {
-  //     this.form.orgid = newVal
-  //   },
-  //   isModify: {
-  //     handler(newVal) {
-  //       if(this.isModify){
-  //         this.popTitle = '修改签收'
-  //         postPickuplist(this.id).then(res => {
-  //           this.form = res;
-  //         })
-  //       }else{
-  //         this.popTitle = '签收录入'
-  //         this.form.orgId = this.orgid
-  //         this.form.registerTime = new Date();
-  //         this.dengji();   
-  //       }
-  //     },
-  //     immediate: true
-  //   }
+    orgid (newVal) {
+      this.form.orgid = newVal
+    },
+    isModify: {
+      handler(newVal) {
+        if(this.isModify){
+          this.popTitle = '修改签收'
+          // repertoryId()
+          // postPickuplist(this.obj.signId).then(res => {
+          //   this.form = res;
+          // })
+        }else{
+          this.popTitle = '签收录入'
+          //  repertoryId()
+          // this.form.orgId = this.orgid
+          // this.form.registerTime = new Date();
+          // this.dengji();   
+        }
+      },
+      immediate: true
+    }
     
   },
   methods: {
+    // chanshu(){
+    //   this.form.repertoryId = this.repertoryId.repertoryId
+    //   this.form.signTime = this.repertoryId.signTime
+    //   this.form.signName = this.repertoryId.signName
+    //   this.form.signCocumentTypeId = this.repertoryId.signCocumentTypeId
+    //   this.form.shipsignNameSn = this.repertoryId.shipsignNameSn
+    //   this.form.documentNum = this.repertoryId.documentNum
+    //   this.form.signTypeId = this.repertoryId.signTypeId
+    //   this.form.remark = this.repertoryId.remark
+    //   this.form.signPic = this.repertoryId.signPic
+    //   // this.obj.id = this.id
+    // },
     reset () {
       this.$refs['ruleForm'].resetFields()
     },
@@ -271,7 +319,8 @@ export default {
     pick(){
       return postPickuplist().then(res=>{
           // this.form = res;
-          this.form.abnormalNo = res
+          // this.form.abnormalNo = res
+          console.log(res);
           // console.log(res, "this.form.abnormalNo: ", this.form);
         })
     },
@@ -281,6 +330,7 @@ export default {
       this.customSend.senderMobile = res.customerMobile
       this.customSend.detailedAddress = res.detailedAddress
       this.customSend.customerType = res.customerType
+      
     },
     querySearchReceiver (name) {
       let _this = this
@@ -292,14 +342,7 @@ export default {
       }
     },
     handleSelectReceiver(res){
-      // receiverName:'',
-      //   receiverMobile:'',//
-      //   detailedAddress:'',
-      this.customRece.receiverName = res.customerName
-      this.customRece.companyName = res.companyName
-      this.customRece.receiverMobile = res.customerMobile
-      this.customRece.detailedAddress = res.detailedAddress
-      this.customRece.customerType = res.customerType
+      
     },
     initInfo () {
       this.loading = false
@@ -307,19 +350,34 @@ export default {
       //   this.resInfo = res.list
       // })
     },
-    getOrgid (id) {
-      // this.form.orgid = id
-    },
-    submitForm2(ruleForm){
+    // getOrgid (id) {
+    //   this.form.orgid = id
+    // },
+    submitForm(ruleForm){
       this.form.signTime = this.searchCreatTime[0]
       this.$refs[ruleForm].validate((valid) => {
         if(valid){
-          this.loading = true
-          let data = Object.assign({},this.form)
+          // this.form.orgid = this.otherinfo.orgid
+          // this.loading = true
+          // this.disabled= true
+          
+          let data = Object.assign({},this.obj)
+          for(let i in data){
+            data[i] = this.form[i]
+          }
+          // data = this.id
           // data.repertoryId = this.repertoryId
-          // console.log();
+          console.log(data);
+           
           let promiseObj
-          promiseObj = postPickupSign(data)//不批量
+          if(this.isModify){
+           
+            promiseObj = putXiugai(this.id,data)
+            console.log(this.id);
+          } else {
+            promiseObj = postPickupSign(data)//不批量
+          }
+          // promiseObj = postPickupSign(data)
           promiseObj.then(res=>{
             if(res.status === 200){
               this.$alert('保存成功', '提示', {
@@ -330,17 +388,48 @@ export default {
                   this.$emit('success')
                 }
               })
-            } else {
+            }else if(res.status === 100) {
               this.loading = false
+              this.$message.warning('不可重复操作~')
               this.closeMe()
             }
-            
           })
         }else{
           return false
         }
       })
     },
+    // submitForm1(ruleForm){
+    //   this.form.signTime = this.searchCreatTime[0]
+    //   this.$refs[ruleForm].validate((valid) => {
+    //     if(valid){
+    //       this.loading = true
+    //       let data = Object.assign({},this.form)
+    //       // data.repertoryId = this.repertoryId
+    //       // console.log(this.form);
+    //       let promiseObj
+    //       promiseObj = postXiugai(data)//不批量
+    //       promiseObj.then(res=>{
+    //         if(res.status === 200){
+    //           this.$alert('保存成功', '提示', {
+    //             confirmButtonText: '确定',
+    //             callback: action => {
+    //               this.loading = false
+    //               this.closeMe()
+    //               this.$emit('success')
+    //             }
+    //           })
+    //         } else {
+    //           this.loading = false
+    //           this.closeMe()
+    //         }
+            
+    //       })
+    //     }else{
+    //       return false
+    //     }
+    //   })
+    // },
     reset () {
       this.$refs['ruleForm'].resetFields()
       this.form.licensePicture = ''

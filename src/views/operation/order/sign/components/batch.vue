@@ -5,14 +5,18 @@
            <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
             <div class="batch">
               <el-form-item label="签收单数:" prop="num">
-                <el-input maxlength="20" v-model="form.num" auto-complete="off" :disabled="true"></el-input>
+                <!-- <el-input maxlength="20" v-model="form.num"  auto-complete="off" :disabled="true"></el-input> -->
+                 <p class="tp">{{this.form.num}}单</p>
               </el-form-item>
               <el-form-item label="到付合计:" prop="shipArrivepayFee">
-                <el-input maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off" :disabled="true"></el-input>
+                <!-- <el-input maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off" :disabled="true"></el-input> -->
+                <p class="tp">{{this.form.shipArrivepayFee}}元</p>
               </el-form-item>
               <el-form-item label="代收款合计:" prop="agencyFund">
-                <el-input maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
+                <!-- <el-input maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input> -->
+                <p class="tp">{{this.form.agencyFund}}元</p>
               </el-form-item>
+             
               <el-form-item label="签收时间:" prop="signTime">
                 <el-date-picker
                   v-model="searchCreatTime"
@@ -282,6 +286,11 @@ export default {
       font-size: 14px;
       text-align: left;
       color: #333333;
+      .tp{
+        display: inline-block;
+        width:200px;
+        margin-left:15px
+      }
       .el-form-item__label{
         padding: 0px;
       }
