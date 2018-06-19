@@ -150,14 +150,18 @@
               <td><el-button v-if="index !== 0" type="danger" icon="el-icon-minus" size="mini" @click="deleteCargoList(index)" circle ></el-button></td>
               <td v-for="item in feeConfig" :key="item.id">
                 <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
-                  <querySelect size="mini" search="value" type="cargoName" valuekey="value" :v-model="cargoList[index][item.fieldProperty]" />
+                  <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="cargoList[index][item.fieldProperty]" />
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
-                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" :v-model="cargoList[index][item.fieldProperty]" />
+                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="cargoList[index][item.fieldProperty]" />
+                </template>
+                <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
+                  <el-input size="mini" maxlength="20"
+                  v-model="cargoList[index][item.fieldProperty]" @change="detectCargoNumChange" />
                 </template>
                 <template v-else>
                   <el-input size="mini" maxlength="20"
-                  :v-model="cargoList[index][item.fieldProperty]" />
+                  v-model="cargoList[index][item.fieldProperty]" />
                 </template>
               </td>
             </tr>
@@ -328,6 +332,7 @@
                       :picker-options="pickoption"
                       v-if="nowTime"
                       size="mini"
+                      tabindex="-1"
                       placeholder="选择日期">
                     </el-date-picker>
                   </td>
@@ -379,18 +384,25 @@
   </div>
 </template>
 <script>
+// 引入事件对象
+import { eventBus } from '@/eventBus'
+// 工具函数
 import { REGEX } from '@/utils/validate'
-import FeeDialog from './components/feePop'
-import PersonDialog from './components/personSetup'
-import OrderApi from  '@/api/operation/orderManage'
+import { closest } from '@/utils/'
+// 请求接口
 import { getSystemTime } from  '@/api/common'
+import OrderApi from  '@/api/operation/orderManage'
 import { getAllSetting } from '@/api/company/systemSetup'
-import FooterBtns from './components/btns'
 import orderManage from '@/api/operation/orderManage'
+// 外部公用组件
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
+// 当前模块子组件
+import FeeDialog from './components/feePop'
+import PersonDialog from './components/personSetup'
+import FooterBtns from './components/btns'
 
 export default {
   components: {
@@ -459,7 +471,11 @@ export default {
       },
       // 费用其他项
       shipOther: [],
+      // 用来保存货物对象的信息
+      cargoObject: {},
+      // 用来保存货物列表
       cargoList: [{}, {}],
+      // 最多创建N个货品
       maxCargoLength: 15,
       form: {
         sender: {
@@ -747,6 +763,54 @@ export default {
       this.setOrderFee()
       this.setOrderTransfer()
       this.setDefaultValue()
+      setTimeout(() => {
+        this.bindTabWithArrow()
+      }, 1000);
+    },
+    // 查找当前表单所有存在的input元素
+    findAllInput() {
+      this.inputEles = Array.prototype.slice.call(document.querySelectorAll('.order-main input'))
+      let len = this.inputEles.length
+      for(let i = 0; i< len; i++){
+        this.inputEles[i].setAttribute('taborder', i++)
+      }
+    },
+    findNextInput(type, currentIndex) {
+      let nextIndex = type === 37 ? currentIndex - 1 : currentIndex + 1
+      if(nextIndex < 0 || nextIndex >= this.inputEles.length){
+        return null
+      } else {
+        let ele = this.inputEles[nextIndex]
+        if(ele.disabled){
+          return this.findNextInput(type, nextIndex)
+        } else {
+          return ele
+        }
+      }
+    },
+    // 绑定左右按键
+    bindTabWithArrow () {
+      // closest(ele, '.order-main')
+      let doc = document
+      let parentEle = doc.querySelector('.order-main')
+      this.findAllInput()
+      parentEle.addEventListener('keydown', (e) => {
+        let ele = e.srcElement
+        // 如果是左右按键，则屏蔽其默认事件以及禁止冒泡
+        // 当前触发元素为input且非button时
+        if(ele.nodeName === 'INPUT' && (e.keyCode === 37 || e.keyCode === 39)){
+          let index = this.inputEles.indexOf(ele)
+          let nextEle = this.findNextInput(e.keyCode, index)
+          console.log('nextEle:', index, ele, nextEle)
+          if(index >= 0 && index !== (this.inputEles.lenth - 1) && nextEle){
+            e.preventDefault()
+            e.stopPropagation()
+            // ele.blur()
+            eventBus.$emit('closepopbox')
+            nextEle.focus()
+          }
+        }
+      }, false)
     },
     // 设置运单号规则 
     setOrderNum () {
@@ -773,18 +837,23 @@ export default {
         if(this.config.cargoNo.systemNumberNotAllowUpdate === '1'){
           this.canChangeCargoNum = false
         }
-        orderManage.postGenerateGoodsSn({
-          "tmsOrderShip":{
-            "shipSn": this.form.tmsOrderShip.shipSn
-          },
-          "tmsOrderCargoList":[
+        /* [
             {
               "cargoAmount": 2
             },
             {
               "cargoAmount": 4
             }
-          ]
+          ] */
+        orderManage.postGenerateGoodsSn({
+          "tmsOrderShip":{
+            "shipSn": this.form.tmsOrderShip.shipSn
+          },
+          "tmsOrderCargoList": this.cargoList.map(el => {
+            let a = {}
+            a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
+            return a
+          })
         }).then(res => {
           this.form.tmsOrderShip.shipGoodsSn = res.data
         })
@@ -808,11 +877,19 @@ export default {
       this.feeConfig = this.feeConfig.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
         el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
+        if(el.ischeck !== 0){
+          this.cargoObject[el.fieldProperty] = ''
+          return true
+        } else {
+          return false
+        }
         return el.ischeck !== 0
       })
       this.feeConfig.sort((a,b)=>{
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       })
+      this.$set(this.cargoList, 0, Object.assign(this.cargoList[0], this.cargoObject))
+      this.$set(this.cargoList, 1, Object.assign(this.cargoList[1], this.cargoObject))
     },
     // 设置中转表单
     setOrderTransfer () {
@@ -867,11 +944,14 @@ export default {
     /** 货品列表 */
     addCargoList(){
       if(this.cargoList.length < this.maxCargoLength){
-        this.cargoList.push({})
+        this.cargoList.push(Object.assign({}, this.cargoObject))
       }
     },
     deleteCargoList(index){
       this.cargoList.splice(index,1)
+    },
+    detectCargoNumChange () {
+      this.setCargoNum()
     },
     // 其他表单
     getBatch (item) {

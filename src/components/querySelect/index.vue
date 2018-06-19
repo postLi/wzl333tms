@@ -7,6 +7,7 @@
   :fetch-suggestions="querySearch"
   :value-key="showkey"
   :placeholder="placeholder"
+  ref="myautocomplete"
   @select="handleSelect"
   v-bind="$attrs"
   >
@@ -32,6 +33,7 @@
     remote
     :placeholder="placeholder"
     :remote-method="querySearch"
+    ref="myautocomplete"
     :loading="loading"
     v-bind="$attrs"
     >
@@ -53,6 +55,7 @@
     popper-class="query-select-autocomplete"
     :filterable="filterable"
     :placeholder="placeholder"
+    ref="myautocomplete"
     v-bind="$attrs"
     >
     <el-option
@@ -69,6 +72,8 @@
   </span>
 </template>
 <script>
+// 引入事件对象
+import { eventBus } from '@/eventBus'
 // 获取城市信息
 import { getCityInfo } from '@/api/common'
 // 获取承运商信息
@@ -254,16 +259,19 @@ export default {
           break
         case 'batch':
           this.canchangeparam = false
+          this.lastQuery = ''
           this.queryParam = this.getOrgid
           fn = orderManageApi.getBatchList
           break
         case 'cargoName':
           this.canchangeparam = false
+          this.lastQuery = ''
           this.queryParam = '1'
           fn = orderManageApi.getRecently
           break
         case 'cargoPack':
           this.canchangeparam = false
+          this.lastQuery = ''
           this.queryParam = '2'
           fn = orderManageApi.getRecently
           break
@@ -328,8 +336,14 @@ export default {
         this.searchData = data
       })
     }
+    this.initEvent()
   },
   methods: {
+    initEvent () {
+      eventBus.$on('closepopbox', () => {
+        this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
+      })
+    },
     highLight (item, key) {
       if(key === this.search && this.lastQuery !== ''){
         return item[key].replace(new RegExp(this.lastQuery, 'igm'), '<i class="highlight">' + this.lastQuery + '</i>')
@@ -347,7 +361,7 @@ export default {
         }
       })
     },
-    querySearch (queryString, cb = ()=>{}) {
+    querySearch (queryString = '', cb = ()=>{}) {
       // 缓存最近一次请求数据
       // 如果设定了不修改参数，则不缓存记录
       if(queryString === this.lastQuery && this.canchangeparam){
@@ -370,6 +384,7 @@ export default {
             }
             // 字符串  布尔值 空值 数值
             // 模糊匹配 全等于
+            // console.log('el[this.search]:', el[this.search], this.search, el[this.search].toString().indexOf(queryString), queryString)
             return el[this.search] ? el[this.search].toString().indexOf(queryString) !== -1 : false
           }
         

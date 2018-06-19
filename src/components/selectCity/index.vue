@@ -4,6 +4,7 @@
   v-model="cityName"
   :fetch-suggestions="querySearch"
   value-key="longAddr"
+  ref="myautocomplete"
   placeholder="请输入内容"
   @select="handleSelect">
   <template slot-scope="{ item }">
@@ -15,6 +16,8 @@
 </el-autocomplete>
 </template>
 <script>
+// 引入事件对象
+import { eventBus } from '@/eventBus'
 import { getCityInfo } from '../../api/common'
 
 export default {
@@ -44,6 +47,11 @@ export default {
       lastQuery: '*',
       lastRequest: []
     }
+  },
+  mounted () {
+    eventBus.$on('closepopbox', () => {
+      this.$refs.myautocomplete.close()
+    })
   },
   methods: {
     querySearch (queryString, cb) {

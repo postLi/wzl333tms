@@ -1,6 +1,5 @@
-<script src="../../api/company/employeeManage.js"></script>
 <template>
-  <el-select :disabled="disabled" v-model="aid" class="select-tree" filterable @change="change">
+  <el-select ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" filterable @change="change">
         <el-option
         v-for="item in openGroups"
         :key="item.id"
@@ -11,6 +10,8 @@
     </el-select>
 </template>
 <script>
+// 引入事件对象
+import { eventBus } from '@/eventBus'
   import { getAllOrgInfo  } from '@/api/company/employeeManage'
   import { mapGetters } from 'vuex'
 /**
@@ -47,6 +48,9 @@ export default {
   mounted () {
     this.aid = this.value
     this.init()
+    eventBus.$on('closepopbox', () => {
+      this.$refs.myautocomplete.handleClose()
+    })
   },
   computed: {
     ...mapGetters([

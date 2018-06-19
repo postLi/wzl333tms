@@ -1,5 +1,5 @@
 <template>
-  <el-select @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs">
+  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs">
     <slot name="head"></slot>
     <template v-for="item in types">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
@@ -12,6 +12,8 @@
   </el-select>
 </template>
 <script>
+// 引入事件对象
+import { eventBus } from '@/eventBus'
 import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
 
@@ -100,6 +102,9 @@ export default {
   mounted () {
     getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(data => {
       this.types = data
+    })
+    eventBus.$on('closepopbox', () => {
+      this.$refs.myautocomplete.handleClose()
     })
   },
   methods: {
