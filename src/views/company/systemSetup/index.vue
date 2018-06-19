@@ -430,6 +430,7 @@ export default {
 
         .setup-right{
           padding: 16px;
+          flex:1;
         }
       }
     }

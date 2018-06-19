@@ -2,7 +2,7 @@
 <span class="autocomplete-input">
 <el-autocomplete
   v-if="show === 'input'"
-  popper-class="query-input-autocomplete"
+  :popper-class="'query-input-autocomplete ' + ((type == 'sender' || type == 'receiver') ? 'query-input-customer' : '')"
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
@@ -13,7 +13,13 @@
   <template slot-scope="{ item }">
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
-      {{ item[showkey] }}
+      <template v-if="type !== 'sender' && type !== 'receiver'">
+        {{ item[showkey] }}
+      </template>
+      <template v-else>
+        <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+      </template>
+
     </slot>
   </template>
 </el-autocomplete>
@@ -171,6 +177,15 @@ export default {
         this.handlevalue = newVal
       },
       immediate: true
+    },
+    value: {
+      handler (newVal) {
+        // 当绑定值跟搜索字段一致时，响应绑定值的变化
+        if(this.search === this.valuekey){
+          this.handlevalue = newVal
+        }
+      },
+      immediate: true
     }
   },
   computed: {
@@ -184,10 +199,9 @@ export default {
       let fn
       switch(this.type){
         case 'user':
-          delete this.queryParam.vo
-          this.queryParam.orgid = this.getOrgid
-          this.queryParam.mobilephone = ''
-          this.queryParam.name = ''
+          this.queryParam.vo.orgid = this.getOrgid
+          this.queryParam.vo.mobilephone = ''
+          this.queryParam.vo.name = ''
 
           fn = getAllUser
           break
@@ -316,6 +330,13 @@ export default {
     }
   },
   methods: {
+    highLight (item, key) {
+      if(key === this.search && this.lastQuery !== ''){
+        return item[key].replace(new RegExp(this.lastQuery, 'igm'), '<i class="highlight">' + this.lastQuery + '</i>')
+      } else {
+        return item[key]
+      }
+    },
     fetchFn () {
       return this.remoteFn(this.queryParam).then(res => {
         let data = res.data ? res.data : res
@@ -388,3 +409,44 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.query-input-customer{
+  min-width: 400px !important;
+  li{
+    padding: 0 10px;
+    font-size: 12px;
+    line-height: 28px;
+    height: 28px;
+    span{
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 28px;
+    }
+    .highlight{
+      font-style: normal;
+      color: #f00;
+    }
+  }
+  .query-input-customer-org{
+    width: 60px;
+    border-right: 1px solid #ddd;
+  }
+  .query-input-customer-name{
+    width: 80px;
+    border-right: 1px solid #ddd;
+    padding-left: 5px;
+  }
+  .query-input-customer-mobile{
+    width: 85px;
+    border-right: 1px solid #ddd;
+    padding-left: 5px;
+  }
+  .query-input-customer-addr{
+    min-width: 137px;
+    padding-left: 5px;
+  }
+}
+</style>
+

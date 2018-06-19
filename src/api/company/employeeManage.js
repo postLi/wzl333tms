@@ -105,14 +105,15 @@ export function getAuthInfo(orgid, pagesize) {
  * @param {*} name 姓名
  * @param {*} orgid 组织ID
  */
-export function getAllUser(orgid, name, mobilephone, pageSize = 100, pageNum = 1) {
+export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage = 1) {
   let params = orgid
   if (typeof orgid !== 'object') {
-    params = { name, orgid, mobilephone, pageSize, pageNum }
+    params = { pageSize, currentPage, vo: {
+      name, orgid, mobilephone
+    }
+    }
   }
-  return fetch.get('/api-system/system/user/v1/', {
-    params
-  }).then(res => {
+  return fetch.post('/api-system/system/user/v1/findAllInfo', params).then(res => {
     return res.data || { total: 0, list: [] }
   })
 }

@@ -3,7 +3,7 @@
   popper-class="city-autocomplete"
   v-model="cityName"
   :fetch-suggestions="querySearch"
-  value-key="id"
+  value-key="longAddr"
   placeholder="请输入内容"
   @select="handleSelect">
   <template slot-scope="{ item }">
@@ -41,7 +41,7 @@ export default {
     return {
       cityName: "",
       // 缓存最近一次的请求数据
-      lastQuery: '',
+      lastQuery: '*',
       lastRequest: []
     }
   },

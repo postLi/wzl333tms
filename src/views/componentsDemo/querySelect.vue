@@ -146,12 +146,12 @@
     <pre class="code">&lt;querySelect search=&quot;batchNumber&quot; keyvalue=&quot;bathId&quot; show=&quot;select&quot; type=&quot;batch&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取货品名称</h4>
-    <querySelect search="name" :remote="true" keyvalue="name" type="cargoName" />
-    <pre class="code">&lt;querySelect search=&quot;name&quot; keyvalue=&quot;name&quot; type=&quot;cargoName&quot;  /&gt;</pre>
+    <querySelect search="value" :remote="true" keyvalue="value" type="cargoName" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;cargoName&quot;  /&gt;</pre>
 
     <h4>获取货品包装</h4>
-    <querySelect search="name" keyvalue="name" type="cargoPack" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;name&quot; keyvalue=&quot;name&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="value" keyvalue="value" type="cargoPack" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
 
     <h3>prop</h3>

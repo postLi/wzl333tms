@@ -36,7 +36,7 @@
           <div class="order-form-item">
             <span class="order-form-label">出发城市</span>
             <el-form-item prop="tmsOrderShip.shipFromCityCode">
-              <SelectCity size="mini" v-model="form.tmsOrderShip.shipFromCityCode" />
+              <querySelect search="longAddr" type="city"  v-model="form.tmsOrderShip.shipFromCityCode" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -68,7 +68,7 @@
           <div class="order-form-item">
             <span class="order-form-label">货号</span>
             <el-form-item prop="tmsOrderShip.shipGoodsSn">
-              <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipGoodsSn" />
+              <el-input size="mini" maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
             </el-form-item>
           </div>
         </el-col>
@@ -111,25 +111,25 @@
           <div class="order-form-item">
             <span class="order-form-label">收货单位</span>
             <el-form-item prop="receiver.customerUnit">
-              <querySelect search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
+              <querySelect search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label">收 货 人</span>
             <el-form-item prop="receiver.customerName">
-              <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
+              <querySelect search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label">联系电话</span>
             <el-form-item prop="receiver.customerMobile">
-              <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+              <querySelect search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label">详细地址</span>
             <el-form-item prop="receiver.detailedAddress">
-              <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
+              <querySelect search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
             </el-form-item>
           </div>
         </div>
@@ -140,7 +140,7 @@
           <thead>
             <tr>
               <th><el-button type="primary" icon="el-icon-plus" size="mini" v-if="cargoList.length < maxCargoLength" @click="addCargoList()" circle ></el-button></th>
-              <th v-for="item in feeConfig" v-if="item.ischeck !== 0" :key="item.id">
+              <th v-for="item in feeConfig" :key="item.id">
                 {{ item.fieldName }}
               </th>
             </tr>
@@ -148,8 +148,17 @@
           <tbody>
             <tr v-for="(item, index) in cargoList" :key="index">
               <td><el-button v-if="index !== 0" type="danger" icon="el-icon-minus" size="mini" @click="deleteCargoList(index)" circle ></el-button></td>
-              <td v-for="item in feeConfig" v-if="item.ischeck !== 0" :key="item.id">
-                
+              <td v-for="item in feeConfig" :key="item.id">
+                <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
+                  <querySelect size="mini" search="value" type="cargoName" valuekey="value" :v-model="cargoList[index][item.fieldProperty]" />
+                </template>
+                <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
+                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" :v-model="cargoList[index][item.fieldProperty]" />
+                </template>
+                <template v-else>
+                  <el-input size="mini" maxlength="20"
+                  :v-model="cargoList[index][item.fieldProperty]" />
+                </template>
               </td>
             </tr>
           </tbody>
@@ -450,7 +459,7 @@ export default {
       },
       // 费用其他项
       shipOther: [],
-      cargoList: ['', ''],
+      cargoList: [{}, {}],
       maxCargoLength: 15,
       form: {
         sender: {
@@ -627,6 +636,8 @@ export default {
       canChangeOrderDate: true,
       // 是否需要填写中转信息
       shouldInputTransfer: false,
+      // 是否允许修改huo号
+      canChangeCargoNum: true,
       nowTime: ''
     }
   },
@@ -650,6 +661,12 @@ export default {
         }
       },
       immediate: true
+    },
+    // 运单号修改，对应的货号也修改
+    'form.tmsOrderShip.shipSn': {
+      handler(newVal){
+        this.setCargoNum()
+      }
     },
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
@@ -725,6 +742,7 @@ export default {
     // 初始化各个表单的情况
     init() {
       this.setOrderNum()
+      this.setCargoNum()
       this.setOrderDate()
       this.setOrderFee()
       this.setOrderTransfer()
@@ -745,6 +763,33 @@ export default {
         })
       }
     },
+    // 设置货号规则 
+    setCargoNum () {
+      // 允许手动输入
+      if(this.config.cargoNo.manualInput === '1'){
+
+      } else {
+        // 不允许修改系统生成的单号
+        if(this.config.cargoNo.systemNumberNotAllowUpdate === '1'){
+          this.canChangeCargoNum = false
+        }
+        orderManage.postGenerateGoodsSn({
+          "tmsOrderShip":{
+            "shipSn": this.form.tmsOrderShip.shipSn
+          },
+          "tmsOrderCargoList":[
+            {
+              "cargoAmount": 2
+            },
+            {
+              "cargoAmount": 4
+            }
+          ]
+        }).then(res => {
+          this.form.tmsOrderShip.shipGoodsSn = res.data
+        })
+      }
+    },
     // 设置运单日期规则 
     setOrderDate () {
       this.form.tmsOrderShip.createTime = this.nowTime
@@ -759,7 +804,15 @@ export default {
     },
     // 设置费用列 
     setOrderFee () {
-
+      // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
+      this.feeConfig = this.feeConfig.filter(el => {
+        // 如果是fixed元素，则给其较小的序号保证其排在前面
+        el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
+        return el.ischeck !== 0
+      })
+      this.feeConfig.sort((a,b)=>{
+        return a.fieldOrder < b.fieldOrder ? -1 : 1
+      })
     },
     // 设置中转表单
     setOrderTransfer () {
@@ -767,6 +820,8 @@ export default {
     },
     // 设置默认值
     setDefaultValue () {
+      // 默认开单网点为本网点
+      this.form.tmsOrderShip.shipFromOrgid = this.otherinfo.orgid
       // 默认制单人为当前用户
       this.form.tmsOrderShip.shipUserid = this.otherinfo.id
       // 付款方式
@@ -794,16 +849,25 @@ export default {
       })
     },
     /** 收货人/发货人 */
-    setSender(){
-      
+    setSender(item, type){
+      type = type ? type : 'sender'
+      if(item){
+        this.form[type].customerId = item.customerId || ''
+        this.form[type].customerType = type === 'sender' ? 1 : 2
+        this.form[type].customerUnit = item.customerUnit
+        this.form[type].customerName = item.customerName
+        this.form[type].customerMobile = item.customerMobile
+        this.form[type].detailedAddress = item.detailedAddress
+        console.log('setSender:', item, type,  this.form[type])
+      }
     },
-    setReceiver(){
-
+    setReceiver(item){
+      this.setSender(item, 'receiver')
     },
     /** 货品列表 */
     addCargoList(){
       if(this.cargoList.length < this.maxCargoLength){
-        this.cargoList.push('')
+        this.cargoList.push({})
       }
     },
     deleteCargoList(index){
