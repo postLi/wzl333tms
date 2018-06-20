@@ -7,10 +7,10 @@
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="批次详情" name="first" height="100%">
-            <Detail :info="info" :isShow="popVisible"></Detail>
+            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
           </el-tab-pane>
-          <el-tab-pane label="批次跟踪" name="second">
-            <div class="tab_box">
+          <el-tab-pane label="批次跟踪" name="second" >
+            <div class="tab_box animated fadeInRight">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
                   <el-col :span="4" :offset="4"><b>操作时间</b></el-col>
@@ -274,7 +274,44 @@ export default {
     }
   }
 }
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
 
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
+}
 .editInfoPop_content {
   padding: 0 10px;
   width: 100%;
