@@ -311,9 +311,11 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-    this.fetchAllCustomer(this.otherinfo.arriveOrgid).then(res => {
-      this.loading = false
-    })
+    this.fetchAllCustomer()
+    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
+    //   console.log(res)
+    //   this.loading = false
+    // })
   },
   data () {
     return {
@@ -323,7 +325,7 @@ export default {
       total: 0,
       trackId:'',
       //加载状态
-      loading: true,
+      // loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -351,7 +353,7 @@ export default {
       this.loading = true
       return postArtList(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },
@@ -359,8 +361,10 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
+      Object.assign(this.searchQuery, obj)
+      this.fetchData()
+      // this.searchQuery.currentPage = obj.pageNum
+      // this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)

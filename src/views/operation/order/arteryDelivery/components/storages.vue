@@ -15,69 +15,68 @@
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="sta_searchinfo clearfix" :model="formModel">
                   <el-form-item label="到达网点:">
                     <el-input
-                      v-model="formModel.arriveOrgid"
+                      v-model="formModel.arriveOrgName"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="车牌号码:">
                     <el-input
                       v-model="formModel.truckIdNumber"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="司机姓名:" >
                     <el-input
                       v-model="formModel.dirverName"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="司机电话:">
                     <el-input
                       v-model="formModel.dirverMobile"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="可载体积:" >
                     <el-input
                       v-model="formModel.truckVolume"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="可载重量:" >
                     <el-input
                       v-model="formModel.truckLoad"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="分摊方式:">
-                    <!--<selectType v-model="formModel.apportionTypeName" type="apportion_type" clearable size="mini"></selectType>-->
                     <el-input
                       v-model="formModel.apportionTypeName"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
-                    <!--<template slot-scope="scope">-->
+                    <!--<template slot-scope="scope">
                       <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
                     <!--</template>-->
                     <el-input
                       v-model="formModel.loadTime"
                       maxlength="15"
-                      clearable>
+                      clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
                     <el-input
                       v-model="formModel.requireArrivedTime"
                       maxlength="15"
-                      clearable
+                      clearable disabled
                     >
                     </el-input>
                   </el-form-item>
@@ -87,7 +86,7 @@
                       clearable
                       maxlength="300"
                       auto-complete="off"
-                      type="textarea"
+                      type="textarea" disabled
                     >
                     </el-input>
                   </el-form-item>
@@ -99,67 +98,67 @@
                     <li>
                       <p>现付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage"></el-input>
+                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>现付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayOilCard"></el-input>
+                        <el-input maxlength="10" v-model="formModel.nowpayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>回付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage"></el-input>
+                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>回付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.backpayOilCard"></el-input>
+                        <el-input maxlength="10" v-model="formModel.backpayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayCarriage"></el-input>
+                        <el-input maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayOilCard"></el-input>
+                        <el-input maxlength="10" v-model="formModel.arrivepayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>整车保险费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.carloadInsuranceFee"></el-input>
+                        <el-input maxlength="10" v-model="formModel.carloadInsuranceFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>发站装卸费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveHandlingFee"></el-input>
+                        <el-input maxlength="10" v-model="formModel.leaveHandlingFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>发站其他费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveOtherFee"></el-input>
+                        <el-input maxlength="10" v-model="formModel.leaveOtherFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到站装卸费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee"></el-input>
+                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到站其他费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveOtherFee"></el-input>
+                        <el-input maxlength="10" v-model="formModel.arriveOtherFee" disabled></el-input>
                       </el-form-item>
                     </li>
                   </ul>
@@ -168,7 +167,7 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">{{titleIcon}}</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">{{popTitle}}</el-button>
                   <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
                   <!--<el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>-->
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
@@ -366,7 +365,7 @@
           </el-tab-pane>
           <el-tab-pane label="运输合同" name="third">
             <div class="pact">
-              <el-form>
+              <el-form :model="formModel">
                 <div class="pact_top">
                   <h3>货物运输合同</h3>
                   <div class="top_num">
@@ -374,8 +373,87 @@
                       <el-input  placeholder="1" size="mini"></el-input>
                     </el-form-item>
                   </div>
+                  <div class="top_no">
+                    <el-form-item label="NO.">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                  </div>
                 </div>
-                <div class="pact_content"></div>
+                <div class="pact_content">
+                  <div class="pact_title">
+                    <span>委托方:</span>
+                    <p style="">{{formModel.arriveOrgName}}</p>
+                    <span>(以下简称甲方)</span>
+                  </div>
+                  <div class="pact_title">
+                    <span>承运方:</span>
+                    <p style=""></p>
+                    <span>(以下简称乙方)</span>
+                  </div>
+                  <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
+                  <div class="p_cont">
+                    <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
+                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方哟啊负担其伙食费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙方不得擅自做主叫车换货；</p>
+                  </div>
+                  <div class="p_input">
+                    <span></span>
+                    <el-form-item label="五、本车货物总为">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>件,全程运费<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，甲乙双方不得任意减价或涨价，乙方不得收取其他劳务费，本车已付运费<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，回单付<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>到付运费<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，保险费 <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>乙方必须将货物安全完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+
+                    </el-form-item>
+                  </div>
+                  <div class="p_input">
+                    <span></span>
+                    <el-form-item label="六、本次发车时间为">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，到达时间为<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>。
+
+
+                    </el-form-item>
+                    <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
+                  </div>
+                  <div class="p_cont">
+                    <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
+                    <p>关于本车：直送致兴和樵鸿</p>
+                    <p>附：驾驶员、车辆登记</p>
+
+                  </div>
+                  <div class="p_table">
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                  </div>
+                  <div class="p_table">
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                    <el-form-item label="司机名称:">
+                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    </el-form-item>
+                  </div>
+                </div>
                 <div class="pact_bottom"></div>
               </el-form>
             </div>
@@ -424,9 +502,9 @@
       data () {
         return {
           // titleIcon:"到车确定",
-          titleIcon:"到车入库",
+          // titleIcon:"到车入库",
           getBatchNo:'',
-          popTitle:'到货入库',
+          popTitle:'到车入库',
           activeName: 'first',
           trackDetail: [],
           ruleForm: {},
@@ -456,7 +534,7 @@
           AddCustomerVisible: false,
           isModify: false,
           formModel: {
-            // arriveOrgid:'',//到达网点
+            // arriveOrgName:'',//到达网点
             // truckIdNumber:'',//车牌号码
             // dirverName:'',//司机姓名
             // dirverMobile:'',//司机电话
@@ -569,19 +647,6 @@
           })
 
         },
-
-        //
-        // fetchAllCustomer () {
-        //   this.loading = true
-        //   let selectLoadId = this.propsId
-        //   console.log(selectLoadId)
-        //   return getSelectLoadList(selectLoadId).then(data => {
-        //     this.usersArr = data.list
-        //     // console.log(data)
-        //     this.loading = false
-        //   })
-        // },
-        //postSelectLoadMainInfoList
         fetchSelectLoadMainInfoList() {
           this.loading = true
           let selectMainId = this.propsId
@@ -676,17 +741,6 @@
         resetForm() {
           this.$refs['formModel'].resetFields()
         },
-        //
-        // fetchAllCustomer () {
-        //   this.loading = true
-        //   let selectLoadId = this.propsId
-        //   console.log(selectLoadId)
-        //   return getSelectLoadList(selectLoadId).then(data => {
-        //     this.usersArr = data.list
-        //     // console.log(data)
-        //     this.loading = false
-        //   })
-        // },
         fetchData () {
           this.fetchAllCustomer()
         },
@@ -837,7 +891,7 @@
           margin-right: 0;
         }
         .table_export{
-          margin-left: 410px;
+          margin-left: 370px;
         }
         /*.table_ixport{*/
         /*margin-left: 400px;*/
@@ -891,20 +945,7 @@
           margin-right: 0;
           margin-bottom: 15px;
         }
-        /*.el-form-item.art_arriveTime.el-form-item--mini{*/
-          /*margin-right: 50px;*/
-          /*margin-bottom: 0;*/
-          /*margin-left: 7px;*/
-          /*label.el-form-item__label{*/
-            /*width: 105px !important;*/
-          /*}*/
-        /*}*/
-        .art_remk{
-          .el-form-item__content{
-            width: 750px !important;
-          }
 
-        }
       }
 
     }
@@ -950,6 +991,17 @@
 
   }
 
+  .tab-content{
+    .info_form,.info_table{
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+        /*border-color: #e4e7ed;*/
+        /*color: #c0c4cc;*/
+        /*cursor: not-allowed;*/
+      }
+    }
+
+  }
 
 
   /*批次详情*/
@@ -957,8 +1009,8 @@
   left: auto;
   top: 50px;
   bottom: auto;
-  min-width: 900px;
-  max-width:  900px;
+  min-width: 1000px;
+  max-width:  1000px;
 
 }
 .batchTypeNo{
@@ -1064,6 +1116,8 @@
 .pact{
   .pact_top{
     position: relative;
+    height: 40px;
+    margin-bottom: 10px;
     h3{
       text-align: center;
       color: rgba(0, 0, 0, 0.85);
@@ -1074,15 +1128,85 @@
       right: 10px;
       top: -18px;
       .el-form-item{
-        .el-form-item__content{
-          display: inline-block;
-        }
+        display: flex;
       }
 
     }
+    .top_no{
+      position: absolute;
+      right: 10px;
+      top: 18px;
+      .el-form-item{
+        display: flex;
+        .el-form-item__content{
+          .el-input.is-disabled {
+            .el-input__inner{
+              background-color: #fff;
+              border-color: #fff;
+            }
+          }
+        }
+
+      }
+    }
+  }
+  .cont_styles{
+    color: #606266;
+    font-size: 14px;
+  }
+  .pact_content{
+    .pact_title{
+      color: #606266;
+      font-size: 14px;
+      margin: 10px 0 0 25px;
+      p{
+        display: inline-block;
+        width: 200px;
+        border-bottom: 1px solid;
+      }
+
+    }
+
+    p.p_salf{
+      color: #606266;
+      font-size: 14px;
+      padding-left: 25px;
+      margin: 10px 0 10px 0;
+    }
+    .p_input{
+      .el-form-item{
+        .el-form-item__content{
+          .el-input.el-input--mini.is-disabled{
+            width: 10%
+          }
+        }
+
+      }
+    }
+    .p_table{
+      /*display: flex;*/
+      .el-form-item{
+        margin-bottom: 0;
+        .el-form-item__content{
+          .el-input.el-input--mini.is-disabled{
+            width: 20%
+          }
+        }
+
+      }
+    }
+
+  }
+
+
+
+  .pact_bottom{
+
   }
 }
 
 }
-
+.cont_rules .el-input--mini .el-input__inner{
+  background: #409eff;
+}
 </style>
