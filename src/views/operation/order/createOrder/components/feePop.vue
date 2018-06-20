@@ -6,6 +6,7 @@
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
     :modal-append-to-body="false"
+    v-loading="loading"
     @open="getFeeSetup"
     width="300px"
     :before-close="close">
@@ -15,26 +16,28 @@
           placeholder="搜索"
           size="mini"
           v-model="query"
-          @change="search"
           suffix-icon="el-icon-search"
           clearable>
         </el-input>
       </div>
       <draggable :move="canDragStart" v-show="!!!query" :list="feeData" class="dragArea" :options="sortOption">
         <div class="list-complete-item" v-for="element in feeData" :key='element.id'>
-          <el-checkbox :title="element.name" v-model="element.ischeck">{{ element.name }}</el-checkbox>
+          <el-checkbox :true-label="1" :false-label="0" :title="element.fieldName" v-model="element.ischeck">{{ element.fieldName }}</el-checkbox>
           <span class="switch-box"><el-switch
-            @change="changeList(element)"
+            :active-value="1"
+            :inactive-value="0"
             v-model="element.isfixed"
             active-text="定">
           </el-switch></span>
         </div>
       </draggable>
+      <!-- 当为筛选的字段时，不允许排序拖拉 -->
       <div v-show="!!query" class="searchlist">
         <div class="list-complete-item" v-for="element in searchList" :key='element.id'>
-          <el-checkbox :title="element.name" v-model="element.ischeck">{{ element.name }}</el-checkbox>
+          <el-checkbox :title="element.fieldName" :true-label="1" :false-label="0" v-model="element.ischeck">{{ element.fieldName }}</el-checkbox>
           <span class="switch-box"><el-switch
-            @change="changeList(element)"
+            :active-value="1"
+            :inactive-value="0"
             v-model="element.isfixed"
             active-text="定">
           </el-switch></span>
@@ -44,7 +47,7 @@
     <div class="tip-info">拖拽，可调整上下顺序。</div>
     <span slot="footer" class="dialog-footer">
       <el-button size="mini" @click="close">取 消</el-button>
-      <el-button size="mini" type="primary" @click="close">确 定</el-button>
+      <el-button size="mini" type="primary" @click="submitFeeSetup">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -79,6 +82,7 @@ export default {
       feeData: [],
       // 用来搜索项
       query: "",
+      loading: false,
       sortOption: {
         group:'item',
         sort: true,
@@ -90,25 +94,36 @@ export default {
     close(done){
       this.$emit('update:dialogVisible', false)
       this.$emit('close')
-      if(done){
+      if(typeof done === 'function'){
         done()
       }
     },
     // 当打开设置窗口时，从后台获取最新的设置
     getFeeSetup() {
-      return OrderApi.getFeeSetup().then(res => {
+      this.loading = true
+      return OrderApi.getCargoSetting(this.otherinfo.orgid).then(res => {
+        res.sort((a,b) => {
+          return a.fieldOrder < b.fieldOrder ? -1 : 1
+        })
         this.feeData = res
+        this.loading = false
       })
     },
     submitFeeSetup() {
-      return OrderApi.putChangeFeeSetup()
-    },
-    changeList(el){
+      this.loading = true
+      this.feeData = this.feeData.map((el, i) => {
+        el.fieldOrder = i + 1
+        return el
+      })
+      return OrderApi.putCargoSetting(this.feeData).then(res => {
+        this.loading = false
+        if(res.status === 200) {
+          this.$message.info('修改成功！')
+          this.close()
+        } else {
 
-      console.log(this.feeData)
-    },
-    search () {
-      
+        }
+      })
     },
     canDragStart(list){
       return !list.draggedContext.element.isfixed
@@ -143,9 +158,6 @@ export default {
   .setup-info-fee{
     height: 258px;
     overflow: auto;
-  }
-  .dragArea{
-
   }
   .list-complete-item{
     clear: both;
