@@ -15,6 +15,7 @@
     </el-form-item>
     <el-form-item label="司机名称">
       <el-input v-model="searchForm.dirverName" maxlength="8" auto-complete="off" clearable></el-input>
+      <!-- <querySelect v-model="searchForm.dirverName" search="driverName" type="driver" :remote="true" /> -->
     </el-form-item>
     <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
@@ -28,11 +29,13 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import querySelect from '@/components/querySelect/index'
 import selectBatchType from '@/components/selectType/index'
 export default {
   components: {
     SelectTree,
-    selectBatchType
+    selectBatchType,
+    querySelect
   },
   props: {
     btnsize: {
@@ -56,36 +59,36 @@ export default {
     }
     return {
       searchTime: [],
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        "orgId": '',
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+        orgId: '',
+        loadTypeId: 38
+        // "loadStartTime": '',
+        // "loadEndTime": '',
+        // "departureStartTime": '',
+        // "departureEndTime": '',
+        // "batchTypeId": '',
+        // "arriveOrgid": '',
+        // "batchNo": '',
+        // "truckIdNumber": '',
+        // "dirverName": ''
       },
       query: {
-        "orgId": '',
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+        orgId: '',
+        loadTypeId: 38
+        // "loadStartTime": '',
+        // "loadEndTime": '',
+        // "departureStartTime": '',
+        // "departureEndTime": '',
+        // "batchTypeId": '',
+        // "arriveOrgid": '',
+        // "batchNo": '',
+        // "truckIdNumber": '',
+        // "dirverName": ''
       },
       rules: {
         orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
+      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -117,11 +120,16 @@ export default {
   },
   methods: {
     onSubmit() {
-      let searchObj = {}
-      searchObj = Object.assign({}, this.searchForm)
-      this.$set(searchObj, 'departureStartTime', this.searchTime[0])
-      this.$set(searchObj, 'departureEndTime', this.searchTime[1])
-      this.$emit('change', searchObj)
+      if (this.searchTime) {
+        this.searchForm.departureStartTime = this.searchTime[0]
+        this.searchForm.departureEndTime = this.searchTime[1]
+      }
+      if (this.searchForm.batchTypeId === 46) {
+        this.searchForm.batchTypeId = undefined
+      }
+      console.log(this.searchForm)
+      this.$emit('change', this.searchForm)
+      this.searchForm = Object.assign({}, this.query)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

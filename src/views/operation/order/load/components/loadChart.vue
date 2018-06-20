@@ -23,11 +23,11 @@ export default {
   props: {
     info: {
       type: Array,
-      default: () => {}
+      default: []
     },
     truckInfo: {
       type: Object,
-      default: () => {}
+      default: {}
     },
     popVisible: {
       type: Boolean,
@@ -77,22 +77,24 @@ export default {
   },
   watch: {
     info() {
-      let data = Object.assign([], this.info)
+      // let data = Object.assign([], this.info)
       let countWeigth = 0
       let countVolume = 0
-      data.forEach(e => {
+      this.info.forEach(e => {
         countWeigth += e.loadWeight
         countVolume += e.loadVolume
       })
       this.baseInfo.weight = Number(countWeigth)
       this.baseInfo.volume = Number(countVolume)
+      console.log('info')
     },
     truckInfo() {
-      let data = Object.assign({}, this.truckInfo)
-      this.$nextTick(() => {
-        this.baseInfo.totalWeight = Number(data.truckLoad)
-        this.baseInfo.totalVolume = Number(data.truckVolume)
-      })
+      // let data = Object.assign({}, this.truckInfo)
+      // this.$nextTick(() => {
+        console.log('sdfsd')
+        this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
+        this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
+      // })
     },
     popVisible() {
       if (this.popVisible) {
@@ -115,6 +117,7 @@ export default {
     initChartWeight() {
       const surweight = this.baseInfo.totalWeight - this.baseInfo.weight
       this.baseInfo.surplusWeight = surweight
+      console.log(this.baseInfo.surplusWeight)
       if (this.popVisible) {
         this.chart = echarts.init(this.$refs.echartWeight)
         this.chart.setOption({
@@ -135,7 +138,7 @@ export default {
             label: {
               normal: {
                 show: true,
-                formatter: '{b}\n\n{c}',
+                formatter: '{b} : {c}',
                 textStyle: {
                   fontWeight: 'normal',
                   fontSize: 16,
@@ -185,7 +188,7 @@ export default {
             label: {
               normal: {
                 show: true,
-                formatter: '{b}\n\n{c}',
+                formatter: '{b} : {c}',
                 textStyle: {
                   fontWeight: 'normal',
                   fontSize: 16,

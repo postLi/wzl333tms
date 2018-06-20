@@ -38,14 +38,14 @@ export function getSelectAddLoadRepertoryList(id) {
 /**
  * 修改时配载左边的库存列表
  */
-export function getUpdateRepertoryLeft (data, orgid, loadid){
-  return fetch.get('/api-order/order/load/v1/selectUpdateLoadRepertoryList/?orgId='+orgid+'&loadId=' + loadid, data)
+export function getUpdateRepertoryLeft (orgid, loadid){
+  return fetch.get('/api-order/order/load/v1/selectUpdateLoadRepertoryList/?orgId='+orgid+'&loadId=' + loadid)
 }
 /**
  * 修改时配载右边的库存列表
  */
-export function getUpdateRepertoryRight (data, orgid, loadid){
-  return fetch.get('/api-order/order/load/v1/selectUpdateLoadDetailList/?orgId='+orgid+'&loadId=' + loadid, data)
+export function getUpdateRepertoryRight (orgid, loadid){
+  return fetch.get('/api-order/order/load/v1/selectUpdateLoadDetailList/?orgId='+orgid+'&loadId=' + loadid)
 }
 /**
  * 配载批次详情列表

@@ -1,8 +1,10 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="短驳时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker>
+      <!-- <el-date-picker v-model="searchTime" :default-value="defaultTime" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker> -->
+       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+          </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
       <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable></selectBatchType>
@@ -56,50 +58,50 @@ export default {
     }
     return {
       searchTime: [],
-      defaultTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       searchForm: {
         orgid: '',
-        loadTypeId: 38,
-        apportionTypeId: '',
-        arriveOrgid: '',
-        batchNo: '',
-        batchTypeId: '',
-        beginTime: '',
-        contractNo: '',
-        createTime: '',
-        dirverMobile: '',
-        dirverName: '',
-        endTime: '',
-        loadTime: '',
-        truckIdNumber: '',
-        truckLoad: '',
-        truckVolume: '',
-        arrivedbeginDate: '',
-        arrivedEndDate: ''
+        loadTypeId: 38
+        // apportionTypeId: '',
+        // arriveOrgid: '',
+        // batchNo: '',
+        // batchTypeId: '',
+        // beginTime: '',
+        // contractNo: '',
+        // createTime: '',
+        // dirverMobile: '',
+        // dirverName: '',
+        // endTime: '',
+        // loadTime: '',
+        // truckIdNumber: '',
+        // truckLoad: '',
+        // truckVolume: '',
+        // arrivedbeginDate: '',
+        // arrivedEndDate: ''
       },
       query: {
         orgid: '',
-        loadTypeId: 38,
-        apportionTypeId: '',
-        arriveOrgid: '',
-        batchNo: '',
-        batchTypeId: '',
-        beginTime: '',
-        contractNo: '',
-        createTime: '',
-        dirverMobile: '',
-        dirverName: '',
-        endTime: '',
-        loadTime: '',
-        truckIdNumber: '',
-        truckLoad: '',
-        truckVolume: '',
-        arrivedbeginDate: '',
-        arrivedEndDate: ''
+        loadTypeId: 38
+        // apportionTypeId: '',
+        // arriveOrgid: '',
+        // batchNo: '',
+        // batchTypeId: '',
+        // beginTime: '',
+        // contractNo: '',
+        // createTime: '',
+        // dirverMobile: '',
+        // dirverName: '',
+        // endTime: '',
+        // loadTime: '',
+        // truckIdNumber: '',
+        // truckLoad: '',
+        // truckVolume: '',
+        // arrivedbeginDate: '',
+        // arrivedEndDate: ''
       },
       rules: {
         orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
+      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -131,15 +133,12 @@ export default {
   },
   methods: {
     onSubmit() {
-      // let searchObj = {}
-      // searchObj = Object.assign({}, this.searchForm)
-      // this.$set(searchObj, 'beginTime', this.searchTime[0])
-      // this.$set(searchObj, 'endTime', this.searchTime[1])
       if (this.searchTime) {
         this.searchForm.beginTime = this.searchTime[0]
         this.searchForm.endTime = this.searchTime[1]
       }
       this.$emit('change', this.searchForm)
+      this.searchForm = Object.assign({}, this.query)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

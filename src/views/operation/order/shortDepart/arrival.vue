@@ -126,24 +126,36 @@ export default {
       this.fetchShortDepartList()
     },
     doAction(type) {
+      let isWork = false
       if (this.selected.length !== 1) {
         this.$message({
           message: '请选择一条数据~',
           type: 'warning'
         })
+        isWork = false
+      } else {
+        isWork = true
       }
       switch (type) {
         case 'truck':
-        this.truck()
+          if (isWork) {
+            this.truck()
+          }
           break
         case 'repertory':
-        this.repertory()
+          if (isWork) {
+            this.repertory()
+          }
           break
         case 'chanelTruck':
-        this.chanelTruck()
+          if (isWork) {
+            this.chanelTruck()
+          }
           break
         case 'chanelRepertory':
-        this.chanelRepertory()
+          if (isWork) {
+            this.chanelRepertory()
+          }
           break
         case 'printPaper':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
@@ -169,41 +181,41 @@ export default {
     fetchShortDepartList() {
       this.getAllList()
     },
-    truck () {
+    truck() {
       let data = {}
       // postAddRepertory(this.selected[0].id, data).then(data =>{
       //   this.$message({type: 'success', message: '到库入库'})
       // })
-      this.$message({type: 'warning', message: '功能未完善'})
+      this.$message({ type: 'warning', message: '功能未完善' })
     },
-    repertory () {
-      this.$message({type: 'warning', message: '功能未完善'})
+    repertory() {
+      this.$message({ type: 'warning', message: '功能未完善' })
     },
-    chanelTruck () {
+    chanelTruck() {
       let data = {}
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       postCancelLoad(data).then(data => {
-        this.$message({type: 'success', message: '取消到车成功'})
-        this.fetchShortDepartList()
-        this.$refs.multipleTable.clearSelection()
-      })
-      .catch(error => {
-        this.$message({type: 'success', message: '操作失败'})
-      })
+          this.$message({ type: 'success', message: '取消到车成功' })
+          this.fetchShortDepartList()
+          this.$refs.multipleTable.clearSelection()
+        })
+        .catch(error => {
+          this.$message({ type: 'success', message: '操作失败' })
+        })
     },
-    chanelRepertory () {
+    chanelRepertory() {
       let data = {}
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       postCancelPut(data).then(data => {
-        this.$message({type: 'success', message: '取消入库成功'})
-        this.fetchShortDepartList()
-        this.$refs.multipleTable.clearSelection()
-      })
-      .catch(error => {
-        this.$message({type: 'success', message: '操作失败'})
-      })
+          this.$message({ type: 'success', message: '取消入库成功' })
+          this.fetchShortDepartList()
+          this.$refs.multipleTable.clearSelection()
+        })
+        .catch(error => {
+          this.$message({ type: 'success', message: '操作失败' })
+        })
     },
     getAllList() {
       this.loading = true

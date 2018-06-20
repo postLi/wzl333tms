@@ -24,8 +24,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="分摊方式" prop="apportionTypeName">
-                    <selectType v-model="formModel.apportionTypeName" type="apportion_type" clearable size="mini"></selectType>
+                  <el-form-item label="分摊方式" prop="apportionTypeId">
+                    <selectType v-model="formModel.apportionTypeId" type="apportion_type" clearable size="mini"></selectType>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -169,7 +169,7 @@
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
       <!-- 穿梭框 -->
-      <dataTable @loadTable="getLoadTable"></dataTable>
+      <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit"></dataTable>
       <!-- 添加车辆信息 -->
       <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
@@ -180,7 +180,7 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
 import { getAllTrunk } from '@/api/company/trunkManage'
 import selectType from '@/components/selectType/index'
@@ -253,12 +253,16 @@ export default {
       leftTable: [],
       rightTable: [],
       loadTableInfo: [],
-      loadInfoPercent: [],
+      loadInfoPercentOrg: [],
       mini: 'mini',
       loadInfo: {
         tmsOrderLoad: {},
         tmsOrderLoadDetailsList: [],
         tmsOrderLoadFee: {}
+      },
+      setLoadTableList: {
+        left: [],
+        right: []
       },
       orgData: [],
       isEdit: false,
@@ -312,13 +316,19 @@ export default {
       this.formModel.arriveOrgid = newVal
     },
     orgid() {},
-    typeid() {
-      this.typeid = this.$route.params.loadTypeId
-      console.log(this.$route.params.loadTypeId)
-    },
     loadTruckInfo() {
       let data = Object.assign({}, this.formModel)
       return data
+    },
+    loadInfoPercent () {
+      let data = Object.assign([], this.loadInfoPercentOrg)
+      return data
+    }
+  },
+  watch: {
+    typeid() {
+      this.typeid = this.$route.params.loadTypeId
+      console.log('获取router-typeId', this.$route.params.loadTypeId)
     }
   },
   components: {
@@ -332,7 +342,7 @@ export default {
   mounted() {
     this.setLoadTypeId()
     this.initIsEdit()
-    this.getLoadNo()
+    // this.getLoadNo()
     this.getSelectAddLoadRepertoryList()
     this.formModel.orgid = this.orgid
     this.DriverList = this.Drivers
@@ -344,13 +354,51 @@ export default {
   },
   methods: {
     initIsEdit() {
-    this.orgData = this.$route.query.info
-      if (this.orgData) {
+      this.orgData = {}
+      if (this.$route.query.info) {
+        this.orgData = this.$route.query.info
         this.isEdit = true
         console.log(this.orgData, this.isEdit)
+        this.truckMessage = this.orgData.batchNo
+        this.contractNo = this.orgData.contractNo
+        // formModel 数据
+        let data = {}
+        data.id = this.orgData.id
+        data.orgid = this.orgData.orgid
+        data.batchNo = this.orgData.batchNo
+        data.arriveOrgid = this.orgData.orgid
+        data.loadTypeId = this.loadTypeId
+        data.batchTypeId = this.batchTypeIdFinish
+        data.apportionTypeId = this.orgData.apportionTypeId
+        data.truckIdNumber = this.orgData.truckIdNumber
+        data.dirverName = this.orgData.dirverName
+        data.dirverMobile = this.orgData.dirverMobile
+        data.truckLoad = this.orgData.truckLoad
+        data.truckVolume = this.orgData.truckVolume
+        data.loadTime = this.orgData.loadTime
+        data.requireArrivedTime = this.orgData.requireArrivedTime
+        data.remark = this.orgData.remark
+        this.formModel = Object.assign({}, data)
+
+        // formFee 数据
+        let dataFee = {}
+        dataFee.nowpayCarriage = this.orgData.nowpayCarriage
+        dataFee.nowpayOilCard = this.orgData.nowpayOilCard
+        dataFee.backpayCarriage = this.orgData.backpayCarriage
+        dataFee.backpayOilCard = this.orgData.backpayOilCard
+        dataFee.arrivepayCarriage = this.orgData.arrivepayCarriage
+        dataFee.arrivepayOilCard = this.orgData.arrivepayOilCard
+        dataFee.carloadInsuranceFee = this.orgData.carloadInsuranceFee
+        dataFee.leaveHandlingFee = this.orgData.leaveHandlingFee
+        dataFee.leaveOtherFee = this.orgData.leaveOtherFee
+        dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
+        dataFee.arriveOtherFee = this.orgData.arriveOtherFee
+        this.formFee = Object.assign({}, dataFee)
+
       } else {
         this.isEdit = false
         console.log(this.orgData, this.isEdit)
+        this.getLoadNo()
       }
     },
     getLoadNo() {
@@ -361,9 +409,14 @@ export default {
       })
     },
     getSelectAddLoadRepertoryList() {
-      return getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-        this.leftTable = data.data
-      })
+      if (this.isEdit) {
+        this.getUpdateRepertoryLeft()
+        this.getUpdateRepertoryRight()
+      } else {
+        return getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+          this.leftTable = data.data
+        })
+      }
     },
     changeTableKey() {
       this.tablekey = Math.random()
@@ -424,11 +477,21 @@ export default {
       if (this.submitvalidate) {
         this.setData() // 处理数据
         this.$nextTick(() => {
-          postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
-            this.$message({ type: 'success', message: '操作成功' })
-            this.resetFieldsForm('formModel')
-            this.resetFieldsForm('formFee')
-          })
+          if (this.isEdit) {
+            putLoadInfo(this.loadInfo).then(data => {
+              this.$message({ type: 'success', message: '修改配载信息成功' })
+              this.resetFieldsForm('formModel')
+              this.resetFieldsForm('formFee')
+             this.$router.push({ path: '././shortDepart' })
+            })
+          } else {
+            postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
+              this.$message({ type: 'success', message: '插入配载信息成功' })
+              this.resetFieldsForm('formModel')
+              this.resetFieldsForm('formFee')
+              this.$router.push({ path: '././shortDepart' })
+            })
+          }
         })
       }
     },
@@ -446,19 +509,22 @@ export default {
       }
     },
     getLoadTable(obj) { // 获取穿梭框表格数据列表
-      this.loadTableInfo = Object.assign([], obj)
-      this.loadInfoPercent = Object.assign([], obj)
+      // this.loadTableInfo = Object.assign([], obj)
+      this.loadInfoPercentOrg = Object.assign([], obj)
+      this.loadTableInfo = obj
+      // this.loadInfoPercentOrg = obj
     },
     resetFieldsForm(formName) { // 5秒后resetFields表单验证
-      clearInterval(timer)
-      let count = 5
-      let timer = setInterval(() => {
-        count--
-        if (count < 1) {
-          this.$refs[formName].resetFields()
-          clearInterval(timer)
-        }
-      }, 1000)
+      this.$refs[formName].resetFields()
+      // clearInterval(timer)
+      // let count = 5
+      // let timer = setInterval(() => {
+      //   count--
+      //   if (count < 1) {
+      //     this.$refs[formName].resetFields()
+      //     clearInterval(timer)
+      //   }
+      // }, 1000)
     },
     /**
      * load_type_id：配载类型（字典表38-40）
@@ -488,26 +554,20 @@ export default {
     },
     setData() { // 完成配载 ：处理数据格式。。。
       this.setLoadTypeId()
-      if (this.isEdit) {
-        this.$set(this.formModel, 'batchNo', this.orgData)
+      if (this.isEdit) { // 编辑配载信息时
+        console.log('编辑', this.isEdit)
+        this.$set(this.formModel, 'orgid', this.orgData.orgid)
+      } else { // 添加配载信息时
         this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
-        this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
-        this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish) // 批次状态： 干线(52已装车,53在途中)
-        this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
-        this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
-        this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
-      } else {
-        this.$set(this.formModel, 'batchNo', this.truckMessage)
-        this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
-        this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
-        this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish) // 批次状态： 干线(52已装车,53在途中)
-        this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
-        this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
-        this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
       }
+      this.$set(this.formModel, 'batchNo', this.truckMessage)
+      this.$set(this.formModel, 'loadTypeId', this.loadTypeId)
+      this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish)
+      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
+      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
+      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
-      // if () {}
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
@@ -515,6 +575,22 @@ export default {
       this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
       this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+    },
+    getUpdateRepertoryLeft() {
+      if (this.orgData.orgid) {
+        getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
+          this.setLoadTableList.left = data.data
+          console.log('修改ing左边列表', this.setLoadTableList.left)
+        })
+      }
+    },
+    getUpdateRepertoryRight() {
+      if (this.orgData.orgid) {
+        getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
+          this.setLoadTableList.right = data.data
+          console.log('修改ing右边列表', this.setLoadTableList.right)
+        })
+      }
     },
     addTruck() {
       // console.log('添加车辆信息')
@@ -641,9 +717,9 @@ export default {
     }
     .el-collapse-item__header {
       background-color: #E9F3FA;
-      padding: 2px 0 0 60px;
-      height: 42px;
-      line-height: 42px;
+      padding: 0 0 0 20px;
+      height: 40px;
+      line-height: 40px;
       font-size: 16px;
       color: #333;
       position: relative;
@@ -652,8 +728,8 @@ export default {
     }
     .el-collapse-item__arrow {
       position: absolute;
-      left: 30px;
-      top: -3px;
+      left: 20px;
+      top: 5px;
     }
     .el-collapse-item__content {
       padding-bottom: 0;

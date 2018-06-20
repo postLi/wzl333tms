@@ -64,17 +64,17 @@
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :value="scope.row.loadAmount" @change="changLoadAmount" required></el-input>
+            <el-input type="number" v-model="scope.row.loadAmount" @change="changLoadAmount" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :value="scope.row.loadWeight" @change="changLoadWeight"></el-input>
+            <el-input type="number" v-model="scope.row.loadWeight" @change="changLoadWeight"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :value="scope.row.loadVolume" @change="changLoadVolume"></el-input>
+            <el-input type="number" v-model="scope.row.loadVolume" @change="changLoadVolume"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
@@ -128,6 +128,16 @@ export default {
       rightTable: []
     }
   },
+  props: {
+    setLoadTable: {
+      type: Object,
+      default: {}
+    },
+    isModify: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapGetters([
       'otherinfo'
@@ -135,6 +145,10 @@ export default {
   },
   components: {
     transferTable
+  },
+  watch: {
+    setLoadTable() {},
+    isModify() {}
   },
   mounted() {
     this.getSelectAddLoadRepertoryList()
@@ -207,9 +221,15 @@ export default {
       return sums
     },
     getSelectAddLoadRepertoryList() {
-      return getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-        this.leftTable = data.data
-      })
+      if (this.isModify) {
+        this.leftTable = this.setLoadTable.left
+        this.rigthTable = this.setLoadTable.right
+        console.log('穿梭框修改时',this.leftTable, this.rightTable)
+      } else {
+        getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+          this.leftTable = data.data
+        })
+      }
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -245,10 +265,12 @@ export default {
     },
     changLoadWeight(newVal) { // 修改配载重量
       if (this.rightTable && newVal) {
+        console.log('weight')
         this.rightTable.forEach((e) => {
           e.loadWeight = Number(newVal)
         })
       }
+      console.log(this.rightTable)
     },
     changLoadVolume(newVal) { // 修改配载体积
       if (this.rightTable && newVal) {
@@ -273,7 +295,7 @@ export default {
             this.leftTable.splice(item, 1)
           }
         })
-        this.changeTableKey() // 刷新表格视图
+        // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }
@@ -290,7 +312,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
-        this.changeTableKey() // 刷新表格视图
+        // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }

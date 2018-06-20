@@ -92,7 +92,7 @@ export default {
       loading: false,
       selectedList: [],
       isModify: false,
-      isBatch: true,
+      isBatch: false,
       commonTruck: {},
       selectInfo: {},
       isDisBtn: true,
@@ -138,24 +138,35 @@ export default {
       this.fetchAllShortDepartList()
     },
     doAction(type) {
-      if (this.selected.length < 1 && type !== 'add') {
+      let isWork = false
+      console.log(this.selected, this.selectedList)
+      if (this.selected.length < 1 && type !== 'add' && this.selectedList.length < 1) {
         this.$message({
-          message: '请选择一条数据~',
+          message: '请选择数据~',
           type: 'warning'
         })
+        isWork = false
+      } else {
+        isWork = true
       }
       switch (type) {
         case 'add':
           this.$router.push({ path: '././load', query: { loadTypeId: 38 } })
           break
         case 'truck': // 发车
-          this.truck()
+          if (isWork) {
+            this.truck()
+          }
           break
         case 'chanelTruck': // 取消发车
-          this.chanelTruck()
+          if (isWork) {
+            this.chanelTruck()
+          }
           break
         case 'chanelRepertory': // 取消装车
-          this.chanelRepertory()
+          if (isWork) {
+            this.chanelRepertory()
+          }
           break
         case 'edit': // 修改
           this.edit()
@@ -206,68 +217,87 @@ export default {
         }
       })
     },
-    commonTruckData(type) {
-      console.log('se', this.selected)
+    clearData() {
+      this.isBatch = false
+      this.commonTruck = {}
+      this.selected = []
+      this.selectedList = []
+      this.selectedData = {}
+      this.$refs.multipleTable.clearSelection()
+    },
+    setData(type) {
+      console.log('se', this.commonTruck)
       let data = {}
-      this.isBatch = true
       this.$set(data, 'loadTypeId', 38) // 短驳
       this.$set(data, 'loadIds', [])
       if (this.isDisBtn) {
         this.selectedList.forEach((e, index) => {
-        if (e.batchTypeId === type) { // 47-短驳发车 48-短驳中
-          data.loadIds.push(e.loadId)
-        } else {
-          this.isBatch = false
-        }
-      })
+          if (e.batchTypeId === type) { // 47-短驳发车 48-短驳中
+            data.loadIds.push(e.loadId)
+          } else {
+            this.isBatch = false
+          }
+        })
       } else {
-         this.selected.forEach((e, index) => {
-        if (e.batchTypeId === type) { // 47-短驳发车 48-短驳中
-          data.loadIds.push(e.loadId)
-        } else {
-          this.isBatch = false
-        }
-      })
+        this.selected.forEach((e, index) => {
+          if (e.batchTypeId === type) { // 47-短驳发车 48-短驳中
+            data.loadIds.push(e.loadId)
+          } else {
+            this.isBatch = false
+          }
+        })
       }
-     
       data.loadIds = data.loadIds.join(',')
-      this.commonTruck = Object.assign({}, data)
+      this.commonTruck = data
+      data = {}
     },
     truck() {
-      this.commonTruckData(47)
+      this.setData(47)
       if (this.isBatch) {
         putTruckDepart(this.commonTruck).then(data => {
-          this.$message({ type: 'success', message: '发车成功！' })
-          this.fetchAllShortDepartList()
-          this.$refs.multipleTable.clearSelection()
+          if (data) {
+            this.$message({ type: 'success', message: '发车成功！' })
+            this.fetchAllShortDepartList()
+            // this.$refs.multipleTable.clearSelection()
+            this.clearData()
+          }
         })
       } else {
         this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
       }
+      this.clearData()
     },
     chanelTruck() {
-      this.commonTruckData(48)
+      this.setData(48)
       if (this.isBatch) {
         putTruckChanel(this.commonTruck).then(data => {
-          this.$message({ type: 'success', message: '取消发车操作成功！' })
-          this.fetchAllShortDepartList()
-          this.$refs.multipleTable.clearSelection()
+          if (data) {
+            this.$message({ type: 'success', message: '取消发车操作成功！' })
+            this.fetchAllShortDepartList()
+            // this.$refs.multipleTable.clearSelection()
+            this.clearData()
+          }
         })
       } else {
         this.$message({ type: 'warning', message: '短驳中状态才可以取消发车' })
       }
+      this.clearData()
     },
     chanelRepertory() {
-      this.commonTruckData(47)
+      this.setData(47)
       if (this.isBatch) {
         putTruckLoad(this.commonTruck).then(data => {
-          this.$message({ type: 'success', message: '取消装车操作成功！' })
-          this.fetchAllShortDepartList()
-          this.$refs.multipleTable.clearSelection()
+          if (data) {
+            this.$message({ type: 'success', message: '取消装车操作成功！' })
+            this.fetchAllShortDepartList()
+            // this.$refs.multipleTable.clearSelection()
+            this.clearData()
+          }
         })
       } else {
         this.$message({ type: 'warning', message: '已装车状态才可以取消装车' })
       }
+      this.clearData()
     },
     edit() {
       let batchTypeId = this.selectedData.batchTypeId

@@ -114,18 +114,12 @@ export default {
   },
   methods: {
     onSubmit() {
-      // let searchObj = {}
-      // searchObj = Object.assign({}, this.searchForm)
-      // if (this.searchTime) {
-      //   this.$set(searchObj, 'startTime', this.searchTime[0])
-      //   this.$set(searchObj, 'endTime', this.searchTime[1])
-      // }
       if (this.searchForm.truckIdNumber) {
         this.searchForm.truckIdNumber = this.searchForm.truckIdNumber.truckIdNumber
       }
-      // if (this.searchForm.dirverName) {
-      //   this.searchForm.dirverName = this.searchForm.dirverName.dirverName
-      // }
+      if (this.searchForm.batchTypeId) {
+        this.searchForm.batchTypeId = undefined
+      }
       if (this.searchTime) {
         this.searchForm.startTime = this.searchTime[0]
         this.searchForm.endTime = this.searchTime[1]
