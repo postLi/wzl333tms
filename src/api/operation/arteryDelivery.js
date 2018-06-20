@@ -20,6 +20,17 @@ export function getBatchNoId(orgid,loadTypeId) {
   return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
 }
 
+/**
+ * 查询配载主信息及费用记录列表 shang
+ * http://localhost:7010/api-order/order/load/v1/selectLoadMainInfoList
+ * @param orgid
+ * @returns {AxiosPromise<any>}
+ */
+export function postSelectLoadMainInfoList(params) {
+  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList',params).then(res => {
+    return res.data || {}
+  })
+}
 ///order/load/v1/confirmToCar/{id}
 // /confirmToCar/{id}
 /**

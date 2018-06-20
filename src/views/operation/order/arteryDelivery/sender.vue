@@ -397,7 +397,7 @@ export default {
             }else if(this.selected.length === 1){
 
               this.selectInfo = this.selected[0]
-              this.trackId = this.selected[0].id
+              // this.trackId = this.selected[0].id
               this.openAddCustomer()
             }
 
