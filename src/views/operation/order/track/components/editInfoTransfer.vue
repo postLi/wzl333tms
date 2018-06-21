@@ -148,7 +148,6 @@ export default {
     },
     getDetail() {
       let transferId = this.id
-      console.log(transferId)
       return getTransferTrack(transferId).then(data => {
         this.trackDetail = Object.assign([], data)
       })

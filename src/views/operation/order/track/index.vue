@@ -38,9 +38,20 @@ export default {
     return {
       component: 'artery'
     }
+  },
+  mounted () {
+    this.isTransfer()
+  },
+  methods: {
+    isTransfer () {
+      if (this.$route.query.transfer) {
+        this.component = 'transfer'
+      } else {
+        this.component = 'artery'
+      }
+    }
   }
 }
-
 </script>
 <style lang="scss" scoped>
 .customer-manager {

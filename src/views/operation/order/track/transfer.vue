@@ -25,7 +25,7 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="oddNumbers" label="中转单号">
           </el-table-column>
-         <!--  <el-table-column sortable width="120" prop="batchTypeId" label="中转批次">
+          <!--  <el-table-column sortable width="120" prop="batchTypeId" label="中转批次">
           </el-table-column> -->
           <el-table-column sortable width="160" prop="createTime" label="开单时间">
             <template slot-scope="scope">
@@ -99,7 +99,7 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="volumeFee" label="体积单价">
           </el-table-column>
-         <!--  <el-table-column sortable width="120" prop="batchTypeId" label="等通知放货">
+          <!--  <el-table-column sortable width="120" prop="batchTypeId" label="等通知放货">
           </el-table-column> -->
           <el-table-column sortable width="120" prop="shipReceiptRequire" label="回单要求">
           </el-table-column>
@@ -156,8 +156,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfoTransfer :orgid="orgid" :id='transferId' :info="trackInfo" :popVisible.sync="editInfoVisible" 
-      @close="closeMe"></editInfoTransfer>
+      <editInfoTransfer :orgid="orgid" :id='transferId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
     </div>
   </div>
 </template>
@@ -224,17 +223,21 @@ export default {
       this.fetchList()
     },
     getSelection(list) {
-      if (list.length === 1) {
-        this.selectInfo = Object.assign([], list)
-        this.isDisBtn = false
-        let tid = this.selectInfo[0].transferId
-        this.trackId = tid
-        this.trackInfo = Object.assign({}, this.selectInfo[0])
-      } else if (list.length > 1){
-        this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
-        this.isDisBtn = true
+      if (this.$route.query.transfer) {
+        this.transferId = this.this.$route.query.transfer
       } else {
-        this.isDisBtn = true
+        if (list.length === 1) {
+          this.selectInfo = Object.assign([], list)
+          this.isDisBtn = false
+          let tid = this.selectInfo[0].transferId
+          this.trackId = tid
+          this.trackInfo = Object.assign({}, this.selectInfo[0])
+        } else if (list.length > 1) {
+          this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
+          this.isDisBtn = true
+        } else {
+          this.isDisBtn = true
+        }
       }
     },
     clickDetails(row) {
@@ -257,7 +260,7 @@ export default {
     },
     getAllList() {
       this.loading = true
-      return postTransferList(this.searchQuery).then(data => {
+      postTransferList(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
           this.total = data.total
@@ -267,6 +270,14 @@ export default {
           this.loading = false
         }
       })
+      this.isTransferTrack()
+    },
+    isTransferTrack() {
+      if (this.$route.query.transfer) {
+        this.setInfo()
+      } else {
+        this.closeMe()
+      }
     }
   }
 }
