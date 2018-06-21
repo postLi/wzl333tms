@@ -169,7 +169,7 @@
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
       <!-- 穿梭框 -->
-      <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit"></dataTable>
+      <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
       <!-- 添加车辆信息 -->
       <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
@@ -329,7 +329,11 @@ export default {
     typeid() {
       this.typeid = this.$route.params.loadTypeId
       console.log('获取router-typeId', this.$route.params.loadTypeId)
-    }
+    },
+    // getTableChange (obj) {
+    //   this.loadInfoPercentOrg = Object.assign([], obj)
+    //   this.loadTableInfo = obj
+    // }
   },
   components: {
     selectType,
@@ -353,6 +357,7 @@ export default {
     }
   },
   methods: {
+    getTableChange () {},
     initIsEdit() {
       this.orgData = {}
       if (this.$route.query.info) {
@@ -509,10 +514,8 @@ export default {
       }
     },
     getLoadTable(obj) { // 获取穿梭框表格数据列表
-      // this.loadTableInfo = Object.assign([], obj)
       this.loadInfoPercentOrg = Object.assign([], obj)
       this.loadTableInfo = obj
-      // this.loadInfoPercentOrg = obj
     },
     resetFieldsForm(formName) { // 5秒后resetFields表单验证
       this.$refs[formName].resetFields()

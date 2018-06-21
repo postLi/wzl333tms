@@ -27,12 +27,12 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
           </el-table-column>
-          <el-table-column sortable width="155" prop="departureTime" label="短驳时间">
+          <el-table-column sortable width="180" prop="departureTime" label="短驳时间">
             <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.departureTime}}
             </template>
           </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
+          <el-table-column sortable width="120" prop="endOrgName" label="目的网点">
           </el-table-column>
           <el-table-column sortable width="155" prop="receivingTime" label="接收时间">
             <template slot-scope="scope">
@@ -69,18 +69,22 @@
           <Pager :total="total" @change="handlePageChange" />
         </div>
       </div>
+      <!-- 在途跟踪 -->
+      <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfo>
     </div>
   </div>
 </template>
 <script>
-import { postLoadList, postCancelLoad, postCancelPut } from '@/api/operation/shortDepart'
+import { postLoadList, postCancelLoad, postCancelPut, postConfirmToCar } from '@/api/operation/shortDepart'
 import { mapGetters } from 'vuex'
 import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
+import editInfo from './components/editInfo'
 export default {
   components: {
     Pager,
-    SearchForm
+    SearchForm,
+    editInfo
   },
   data() {
     return {
@@ -89,9 +93,12 @@ export default {
       setupTableVisible: false,
       selected: [],
       tableKey: 0,
+      loadId: 0,
       loading: false,
       isModify: false,
+      editInfoVisible: false,
       selectInfo: {},
+      loadInfo: [],
       isBatch: true,
       commonTruck: {},
       infoList: [],
@@ -115,15 +122,15 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchShortDepartList()
+    this.getAllList()
   },
   methods: {
-    getSearchParam(obj) {
+    getSearchParam(obj) { // 获取搜索框表单内容
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.vo.orgid) {
         this.searchQuery.vo.orgid = this.otherinfo.orgid
       }
-      this.fetchShortDepartList()
+      this.getAllList()
     },
     doAction(type) {
       let isWork = false
@@ -167,59 +174,74 @@ export default {
           break
       }
     },
-    setTable() {},
-    clickDetails(row) {
+    setTable() {
+      this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+    },
+    clickDetails(row) { //打勾勾
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection(list) {
-      this.selected = list
+    getSelection(list) { // 获取列表勾选项
+      this.selected = Object.assign([], list)
+      if (list.length === 1) {
+        let lid = 0
+        list.forEach(e => {
+          lid = e.id
+          this.loadInfo = Object.assign([], e)
+        })
+        this.loadId = lid
+      }
     },
-    handlePageChange(obj) {
+    handlePageChange(obj) { // 翻页
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    fetchShortDepartList() {
-      this.getAllList()
-    },
-    truck() {
+    truck() { // 短驳到车确认
       let data = {}
-      // postAddRepertory(this.selected[0].id, data).then(data =>{
-      //   this.$message({type: 'success', message: '到库入库'})
-      // })
-      this.$message({ type: 'warning', message: '功能未完善' })
+      this.$set(data, 'id', this.loadInfo.id)
+      this.$set(data, 'typeId', 49) // 49为短驳到车，54为干线到车
+      postConfirmToCar(data).then(data => {
+        this.$message({ type: 'success', message: '短驳到车操作成功' })
+        this.getAllList()
+        this.clearInfo()
+      })
     },
-    repertory() {
-      this.$message({ type: 'warning', message: '功能未完善' })
+    repertory() { // 短驳入库-打开弹出框
+      this.setInfo()
     },
-    chanelTruck() {
+    chanelTruck() { // 取消到车
       let data = {}
-      this.$set(data, 'id', this.selected[0].id)
-      this.$set(data, 'loadType', 38) // 装载类型：短驳
-      postCancelLoad(data).then(data => {
+      this.$set(data, 'id', this.loadInfo.id)
+      this.$set(data, 'loadType', 38) // 装载类型：38-短驳
+      if (this.loadInfo.bathStatusName === '已到车'){
+        postCancelLoad(data).then(data => {
           this.$message({ type: 'success', message: '取消到车成功' })
-          this.fetchShortDepartList()
-          this.$refs.multipleTable.clearSelection()
+          this.getAllList()
+          this.clearInfo()
         })
         .catch(error => {
           this.$message({ type: 'success', message: '操作失败' })
         })
+      } else {
+        this.$message({ type: 'warning', message: '【 '+this.loadInfo.batchNo+' 】已【 '+this.loadInfo.bathStatusName+' 】不允许取消到车' })
+        this.clearInfo()
+      }
+      
     },
-    chanelRepertory() {
+    chanelRepertory() { // 取消入库
       let data = {}
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       postCancelPut(data).then(data => {
           this.$message({ type: 'success', message: '取消入库成功' })
-          this.fetchShortDepartList()
-          this.$refs.multipleTable.clearSelection()
+          this.getAllList()
+          this.clearInfo()
         })
         .catch(error => {
           this.$message({ type: 'success', message: '操作失败' })
         })
     },
-    getAllList() {
+    getAllList() { // 获取短驳到货列表
       this.loading = true
-      console.log(this.searchQuery)
       return postLoadList(this.searchQuery).then(data => {
         if (data) {
           this.infoList = data.list
@@ -229,7 +251,18 @@ export default {
           this.loading = false
         }
       })
-    }
+    },
+    closeMe() { // 关闭弹出框
+      this.editInfoVisible = false
+    },
+    setInfo() { // 打开弹出框
+      this.editInfoVisible = true
+      this.$refs.multipleTable.clearSelection()
+    },
+    clearInfo() { // 清空数据
+      this.editInfoVisible = false
+      this.$refs.multipleTable.clearSelection()
+    },
   }
 }
 

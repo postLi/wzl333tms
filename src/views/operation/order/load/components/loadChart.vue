@@ -1,8 +1,7 @@
 <template>
   <div>
     <!-- 配载率 -->
-    <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading" :before-close="closeMe" width="60%" 
-    :close-on-click-modal="false" center>
+    <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading" :before-close="closeMe" width="60%" :close-on-click-modal="false" center>
       <el-row>
         <el-col :span="12">
           <div :class="className" :id="idWeigth" :style="{height:height,width:width}" ref="echartWeight"></div>
@@ -21,11 +20,11 @@
 import echarts from 'echarts'
 export default {
   props: {
-    info: {
+    info: { // 表格里面的数据
       type: Array,
       default: []
     },
-    truckInfo: {
+    truckInfo: { // 顶部基本信息里面的数据
       type: Object,
       default: {}
     },
@@ -77,7 +76,6 @@ export default {
   },
   watch: {
     info() {
-      // let data = Object.assign([], this.info)
       let countWeigth = 0
       let countVolume = 0
       this.info.forEach(e => {
@@ -86,15 +84,12 @@ export default {
       })
       this.baseInfo.weight = Number(countWeigth)
       this.baseInfo.volume = Number(countVolume)
-      console.log('info')
+      console.log('info表格')
     },
     truckInfo() {
-      // let data = Object.assign({}, this.truckInfo)
-      // this.$nextTick(() => {
-        console.log('sdfsd')
-        this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
-        this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
-      // })
+      console.log('sdfsd')
+      this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
+      this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
     },
     popVisible() {
       if (this.popVisible) {
@@ -102,7 +97,7 @@ export default {
           if (this.baseInfo.totalWeight || this.baseInfo.weight) {
             this.initChart()
           } else {
-            this.baseInfo = Object.assign({},this.newInfo)
+            this.baseInfo = Object.assign({}, this.newInfo)
             this.initChart()
           }
         })

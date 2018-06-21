@@ -29,25 +29,31 @@ export function putTruckLoad(data) {
  * 根据配载类型组织机构查询到货列表 38-短驳
  */
 export function postLoadList(data) {
-	return fetch.post('/api-order/order/load/v1/list/', data).then(res => {
-		return res.data || { list: [], totalCount: 0 }
-	})
+  return fetch.post('/api-order/order/load/v1/list/', data).then(res => {
+    return res.data || { list: [], totalCount: 0 }
+  })
 }
 /**
  * 根据配载单ID配载类型取消到车
  */
 export function postCancelLoad(data) {
-  return fetch.post('/api-order/order/load/v1/cancelLoad/' + data.id + '/'+ data.loadType )
+  return fetch.post('/api-order/order/load/v1/cancelLoad/' + data.id + '/' + data.loadType)
 }
 /**
  * 取消入库
  */
-export function postCancelPut (data) {
-	return fetch.post('/api-order/order/load/v1/cancelPut/'+data.id+'/'+data.loadType)
+export function postCancelPut(data) {
+  return fetch.post('/api-order/order/load/v1/cancelPut/' + data.id + '/' + data.loadType)
 }
 /**
- * 到库入库
+ * 到车入库
  */
-export function postAddRepertory (typeId, data) {
-	return fetch.post('/api-order/order/load/v1/addRepertory/' + typeId, data)
+export function postAddRepertory(typeId, data) {
+  return fetch.post('/api-order/order/load/v1/addRepertory/' + typeId, data)
+}
+/**
+ * 到车确认
+ */
+export function postConfirmToCar(data) {
+  return fetch.post('/api-order/order/load/v1/confirmToCar/' + data.id + '/?typeId='+data.typeId)
 }

@@ -9,7 +9,7 @@
           <el-tab-pane label="批次详情" name="first" height="100%">
             <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
           </el-tab-pane>
-          <el-tab-pane label="批次跟踪" name="second" >
+          <el-tab-pane label="批次跟踪" name="second">
             <div class="tab_box animated fadeInRight">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
@@ -62,22 +62,24 @@
         </el-tabs>
       </div>
     </template>
-    <div slot="footer" class=" stepFrom" v-if="isFootEdit">
-      <el-form :inline="true" :model="formModel" :rules="ruleForm" ref="formModel" label-width="100px">
+    <div slot="footer" class="dialog-footer stepFrom" v-if="isFootEdit">
+      <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
         <el-form-item label="类型" prop="loadStatus">
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker value-format="yyyy-MM-dd" v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
           <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
+        </el-form-item>
       </el-form>
-       <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
     </div>
-    <div slot="footer" class="" v-else="isFootEdit">
+    <div slot="footer" class="dialog-footer" v-else="isFootEdit">
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -89,6 +91,7 @@ import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
+import { getSystemTime } from '@/api/common'
 export default {
   components: {
     popRight,
@@ -107,8 +110,8 @@ export default {
       default: 0
     },
     info: {
-      type: Object,
-      default: {}
+      type: Array,
+      default: () => {}
     }
   },
   data() {
@@ -120,11 +123,11 @@ export default {
       activeName: 'first',
       formModel: {},
       ruleForm: {
-        loadStatus: [{required: true, trigger: 'blur', message: '不能为空'}],
-        operatorTime: [{required: true, trigger: 'blur', message: '不能为空'}],
-        operatorInfo: [{required: true, trigger: 'blur', message: '不能为空'}]
+        loadStatus: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        operatorTime: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        operatorInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
-      isShowBtn: true,
+      isShowBtn: false,
       isFootEdit: false,
       formModel: {
         addStatus: 1,
@@ -151,8 +154,16 @@ export default {
     if (this.popVisible) {
       this.getDetail()
     }
+    this.getSystemTime()
   },
   methods: {
+    getSystemTime () {
+      getSystemTime().then(data => {
+        if (data) {
+          this.formModel.operatorTime = data
+        }
+      })
+    },
     showBtnBox() {
       console.log('show')
     },
@@ -211,6 +222,7 @@ export default {
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
+        this.getSystemTime()
       })
     },
     handleClick() {
@@ -256,42 +268,30 @@ export default {
   height: 36px;
   padding: 0 10px;
 }
+
 .stepFrom {
-  background-color:#eee;
-  display:block;
-  width:100%;
-  height:100%;
-  padding-top: 15px;
-  .el-form--inline .el-form-item{
-    margin-right:0;
-    float:left;
-    display:flex;
-    width:28%;
-  }
-  .el-date-editor.el-input,
-  .el-date-editor.el-input__inner {
-    width: 100%;
-  }
-
-  .el-form-item__label {
-    font-size: 12px;
-  }
-
-  .el-form-item__content {
-    flex: 1;
-  }
-  .el-button--primary{
-    position: absolute;
-    top:23px;
-    right:10px;
+  .el-form--inline .el-form-item {
+    margin-right: 0;
+    float: left;
+    display: flex;
+    .el-input {
+      width: 150px;
+      padding: 0;
+      margin-left: -5px;
+    }
+    .el-button {
+      margin-left: 10px;
+    }
   }
 }
+
 .animated {
   -webkit-animation-duration: 0.5s;
   animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
+
 @-webkit-keyframes fadeInRight {
   from {
     opacity: 0;
@@ -324,6 +324,7 @@ export default {
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
+
 .editInfoPop_content {
   padding: 0 10px;
   width: 100%;
@@ -358,20 +359,19 @@ export default {
     padding-left: 10px;
     display: flex;
     flex-direction: row;
+    width: 100%;
     .stepItem_title {
       margin: 10px 0 10px 10px;
       font-size: 14px;
-      width: 165%;
+      width: 116%;
     }
     .stepItem {
       font-size: 14px;
       color: #666;
-      margin-bottom: 20px;
-      width: 160%;
+      margin-bottom: 70px; // height:100%;
+      width: 110%;
       p {
         word-wrap: break-word;
-        word-break: normal;
-        display: block;
       }
     }
   }

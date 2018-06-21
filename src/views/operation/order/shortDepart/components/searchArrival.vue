@@ -1,10 +1,8 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="短驳时间">
-      <!-- <el-date-picker v-model="searchTime" :default-value="defaultTime" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker> -->
-       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-          </el-date-picker>
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
       <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable></selectBatchType>
@@ -13,10 +11,10 @@
       <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-input v-model="searchForm.truckIdNumber" maxlength="8" auto-complete="off" clearable></el-input>
+     <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
     </el-form-item>
     <el-form-item label="司机名称">
-      <el-input v-model="searchForm.dirverName" maxlength="8" auto-complete="off" clearable></el-input>
+       <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName"  label="driverName" :remote="true" clearable />
     </el-form-item>
     <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgid" clearable></SelectTree>
@@ -31,10 +29,12 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import selectBatchType from '@/components/selectType/index'
+import querySelect from '@/components/querySelect/index'
 export default {
   components: {
     SelectTree,
-    selectBatchType
+    selectBatchType,
+    querySelect
   },
   props: {
     btnsize: {
@@ -133,6 +133,12 @@ export default {
   },
   methods: {
     onSubmit() {
+      // if (this.searchForm.truckIdNumber) {
+      //   this.searchForm.truckIdNumber = this.searchForm.truckIdNumber.truckIdNumber
+      // }
+      if (this.searchForm.batchTypeId === 46) {
+        this.searchForm.batchTypeId = undefined
+      }
       if (this.searchTime) {
         this.searchForm.beginTime = this.searchTime[0]
         this.searchForm.endTime = this.searchTime[1]

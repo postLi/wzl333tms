@@ -7,16 +7,18 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="批次状态" prop="batchTypeId">
-          <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type" clearable></selectBatchType>
+          <!-- <selectBatchType v-model="searchForm.batchTypeId" type="delivery_batch_type" clearable></selectBatchType> -->
+
+          <selectBatchType v-model="searchForm.batchTypeId" type="delivery_batch_type" clearable></selectBatchType>
         </el-form-item>
         <el-form-item label="发车批次">
-          <el-input v-model="searchForm.deliveryBatchType" maxlength="15" auto-complete="off" clearable></el-input>
+          <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
         </el-form-item>
         <el-form-item label="车牌号">
           <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
         </el-form-item>
         <el-form-item label="司机名称">
-          <querySelect search="driverName" type="driver" v-model="searchForm.dirverName"  label="driverName" :remote="true" clearable />
+          <querySelect search="driverName"  valuekey="dirverName" type="driver" v-model="searchForm.dirverName"  label="driverName" :remote="true" clearable />
         </el-form-item>
       </el-col>
       <el-col :span="4">
@@ -125,6 +127,12 @@ export default {
     onSubmit() {
       if (this.searchForm.truckIdNumber) {
         this.searchForm.truckIdNumber = this.searchForm.truckIdNumber.truckIdNumber
+      }
+       if (this.searchForm.dirverName) {
+        this.searchForm.dirverName = this.searchForm.dirverName.driverName
+      }
+      if (this.searchForm.batchTypeId === 56) {
+        this.searchForm.batchTypeId = undefined
       }
       if (this.searchTime) {
         this.searchForm.startTime = this.searchTime[0]

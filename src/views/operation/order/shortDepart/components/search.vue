@@ -5,17 +5,16 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
-      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable></selectBatchType>
+      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
       <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-input v-model="searchForm.truckIdNumber" maxlength="8" auto-complete="off" clearable></el-input>
+     <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
     </el-form-item>
     <el-form-item label="司机名称">
-      <el-input v-model="searchForm.dirverName" maxlength="8" auto-complete="off" clearable></el-input>
-      <!-- <querySelect v-model="searchForm.dirverName" search="driverName" type="driver" :remote="true" /> -->
+       <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName"  label="driverName" :remote="true" clearable />
     </el-form-item>
     <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
@@ -29,8 +28,8 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
-import querySelect from '@/components/querySelect/index'
 import selectBatchType from '@/components/selectType/index'
+import querySelect from '@/components/querySelect/index'
 export default {
   components: {
     SelectTree,

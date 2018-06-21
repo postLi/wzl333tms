@@ -64,17 +64,17 @@
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" v-model="scope.row.loadAmount" @change="changLoadAmount" required></el-input>
+            <el-input type="number" v-model="scope.row.loadAmount" @change="changLoadAmount[scope.$index]" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
           <template slot-scope="scope">
-            <el-input type="number" v-model="scope.row.loadWeight" @change="changLoadWeight"></el-input>
+            <el-input type="number" v-model="scope.row.loadWeight" @change="changLoadWeight[scope.$index]"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
           <template slot-scope="scope">
-            <el-input type="number" v-model="scope.row.loadVolume" @change="changLoadVolume"></el-input>
+            <el-input type="number" v-model="scope.row.loadVolume" @change="changLoadVolume[scope.$index]"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
@@ -262,12 +262,13 @@ export default {
           e.loadAmount = Number(newVal)
         })
       }
+      this.$emit('change', this.rightTable)
     },
     changLoadWeight(newVal) { // 修改配载重量
       if (this.rightTable && newVal) {
-        console.log('weight')
         this.rightTable.forEach((e) => {
           e.loadWeight = Number(newVal)
+          console.log(e.loadWeight, e)
         })
       }
       console.log(this.rightTable)

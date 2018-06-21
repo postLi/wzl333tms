@@ -103,17 +103,17 @@ export default {
         currentPage: 1
       },
       searchQuery: {
-        "orgId": 1,
-        "loadTypeId": 38,
-        "loadStartTime": '',
-        "loadEndTime": '',
-        "departureStartTime": '',
-        "departureEndTime": '',
-        "batchTypeId": '',
-        "arriveOrgid": '',
-        "batchNo": '',
-        "truckIdNumber": '',
-        "dirverName": ''
+        orgId: 1,
+        loadTypeId: 38,
+        loadStartTime: '',
+        loadEndTime: '',
+        departureStartTime: '',
+        departureEndTime: '',
+        batchTypeId: '',
+        arriveOrgid: '',
+        batchNo: '',
+        truckIdNumber: '',
+        dirverName: ''
       }
     }
   },
@@ -258,7 +258,6 @@ export default {
           if (data) {
             this.$message({ type: 'success', message: '发车成功！' })
             this.fetchAllShortDepartList()
-            // this.$refs.multipleTable.clearSelection()
             this.clearData()
           }
         })
@@ -290,7 +289,6 @@ export default {
           if (data) {
             this.$message({ type: 'success', message: '取消装车操作成功！' })
             this.fetchAllShortDepartList()
-            // this.$refs.multipleTable.clearSelection()
             this.clearData()
           }
         })
@@ -306,6 +304,7 @@ export default {
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
       }
+      this.clearData()
     }
   }
 }
