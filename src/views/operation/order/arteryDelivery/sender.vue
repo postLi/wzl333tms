@@ -286,7 +286,7 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { postArtList } from '@/api/operation/arteryDelivery'
+import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/storages'
@@ -306,7 +306,7 @@ export default {
       ]),
       orgid () {
         // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
       }
   },
   mounted () {
@@ -401,41 +401,44 @@ export default {
             }else if(this.selected.length === 1){
 
               this.selectInfo = this.selected[0]
-              // this.trackId = this.selected[0].id
+              this.isModify = false
               this.openAddCustomer()
             }
 
               break;
-          //
-          // // 修改客户信息
-          // case 'modify':
-          //     this.isModify = true
-          //     if(this.selected.length > 1){
-          //         this.$message({
-          //             message: '每次只能修改单条数据~',
-          //             type: 'warning'
-          //         })
-          //     }
-          //     this.selectInfo = this.selected[0]
-          //     this.openAddCustomer()
-          //     break;
+          //到车确定
+          case 'sure':
+
+              if(this.selected.length > 1){
+                  this.$message({
+                      message: '每次只能修改单条数据~',
+                      type: 'warning'
+                  })
+                return false
+              }else if(this.selected.length === 1){
+
+                this.selectInfo = this.selected[0]
+                this.isModify = true
+                this.openAddCustomer()
+              }
+              break;
         // sure 到车确定   deselectCar取消到车  deleteStor取消入库
 
           // 删除客户
-          case 'delete':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
+          case 'deselectCar':
+                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
                   //=>todo 删除多个
                   let ids = this.selected.map(item => {
-                      return item.customerId
+                      return item.id
                   })
                   ids = ids.join(',')
 
-                  this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
+                  this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
                       confirmButtonText: '删除',
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                      deleteSomeCustomerInfo(ids).then(res => {
+                    postCancelLoad(ids,39).then(res => {
                           this.$message({
                               type: 'success',
                               message: '删除成功!'
@@ -455,6 +458,40 @@ export default {
                       })
                   })
               break;
+          // 取消入库
+          case 'deleteStor':
+            let deleteItemName = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
+            //=>todo 删除多个
+            let _ids = this.selected.map(item => {
+              return item.id
+            })
+            _ids = _ids.join(',')
+
+            this.$confirm('确定要取消车牌号 ' + deleteItemName + ' 入库吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              postCancelPut(_ids,39).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.fetchData()
+              }).catch(err=>{
+                this.$message({
+                  type: 'info',
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
+              })
+
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              })
+            })
+            break;
           // 导出数据
           case 'export':
               let ids2 = this.selected.map(el => {

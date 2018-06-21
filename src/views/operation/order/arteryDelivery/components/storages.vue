@@ -5,7 +5,7 @@
         批次：{{getBatchNo}}
       </div>
       <div class="storagesInfoPop_content">
-        <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick" class="tab-card">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-card">
           <el-tab-pane label="批次详情" name="first">
             <div class="tab-content" v-loading="loading">
               <div class="info_form">
@@ -167,11 +167,10 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">{{popTitle}}</el-button>
-                  <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
-                  <!--<el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>-->
+                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">{{popTitle}}</el-button>
+
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain class="table_import">批量导入</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="info_tab">
@@ -218,22 +217,25 @@
                       width="120"
                       label="子运单号">
                     </el-table-column>
+                    <!--actualAmount-->
                     <el-table-column
-                      prop="actualAmount"
+                      prop="loadAmount"
                       sortable
                       width="120"
                       label="实到件数">
                     </el-table-column>
+                    <!--actualWeight-->
                     <el-table-column
                       sortable
-                      prop="actualWeight"
+                      prop="loadWeight"
                       width="120"
                       label="实到重量">
                     </el-table-column>
+                    <!--actualVolume-->
                     <el-table-column
                       label="实到体积"
                       width="120"
-                      prop="actualVolume"
+                      prop="loadVolume"
                       sortable
                     >
                     </el-table-column>
@@ -309,8 +311,6 @@
                   </el-table>
                 </div>
               </div>
-              <!--<AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />-->
-              <!--<TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />-->
             </div>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
@@ -368,46 +368,46 @@
               <el-form :model="formModel">
                 <div class="pact_top">
                   <h3>货物运输合同</h3>
-                  <div class="top_num">
-                    <el-form-item label="合同模板">
-                      <el-input  placeholder="1" size="mini"></el-input>
-                    </el-form-item>
-                  </div>
+                  <!--<div class="top_num">-->
+                    <!--<el-form-item label="合同模板">-->
+                      <!--<el-input  placeholder="1" size="mini"></el-input>-->
+                    <!--</el-form-item>-->
+                  <!--</div>-->
                   <div class="top_no">
                     <el-form-item label="NO.">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                      <el-input  placeholder="1" size="mini" disabled v-model="formModel.contractNo"></el-input>
                     </el-form-item>
                   </div>
                 </div>
                 <div class="pact_content">
                   <div class="pact_title">
                     <span>委托方:</span>
-                    <p style="">{{formModel.arriveOrgName}}</p>
+                    <p style="">{{formModel.orgName}}</p>
                     <span>(以下简称甲方)</span>
                   </div>
                   <div class="pact_title">
                     <span>承运方:</span>
-                    <p style=""></p>
+                    <p style="">{{formModel.dirverName}}</p>
                     <span>(以下简称乙方)</span>
                   </div>
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
-                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方哟啊负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
-                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙方不得擅自做主叫车换货；</p>
+                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="五、本车货物总为">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>件,全程运费<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，甲乙双方不得任意减价或涨价，乙方不得收取其他劳务费，本车已付运费<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，回单付<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>到付运费<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，保险费 <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>乙方必须将货物安全完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>件 <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>千克 <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>方,全程运费<el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>元，甲乙双方不得任意减价或涨  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费<el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，现付油卡<el-input  size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>元，到付运费 <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>，到付油   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡   <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>元，回付运费 <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，回付油卡 <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>元，保险费 <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>元 。乙方必须将货物安全   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
 
                     </el-form-item>
                   </div>
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>，到达时间为<el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>。
+                      <el-input size="mini" disabled v-model="formModel.departureTime"></el-input>，到达时间为<el-input size="mini" disabled v-model="formModel.planArrivedTime"></el-input>。
 
 
                     </el-form-item>
@@ -415,44 +415,47 @@
                   </div>
                   <div class="p_cont">
                     <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
-                    <p>关于本车：直送致兴和樵鸿</p>
-                    <p>附：驾驶员、车辆登记</p>
+                    <el-form-item label="关于本车:" class="p_textarea">
+                      <el-input type="textarea" size="mini" v-model="formModel.remark"></el-input>
+                    </el-form-item>
+                    <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
+                    <p class="p_about">附：驾驶员、车辆登记</p>
 
                   </div>
                   <div class="p_table">
                     <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                      <el-input size="mini" disabled v-model="formModel.dirverName"></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="家庭住址:">
+                      <el-input size="mini" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="家庭电话:">
+                      <el-input size="mini" disabled ></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="车架号:">
+                      <el-input size="mini" disabled ></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="配载人员:">
+                      <el-input size="mini" disabled v-model="formModel.userName"></el-input>
                     </el-form-item>
+                    <span>甲方签章:</span>
                   </div>
                   <div class="p_table">
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="身份证号:">
+                      <el-input size="mini" disabled v-model="formModel.driverCardid "></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="随车电话:">
+                      <el-input size="mini" disabled v-model="formModel.dirverMobile"></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="车牌号:">
+                      <el-input size="mini" disabled v-model="formModel.truckIdNumber"></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
+                    <el-form-item label="发动机号:">
+                      <el-input  size="mini" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="司机名称:">
-                      <el-input  placeholder="1" size="mini" disabled>{{formModel.contractNo}}</el-input>
-                    </el-form-item>
+                    <span>乙方签章:</span>
                   </div>
+
                 </div>
                 <div class="pact_bottom"></div>
               </el-form>
@@ -491,7 +494,7 @@
   import popRight from '@/components/PopRight/index'
   import selectType from '@/components/selectType/index'
   import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack   ,getSelectLoadList} from '@/api/operation/track'
-  import {getBatchNoId,postSelectLoadMainInfoList} from '@/api/operation/arteryDelivery'
+  import {getBatchNoId,postSelectLoadMainInfoList,postAddRepertory,postConfirmToCar} from '@/api/operation/arteryDelivery'
   import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
   // import SearchForm from './components/search'
   // import TableSetup from './components/tableSetup'
@@ -523,17 +526,16 @@
           //   operatorOrgid: 1,
           //   operatorTime: '',
           //   operatorUserid: 0
-          //   // transferId: 0
           // },
-          //
           btnsize: 'mini',
           usersArr: [],
+          selected: [],
           //加载状态
           loading: true,
           setupTableVisible: false,
           AddCustomerVisible: false,
           isModify: false,
-          formModel: {
+          formMode1: {
             // arriveOrgName:'',//到达网点
             // truckIdNumber:'',//车牌号码
             // dirverName:'',//司机姓名
@@ -555,6 +557,25 @@
           //  leaveOtherFee:'',//发站其他费
           //  arriveHandlingFee:'',//到站装卸费
           //  arriveOtherFee:'',//到站其他费
+          //   userName //配载人员
+          },
+          sendModel:{
+            "tmsOrderLoad" :{
+              "id":""
+            },
+            tmsOrderLoadFee :{
+              "id":"",
+              "arriveHandlingFee":"",
+              "arriveOtherFee":""
+            },
+            tmsOrderLoadDetailsList :[
+              // {
+              //   id:'',
+              //   actualAmount:'',
+              //   actualWeight:'',
+              //   actualVolume:''
+              // }
+            ]
           },
           searchQuery: {
             "currentPage": 1,
@@ -578,7 +599,7 @@
         orgid () {
           // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
 
-          return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+          // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
         }
       },
       props: {
@@ -589,10 +610,10 @@
         orgid: {
           required: true
         },
-        // isModify: {
-        //   type: Boolean,
-        //   default: false
-        // },
+        isModify: {
+          type: Boolean,
+          default: false
+        },
         info: {
           type: Object,
           default: () => {}
@@ -612,11 +633,23 @@
           // console.log(this.id)
         },
         info(newVal){
+          if(this.isModify){
+          }else{
+
+          }
           this.propsId = this.info.id
-          this.formModel = this.info
+          // this.formModel = this.info
           this.getDetail()
           this.fetchAllCustomer()
           this.fetchSelectLoadMainInfoList()
+        },
+        isModify(newVal){
+          if(this.isModify){
+            this.popTitle = '到车确定'
+
+          }else{
+            this.popTitle = '到车入库'
+          }
         },
         popVisible(newVal, oldVal) {
           if (!this.inited) {
@@ -671,7 +704,6 @@
         },
         getDetail() {
           let id = this.propsId
-          // console.log(id)
           return getLoadDetail(id).then(data => {
             this.trackDetail = Object.assign([], data)
           })
@@ -763,7 +795,7 @@
             return false
           }
           // 判断是否有选中项
-          if(!this.selected.length && type !== 'add'){
+          if(!this.selected.length ){
             this.closeAddCustomer()
             this.$message({
               message: '请选择要操作的项~',
@@ -771,62 +803,48 @@
             })
             return false
           }
-
-          // console.log("this.selected:", this.selected)
-
-
           switch (type) {
             // 添加客户
-            case 'add':
-              this.isModify = false
-              this.selectInfo = {}
-              this.openAddCustomer()
-              break;
-            // 修改客户信息
-            case 'modify':
-              this.isModify = true
-              if(this.selected.length > 1){
-                this.$message({
-                  message: '每次只能修改单条数据~',
-                  type: 'warning'
-                })
-              }
-              this.selectInfo = this.selected[0]
-              this.openAddCustomer()
-              break;
-            // 删除客户
-            case 'delete':
-              let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
-              //=>todo 删除多个
-              let ids = this.selected.map(item => {
-                return item.customerId
-              })
-              ids = ids.join(',')
+            case 'sure':
+              let data
+              if(this.popTitle === '到车确定'){
 
-              this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-                confirmButtonText: '删除',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                deleteSomeCustomerInfo(ids).then(res => {
+                // data = this.sendModel
+                postConfirmToCar(data).then(res => {
                   this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                    message: '到车确定成功'
                   })
-                  this.fetchData()
-                }).catch(err=>{
+                  this.closeMe()
+                })
+              }else{
+                // data.tmsOrderLoad.id = this.formModel.id
+                // data.tmsOrderLoadFee.loadFeeId = this.formModel.loadFeeId
+                this.sendModel.tmsOrderLoad.id = this.formModel.id
+                this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
+                this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveHandlingFee
+                this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
+                this.sendModel.tmsOrderLoadDetailsList = []
+                this.selected.forEach( (value,index,array) => {
+                  this.sendModel.tmsOrderLoadDetailsList.push({
+                      id:value.id,
+                      actualAmount:value.actualAmount,
+                      actualWeight:value.actualWeight,
+                      actualVolume:value.actualVolume
+                    })
+                })
+                data = this.sendModel
+                postAddRepertory(55,data).then(res => {
                   this.$message({
-                    type: 'info',
-                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                    type: 'success',
+                    message: '到车入库成功'
                   })
                 })
-
-              }).catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '已取消删除'
-                })
-              })
+                this.closeMe()
+              }
+              // this.isModify = false
+              // this.selectInfo = {}
+              // this.openAddCustomer()
               break;
             // 导出数据
             case 'export':
@@ -891,7 +909,7 @@
           margin-right: 0;
         }
         .table_export{
-          margin-left: 370px;
+          margin-left: 510px;
         }
         /*.table_ixport{*/
         /*margin-left: 400px;*/
@@ -1135,7 +1153,7 @@
     .top_no{
       position: absolute;
       right: 10px;
-      top: 18px;
+      top: -5px;
       .el-form-item{
         display: flex;
         .el-form-item__content{
@@ -1161,12 +1179,35 @@
       margin: 10px 0 0 25px;
       p{
         display: inline-block;
-        width: 200px;
+        width: 250px;
         border-bottom: 1px solid;
+        padding-left: 10px;
       }
 
-    }
 
+    }
+    .p_cont,.p_input{
+      color: #606266;
+      font-size: 14px;
+
+    }
+    .p_cont{
+      .p_textarea.el-form-item{
+        display: inline-flex;
+        padding-left: 25px;
+        margin-bottom: 0;
+        .el-textarea{
+          width: 250%;
+        }
+      }
+      p.p_about{
+        padding-left: 25px;
+        margin: 10px 0 10px 0;
+      }
+      p{
+        margin-bottom: 5px;
+      }
+    }
     p.p_salf{
       color: #606266;
       font-size: 14px;
@@ -1175,24 +1216,64 @@
     }
     .p_input{
       .el-form-item{
+        margin-bottom: 0;
         .el-form-item__content{
           .el-input.el-input--mini.is-disabled{
-            width: 10%
+            width: 13%;
+            .el-input__inner{
+              background: #fff;
+            }
+
           }
         }
 
       }
     }
     .p_table{
-      /*display: flex;*/
+      float: left;
+      padding-left: 80px;
+      width: 400px;
+      margin-bottom: 150px;
       .el-form-item{
         margin-bottom: 0;
         .el-form-item__content{
           .el-input.el-input--mini.is-disabled{
-            width: 20%
+            width: 59%;
+            .el-input__inner{
+              width: 200px;
+            }
+
           }
+          .el-input.el-input--mini{
+            width: 59%;
+            input.el-input__inner{
+              width: 200px;
+            }
+
+          }
+
+          /*.el-input.el-input--mini.is-disabled{*/
+            /*width: 20%*/
+          /*}*/
         }
 
+      }
+      .el-form-item:last-of-type{
+        margin-bottom: 60px;
+      }
+
+    }
+    .p_table:last-of-type{
+      /*<!--top:-204px;-->*/
+      /*left: 550px;*/
+      float: right;
+      padding-left: 0;
+      /*padding-left: 300px;*/
+      .el-form-item:last-of-type{
+        margin-bottom: 100px;
+      }
+      span{
+        margin-bottom: 100px;
       }
     }
 
@@ -1209,4 +1290,7 @@
 .cont_rules .el-input--mini .el-input__inner{
   background: #409eff;
 }
+  .p_table .el-input--mini .el-input__inner{
+    width: 200px;
+  }
 </style>

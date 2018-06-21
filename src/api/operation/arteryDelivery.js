@@ -11,14 +11,7 @@ export function postArtList(params) {
   })
 }
 
-/**
- * order/load/v1/getBatchNo
- * 获得配载批次号
- * @returns {AxiosPromise<any>}
- */
-export function getBatchNoId(orgid,loadTypeId) {
-  return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
-}
+
 
 /**
  * 查询配载主信息及费用记录列表 shang
@@ -31,8 +24,20 @@ export function postSelectLoadMainInfoList(params) {
     return res.data || {}
   })
 }
-///order/load/v1/confirmToCar/{id}
-// /confirmToCar/{id}
+
+
+/**
+ * /order/load/v1/addRepertory/{typeId}
+ /到车入库
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function postAddRepertory(typeId,params) {
+  return fetch.post('/api-order/order/load/v1/addRepertory/' + typeId, params).then(res => {
+    return res.data || {}
+  })
+}
+
 /**
  * order/load/v1/confirmToCar/{id}
  // /confirmToCar/{id}
@@ -48,14 +53,21 @@ export function postSelectLoadMainInfoList(params) {
  * @param params
  * @returns {Promise<AxiosResponse<any>>}
  */
-export function postConfirmToCar(params) {
-  return fetch.post('/api-order/order/load/v1/confirmToCar', params).then(res => {
-    return res.data || {}
-  })
+export function postConfirmToCar(id,typeId) {
+  return fetch.post('/api-order/order/load/v1/confirmToCar/?id=' + id + '&typeId=' + typeId)
 }
 
+/**
+ * order/load/v1/getBatchNo
+ * 获得配载批次号
+ * @returns {AxiosPromise<any>}
+ */
+export function getBatchNoId(orgid,loadTypeId) {
+  return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
+}
 
 /**
+ * /order/load/v1/cancelLoad/{id}/{loadType}
  * // 根据配载单ID配载类型取消到车
  * @param id
  * @param loadTypeId
@@ -64,7 +76,7 @@ export function postConfirmToCar(params) {
 export function postCancelLoad(id,loadTypeId) {
   return fetch.post('/api-order/order/load/v1/cancelLoad/?id=' + id + '&loadTypeId=' + loadTypeId)
 }
-/**
+/**order/load/v1/cancelPut/{id}/{loadType}
  * 根据配载单ID配载类型取消入库
  * @param id
  * @param loadTypeId
@@ -73,3 +85,5 @@ export function postCancelLoad(id,loadTypeId) {
 export function postCancelPut(id,loadTypeId) {
   return fetch.post('/api-order/order/load/v1/cancelPut/?id=' + id + '&loadTypeId=' + loadTypeId)
 }
+
+

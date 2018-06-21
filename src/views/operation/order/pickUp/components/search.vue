@@ -15,14 +15,6 @@
       <el-form-item label="订单状态：">
         <SelectType v-model="searchForm.orderStatus" type="order_status" />
       </el-form-item>
-      <!--<el-form-item :label="title+'货人'">-->
-          <!--<el-input-->
-              <!--:placeholder="title+'货单位或'+title+'货人'"-->
-              <!--v-model="searchForm.name"-->
-              <!--maxlength="15"-->
-              <!--clearable>-->
-          <!--</el-input>-->
-      <!--</el-form-item>-->
       <el-form-item label="提货批次">
           <el-input
               v-numberOnly
@@ -36,7 +28,7 @@
       <el-input
         v-numberOnly
         placeholder=""
-        maxlength="15"
+        maxlength="8"
         v-model="searchForm.truckIdNumber"
         clearable>
       </el-input>
@@ -45,7 +37,7 @@
       <el-input
         v-numberOnly
         placeholder=""
-        maxlength="10"
+        maxlength="8"
         v-model="searchForm.driverName"
         clearable>
       </el-input>
