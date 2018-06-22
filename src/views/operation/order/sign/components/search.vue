@@ -1,26 +1,30 @@
 <template>
     <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="receipt_searchinfo clearfix">
-         <el-form-item label="开单时间:">
+      <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
             v-model="searchCreatTime"
             type="datetimerange"
+            value-format="yyyy-MM-dd hh:mm:ss"
             align="right"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
         </div>
-          <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
         <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.shipFromOrgid" />
         </el-form-item>
         
         <el-form-item label="签收状态"  prop="signStatus">
-          <selectType v-model="searchForm.signStatus"  type="sign_status"/>
+          <selectType v-model="searchForm.signStatus"  type="sign_status">
+            <!-- <el-option slot="head" label="已签收" value=""></el-option> -->
+          </selectType>
         </el-form-item>
-        <el-form-item label="凭证状态"  prop="recStatus">
-          <selectType v-model="searchForm.thestatus" type="" />
+        <el-form-item label="凭证状态"  prop="signCertificate">
+          <selectType v-model="searchForm.signCertificate" type="sign_certificate" >
+            <!-- <el-option slot="head" label="全部" value=""></el-option> -->
+          </selectType>
         </el-form-item>
         <el-form-item label="运单号" prop="shipSn">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
@@ -68,19 +72,18 @@ export default {
   },
   data () {
     let _this = this
-    const validateFormNumber = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
-       if (value === '' || value === null || !value || value === undefined) {
+    const validateshipSn = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入运单号'))
+      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      } else if (!(reg.test(value))) {
-        callback(new Error('请输入最多20个字符，只能输字母和数字'))
-      } else {
-        callback()
+      }else {
+        callback(new Error('只能输字母和数字'))
       }
     }
 
     return {
-      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       thestatus: '',
       searchForm: {
         shipFromOrgid:'',
@@ -88,34 +91,31 @@ export default {
         shipSn:'',
         shipFromCityCode:'',
         shipToCityCode:'',
-        shipSenderId:'',
-        shipReceiverId:'',
-        signStatus:''
+        signCertificate:230,
+        signStatus:226,
+        startTime:'',
+        endTime:''
       },
       rules: {
         shipSn: [
-          { required: true, message: '请输入用户姓名', trigger: 'change' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+         
+          { required: true, trigger: 'blur', validator: validateshipSn}
         ]
-        // mobile: [{
-        //   //validator: validateFormMobile, trigger: 'blur'
-        //   shipSn: validateFormNumber, trigger: 'change'
-        // }]
       }
     }
   },
   watch: {
-    orgid(newVal){
-      this.searchForm.orgid = newVal
-    }
+    // orgid(newVal){
+    //   this.searchForm.orgid = newVal
+    // }
   },
   mounted () {
-    // this.searchForm.orgid = this.orgid
+    this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
-    getOrgid (id){
-      this.searchForm.orgid = id
-    },
+    // getOrgid (id){
+    //   this.searchForm.orgid = id
+    // },
     getFromCity(city){
      
       this.searchForm.shipFromCityCode = city.id.toString() 
@@ -124,19 +124,20 @@ export default {
       this.searchForm.shipToCityCode =  city.id.toString() 
     },
     onSubmit () {
-      // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
-      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
-      this.searchForm.startTime = this.searchCreatTime[0]
-      this.searchForm.endTime = this.searchCreatTime[1]
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
+      // this.searchForm.startTime = this.searchCreatTime[0]
+      // this.searchForm.endTime = this.searchCreatTime[1]
+      // console.log(this.searchCreatTime[0],this.searchCreatTime[1]);
       this.$emit('change', this.searchForm)
     },
     clearForm () {
       this.searchForm.shipFromOrgid = ''
-      this.searchForm.orgid = this.orgid
+      this.searchForm.signStatus = ''
+      this.searchForm.signCertificate = ''
       this.searchForm.shipSn = ''
-      this.searchForm.shipReceiverId = ''
-      this.searchForm.shipSenderId = ''
-       this.searchForm.searchCreatTime = ''
+      this.searchForm.getFromCity = ''
+      this.searchForm.getToCity = ''
     }
   }
 }
@@ -167,6 +168,9 @@ export default {
           float: none;
       }
   }
+}
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+  width:200px;
 }
 </style>
 

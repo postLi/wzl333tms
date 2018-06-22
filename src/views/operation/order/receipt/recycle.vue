@@ -1,7 +1,6 @@
 <template>
     <div class="tab-content">
-      <SearchForm :orgid="otherinfo.orgid"
-      type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam"   :btnsize="btnsize" />
+      <SearchForm :orgid="otherinfo.orgid" type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
             <el-button type="primary" :size="btnsize"  plain @click="doAction('recycle')">回单回收</el-button>
@@ -428,8 +427,8 @@ export default {
                   this.searchQuery.vo.receiptIds = ids
                   this.dotInfo = ids
                   this.popVisible = true
-                  this.isAccept = true
-                  this.isModify = false
+                  // this.isAccept = true
+                  this.isModify = true
                 }else{
                   this.$message.warning('请选择未回收项~')
                 }
@@ -470,9 +469,12 @@ export default {
           this.popVisible = false;
             // this.addDoTotVisible = false
           },
-        setTable(){},
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        setTable(){}
        
-        clickDetails(){}
+       
     }
 }
 </script>

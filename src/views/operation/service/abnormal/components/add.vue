@@ -4,7 +4,7 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
-          <el-form-item label="运单号" prop="shipSn">
+          <el-form-item label="运单号" prop="shipSn" class="label">
             <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           
@@ -38,7 +38,7 @@
           <el-form-item label="登记网点" prop="orgId"  >
             <SelectTree v-model="form.orgId" :disabled="true"/>
           </el-form-item>
-          <el-form-item label="登记人" prop="registerName" >
+          <!-- <el-form-item label="登记人" prop="registerName" >
             <el-autocomplete
               popper-class="my-autocomplete"
               v-model="form.registerName"
@@ -48,27 +48,30 @@
                 <div class="name">{{ item.name }}</div>
               </template>
             </el-autocomplete>
+          </el-form-item> -->
+           <el-form-item label="登记人" prop="registerName"  >
+            <SelectTree v-model="form.registerName" :disabled="true"/>
           </el-form-item>
-          <el-form-item label="异常类型" prop="abnormalType" >
+          <el-form-item label="异常类型" prop="abnormalType" class="label">
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常件数" prop="abnormalAmount" >
             <el-input v-model="form.abnormalAmount" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="处理网点" prop="orgName" >
+          <el-form-item label="处理网点" prop="orgName" class="label">
             <SelectTree v-model="form.orgName" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常金额" prop="registerFee" >
-            <el-input v-model="form.registerFee" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input v-model="form.registerFee" maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="责任网点" prop="dutyOrgName" >
             <SelectTree v-model="form.dutyOrgName" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
-          <el-form-item class="driverRemarks" label="异常描述" prop="abnormalDescribe" >
-            <el-input type="textarea" maxlength="125" v-model="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
-            <p class="ts">注意：问题描述最多输入200字</p>
-            <p><label>图片上传</label><em class="ts">注：最多可上传6张图片，每张图片不能大于5M</em></p>
+          <el-form-item class="driverRemarks label ms" label="异常描述" prop="abnormalDescribe" >
+            <el-input type="textarea" maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
+            <p class="ts">注意：问题描述最多输入200字</p>
+            <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
           <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck || isDeal}">
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" :disabled="isCheck || isDeal ? true : false"/>
           </div>
@@ -98,11 +101,11 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item class="driverRemarks" label="处理意见" prop="disposeOpinion" >
+          <el-form-item class="driverRemarks ms" label="处理意见" prop="disposeOpinion" >
             <el-input type="textarea" maxlength="125" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
-            <p class="ts">注意：问题描述最多输入200字</p>
-            <p><label>图片上传</label><em class="ts">注：最多可上传6张图片，每张图片不能大于5M</em></p>
           </el-form-item>
+            <p class="ts">注意：问题描述最多输入200字</p>
+            <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
           <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck}">
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
           </div>
@@ -175,31 +178,24 @@ export default {
   },
   data () {
     const _this = this
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
-        }
-        callback();
-      }
-    }
-
-    const validateFormMobile = function (rule, value, callback) {
-      if(REGEX.MOBILE.test(value)){
+    const validateNameSn = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入异常件数'))
+      }else if (value.length > 5) {
+        callback(new Error('最多可输入5位'))
+      }else if (REGEX.ONLY_NUMBER_GT.test(value)) {
         callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
+      }else {
+        callback(new Error('只能输入数字从1开始'))
       }
     }
-
-    const validateFormNumber = function (rule, value, callback) {
-      console.log('rule:', rule)
-      _this.form[rule.field] = value.replace(REGEX.NO_NUMBER, '')
-      callback()
+    const validatereg = function(rule, value, callback) {
+      if(REGEX.ONLY_NUMBER.test(value)) {
+        callback()
+      }else {
+        callback(new Error('只能输入数字'))
+      }
     }
-
     return {
       form: {
         "abnormalAmount": "",
@@ -226,16 +222,27 @@ export default {
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
-        driverName: [
-          { required: true, message: '请输入司机名称', trigger: 'blur' }
+        abnormalAmount: [
+          { required: true, trigger: 'blur', validator: validateNameSn }
         ],
-        orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+        abnormalType: [
+          { required: true, message: '必选', trigger: 'blur' }
         ],
-        driverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-          // { validator: validateFormNumber, trigger: 'change'}
-        ]
+        registerFee: [
+          { required: true, trigger: 'blur', validator: validatereg }
+        ],
+        abnormalDescribe: [
+          { required: true, message: '必填', trigger: 'blur' }
+        ],
+        dutyOrgName: [
+          { required: true, message: '请选择责任网点', trigger: 'blur' }
+        ],
+        orgName: [
+          { required: true, message: '请选择处理网点', trigger: 'blur' }
+        ],
+        disposeOpinion: [
+          { required: true, message: '必填', trigger: 'blur' }
+        ],
       },
       // fileList2:[],
       disabled:false,
@@ -488,10 +495,23 @@ export default {
         margin-right: -17px;
       }
     }
+    .ms{
+      width:100%;
+    }
     .el-form--inline .driverRemarks{
       width: 600px;
+      // position:relative;
+      
     }
-
+    .wz{
+        font-size:12px;
+        color:orange;
+        a{
+          color: #606266;
+          margin:0 15px;
+        }
+        
+      }
     .el-date-editor.el-input, .el-date-editor.el-input__inner{
       width: 100%;
     }
@@ -557,7 +577,6 @@ export default {
        
       }
       .result{
-        
         position:absolute;
         top:0px;
         right:0px;
@@ -573,7 +592,16 @@ export default {
     }
     .ts{
       color:orange;
+      margin-left:77px;
+      margin-bottom: 15px;
+      font-size:12px;
     }
+  }
+  .label{
+    label{
+      color:red;
+    }
+    
   }
   // .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
   //   margin-bottom: 6px;

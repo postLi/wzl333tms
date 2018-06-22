@@ -387,7 +387,9 @@ export default {
             this.fetchAllreceipt()
         },
         setTable(){},
-        clickDetails(){},
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
         getSelection(){}
 
     }

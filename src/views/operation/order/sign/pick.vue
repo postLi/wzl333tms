@@ -1,9 +1,9 @@
 <template>
     <div class="tab-content" @success="fetchAllreceipt">
-        <SearchForm :orgid="otherinfo.orgid" title="寄出" type="send_status" status="sendStatus" @change="getSearchParam" :btnsize="btnsize" />
+      <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize"  plain @click="doAction('pick')">签收</el-button>
+        <el-button type="primary" :size="btnsize"  plain @click="doAction('pick')" >签收</el-button>
         <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消签收</el-button>
         <el-button type="primary" :size="btnsize"  plain @click="doAction('amend')">修改</el-button>
         <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
@@ -102,35 +102,35 @@
             >
           </el-table-column>
           <el-table-column
-            prop="form.sender_customer_name"
+            prop="sender_customer_name"
             label="发货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="form.sender_customer_mobile"
+            prop="sender_customer_mobile"
             label="发货人电话"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="form.sender_detailed_address"
+            prop="sender_detailed_address"
             label="发货人地址"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="form.receiver_customer_name"
+            prop="receiver_customer_name"
             label="收货人"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="form.eceiver_customer_mobile"
+            prop="receiver_customer_mobile"
             label="收货人电话"
             width="120"
             sortable
@@ -165,7 +165,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="shipStatusName"
+            prop="signStatusName"
             label="签收状态"
             width="120"
             sortable
@@ -193,7 +193,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="signCocumentTypeId"
+            prop="signCocumentTypeName"
             label="签收证件"
             width="120"
             sortable
@@ -201,7 +201,7 @@
           </el-table-column>
           <el-table-column
             prop="documentNum"
-            label="签收号码"
+            label="证件号码"
             width="120"
             sortable
             >
@@ -470,7 +470,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop="transferOrgid" pppp
+            prop="transferOrgName" 
             label="中转网点"
             width="120"
             sortable
@@ -529,7 +529,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      <Addsign :issender="true" :isModify="isModify" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
+      <Addsign :issender="true" :isPick="isPick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
       <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify"></Addbatch>
       <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
@@ -560,7 +560,7 @@ export default {
         }
     },
     mounted () {
-        this.searchQuery.vo.orgId = this.otherinfo.orgid
+        // this.searchQuery.vo.orgId = this.otherinfo.orgid
         Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
             this.loading = false
             // this.licenseTypes = resArr[1]
@@ -578,9 +578,12 @@ export default {
                 setupTableVisible: false,
                 popVisible:false,
                 isModify: false,
+                isPick:false,
                 dotInfo: [],
                 repertoryId:'',
                 signId:'',
+                disabled:false,
+                signStatus:'',
                 // loading:false,
                 searchQuery: {
                   "currentPage":1,
@@ -601,19 +604,27 @@ export default {
                 this.dataset = data.list
                 this.total = data.total
                 this.signId = data.signId
+                this.signStatus = data.signStatus
             })
         },
         fetchData () {
           this.fetchAllreceipt()
         },
+         // 获取组件返回的搜索参数
+        getSearchParam (searchParam) {
+            // 根据搜索参数请求后台获取数据
+            Object.assign(this.searchQuery.vo, searchParam)
+            //this.searchQuery.vo.orgId = searchParam.orgid
+            this.fetchData()
+        },
         handlePageChange (obj) {
             this.searchQuery.currentPage = obj.pageNum
             this.searchQuery.pageSize = obj.pageSize
         },
-        getSearchParam (searchParam) {
-          Object.assign(this.searchQuery.vo, searchParam)
-          this.fetchAllreceipt()
-        },
+        // getSearchParam (searchParam) {
+        //   Object.assign(this.searchQuery.vo, searchParam)
+        //   this.fetchAllreceipt()
+        // },
         doAction (type) {
           if(type==='import'){
             this.showImport()
@@ -639,8 +650,9 @@ export default {
                 }) */
                 this.dotInfo = ids
                 // console.log(ids);
-                this.popVisible = true
-                this.isModify = false
+                this.isModify = true
+                this.openAddBatch()
+                this.isPick = false
               }else{
                 this.repertoryId = this.selected[0]
                 this.openAddSign()
@@ -655,7 +667,7 @@ export default {
                       type: 'warning'
                   })
                 }else{
-                  this.isModify = true
+                  this.isPick = true
                   this.repertoryId = this.selected[0]
                   this.id = this.selected[0].signId
                   console.log(this.id);
@@ -699,13 +711,15 @@ export default {
           this.AddSignVisible = false
         },
         openAddBatch () {
-          this.AddBatchVisible = true
+          this.popVisible = true
         },
         closeAddBacth () {
           // this.AddBacthVisible = false
            this.popVisible = false;
         },
-        clickDetails(){},
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
         getSelection(selected){
           this.selected = selected
         }

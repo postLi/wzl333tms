@@ -443,7 +443,9 @@ export default {
           this.$refs.multipleTable.clearSelection()
         },
         setTable(){},
-        clickDetails(){},
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
         getSelection(selected){
           this.selected = selected
         }

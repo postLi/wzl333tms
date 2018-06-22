@@ -1,7 +1,7 @@
 <template>
     <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="abnormal_searchinfo clearfix">
       
-        <el-form-item label="登记时间:">
+        <!-- <el-form-item label="登记时间:">
           <div class="block">
             <el-date-picker
               v-model="searchCreatTime"
@@ -14,9 +14,22 @@
             >
             </el-date-picker>
           </div>
-            <!--<SelectTree v-model="searchForm.orgid" />-->
-        </el-form-item>
-        
+        </el-form-item> -->
+
+        <el-form-item label="登记时间:">
+        <div class="block">
+          <el-date-picker
+            v-model="searchCreatTime"
+            type="datetimerange"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            align="right"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
+      </el-form-item>
+
+
         <el-form-item label="运单号">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
@@ -38,7 +51,7 @@
 import { REGEX }  from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-
+import { parseTime }  from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -68,12 +81,11 @@ export default {
     }
 
     return {
-      pickerOptions1:{},
-      searchCreatTime: [],
+      searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
         orgId: '',//网点
         shipSn:'' ,//  运单号
-        abnormalStatus:'',//异常状态
+        abnormalStatus:117,//异常状态
         // name: '',
         // mobile: '',
         registerTime:'',//登记时间
@@ -106,8 +118,10 @@ export default {
       this.searchForm.orgId = id
     },
     onSubmit () {
-      this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
-      this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
+      // this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
+      // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
       this.$emit('change', this.searchForm)
     },
     clearForm () {
@@ -148,6 +162,9 @@ export default {
           float: none;
       }
   }
+}
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+  width:200px;
 }
 </style>
 

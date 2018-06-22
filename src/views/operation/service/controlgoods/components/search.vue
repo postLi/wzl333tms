@@ -103,7 +103,7 @@ export default {
     }
   },
   mounted () {
-    this.searchForm.orgid = this.orgid
+    this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
     getFromCity(city){
@@ -169,6 +169,9 @@ export default {
           float: none;
       }
   }
+}
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+  width:200px;
 }
 </style>
 

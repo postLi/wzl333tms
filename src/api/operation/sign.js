@@ -14,7 +14,18 @@ export function postPickuplist(params) {
     return res.data || {}
   })
 }
-
+/**
+ * 自提取消签收,需要传递签收id,库存id
+ * {
+	"repertoryId":25,
+	"signId":37
+}
+ */
+export function postCancelPickupSign(id) {
+  return fetch.post('/api-order/order/sign/v1/cancelPickupSign', id).then(res => {
+    return res.data || {}
+  })
+}
 /**
  * 自提签收,需要传递库存id
  * 提货签收
@@ -39,18 +50,7 @@ export function postPickupSign(id) {
 export function putXiugai(id,params) {
   return fetch.post('/api-order/order/sign/v1/?id=' + id,params)
 }
-/**
- * 自提取消签收,需要传递签收id,库存id
- * {
-	"repertoryId":25,
-	"signId":37
-}
- */
-export function postCancelPickupSign(id) {
-  return fetch.post('/api-order/order/sign/v1/cancelPickupSign', id).then(res => {
-    return res.data || {}
-  })
-}
+
 /**
  * 送货签收列表
  * {
@@ -65,7 +65,18 @@ export function postDeliveryList(params) {
     return res.data || {}
   })
 }
-
+/**
+ * 取消送货签收,中转签收,需要传递运单id,签收id
+ * {
+	"signId":26,
+	"shipId":32
+}
+ */
+export function postCancelSign(id) {
+  return fetch.post('/api-order/order/sign/v1/cancelSign', id).then(res => {
+    return res.data || {}
+  })
+}
 /**
  * 送货签收中转签收
  * 送货签收,中转签收,需要传递运单id,子运单id
@@ -83,18 +94,6 @@ export function postDeliveryList(params) {
  */
 export function postSign(id) {
   return fetch.post('/api-order/order/sign/v1/sign', id).then(res => {
-    return res.data || {}
-  })
-}
-/**
- * 取消送货签收,中转签收,需要传递运单id,签收id
- * {
-	"signId":26,
-	"shipId":32
-}
- */
-export function postCancelSign(id) {
-  return fetch.post('/api-order/order/sign/v1/cancelSign', id).then(res => {
     return res.data || {}
   })
 }
@@ -127,9 +126,7 @@ export function postTransferList(params) {
 
  */
 export function postBatchSign(id) {
-  return fetch.post('/api-order/order/sign/v1/batchSign', id).then(res => {
-    return res.data || {}
-  })
+  return fetch.post('/api-order/order/sign/v1/batchSign', id)
 }
 /**
  * 批量提货签收
@@ -146,7 +143,5 @@ export function postBatchSign(id) {
 }
  */
 export function postPickupBatchSign(ids) {
-  return fetch.post('/api-order/order/sign/v1/pickupBatchSign', ids).then(res => {
-    return res.data || {}
-  })
+  return fetch.post('/api-order/order/sign/v1/pickupBatchSign', ids)
 }

@@ -613,9 +613,11 @@ export default {
           // 清除选中状态，避免影响下个操作
           this.$refs.multipleTable.clearSelection()
         },
-        
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
         setTable(){},
-        clickDetails(){}
+       
 
     }
 }

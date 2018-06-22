@@ -55,7 +55,7 @@
 import PopFrame from '@/components/PopFrame/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import {postPickuplist,postPickupBatchSign } from '@/api/operation/sign'
+import {postPickupBatchSign,postBatchSign } from '@/api/operation/sign'
 import { REGEX }  from '@/utils/validate'
 import { mapGetters } from 'vuex'
 import { exportWithIframe } from '@/utils';
@@ -96,7 +96,7 @@ export default {
       type: Boolean,
       default: false
     },
-    isAccept: {
+    isSongh: {
       type: Boolean,
       default: false
     }
@@ -104,27 +104,21 @@ export default {
   
   data() {
     return {
-      searchCreatTime: [ +new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [ new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickOption2:'',
       form:{
-        "signTime":'',
         "num":'',
-        // "signCertificate":'',
-        // "documentNum":'',
-        // "signRemark":'',
-        // "signTime":'',
-        // "agencyFund":'',
-        // "signCocumentTypeName":'',
-        // "repertoryId":'',
-        // "shipArrivepayFee":''
-        "repertoryIds":'',
+        "repertoryIds":[],
         "signTime":"",
         "signName":"",
         "signCocumentTypeId":'',
         "documentNum":"",
         "signTypeId":'',
         "remark":'',
-        "signPic":''
+        "signPic":'',
+
+        "shipIds":[],
+	      "childShipIds":[],
       },
       formLabelWidth: '80px',
       tooltip: false,
@@ -150,7 +144,7 @@ export default {
     }
   },
   mounted() {
-   
+    
   },
   watch: {
     isDepMain(){
@@ -158,7 +152,7 @@ export default {
     },
     dotInfo (newVal) {
       // this.form = this.dotInfo
-      console.log(this.dotInfo);
+      // console.log(this.dotInfo);
       // this.form = this.dotInfo
       this.form.num = this.dotInfo.length
       let total = 0
@@ -190,16 +184,6 @@ export default {
       },
       immediate: true
     },
-    // isAccept: {
-    //   handler(newVal) {
-    //     if(!this.isAccept){
-    //       this.popTitle = '回单接收'
-    //       this.form.pageType = this.searchQuery.vo.pageType
-    //       console.log(888);
-    //     }
-    //   },
-    //   immediate: true
-    // },
     createrId(newVal){
     }
     
@@ -221,22 +205,42 @@ export default {
       if(valid){
         this.loading = true
         let data = Object.assign({},this.form)
-        data.repertoryIds = this.dotInfo.map(el => {
+         data.repertoryIds = this.dotInfo.map(el => {
           return el.repertoryId
         })
         // console.log();
         let promiseObj
-        promiseObj = postPickupBatchSign(data)//批量
+       
+        if(this.isModify){
+          promiseObj = postPickupBatchSign(data)//自提批量
+           console.log(66);
+        }
+        else if(this.isSongh){
+          data.shipIds = this.dotInfo.map(el=>{
+            return el.shipId
+          })
+          data.childShipIds = this.dotInfo.map(el=>{
+            return el.childShipId
+          })
+          promiseObj = postBatchSign(data)//送货批量
+        }
         promiseObj.then(res=>{
-          this.$alert('保存成功', '提示', {
-            confirmButtonText: '确定',
-            callback: action => {
+            console.log(res);
+            if(res.status === 200){
+              this.$alert('保存成功', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.loading = false
+                  this.closeMe()
+                  this.$emit('success')
+                }
+              })
+            }else if(res.status === 100) {
               this.loading = false
+              this.$message.warning(res.text)
               this.closeMe()
-              this.$emit('success')
             }
           })
-        })
       }else{
         return false
       }

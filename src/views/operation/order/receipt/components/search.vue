@@ -1,6 +1,6 @@
 <template>
     <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="receipt_searchinfo clearfix">
-         <el-form-item label="开单时间:">
+      <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
             v-model="searchCreatTime"
@@ -74,14 +74,13 @@ export default {
   },
   data () {
     let _this = this
-    const validateFormNumber = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
-       if (value === '' || value === null || !value || value === undefined) {
+    const validateshipSn = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入运单号'))
+      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      } else if (!(reg.test(value))) {
-        callback(new Error('请输入最多20个字符，只能输字母和数字'))
-      } else {
-        callback()
+      }else {
+        callback(new Error('只能输字母和数字'))
       }
     }
 
@@ -98,10 +97,9 @@ export default {
         shipReceiverId:''
       },
       rules: {
-        mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
-          shipSn: validateFormNumber, trigger: 'change'
-        }]
+        shipSn: [
+          { required: true, trigger: 'blur', validator: validateshipSn}
+        ]
       }
     }
   },
@@ -169,6 +167,9 @@ export default {
           float: none;
       }
   }
+}
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+  width:200px;
 }
 </style>
 

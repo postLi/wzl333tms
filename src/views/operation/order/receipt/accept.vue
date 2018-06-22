@@ -417,7 +417,7 @@ export default {
                   this.dotInfo = ids
                   this.popVisible = true
                   this.isAccept = true
-                  this.isModify = false
+                  // this.isModify = false
                 }else{
                   this.$message.warning('请选择未接收项~')
                 }
@@ -459,9 +459,11 @@ export default {
           this.popVisible = false;
             // this.addDoTotVisible = false
           },
-        setTable(){},
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
+        setTable(){}
        
-        clickDetails(){}
     }
 }
 </script>

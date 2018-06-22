@@ -46,7 +46,7 @@ export default {
         data() {
             return {
                 btnsize: 'mini',
-                component: 'Send',
+                component: 'Recycle',
             }
         },
         methods: {

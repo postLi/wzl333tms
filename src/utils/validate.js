@@ -103,6 +103,8 @@ export const REGEX = {
 //       LETTER_AND_NUMBER_AND_PUNCTUATION : /(^[a-zA-Z]+$)&(^[0-9]+$)(^[~\!@#\$%\^\&\*\(\)_\+\{\}\|\:\"<>\?`\-\=\[\]\\;\',\.\/]+$)/,
   // 纯数字从1开始
   ONLY_NUMBER_GT: /^[1-9]\d*$/,
+  // 不可以为空格
+  KONGE: /^[^ ]{6,16}$/,
   // 只含有英文字母、数字和下划线
   ONLY_ENGLISH_NUMBER: /^[A-Za-z0-9_]+$/,
   // 国内电话(区号-号码)

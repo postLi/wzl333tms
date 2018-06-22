@@ -12,7 +12,13 @@
           <td>
             <el-form-item label="开单日期:" prop="createTime">
                 <el-input maxlength="20" v-model="form.createTime" auto-complete="off" :disabled="true"></el-input>
-              </el-form-item>
+            </el-form-item>
+            <!-- <el-table-column
+              sortable
+              width="120"
+              label="开单日期">
+              <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+            </el-table-column> -->
           </td>
           <td>
             <el-form-item label="回单号:" prop="shipReceiptSn">
@@ -65,7 +71,7 @@
               </el-form-item> -->
           </td>
           <td>
-            <el-form-item label="交接方式:" prop="signCocumentTypeId" >
+            <el-form-item label="交接方式:" prop="shipDeliveryMethodName" >
               <SelectType v-model="form.shipDeliveryMethodName" type="ship_delivery_method" :disabled="true"/>
             </el-form-item>
           </td>
@@ -83,7 +89,7 @@
         <tr>
           <td>
             <el-form-item label="签收人:" prop="shipsignNameSn">
-                <el-input maxlength="20" v-model="form.shipsignNameSn" auto-complete="off"></el-input>
+                <el-input maxlength="10" v-model="form.shipsignNameSn" auto-complete="off"></el-input>
               </el-form-item>
           </td>
           <td>
@@ -92,8 +98,8 @@
             </el-form-item>
           </td>
           <td>
-            <el-form-item label="证件号码:" prop="shipArrivepayFee">
-              <el-input maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
+            <el-form-item label="证件号码:" prop="documentNum">
+              <el-input v-model="form.documentNum" auto-complete="off"></el-input>
             </el-form-item>
           </td>
           <td>
@@ -104,28 +110,29 @@
         </tr>
         <tr>
           <td>备注</td>
-          <td colspan="7"><input type="text" v-model="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%"/></td>
+          <td colspan="7" prop="remark" ><input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%"/></td>
         </tr>
         <tr style="height:152px">
           <td>签收凭证</td>
           <td colspan="7" class="imgshow">
-            
-            
+            <div class="clearfix uploadcard">
+              <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.signPic"/>
+            </div>
           </td>
         </tr> 
       </table>
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">修改签收</el-button>
-      <el-button type="primary" @click="submitForm('ruleForm')">签 收</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')" v-if="isPick">修改签收</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')" v-if="!isPick">签 收</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import {postPickuplist,postPickupSign,putXiugai } from '@/api/operation/sign'
+import {postPickuplist,postPickupSign,putXiugai,postSign } from '@/api/operation/sign'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -155,6 +162,14 @@ export default {
       type: Boolean,
       default: false
     },
+    isPick: {
+      type: Boolean,
+      default: false
+    },
+    isDelivery: {
+      type: Boolean,
+      default: false
+    },
     info: {
       type: Object,
       default: () => {}
@@ -170,11 +185,37 @@ export default {
       ])
   },
   data () {
-    const validateusername = function (rule, value, callback) {
-      if(isvalidUsername(value)){
+    const validateNum = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入证件号码'))
+      }else if (value.length > 20) {
+        callback(new Error('最多可输入20位'))
+      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      } else {
-        callback(new Error('用户名只能由中文，数字，字母组成'))
+      }else {
+        callback(new Error('只能输入字母和数字'))
+      }
+    }
+    const validateNameSn = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入签收人'))
+      }else if (value.length > 10) {
+        callback(new Error('最多可以输入10位字符'))
+      }else if (REGEX.USERNAME.test(value)) {
+        callback()
+      }else {
+        callback(new Error('不可以输入特殊字符和空格'))
+      }
+    }
+    const validateremark = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入备注'))
+      }else if (value.length > 250) {
+        callback(new Error('最多可以输入250位字符'))
+      }else if (REGEX.KONGE.test(value)) {
+        callback()
+      }else {
+        callback(new Error('不可以输入空格'))
       }
     }
     return {
@@ -185,15 +226,16 @@ export default {
       pickOption2:'',
       form:{},
       dataform:{},
+      childShipId:'',
       // getrepertoryId:'',
       form: {
         "repertoryId":'',
         "signTime":"",
         "signName":"",
-        "signCocumentTypeId":'',
+        "signCocumentTypeId":96,
         "shipsignNameSn": "",
         "documentNum":"",
-        "signTypeId":'',
+        "signTypeId":99,
         "remark":"",
         "signPic":""
       },
@@ -201,34 +243,40 @@ export default {
         "repertoryId":'',
         "signTime":"",
         "signName":"",
-        "signCocumentTypeId":'',
+        "signCocumentTypeId":96,
         "shipsignNameSn": "",
         "documentNum":"",
-        "signTypeId":'',
+        "signTypeId":99,
         "remark":"",
         "signPic":"",
         "signId":""
       },
+      devobj:{
+        "childShipId":"",//子运单id
+      },
       rules: {
-        shipsignNameSn: [
-          { required: true, message: '请输入签收人', trigger: 'blur' },
-          { max: 1, message: '不能超过30个字符', trigger: 'blur' }
+        shipsignNameSn: [   
+          { required: true, trigger: 'blur', validator: validateNameSn }
+        ],
+        signCocumentTypeId:[
+          { required: true, message: '请选择签收证件', trigger: 'blur' },
+        ],
+        documentNum:[   
+          { required: true, trigger: 'blur', validator: validateNum }
+        ],
+        signTypeId:[
+          { required: true, message: '请选择签收类型', trigger: 'blur' },
+        ],
+        remark:[
+          // { required: true, message: '请输入签收备注', trigger: 'blur' },
+           { required: true, trigger: 'blur', validator: validateremark }
         ]
       },
       formLabelWidth: '100px',
       tooltip: false,
-      rules: {
-      },
       popTitle: '签收录入',
-      orgArr: [],
-      rolesArr: [],
-      departmentArr: [],
       loading: false,
-      departments: [],
-      groups: [],
       inited: false,
-      plId:''
-      // disabled:false
     }
   },
   mounted () {
@@ -236,10 +284,8 @@ export default {
     if(!this.inited){
       this.inited = true
       this.initInfo()
-
-     
     }
-    
+
   },
   watch: {
     // dotInfo (newVal) {
@@ -256,10 +302,7 @@ export default {
       this.obj.signTypeId = this.repertoryId.signTypeId
       this.obj.remark = this.repertoryId.remark
       this.obj.signPic = this.repertoryId.signPic
-
-      // this.chanshu()
-      console.log(this.form);
-      // console.log(this.repertoryId);
+      console.log('repertoryId:', this.form, newVal)
     },
     
     popVisible (newVal, oldVal) {
@@ -271,39 +314,28 @@ export default {
     orgid (newVal) {
       this.form.orgid = newVal
     },
-    isModify: {
+    isPick: {
       handler(newVal) {
-        if(this.isModify){
-          this.popTitle = '修改签收'
-          // repertoryId()
-          // postPickuplist(this.obj.signId).then(res => {
-          //   this.form = res;
-          // })
+        if(this.isPick){
+          this.popTitle = '自提修改签收'
         }else{
-          this.popTitle = '签收录入'
-          //  repertoryId()
-          // this.form.orgId = this.orgid
-          // this.form.registerTime = new Date();
-          // this.dengji();   
+          this.popTitle = '自提签收录入' 
         }
       },
       immediate: true
-    }
-    
+    },
+    isDelivery:{
+      handler(newVal) {
+        if(!this.isDelivery){
+          this.popTitle = '送货修改签收'
+        }else{
+          this.popTitle = '送货签收录入' 
+        }
+      },
+    },
+    immediate: true
   },
   methods: {
-    // chanshu(){
-    //   this.form.repertoryId = this.repertoryId.repertoryId
-    //   this.form.signTime = this.repertoryId.signTime
-    //   this.form.signName = this.repertoryId.signName
-    //   this.form.signCocumentTypeId = this.repertoryId.signCocumentTypeId
-    //   this.form.shipsignNameSn = this.repertoryId.shipsignNameSn
-    //   this.form.documentNum = this.repertoryId.documentNum
-    //   this.form.signTypeId = this.repertoryId.signTypeId
-    //   this.form.remark = this.repertoryId.remark
-    //   this.form.signPic = this.repertoryId.signPic
-    //   // this.obj.id = this.id
-    // },
     reset () {
       this.$refs['ruleForm'].resetFields()
     },
@@ -357,28 +389,29 @@ export default {
       this.form.signTime = this.searchCreatTime[0]
       this.$refs[ruleForm].validate((valid) => {
         if(valid){
-          // this.form.orgid = this.otherinfo.orgid
-          // this.loading = true
-          // this.disabled= true
-          
           let data = Object.assign({},this.obj)
           for(let i in data){
             data[i] = this.form[i]
           }
-          // data = this.id
-          // data.repertoryId = this.repertoryId
-          console.log(data);
-           
+          data.childShipId = this.repertoryId.childShipId
+          data.shipId = this.repertoryId.shipId
           let promiseObj
-          if(this.isModify){
-           
+          if(this.isPick){
             promiseObj = putXiugai(this.id,data)
-            console.log(this.id);
-          } else {
-            promiseObj = postPickupSign(data)//不批量
+            console.log(data);
+            
           }
-          // promiseObj = postPickupSign(data)
+          else if(this.isDelivery){
+           
+            promiseObj = postSign(data)//不批量
+            console.log(666);
+          }
+          else{
+            promiseObj = postPickupSign(data)//不批量
+            // console.log(666);
+          }
           promiseObj.then(res=>{
+            // console.log(res);
             if(res.status === 200){
               this.$alert('保存成功', '提示', {
                 confirmButtonText: '确定',
@@ -390,7 +423,7 @@ export default {
               })
             }else if(res.status === 100) {
               this.loading = false
-              this.$message.warning('不可重复操作~')
+              this.$message.warning(res.text)
               this.closeMe()
             }
           })
@@ -477,6 +510,9 @@ export default {
         font-size:14px;
         text-align :center;
         background: #f5f7fa;
+        // label{
+        //   background:#fff;
+        // }
         
         input{
           height: 48px;
@@ -499,9 +535,21 @@ export default {
         }
       }
       .imgshow{
-        .uploadcard{
-          float:left;
+        .el-upload-list--picture .el-upload-list__item{
+            overflow: hidden;
+            z-index: 0;
+            background-color: #fff;
+            border: 1px solid #c0ccda;
+            border-radius: 6px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-top: 10px;
+            padding: 10px 10px 10px 90px;
+            height: 92px;
+            width: 100px;
+            float: left;
         }
+       
       }
     }
   }

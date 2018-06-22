@@ -574,7 +574,9 @@ export default {
         },
         
         setTable(){},
-        clickDetails(){},
+        clickDetails(row, event, column){
+          this.$refs.multipleTable.toggleRowSelection(row)
+        },
         getSelection(){}
 
     }

@@ -109,7 +109,6 @@ export default {
       popTitle: '',
       loading:false,
       type:''
-  
     }
   },
   computed: {
@@ -151,7 +150,7 @@ export default {
     },
     isAccept: {
       handler(newVal) {
-        if(!this.isAccept){
+        if(this.isAccept){
           this.popTitle = '回单接收'
           this.form.pageType = this.searchQuery.vo.pageType
           console.log(888);
