@@ -6,7 +6,7 @@
       </div>
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="批次详情" name="first" height="100%">
+          <el-tab-pane label="批次详情" name="first">
             <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second" >
@@ -62,8 +62,8 @@
         </el-tabs>
       </div>
     </template>
-    <div slot="footer" class=" stepFrom" v-if="isFootEdit">
-      <el-form :inline="true" :model="formModel" :rules="ruleForm" ref="formModel" label-width="100px">
+    <div slot="footer" class="dialog-footer stepFrom" v-if="isFootEdit">
+      <el-form inline :model="formModel" :rules="ruleForm" ref="formModel" label-width="80px">
         <el-form-item label="类型" prop="loadStatus">
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
@@ -74,10 +74,13 @@
         <el-form-item label="操作信息" prop="operatorInfo">
           <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
+       <!--  <el-form-item>
+          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
+        </el-form-item> -->
       </el-form>
        <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
     </div>
-    <div slot="footer" class="" v-else="isFootEdit">
+    <div slot="footer" class="dialog-footer" v-else="isFootEdit">
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -228,7 +231,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .icon_man {
   background-image: url(../../../../../assets/icom/human.svg);
   background-size: 24px;
@@ -254,7 +257,59 @@ export default {
   background-color: #E9F3FA;
   line-height: 36px;
   height: 36px;
+  width: 100%;
   padding: 0 10px;
+  position: fixed;
+  top: 30px;
+  left: 0;
+  z-index: 34;
+}
+
+.editInfoPop_content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fbfbfb;
+
+  .el-tabs__header {
+    position: fixed;
+    z-index: 34;
+    top: 66px;
+    left: 0;
+    padding: 0 10px;
+    background-color: #ffffff;
+    width: 100%;
+  }
+  .tab_box {
+    position: relative;
+    .tab_box_item {
+      padding: 0 0 0 0;
+      .stepItem_title {
+        font-size: 14px;
+        color: #333;
+        width: 110%;
+        height: 36px;
+        line-height: 36px;
+      }
+      .el-step.is-vertical {
+        padding-left: 20px;
+        .stepItem {
+          width: 110%;
+          color: #666;
+          font-size: 14px;
+          padding: 10px;
+          margin: 0 0 3px 0;
+          background-color: #ffffff;
+          box-shadow: 0px 0px 10px #eaeaea;
+          transition: 0.4s;
+        }
+        .stepItem:hover {
+          transition: 0.2s;
+          background-color: #E9F3FA;
+        }
+      }
+    }
+  }
 }
 .stepFrom {
   background-color:#eee;
@@ -292,6 +347,7 @@ export default {
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
+
 @-webkit-keyframes fadeInRight {
   from {
     opacity: 0;
@@ -324,57 +380,153 @@ export default {
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
-.editInfoPop_content {
-  padding: 0 10px;
-  width: 100%;
-  height: 93%;
-  .el-tabs {
-    height: 100%;
-    .el-tabs__content {
-      height: 100%;
-    }
-  }
-  .info {
-    background-color: rgb(238, 241, 246);
-    margin-top: -30px;
-    padding: 10px;
-  }
-  .info p {
-    font-weight: 900;
-    font-size: 16px;
-    margin-bottom: 0px;
-  }
-  .info-content {
-    margin-top: 10px;
-    padding: 20px 10px 10px;
-    background-color: #FFF;
-    border: 2px dotted rgb(238, 241, 246);
-  }
-  .itemRecharge {
-    background-color: rgb(238, 241, 246);
-    padding: 10px;
-  }
-  .tab_box {
-    padding-left: 10px;
-    display: flex;
-    flex-direction: row;
-    .stepItem_title {
-      margin: 10px 0 10px 10px;
-      font-size: 14px;
-      width: 165%;
-    }
-    .stepItem {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 20px;
-      width: 160%;
-      p {
-        word-wrap: break-word;
-        word-break: normal;
-        display: block;
-      }
-    }
-  }
-}
+
+// .icon_man {
+//   background-image: url(../../../../../assets/icom/human.svg);
+//   background-size: 24px;
+//   display: inline-block;
+//   width: 24px;
+//   height: 24px;
+//   vertical-align: middle;
+// }
+
+// .icon_blank {
+//   background-size: 24px;
+//   display: inline-block;
+//   width: 24px;
+//   height: 24px;
+//   vertical-align: middle;
+// }
+
+// .popRight {
+//   width: 800px !important;
+// }
+
+// .content_head {
+//   background-color: #E9F3FA;
+//   line-height: 36px;
+//   height: 36px;
+//   padding: 0 10px;
+// }
+// .stepFrom {
+//   background-color:#eee;
+//   display:block;
+//   width:100%;
+//   height:100%;
+//   padding-top: 15px;
+//   .el-form--inline .el-form-item{
+//     margin-right:0;
+//     float:left;
+//     display:flex;
+//     width:28%;
+//   }
+//   .el-date-editor.el-input,
+//   .el-date-editor.el-input__inner {
+//     width: 100%;
+//   }
+
+//   .el-form-item__label {
+//     font-size: 12px;
+//   }
+
+//   .el-form-item__content {
+//     flex: 1;
+//   }
+//   .el-button--primary{
+//     position: absolute;
+//     top:23px;
+//     right:10px;
+//   }
+// }
+// .animated {
+//   -webkit-animation-duration: 0.5s;
+//   animation-duration: 0.5s;
+//   -webkit-animation-fill-mode: both;
+//   animation-fill-mode: both;
+// }
+// @-webkit-keyframes fadeInRight {
+//   from {
+//     opacity: 0;
+//     -webkit-transform: translate3d(100%, 0, 0);
+//     transform: translate3d(100%, 0, 0);
+//   }
+
+//   to {
+//     opacity: 1;
+//     -webkit-transform: translate3d(0, 0, 0);
+//     transform: translate3d(0, 0, 0);
+//   }
+// }
+
+// @keyframes fadeInRight {
+//   from {
+//     opacity: 0;
+//     -webkit-transform: translate3d(100%, 0, 0);
+//     transform: translate3d(100%, 0, 0);
+//   }
+
+//   to {
+//     opacity: 1;
+//     -webkit-transform: translate3d(0, 0, 0);
+//     transform: translate3d(0, 0, 0);
+//   }
+// }
+
+// .fadeInRight {
+//   -webkit-animation-name: fadeInRight;
+//   animation-name: fadeInRight;
+// }
+// .editInfoPop_content {
+//   padding: 0 10px;
+//   width: 100%;
+//   height: 93%;
+//   .el-tabs {
+//     height: 100%;
+//     .el-tabs__content {
+//       height: 100%;
+//     }
+//   }
+//   .info {
+//     background-color: rgb(238, 241, 246);
+//     margin-top: -30px;
+//     padding: 10px;
+//   }
+//   .info p {
+//     font-weight: 900;
+//     font-size: 16px;
+//     margin-bottom: 0px;
+//   }
+//   .info-content {
+//     margin-top: 10px;
+//     padding: 20px 10px 10px;
+//     background-color: #FFF;
+//     border: 2px dotted rgb(238, 241, 246);
+//   }
+//   .itemRecharge {
+//     background-color: rgb(238, 241, 246);
+//     padding: 10px;
+//   }
+//   .tab_box {
+//     padding-left: 10px;
+//     display: flex;
+//     flex-direction: row;
+//     .stepItem_title {
+//       margin: 10px 0 10px 10px;
+//       font-size: 14px;
+//       width: 165%;
+//     }
+//     .stepItem {
+//       font-size: 14px;
+//       color: #666;
+//       margin-bottom: 20px;
+//       width: 160%;
+//       p {
+//         word-wrap: break-word;
+//         word-break: normal;
+//         display: block;
+//       }
+//     }
+//   }
+// }
 
 </style>

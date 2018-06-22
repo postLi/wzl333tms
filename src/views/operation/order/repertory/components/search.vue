@@ -1,11 +1,7 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" 
-      :default-value="defaultTime" type="daterange" 
-      align="right" value-format="yyyy-MM-dd" 
-      start-placeholder="开始日期" 
-      :picker-options="pickerOptions" end-placeholder="结束日期">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="运单号" prop="shipSn">
@@ -23,7 +19,6 @@
     </el-form-item>
   </el-form>
 </template>
-
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
@@ -53,7 +48,9 @@ export default {
     }
     return {
       searchForm: {
-        shipSn: ''
+        shipSn: '',
+        shipFromCityName: '',
+        shipToCityName: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
@@ -98,41 +95,46 @@ export default {
       this.$emit('change', searchObj)
     },
     clearForm(formName) {
-      this.$refs[formName].resetFields()
-      this.searchForm.shipSn = ''
-      this.searchForm.shipFromCityName = ''
-      this.searchForm.shipToCityName = ''
-      this.searchTime = []
+
+      this.$nextTick(() => {
+        Object.assign(this.$data, this.$options.data())
+        this.$refs[formName].resetFields()
+      })
+      // this.$refs[formName].resetFields()
+      // this.searchForm.shipSn = ''
+      // this.searchForm.shipFromCityName = ''
+      // this.searchForm.shipToCityName = ''
+      // this.searchTime = []
     }
   }
 }
 
 </script>
-
 <style lang="scss" scoped>
-.tab-content{
-    .staff_searchinfo{
-        padding:15px 20px;
-        border-bottom:1px dashed #999;
-        .el-form-item{
-            margin-bottom: 0;
-        }
-        
+.tab-content {
+  .staff_searchinfo {
+    padding: 15px 20px;
+    border-bottom: 1px dashed #999;
+    .el-form-item {
+      margin-bottom: 0;
     }
-    .staff_searchinfo--btn{
-        float: right;
-    }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .staff_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .staff_searchinfo--btn{
-          float: none;
-      }
+  }
+  .staff_searchinfo--btn {
+    float: right;
   }
 }
+
+@media screen and (max-width:1308px) {
+  .tab-content {
+    .staff_searchinfo {
+      .el-form-item {
+        margin-bottom: 10px;
+      }
+    }
+    .staff_searchinfo--btn {
+      float: none;
+    }
+  }
+}
+
 </style>

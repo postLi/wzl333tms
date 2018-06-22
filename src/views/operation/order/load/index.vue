@@ -161,7 +161,7 @@
       </el-collapse>
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
-        <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button>
+        <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空并新增</el-button>
         <el-button size="mini" icon="el-icon-goods" plain type="primary" @click="doAction('precent')">配载率</el-button>
         <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
         <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')">完成并发车</el-button>
@@ -320,7 +320,7 @@ export default {
       let data = Object.assign({}, this.formModel)
       return data
     },
-    loadInfoPercent () {
+    loadInfoPercent() {
       let data = Object.assign([], this.loadInfoPercentOrg)
       return data
     }
@@ -328,12 +328,8 @@ export default {
   watch: {
     typeid() {
       this.typeid = this.$route.params.loadTypeId
-      console.log('获取router-typeId', this.$route.params.loadTypeId)
-    },
-    // getTableChange (obj) {
-    //   this.loadInfoPercentOrg = Object.assign([], obj)
-    //   this.loadTableInfo = obj
-    // }
+      // console.log('获取router-typeId', this.$route.params.loadTypeId)
+    }
   },
   components: {
     selectType,
@@ -357,13 +353,13 @@ export default {
     }
   },
   methods: {
-    getTableChange () {},
+    getTableChange() {},
     initIsEdit() {
       this.orgData = {}
       if (this.$route.query.info) {
         this.orgData = this.$route.query.info
         this.isEdit = true
-        console.log(this.orgData, this.isEdit)
+        // console.log(this.orgData, this.isEdit)
         this.truckMessage = this.orgData.batchNo
         this.contractNo = this.orgData.contractNo
         // formModel 数据
@@ -402,12 +398,10 @@ export default {
 
       } else {
         this.isEdit = false
-        console.log(this.orgData, this.isEdit)
         this.getLoadNo()
       }
     },
     getLoadNo() {
-      console.log('批次号查询', this.loadTypeId)
       return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
         this.truckMessage = data.text // 批次号
         this.contractNo = data.text // 合同编号？？？？？
@@ -487,7 +481,7 @@ export default {
               this.$message({ type: 'success', message: '修改配载信息成功' })
               this.resetFieldsForm('formModel')
               this.resetFieldsForm('formFee')
-             this.$router.push({ path: '././shortDepart' })
+              this.$router.push({ path: '././shortDepart' })
             })
           } else {
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
@@ -517,17 +511,12 @@ export default {
       this.loadInfoPercentOrg = Object.assign([], obj)
       this.loadTableInfo = obj
     },
-    resetFieldsForm(formName) { // 5秒后resetFields表单验证
-      this.$refs[formName].resetFields()
-      // clearInterval(timer)
-      // let count = 5
-      // let timer = setInterval(() => {
-      //   count--
-      //   if (count < 1) {
-      //     this.$refs[formName].resetFields()
-      //     clearInterval(timer)
-      //   }
-      // }, 1000)
+    resetFieldsForm(formName) { // resetFields表单验证
+      Object.assign(this.$data, this.$options.data())
+      this.$nextTick(() => {
+        this.$refs[formName].resetFields()
+        this.$router.push({path: '././load', query:{loadKey: Math.random()}})
+      })
     },
     /**
      * load_type_id：配载类型（字典表38-40）
@@ -558,7 +547,6 @@ export default {
     setData() { // 完成配载 ：处理数据格式。。。
       this.setLoadTypeId()
       if (this.isEdit) { // 编辑配载信息时
-        console.log('编辑', this.isEdit)
         this.$set(this.formModel, 'orgid', this.orgData.orgid)
       } else { // 添加配载信息时
         this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
@@ -583,7 +571,7 @@ export default {
       if (this.orgData.orgid) {
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
           this.setLoadTableList.left = data.data
-          console.log('修改ing左边列表', this.setLoadTableList.left)
+          // console.log('修改ing左边列表', this.setLoadTableList.left)
         })
       }
     },
@@ -591,7 +579,7 @@ export default {
       if (this.orgData.orgid) {
         getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
           this.setLoadTableList.right = data.data
-          console.log('修改ing右边列表', this.setLoadTableList.right)
+          // console.log('修改ing右边列表', this.setLoadTableList.right)
         })
       }
     },

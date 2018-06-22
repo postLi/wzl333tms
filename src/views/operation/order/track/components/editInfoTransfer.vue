@@ -5,7 +5,7 @@
         <div class="tab_box">
           <div class="tab_box_item">
             <el-row class="stepItem_title">
-              <el-col :span="4" :offset="4"><b>操作时间</b></el-col>
+              <el-col :span="5" :offset="5"><b>操作时间</b></el-col>
               <el-col :span="3"><b>操作网点</b></el-col>
               <el-col :span="2"><b>操作人</b></el-col>
               <el-col :span="3"><b>操作信息</b></el-col>
@@ -26,7 +26,7 @@
                       </el-popover>
                       <el-button size="mini" v-else>{{item.loadStatus}}</el-button>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6">
                       <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
                     </el-col>
                     <el-col :span="3">
@@ -64,10 +64,11 @@
         <el-form-item label="操作信息" prop="operatorInfo">
           <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保存</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+       <el-button type="primary" @click="submitForm('formModel')" size="mini">保存</el-button>
     </div>
   </pop-right>
 </template>
@@ -216,62 +217,190 @@ export default {
 .popRight {
   width: 800px !important;
 }
-
-.content_head {
-  background-color: #E9F3FA;
-  line-height: 36px;
-  height: 36px;
-  padding: 0 10px;
-}
-
-.stepFrom {
-  .el-form--inline .el-form-item {
-    margin-right: 0;
-    float: left;
-    display: flex;
-    .el-input {
-      width: 150px;
-      padding: 0;
-      margin-left: -5px;
-    }
-    .el-button {
-      margin-left: 10px;
-    }
-  }
-}
-
 .editInfoPop_content {
-  padding: 0 10px;
-  width: 100%;
-  height: 93%;
-  .info {
-    background-color: rgb(238, 241, 246);
-    margin-top: -30px;
-    padding: 10px;
-  }
+  width: 100%; 
+  display: flex;
+  flex-direction: column;
+  background-color: #fbfbfb;
+
   .tab_box {
-    padding-left: 10px;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    overflow: hidden;
-    p {
-      word-wrap: break-word;
-      word-break: normal;
-      display: block;
-    }
-    .stepItem_title {
-      margin: 10px 0 10px 10px;
-      font-size: 14px;
-      width: 220%;
-    }
-    .stepItem {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 20px;
-      width: 220%;
+    position: relative;
+    .tab_box_item {
+      margin: 0;
+      .stepItem_title {
+        font-size: 14px;
+        color: #333;
+        width: 100%;
+        height: 36px;
+        line-height: 36px;
+        padding-left:30px;
+      }
+      .el-step.is-vertical {
+        padding-left: 20px;
+        .stepItem {
+          width: 110%;
+          color: #666;
+          font-size: 14px;
+          padding: 10px;
+          margin: 0 0 3px 0;
+          background-color: #ffffff;
+          box-shadow: 0px 0px 10px #eaeaea;
+          transition: 0.4s;
+        }
+        .stepItem:hover {
+          transition: 0.2s;
+          background-color: #E9F3FA;
+        }
+      }
     }
   }
 }
+.stepFrom {
+  background-color:#eee;
+  display:block;
+  width:100%;
+  height:100%;
+  padding-top: 15px;
+  .el-form--inline .el-form-item{
+    margin-right:0;
+    float:left;
+    display:flex;
+    width:28%;
+  }
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner {
+    width: 100%;
+  }
+
+  .el-form-item__label {
+    font-size: 12px;
+  }
+
+  .el-form-item__content {
+    flex: 1;
+  }
+  .el-button--primary{
+    position: absolute;
+    top:23px;
+    right:10px;
+  }
+}
+
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
+}
+// .icon_man {
+//   background-image: url(../../../../../assets/icom/human.svg);
+//   background-size: 24px;
+//   display: inline-block;
+//   width: 24px;
+//   height: 24px;
+//   vertical-align: middle;
+// }
+
+// .icon_blank {
+//   background-size: 24px;
+//   display: inline-block;
+//   width: 24px;
+//   height: 24px;
+//   vertical-align: middle;
+// }
+
+// .popRight {
+//   width: 800px !important;
+// }
+
+// .content_head {
+//   background-color: #E9F3FA;
+//   line-height: 36px;
+//   height: 36px;
+//   padding: 0 10px;
+// }
+
+// .stepFrom {
+//   .el-form--inline .el-form-item {
+//     margin-right: 0;
+//     float: left;
+//     display: flex;
+//     .el-input {
+//       width: 150px;
+//       padding: 0;
+//       margin-left: -5px;
+//     }
+//     .el-button {
+//       margin-left: 10px;
+//     }
+//   }
+// }
+
+// .editInfoPop_content {
+//   padding: 0 10px;
+//   width: 100%;
+//   height: 93%;
+//   .info {
+//     background-color: rgb(238, 241, 246);
+//     margin-top: -30px;
+//     padding: 10px;
+//   }
+//   .tab_box {
+//     padding-left: 10px;
+//     display: flex;
+//     flex-direction: row;
+//     width: 100%;
+//     overflow: hidden;
+//     p {
+//       word-wrap: break-word;
+//       word-break: normal;
+//       display: block;
+//     }
+//     .stepItem_title {
+//       margin: 10px 0 10px 10px;
+//       font-size: 14px;
+//       width: 220%;
+//     }
+//     .stepItem {
+//       font-size: 14px;
+//       color: #666;
+//       margin-bottom: 20px;
+//       width: 220%;
+//     }
+//   }
+// }
 
 </style>

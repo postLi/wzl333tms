@@ -1,28 +1,28 @@
 <template>
-	<el-dialog :title="popTitle" v-loading="loading" :visible.sync="isShow" 
-  :close-on-click-modal="false"
-	 :before-close="closeMe" class="setupTablePop">
-	 <el-form ref="ruleForm" :model="repertorySetting" :rules="rules" class="colorpickerForm">
-	 	<el-form-item class="colorpickerItem" prop="sectionOne">
-	 		<b>超过：</b><el-input v-model="repertorySetting.sectionOne"></el-input><b>小时的库存颜色</b>
-	 		<el-color-picker v-model.number="repertorySetting.sectionOneColour" :predefine="predefineColors"></el-color-picker>
-	 	</el-form-item>
-	 	<el-form-item class="colorpickerItem" prop="sectionTwo">
-	 		<b>超过：</b><el-input v-model="repertorySetting.sectionTwo"></el-input><b>小时的库存颜色</b>
-	 		<el-color-picker v-model.number="repertorySetting.sectionTwoColour" :predefine="predefineColors"></el-color-picker>
-	 	</el-form-item>
-	 	<el-form-item class="colorpickerItem" prop="sectionThree">
-	 		<b>超过：</b><el-input v-model="repertorySetting.sectionThree"></el-input><b>小时的库存颜色</b>
-	 		<el-color-picker v-model.number="repertorySetting.sectionThreeColour" :predefine="predefineColors"></el-color-picker>
-	 	</el-form-item>
-	 </el-form>
+  <el-dialog :title="popTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="setupTablePop">
+    <el-form ref="ruleForm" :model="repertorySetting" :rules="rules" class="colorpickerForm">
+      <el-form-item class="colorpickerItem" prop="sectionOne">
+        <b>超过：</b>
+        <el-input v-model="repertorySetting.sectionOne"></el-input><b>小时的库存颜色</b>
+        <el-color-picker v-model.number="repertorySetting.sectionOneColour" :predefine="predefineColors"></el-color-picker>
+      </el-form-item>
+      <el-form-item class="colorpickerItem" prop="sectionTwo">
+        <b>超过：</b>
+        <el-input v-model="repertorySetting.sectionTwo"></el-input><b>小时的库存颜色</b>
+        <el-color-picker v-model.number="repertorySetting.sectionTwoColour" :predefine="predefineColors"></el-color-picker>
+      </el-form-item>
+      <el-form-item class="colorpickerItem" prop="sectionThree">
+        <b>超过：</b>
+        <el-input v-model="repertorySetting.sectionThree"></el-input><b>小时的库存颜色</b>
+        <el-color-picker v-model.number="repertorySetting.sectionThreeColour" :predefine="predefineColors"></el-color-picker>
+      </el-form-item>
+    </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="closeMe">取 消</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
-
 <script>
 import popRight from '@/components/PopRight/index'
 import { getRepertoryColor, putRepertoryColor } from '@/api/operation/repertory'
@@ -115,7 +115,6 @@ export default {
     getColor() {
       return getRepertoryColor(this.otherinfo.orgid).then(data => {
         if (data) {
-          console.log(data)
           let list = data.data.repertorySetting
           this.$nextTick(() => {
             this.repertorySetting = Object.assign(this.repertorySetting, list)
@@ -131,18 +130,16 @@ export default {
           this.loading = true
           let colorData = {}
           this.$set(colorData, 'repertorySetting', this.repertorySetting)
-          console.log('colorData1', JSON.stringify(colorData))
           putRepertoryColor(colorData, this.otherinfo.orgid, this.colorSetting.id).then(data => {
-            this.$message({type: 'success', message: '修改成功'})
-            this.loading = false
-            console.log('colorData2', JSON.stringify(colorData))
-            this.getColor()
-            this.$emit('success', colorData.repertorySetting)
-          })
-          .catch(error => {
-            this.$message({type: 'danger', message: '修改失败' })
-            this.loading = false
-          })
+              this.$message({ type: 'success', message: '修改成功' })
+              this.loading = false
+              this.getColor()
+              this.$emit('success', colorData.repertorySetting)
+            })
+            .catch(error => {
+              this.$message({ type: 'danger', message: '修改失败' })
+              this.loading = false
+            })
         }
       })
     }
@@ -150,33 +147,33 @@ export default {
 }
 
 </script>
-
-
 <style lang="scss" scoped>
-.setupTablePop{
-  .el-dialog{
+.setupTablePop {
+  .el-dialog {
     max-width: 546px;
     min-width: 300px;
   }
-  .transfer-footer{
+  .transfer-footer {
     line-height: 20px;
     color: #666;
     font-size: 12px;
   }
 }
 
-.colorpickerItem{
-	text-align:center;
-	display: inline;
-	width: 100%;
-	.el-input{
-		width:100px;
-	}
-	.el-color-picker__trigger{
-		vertical-align:middle;
-	}
-	b{
-		margin:0 10px;
-	}
+.colorpickerItem {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  .el-input{
+   width:100px;
+  }
+  .el-color-picker{
+   vertical-align:middle !important;
+  }
+  b{
+   margin:0 10px;
+  }
 }
+
 </style>

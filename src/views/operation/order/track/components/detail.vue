@@ -48,14 +48,14 @@
         </tbody>
       </table>
     </el-form>
-    <div class="tab_info">
+    <div class="tab_infos">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
       </div>
       <div class="info_tab">
-        <el-table :data="detailList" stripe border height="100%" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+        <el-table :data="detailList" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
           <el-table-column sortable width="120" prop="shipId" label="运单号"></el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
@@ -153,20 +153,24 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .detailTable {
-  height:100%;
+  // margin-top: 75px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 240px);
+  padding: 0 10px;
+  position: relative;
   .detailTable_info {
     border: 1px solid #eee;
-    background-color: #fbfbfb;
-    margin-bottom: 5px;
+    background-color: #fff;
     table {
       width: 100%;
       tbody {
         tr {
           font-size: 14px;
           th {
-            background-color: #eaf0ff;
+            background-color: #f2f2f2;
             width: 16.6%;
             height: 36px;
           }
@@ -178,15 +182,14 @@ export default {
       }
     }
   }
-  .tab_info {
-    padding: 0px;
+  .tab_infos {
+    padding: 10px 0;
     height: 100%;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    position: relative;
     .btns_box {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       .el-button {
         margin-right: 0;
       }
@@ -197,24 +200,73 @@ export default {
     }
     .info_tab {
       width: 100%;
-      height: 530px;
-      .el-table {
-        table {
-          th,
-          td {
-            text-align: center;
-          }
-        }
-        .unauth {
-          color: #f00;
-        }
-      }
-      .el-table td,
-      .el-table th {
-        padding: 5px 0;
-      }
+      height: calc(100vh - 430px);
+      flex-grow: 1;
     }
   }
 }
+
+// .detailTable {
+//   height:100%;
+//   .detailTable_info {
+//     border: 1px solid #eee;
+//     background-color: #fbfbfb;
+//     margin-bottom: 5px;
+//     table {
+//       width: 100%;
+//       tbody {
+//         tr {
+//           font-size: 14px;
+//           th {
+//             background-color: #eaf0ff;
+//             width: 16.6%;
+//             height: 36px;
+//           }
+//           td {
+//             width: 16.6%;
+//             padding: 0 3px;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   .tab_infos {
+//     padding: 0px;
+//     height: 100%;
+//     flex-grow: 1;
+//     display: flex;
+//     flex-direction: column;
+//     position: relative;
+//     .btns_box {
+//       margin-bottom: 10px;
+//       .el-button {
+//         margin-right: 0;
+//       }
+//       .table_setup {
+//         float: right;
+//         margin-left: 10px;
+//       }
+//     }
+//     .info_tab {
+//       width: 100%;
+//       height: 530px;
+//       .el-table {
+//         table {
+//           th,
+//           td {
+//             text-align: center;
+//           }
+//         }
+//         .unauth {
+//           color: #f00;
+//         }
+//       }
+//       .el-table td,
+//       .el-table th {
+//         padding: 5px 0;
+//       }
+//     }
+//   }
+// }
 
 </style>

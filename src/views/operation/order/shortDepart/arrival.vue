@@ -36,7 +36,7 @@
           </el-table-column>
           <el-table-column sortable width="155" prop="receivingTime" label="接收时间">
             <template slot-scope="scope">
-              {{ scope.row.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.receivingTime }}
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="shortFee" label="短驳费">

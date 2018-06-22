@@ -75,19 +75,8 @@ export default {
     }
   },
   watch: {
-    info() {
-      let countWeigth = 0
-      let countVolume = 0
-      this.info.forEach(e => {
-        countWeigth += e.loadWeight
-        countVolume += e.loadVolume
-      })
-      this.baseInfo.weight = Number(countWeigth)
-      this.baseInfo.volume = Number(countVolume)
-      console.log('info表格')
-    },
+    info() {},
     truckInfo() {
-      console.log('sdfsd')
       this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
       this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
     },
@@ -101,16 +90,30 @@ export default {
             this.initChart()
           }
         })
+      } else {
+        this.baseInfo = Object.assign({}, this.newInfo)
       }
     }
   },
   methods: {
+    initData() {
+      if (this.popVisible) {
+        this.info.forEach(e => {
+          this.baseInfo.weight += Number(e.loadWeight)
+          this.baseInfo.volume += Number(e.loadVolume)
+        })
+      } else {
+        this.baseInfo.weight = 0
+        this.baseInfo.volume = 0
+      }
+    },
     initChart() {
+      this.initData()
       this.initChartWeight()
       this.initChartVolume()
     },
     initChartWeight() {
-      const surweight = this.baseInfo.totalWeight - this.baseInfo.weight
+      let surweight = this.baseInfo.totalWeight - this.baseInfo.weight
       this.baseInfo.surplusWeight = surweight
       console.log(this.baseInfo.surplusWeight)
       if (this.popVisible) {
@@ -161,7 +164,7 @@ export default {
       }
     },
     initChartVolume() {
-      const survolume = this.baseInfo.totalVolume - this.baseInfo.volume
+      let survolume = this.baseInfo.totalVolume - this.baseInfo.volume
       this.baseInfo.surplusVolume = survolume
       if (this.popVisible) {
         this.chart = echarts.init(this.$refs.echartVolume)
