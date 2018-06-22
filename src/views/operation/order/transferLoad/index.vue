@@ -38,7 +38,7 @@
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
         <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button>
-        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
+        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成中转</el-button>
       </div>
       <!-- 穿梭框 -->
       <dataTable :leftData="leftData" :rightData="rightData"  @loadTable="getLoadTable"></dataTable>
@@ -92,6 +92,7 @@ export default {
     }
   },
   mounted() {
+    console.log('transferId:', this.$route)
     let transferId = this.$route.params.transferId
     if(typeof transferId !== 'undefined'){
       // 表示进来修改
@@ -130,27 +131,43 @@ export default {
         })
       }
     },
+    goTransferList() {
+      // 跳转到中转管理页面
+      let lastRoute = this.$route
+      this.$router.replace({
+        path: '/operation/order/transfer'
+      }, () => {
+        this.$store.dispatch('delVisitedViews', lastRoute)
+      })
+    },
     // 获取批次详细信息
     getUpdateTransferDetail() {
       return transferManageApi.getUpdateTransferDetail(this.otherinfo.orgid, this.formModel.transferBatchNo).then(res => {
         let data = res.data
-        for(let i in this.formModel){
-          this.formModel[i] = data[i]
+        if(!data.transferBatchNo){
+          // 当这个批次号不能获取到信息时，提示用户
+          this.$alert('当前批次号不存在', '提示', {
+            confirmButtonText: '确定',
+            callback: action => {
+              this.goTransferList()     
+            }
+          });
+        } else {
+          for(let i in this.formModel){
+            this.formModel[i] = data[i]
+          }
+          this.formModel.transferTime = parseTime(new Date(this.formModel.transferTime))
+          this.rightData = data.tmsOrderTransferDetails || []
+          this.loadTableInfo = this.rightData
+          this.carrierName = res.data.carrierName
         }
-        this.formModel.transferTime = parseTime(new Date(this.formModel.transferTime))
-        this.rightData = data.tmsOrderTransferDetails || []
-        this.loadTableInfo = this.rightData
-        this.carrierName = res.data.carrierName
       }).catch(errRes => {
         // 当这个批次号不能获取到信息时，提示用户
         this.$alert('当前批次号不存在', '提示', {
             confirmButtonText: '确定',
             callback: action => {
               // 跳转到中转管理页面
-              this.$router.push({
-                replace: true,
-                path: '/operation/order/transfer'
-              })
+              this.goTransferList()
             }
           });
       })

@@ -44,8 +44,9 @@
               :label="column.label"
               v-else
               :width="column.width">
-              <template slot-scope="scope" v-html="true">
-                  {{ column.slot(scope) }}
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
           </template>
@@ -53,7 +54,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-    <AddOrder :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
+    <AddOrder @action="setAction" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -89,6 +90,7 @@ export default {
     }) */
   },
   data () {
+    let _this = this
     return {
       btnsize: 'mini',
       usersArr: [],
@@ -99,6 +101,7 @@ export default {
       AddOrderVisible: false,
       isModify: false,
       selectInfo: {},
+      addCarrierVisible: false,
       // 选中的行
       selected: [],
       searchQuery: {
@@ -119,7 +122,13 @@ export default {
       tableColumn: [{
         "label": "中转批次",
         "prop": "transferBatchNo",
-        "width": "150"
+        "width": "150",
+        "slot": function(scope){
+          return scope.row.transferBatchNo
+        },
+        'click': function(scope){
+          _this.openAddOrder(scope.row)
+        }
       },{
         "label": "中转时间",
         "prop": "transferTime",
@@ -201,6 +210,38 @@ export default {
       this.loading = false
       this.fetchData()
     },
+    setAction (type, val){
+      if(type==='cancel'){
+        this.cancelBatch(val)
+      }
+    },
+    cancelBatch (transferBatchNos) {
+      this.$confirm('确定要取消 ' + transferBatchNos.length + ' 条运单吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+          // 提交前先进行去重
+          transferManageApi.deleteTransfer(this.otherinfo.orgid, uniqArray(transferBatchNos).join(','), '').then(res => {
+              this.$message({
+                  type: 'success',
+                  message: '取消成功!'
+              })
+              this.fetchData()
+          }).catch(err=>{
+              this.$message({
+                  type: 'info',
+                  message: '取消失败，原因：' + (err.errorInfo ? err.errorInfo : err.text)
+              })  
+          })
+            
+        }).catch((err) => {
+            this.$message({
+                type: 'info',
+                message: '已取消:' + JSON.stringify(err)
+            })          
+        })
+    },
     doAction (type) {
 
       // 判断是否有选中项
@@ -268,31 +309,7 @@ export default {
                     return el.shipSn
                   })
 
-                this.$confirm('确定要取消 ' + avaiableItem.length + ' 条运单吗？', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                      // 提交前先进行去重
-                      transferManageApi.deleteTransfer(this.otherinfo.orgid, uniqArray(transferBatchNos).join(','), '').then(res => {
-                          this.$message({
-                              type: 'success',
-                              message: '取消成功!'
-                          })
-                          this.fetchData()
-                      }).catch(err=>{
-                          this.$message({
-                              type: 'info',
-                              message: '取消失败，原因：' + (err.errorInfo ? err.errorInfo : err.text)
-                          })  
-                      })
-                        
-                    }).catch((err) => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消:' + JSON.stringify(err)
-                        })          
-                    })
+                  this.cancelBatch(transferBatchNos)
                 }
                 
               break;
@@ -318,7 +335,8 @@ export default {
     closeSetupTable () {
       this.setupTableVisible = false
     },
-    openAddOrder () {
+    openAddOrder (item) {
+      this.selectInfo = item
       this.AddOrderVisible = true
     },
     closeAddOrder () {
@@ -396,6 +414,11 @@ export default {
         line-height: 40px;
         height: 40px;
         overflow: hidden;
+    }
+
+    .clickitem{
+      cursor: pointer;
+      color: #409eff;
     }
 }
 </style>
