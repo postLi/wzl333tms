@@ -45,6 +45,11 @@ $bodercolor: #d0d7e5;
 .el-table td, .el-table th{
   padding: 5px 0;
 }
+.el-table .cell{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 //element ui upload
 .upload-container {

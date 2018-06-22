@@ -98,6 +98,10 @@ export function cleanArray(actual) {
   return newArray
 }
 
+export function uniqArray(array) {
+  return Array.from(new Set(array))
+}
+
 export function param(json) {
   if (!json) return ''
   return cleanArray(Object.keys(json).map(key => {

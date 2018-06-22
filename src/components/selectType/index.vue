@@ -62,6 +62,7 @@ order_status 订单状态
  */
 
 export default {
+  name: 'selectType',
   props: {
     orgid: {
       type: [Number, String],
@@ -108,8 +109,9 @@ export default {
     })
   },
   methods: {
-    change () {
+    change (item) {
       this.$emit('input', this.val)
+      this.$emit('change', item)
     }
   }
 }

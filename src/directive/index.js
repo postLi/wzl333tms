@@ -11,13 +11,14 @@ Waves.install()
 vueSticky.install()
 
 let hasPoint = false
+let pointNum = 2
 const VueDirectiveObject = {
   findInput: function(el) {
     return el.classList.contains('el-input') ? el.querySelector('input') : el
   },
   keepNumber: function() {
     // 如果第一位为小数点，则补0
-    this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.') : this.value.replace(/\D/g, '')
+    this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.').replace(new RegExp('^(\\d+)\\.(\\d{' + Math.abs(pointNum) + '}).*$'), '$1.$2') : this.value.replace(/\D/g, '')
   },
   onkeydown: function(event) {
     // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode),event.key,event.code, /[\d]/.test(String.fromCharCode(event.keyCode)))
@@ -34,7 +35,11 @@ const VueDirectiveObject = {
 // 限制只能输入数字
 Vue.directive('numberOnly', {
   bind: function(el, binding) {
-    hasPoint = binding.arg === 'point'
+    // 判断是否需要小数点
+    const arg = binding.arg || ''
+    hasPoint = arg.indexOf('point') !== -1
+    // 判断需要小数点后几位，默认为 俩位
+    pointNum = parseInt(arg.replace('point', ''), 10) || 2
     VueDirectiveObject.findInput(el).addEventListener('input', VueDirectiveObject.keepNumber)
     VueDirectiveObject.findInput(el).addEventListener('keydown', VueDirectiveObject.onkeydown)
   },

@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
           }})
         })
       } else {
-        window.document.title = to.meta.title + ' - 安发TMS管理系统'
+        window.document.title = (to.meta.title || to.name) + ' - 安发TMS管理系统'
         next()
       }
     }

@@ -6,7 +6,7 @@
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
-  :placeholder="placeholder"
+  :placeholder="place"
   ref="myautocomplete"
   @select="handleSelect"
   v-bind="$attrs"
@@ -31,7 +31,7 @@
     :filterable="filterable"
     @change="handleSelect"
     remote
-    :placeholder="placeholder"
+    :placeholder="place"
     :remote-method="querySearch"
     ref="myautocomplete"
     :loading="loading"
@@ -54,7 +54,7 @@
     @change="handleSelect"
     popper-class="query-select-autocomplete"
     :filterable="filterable"
-    :placeholder="placeholder"
+    :placeholder="place"
     ref="myautocomplete"
     v-bind="$attrs"
     >
@@ -194,6 +194,9 @@ export default {
     }
   },
   computed: {
+    place() {
+      return this.show === 'select' ? '请选择' : this.placeholder
+    },
     getOrgid () {
       return this.orgid || this.otherinfo.orgid
     },

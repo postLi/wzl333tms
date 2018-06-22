@@ -13,7 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   if (store.getters.token) {
     // 让每个请求携带自定义token 请根据实际情况自行修改
-    // config.headers['access_token'] = getToken()
+    config.headers['access_token'] = getToken()
     // config.headers.Authorization = 'Bearer ' + getToken()
 
     // 暂时放到链接中
@@ -104,4 +104,49 @@ service.interceptors.response.use(
   }
 )
 
+export function checkStatus(res) {
+  if (res.status !== 100) {
+    return res
+  } else if (res.status === 100) {
+    return Promise.reject(res)
+  }
+}
+
+/* function serviceWrapper() {
+  return service(arguments).then(checkStatus)
+}
+
+serviceWrapper.prototype = {
+  get: () => {
+    return service.get(arguments).then(checkStatus)
+  },
+  post: () => {
+    return service.post(arguments).then(checkStatus)
+  },
+  delete: () => {
+    return service.delete(arguments).then(checkStatus)
+  },
+  put: () => {
+    return service.put(arguments).then(checkStatus)
+  }
+} */
+/* // 覆写常用方法，对返回状态进行判断
+const oldGet = service.get
+const oldPost = service.post
+const oldPut = service.put
+const oldDelete = service.delete
+
+service.get = function() {
+  return oldGet(arguments).then(checkStatus)
+}
+service.post = function() {
+  return oldPost(arguments).then(checkStatus)
+}
+service.put = function() {
+  return oldPut(arguments).then(checkStatus)
+}
+service.delete = function() {
+  return oldDelete(arguments).then(checkStatus)
+}
+console.log('oldGet', oldGet, service.get) */
 export default service

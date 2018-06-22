@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import fetch, { checkStatus } from '@/utils/fetch'
 
 /**
  * 新增中转外发时左边的库存列表
@@ -9,7 +9,7 @@ export function getLeftRepetoryList(orgId) {
     params: {
       orgId
     }
-  })
+  }).then(checkStatus)
 }
 
 /**
@@ -49,14 +49,19 @@ export function getLeftRepetoryList(orgId) {
 }
  */
 export function postNewTransfer(data) {
-  return fetch.post('/api-order/order/transfer/v1/insertTransfer', data)
+  return fetch.post('/api-order/order/transfer/v1/insertTransfer', data).then(checkStatus)
 }
+
+export function getExportExcel() {
+  return new Promise()
+}
+
 /**
  * 中转管理_修改
  * @param {*} data 同新建
  */
 export function putModifyTransfer(data) {
-  return fetch.put('/api-order/order/transfer/v1/updateTransfer', data)
+  return fetch.put('/api-order/order/transfer/v1/updateTransfer', data).then(checkStatus)
 }
 
 /**
@@ -69,7 +74,7 @@ export function getUpdateLoadRepertoryList(orgId, batchNo) {
       batchNo,
       orgId
     }
-  })
+  }).then(checkStatus)
 }
 /**
  * 修改时中转信息及中转列表
@@ -81,7 +86,7 @@ export function getUpdateTransferDetail(orgId, batchNo) {
       batchNo,
       orgId
     }
-  })
+  }).then(checkStatus)
 }
 /**
  * 已中转运单列表
@@ -102,7 +107,9 @@ export function getUpdateTransferDetail(orgId, batchNo) {
 }
  */
 export function getAlreadyTransferList(data) {
-  return fetch.post('/api-order/order/transfer/v1/selectAlreadyTransferList', data)
+  return fetch.post('/api-order/order/transfer/v1/selectAlreadyTransferList', data).then(checkStatus).then(res => {
+    return res.data || { list: [], total: 0 }
+  })
 }
 
 /**
@@ -120,7 +127,9 @@ export function getAlreadyTransferList(data) {
 }
  */
 export function getAlreadyTransferBatchList(data) {
-  return fetch.post('/api-order/order/transfer/v1/selectTransferBatchList', data)
+  return fetch.post('/api-order/order/transfer/v1/selectTransferBatchList', data).then(checkStatus).then(res => {
+    return res.data || { list: [], total: 0 }
+  })
 }
 
 /**
@@ -132,7 +141,9 @@ export function getAlreadyTransferBatchList(data) {
 }
  */
 export function getTransferBatchDetailsList(data) {
-  return fetch.post('/api-order/order/transfer/v1/selectTransferBatchDetailsList', data)
+  return fetch.post('/api-order/order/transfer/v1/selectTransferBatchDetailsList', data).then(checkStatus).then(res => {
+    return res.data || {}
+  })
 }
 
 /**
@@ -145,7 +156,7 @@ export function getTransferBatchDetailsList(data) {
 }
  */
 export function deleteTransfer(orgId, batchNos, shipIds) {
-  return fetch.delete('/api-order/order/transfer/v1/cancelTransfer?orgId=' + orgId + '&batchNos=' + batchNos + '&shipIds=' + shipIds)
+  return fetch.delete('/api-order/order/transfer/v1/cancelTransfer?orgId=' + orgId + '&batchNos=' + batchNos + '&shipIds=' + shipIds).then(checkStatus)
 }
 
 /**
@@ -158,5 +169,5 @@ export function getBatchNo(orgId) {
     params: {
       orgId
     }
-  })
+  }).then(checkStatus)
 }
