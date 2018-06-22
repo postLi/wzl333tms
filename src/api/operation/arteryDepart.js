@@ -9,3 +9,5 @@ export function postSelectLoadMainInfoList(params) {
     return res.data || {}
   })
 }
+///order/load/v1/loadDepart
+// 配载发车(批量)

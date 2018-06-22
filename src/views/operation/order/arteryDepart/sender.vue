@@ -280,6 +280,8 @@
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+
+
 import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
 import { postSelectLoadMainInfoList } from '@/api/operation/arteryDepart'
 import SearchForm from './components/search'

@@ -51,7 +51,7 @@
 
 <script>
 import { REGEX }  from '@/utils/validate'
-import { parseTime }  from '@/utils/'
+import { parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 export default {
@@ -126,8 +126,8 @@ export default {
         batchTypeId: '',//批次状态
         batchNo:'',//发车批次
         loadTypeId:39,//配载类型
-        endTime:'',//结束时间
-        beginTime:''
+        loadEndTime:'',//结束时间
+        loadStartTime:''
       },
       rules: {
         mobile: [{
@@ -156,11 +156,10 @@ export default {
       // this.searchForm.orgid = id
     },
     onSubmit () {
-      if(this.searchForm){
-        this.searchForm.loadStartTime = parseTime(this.searchCreatTime[0])
-        this.searchForm.loadEndTime = parseTime(this.searchCreatTime[1])
-        this.$emit('change', this.searchForm)
-      }
+      this.searchForm.loadStartTime = parseTime(this.searchCreatTime[0])
+      this.searchForm.loadEndTime = parseTime(this.searchCreatTime[1])
+      console.log(this.searchForm.loadEndTime);
+      this.$emit('change', this.searchForm)
 
     },
     clearForm () {
