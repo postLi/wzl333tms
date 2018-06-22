@@ -510,7 +510,7 @@
   import selectType from '@/components/selectType/index'
   import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack   ,getSelectLoadList} from '@/api/operation/track'
   import {getBatchNoId,postSelectLoadMainInfoList,postAddRepertory,postConfirmToCar} from '@/api/operation/arteryDelivery'
-  import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+  import { getExportExcel } from '@/api/company/customerManage'
   import { mapGetters } from 'vuex'
   import SelectTree from '@/components/selectTree/index'
     export default {

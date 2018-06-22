@@ -1167,6 +1167,7 @@
   }
   /*货物运输合同*/
 .pact{
+  padding-left: 20px;
   .pact_top{
     position: relative;
     height: 40px;

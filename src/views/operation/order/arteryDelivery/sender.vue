@@ -21,6 +21,7 @@
           :data="usersArr"
           stripe
           border
+          @row-dblclick="getDbClick"
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -554,6 +555,11 @@ export default {
     getSelection (selection) {
       this.selected = selection
     },
+    getDbClick(row, event){
+      this.selectInfo = row
+      this.isModify = false
+      this.openAddCustomer()
+    }
   }
 }
 </script>
