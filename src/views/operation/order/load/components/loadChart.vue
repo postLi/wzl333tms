@@ -91,20 +91,19 @@ export default {
           }
         })
       } else {
-        this.baseInfo = Object.assign({}, this.newInfo)
+        // this.baseInfo = Object.assign({}, this.newInfo)
       }
     }
   },
   methods: {
     initData() {
       if (this.popVisible) {
+        this.baseInfo.weight = 0
+        this.baseInfo.volume = 0
         this.info.forEach(e => {
           this.baseInfo.weight += Number(e.loadWeight)
           this.baseInfo.volume += Number(e.loadVolume)
         })
-      } else {
-        this.baseInfo.weight = 0
-        this.baseInfo.volume = 0
       }
     },
     initChart() {

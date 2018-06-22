@@ -123,7 +123,7 @@ export default {
         truckIdNumber:'',//车牌号
         batchTypeId: '',//批次状态
         batchNo:'',//发车批次
-        loadTypeId:39,//配载类型
+        loadTypeId:40,//配载类型
         endTime:'',//结束时间
         beginTime:''
       },

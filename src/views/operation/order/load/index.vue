@@ -1,11 +1,11 @@
 <template>
   <div class="load-steup">
-    <!-- 新增配载 -->
+    <!-- 新增配载 loadTypeId：38-短驳 39-干线 40-送货 -->
     <div class="load-steup-form" v-loading="loading">
       <el-collapse v-model="loadTruck">
         <el-collapse-item name="loadTruckOne">
           <template slot="title">
-            车辆信息&nbsp; <b>发车批次：{{truckMessage}} 合同编号：{{contractNo}}</b>
+            车辆信息&nbsp; <b>{{loadTypeId===40?'送货':'发车'}}批次：{{truckMessage}} 合同编号：{{contractNo}}</b>
           </template>
           <div class="clearfix loadFrom">
             <el-form :model="formModel" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
@@ -18,6 +18,9 @@
               <!-- 基本信息 -->
               <el-row :gutter="4">
                 <el-col :span="6">
+                  <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
+                    <el-input size="mini" v-model="formModel.deliveryFee"></el-input>
+                  </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini">
                     </SelectTree>
@@ -67,8 +70,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="短驳日期">
-                    <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" placeholder="短驳日期">
+                  <el-form-item :label="loadTimeFormName">
+                    <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" :placeholder="loadTimeFormName">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -80,13 +83,13 @@
                 </el-col>
                 <el-col :span="18">
                   <el-form-item label="备注">
-                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark" maxlength="10"></el-input>
+                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark" ></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
             </el-form>
             <!-- 费用参数 -->
-            <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee">
+            <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId!==40">
               <ul class="feeList">
                 <li>
                   <p>现付运费</p>
@@ -164,7 +167,7 @@
         <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空并新增</el-button>
         <el-button size="mini" icon="el-icon-goods" plain type="primary" @click="doAction('precent')">配载率</el-button>
         <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
-        <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')">完成并发车</el-button>
+        <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '>完成并发车</el-button>
       </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
@@ -323,6 +326,9 @@ export default {
     loadInfoPercent() {
       let data = Object.assign([], this.loadInfoPercentOrg)
       return data
+    },
+    loadTimeFormName() {
+      return (this.loadTypeId === 38 ? '短驳' : (this.loadTypeId === 39 ? '配载' : '送货')) + '日期'
     }
   },
   watch: {
@@ -450,7 +456,7 @@ export default {
     },
     formValidate() { // 判断表单验证
       this.$refs['formModel'].validate((valid) => {
-        if (valid) {
+        if (valid && this.loadTypeId !== 40) {
           this.$refs['formFee'].validate((validFee) => {
             if (validFee) {
               if (this.loadTableInfo.length < 1) {
@@ -465,11 +471,26 @@ export default {
               this.submitvalidate = false
             }
           })
+        } else if (valid && this.loadTypeId === 40){
+          this.submitvalidate = true
         } else {
           this.$message({ type: 'warning', message: '请填写完整表单' })
           this.submitvalidate = false
         }
       })
+    },
+    gotoPage() { // 跳转回到配载列表页面
+      switch (this.loadTypeId) {
+        case 38: // 短驳
+          this.$router.push({ path: '././shortDepart' })
+          break
+        case 39: // 干线
+          this.$router.push({ path: '././arteryDepart' })
+          break
+        case 40: // 送货
+          this.$router.push({ path: '././deliverManage' })
+          break
+      }
     },
     finishLoadInfo() {
       this.formValidate() // 表单验证
@@ -481,14 +502,14 @@ export default {
               this.$message({ type: 'success', message: '修改配载信息成功' })
               this.resetFieldsForm('formModel')
               this.resetFieldsForm('formFee')
-              this.$router.push({ path: '././shortDepart' })
+              this.gotoPage()
             })
           } else {
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.$message({ type: 'success', message: '插入配载信息成功' })
-              this.resetFieldsForm('formModel')
-              this.resetFieldsForm('formFee')
-              this.$router.push({ path: '././shortDepart' })
+              // this.resetFieldsForm('formModel')
+              // this.resetFieldsForm('formFee')
+              this.gotoPage()
             })
           }
         })
@@ -515,7 +536,7 @@ export default {
       Object.assign(this.$data, this.$options.data())
       this.$nextTick(() => {
         this.$refs[formName].resetFields()
-        this.$router.push({path: '././load', query:{loadKey: Math.random()}})
+        this.$router.push({ path: '././load', query: { loadKey: Math.random() } })
       })
     },
     /**
@@ -538,6 +559,7 @@ export default {
           case 40: // 送货
             this.batchTypeIdFinish = 57
             this.batchTypeIdFinishTruck = 57
+            console.log('传过来的',this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
             break
         }
       } else {
@@ -557,6 +579,11 @@ export default {
       this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
       this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      if (this.loadTypeId === 40) {
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
+      } else {
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
+      }
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
       this.$set(this.formModel, 'batchNo', this.truckMessage)
@@ -694,7 +721,7 @@ export default {
     .loadFrom {
       padding: 0 20px 20px 0;
       .el-form-item {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
       }
       .loadFrom-type {
         position: absolute;

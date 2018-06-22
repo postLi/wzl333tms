@@ -1,9 +1,16 @@
 <template>
   <transferTable>
     <!-- 左边表格区 -->
-    <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+    <div slot="tableLeft" class="tableHeadItemBtn">
       <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
+      <el-table ref="multipleTableRight" 
+      :data="leftTable" border 
+      @row-click="clickDetailsRight"
+       @selection-change="getSelectionRight" 
+       tooltip-effect="dark" triped :key="tablekey" 
+       height="100%" style="height:100%;"
+       :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" 
+       :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -48,9 +55,9 @@
       </el-table>
     </div>
     <!-- 右边表格区 -->
-    <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn">
+    <div slot="tableRight" class="tableHeadItemBtn">
       <el-button icon="el-icon-minus" class="tableAllBtn" size="mini" @click="minusAllList"></el-button>
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
+      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -344,6 +351,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tableHeadItemBtn {
+  display: flex;
+  flex-direction: column;
+  flex:1;
+  height:calc(100vh - 480px);
   position: relative;
   .tableItemBtn {
     width: 30px;

@@ -388,7 +388,7 @@
           loading: true,
           setupTableVisible: false,
           AddCustomerVisible: false,
-          isModify: false,
+          // isModify: false,
           formMode1: {
             // arriveOrgName:'',//到达网点
             // truckIdNumber:'',//车牌号码
@@ -452,12 +452,12 @@
       computed: {
         ...mapGetters([
           'otherinfo'
-        ]),
-        orgid () {
+        ])
+        // orgid () {
           // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
 
           // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
+        // }
       },
       props: {
         popVisible: {

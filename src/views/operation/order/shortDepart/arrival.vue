@@ -14,7 +14,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
+        <el-table ref="multipleTable" :data="infoList" stripe border @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
           <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="batchNo" label="发货批次">
@@ -174,6 +174,9 @@ export default {
           break
       }
     },
+    editTruck(row, column, cell, event) { // 双击单元格弹出详情页
+      this.setInfo()
+    },
     setTable() {
       this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
     },
@@ -212,20 +215,20 @@ export default {
       let data = {}
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'loadType', 38) // 装载类型：38-短驳
-      if (this.loadInfo.bathStatusName === '已到车'){
+      if (this.loadInfo.bathStatusName === '已到车') {
         postCancelLoad(data).then(data => {
-          this.$message({ type: 'success', message: '取消到车成功' })
-          this.getAllList()
-          this.clearInfo()
-        })
-        .catch(error => {
-          this.$message({ type: 'success', message: '操作失败' })
-        })
+            this.$message({ type: 'success', message: '取消到车成功' })
+            this.getAllList()
+            this.clearInfo()
+          })
+          .catch(error => {
+            this.$message({ type: 'success', message: '操作失败' })
+          })
       } else {
-        this.$message({ type: 'warning', message: '【 '+this.loadInfo.batchNo+' 】已【 '+this.loadInfo.bathStatusName+' 】不允许取消到车' })
+        this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消到车' })
         this.clearInfo()
       }
-      
+
     },
     chanelRepertory() { // 取消入库
       let data = {}

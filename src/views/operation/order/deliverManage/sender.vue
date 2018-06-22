@@ -4,7 +4,7 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">新增送货</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增送货</el-button>
 
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('sure')">修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>取消发货</el-button>
@@ -198,12 +198,12 @@ export default {
           truckIdNumber:'',//车牌号
           batchTypeId: '',//批次状态
           batchNo:'',//发车批次
-          loadTypeId:38,//配载类型 38
+          loadTypeId:40,//配载类型 38
           loadEndTime:'',//结束时间
           loadStartTime:'',
           departureStartTime:'',
           departureEndTime:'',
-          arriveOrgid:'',
+          arriveOrgid:1,
         }
       }
     }
@@ -211,6 +211,7 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
+      console.log(this.searchQuery)
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
@@ -239,7 +240,7 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length){
+      if(!this.selected.length && type !== 'add'){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -249,6 +250,9 @@ export default {
       }
 
       switch (type) {
+        case 'add':
+        this.$router.push({path: '././load', query:{loadTypeId: 40}}) // 38-短驳 39-干线 40-送货
+        break
           // 添加客户
           case 'storage':
             if(this.selected.length > 1){
@@ -298,7 +302,7 @@ export default {
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                    postCancelLoad(ids,39).then(res => {
+                    postCancelLoad(ids,40).then(res => {
                           this.$message({
                               type: 'success',
                               message: '取消成功!'
@@ -332,7 +336,7 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              postCancelPut(_ids,39).then(res => {
+              postCancelPut(_ids,40).then(res => {
                 this.$message({
                   type: 'success',
                   message: '取消成功!'
