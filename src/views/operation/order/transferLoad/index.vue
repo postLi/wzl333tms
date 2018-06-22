@@ -37,7 +37,7 @@
       </el-collapse>
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
-        <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button>
+        <!-- <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button> -->
         <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成中转</el-button>
       </div>
       <!-- 穿梭框 -->
@@ -219,7 +219,10 @@ export default {
               PromiseObj = transferManageApi.postNewTransfer(data)
             }
             PromiseObj.then(res => {
-              // this.resetFieldsForm('formModel')
+              if(this.isModify){
+                // this.reset()
+              }
+
               this.$message.success('操作成功！')
             }).catch(err => {
               this.$message.error(err.text || '未知错误')
@@ -229,6 +232,13 @@ export default {
           this.$message({ type: 'warning', message: '请填写完整表单' })
         }
       })
+    },
+    reset() {
+      this.resetFieldsForm('formModel')
+      this.getSelectAddLoadRepertoryList()
+      this.carrierName = ''
+      this.rightData = []
+      this.loadTableInfo = []
     },
     getLoadTable(obj) { // 获取穿梭框表格数据列表
       this.loadTableInfo = obj || []
