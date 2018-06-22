@@ -13,9 +13,16 @@
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
                 <!--</el-form-item>-->
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="sta_searchinfo clearfix" :model="formModel">
-                  <el-form-item label="到达网点:">
+                  <el-form-item label="送货费:">
                     <el-input
                       v-model="formModel.arriveOrgName"
+                      maxlength="15"
+                      clearable disabled>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="分摊方式:">
+                    <el-input
+                      v-model="formModel.apportionTypeName"
                       maxlength="15"
                       clearable disabled>
                     </el-input>
@@ -55,23 +62,16 @@
                       clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="分摊方式:">
-                    <el-input
-                      v-model="formModel.apportionTypeName"
-                      maxlength="15"
-                      clearable disabled>
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item label="配载日期:">
+
+                  <el-form-item label="送货日期:">
+                    <!--<template slot-scope="scope">
+                      <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+                    <!--</template>-->
                     <el-input
                       v-model="formModel.loadTime"
                       maxlength="15"
                       clearable disabled>
                     </el-input>
-                    <!--<template slot-scope="scope">-->
-                      <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
-                    <!--</template>-->
-
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
                     <el-input
@@ -93,85 +93,13 @@
                   </el-form-item>
                 </el-form>
               </div>
-              <div class="info_table">
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">
-                  <ul>
-                    <li>
-                      <p>现付运费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>现付油卡</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayOilCard" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>回付运费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>回付油卡</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.backpayOilCard" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>到付运费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>到付油卡</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayOilCard" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>整车保险费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.carloadInsuranceFee" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>发站装卸费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveHandlingFee" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>发站其他费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveOtherFee" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>到站装卸费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                    <li>
-                      <p>到站其他费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveOtherFee" disabled></el-input>
-                      </el-form-item>
-                    </li>
-                  </ul>
-                </el-form>
-              </div>
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
                   <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">{{popTitle}}</el-button>
 
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导入清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="info_tab">
@@ -213,34 +141,6 @@
                       label="运单号">
                     </el-table-column>
                     <el-table-column
-                      prop="childShipId"
-                      sortable
-                      width="120"
-                      label="子运单号">
-                    </el-table-column>
-                    <!--actualAmount-->
-                    <el-table-column
-                      prop="loadAmount"
-                      sortable
-                      width="120"
-                      label="实到件数">
-                    </el-table-column>
-                    <!--actualWeight-->
-                    <el-table-column
-                      sortable
-                      prop="loadWeight"
-                      width="120"
-                      label="实到重量">
-                    </el-table-column>
-                    <!--actualVolume-->
-                    <el-table-column
-                      label="实到体积"
-                      width="120"
-                      prop="loadVolume"
-                      sortable
-                    >
-                    </el-table-column>
-                    <el-table-column
                       prop="loadAmount"
                       label="配载件数"
                       width="120"
@@ -256,6 +156,48 @@
                     <el-table-column
                       prop="loadVolume"
                       label="配载体积"
+                      width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadVolume"
+                      label="库存件数"
+                      width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadVolume"
+                      label="库存重量"
+                      width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadVolume"
+                      label="库存体积"
+                      width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadVolume"
+                      label="运单件数"
+                      width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadVolume"
+                      label="运单重量"
+                      width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadVolume"
+                      label="运单体积"
                       width="120"
                       sortable
                     >
@@ -284,19 +226,19 @@
                     <el-table-column
                       prop="shipSenderMobile"
                       label="发货人电话"
-                      width="100"
-                      sortable
-                    >
-                    </el-table-column>
-                    <el-table-column
-                      prop="shipSenderName"
-                      label="收货人电话"
                       width="120"
                       sortable
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="shipSenderMobile"
+                      prop="shipReceiverName"
+                      label="收货人"
+                      width="100"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="shipReceiverMobile"
                       label="收货人电话"
                       width="120"
                       sortable
@@ -378,105 +320,7 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="运输合同" name="third">
-            <div class="pact">
-              <el-form :model="formModel">
-                <div class="pact_top">
-                  <h3>货物运输合同</h3>
-                  <!--<div class="top_num">-->
-                    <!--<el-form-item label="合同模板">-->
-                      <!--<el-input  placeholder="1" size="mini"></el-input>-->
-                    <!--</el-form-item>-->
-                  <!--</div>-->
-                  <div class="top_no">
-                    <el-form-item label="NO.">
-                      <el-input  placeholder="1" size="mini" disabled v-model="formModel.contractNo"></el-input>
-                    </el-form-item>
-                  </div>
-                </div>
-                <div class="pact_content">
-                  <div class="pact_title">
-                    <span>委托方:</span>
-                    <p style="">{{formModel.orgName}}</p>
-                    <span>(以下简称甲方)</span>
-                  </div>
-                  <div class="pact_title">
-                    <span>承运方:</span>
-                    <p style="">{{formModel.dirverName}}</p>
-                    <span>(以下简称乙方)</span>
-                  </div>
-                  <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
-                  <div class="p_cont">
-                    <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
-                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
-                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
-                  </div>
-                  <div class="p_input">
-                    <span></span>
-                    <el-form-item label="五、本车货物总为">
-                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>件 <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>千克 <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>方,全程运费<el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>元，甲乙双方不得任意减价或涨  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费<el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，现付油卡<el-input  size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>元，到付运费 <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>，到付油   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡   <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>元，回付运费 <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，回付油卡 <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>元，保险费 <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>元 。乙方必须将货物安全   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
 
-                    </el-form-item>
-                  </div>
-                  <div class="p_input">
-                    <span></span>
-                    <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled v-model="formModel.departureTime"></el-input>，到达时间为<el-input size="mini" disabled v-model="formModel.planArrivedTime"></el-input>。
-
-
-                    </el-form-item>
-                    <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
-                  </div>
-                  <div class="p_cont">
-                    <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
-                    <el-form-item label="关于本车:" class="p_textarea">
-                      <el-input type="textarea" size="mini" v-model="formModel.remark"></el-input>
-                    </el-form-item>
-                    <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
-                    <p class="p_about">附：驾驶员、车辆登记</p>
-
-                  </div>
-                  <div class="p_table">
-                    <el-form-item label="司机名称:">
-                      <el-input size="mini" disabled v-model="formModel.dirverName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="家庭住址:">
-                      <el-input size="mini" disabled></el-input>
-                    </el-form-item>
-                    <el-form-item label="家庭电话:">
-                      <el-input size="mini" disabled ></el-input>
-                    </el-form-item>
-                    <el-form-item label="车架号:">
-                      <el-input size="mini" disabled ></el-input>
-                    </el-form-item>
-                    <el-form-item label="配载人员:">
-                      <el-input size="mini" disabled v-model="formModel.userName"></el-input>
-                    </el-form-item>
-                    <span>甲方签章:</span>
-                  </div>
-                  <div class="p_table">
-                    <el-form-item label="身份证号:">
-                      <el-input size="mini" disabled v-model="formModel.driverCardid "></el-input>
-                    </el-form-item>
-                    <el-form-item label="随车电话:">
-                      <el-input size="mini" disabled v-model="formModel.dirverMobile"></el-input>
-                    </el-form-item>
-                    <el-form-item label="车牌号:">
-                      <el-input size="mini" disabled v-model="formModel.truckIdNumber"></el-input>
-                    </el-form-item>
-                    <el-form-item label="发动机号:">
-                      <el-input  size="mini" disabled></el-input>
-                    </el-form-item>
-                    <span>乙方签章:</span>
-                  </div>
-
-                </div>
-                <div class="pact_bottom"></div>
-              </el-form>
-            </div>
-
-          </el-tab-pane>
         </el-tabs>
       </div>
 
@@ -516,8 +360,6 @@
     export default {
       data () {
         return {
-          // titleIcon:"到车确定",
-          // titleIcon:"到车入库",
           getBatchNo:'',
           popTitle:'到车入库',
           activeName: 'first',
@@ -1146,161 +988,6 @@
       }
     }
   }
-  /*货物运输合同*/
-.pact{
-  .pact_top{
-    position: relative;
-    height: 40px;
-    margin-bottom: 10px;
-    h3{
-      text-align: center;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: 500;
-    }
-    .top_num{
-      position: absolute;
-      right: 10px;
-      top: -18px;
-      .el-form-item{
-        display: flex;
-      }
-
-    }
-    .top_no{
-      position: absolute;
-      right: 10px;
-      top: -5px;
-      .el-form-item{
-        display: flex;
-        .el-form-item__content{
-          .el-input.is-disabled {
-            .el-input__inner{
-              background-color: #fff;
-              border-color: #fff;
-            }
-          }
-        }
-
-      }
-    }
-  }
-  .cont_styles{
-    color: #606266;
-    font-size: 14px;
-  }
-  .pact_content{
-    .pact_title{
-      color: #606266;
-      font-size: 14px;
-      margin: 10px 0 0 25px;
-      p{
-        display: inline-block;
-        width: 250px;
-        border-bottom: 1px solid;
-        padding-left: 10px;
-      }
-
-
-    }
-    .p_cont,.p_input{
-      color: #606266;
-      font-size: 14px;
-
-    }
-    .p_cont{
-      .p_textarea.el-form-item{
-        display: inline-flex;
-        padding-left: 25px;
-        margin-bottom: 0;
-        .el-textarea{
-          width: 250%;
-        }
-      }
-      p.p_about{
-        padding-left: 25px;
-        margin: 10px 0 10px 0;
-      }
-      p{
-        margin-bottom: 5px;
-      }
-    }
-    p.p_salf{
-      color: #606266;
-      font-size: 14px;
-      padding-left: 25px;
-      margin: 10px 0 10px 0;
-    }
-    .p_input{
-      .el-form-item{
-        margin-bottom: 0;
-        .el-form-item__content{
-          .el-input.el-input--mini.is-disabled{
-            width: 13%;
-            .el-input__inner{
-              background: #fff;
-            }
-
-          }
-        }
-
-      }
-    }
-    .p_table{
-      float: left;
-      padding-left: 80px;
-      width: 400px;
-      margin-bottom: 150px;
-      .el-form-item{
-        margin-bottom: 0;
-        .el-form-item__content{
-          .el-input.el-input--mini.is-disabled{
-            width: 59%;
-            .el-input__inner{
-              width: 200px;
-            }
-
-          }
-          .el-input.el-input--mini{
-            width: 59%;
-            input.el-input__inner{
-              width: 200px;
-            }
-
-          }
-
-          /*.el-input.el-input--mini.is-disabled{*/
-            /*width: 20%*/
-          /*}*/
-        }
-
-      }
-      .el-form-item:last-of-type{
-        margin-bottom: 60px;
-      }
-
-    }
-    .p_table:last-of-type{
-      /*<!--top:-204px;-->*/
-      /*left: 550px;*/
-      float: right;
-      padding-left: 0;
-      /*padding-left: 300px;*/
-      .el-form-item:last-of-type{
-        margin-bottom: 100px;
-      }
-      span{
-        margin-bottom: 100px;
-      }
-    }
-
-  }
-
-
-
-  .pact_bottom{
-
-  }
-}
 
 }
 .cont_rules .el-input--mini .el-input__inner{

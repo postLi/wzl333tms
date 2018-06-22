@@ -1,6 +1,6 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="发车时间:">
+    <el-form-item label="送货时间:">
       <el-date-picker
         v-model="searchCreatTime"
         type="daterange"
@@ -12,46 +12,33 @@
         >
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="到车时间:">
-      <el-date-picker
-        v-model="searchEndTime"
-        type="daterange"
-        align="right"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        >
-      </el-date-picker>
-    </el-form-item>
     <el-form-item label="批次状态:">
-      <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" />
+      <SelectType v-model="searchForm.batchTypeId" type="delivery_batch_type" placeholder="请选择" class="pickup-way" />
       <!--<SelectTree v-model="searchForm.orgid" />-->
     </el-form-item>
-      <el-form-item label="发站:">
-          <SelectTree v-model="searchForm.orgid" />
-      </el-form-item>
-      <el-form-item label="发车批次:" class="art_marginTop">
-          <el-input
-              v-model="searchForm.batchNo"
-              maxlength="15"
-              clearable>
-          </el-input>
-      </el-form-item>
-    <el-form-item label="车牌号:" class="art_marginTop">
+    <el-form-item label="送货批次:">
+      <el-input
+        v-model="searchForm.batchNo"
+        maxlength="15"
+        clearable>
+      </el-input>
+    </el-form-item>
+
+    <el-form-item label="车牌号:" class="">
       <el-input
         v-model="searchForm.truckIdNumber"
         maxlength="15"
         clearable>
       </el-input>
     </el-form-item>
-    <el-form-item label="司机姓名:" class="art_marginTop" prop="dirverName">
+    <el-form-item label="司机名称:" prop="dirverName">
       <el-input
         v-model="searchForm.driverName"
         maxlength="15"
         clearable>
       </el-input>
     </el-form-item>
+
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -62,7 +49,6 @@
 <script>
 import { REGEX }  from '@/utils/validate'
 import { parseTime }  from '@/utils/'
-
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 export default {
@@ -85,7 +71,7 @@ export default {
   },
   computed: {
     title () {
-
+      // return this.issender ? '发' : '收'
     }
   },
   data () {
@@ -115,8 +101,6 @@ export default {
     }
 
     return {
-      // searchCreatTime:[],
-      // searchEndTime:[],
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchEndTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickOption: {
@@ -141,9 +125,7 @@ export default {
         batchNo:'',//发车批次
         loadTypeId:39,//配载类型
         endTime:'',//结束时间
-        beginTime:'',//
-        arrivedbeginDate:'',//到达时间(起始时间)
-        arrivedEndDate:''//到达时间(结束时间)
+        beginTime:''
       },
       rules: {
         mobile: [{
@@ -165,23 +147,26 @@ export default {
   mounted () {
     this.searchForm.orgid = this.orgid
     // this.searchForm.batchTypeId = this.orgid
+    // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
     getOrgid (id){
       // this.searchForm.orgid = id
     },
     onSubmit () {
-      this.searchForm.beginTime = parseTime(this.searchCreatTime[0])
-      this.searchForm.endTime = parseTime(this.searchCreatTime[1])
-      this.searchForm.arrivedbeginDate = parseTime(this.searchEndTime[0])
-      this.searchForm.arrivedEndDate = parseTime(this.searchEndTime[1])
-      this.$emit('change', this.searchForm)
+      if(this.searchForm){
+        this.searchForm.loadStartTime = parseTime(this.searchCreatTime[0])
+        this.searchForm.loadEndTime = parseTime(this.searchCreatTime[1])
+        this.$emit('change', this.searchForm)
+      }
+
     },
     clearForm () {
       this.searchForm.dirverName = ''
       this.searchForm.orgid = this.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
+
     }
   }
 }

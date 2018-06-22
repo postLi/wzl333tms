@@ -1,13 +1,16 @@
 <template>
-  <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+  <!--v-loading="loading"-->
+  <div class="tab-content" >
+    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">新增送货</el-button>
+
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('sure')">修改</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>取消发货</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deleteStor')" plain>取消装货</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -31,99 +34,118 @@
           <el-table-column
             fixed
             sortable
-            prop="customerId"
+            prop="id"
             label="序号"
             width="80">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="companyName"
-            label="收货公司">
+            prop="batchTypeId"
+            width="120"
+            label="送货批次">
           </el-table-column>
           <el-table-column
-            prop="customerUnit"
+            fixed
             sortable
-            label="收货方">
+            prop="batchTypeId"
+            width="120"
+            label="批次状态">
           </el-table-column>
           <el-table-column
-            prop="customerName"
+            label="送货时间"
+            width="160"
             sortable
-            label="收货人">
+          >
+            <template slot-scope="scope">
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="customerMobile"
+            label="完成时间"
+            width="160"
             sortable
-            label="手机号码">
+          >
+            <template slot-scope="scope">
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <el-table-column
+            prop="truckIdNumber"
+            width="110"
             sortable
-            prop="orgName"
-            label="归属组织">
-          </el-table-column>
-          <el-table-column
-            label="公司法人"
-            prop="legalPersonname"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="vipNum"
-            label="VIP号"
-            sortable
-            >
+            label="车牌号">
           </el-table-column>
           <el-table-column
             sortable
-            prop="idcard"
-            label="身份证号码">
+            prop="dirverName"
+            width="110"
+            label="司机名称">
           </el-table-column>
           <el-table-column
-            prop="bankName"
-            label="银行名称"
+            prop="dirverMobile"
+            label="司机电话"
+            width="110"
             sortable
-            >
+          >
           </el-table-column>
           <el-table-column
-            prop="bankCardNumber"
-            label="银行卡号"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="openBank"
-            label="开户行"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="detailedAddress"
-            label="详细地址"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            label="身份证图片"
+            prop="amountall"
+            label="送货件数"
             width="120"
             sortable
-            >
-            <template slot-scope="scope">
-                <span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>
-            </template>
+          >
+          </el-table-column>
+          <el-table-column
+            prop="weightall"
+            label="送货重量"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="volumeall"
+            label="送货体积"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="weightRate"
+            label="重量装载率"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="volumeRate"
+            label="体积装载率"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            width="150"
+            sortable
+          >
           </el-table-column>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
+import { postSelectLoadMainInfoList } from '@/api/operation/arteryDepart'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/add'
+import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
@@ -139,23 +161,27 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
       }
   },
   mounted () {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
-      this.loading = false
-    })
+    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    this.fetchAllCustomer()
+    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
+    //   console.log(res)
+    //   this.loading = false
+    // })
   },
   data () {
     return {
+      loading: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
+      trackId:'',
       //加载状态
-      loading: true,
+      // loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -163,13 +189,21 @@ export default {
       // 选中的行
       selected: [],
       searchQuery: {
-        "currentPage": 1,
+        // "currentPage": 1,
+        "pageNum": 1,
         "pageSize": 100,
         "vo": {
-          "orgid": 1,
-          customerType: 2,
-          customerMobile: '',
-          customerName: ''
+          "orgId": 1,
+          dirverName: '',
+          truckIdNumber:'',//车牌号
+          batchTypeId: '',//批次状态
+          batchNo:'',//发车批次
+          loadTypeId:38,//配载类型 38
+          loadEndTime:'',//结束时间
+          loadStartTime:'',
+          departureStartTime:'',
+          departureEndTime:'',
+          arriveOrgid:'',
         }
       }
     }
@@ -177,9 +211,9 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      return getAllCustomer(this.searchQuery).then(data => {
+      return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },
@@ -187,13 +221,13 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
+      Object.assign(this.searchQuery, obj)
+      this.fetchData()
+      // this.searchQuery.currentPage = obj.pageNum
+      // this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchQuery.vo.orgid = obj.orgid
-      this.searchQuery.vo.customerMobile = obj.mobile
-      this.searchQuery.vo.customerName = obj.name
+      this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
     showImport () {
@@ -205,7 +239,7 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length && type !== 'add'){
+      if(!this.selected.length){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -214,62 +248,110 @@ export default {
           return false
       }
 
-      console.log("this.selected:", this.selected)
-      
-
       switch (type) {
           // 添加客户
-          case 'add':
+          case 'storage':
+            if(this.selected.length > 1){
+              this.$message({
+                message: '只能选择一条数据进行跟踪设置~',
+                type: 'warning'
+              })
+              return false
+
+            }else if(this.selected.length === 1){
+
+              this.selectInfo = this.selected[0]
               this.isModify = false
-              this.selectInfo = {}
               this.openAddCustomer()
+            }
+
               break;
-          // 修改客户信息
-          case 'modify':
-              this.isModify = true
+          //到车确定
+          case 'sure':
+
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
                       type: 'warning'
                   })
+                return false
+              }else if(this.selected.length === 1){
+
+                this.selectInfo = this.selected[0]
+                this.isModify = true
+                this.openAddCustomer()
               }
-              this.selectInfo = this.selected[0]
-              this.openAddCustomer()
               break;
+        // sure 到车确定   deselectCar取消到车  deleteStor取消入库
+
           // 删除客户
-          case 'delete':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
+          case 'deselectCar':
+                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
                   //=>todo 删除多个
                   let ids = this.selected.map(item => {
-                      return item.customerId
+                      return item.id
                   })
                   ids = ids.join(',')
 
-                  this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-                      confirmButtonText: '删除',
+                  this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
+                      confirmButtonText: '确定',
                       cancelButtonText: '取消',
                       type: 'warning'
                   }).then(() => {
-                      deleteSomeCustomerInfo(ids).then(res => {
+                    postCancelLoad(ids,39).then(res => {
                           this.$message({
                               type: 'success',
-                              message: '删除成功!'
+                              message: '取消成功!'
                           })
                           this.fetchData()
                       }).catch(err=>{
                           this.$message({
                               type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })  
+                              message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                          })
                       })
-                      
+
                   }).catch(() => {
                       this.$message({
                           type: 'info',
-                          message: '已取消删除'
-                      })          
+                          message: '已取消'
+                      })
                   })
               break;
+          // 取消入库
+          case 'deleteStor':
+            let deleteItemName = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
+            //=>todo 删除多个
+            let _ids = this.selected.map(item => {
+              return item.id
+            })
+            _ids = _ids.join(',')
+
+            this.$confirm('确定要取消车牌号 ' + deleteItemName + ' 入库吗？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              postCancelPut(_ids,39).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '取消成功!'
+                })
+                this.fetchData()
+              }).catch(err=>{
+                this.$message({
+                  type: 'info',
+                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
+              })
+
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              })
+            })
+            break;
           // 导出数据
           case 'export':
               let ids2 = this.selected.map(el => {
@@ -335,7 +417,7 @@ export default {
             width: 100%;
             height: calc(100% - 68px);
             flex-grow: 1;
-            
+
             .el-table{
                 table{
                     th,td{

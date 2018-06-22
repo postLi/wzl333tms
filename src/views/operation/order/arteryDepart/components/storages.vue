@@ -63,15 +63,14 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
+                    <!--<template slot-scope="scope">
+                      <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+                    <!--</template>-->
                     <el-input
                       v-model="formModel.loadTime"
                       maxlength="15"
                       clearable disabled>
                     </el-input>
-                    <!--<template slot-scope="scope">-->
-                      <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
-                    <!--</template>-->
-
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
                     <el-input
@@ -168,10 +167,10 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">{{popTitle}}</el-button>
+                  <!--<el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">{{popTitle}}</el-button>-->
 
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="info_tab">
@@ -218,28 +217,7 @@
                       width="120"
                       label="子运单号">
                     </el-table-column>
-                    <!--actualAmount-->
-                    <el-table-column
-                      prop="loadAmount"
-                      sortable
-                      width="120"
-                      label="实到件数">
-                    </el-table-column>
-                    <!--actualWeight-->
-                    <el-table-column
-                      sortable
-                      prop="loadWeight"
-                      width="120"
-                      label="实到重量">
-                    </el-table-column>
-                    <!--actualVolume-->
-                    <el-table-column
-                      label="实到体积"
-                      width="120"
-                      prop="loadVolume"
-                      sortable
-                    >
-                    </el-table-column>
+
                     <el-table-column
                       prop="loadAmount"
                       label="配载件数"
@@ -257,6 +235,49 @@
                       prop="loadVolume"
                       label="配载体积"
                       width="120"
+                      sortable
+                    >
+                    </el-table-column>
+                    <!--actualAmount-->
+                    <el-table-column
+                      prop="loadAmount"
+                      sortable
+                      width="120"
+                      label="库存件数">
+                    </el-table-column>
+                    <!--actualWeight-->
+                    <el-table-column
+                      sortable
+                      prop="loadWeight"
+                      width="120"
+                      label="库存重量">
+                    </el-table-column>
+                    <!--actualVolume-->
+                    <el-table-column
+                      label="库存体积"
+                      width="120"
+                      prop="loadVolume"
+                      sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="loadAmount"
+                      sortable
+                      width="120"
+                      label="运单件数">
+                    </el-table-column>
+                    <!--actualWeight-->
+                    <el-table-column
+                      sortable
+                      prop="loadWeight"
+                      width="120"
+                      label="运单重量">
+                    </el-table-column>
+                    <!--actualVolume-->
+                    <el-table-column
+                      label="运单体积"
+                      width="120"
+                      prop="loadVolume"
                       sortable
                     >
                     </el-table-column>
@@ -289,14 +310,14 @@
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="shipSenderName"
-                      label="收货人电话"
+                      prop="shipReceiverName"
+                      label="收货人"
                       width="120"
                       sortable
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="shipSenderMobile"
+                      prop="shipReceiverMobile"
                       label="收货人电话"
                       width="120"
                       sortable
@@ -516,8 +537,6 @@
     export default {
       data () {
         return {
-          // titleIcon:"到车确定",
-          // titleIcon:"到车入库",
           getBatchNo:'',
           popTitle:'到车入库',
           activeName: 'first',

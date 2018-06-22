@@ -54,16 +54,9 @@ export function postAddRepertory(typeId,params) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function postConfirmToCar(id,typeId) {
-  return fetch.post('/api-order/order/load/v1/confirmToCar/?id=' + id + '&typeId=' + typeId)
-}
-
-/**
- * order/load/v1/getBatchNo
- * 获得配载批次号
- * @returns {AxiosPromise<any>}
- */
-export function getBatchNoId(orgid,loadTypeId) {
-  return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
+  return fetch.post('/api-order/order/load/v1/confirmToCar/ '+ id  + '?&typeId=' + typeId).then(res => {
+    return res.data || {}
+  })
 }
 
 /**
@@ -74,7 +67,7 @@ export function getBatchNoId(orgid,loadTypeId) {
  * @returns {AxiosPromise<any>}
  */
 export function postCancelLoad(id,loadTypeId) {
-  return fetch.post('/api-order/order/load/v1/cancelLoad/?id=' + id + '&loadTypeId=' + loadTypeId)
+  return fetch.post('/api-order/order/load/v1/cancelLoad/' + id + '/' + loadTypeId)
 }
 /**order/load/v1/cancelPut/{id}/{loadType}
  * 根据配载单ID配载类型取消入库
@@ -83,7 +76,15 @@ export function postCancelLoad(id,loadTypeId) {
  * @returns {AxiosPromise<any>}
  */
 export function postCancelPut(id,loadTypeId) {
-  return fetch.post('/api-order/order/load/v1/cancelPut/?id=' + id + '&loadTypeId=' + loadTypeId)
+  return fetch.post('/api-order/order/load/v1/cancelPut/' + id + '/' + loadTypeId)
 }
 
 
+/**
+ * order/load/v1/getBatchNo
+ * 获得配载批次号
+ * @returns {AxiosPromise<any>}
+ */
+export function getBatchNoId(orgid,loadTypeId) {
+  return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
+}

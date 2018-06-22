@@ -43,7 +43,7 @@
           <el-table-column
             fixed
             sortable
-            prop="batchTypeId"
+            prop="batchNo"
             width="120"
             label="发车批次">
           </el-table-column>
@@ -54,29 +54,31 @@
             label="车牌号">
           </el-table-column>
           <el-table-column
-            prop="customerName"
+            prop="orgName"
             sortable
             width="110"
             label="发车网点">
           </el-table-column>
           <el-table-column
-            prop="arriveOrgid"
+            prop="endOrgName"
             sortable
             width="110"
             label="目的网点">
           </el-table-column>
           <el-table-column
             sortable
-            prop="batchTypeId"
+            prop="bathStatusName"
             width="110"
             label="批次状态">
           </el-table-column>
           <el-table-column
             label="发车时间"
-            width="110"
-            prop="departureTime"
+            width="160"
             sortable
             >
+            <template slot-scope="scope">
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <!--<el-table-column-->
             <!--prop="vipNum"-->
@@ -267,15 +269,6 @@
             sortable
           >
           </el-table-column>
-          <!--<el-table-column-->
-            <!--label="身份证图片"-->
-            <!--width="120"-->
-            <!--sortable-->
-            <!--&gt;-->
-            <!--<template slot-scope="scope">-->
-                <!--<span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
@@ -324,6 +317,7 @@ export default {
       usersArr: [],
       total: 0,
       trackId:'',
+      batchTypeId:'',//批次状态
       //加载状态
       // loading: true,
       setupTableVisible: false,
@@ -343,7 +337,9 @@ export default {
           batchNo:'',//发车批次
           loadTypeId:39,//配载类型
           endTime:'',//结束时间
-          beginTime:''
+          beginTime:'',//
+          arrivedbeginDate:'',//到达时间(起始时间)
+          arrivedEndDate:''//到达时间(结束时间)
         }
       }
     }
@@ -389,7 +385,7 @@ export default {
       }
 
       switch (type) {
-          // 添加客户
+          // ruku
           case 'storage':
             if(this.selected.length > 1){
               this.$message({
@@ -408,7 +404,6 @@ export default {
               break;
           //到车确定
           case 'sure':
-
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
@@ -416,15 +411,29 @@ export default {
                   })
                 return false
               }else if(this.selected.length === 1){
-
-                this.selectInfo = this.selected[0]
-                this.isModify = true
-                this.openAddCustomer()
+                //在途中
+                if(this.selected[0].bathStatusName === "在途中"){
+                  this.$message({
+                    message: '到车确定成功~',
+                    type: 'success'
+                  })
+                  this.fetchData()
+                  // this.selectInfo = this.selected[0]
+                  // this.isModify = true
+                  // this.openAddCustomer()
+                }else{
+                  let bathStatusName = this.selected[0].bathStatusName
+                  this.$message({
+                    message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
+                    type: 'warning'
+                  })
+                  return false
+                }
               }
               break;
         // sure 到车确定   deselectCar取消到车  deleteStor取消入库
 
-          // 删除客户
+          // deselectCar取消到车
           case 'deselectCar':
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
                   //=>todo 删除多个
@@ -432,31 +441,41 @@ export default {
                       return item.id
                   })
                   ids = ids.join(',')
-
+                if(this.selected[0].bathStatusName === '已到车'){
+                    console.log(this.selected.bathStatusName)
                   this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
-                      confirmButtonText: '删除',
-                      cancelButtonText: '取消',
-                      type: 'warning'
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
                   }).then(() => {
                     postCancelLoad(ids,39).then(res => {
-                          this.$message({
-                              type: 'success',
-                              message: '删除成功!'
-                          })
-                          this.fetchData()
-                      }).catch(err=>{
-                          this.$message({
-                              type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })
+                      this.$message({
+                        type: 'success',
+                        message: '取消到车成功~'
                       })
+                      this.fetchData()
+                    }).catch(err=>{
+                      this.$message({
+                        type: 'info',
+                        message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                      })
+                    })
 
                   }).catch(() => {
-                      this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                      })
+                    this.$message({
+                      type: 'info',
+                      message: '已取消'
+                    })
                   })
+                }else{
+                  let bathStatusName = this.selected[0].bathStatusName
+                  this.$message({
+                    message: '批次状态为：' + bathStatusName + '不允许取消到车~',
+                    type: 'warning'
+                  })
+                  return false
+                }
+
               break;
           // 取消入库
           case 'deleteStor':
@@ -467,30 +486,39 @@ export default {
             })
             _ids = _ids.join(',')
 
-            this.$confirm('确定要取消车牌号 ' + deleteItemName + ' 入库吗？', '提示', {
-              confirmButtonText: '删除',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              postCancelPut(_ids,39).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
+            if(this.selected[0].bathStatusName === '已入库'){
+              this.$confirm('确定要取消车牌号 ' + deleteItemName + ' 入库吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                postCancelPut(_ids,39).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '到货入库成功~'
+                  })
+                  this.fetchData()
+                }).catch(err=>{
+                  this.$message({
+                    type: 'info',
+                    message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  })
                 })
-                this.fetchData()
-              }).catch(err=>{
+
+              }).catch(() => {
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '已取消删除'
                 })
               })
-
-            }).catch(() => {
+            }else{
+              let bathStatusName = this.selected[0].bathStatusName
               this.$message({
-                type: 'info',
-                message: '已取消删除'
+                message: '批次状态为：' + bathStatusName + '不允许取消入库~',
+                type: 'warning'
               })
-            })
+              return false
+            }
             break;
           // 导出数据
           case 'export':
