@@ -28,7 +28,7 @@
           <div class="order-form-item">
             <span class="order-form-label">开单网点</span>
             <el-form-item prop="tmsOrderShip.shipFromOrgid">
-              <SelectTree size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
+              <SelectTree :filterable="false" size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
             </el-form-item>
           </div>
         </el-col>
@@ -52,7 +52,7 @@
           <div class="order-form-item">
             <span class="order-form-label">目的网点</span>
             <el-form-item prop="tmsOrderShip.shipToOrgid">
-              <SelectTree size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+              <SelectTree :filterable="false" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
             </el-form-item>
           </div>
         </el-col>
@@ -139,7 +139,9 @@
         <table>
           <thead>
             <tr>
-              <th><el-button type="primary" icon="el-icon-plus" size="mini" v-if="cargoList.length < maxCargoLength" @click="addCargoList()" circle ></el-button></th>
+              <th>
+                <span class="addButton" @click="addCargoList()"><i class="el-icon-plus"></i></span>
+                </th>
               <th v-for="item in feeConfig" :key="item.id">
                 {{ item.fieldName }}
               </th>
@@ -147,7 +149,9 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in cargoList" :key="index">
-              <td><el-button v-if="index !== 0" type="danger" icon="el-icon-minus" size="mini" @click="deleteCargoList(index)" circle ></el-button></td>
+              <td>
+                <span class="minusButton" v-if="index !== 0" @click="deleteCargoList(index)"><i class="el-icon-minus"></i></span>
+                </td>
               <td v-for="item in feeConfig" :key="item.id">
                 <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="cargoList[index][item.fieldProperty]" />
@@ -1011,6 +1015,8 @@ export default {
 </script>
 <style lang="scss">
 $bordercolor: #d4d4d4;
+$backgroundcolor: #cbe1f7;
+
   .createOrder-main{
     margin-left: 12px;
     margin-right: 12px;
@@ -1096,16 +1102,93 @@ $bordercolor: #d4d4d4;
     .createOrder-info{
       height: 30px;
     }
+
+    .order-form-label{
+      color: #666;
+    }
+
+    .order-form-item{
+      display: flex;
+      line-height: 30px;
+      .order-form-label{
+        width: 65px;
+        text-align: center;
+        border-right: 1px solid $bordercolor;
+      }
+      .el-form-item{
+        flex: 1;
+      }
+      .autocomplete-input,.el-form-item__content,.el-autocomplete{
+        display: block;
+        width: 100%;
+      }
+    }
+
+    .firstline-order{
+      border-bottom: 1px solid $bordercolor;
+      
+      .el-col:first-child .order-form-label{
+        border-left: none;
+      }
+      .order-form-label{
+        display: inline-block;
+        
+        border-left: 1px solid $bordercolor;
+        
+      }
+      .el-input__inner{
+        border-color: transparent;
+        border-radius: 0;
+      }
+      
+    }
+    
+    /* 收发货表单 */
+    .sender-form,.receiver-form{
+      float: left;
+      width: calc( (100% - 5px) / 2 );
+
+      .order-form-item{
+        border-bottom: 1px solid $bordercolor;
+
+        &:last-child{
+          border: none;
+        }
+      }
+
+      .form-title{
+        border-bottom: 1px solid $bordercolor;
+        line-height: 28px;
+        text-align: center;
+        font-size: 16px;
+        color: #5dabed;
+        background: $backgroundcolor;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+      .el-input__inner{
+        border-color: transparent;
+        border-radius: 0;
+      }
+    }
+    .sender-form{
+      border-right: 1px solid $bordercolor;
+    }
+    .receiver-form{
+      float: right;
+      border-left: 1px solid $bordercolor;
+    }
+
     /** 货品表单 **/
     .order-cargo-form{
       overflow: auto;
       table, td{
-        border: 1px solid #d4d4d4;
+        border: 1px solid $bordercolor;
         text-align: center;
       }
       td, th{
-        padding: 2px 0;
-        height: 32px;
+        padding: 0 0;
+        height: 28px;
       }
       th{
         min-width: 110px;
@@ -1116,14 +1199,35 @@ $bordercolor: #d4d4d4;
         border-left: 1px solid #88bef3;
         text-align: center;
       }
-    }
-    /* 收发货表单 */
-    .sender-form,.receiver-form{
-      float: left;
-      width: calc( (100% - 5px) / 2 );
-    }
-    .receiver-form{
-      float: right;
+      .el-input__inner{
+        border-color: transparent;
+        border-radius: 0;
+
+        &:focus{
+          background: rgba(0, 0, 0, 0.1);
+        }
+      }
+      .addButton, .minusButton{
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        border: 1px solid #3b95ee;
+        color: #3b95ee;
+        line-height: 14px;
+        border-radius: 4px;
+
+        cursor: pointer;
+
+        i{
+          font-weight: bold;
+          vertical-align: middle;
+        }
+      }
+      .minusButton{
+        border-color: #ee3b3b;
+        color: #ee3b3b;
+      }
     }
     /* 其他费用 */
     .order-other-form{

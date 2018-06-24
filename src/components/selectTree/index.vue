@@ -1,5 +1,5 @@
 <template>
-  <el-select ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" filterable @change="change">
+  <el-select ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" @change="change">
         <el-option
         v-for="item in openGroups"
         :key="item.id"
