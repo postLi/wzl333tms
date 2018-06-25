@@ -318,7 +318,7 @@ export default {
   position: relative;
 
   .tab_info {
-    padding: 10px 30px 40px;
+    padding: 10px 0px 40px;
     height: 100%;
     flex-grow: 1;
     display: flex;

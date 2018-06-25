@@ -1,7 +1,5 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-row>
-      <el-col :span="20">
         <el-form-item label="短驳时间">
           <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
           </el-date-picker>
@@ -18,14 +16,10 @@
         <el-form-item label="司机名称">
           <querySelect search="driverName"  valuekey="dirverName" type="driver" v-model="searchForm.dirverName"  label="driverName" :remote="true" clearable />
         </el-form-item>
-      </el-col>
-      <el-col :span="4">
         <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
         </el-form-item>
-      </el-col>
-    </el-row>
   </el-form>
 </template>
 <script>
@@ -141,6 +135,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tab-content {
+  .el-input--mini{
+    width:150px;
+  }
+  .el-range-editor--mini.el-input__inner{
+    width:200px;
+  }
   .staff_searchinfo {
     padding: 15px 20px;
     border-bottom: 1px dashed #999;

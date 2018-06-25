@@ -29,7 +29,7 @@ export default {
       component: 'deliver'
     }
   },
-  mounted() {
+  activated() {
     this.setPage()
   },
   methods: {

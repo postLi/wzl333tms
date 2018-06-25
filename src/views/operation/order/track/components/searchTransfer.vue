@@ -122,6 +122,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tab-content {
+  .el-input--mini{
+    width:150px;
+  }
+  .el-range-editor--mini.el-input__inner{
+    width:200px;
+  }
   .staff_searchinfo {
     padding: 15px 20px;
     border-bottom: 1px dashed #999;

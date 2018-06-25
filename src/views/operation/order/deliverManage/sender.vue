@@ -111,14 +111,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="weightRate"
+            prop="weightLoadRate"
             label="重量装载率"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="volumeRate"
+            prop="volumeLoadRate"
             label="体积装载率"
             width="120"
             sortable
@@ -272,7 +272,6 @@ export default {
               break;
           //到车确定
           case 'sure':
-
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
@@ -282,8 +281,10 @@ export default {
               }else if(this.selected.length === 1){
 
                 this.selectInfo = this.selected[0]
-                this.isModify = true
-                this.openAddCustomer()
+                this.$router.push({path: '././load', query: {loadTypeId: 40, info: this.selectInfo, tablekey: Math.random()}})
+                console.log('40-info', this.selectInfo)
+                // this.isModify = true
+                // this.openAddCustomer()
               }
               break;
         // sure 到车确定   deselectCar取消到车  deleteStor取消入库

@@ -70,7 +70,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfo>
+      <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
     </div>
   </div>
 </template>
@@ -266,6 +266,12 @@ export default {
       this.editInfoVisible = false
       this.$refs.multipleTable.clearSelection()
     },
+    isSuccess (obj) {
+      if (obj) {
+        // this.$router.push({path: '././shortDepart', query:{tableKey: Math.random()}})
+        this.getAllList()
+      }
+    }
   }
 }
 
@@ -278,7 +284,7 @@ export default {
   position: relative;
 
   .tab_info {
-    padding: 10px 30px 40px;
+    padding: 10px 0px 40px;
     height: 100%;
     flex-grow: 1;
     display: flex;

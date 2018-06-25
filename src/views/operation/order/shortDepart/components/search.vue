@@ -11,10 +11,10 @@
       <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-     <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
+      <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
     </el-form-item>
     <el-form-item label="司机名称">
-       <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName"  label="driverName" :remote="true" clearable />
+      <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable />
     </el-form-item>
     <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
@@ -141,11 +141,18 @@ export default {
 </script>
 <style lang="scss">
 .tab-content {
+
   .staff_searchinfo {
     padding: 15px 20px;
     border-bottom: 1px dashed #999;
     .el-form-item {
-      margin-bottom: 0;
+      margin-bottom: 10px;
+    }
+    .el-input--mini {
+      width: 150px;
+    }
+    .el-range-editor--mini.el-input__inner {
+      width: 200px;
     }
   }
   .staff_searchinfo--btn {
@@ -157,7 +164,7 @@ export default {
   .tab-content {
     .staff_searchinfo {
       .el-form-item {
-        margin-bottom: 10px;
+        margin-bottom: 0px;
       }
     }
     .staff_searchinfo--btn {

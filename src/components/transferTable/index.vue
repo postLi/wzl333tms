@@ -3,9 +3,11 @@
     <!-- 穿梭框 -->
     <div class="transferTable_header">
       <div class="transferTable_header_btn_direction">
-        <el-button icon="el-icon-arrow-right" type="primary" circle size="mini" @click="doAction('showAllLeft')"></el-button>
-        <el-button icon="el-icon-arrow-left" type="primary" circle size="mini" @click="doAction('showAllRight')"></el-button>
-        <el-button icon="el-icon-menu" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')"></el-button>
+        <el-button icon="el-icon-arrow-right" type="primary" circle :disabled="isShowLeft" size="mini" @click="doAction('showAllLeft')"></el-button>
+        <el-button icon="el-icon-arrow-left" type="primary" circle :disabled="isShowRight"  size="mini" @click="doAction('showAllRight')"></el-button>
+        <transition name="el-zoom-in-bottom">
+          <el-button icon="el-icon-menu" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')"></el-button>
+        </transition>
       </div>
     </div>
     <div class="transferTable_content">
@@ -20,7 +22,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       isShowLeft: false,
       isShowRight: false,
@@ -37,8 +39,8 @@ export default {
           this.showAllRight()
           break
         case 'showReback':
-        this.showReback()
-        break
+          this.showReback()
+          break
       }
     },
     showAllLeft() {
@@ -53,7 +55,7 @@ export default {
       this.isShowReback = true
       // console.log('展开右边表格')
     },
-    showReback () {
+    showReback() {
       this.isShowReback = false
       this.isShowLeft = false
       this.isShowRight = false
@@ -85,6 +87,7 @@ export default {
     .transferTable_content_table {
       width: 50%;
       height: 100%;
+      transition:0.5s;
       .el-table {
         table {
           width: 100%;
@@ -99,17 +102,17 @@ export default {
         padding: 5px 0;
       }
     }
-    .showTableLeft{
-     width:calc(100% - 90px);
-     transition: 0.5s;
-    }
-    .shortTableLeft {
-      width:112px;
+    .showTableLeft {
+      width: calc(100% - 90px);
       transition: 0.5s;
     }
-    .showTableRight{
-     width:calc(100%); 
-     transition: 0.5s;
+    .shortTableLeft {
+      width: 112px;
+      transition: 0.5s;
+    }
+    .showTableRight {
+      width: calc(100%);
+      transition: 0.5s;
     }
   }
 }

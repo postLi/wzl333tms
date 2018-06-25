@@ -1,16 +1,9 @@
 <template>
   <transferTable>
     <!-- 左边表格区 -->
-    <div slot="tableLeft" class="tableHeadItemBtn">
+    <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <el-table ref="multipleTableRight" 
-      :data="leftTable" border 
-      @row-click="clickDetailsRight"
-       @selection-change="getSelectionRight" 
-       tooltip-effect="dark" triped :key="tablekey" 
-       height="100%" style="height:100%;"
-       :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" 
-       :show-summary="true">
+      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -71,17 +64,17 @@
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" v-model.number="scope.row.loadAmount" @change="changLoadAmount[scope.$index]" required></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadAmount[scope.$index]" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
           <template slot-scope="scope">
-            <el-input type="number" v-model.number="scope.row.loadWeight" @change="changLoadWeight[scope.$index]"></el-input>
+            <el-input type="number" :size="btnsize"  v-model.number="scope.row.loadWeight" @change="changLoadWeight[scope.$index]"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
           <template slot-scope="scope">
-            <el-input type="number" v-model.number="scope.row.loadVolume" @change="changLoadVolume[scope.$index]"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadVolume[scope.$index]"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
@@ -129,6 +122,7 @@ export default {
       formModel: {},
       loadTruck: 'loadTruckOne',
       loading: false,
+      btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],
       leftTable: [],
@@ -169,11 +163,15 @@ export default {
           sums[index] = '总计'
           return
         }
-        if (index === 1 || index === 2 || index === 10) {
+        if (index === 1) {
+          sums[index] = '操作'
+          return
+        }
+        if ( index === 2) {
           sums[index] = data.length + '单'
           return
         }
-        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9) {
+        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
           sums[index] = ''
           return
         }
@@ -197,16 +195,22 @@ export default {
     getSumLeft(param) { // 左边表格合计-自定义显示
       const { columns, data } = param
       const sums = []
+      let strNull = [12,13,14,15,16,17,18,19,20]
       columns.forEach((column, index) => {
+
         if (index === 0) {
           sums[index] = '总计'
           return
         }
-        if (index === 1 || index === 2) {
+        if (index === 1) {
+          sums[index] = '操作'
+          return
+        }
+        if (index === 2 || index === 3) {
           sums[index] = data.length + '单'
           return
         }
-        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19) {
+        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
           sums[index] = ''
           return
         }
@@ -231,7 +235,7 @@ export default {
       if (this.isModify) {
         this.leftTable = this.setLoadTable.left
         this.rigthTable = this.setLoadTable.right
-        console.log('穿梭框修改时',this.leftTable, this.rightTable)
+        console.log('穿梭框修改时', this.leftTable, this.rightTable)
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
@@ -274,7 +278,12 @@ export default {
     changLoadWeight(newVal) { // 修改配载重量
       if (this.rightTable && newVal) {
         this.rightTable.forEach((e) => {
-          e.loadWeight = Number(newVal)
+          if (newVal > e.repertoryWeight || newVal < 0) {
+            this.$message({ type: 'warning', message: '不能大于库存重量' })
+            e.loadWeight = Number(e.repertoryWeight)
+          } else {
+            e.loadWeight = Number(newVal)
+          }
           console.log(e.loadWeight, e)
         })
       }
@@ -284,6 +293,10 @@ export default {
     changLoadVolume(newVal) { // 修改配载体积
       if (this.rightTable && newVal) {
         this.rightTable.forEach((e) => {
+          if (newVal > e.repertoryVolume) {
+            this.$message({ type: 'warning', message: '不能大于库存体积' })
+            e.loadVolume = Number(e.repertoryVolume)
+          }
           e.loadVolume = Number(newVal)
         })
       }
@@ -351,10 +364,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tableHeadItemBtn {
-  display: flex;
-  flex-direction: column;
-  flex:1;
-  height:calc(100vh - 480px);
+  height: 100%;
   position: relative;
   .tableItemBtn {
     width: 30px;

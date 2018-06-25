@@ -5,7 +5,7 @@
         批次：{{getBatchNo}}
       </div>
       <div class="storagesInfoPop_content">
-        <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-card">
+        <el-tabs v-model="activeName" type="card"  @tab-click="handleClick" class="tab-card">
           <el-tab-pane label="批次详情" name="first">
             <div class="tab-content" v-loading="loading">
               <div class="info_form">
@@ -332,7 +332,7 @@
             <div class="tab_box">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
-                  <el-col :span="4" :offset="4"><b>操作时间</b></el-col>
+                  <el-col :span="4" :offset="5"><b>操作时间</b></el-col>
                   <el-col :span="3"><b>操作网点</b></el-col>
                   <el-col :span="2"><b>操作人</b></el-col>
                   <el-col :span="3"><b>操作信息</b></el-col>
@@ -508,7 +508,7 @@
   import { REGEX } from '@/utils/validate'
   import popRight from '@/components/PopRight/index'
   import selectType from '@/components/selectType/index'
-  import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack   ,getSelectLoadList} from '@/api/operation/track'
+  import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList} from '@/api/operation/track'
   import {getBatchNoId,postSelectLoadMainInfoList,postAddRepertory,postConfirmToCar} from '@/api/operation/arteryDelivery'
   import { getExportExcel } from '@/api/company/customerManage'
   import { mapGetters } from 'vuex'
@@ -622,13 +622,13 @@
           type: Boolean,
           default: false
         },
-        orgid: {
-          required: true
-        },
-        isModify: {
-          type: Boolean,
-          default: false
-        },
+        // orgid: {
+        //   required: true
+        // },
+        // isModify: {
+        //   type: Boolean,
+        //   default: false
+        // },
         info: {
           type: Object,
           default: () => {}
@@ -1095,10 +1095,22 @@
 }
 
 .storagesInfoPop_content {
+  // width: 100%;
+  // display: flex;
+  // flex-direction: column;
   .tab-card{
     .el-tabs__content{
       padding: 0 !important;
     }
+  }
+  .el-tabs__header {
+    position: fixed;
+    z-index: 34;
+    top: 66px;
+    left: 0;
+    padding: 0 10px;
+    background-color: #ffffff;
+    width: 100%;
   }
   /*.el-tabs--border-card>.el-tabs__content{*/
     /*padding: 0 !important;*/
@@ -1125,27 +1137,86 @@
     background-color: rgb(238, 241, 246);
     padding: 10px;
   }
+  // .tab_box {
+  //   padding-left: 10px;
+  //   display: flex;
+  //   flex-direction: row;
+  // .stepItem_title {
+  //   margin: 10px 0 10px 10px;
+  //   font-size: 14px;
+  //   width: 165%;
+  // }
+  //   .stepItem {
+  //     font-size: 14px;
+  //     color: #666;
+  //     margin-bottom: 20px;
+  //     width: 160%;
+  //     p {
+  //       word-wrap: break-word;
+  //       word-break: normal;
+  //       display: block;
+  //     }
+  //   }
+  // }
   .tab_box {
-    padding-left: 10px;
-    display: flex;
-    flex-direction: row;
-  .stepItem_title {
-    margin: 10px 0 10px 10px;
-    font-size: 14px;
-    width: 165%;
-  }
-    .stepItem {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 20px;
-      width: 160%;
-      p {
-        word-wrap: break-word;
-        word-break: normal;
-        display: block;
+    position: relative;
+    .tab_box_item {
+      // margin: 76px 0 0 0;
+      .stepItem_title {
+        font-size: 14px;
+        color: #333;
+        width: 110%;
+        height: 36px;
+        line-height: 36px;
+      }
+      .el-step.is-vertical {
+        padding-left: 20px;
+        .stepItem {
+          width: 110%;
+          color: #666;
+          font-size: 14px;
+          padding: 10px;
+          margin: 0 0 3px 0;
+          background-color: #ffffff;
+          box-shadow: 0px 0px 10px #eaeaea;
+          transition: 0.4s;
+        }
+        .stepItem:hover {
+          transition: 0.2s;
+          background-color: #E9F3FA;
+        }
       }
     }
   }
+  .stepFrom {
+  display:block;
+  width:100%;
+  height:100%;
+  padding-top: 15px;
+  .el-form--inline .el-form-item{
+    margin-right:0;
+    float:left;
+    display:flex;
+    width:28%;
+  }
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner {
+    width: 100%;
+  }
+
+  .el-form-item__label {
+    font-size: 12px;
+  }
+
+  .el-form-item__content {
+    flex: 1;
+  }
+  .el-button--primary{
+    position: absolute;
+    top:23px;
+    right:10px;
+  }
+}
   /*货物运输合同*/
 .pact{
   .pact_top{

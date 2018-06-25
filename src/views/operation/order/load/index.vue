@@ -7,19 +7,19 @@
           <template slot="title">
             车辆信息&nbsp; <b>{{loadTypeId===40?'送货':'发车'}}批次：{{truckMessage}} 合同编号：{{contractNo}}</b>
           </template>
-          <div class="clearfix loadFrom">
-            <el-form :model="formModel" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
+          <div class=" loadFrom clearfix">
+            <el-form :model="formModel" :size="mini" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
               <div class="loadFrom-type">
-                <el-checkbox-group v-model="formModel.types">
-                  <el-checkbox label="直送" name="types"></el-checkbox>
-                  <el-checkbox label="投车整保" name="types"></el-checkbox>
-                </el-checkbox-group>
+                <!-- <el-checkbox-group v-model="formModel.types">
+                  <el-checkbox label="直送" name="types1"></el-checkbox>
+                  <el-checkbox label="投车整保" name="types2"></el-checkbox>
+                </el-checkbox-group> -->
               </div>
               <!-- 基本信息 -->
               <el-row :gutter="4">
                 <el-col :span="6">
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
-                    <el-input size="mini" v-model="formModel.deliveryFee"></el-input>
+                    <el-input size="mini" v-model="formModel.deliveryFee" clearable></el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini">
@@ -81,80 +81,85 @@
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
-                <el-col :span="18">
+                <el-col :span="12" v-if="loadTypeId===40">
                   <el-form-item label="备注">
-                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark" ></el-input>
+                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="18" v-else>
+                  <el-form-item label="备注">
+                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
             </el-form>
             <!-- 费用参数 -->
-            <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId!==40">
+            <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
               <ul class="feeList">
                 <li>
                   <p>现付运费</p>
                   <el-form-item prop="nowpayCarriage">
-                    <el-input v-model="formFee.nowpayCarriage" maxlength="10"></el-input>
+                    <el-input v-model="formFee.nowpayCarriage" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>现付油卡</p>
                   <el-form-item prop="nowpayOilCard">
-                    <el-input v-model="formFee.nowpayOilCard" maxlength="10"></el-input>
+                    <el-input v-model="formFee.nowpayOilCard" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付运费</p>
                   <el-form-item prop="backpayCarriage">
-                    <el-input v-model="formFee.backpayCarriage" maxlength="10"></el-input>
+                    <el-input v-model="formFee.backpayCarriage" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付油卡</p>
                   <el-form-item prop="backpayOilCard">
-                    <el-input v-model="formFee.backpayOilCard" maxlength="10"></el-input>
+                    <el-input v-model="formFee.backpayOilCard" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付运费</p>
                   <el-form-item prop="arrivepayCarriage">
-                    <el-input v-model="formFee.arrivepayCarriage" maxlength="10"></el-input>
+                    <el-input v-model="formFee.arrivepayCarriage" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付油卡</p>
                   <el-form-item prop="arrivepayOilCard">
-                    <el-input v-model="formFee.arrivepayOilCard" maxlength="10"></el-input>
+                    <el-input v-model="formFee.arrivepayOilCard" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>整车保险费</p>
                   <el-form-item prop="carloadInsuranceFee">
-                    <el-input v-model="formFee.carloadInsuranceFee" maxlength="10"></el-input>
+                    <el-input v-model="formFee.carloadInsuranceFee" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站装卸费</p>
                   <el-form-item prop="leaveHandlingFee">
-                    <el-input v-model="formFee.leaveHandlingFee" maxlength="10"></el-input>
+                    <el-input v-model="formFee.leaveHandlingFee" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站其他费</p>
                   <el-form-item prop="leaveOtherFee">
-                    <el-input v-model="formFee.leaveOtherFee" maxlength="10"></el-input>
+                    <el-input v-model="formFee.leaveOtherFee" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站装卸费</p>
                   <el-form-item prop="arriveHandlingFee">
-                    <el-input v-model="formFee.arriveHandlingFee" maxlength="10"></el-input>
+                    <el-input v-model="formFee.arriveHandlingFee" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站其他费</p>
                   <el-form-item prop="arriveOtherFee">
-                    <el-input v-model="formFee.arriveOtherFee" maxlength="10"></el-input>
+                    <el-input v-model="formFee.arriveOtherFee" maxlength="10" :size="mini"></el-input>
                   </el-form-item>
                 </li>
               </ul>
@@ -164,7 +169,7 @@
       </el-collapse>
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
-        <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空并新增</el-button>
+        <!-- <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">清空并新增{{loadTypeId===38?'短驳':(loadTypeId===39?'干线':'送货')}}</el-button> -->
         <el-button size="mini" icon="el-icon-goods" plain type="primary" @click="doAction('precent')">配载率</el-button>
         <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
         <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '>完成并发车</el-button>
@@ -245,7 +250,7 @@ export default {
       truckMessage: '',
       contractNo: '',
       formModel: {
-        'orgid': ''
+        orgid: ''
       },
       formFee: {},
       loadTruck: 'loadTruckOne',
@@ -267,7 +272,7 @@ export default {
         left: [],
         right: []
       },
-      orgData: [],
+      orgData: {},
       isEdit: false,
       isModify: false,
       addTruckVisible: false,
@@ -290,24 +295,24 @@ export default {
       batchTypeIdFinishTruck: 48,
       inited: false,
       formModelRules: {
-        arriveOrgid: [{ required: true, trigger: 'blur', message: '非直送不能为空' }],
-        apportionTypeName: [{ required: true, trigger: 'blur', message: '必选' }],
-        truckIdNumber: [{ required: true, trigger: 'blur', validator: validateStringEight }],
-        dirverName: [{ required: true, trigger: 'blur', validator: validateStringTen }],
-        dirverMobile: [{ required: true, trigger: 'blur', validator: validateFormMobile }]
+        arriveOrgid: [{ required: true, trigger: 'change', message: '非直送不能为空' }],
+        apportionTypeName: [{ required: true, trigger: 'change', message: '必选' }],
+        truckIdNumber: [{ required: true, trigger: 'change', validator: validateStringEight }],
+        dirverName: [{ required: true, trigger: 'change', validator: validateStringTen }],
+        dirverMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }]
       },
       formFeeRules: {
-        nowpayCarriage: [{ required: true, trigger: 'blur', validator: validateInt }],
-        nowpayOilCard: [{ required: true, trigger: 'blur', validator: validateInt }],
-        backpayCarriage: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        backpayOilCard: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        arrivepayCarriage: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        arrivepayOilCard: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        carloadInsuranceFee: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        leaveHandlingFee: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        leaveOtherFee: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        arriveHandlingFee: [{ required: true, trigger: 'blur', validator: validateBigDecimal }],
-        arriveOtherFee: [{ required: true, trigger: 'blur', validator: validateBigDecimal }]
+        nowpayCarriage: [{ required: true, trigger: 'change', validator: validateInt }],
+        nowpayOilCard: [{ required: true, trigger: 'change', validator: validateInt }],
+        backpayCarriage: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        backpayOilCard: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        arrivepayCarriage: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        arrivepayOilCard: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        carloadInsuranceFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        leaveHandlingFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        leaveOtherFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        arriveHandlingFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
+        arriveOtherFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }]
       }
     }
   },
@@ -329,11 +334,10 @@ export default {
     },
     loadTimeFormName() {
       return (this.loadTypeId === 38 ? '短驳' : (this.loadTypeId === 39 ? '配载' : '送货')) + '日期'
-    }
-  },
-  watch: {
+    },
     typeid() {
-      this.typeid = this.$route.params.loadTypeId
+      return this.$route.params.loadTypeId
+      console.log('computed', this.typeid)
       // console.log('获取router-typeId', this.$route.params.loadTypeId)
     }
   },
@@ -345,27 +349,31 @@ export default {
     addDriverInfo,
     loadChart
   },
-  mounted() {
-    this.setLoadTypeId()
-    this.initIsEdit()
-    // this.getLoadNo()
-    this.getSelectAddLoadRepertoryList()
-    this.formModel.orgid = this.orgid
-    this.DriverList = this.Drivers
-    this.TruckList = this.Trucks
-    if (!this.inited) {
-      this.inited = true
-      this.initInfo()
-    }
+  activated() {
+    this.init()
   },
   methods: {
+    init() {
+      this.formModel = {}
+      this.$refs['formModel'].resetFields()
+      this.setLoadTypeId()
+      this.initIsEdit()
+      this.getSelectAddLoadRepertoryList()
+      this.formModel.orgid = this.orgid
+      this.DriverList = this.Drivers
+      this.TruckList = this.Trucks
+      if (!this.inited) {
+        this.inited = true
+        this.initInfo()
+      }
+    },
     getTableChange() {},
     initIsEdit() {
-      this.orgData = {}
+      this.orgData = JSON.parse(JSON.stringify(this.$data.orgData))
+      this.formFee = JSON.parse(JSON.stringify(this.$data.formFee))
       if (this.$route.query.info) {
         this.orgData = this.$route.query.info
         this.isEdit = true
-        // console.log(this.orgData, this.isEdit)
         this.truckMessage = this.orgData.batchNo
         this.contractNo = this.orgData.contractNo
         // formModel 数据
@@ -385,8 +393,8 @@ export default {
         data.loadTime = this.orgData.loadTime
         data.requireArrivedTime = this.orgData.requireArrivedTime
         data.remark = this.orgData.remark
+        data.deliveryFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
         this.formModel = Object.assign({}, data)
-
         // formFee 数据
         let dataFee = {}
         dataFee.nowpayCarriage = this.orgData.nowpayCarriage
@@ -401,14 +409,15 @@ export default {
         dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
         dataFee.arriveOtherFee = this.orgData.arriveOtherFee
         this.formFee = Object.assign({}, dataFee)
-
       } else {
+        this.orgData = JSON.parse(JSON.stringify(this.$data.orgData))
+        // this.orgData = {}
         this.isEdit = false
         this.getLoadNo()
       }
     },
     getLoadNo() {
-      return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
+      getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
         this.truckMessage = data.text // 批次号
         this.contractNo = data.text // 合同编号？？？？？
       })
@@ -418,7 +427,7 @@ export default {
         this.getUpdateRepertoryLeft()
         this.getUpdateRepertoryRight()
       } else {
-        return getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+        getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
         })
       }
@@ -429,8 +438,9 @@ export default {
     doAction(type) {
       switch (type) {
         case 'reset':
-          this.resetFieldsForm('formModel')
-          this.resetFieldsForm('formFee')
+          this.$nextTick(() =>{
+            this.resetFieldsForm()
+          })
           break
         case 'precent': // 设置配载率
           this.showPercent()
@@ -449,19 +459,20 @@ export default {
           break
         case 'addOrg': // 添加网点
           this.addOrg()
+          break
       }
     },
     showPercent() {
       this.showRightTablePercent = true
     },
     formValidate() { // 判断表单验证
+      console.log(this.formModel, this.formFee)
       this.$refs['formModel'].validate((valid) => {
-        if (valid && this.loadTypeId !== 40) {
+        if (valid && this.loadTypeId === 39) {
           this.$refs['formFee'].validate((validFee) => {
             if (validFee) {
               if (this.loadTableInfo.length < 1) {
                 this.submitvalidate = false
-                console.log(this.loadTableInfo.length, this.submitvalidate, 'length')
                 this.$message({ type: 'warning', message: '右边数据表格不能为空' })
               } else {
                 this.submitvalidate = true
@@ -471,7 +482,7 @@ export default {
               this.submitvalidate = false
             }
           })
-        } else if (valid && this.loadTypeId === 40){
+        } else if (valid && this.loadTypeId !==39) {
           this.submitvalidate = true
         } else {
           this.$message({ type: 'warning', message: '请填写完整表单' })
@@ -500,16 +511,20 @@ export default {
           if (this.isEdit) {
             putLoadInfo(this.loadInfo).then(data => {
               this.$message({ type: 'success', message: '修改配载信息成功' })
-              this.resetFieldsForm('formModel')
-              this.resetFieldsForm('formFee')
-              this.gotoPage()
+              this.resetFieldsForm()
+              // this.resetFieldsForm('formFee')
+              this.$nextTick(() => {
+                this.gotoPage()
+              })
             })
           } else {
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.$message({ type: 'success', message: '插入配载信息成功' })
-              // this.resetFieldsForm('formModel')
+              this.resetFieldsForm()
               // this.resetFieldsForm('formFee')
-              this.gotoPage()
+              this.$nextTick(() => {
+                this.gotoPage()
+              })
             })
           }
         })
@@ -522,8 +537,8 @@ export default {
         this.$nextTick(() => {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
             this.$message({ type: 'success', message: '操作成功' })
-            this.resetFieldsForm('formModel')
-            this.resetFieldsForm('formFee')
+            this.resetFieldsForm()
+            // this.resetFieldsForm('formFee')
           })
         })
       }
@@ -532,12 +547,26 @@ export default {
       this.loadInfoPercentOrg = Object.assign([], obj)
       this.loadTableInfo = obj
     },
-    resetFieldsForm(formName) { // resetFields表单验证
+    resetFieldsForm() { // resetFields表单验证---------------------------------------------
+      const formName = ['formModel', 'formFee']
+      const loadtypeid = this.$route.query.loadTypeId
       Object.assign(this.$data, this.$options.data())
       this.$nextTick(() => {
-        this.$refs[formName].resetFields()
-        this.$router.push({ path: '././load', query: { loadKey: Math.random() } })
+        if (loadtypeid === 39) { // 只有39-干线有表单formFee，38-短驳费 40-送货费
+          formName.forEach(e => {
+            this.$refs[e].resetFields()
+          })
+        } else {
+          this.$refs[formName[0]].resetFields()
+        }
       })
+      console.log('loadtypeid', loadtypeid)
+      if (loadtypeid) {
+        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
+      } else {
+        // this.$router.push({ path: '././load' })
+      }
+      this.init()
     },
     /**
      * load_type_id：配载类型（字典表38-40）
@@ -545,21 +574,24 @@ export default {
      */
     setLoadTypeId() {
       let typeid = this.$route.query.loadTypeId
+      console.log('typeid', typeid, this.$route.query.info)
       if (typeid) {
         this.loadTypeId = typeid
         switch (typeid) {
           case 38: // 短驳
             this.batchTypeIdFinish = 47 // 完成配载
             this.batchTypeIdFinishTruck = 48 // 配载并发车
+            console.log('短驳38', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
             break
           case 39: // 干线
             this.batchTypeIdFinish = 52
             this.batchTypeIdFinishTruck = 53
+            console.log('干线39', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
             break
           case 40: // 送货
             this.batchTypeIdFinish = 57
             this.batchTypeIdFinishTruck = 57
-            console.log('传过来的',this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
+            console.log('送货40', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
             break
         }
       } else {
@@ -676,6 +708,7 @@ export default {
     },
     handleSelectTruck(item) {
       this.formModel.truckIdNumber = item.truckIdNumber
+
     },
     querySearch(queryString, cb) {
       let driverList = this.Drivers
@@ -704,6 +737,18 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
+  .transferTable {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .load_btn_boxs {
+    position: relative;
+    top: 10px;
+    z-index: 33;
+    text-align: right;
+    height: 0;
+  }
   .load-steup-form {
     flex-grow: 1;
     overflow-x: hidden;
@@ -711,17 +756,13 @@ export default {
     padding: 10px 10px 0 10px;
     height: 100%;
     position: relative;
-    .load_btn_boxs {
-      position: absolute;
-      float: right;
-      right: 10px;
-      margin-top: 8px;
-      z-index: 33;
-    }
+    display: flex;
+    flex-direction: column;
+
     .loadFrom {
-      padding: 0 20px 20px 0;
+      padding: 0 10px 5px 0;
       .el-form-item {
-        margin-bottom: 5px;
+        margin-bottom: 0px;
       }
       .loadFrom-type {
         position: absolute;
@@ -783,18 +824,22 @@ export default {
 
 ul.feeList {
   border-top: 2px dotted #bbbbbb;
-  margin: 10px -10px -10px 0;
-  padding: 5px 10px 10px 10px;
+  margin: 5px -10px -10px 0;
+  padding: 5px 10px 15px 10px;
   background-color: #fbfbfb;
   width: 100%;
   display: flex;
   flex-direction: row;
+  .el-form-item__error {
+    padding-top: 0px;
+    top: 90%;
+  }
   li {
     border-right: 1px solid #eeeeee;
     width: 10%;
     p {
       text-align: center;
-      line-height: 36px;
+      line-height: 18px;
       font-size: 14px;
     }
   }

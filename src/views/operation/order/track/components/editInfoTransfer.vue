@@ -149,6 +149,7 @@ export default {
     },
     getDetail() {
       let transferId = this.id
+      console.log('id', this.id)
       return getTransferTrack(transferId).then(data => {
         this.trackDetail = Object.assign([], data)
       })
@@ -221,7 +222,6 @@ export default {
   width: 100%; 
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
 
   .tab_box {
     position: relative;
@@ -256,7 +256,6 @@ export default {
   }
 }
 .stepFrom {
-  background-color:#eee;
   display:block;
   width:100%;
   height:100%;
@@ -325,82 +324,4 @@ export default {
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
-// .icon_man {
-//   background-image: url(../../../../../assets/icom/human.svg);
-//   background-size: 24px;
-//   display: inline-block;
-//   width: 24px;
-//   height: 24px;
-//   vertical-align: middle;
-// }
-
-// .icon_blank {
-//   background-size: 24px;
-//   display: inline-block;
-//   width: 24px;
-//   height: 24px;
-//   vertical-align: middle;
-// }
-
-// .popRight {
-//   width: 800px !important;
-// }
-
-// .content_head {
-//   background-color: #E9F3FA;
-//   line-height: 36px;
-//   height: 36px;
-//   padding: 0 10px;
-// }
-
-// .stepFrom {
-//   .el-form--inline .el-form-item {
-//     margin-right: 0;
-//     float: left;
-//     display: flex;
-//     .el-input {
-//       width: 150px;
-//       padding: 0;
-//       margin-left: -5px;
-//     }
-//     .el-button {
-//       margin-left: 10px;
-//     }
-//   }
-// }
-
-// .editInfoPop_content {
-//   padding: 0 10px;
-//   width: 100%;
-//   height: 93%;
-//   .info {
-//     background-color: rgb(238, 241, 246);
-//     margin-top: -30px;
-//     padding: 10px;
-//   }
-//   .tab_box {
-//     padding-left: 10px;
-//     display: flex;
-//     flex-direction: row;
-//     width: 100%;
-//     overflow: hidden;
-//     p {
-//       word-wrap: break-word;
-//       word-break: normal;
-//       display: block;
-//     }
-//     .stepItem_title {
-//       margin: 10px 0 10px 10px;
-//       font-size: 14px;
-//       width: 220%;
-//     }
-//     .stepItem {
-//       font-size: 14px;
-//       color: #666;
-//       margin-bottom: 20px;
-//       width: 220%;
-//     }
-//   }
-// }
-
 </style>

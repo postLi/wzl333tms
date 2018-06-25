@@ -7,7 +7,7 @@
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="批次详情" name="first">
-            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
+            <Detail :info="info" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="tab_box animated fadeInRight">
@@ -226,6 +226,14 @@ export default {
     resetForm() {
       this.$refs['formModel'].resetFields()
       this.formModel = this.$options.data().formModel
+    },
+    isSuccess (obj) {
+      console.log(obj)
+      if (obj) {
+        this.closeMe()
+        // this.$router.push({path:'././shortDepart', query:{tableKey: Math.random()}})
+        this.$emit('isSuccess', obj)
+      }
     }
   }
 }

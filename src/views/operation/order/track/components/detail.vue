@@ -6,27 +6,30 @@
           <tr>
             <th>到达网点</th>
             <td>
-              {{info.currentOrgName}}
-              <!-- <el-input v-model="info.currentOrgName" :size="btnsize"></el-input> -->
+              <!-- {{info.currentOrgName}} -->
+              <el-input v-model="info.currentOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
             <td>
-              {{info.dirverName}}
-              <!-- <el-input v-model="info.dirverName" :size="btnsize"></el-input> -->
+              <!-- {{info.dirverName}} -->
+              <el-input v-model="info.dirverName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机电话</th>
             <td>
-              {{info.dirverMobile}}
-              <!-- <el-input v-model="info.dirverMobile" :size="btnsize"></el-input> -->
+              <!-- {{info.dirverMobile}} -->
+              <el-input v-model="info.dirverMobile" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
             <th>车牌号码</th>
-            <td>{{info.truckIdNumber}}</td>
+            <td>
+              <!-- {{info.truckIdNumber}} -->
+             <el-input v-model="info.truckIdNumber" :size="btnsize" disabled></el-input>
+           </td>
             <th>短驳费</th>
             <td>
               {{info.shortFee}}
-              <!-- <el-input v-model="info.shortFee" :size="btnsize"></el-input> -->
+              <!-- <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input> -->
             </td>
             <th>分摊方式</th>
             <td>{{info.dirverName}}</td>
@@ -155,7 +158,7 @@ export default {
 </script>
 <style lang="scss">
 .detailTable {
-  // margin-top: 75px;
+  margin-top: 75px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 240px);
@@ -170,7 +173,8 @@ export default {
         tr {
           font-size: 14px;
           th {
-            background-color: #f2f2f2;
+           background-color: #eaf0ff;
+            color:#999;
             width: 16.6%;
             height: 36px;
           }
@@ -205,68 +209,5 @@ export default {
     }
   }
 }
-
-// .detailTable {
-//   height:100%;
-//   .detailTable_info {
-//     border: 1px solid #eee;
-//     background-color: #fbfbfb;
-//     margin-bottom: 5px;
-//     table {
-//       width: 100%;
-//       tbody {
-//         tr {
-//           font-size: 14px;
-//           th {
-//             background-color: #eaf0ff;
-//             width: 16.6%;
-//             height: 36px;
-//           }
-//           td {
-//             width: 16.6%;
-//             padding: 0 3px;
-//           }
-//         }
-//       }
-//     }
-//   }
-//   .tab_infos {
-//     padding: 0px;
-//     height: 100%;
-//     flex-grow: 1;
-//     display: flex;
-//     flex-direction: column;
-//     position: relative;
-//     .btns_box {
-//       margin-bottom: 10px;
-//       .el-button {
-//         margin-right: 0;
-//       }
-//       .table_setup {
-//         float: right;
-//         margin-left: 10px;
-//       }
-//     }
-//     .info_tab {
-//       width: 100%;
-//       height: 530px;
-//       .el-table {
-//         table {
-//           th,
-//           td {
-//             text-align: center;
-//           }
-//         }
-//         .unauth {
-//           color: #f00;
-//         }
-//       }
-//       .el-table td,
-//       .el-table th {
-//         padding: 5px 0;
-//       }
-//     }
-//   }
-// }
 
 </style>

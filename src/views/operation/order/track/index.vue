@@ -39,7 +39,7 @@ export default {
       component: 'artery'
     }
   },
-  mounted () {
+  activated () {
     this.isTransfer()
   },
   methods: {
@@ -49,6 +49,7 @@ export default {
       } else {
         this.component = 'artery'
       }
+      console.log(this.component, 'component')
     }
   }
 }

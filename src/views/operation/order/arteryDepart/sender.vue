@@ -4,7 +4,7 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">新增配载</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增配载</el-button>
 
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('depart')">发车</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>取消发车</el-button>
@@ -381,7 +381,7 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length){
+      if(!this.selected.length && type !== 'add'){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -391,6 +391,9 @@ export default {
       }
 
       switch (type) {
+        case 'add':
+        this.$router.push({path: '././load', query:{loadTypeId: 39}}) // 38-短驳 39-干线 40-送货
+        break
         // 添加客户
         case 'storage':
           if (this.selected.length > 1) {
@@ -418,10 +421,12 @@ export default {
             })
             return false
           } else if (this.selected.length === 1) {
-            this.$message({
-              message: '跳至新增配载页面~',
-              type: 'warning'
-            })
+
+            this.selectInfo = this.selected[0]
+            // this.isModify = true
+            // this.openAddCustomer()
+            this.$router.push({path: '././load', query: {loadTypeId:39, info:this.selectInfo}})
+            console.log('39-info', this.selectInfo)
           }
           break;
         //    发车

@@ -13,7 +13,7 @@
             <div class="tab_box animated fadeInRight">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
-                  <el-col :span="4" :offset="4"><b>操作时间</b></el-col>
+                  <el-col :span="4" :offset="5"><b>操作时间</b></el-col>
                   <el-col :span="3"><b>操作网点</b></el-col>
                   <el-col :span="2"><b>操作人</b></el-col>
                   <el-col :span="3"><b>操作信息</b></el-col>
@@ -269,7 +269,6 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
 
   .el-tabs__header {
     position: fixed;
@@ -283,7 +282,7 @@ export default {
   .tab_box {
     position: relative;
     .tab_box_item {
-      padding: 0 0 0 0;
+      margin: 76px 0 0 0;
       .stepItem_title {
         font-size: 14px;
         color: #333;
@@ -312,7 +311,6 @@ export default {
   }
 }
 .stepFrom {
-  background-color:#eee;
   display:block;
   width:100%;
   height:100%;

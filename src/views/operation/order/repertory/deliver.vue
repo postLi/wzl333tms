@@ -5,8 +5,8 @@
   <div class="tab_info">
     <div class="btns_box">
     <el-button type="primary" :size="btnsize" icon="el-icon-menu" plain @click="doAction('colorpicker')">提醒颜色设置</el-button>
-    <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
+    <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
     </div>
     <div class="info_tab">
@@ -429,7 +429,7 @@ export default {
   position: relative;
 
   .tab_info {
-    padding: 10px 30px 40px;
+    padding: 10px 0px 40px;
     height: 100%;
     flex-grow: 1;
     display: flex;
