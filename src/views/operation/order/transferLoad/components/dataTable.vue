@@ -129,6 +129,8 @@
 <script>
 import transferTable from '@/components/transferTable'
 import selectType from '@/components/selectType/index'
+import {getTotal} from '@/utils/'
+
 export default {
   props: {
     leftData: {
@@ -243,28 +245,13 @@ export default {
           break
       }
     },
-    // 计算总数
-    // 只计算小数点后两位
-    getTotal () {
-      let args = Array.from(arguments)
-      let total = 0
-      // 先处理成俩位
-      // 然后乘以100
-      // 再计算
-      // 最后再除以100返回
-      args.map(el => {
-        el = ((parseFloat(el, 10) || 0) * 100).toString().replace('\..*$', '')
-        total += parseInt(el, 10)
-      })
-      return total/100
-    },
     // 设置对应行
     changeRow(filed, index, val){
       let _this = this
       let current = _this.rightTable[index]
       current[filed] = val
       // 计算总费用
-      current['totalCost'] = this.getTotal(current['transferCharge'], current['deliveryExpense'], current['transferOtherFee'])
+      current['totalCost'] = getTotal(current['transferCharge'], current['deliveryExpense'], current['transferOtherFee'])
       _this.$emit('loadTable', _this.rightTable)
 
     },

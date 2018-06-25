@@ -432,8 +432,8 @@ export default {
   "value": "shlfhring"
 }
    */
-  postRemark(id, data) {
-    return fetch.post('/api-order/order/recently/v1/' + id, data).then(checkStatus)
+  postRemark(data) {
+    return fetch.post('/api-order/order/recently/v1/', data).then(checkStatus)
   },
   /**
    * 修改备注

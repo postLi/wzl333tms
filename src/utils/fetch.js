@@ -105,9 +105,9 @@ service.interceptors.response.use(
 )
 
 export function checkStatus(res) {
-  if (res.status !== 100) {
+  if (res.status !== 100 && res.status !== -1) {
     return res
-  } else if (res.status === 100) {
+  } else {
     return Promise.reject(res)
   }
 }

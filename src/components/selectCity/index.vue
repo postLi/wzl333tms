@@ -36,6 +36,9 @@ export default {
         this.cityName = newVal
       },
       immediate: true
+    },
+    value (newVal) {
+      this.cityName = newVal
     }
   },
   computed: {

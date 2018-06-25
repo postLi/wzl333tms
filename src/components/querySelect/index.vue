@@ -186,8 +186,10 @@ export default {
     value: {
       handler (newVal) {
         // 当绑定值跟搜索字段一致时，响应绑定值的变化
-        if(this.search === this.valuekey){
+        // 当被清空时
+        if(this.search === this.valuekey || !newVal){
           this.handlevalue = newVal
+          console.log('handkler: value')
         }
       },
       immediate: true
@@ -278,6 +280,12 @@ export default {
           this.queryParam = '2'
           fn = orderManageApi.getRecently
           break
+        case 'remark':
+          this.canchangeparam = false
+          this.lastQuery = ''
+          this.queryParam = ''
+          fn = orderManageApi.getRemarkList
+          break
       }
       // 设定pageSize参数
       if(typeof this.queryParam === 'object') {
@@ -365,6 +373,7 @@ export default {
       })
     },
     querySearch (queryString = '', cb = ()=>{}) {
+    
       // 缓存最近一次请求数据
       // 如果设定了不修改参数，则不缓存记录
       if(queryString === this.lastQuery && this.canchangeparam){
@@ -404,7 +413,12 @@ export default {
           })
         } else {
           this.lastQuery = queryString
-          this.lastRequest = this.allData.filter(searchFunction)
+          if(!this.canchangeparam){
+            this.lastRequest = this.allData
+          } else {
+            this.lastRequest = this.allData.filter(searchFunction)
+          }
+          
           console.log('this.allData, this.lastRequest:', this.allData, this.lastRequest)
           cb(this.lastRequest)
         }
@@ -422,6 +436,7 @@ export default {
         info = info[0] || old
       }
       this.$emit("input", info[this.valuekey] ? info[this.valuekey]: info ? info : '')
+      // this.$emit("input", this.handlevalue )
       this.$emit('change', info)
     }
   }

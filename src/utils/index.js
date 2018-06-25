@@ -369,3 +369,22 @@ export function exportWithIframe(url) {
   }
   ifr.src = url
 }
+
+// 计算总数
+// 只计算小数点后两位
+export function getTotal() {
+  const args = Array.from(arguments)
+  let total = 0
+  // 先处理成俩位
+  // 然后乘以10000
+  // 再计算
+  // 最后再除以10000返回
+  args.map(el => {
+    // 保留俩位小数
+    el = el.toString().replace(/([^.]*)(\.?)(\d)?(\d)?(.*)/, '$1$2$3$4')
+    el = ((parseFloat(el, 10) || 0) * 10000).toString().replace('\..*$', '')
+    total += parseInt(el, 10)
+  })
+  console.log('total args:', args, total)
+  return (total / 10000)
+}
