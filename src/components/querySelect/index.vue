@@ -193,6 +193,12 @@ export default {
         }
       },
       immediate: true
+    },
+    handlevalue (newVal) {
+      if(this.search === this.valuekey){
+        this.$emit("input", this.handlevalue )
+      }
+      this.$emit('change', '', this.handlevalue)
     }
   },
   computed: {
@@ -435,8 +441,10 @@ export default {
         })
         info = info[0] || old
       }
+      
+
       this.$emit("input", info[this.valuekey] ? info[this.valuekey]: info ? info : '')
-      // this.$emit("input", this.handlevalue )
+      
       this.$emit('change', info)
     }
   }
