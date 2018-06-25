@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import fetch, { checkStatus } from '@/utils/fetch'
 
 export default {
   /**
@@ -107,7 +107,7 @@ export default {
 }
    */
   getAllShip(param) {
-    return fetch.post('/api-order/order/v1/findAllShip', param).then(res => {
+    return fetch.post('/api-order/order/v1/findAllShip', param).then(checkStatus).then(res => {
       return res.data ? res.data : { total: 0, list: [] }
     })
   },
@@ -116,7 +116,7 @@ export default {
    * @param {*} param 查询参数
    */
   getFindByShipSnOrGoodSn(tmsOrderShipQuery) {
-    return fetch.post('/api-order/order/v1/findByShipSnOrGoodSn', tmsOrderShipQuery)
+    return fetch.post('/api-order/order/v1/findByShipSnOrGoodSn', tmsOrderShipQuery).then(checkStatus)
   },
   /**
    * 创建运单
@@ -124,7 +124,7 @@ export default {
    * 同修改
    */
   postNewOrder(data) {
-    return fetch.post('/api-order/order/v1/', data)
+    return fetch.post('/api-order/order/v1/', data).then(checkStatus)
   },
   /**
    * 修改开单对象
@@ -275,28 +275,28 @@ export default {
 }
    */
   putChangeOrder(data) {
-    return fetch.put('/api-order/order/v1/', data)
+    return fetch.put('/api-order/order/v1/', data).then(checkStatus)
   },
   /**
    * 查询开单对象
    * @param {*} id 运单id
    */
   getOrderInfoById(id) {
-    return fetch.get('/api-order/order/v1/' + id)
+    return fetch.get('/api-order/order/v1/' + id).then(checkStatus)
   },
   /**
    * 删除运单
    * @param {*} id 运单id
    */
   deleteOrderInfoById(id) {
-    return fetch.delete('/api-order/order/v1/' + id + '?type=2')
+    return fetch.delete('/api-order/order/v1/' + id + '?type=2').then(checkStatus)
   },
   /**
    * 作废运单
    * @param {*} id 运单id
    */
   deleteCancleOrderById(id) {
-    return fetch.delete('/api-order/order/v1/' + id + '?type=3')
+    return fetch.delete('/api-order/order/v1/' + id + '?type=3').then(checkStatus)
   },
   /**
    * 根据系统设置获取货号
@@ -315,7 +315,7 @@ export default {
 }
    */
   postGenerateGoodsSn(param) {
-    return fetch.post('/api-order/order/v1/generateGoodsSn', param)
+    return fetch.post('/api-order/order/v1/generateGoodsSn', param).then(checkStatus)
   },
   /**
    * 自动获取运单号
@@ -326,7 +326,7 @@ export default {
       params: {
         orgid
       }
-    })
+    }).then(checkStatus)
   },
   /**
    * 判断运单号是否唯一
@@ -337,7 +337,7 @@ export default {
       params: {
         orgId
       }
-    })
+    }).then(checkStatus)
   },
   // 导出数据
   getExportExcel() {
@@ -348,7 +348,7 @@ export default {
    * @param {number} userId 用户ID
    */
   getPersonalSetup(userId, type) {
-    return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(res => {
+    return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus).then(res => {
       return res.data ? (type ? (res.data[type] || {}) : res.data) : {}
     })
   },
@@ -379,21 +379,21 @@ export default {
 }
    */
   putPersonalSetup(data) {
-    return fetch.put('/api-order/order/tmsshipsetting/v1/', data)
+    return fetch.put('/api-order/order/tmsshipsetting/v1/', data).then(checkStatus)
   },
   /**
    * 重置个人设置
    * @param {*} userId 用户ID
    */
   resetPersonalSetup(userId) {
-    return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId)
+    return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus)
   },
   /**
    * 获取批次信息
    * @param {*} orgid 组织id
    */
   getBatchList(orgid) {
-    return fetch.get('/api-order/order/v1/bath/' + orgid)
+    return fetch.get('/api-order/order/v1/bath/' + orgid).then(checkStatus)
   },
   /**
    * type为1是货品名 2是包装
@@ -404,7 +404,7 @@ export default {
       params: {
         Type
       }
-    })
+    }).then(checkStatus)
   },
   /**
    * 获取创建订单的时间
@@ -412,13 +412,15 @@ export default {
   getCreateOrderDate() {
     return fetch.get('/api-order/order/v1/orderCreateDate').then(res => {
       return res.data || ''
-    })
+    }).then(checkStatus)
   },
   /**
    * 获取备注列表
    */
   getRemarkList() {
-    return fetch.get('/api-order/order/recently/v1/')
+    return fetch.get('/api-order/order/recently/v1/').then(checkStatus).then(res => {
+      return res.data || { list: [], total: 0 }
+    })
   },
   /**
    * 新增备注
@@ -431,7 +433,7 @@ export default {
 }
    */
   postRemark(id, data) {
-    return fetch.post('/api-order/order/recently/v1/' + id, data)
+    return fetch.post('/api-order/order/recently/v1/' + id, data).then(checkStatus)
   },
   /**
    * 修改备注
@@ -442,14 +444,14 @@ export default {
 }
    */
   putRemark(id, data) {
-    return fetch.put('/api-order/order/recently/v1/' + id, data)
+    return fetch.put('/api-order/order/recently/v1/' + id, data).then(checkStatus)
   },
   /**
    * 删除备注
    * @param {*} id 备注id
    */
   deleteRemark(id) {
-    return fetch.delete('/api-order/order/recently/v1/' + id)
+    return fetch.delete('/api-order/order/recently/v1/' + id).then(checkStatus)
   },
   /**
    * 获取货品设置
@@ -461,7 +463,7 @@ export default {
         orgId,
         Type: 'orderCargoSetting'
       }
-    }).then(res => {
+    }).then(checkStatus).then(res => {
       return res.data || []
     })
   },
@@ -470,6 +472,6 @@ export default {
    * @param {*} data 货品设置数据
    */
   putCargoSetting(data) {
-    return fetch.put('/api-order/order/tmsorderfield/v1/', data)
+    return fetch.put('/api-order/order/tmsorderfield/v1/', data).then(checkStatus)
   }
 }
