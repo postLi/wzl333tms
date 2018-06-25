@@ -20,7 +20,7 @@
               </el-input>
               <div class="dep-img">
                 <img src="../../../assets/icom/groupManage-checked.png" @click="addDep">
-                <img src="../../../assets/icom/groupManage-false.png" @click="delDep">
+                <img src="../../../assets/icom/groupManage-false.png" @click="closeMe">
               </div>
             </div>
             <div class="depmain-list">
@@ -145,7 +145,7 @@
           // this.getMentInfo = this.dotInfo
         },
         popVisible (newVal) {
-          console.log('popVisible:', newVal)
+          // console.log('popVisible:', newVal)
         },
         createrId(newVal){
 
@@ -241,14 +241,15 @@
           })
         },
         delDep(item){
-          let id = item.id
+          let _id = item.id
+          console.log(_id)
           let deleteItem = item.dictName
           this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            deletePerManage(id).then(res => {
+            deletePerManage(_id).then(res => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'

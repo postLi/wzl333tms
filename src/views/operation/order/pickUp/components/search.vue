@@ -12,10 +12,10 @@
           </el-date-picker>
         </div>
       </el-form-item>
-      <el-form-item label="订单状态：">
-        <SelectType v-model="searchForm.orderStatus" type="order_status" />
+      <el-form-item label="提货状态：">
+        <SelectType v-model="searchForm.pickupStatus" type="pickup_status" />
       </el-form-item>
-      <el-form-item label="提货批次">
+      <el-form-item label="提货批次:">
           <el-input
               v-numberOnly
               placeholder=""
@@ -24,7 +24,7 @@
               clearable>
           </el-input>
       </el-form-item>
-    <el-form-item label="车牌号">
+    <el-form-item label="车牌号:">
       <el-input
         v-numberOnly
         placeholder=""
@@ -33,7 +33,7 @@
         clearable>
       </el-input>
     </el-form-item>
-    <el-form-item label="司机姓名">
+    <el-form-item label="司机姓名:">
       <el-input
         v-numberOnly
         placeholder=""
@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     title () {
-      // return this.issender ? '发' : '收'
+
     }
   },
   data () {
@@ -96,7 +96,7 @@ export default {
     return {
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        orderStatus: 213,
+        pickupStatus: 235,
         pickupBatchNumber: '',
         truckIdNumber: '',
         driverName: ''
@@ -134,7 +134,7 @@ export default {
       this.searchForm.pickupBatchNumber = ''
       this.searchForm.truckIdNumber = ''
       this.searchForm.driverName = ''
-      this.searchForm.orderStatus = ''
+      this.searchForm.pickupStatus = ''
     }
   }
 }

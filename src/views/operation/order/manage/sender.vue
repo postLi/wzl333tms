@@ -50,9 +50,6 @@
             width="110"
             sortable
             label="订单状态">
-            <!--订单状态 0:未受理 1:已受理-->
-            <!--orderStatus-->
-            <!--<el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>-->
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -136,11 +133,11 @@
           </el-table-column>
           <!--创建时间-->
           <el-table-column
-            prop="detailedAddress"
             label="创建时间"
             width="110"
             sortable
           >
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
           </el-table-column>
           <el-table-column
             prop="senderName"
@@ -388,15 +385,17 @@ export default {
                 type: 'warning'
               })
             }
-
             if(this.selected[0].orderStatus === 213){
-              console.log('跳转到开单页面')
+              this.$router.push('/operation/order/createOrder?preId=' + this.selected[0].id)
+
             //  订单至少需要一个预订单，点击受理跳转到开单页面
-            }else{
+            }else if(this.selected[0].orerStatusName === "已受理" ) {
               this.$message({
                 message: '订单已经受理了~',
                 type: 'warning'
               })
+              return false
+            }else{
               return false
             }
             break;
@@ -418,6 +417,7 @@ export default {
               break;
         // 作废
         case 'cancel':
+          this.closeAddCustomer()
           if(this.selected[0].orderStatus == 213){
             let _deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
             let _ids = this.selected.map(item => {
@@ -458,7 +458,8 @@ export default {
           break;
         // 拒绝 'refuse':
           case 'refuse':
-            this.loading = true
+
+            this.closeAddCustomer()
             if(this.selected[0].orderStatus == 213){
               //=>todo 删除多个
               let ids = this.selected.map(item => {
@@ -504,12 +505,20 @@ export default {
                 message: '已受理的订单不可以拒绝~',
                 type: 'warning'
               })
+              return false
+            }else{
+              this.$message({
+                message: '该订单不可以拒绝~',
+                type: 'warning'
+              })
+              return false
             }
 
             break;
           // 删除
           case 'delete':
-            if(this.selected[0].orderStatus === 213 && this.selected[0].orderStatus === 215){
+            this.closeAddCustomer()
+            if(this.selected[0].orderStatus === 213 || this.selected[0].orderStatus === 215){
 
               let deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
               let ids = this.selected.map(item => {
@@ -654,5 +663,8 @@ export default {
         height: 40px;
         overflow: hidden;
     }
+  .el-message-box__message{
+    padding-left: 0;
+  }
 }
 </style>

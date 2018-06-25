@@ -1,13 +1,9 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add" label-width="180px">
         <table class="manage-add-table-top">
           <thead>
-          <!--<tr>-->
-            <!--<th>发货方</th>-->
-            <!--<th>收货方</th>-->
-          <!--</tr>-->
           <tr>
             <td>
               <el-form-item label="发货方:">
@@ -53,9 +49,8 @@
           </thead>
           <tbody>
           <tr>
-
             <td>
-              <el-form-item label="发货人:">
+              <el-form-item label="发货人:" prop="senderName">
                 <el-autocomplete
                   class="inline-input"
                   v-model="customSend.senderName"
@@ -75,7 +70,7 @@
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="收货人:">
+              <el-form-item label="收货人:" prop="receiverName">
                 <el-autocomplete
                   class="inline-input"
                   v-model="customRece.receiverName"
@@ -97,7 +92,7 @@
           </tr>
           <tr>
             <td>
-              <el-form-item label="联系号码:" prop="">
+              <el-form-item label="联系号码:" prop="senderMobile">
                 <el-autocomplete
                   class="inline-input"
                   v-model="customSend.senderMobile"
@@ -117,7 +112,7 @@
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="联系号码:" prop="">
+              <el-form-item label="联系号码:" prop="receiverMobile">
                 <el-autocomplete
                   class="inline-input"
                   v-model="customRece.receiverMobile"
@@ -184,76 +179,49 @@
         </table>
 
         <div class="info_order">货物信息</div>
-        <table class="manage-add-table-center">
-          <!--<thead>-->
-          <!--<tr>-->
-            <!--<th>货物信息</th>-->
-          <!--</tr>-->
-          <!--</thead>-->
-          <tbody>
-          <tr>
-            <td>
-              <el-form-item label="货品名">
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="件数">
-              </el-form-item>
-            </td>
+        <div class="info_table">
+          <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">-->
+            <ul>
+              <li>
+                <p>货品名</p>
+                <el-form-item prop="nowpayCarriage">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoName"></el-input>
+                </el-form-item>
+              </li>
+              <li>
+                <p>件数</p>
+                <el-form-item prop="nowpayCarriage">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount"></el-input>
+                </el-form-item>
+              </li>
+              <li>
+                <p>重量</p>
+                <el-form-item prop="nowpayCarriage">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight"></el-input>
+                </el-form-item>
+              </li>
+              <li>
+                <p>体积</p>
+                <el-form-item prop="nowpayCarriage">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume"></el-input>
+                </el-form-item>
+              </li>
+              <li>
+                <p>包装</p>
+                <el-form-item prop="nowpayCarriage">
+                  <el-input maxlength="10"  v-model="form.tmsOrderCargoList.cargoPack"></el-input>
+                </el-form-item>
+              </li>
+              <li>
+                <p>品种规格</p>
+                <el-form-item prop="nowpayCarriage">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.description"></el-input>
+                </el-form-item>
+              </li>
+            </ul>
+          <!--</el-form>-->
+        </div>
 
-            <td>
-              <el-form-item label="重量">
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="体积">
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="包装">
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="品种规格">
-              </el-form-item>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <el-form-item label="" prop="">
-                <el-input v-model="form.tmsOrderCargoList.cargoName" maxlength="25" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="">
-                <el-input v-model="form.tmsOrderCargoList.cargoAmount" maxlength="8" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </td>
-
-            <td>
-              <el-form-item label="">
-                <el-input v-model="form.tmsOrderCargoList.cargoWeight" maxlength="8" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="">
-                <el-input v-model="form.tmsOrderCargoList.cargoVolume" maxlength="8" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="">
-                <el-input v-model="form.tmsOrderCargoList.cargoPack" maxlength="25" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="">
-                <el-input v-model="form.tmsOrderCargoList.description" maxlength="20" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </td>
-          </tr>
-          </tbody>
-
-        </table>
         <div class="info">订单信息</div>
         <table class="manage-add-table-foot">
           <tbody>
@@ -270,12 +238,12 @@
             </td>
             <td>
               <el-form-item label="开单网点">
-                <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" />
+                <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled="disabled"/>
               </el-form-item>
             </td>
 
             <td>
-              <el-form-item label="目的网点">
+              <el-form-item label="目的网点" >
                 <SelectTree v-model="form.tmsOrderPre.orderToOrgid" />
               </el-form-item>
             </td>
@@ -283,7 +251,6 @@
           <tr>
             <td>
               <el-form-item label="提货方式">
-
                 <SelectType v-model="form.tmsOrderPre.orderPickupMethod" type="order_pickup_method" placeholder="请选择" />
               </el-form-item>
             </td>
@@ -323,9 +290,9 @@
             </td>
           </tr>
           <tr>
-            <td class="add-textarea">
+            <td>
               <el-form-item label="备注">
-                <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable></el-input>
+                <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea"></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -348,6 +315,7 @@ import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
+import querySelect from '@/components/querySelect/index'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -385,6 +353,7 @@ export default {
   },
   data () {
     return {
+      btnsize: 'mini',
       senderList: [],
       receiverList: [],
       searchSend: {
@@ -445,6 +414,7 @@ export default {
         }
       },
       customSend:{
+        //customerId
         // 发货人
         companyName:'',
         senderName:'',
@@ -462,8 +432,6 @@ export default {
 
       formLabelWidth: '100px',
       tooltip: false,
-      rules: {
-      },
       popTitle: '新建',
       orgArr: [],
       rolesArr: [],
@@ -472,6 +440,21 @@ export default {
       departments: [],
       groups: [],
       inited: false,
+      rules: {
+        "senderName": [
+          { required: true, trigger: 'blur',message: '请输入姓名', }
+        ],
+        "receiverName": [
+          { required: true, trigger: 'blur',message: '请输入姓名', }
+        ],
+        "senderMobile": [
+          { required: true, trigger: 'blur',message: '请输入手机号码', }
+        ],
+        "receiverMobile": [
+          { required: true, trigger: 'blur',message: '请输入手机号码', }
+        ]
+      },
+
 
     }
   },
@@ -506,16 +489,12 @@ export default {
     info () {
       if(this.isModify){
         this.popTitle = '修改'
-        // this.customSend = this.setObject(this.customSend, this.info)
-        // this.customRece = this.setObject(this.customRece, this.info)
-
         this.form.tmsOrderCargoList.cargoName = this.info.cargoName
         this.form.tmsOrderCargoList.cargoAmount = this.info.cargoAmount
         this.form.tmsOrderCargoList.cargoWeight = this.info.cargoWeight
         this.form.tmsOrderCargoList.cargoVolume = this.info.cargoVolume
         this.form.tmsOrderCargoList.cargoPack = this.info.cargoPack
         this.form.tmsOrderCargoList.description = this.info.description
-        // this.form.tmsOrderCargoList = this.setObject(this.form.tmsOrderCargoList,this.info)
         // 订单信息
         this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre, this.info)
       } else {
@@ -528,6 +507,22 @@ export default {
     }
   },
   methods: {
+    /** 收货人/发货人 */
+    setSender(item, type){
+      type = type ? type : 'sender'
+      if(item){
+        this.form[type].customerId = item.customerId || ''
+        this.form[type].customerType = type === 'sender' ? 1 : 2
+        this.form[type].customerUnit = item.customerUnit
+        this.form[type].customerName = item.customerName
+        this.form[type].customerMobile = item.customerMobile
+        this.form[type].detailedAddress = item.detailedAddress
+        console.log('setSender:', item, type,  this.form[type])
+      }
+    },
+    setReceiver(item){
+      this.setSender(item, 'receiver')
+    },
     querySearchSender (name) {
       let _this = this
       return function(query, cb){
@@ -661,7 +656,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
   .selectListOption_lrl{
     clear:both;
     span{
@@ -678,8 +673,8 @@ export default {
   left: auto;
   top: 50px;
   bottom: auto;
-  min-width: 700px;
-  max-width:  700px;
+  min-width: 900px;
+  max-width:  900px;
 
   .el-autocomplete{
     width: 100%;
@@ -689,6 +684,7 @@ export default {
     margin-right: -9px;
     width: 90%;
     display: flex;
+    margin-left: 7px
   }
 
   .el-form-item__content{
@@ -739,14 +735,15 @@ export default {
   }
 }
   /*收货-发货方*/
-.manage-add-table-top,.manage-add-table-center,.manage-add-table-foot{
+.manage-add-table-top,.manage-add-table-foot{
   height: 100%;
   width: 100%;
+  /*margin-left: 10px;*/
 }
 .manage-add-table-foot{
   margin-top: 10px;
 }
-.manage-add-table-top th,.manage-add-table-center th,.manage-add-table-foot th{
+.manage-add-table-top th,.manage-add-table-foot th{
   width: 50%;
   height: 30px;
   background: #eee;
@@ -754,13 +751,32 @@ export default {
   font-size: 14px;
   padding: 2px 2px 2px 5px !important;
 }
-.manage-add-table-center th,.manage-add-table-foot th{
+  .manage-add-table-foot th{
   background:transparent;
   width: 0;
 }
-.manage-add-table-foot{}
-.manage-add-table-top th, .manage-add-table-top td , .manage-add-table-center td{
-  border: 1px solid #ccc;
+.manage-add-table-foot {
+  tbody{
+    tr{
+      td{
+        .el-form-item--mini{
+          .el-form-item__label{
+            width: 40%;
+          }
+        }
+
+      }
+    }
+  }
+  .add-textarea{
+    width: 570%;
+    .el-textarea__inner{
+      width: 570%;
+    }
+  }
+}
+.manage-add-table-top th, .manage-add-table-top td {
+  /*border: 1px solid #ccc;*/
   padding: 2px;
   text-align: left;
   font-size: 14px;
@@ -768,40 +784,28 @@ export default {
 .manage-add-table-top th:nth-of-type(1) {
   padding-left: 10px !important;
 }
-.manage-add-table-top .el-input--mini .el-input__inner,.manage-add-table-center .el-input--mini .el-input__inner{
+.manage-add-table-top .el-input--mini .el-input__inner{
   height: 40px;
   line-height: 40px;
   padding: 0;
 }
-.manage-add-table-center .el-input--mini .el-input__inner{
-  height: 40px;
-  line-height: 40px;
-  padding-left: 5px;
-}
-.manage-add-table-top .el-form-item,.manage-add-table-center .el-form-item{
-  margin-bottom: 0;
 
-}
-.manage-add-table-top .el-form-item__label,.manage-add-table-center .el-form-item__label{
+.manage-add-table-top .el-form-item__label{
   height: 40px;
   line-height: 40px;
   text-align: center;
   padding-left: 10px;
 }
-.manage-add-table-top .el-input__inner,.manage-add-table-center .el-input__inner{
+.manage-add-table-top .el-input__inner{
   border-color: transparent;
 }
-.manage-add-table-top .el-input__inner:hover,.manage-add-table-center .el-input__inner:hover{
+.manage-add-table-top .el-input__inner:hover{
   border-color: transparent;
 }
-.manage-add-table-top .el-input__inner:focus,.manage-add-table-center .el-input__inner:focus{
+.manage-add-table-top .el-input__inner:focus{
   border-color: transparent;
 }
 
-
-/*.manage-add-table-top .el-input--mini .el-input__inner, .manage-add-table-center .el-input--mini .el-input__inner{*/
-  /**/
-/*}*/
 
 .manage-add-table-top .el-form-item--mini .el-form-item__content{
   line-height: 0;
@@ -845,6 +849,44 @@ manage-add-table-top .el-form-item__error {
   .add-textarea .el-textarea__inner {
     width: 570%;
     padding: 15px 0 0 10px;
+  }
+  .info_table{
+    border-color: #dcdfe6;
+    ul{
+      /*border-top: 2px dotted #bbbbbb;
+      margin: 10px -10px -10px 0;
+      padding: 5px 10px 10px 10px;
+      /*background-color: #fbfbfb;*/
+      width: 100%;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      li:nth-of-type(1){
+        padding-left: 0;
+      }
+      li:last-of-type{
+        border-right: none;
+      }
+      li{
+        border: 1px solid #eee;
+        width: 30%;
+        border-bottom: none;
+        border-left: none;
+        p{
+          font-size: 14px;
+          text-align: center;
+          line-height: 34px;
+
+        }
+      }
+      .el-form-item{
+        margin-bottom: 0;
+        margin-right: 0;
+
+      }
+    }
+
   }
 </style>
 

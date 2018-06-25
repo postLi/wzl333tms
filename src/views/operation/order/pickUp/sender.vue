@@ -71,7 +71,7 @@
           </el-table-column>
           <el-table-column
             label="提货地址"
-            width="120"
+            width="150"
             prop="detailedAddress"
             sortable
             >
@@ -244,12 +244,12 @@
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
     <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" ></PickupMain>
-    <!--<PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>-->
+    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
 
   </div>
 </template>
 <script>
-import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+import { getExportExcel } from '@/api/company/customerManage'
 import { fetchPostlist , deletebatchDelete } from '@/api/operation/pickup'
 
 import SearchForm from './components/search'
@@ -305,7 +305,7 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgid": 1,
-          orderStatus: '',
+          pickupStatus: '',
           startTime: '',
           pickupBatchNumber: '',
           truckIdNumber: '',

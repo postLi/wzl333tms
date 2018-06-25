@@ -2,17 +2,11 @@
   height: 100%;
   padding-bottom: 40px;
 }
-.app-wrapper .main-container-wrap{
-  /*height: 0;*/
-  /*overflow: hidden;*/
-}
 .company-box{
   display: flex;
   position: relative;
   height: 100%;
   width: 100%;
-  /*!*flex-direction: column;*!*/
-   /*!*align-items: center*!*/
 }
 /*左侧栏*/
 .side_left{
@@ -78,6 +72,9 @@ background-color: rgb(195,232,255);
    margin-right: 0;
   float:left;
   margin-left: 700px;
+}
+.side_right .el-collapse-item__content{
+  padding-bottom: 0;
 }
 .side_right_top .el-form{
   display: inline-block;

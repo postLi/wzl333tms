@@ -9,7 +9,7 @@
               <el-input v-model="getMentInfo.pickupBatchNumber" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="派车费用">
-              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder=""></el-input>
+              <el-input v-model="getMentInfo.truckFee" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="车牌号码">
               <el-input v-model="getMentInfo.truckIdNumber" placeholder=""></el-input>
@@ -20,7 +20,7 @@
           </el-form>
           <el-table
             ref="multipleTable"
-            :data="userar"
+            :data="usersArr"
             stripe
             border
             @row-click="clickDetails"
@@ -60,13 +60,13 @@
 
           <el-form :inline="true" :model="formInline" class="order_bottom" :label-width="formLabelWidth">
             <el-form-item label="运单号">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="formInline.shipSn"></el-input>
             </el-form-item>
             <el-form-item label="货号">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="formInline.pickupName"></el-input>
             </el-form-item>
             <el-form-item label="本单提货费">
-              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+              <el-input v-model="formInline.user"></el-input>
             </el-form-item>
           </el-form>
 
@@ -84,7 +84,8 @@
 
 <script>
   import PopFrame from '@/components/PopFrame/index'
-  // import { getSelectDictInfo,postDict,deletePerManage,putDict } from '@/api/company/groupManage'
+  import querySelect from '@/components/querySelect/index'
+  import { postFindByShipSnOrGoodSn,getFindShipByid} from '@/api/operation/pickup'
   export default {
     components: {
       PopFrame
@@ -108,16 +109,18 @@
       return {
         formLabelWidth:'90',
         formInline: {
-          user: '',
+          shipSn: '',
+          pickupName: '',
           region: ''
         },
+        usersArr: [],
         checked1: true,
         popTitle: '关联运单',
         loading:false,
         getMentInfo:
           {
             pickupBatchNumber:'',
-          //派车费用
+            truckFee:'',//派车费用
             truckIdNumber:'',//车牌
             driverName:''//司机姓名
           },
@@ -150,27 +153,40 @@
         }
       },
       dotInfo (newVal) {
+        this.getMentInfo.pickupBatchNumber = this.dotInfo.pickupBatchNumber
+        this.getMentInfo.driverName = this.dotInfo.driverName
+        this.getMentInfo.getMentInfo = this.dotInfo.getMentInfo
+        this.getMentInfo.truckFee = this.dotInfo.truckFee
+        //  pickupBatchNumber:'',
+        //派车费用
+        // truckIdNumber:'',//车牌
+          // driverName:''//司机姓名
         // this.getMentInfo = this.dotInfo
         // console.log(typeof this.dotInfo)
       },
       popVisible (newVal) {
-        console.log('popVisible:', newVal)
+        // console.log('popVisible:', newVal)
       },
       createrId(newVal){
 
       }
     },
     mounted() {
-      this.getSelectDict(this.createrId)
+      if(this.popVisible){
+        console.log('1')
+        this.getSelectDict()
+      }
+
     },
     methods: {
-      getSelectDict(orgId) {
-        //
-        // this.loading = true
-        // getSelectDictInfo(this.createrId).then(res => {
-        //   this.loading = false
-        //   this.getMentInfo = res
-        // })
+      getSelectDict() {
+
+        this.loading = true
+        getFindShipByid(this.dotInfo.id).then(res => {
+          this.loading = false
+          // this.getMentInfo = res
+          console.log(res)
+        })
 
       },
       getAddDate() {

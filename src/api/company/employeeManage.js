@@ -88,12 +88,13 @@ export function getDepartmentInfo(orgid) {
  * @param {*} orgid 网点id
  * @param {*} pagesize 获取权限列表的长度
  */
-export function getAuthInfo(orgid, pagesize) {
-  return fetch.get('/api-system/system/role/v1/', {
-    params: {
+export function getAuthInfo(orgid, pageSize = 50, currentPage = 1) {
+  return fetch.post('/api-system/system/role/v1/findAllInfo', {
+    currentPage,
+    pageSize,
+    vo: {
       orgid,
-      roleName: '',
-      pageSize: pagesize || 50
+      rolesName: ''
     }
   }).then(res => {
     return res.data || { total: 0, list: [] }

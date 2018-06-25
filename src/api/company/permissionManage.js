@@ -45,16 +45,16 @@ export function deleteRoleInfo(id) {
  * @param {*} orgid 网点id
  * @param {*} pagesize 获取权限列表的长度
  */
-export function getAuthInfo(orgid, roleName, pageNum, pagesize) {
-  return fetch.get('/api-system/system/role/v1/', {
-    params: {
+export function getAuthInfo(orgid, rolesName, currentPage = 1, pageSize = 100) {
+  return fetch.post('/api-system/system/role/v1/findAllInfo', {
+    currentPage,
+    pageSize,
+    vo: {
       orgid,
-      roleName: roleName || '',
-      pageNum: pageNum || 1,
-      pageSize: pagesize || 50
+      rolesName
     }
   }).then(res => {
-    return res.data ? res.data : {}
+    return res.data || { total: 0, list: [] }
   })
 }
 

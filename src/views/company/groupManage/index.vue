@@ -175,6 +175,7 @@
     import DepMaintain from './depMaintain'
     import { getOrgId } from '../../../api/company/groupManage'
     import { getAllOrgInfo, getAllUser, deleteEmployeer } from '../../../api/company/employeeManage'
+
     import { mapGetters } from 'vuex'
     import Pager from '@/components/Pagination/index'
     import { getUserInfo } from '../../../utils/auth';
@@ -309,8 +310,6 @@
               })
               return false
             }
-
-
             switch (type){
                 //新增员工
               case 'addPeople':
@@ -344,6 +343,9 @@
                 break;
             //    删除员工
               case 'deletePeople':
+                this.addDepMaintainisible = false
+                this.addDoTotVisible = false
+                this.addPeopleVisible = false
                 let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
                 //=>todo 删除多个
                 let ids = ''
