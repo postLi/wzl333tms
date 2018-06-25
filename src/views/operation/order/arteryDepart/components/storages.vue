@@ -944,7 +944,7 @@
           margin-right: 0;
         }
         .table_export{
-          margin-left: 510px;
+          margin-left: 620px;
         }
         /*.table_ixport{*/
         /*margin-left: 400px;*/
@@ -1226,6 +1226,7 @@
       color: #606266;
       font-size: 14px;
 
+
     }
     .p_cont{
       .p_textarea.el-form-item{
@@ -1253,6 +1254,9 @@
     .p_input{
       .el-form-item{
         margin-bottom: 0;
+        .el-form-item__label{
+          padding:0
+        }
         .el-form-item__content{
           .el-input.el-input--mini.is-disabled{
             width: 13%;

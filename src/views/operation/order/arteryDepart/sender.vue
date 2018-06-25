@@ -418,10 +418,10 @@ export default {
             })
             return false
           } else if (this.selected.length === 1) {
-
-            this.selectInfo = this.selected[0]
-            this.isModify = true
-            this.openAddCustomer()
+            this.$message({
+              message: '跳至新增配载页面~',
+              type: 'warning'
+            })
           }
           break;
         //    发车
