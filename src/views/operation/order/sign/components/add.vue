@@ -138,6 +138,7 @@ import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
+import {objectMerge2} from '@/utils/index'
 export default {
   components: {
     popRight,
@@ -389,7 +390,7 @@ export default {
       this.form.signTime = this.searchCreatTime[0]
       this.$refs[ruleForm].validate((valid) => {
         if(valid){
-          let data = Object.assign({},this.obj)
+          let data = Object.objectMerge2({},this.obj)
           for(let i in data){
             data[i] = this.form[i]
           }

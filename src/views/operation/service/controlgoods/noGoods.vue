@@ -486,6 +486,7 @@ import {PutFh, PostControlgoods} from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { deleteTrunkInfo } from '@/api/company/trunkManage';
+import {objectMerge2} from '@/utils/index'
 export default {
     components: {
         SearchForm,
@@ -560,7 +561,7 @@ export default {
          // 获取组件返回的搜索参数
         getSearchParam (searchParam) {
             // 根据搜索参数请求后台获取数据
-            Object.assign(this.searchQuery.vo, searchParam)
+            Object.objectMerge2(this.searchQuery.vo, searchParam)
             //this.searchQuery.vo.orgId = searchParam.orgid
             this.fetchData()
         },

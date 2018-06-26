@@ -40,7 +40,7 @@ import { REGEX }  from '@/utils/validate'
 import { parseTime }  from '@/utils/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
-
+import {objectMerge2} from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -121,7 +121,7 @@ export default {
       // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
       this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
-      let data = Object.assign({},this.searchForm)
+      let data = Object.objectMerge2({},this.searchForm)
       if(this.searchForm.shipFromOrgid){
         data.shipFromOrgid =[this.searchForm.shipFromOrgid]
       }else{

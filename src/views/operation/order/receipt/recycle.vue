@@ -331,6 +331,7 @@ import { postReceipt,putUpdateCancelReceipt,putUpdateReceipt } from '@/api/opera
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import AddMark from './components/add'
+import {objectMerge2} from '@/utils/index'
 export default {
     components: {
         SearchForm,
@@ -398,7 +399,7 @@ export default {
             // this.searchQuery.vo.orgid = obj.orgid
             // this.searchQuery.vo.customerMobile = obj.mobile
             // this.searchQuery.vo.customerName = obj.name
-            Object.assign(this.searchQuery.vo, searchParam)
+            Object.objectMerge2(this.searchQuery.vo, searchParam)
             this.fetchAllreceipt()
         },
         getSelection(selection) {

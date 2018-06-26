@@ -59,6 +59,7 @@ import {postPickupBatchSign,postBatchSign } from '@/api/operation/sign'
 import { REGEX }  from '@/utils/validate'
 import { mapGetters } from 'vuex'
 import { exportWithIframe } from '@/utils';
+import {objectMerge2} from '@/utils/index'
 export default {
   // computed: {
   // ...mapGetters([
@@ -229,7 +230,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if(valid){
           this.loading = true
-          let data = Object.assign({},this.form)
+          let data = Object.objectMerge2({},this.form)
           data.repertoryIds = this.dotInfo.map(el => {
             return el.repertoryId
           })

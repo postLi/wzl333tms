@@ -128,7 +128,7 @@ import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
-
+import {objectMerge2} from '@/utils/index'
 export default {
   components: {
     popRight,
@@ -428,7 +428,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({},this.form)
+          let data = objectMerge2({},this.form)
           // data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数

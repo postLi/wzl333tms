@@ -316,6 +316,7 @@ import SearchForm from './components/search'
 import { postReceipt,putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import {objectMerge2} from '@/utils/index'
 export default {
     components: {
         SearchForm,
@@ -371,7 +372,7 @@ export default {
             this.searchQuery.pageSize = obj.pageSize
         },
         getSearchParam (searchParam) {
-          Object.assign(this.searchQuery.vo, searchParam)
+          Object.objectMerge2(this.searchQuery.vo, searchParam)
           this.fetchAllreceipt()
         },
         doAction (type) {
