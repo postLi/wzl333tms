@@ -27,8 +27,13 @@ service.interceptors.request.use(config => {
 
   } else {
     // 统一加上/api 前缀，方便后台转发接口
-    // config.url = '/api' + config.url
-    config.url = '/localapi' + config.url
+    config.url = '/api' + config.url
+    // config.url = '/localapi' + config.url
+
+    // 如果是生产环境，强制访问157
+    if (process.env.NODE_ENV === 'production') {
+      config.url = '/api' + config.url
+    }
   }
 
   return config
