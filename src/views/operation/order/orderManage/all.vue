@@ -18,6 +18,7 @@
           stripe
           border
           @row-click="clickDetails"
+          @row-dblclick="viewDetails"
           @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
@@ -401,6 +402,9 @@ export default {
     }
   },
   methods: {
+    viewDetails (row) {
+      this.$router.push('/operation/order/createOrder/' + row.id + '?type=view&tab=查看' + row.shipSn)
+    },
     fetchAllOrder () {
       this.loading = true
       return orderManageApi.getAllShip(this.searchQuery).then(data => {
@@ -442,7 +446,7 @@ export default {
           case 'add':
               this.isModify = false
               this.selectInfo = {}
-              this.openAddOrder()
+              this.$router.push('/operation/order/createOrder/')
               break;
           // 修改运单信息
           case 'modify':
@@ -454,7 +458,7 @@ export default {
                   })
               }
               this.selectInfo = this.selected[0]
-              this.openAddOrder()
+              this.$router.push('/operation/order/createOrder/' + this.selectInfo.id + '?type=modify&tab=修改' + this.selectInfo.shipSn)
               break;
           // 删除运单
           case 'delete':
