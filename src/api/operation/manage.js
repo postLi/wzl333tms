@@ -1,6 +1,6 @@
 import fetch from '../../utils/fetch'
 
-/**客户订单列表
+/** 客户订单列表
  * getPostlist
  * @returns {Promise<AxiosResponse<any>>}
  */

@@ -16,7 +16,7 @@ export function postSelectLoadMainInfoList(params) {
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function putLoadDepart(loadIds ,loadTypeId) {
+export function putLoadDepart(loadIds, loadTypeId) {
   return fetch.put('/api-order/order/load/v1/loadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
 }
 /**
@@ -26,7 +26,7 @@ export function putLoadDepart(loadIds ,loadTypeId) {
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function putCancelLoadTruck(loadIds ,loadTypeId) {
+export function putCancelLoadTruck(loadIds, loadTypeId) {
   return fetch.put('/api-order/order/load/v1/cancelLoadTruck?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
 }
 /**
@@ -37,6 +37,6 @@ export function putCancelLoadTruck(loadIds ,loadTypeId) {
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function putCancelLoadDepart(loadIds ,loadTypeId) {
+export function putCancelLoadDepart(loadIds, loadTypeId) {
   return fetch.put('/api-order/order/load/v1/cancelLoadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
 }

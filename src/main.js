@@ -16,6 +16,18 @@ import './mixins'
 
 import './directive'
 
+
+if (process.env.NODE_ENV !== 'production') {
+  console.log('init')
+  window.addEventListener('error', function() {
+    console.error(arguments)
+  }, true)
+  let old_error = window.onerror
+  window.onerror = function() {
+    old_error.call(this, arguments)
+    console.error(arguments)
+  }
+}
 // mock
 // import './mock/'
 

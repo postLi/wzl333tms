@@ -2,7 +2,7 @@ import fetch from '../../utils/fetch'
 
 /**
  * 异常列表
- * @param {*} params 
+ * @param {*} params
  * {"currentPage":1,
 		"pageSize":10,
 		"vo":{
@@ -18,7 +18,7 @@ export function PostGetAbnormalList(params) {
 
 /**
  * 根据id查看异常详情
- * @param {*} params 
+ * @param {*} params
  * {"currentPage":1,
 		"pageSize":10,
 		"vo":{
@@ -34,7 +34,7 @@ export function GetLook(id) {
 
 /**
  * 修改或处理异常
- * @param {*} params 
+ * @param {*} params
 {
   "abnormalAmount": 0,
   "abnormalDescribe": "string",
@@ -93,7 +93,7 @@ export function PostNewAbnormal(params) {
 
 /**
  * 控货列表
- * @param {*} params 
+ * @param {*} params
 {
   "currentPage": 0,
   "pageSize": 0,
@@ -138,8 +138,6 @@ export function GetAbnormalNo() {
     return res.data || { list: [], totalCount: 0 }
   })
 }
-
-
 
 /**
  * 根据id删除/order/abnormal/v1/

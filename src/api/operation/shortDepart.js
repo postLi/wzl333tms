@@ -55,5 +55,5 @@ export function postAddRepertory(typeId, data) {
  * 到车确认
  */
 export function postConfirmToCar(data) {
-  return fetch.post('/api-order/order/load/v1/confirmToCar/' + data.id + '/?typeId='+data.typeId)
+  return fetch.post('/api-order/order/load/v1/confirmToCar/' + data.id + '/?typeId=' + data.typeId)
 }

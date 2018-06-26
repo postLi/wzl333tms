@@ -1,6 +1,6 @@
 import fetch from '../../utils/fetch'
 
-/**提货单列表
+/** 提货单列表
  * getPostlist
  * @returns {Promise<AxiosResponse<any>>}
  */
@@ -96,7 +96,6 @@ export function getFindShipByid(id) {
 //   "vo":{"orgid":1,"truckIdNumber":"1234"}
 // }
 // post
-
 
 // /**
 //  *

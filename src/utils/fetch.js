@@ -23,16 +23,20 @@ service.interceptors.request.use(config => {
     config.params['access_token'] = getToken()
     // console.log(config.url, config.params)
   }
+  console.log('axios config:', config)
   if (config.url.indexOf('http://') !== -1) {
 
   } else {
-    // 统一加上/api 前缀，方便后台转发接口
-    config.url = '/api' + config.url
-    // config.url = '/localapi' + config.url
-
     // 如果是生产环境，强制访问157
     if (process.env.NODE_ENV === 'production') {
       config.url = '/api' + config.url
+    } else {
+      /**
+       * 测试环境修改这里，不要修改上面那句代码
+       */
+      // 统一加上/api 前缀，方便后台转发接口
+      config.url = '/api' + config.url
+      // config.url = '/localapi' + config.url
     }
   }
 
@@ -117,11 +121,13 @@ export function checkStatus(res) {
   }
 }
 
-/* function serviceWrapper() {
-  return service(arguments).then(checkStatus)
+function ServiceWrapper(config) {
+  if (typeof config === 'object') {
+    return service(arguments).then(checkStatus)
+  }
 }
 
-serviceWrapper.prototype = {
+ServiceWrapper.prototype = {
   get: () => {
     return service.get(arguments).then(checkStatus)
   },
@@ -133,8 +139,13 @@ serviceWrapper.prototype = {
   },
   put: () => {
     return service.put(arguments).then(checkStatus)
+  },
+  axios: () => {
+    return service(arguments).then(checkStatus)
   }
-} */
+}
+
+const output = new ServiceWrapper()
 /* // 覆写常用方法，对返回状态进行判断
 const oldGet = service.get
 const oldPost = service.post
@@ -154,4 +165,5 @@ service.delete = function() {
   return oldDelete(arguments).then(checkStatus)
 }
 console.log('oldGet', oldGet, service.get) */
+// export default output
 export default service

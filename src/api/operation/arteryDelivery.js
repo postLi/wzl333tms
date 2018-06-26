@@ -11,8 +11,6 @@ export function postArtList(params) {
   })
 }
 
-
-
 /**
  * 查询配载主信息及费用记录列表 shang
  * http://localhost:7010/api-order/order/load/v1/selectLoadMainInfoList
@@ -20,11 +18,10 @@ export function postArtList(params) {
  * @returns {AxiosPromise<any>}
  */
 export function postSelectLoadMainInfoList(params) {
-  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList',params).then(res => {
+  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList', params).then(res => {
     return res.data || {}
   })
 }
-
 
 /**
  * /order/load/v1/addRepertory/{typeId}
@@ -32,7 +29,7 @@ export function postSelectLoadMainInfoList(params) {
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function postAddRepertory(typeId,params) {
+export function postAddRepertory(typeId, params) {
   return fetch.post('/api-order/order/load/v1/addRepertory/' + typeId, params).then(res => {
     return res.data || {}
   })
@@ -53,8 +50,8 @@ export function postAddRepertory(typeId,params) {
  * @param params
  * @returns {Promise<AxiosResponse<any>>}
  */
-export function postConfirmToCar(id,typeId) {
-  return fetch.post('/api-order/order/load/v1/confirmToCar/ '+ id  + '?&typeId=' + typeId).then(res => {
+export function postConfirmToCar(id, typeId) {
+  return fetch.post('/api-order/order/load/v1/confirmToCar/ ' + id + '?&typeId=' + typeId).then(res => {
     return res.data || {}
   })
 }
@@ -66,25 +63,25 @@ export function postConfirmToCar(id,typeId) {
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function postCancelLoad(id,loadTypeId) {
+export function postCancelLoad(id, loadTypeId) {
   return fetch.post('/api-order/order/load/v1/cancelLoad/' + id + '/' + loadTypeId)
 }
-/**order/load/v1/cancelPut/{id}/{loadType}
+
+/** order/load/v1/cancelPut/{id}/{loadType}
  * 根据配载单ID配载类型取消入库
  * @param id
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function postCancelPut(id,loadTypeId) {
+export function postCancelPut(id, loadTypeId) {
   return fetch.post('/api-order/order/load/v1/cancelPut/' + id + '/' + loadTypeId)
 }
-
 
 /**
  * order/load/v1/getBatchNo
  * 获得配载批次号
  * @returns {AxiosPromise<any>}
  */
-export function getBatchNoId(orgid,loadTypeId) {
+export function getBatchNoId(orgid, loadTypeId) {
   return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
 }

@@ -22,7 +22,7 @@ export function postLoadInfo(data) {
 /**
  * 修改配载信息
  */
-export function putLoadInfo (data) {
+export function putLoadInfo(data) {
   return fetch.put('/api-order/order/load/v1/', data)
 }
 /**
@@ -38,20 +38,20 @@ export function getSelectAddLoadRepertoryList(id) {
 /**
  * 修改时配载左边的库存列表
  */
-export function getUpdateRepertoryLeft (orgid, loadid){
-  return fetch.get('/api-order/order/load/v1/selectUpdateLoadRepertoryList/?orgId='+orgid+'&loadId=' + loadid)
+export function getUpdateRepertoryLeft(orgid, loadid) {
+  return fetch.get('/api-order/order/load/v1/selectUpdateLoadRepertoryList/?orgId=' + orgid + '&loadId=' + loadid)
 }
 /**
  * 修改时配载右边的库存列表
  */
-export function getUpdateRepertoryRight (orgid, loadid){
-  return fetch.get('/api-order/order/load/v1/selectUpdateLoadDetailList/?orgId='+orgid+'&loadId=' + loadid)
+export function getUpdateRepertoryRight(orgid, loadid) {
+  return fetch.get('/api-order/order/load/v1/selectUpdateLoadDetailList/?orgId=' + orgid + '&loadId=' + loadid)
 }
 /**
  * 配载批次详情列表
  */
 export function getSelectLoadDetailList(loadid) {
-  return fetch.get('/api-order/order/load/v1/selectLoadDetailList/',{
+  return fetch.get('/api-order/order/load/v1/selectLoadDetailList/', {
     params: {
       loadId: loadid
     }
@@ -60,7 +60,7 @@ export function getSelectLoadDetailList(loadid) {
 /**
  * 查询配载主信息及费用记录列表
  */
-export function selectLoadMainInfoList (data) {
+export function selectLoadMainInfoList(data) {
   return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', data).then(data => {
     return data.list
   })
@@ -68,7 +68,7 @@ export function selectLoadMainInfoList (data) {
 /**
  * 配载发车(批量)
  */
-export function putLoadDepart (params) {
+export function putLoadDepart(params) {
   return fetch.put('/api-order/order/load/v1/loadDepart/', {
     params: {
       loadTypeId: params.loadTypeId,

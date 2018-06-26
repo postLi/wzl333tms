@@ -55,14 +55,13 @@ export function getSelectDictInfo(orgId) {
  * @param "dictRemark":"部门类型"
  * @param "orgid":3,
  */
-export function postDict(orgid,dictName) {
+export function postDict(orgid, dictName) {
   return fetch.post('/api-system/system/dict/v1/', {
-
-      dictType: 'department_type',
-      dictRemark: '部门类型',
-      dict_value: '',
-      orgid,
-      dictName
+    dictType: 'department_type',
+    dictRemark: '部门类型',
+    dict_value: '',
+    orgid,
+    dictName
   }).then(res => {
     return res.data || []
   })
@@ -82,7 +81,7 @@ export function deletePerManage(id) {
  * @param "orgid":3,
  * @param  "id":16,
  */
-export function putDict(orgid,dictName,id) {
+export function putDict(orgid, dictName, id) {
   return fetch.put('/api-system/system/dict/v1/', {
     dictType: 'department_type',
     dictRemark: '部门类型',
