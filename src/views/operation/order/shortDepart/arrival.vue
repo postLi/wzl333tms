@@ -80,6 +80,7 @@ import { mapGetters } from 'vuex'
 import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     Pager,
@@ -126,7 +127,7 @@ export default {
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
-      this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
+      this.searchQuery.vo = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.vo.orgid) {
         this.searchQuery.vo.orgid = this.otherinfo.orgid
       }
@@ -184,12 +185,12 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) { // 获取列表勾选项
-      this.selected = Object.assign([], list)
+      this.selected = objectMerge2([], list)
       if (list.length === 1) {
         let lid = 0
         list.forEach(e => {
           lid = e.id
-          this.loadInfo = Object.assign([], e)
+          this.loadInfo = objectMerge2([], e)
         })
         this.loadId = lid
       }

@@ -28,6 +28,7 @@ import popRight from '@/components/PopRight/index'
 import { getRepertoryColor, putRepertoryColor } from '@/api/operation/repertory'
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
+import { objectMerge2 } from '@/utils/index'
 export default {
   data() {
     const pretimeIdentifier = (rule, value, callback) => {
@@ -117,7 +118,8 @@ export default {
         if (data) {
           let list = data.data.repertorySetting
           this.$nextTick(() => {
-            this.repertorySetting = Object.assign(this.repertorySetting, list)
+            this.repertorySetting = objectMerge2({}, list)
+            // this.repertorySetting = Object.assign(this.repertorySetting, list)
             this.colorSetting = data.data
             this.$emit('success', this.colorSetting.repertorySetting)
           })
@@ -165,14 +167,14 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  .el-input{
-   width:100px;
+  .el-input {
+    width: 100px;
   }
-  .el-color-picker{
-   vertical-align:middle !important;
+  .el-color-picker {
+    vertical-align: middle !important;
   }
-  b{
-   margin:0 10px;
+  b {
+    margin: 0 10px;
   }
 }
 

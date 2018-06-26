@@ -77,6 +77,7 @@ import { postAllshortDepartList, putTruckDepart, putTruckChanel, putTruckLoad } 
 import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     Pager,
@@ -131,7 +132,7 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
-      this.searchQuery = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
+      this.searchQuery = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.orgId) {
         this.searchQuery.orgId = this.otherinfo.orgid
       }
@@ -139,7 +140,6 @@ export default {
     },
     doAction(type) {
       let isWork = false
-      console.log(this.selected, this.selectedList)
       if (this.selected.length < 1 && type !== 'add' && this.selectedList.length < 1) {
         this.$message({
           message: '请选择数据~',
@@ -185,15 +185,15 @@ export default {
     },
     getSelection(list) {
       if (list.length === 1) {
-        this.selected = Object.assign([], list)
+        this.selected = objectMerge2([], list)
         this.isDisBtn = false
         let tid = 0
         this.selected.forEach(e => {
-          this.selectedData = Object.assign({}, e)
+          this.selectedData = objectMerge2({}, e)
         })
       } else {
         this.isDisBtn = true
-        this.selectedList = Object.assign([], list)
+        this.selectedList = objectMerge2([], list)
       }
       this.isBatch = true
     },
@@ -226,7 +226,6 @@ export default {
       this.$refs.multipleTable.clearSelection()
     },
     setData(type) {
-      console.log('se', this.commonTruck)
       let data = {}
       this.$set(data, 'loadTypeId', 38) // 短驳
       this.$set(data, 'loadIds', [])

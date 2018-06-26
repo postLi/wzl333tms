@@ -109,6 +109,7 @@
 <script>
 import { getSelectLoadDetailList } from '@/api/operation/load'
 import { postAddRepertory } from '@/api/operation/shortDepart'
+import { objectMerge2 } from '@/utils/index'
 export default {
   props: {
     info: {
@@ -241,10 +242,9 @@ export default {
         e.actualAmountall = e.loadAmount
       })
       // setData 后台需要的数据结构
-      this.newData.tmsOrderLoad = Object.assign({}, dataLoad)
-      this.newData.tmsOrderLoadFee = Object.assign({}, dataFee)
-      this.newData.tmsOrderLoadDetailsList = Object.assign([], this.detailList)
-      console.log('setData', this.newData)
+      this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
+      this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
+      this.newData.tmsOrderLoadDetailsList = objectMerge2([], this.detailList)
     },
     postAddRepertory() {
       this.setData()

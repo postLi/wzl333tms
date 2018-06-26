@@ -30,6 +30,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import selectBatchType from '@/components/selectType/index'
 import querySelect from '@/components/querySelect/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -59,26 +60,6 @@ export default {
     return {
       searchTime: [],
       searchForm: {
-        orgid: '',
-        loadTypeId: 38
-        // apportionTypeId: '',
-        // arriveOrgid: '',
-        // batchNo: '',
-        // batchTypeId: '',
-        // beginTime: '',
-        // contractNo: '',
-        // createTime: '',
-        // dirverMobile: '',
-        // dirverName: '',
-        // endTime: '',
-        // loadTime: '',
-        // truckIdNumber: '',
-        // truckLoad: '',
-        // truckVolume: '',
-        // arrivedbeginDate: '',
-        // arrivedEndDate: ''
-      },
-      query: {
         orgid: '',
         loadTypeId: 38
         // apportionTypeId: '',
@@ -144,12 +125,11 @@ export default {
         this.searchForm.endTime = this.searchTime[1]
       }
       this.$emit('change', this.searchForm)
-      this.searchForm = Object.assign({}, this.query)
+      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
       this.searchForm = this.$options.data().searchForm
-      // this.searchForm = Object.assign({}, this.query)
       this.searchTime = []
     }
   }

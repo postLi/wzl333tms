@@ -22,6 +22,7 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SelectTree
@@ -88,23 +89,19 @@ export default {
   },
   methods: {
     onSubmit() {
-      let searchObj = {}
-      searchObj = Object.assign({}, this.searchForm)
-      this.$set(searchObj, 'createTime', this.searchTime[0])
-      this.$set(searchObj, 'endTime', this.searchTime[1])
+      let searchObj = objectMerge2({}, this.searchForm)
+      if (this.searchTime) {
+        this.$set(searchObj, 'createTime', this.searchTime[0])
+        this.$set(searchObj, 'endTime', this.searchTime[1])
+      }
       this.$emit('change', searchObj)
+      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
-
       this.$nextTick(() => {
-        Object.assign(this.$data, this.$options.data())
+        objectMerge2(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
       })
-      // this.$refs[formName].resetFields()
-      // this.searchForm.shipSn = ''
-      // this.searchForm.shipFromCityName = ''
-      // this.searchForm.shipToCityName = ''
-      // this.searchTime = []
     }
   }
 }
@@ -112,11 +109,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tab-content {
-  .el-input--mini{
-    width:150px;
+  .el-input--mini {
+    width: 150px;
   }
-  .el-range-editor--mini.el-input__inner{
-    width:200px;
+  .el-range-editor--mini.el-input__inner {
+    width: 200px;
   }
   .staff_searchinfo {
     padding: 15px 20px;
