@@ -23,27 +23,29 @@
                     <!--</div>-->
                   <!--</template>-->
                 <!--</el-autocomplete>-->
-                <querySelect search="companyName" type="sender" valuekey="companyName" v-model="form.customSend.companyName" @change="setSender" />
+                <querySelect search="companyName" type="sender" valuekey="companyName" v-model="customSend.companyName" @change="setSender" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货方:">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="customRece.companyName"
-                  :fetch-suggestions="querySearchReceiver('companyName')"
-                  value-key="companyName"
-                  :maxlength="25"
-                  placeholder="请选择"
-                  @select="handleSelectReceiver"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.companyName }}</span>
-                      <span class="addr">{{ item.customerName }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--v-model="customRece.companyName"-->
+                  <!--:fetch-suggestions="querySearchReceiver('companyName')"-->
+                  <!--value-key="companyName"-->
+                  <!--:maxlength="25"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectReceiver"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.companyName }}</span>-->
+                      <!--<span class="addr">{{ item.customerName }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="companyName" type="sender" valuekey="companyName" v-model="customRece.companyName" @change="setSender" />
+              <!--</el-form-item>-->
               </el-form-item>
             </td>
           </tr>
@@ -52,126 +54,133 @@
           <tr>
             <td>
               <el-form-item label="发货人:" prop="senderName">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="customSend.senderName"
-                  :fetch-suggestions="querySearchSender('customerName')"
-                  value-key="customerName"
-                  :maxlength="25"
-                  placeholder="请选择"
-                  @select="handleSelectSender"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.customerName }}</span>
-                      <span class="addr">{{ item.customerMobile }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--v-model="customSend.senderName"-->
+                  <!--:fetch-suggestions="querySearchSender('customerName')"-->
+                  <!--value-key="customerName"-->
+                  <!--:maxlength="25"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectSender"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.customerName }}</span>-->
+                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="senderName" type="sender" valuekey="senderName" v-model="customSend.senderName" @change="setSender" />
+
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货人:" prop="receiverName">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="customRece.receiverName"
-                  :fetch-suggestions="querySearchReceiver('customerName')"
-                  value-key="customerName"
-                  :maxlength="25"
-                  placeholder="请选择"
-                  @select="handleSelectReceiver"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.customerName }}</span>
-                      <span class="addr">{{ item.customerMobile }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--v-model="customRece.receiverName"-->
+                  <!--:fetch-suggestions="querySearchReceiver('customerName')"-->
+                  <!--value-key="customerName"-->
+                  <!--:maxlength="25"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectReceiver"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.customerName }}</span>-->
+                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="receiverName" type="sender" valuekey="receiverName" v-model="customRece.receiverName" @change="setSender" />
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="联系号码:" prop="senderMobile">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="customSend.senderMobile"
-                  value-key="customerMobile"
-                  :fetch-suggestions="querySearchSender('customerMobile')"
-                  :maxlength="11"
-                  placeholder="请选择"
-                  @select="handleSelectSender"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.customerName }}</span>
-                      <span class="addr">{{ item.customerMobile }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--v-model="customSend.senderMobile"-->
+                  <!--value-key="customerMobile"-->
+                  <!--:fetch-suggestions="querySearchSender('customerMobile')"-->
+                  <!--:maxlength="11"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectSender"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.customerName }}</span>-->
+                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="senderMobile" type="sender" valuekey="senderMobile" v-model="customSend.senderMobile" @change="setSender" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="联系号码:" prop="receiverMobile">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="customRece.receiverMobile"
-                  value-key="customerMobile"
-                  :fetch-suggestions="querySearchReceiver('customerMobile')"
-                  :maxlength="11"
-                  placeholder="请选择"
-                  @select="handleSelectReceiver"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.customerName }}</span>
-                      <span class="addr">{{ item.customerMobile }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--v-model="customRece.receiverMobile"-->
+                  <!--value-key="customerMobile"-->
+                  <!--:fetch-suggestions="querySearchReceiver('customerMobile')"-->
+                  <!--:maxlength="11"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectReceiver"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.customerName }}</span>-->
+                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="receiverMobile" type="sender" valuekey="receiverMobile" v-model="customRece.receiverMobile" @change="setSender" />
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="发货地址:">
-                <el-autocomplete
-                  class="inline-input"
-                  value-key="detailedAddress"
-                  v-model="customSend.detailedAddress"
-                  :fetch-suggestions="querySearchSender('detailedAddress')"
-                  :maxlength="25"
-                  placeholder="请选择"
-                  @select="handleSelectSender"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.customerName }}</span>
-                      <span class="addr">{{ item.detailedAddress }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--value-key="detailedAddress"-->
+                  <!--v-model="customSend.detailedAddress"-->
+                  <!--:fetch-suggestions="querySearchSender('detailedAddress')"-->
+                  <!--:maxlength="25"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectSender"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.customerName }}</span>-->
+                      <!--<span class="addr">{{ item.detailedAddress }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="customSend.detailedAddress" @change="setSender" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货地址:">
-                <el-autocomplete
-                  class="inline-input"
-                  value-key="detailedAddress"
-                  v-model="customRece.detailedAddress"
-                  :fetch-suggestions="querySearchReceiver('detailedAddress')"
-                  :maxlength="25"
-                  placeholder="请选择"
-                  @select="handleSelectReceiver"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.customerName }}</span>
-                      <span class="addr">{{ item.detailedAddress }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--value-key="detailedAddress"-->
+                  <!--v-model="customRece.detailedAddress"-->
+                  <!--:fetch-suggestions="querySearchReceiver('detailedAddress')"-->
+                  <!--:maxlength="25"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectReceiver"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.customerName }}</span>-->
+                      <!--<span class="addr">{{ item.detailedAddress }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="customRece.detailedAddress" @change="setSender" />
               </el-form-item>
             </td>
           </tr>
@@ -542,18 +551,19 @@ export default {
         //   senderMobile:'',
         //   detailedAddress:'',
         //   customerType:1
-        this.form[type].customerId = item.customerId || ''
-        this.form[type].customerType = type === 'sender' ? 1 : 2
-        this.form[type].customerUnit = item.customerUnit
-        this.form[type].customerName = item.customerName
-        this.form[type].senderMobile = item.customerMobile
-        this.form[type].detailedAddress = item.detailedAddress
-        console.log('setSender:', item, type,  this.form[type])
+        this.customSend[type].customerId = item.customerId || ''
+        this.customSend[type].customerType = type === 'sender' ? 1 : 2
+        this.customSend[type].customerUnit = item.customerUnit
+        this.customSend[type].companyName = item.companyName
+        this.customSend[type].senderMobile = item.customerMobile
+        this.customSend[type].detailedAddress = item.detailedAddress
+        console.log('setSender:', item, type,  this.customSend[type])
       }
     },
     setReceiver(item){
       this.setSender(item, 'receiver')
     },
+
     querySearchSender (name) {
       let _this = this
       return function(query, cb){
