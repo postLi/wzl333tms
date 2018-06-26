@@ -121,7 +121,7 @@ export default {
       // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
       this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
-      let data = Object.objectMerge2({},this.searchForm)
+      let data = objectMerge2({},this.searchForm)
       if(this.searchForm.shipFromOrgid){
         data.shipFromOrgid =[this.searchForm.shipFromOrgid]
       }else{

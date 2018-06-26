@@ -277,22 +277,21 @@
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>
-              
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template> 
             </el-table-column>
             <el-table-column
               label="目的市"
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template>
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template> 
             </el-table-column>
             <el-table-column
               label="目的区"
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template>
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template> 
             </el-table-column>
             <el-table-column
               prop="userName"
@@ -561,7 +560,7 @@ export default {
          // 获取组件返回的搜索参数
         getSearchParam (searchParam) {
             // 根据搜索参数请求后台获取数据
-            Object.objectMerge2(this.searchQuery.vo, searchParam)
+            objectMerge2(this.searchQuery.vo, searchParam)
             //this.searchQuery.vo.orgId = searchParam.orgid
             this.fetchData()
         },

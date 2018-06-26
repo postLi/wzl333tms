@@ -230,7 +230,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if(valid){
           this.loading = true
-          let data = Object.objectMerge2({},this.form)
+          let data = objectMerge2({},this.form)
           data.repertoryIds = this.dotInfo.map(el => {
             return el.repertoryId
           })

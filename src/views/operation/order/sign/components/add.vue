@@ -110,7 +110,7 @@
         </tr>
         <tr>
           <td>备注</td>
-          <td colspan="7" prop="remark" ><input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%"/></td>
+          <td colspan="7" prop="remark" ><input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%;height:48px;line-hieght:48px"/></td>
         </tr>
         <tr style="height:152px">
           <td>签收凭证</td>
@@ -390,7 +390,7 @@ export default {
       this.form.signTime = this.searchCreatTime[0]
       this.$refs[ruleForm].validate((valid) => {
         if(valid){
-          let data = Object.objectMerge2({},this.obj)
+          let data = objectMerge2({},this.obj)
           for(let i in data){
             data[i] = this.form[i]
           }
@@ -516,8 +516,8 @@ export default {
         // }
         
         input{
-          height: 48px;
-          line-height: 48px;
+          height: 32px;
+          line-height: 32px;
           border:none;
           padding-left:10px;
           
@@ -551,6 +551,9 @@ export default {
             float: left;
         }
        
+      }
+      .el-input__prefix i{
+        display: none;
       }
     }
   }

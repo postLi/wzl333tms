@@ -178,7 +178,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if(valid){
           this.loading = true
-          let data = Object.objectMerge2({},this.form)
+          let data = objectMerge2({},this.form)
           data.receiptIds = this.dotInfo
           let promiseObj
           promiseObj = putUpdateReceipt(data)
