@@ -1,5 +1,5 @@
-<template>
-  <div class="batch_main">
+<template> 
+  <div class="batch_main" :class="{'batch_show':isModify ||isSongh}" ref="batch_show">
       <PopFrame :title='popTitle' :isShow="popVisible" @close="closeMe" class='addpopDepMain'>
         <template class='addRelationPop-content' slot="content">
            <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
@@ -38,7 +38,7 @@
                 <el-input maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="备注:" prop="remark">
-                <el-input maxlength="20" v-model="form.remark" auto-complete="off"></el-input>
+                <el-input maxlength="250" v-model.trim="form.remark" auto-complete="off"></el-input>
               </el-form-item>
             </div>  
                
@@ -46,7 +46,7 @@
         </template>
         <div slot="footer" class="dialog-footer-frame">
           <el-button type="primary" @click="submitForm('ruleForm')" class="btn">签收</el-button>
-          <el-button @click="closeMe" class="btn">取消</el-button>
+          <el-button @click="closeMe($event)" class="btn">取消</el-button>
         </div>
       </PopFrame>
   </div>
@@ -91,8 +91,12 @@ export default {
       type:Boolean,
       default:false
     },
+    show:{
+      type:Boolean,
+      default:false
+    },
     createrId: [Number,String],
-      isModify: {
+    isModify: {
       type: Boolean,
       default: false
     },
@@ -103,17 +107,32 @@ export default {
   },
   
   data() {
+    const validateNum = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入证件号码'))
+      }else if (value.length > 20) {
+        callback(new Error('最多可输入20位'))
+      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+        callback()
+      }else {
+        callback(new Error('只能输入字母和数字'))
+      }
+    }
     return {
       searchCreatTime: [ new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickOption2:'',
+      checked1: true,
+      popTitle: '',
+      loading:false,
+      type:'',
       form:{
         "num":'',
         "repertoryIds":[],
         "signTime":"",
         "signName":"",
-        "signCocumentTypeId":'',
+        "signCocumentTypeId":96,
         "documentNum":"",
-        "signTypeId":'',
+        "signTypeId":99,
         "remark":'',
         "signPic":'',
 
@@ -126,11 +145,11 @@ export default {
       rules: {
        
       },
-      checked1: true,
-      popTitle: '',
-      loading:false,
-      type:''
-  
+      rules: {
+        documentNum: [   
+          { required: true, trigger: 'blur', validator: validateNum }
+        ],
+      }
     }
   },
   computed: {
@@ -179,7 +198,10 @@ export default {
         if(this.isModify){
           this.popTitle = '批量签收'
           // this.form.pageType = this.searchQuery.vo.pageType
-          // console.log(this.dotInfo);
+          // cocloseInfo);
+          // this.showAlert = true
+        }else{
+          // this.showAlert = false
         }
       },
       immediate: true
@@ -198,60 +220,73 @@ export default {
     if(typeof done === 'function'){
       done()
     }
+    // console.log(this.$refs.batch_show);
+    this.$refs.batch_show.className = 'batch_main'
+
   },
   submitForm(formName){
-    this.form.signTime = this.searchCreatTime[0]
-    this.$refs[formName].validate((valid) => {
-      if(valid){
-        this.loading = true
-        let data = Object.assign({},this.form)
-         data.repertoryIds = this.dotInfo.map(el => {
-          return el.repertoryId
-        })
-        // console.log();
-        let promiseObj
-       
-        if(this.isModify){
-          promiseObj = postPickupBatchSign(data)//自提批量
-           console.log(66);
+      this.form.signTime = this.searchCreatTime[0]
+      this.$refs[formName].validate((valid) => {
+        if(valid){
+          this.loading = true
+          let data = Object.assign({},this.form)
+          data.repertoryIds = this.dotInfo.map(el => {
+            return el.repertoryId
+          })
+          // console.log();
+          let promiseObj
+        
+          if(this.isModify){
+            promiseObj = postPickupBatchSign(data)//自提批量
+            console.log(66);
+          }
+          else if(this.isSongh){
+            data.shipIds = this.dotInfo.map(el=>{
+              return el.shipId
+            })
+            data.childShipIds = this.dotInfo.map(el=>{
+              return el.childShipId
+            })
+            promiseObj = postBatchSign(data)//送货批量
+          }
+          promiseObj.then(res=>{
+              console.log(res);
+              if(res.status === 200){
+                this.$alert('保存成功', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.loading = false
+                    this.closeMe()
+                    this.$emit('success')
+                  }
+                })
+              }else if(res.status === 100) {
+                this.loading = false
+                this.$message.warning(res.text)
+                this.closeMe()
+              }
+            })
+        }else{
+          return false
         }
-        else if(this.isSongh){
-          data.shipIds = this.dotInfo.map(el=>{
-            return el.shipId
-          })
-          data.childShipIds = this.dotInfo.map(el=>{
-            return el.childShipId
-          })
-          promiseObj = postBatchSign(data)//送货批量
-        }
-        promiseObj.then(res=>{
-            console.log(res);
-            if(res.status === 200){
-              this.$alert('保存成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.loading = false
-                  this.closeMe()
-                  this.$emit('success')
-                }
-              })
-            }else if(res.status === 100) {
-              this.loading = false
-              this.$message.warning(res.text)
-              this.closeMe()
-            }
-          })
-      }else{
-        return false
-      }
-    })
-  }
-
-  }
+      })
+    }
+  },
 }
 </script>
 
 <style lang="scss">
+  .batch_show{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4); 
+    z-index: 1000;
+    transition: all .3s ease-in-out; 
+
+  }
   .batch_main .addpopDepMain{
     top: 29%;
     bottom: auto;

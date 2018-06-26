@@ -145,7 +145,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="disposeTime"
             label="处理时间"
             width="120"
             sortable

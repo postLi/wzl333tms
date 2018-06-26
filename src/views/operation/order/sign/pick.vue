@@ -530,7 +530,7 @@
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
       <Addsign :issender="true" :isPick="isPick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
-      <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify"></Addbatch>
+      <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :show="show"></Addbatch>
       <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </template>
@@ -543,6 +543,7 @@ import Pager from '@/components/Pagination/index'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
 export default {
+    name: 'tab-content',
     components: {
         SearchForm,
         Addsign,
@@ -568,35 +569,46 @@ export default {
         },
         data() {
             return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                selected:[],
-                dataset:[],
-                AddSignVisible:false,
-                AddBatchVisible:false,
-                setupTableVisible: false,
-                popVisible:false,
-                isModify: false,
-                isPick:false,
-                dotInfo: [],
-                repertoryId:'',
-                signId:'',
-                disabled:false,
-                signStatus:'',
-                // loading:false,
-                searchQuery: {
-                  "currentPage":1,
-                  "pageSize":10000,
-                  "vo":{
-                    "repertoryId":'',
-	                  "signId":''
-                  }
-                },
-                total: 0,
-                id:''
+              btnsize: 'mini',
+              component: 'Send',
+              selectInfo: {},
+              selected:[],
+              dataset:[],
+              AddSignVisible:false,
+              AddBatchVisible:false,
+              setupTableVisible: false,
+              popVisible:false,
+              isModify: false,
+              show:false,
+              isPick:false,
+              dotInfo: [],
+              repertoryId:'',
+              signId:'',
+              disabled:false,
+              signStatus:'',
+              // loading:false,
+              searchQuery: {
+                "currentPage":1,
+                "pageSize":10000,
+                "vo":{
+                  "repertoryId":'',
+                  "signId":''
+                }
+              },
+              total: 0,
+              id:''
             }
+      
         },
+        // props:{
+        //   type: { // 可以有confirm, 和inform两个类型
+        //   type: String,
+        //   default: 'confirm',
+        //   validator(value) {
+        //       return value === 'confirm' || value === 'inform';
+        //     },
+        //   },
+        // },
         methods: {
         fetchAllreceipt() {
             this.loading = true
@@ -653,6 +665,7 @@ export default {
                 this.isModify = true
                 this.openAddBatch()
                 this.isPick = false
+                // this.show = true
               }else{
                 this.repertoryId = this.selected[0]
                 this.openAddSign()
@@ -723,7 +736,7 @@ export default {
         getSelection(selected){
           this.selected = selected
         }
-
+       
     }
 }
 </script>
@@ -732,7 +745,9 @@ export default {
     height: calc(100% - 33px);
     display: flex;
     flex-direction:column;
-    position: relative;
+    // position: relative;
+    
+  
 
     .tab_info{
         padding:10px 30px 40px;

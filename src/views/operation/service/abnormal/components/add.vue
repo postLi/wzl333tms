@@ -190,10 +190,19 @@ export default {
       }
     }
     const validatereg = function(rule, value, callback) {
-      if(REGEX.ONLY_NUMBER.test(value)) {
+      if(value === '' || value === null || !value || value === undefined) {
+        callback()
+      }else if(REGEX.ONLY_NUMBER.test(value)) {
         callback()
       }else {
         callback(new Error('只能输入数字'))
+      }
+    }
+    const validateshipSn = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入运单号'))
+      }else {
+        callback()
       }
     }
     return {
@@ -243,6 +252,9 @@ export default {
         disposeOpinion: [
           { required: true, message: '必填', trigger: 'blur' }
         ],
+        shipSn: [
+          { required: true, trigger: 'blur', validator: validateshipSn}
+        ]
       },
       // fileList2:[],
       disabled:false,

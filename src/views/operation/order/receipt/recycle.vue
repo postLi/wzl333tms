@@ -363,6 +363,7 @@ export default {
                 isModify: false,
                 popVisible:false,
                 isAccept:false,
+                // rec_status:113,
                 // loading:false,
                 searchQuery: {
                     // "currentPage":1,

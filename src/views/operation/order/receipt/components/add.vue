@@ -4,7 +4,7 @@
         <template class='addRelationPop-content' slot="content">
            <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
             <div class="addMark" v-if="isModify">
-              <el-form-item label="回收情况" prop="abnormalType" :cols="45">
+              <el-form-item label="回收情况" prop="recTypeId" :cols="45">
                 <SelectType type="rec_type" v-model="form.recTypeId" />
               </el-form-item>
               <el-form-item label="回收备注" :label-width="formLabelWidth" prop="recRemark">
@@ -95,9 +95,9 @@ export default {
     return {
       form:{
         "pageType":'',
-        "recTypeId":'',
+        "recTypeId":113,
         "recRemark":'',
-        "acceptTypeId":'',
+        "acceptTypeId":115,
         "acceptRemark":''
       },
       formLabelWidth: '80px',

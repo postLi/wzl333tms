@@ -356,6 +356,7 @@ export default {
                 isAccept: false,
                 popVisible:false,
                 isModify:false,
+                // acceptStatus:115,
                 // loading:false,
                 searchQuery: {
                     // "currentPage":1,

@@ -86,7 +86,8 @@ export default {
 
     return {
       searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      thestatus: '',
+      thestatus: 105,
+      // recStatus:105,
       searchForm: {
         shipFromOrgid:'',
         // number:'',
@@ -136,7 +137,12 @@ export default {
       this.searchForm.shipSn = ''
       this.searchForm.shipReceiverId = ''
       this.searchForm.shipSenderId = ''
-       this.searchForm.searchCreatTime = ''
+      this.searchForm.searchCreatTime = ''
+      this.searchForm.shipFromCityCode = ''
+      this.searchForm.shipToCityCode = ''
+      this.searchForm.thestatus = ''
+      this.searchForm.startTime = ''
+      this.searchForm.endTime = ''
     }
   }
 }

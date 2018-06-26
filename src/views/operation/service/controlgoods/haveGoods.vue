@@ -276,22 +276,21 @@
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[0] }}</template>
-              
+               <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template> 
             </el-table-column>
             <el-table-column
               label="目的市"
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[1] }}</template>
+               <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template> 
             </el-table-column>
             <el-table-column
               label="目的区"
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName.split(',')[2] }}</template>
+               <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template> 
             </el-table-column>
             <el-table-column
               prop="userName"
