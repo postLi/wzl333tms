@@ -140,9 +140,10 @@ ServiceWrapper.prototype = {
   put: (url, data = {}, config = {}) => {
     return service.put(url, data, config).then(checkStatus)
   },
-  axios: (config) => {
+  request: (config) => {
     return service(config).then(checkStatus)
-  }
+  },
+  axios: service
 }
 
 const output = new ServiceWrapper()

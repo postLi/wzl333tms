@@ -17,7 +17,7 @@ export function login(username, password, orgid) {
     }
   }) */
   console.log('login:', arguments, fetch.axios)
-  return fetch.axios({
+  return fetch.request({
     url: '/uaa/oauth/token',
     method: 'post',
     headers: {
