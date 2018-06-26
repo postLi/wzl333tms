@@ -4,8 +4,14 @@ import store from './store'
 // you can set only in production env show the error-log
 // if (process.env.NODE_ENV === 'production') {
 
+if (process.env.NODE_ENV !== 'production') {
+  window.addEventListener('error', function() {
+    console.error('window error:', arguments)
+  }, true)
+}
+
 Vue.config.errorHandler = function(err, vm, info, a) {
-  console.error(err, info)
+  console.error('errorHandler:', err, info)
   // Don't ask me why I use Vue.nextTick, it just a hack.
   // detail see https://forum.vuejs.org/t/dispatch-in-vue-config-errorhandler-has-some-problem/23500
   Vue.nextTick(() => {

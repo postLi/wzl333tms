@@ -16,7 +16,8 @@ export function login(username, password, orgid) {
       'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
     }
   }) */
-  return fetch({
+  console.log('login:', arguments, fetch.axios)
+  return fetch.axios({
     url: '/uaa/oauth/token',
     method: 'post',
     headers: {

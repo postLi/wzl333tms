@@ -23,7 +23,6 @@ service.interceptors.request.use(config => {
     config.params['access_token'] = getToken()
     // console.log(config.url, config.params)
   }
-  console.log('axios config:', config)
   if (config.url.indexOf('http://') !== -1) {
 
   } else {
@@ -43,7 +42,7 @@ service.interceptors.request.use(config => {
   return config
 }, error => {
   // Do something with request error
-  console.log(error) // for debug
+  console.log('interceptors:', error) // for debug
   Promise.reject(error)
 })
 
@@ -102,7 +101,7 @@ service.interceptors.response.use(
         })
       }
     } else {
-      console.log('err' + error)// for debug
+      console.log('response err:', error)// for debug
       Message({
         message: error.message,
         type: 'error',
@@ -121,49 +120,32 @@ export function checkStatus(res) {
   }
 }
 
+// 覆写常用方法，对返回状态进行判断
 function ServiceWrapper(config) {
   if (typeof config === 'object') {
-    return service(arguments).then(checkStatus)
+    return service(config).then(checkStatus)
   }
 }
 
 ServiceWrapper.prototype = {
-  get: () => {
-    return service.get(arguments).then(checkStatus)
+  get: (url, config = {}) => {
+    return service.get(url, config).then(checkStatus)
   },
-  post: () => {
-    return service.post(arguments).then(checkStatus)
+  post: (url, data = {}, config = {}) => {
+    return service.post(url, data, config).then(checkStatus)
   },
-  delete: () => {
-    return service.delete(arguments).then(checkStatus)
+  delete: (url, config = {}) => {
+    return service.delete(url, config).then(checkStatus)
   },
-  put: () => {
-    return service.put(arguments).then(checkStatus)
+  put: (url, data = {}, config = {}) => {
+    return service.put(url, data, config).then(checkStatus)
   },
-  axios: () => {
-    return service(arguments).then(checkStatus)
+  axios: (config) => {
+    return service(config).then(checkStatus)
   }
 }
 
 const output = new ServiceWrapper()
-/* // 覆写常用方法，对返回状态进行判断
-const oldGet = service.get
-const oldPost = service.post
-const oldPut = service.put
-const oldDelete = service.delete
 
-service.get = function() {
-  return oldGet(arguments).then(checkStatus)
-}
-service.post = function() {
-  return oldPost(arguments).then(checkStatus)
-}
-service.put = function() {
-  return oldPut(arguments).then(checkStatus)
-}
-service.delete = function() {
-  return oldDelete(arguments).then(checkStatus)
-}
-console.log('oldGet', oldGet, service.get) */
-// export default output
-export default service
+export default output
+// export default service
