@@ -90,8 +90,6 @@ export default {
             this.initChart()
           }
         })
-      } else {
-        // this.baseInfo = Object.assign({}, this.newInfo)
       }
     }
   },

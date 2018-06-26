@@ -114,22 +114,19 @@ export default {
   },
   methods: {
     onSubmit() {
-      // if (this.searchForm.truckIdNumber) {
-      //   this.searchForm.truckIdNumber = this.searchForm.truckIdNumber.truckIdNumber
-      // }
       if (this.searchForm.batchTypeId === 46) {
         this.searchForm.batchTypeId = undefined
       }
       if (this.searchTime) {
-        this.searchForm.beginTime = this.searchTime[0]
-        this.searchForm.endTime = this.searchTime[1]
+        this.$set(this.searchForm, 'beginTime', this.searchTime[0])
+        this.$set(this.searchForm, 'endTime', this.searchTime[1])
       }
       this.$emit('change', this.searchForm)
       this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchForm = this.$options.data().searchForm
+      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
       this.searchTime = []
     }
   }

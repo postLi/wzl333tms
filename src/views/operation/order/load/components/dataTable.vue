@@ -64,17 +64,17 @@
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadAmount[scope.$index]" required></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadAmount(scope.$index)" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize"  v-model.number="scope.row.loadWeight" @change="changLoadWeight[scope.$index]"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadWeight(scope.$index)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadVolume[scope.$index]"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadVolume(scope.$index)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
@@ -113,6 +113,7 @@
 import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
+import { objectMerge2 } from '@/utils/index'
 export default {
   data() {
     return {
@@ -126,13 +127,17 @@ export default {
       selectedRight: [],
       selectedLeft: [],
       leftTable: [],
-      rightTable: []
+      rightTable: [],
+      orgData: {
+        left: [],
+        right: []
+      }
     }
   },
   props: {
     setLoadTable: {
       type: Object,
-      default: {}
+      default: () => {}
     },
     isModify: {
       type: Boolean,
@@ -148,11 +153,26 @@ export default {
     transferTable
   },
   watch: {
-    setLoadTable() {},
-    isModify() {}
+    isModify: {
+      handler(cval, oval) { // 深度监听
+        this.getList()
+      },
+      deep: true
+    },
+    setLoadTable: { // 深度监听数组变换
+      handler(cval, oval) {
+        if (cval) {
+          // this.orgData = Object.assign({}, cval)
+          this.orgData = objectMerge2({}, cval)
+          this.getList()
+          console.log('cval', cval)
+        }
+      },
+      deep: true
+    }
   },
-  mounted() {
-    this.getSelectAddLoadRepertoryList()
+  activated() {
+    this.getList()
   },
   methods: {
     getSumRight(param) { // 右边表格合计-自定义显示
@@ -167,7 +187,7 @@ export default {
           sums[index] = '操作'
           return
         }
-        if ( index === 2) {
+        if (index === 2) {
           sums[index] = data.length + '单'
           return
         }
@@ -195,7 +215,7 @@ export default {
     getSumLeft(param) { // 左边表格合计-自定义显示
       const { columns, data } = param
       const sums = []
-      let strNull = [12,13,14,15,16,17,18,19,20]
+      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
       columns.forEach((column, index) => {
 
         if (index === 0) {
@@ -231,13 +251,18 @@ export default {
       })
       return sums
     },
-    getSelectAddLoadRepertoryList() {
+    getList() {
+      console.log('isModify', this.isModify)
+      this.leftTable = this.$options.data().leftTable
+      this.rightTable = this.$options.data().rightTable
       if (this.isModify) {
-        this.leftTable = this.setLoadTable.left
-        this.rigthTable = this.setLoadTable.right
-        console.log('穿梭框修改时', this.leftTable, this.rightTable)
+        this.leftTable = this.orgData.left
+        this.rightTable = this.orgData.right
+        console.log('----------修改')
+        this.$emit('loadTable', this.rightTable)
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+          console.log('----------不修改')
           this.leftTable = data.data
         })
       }
@@ -268,37 +293,38 @@ export default {
       }
     },
     changLoadAmount(newVal) { // 修改配载件数
-      if (this.rightTable && newVal) {
-        this.rightTable.forEach((e) => {
-          e.loadAmount = Number(newVal)
-        })
+      let cur = this.rightTable[newVal].loadAmount
+      let currepert = this.rightTable[newVal].repertoryAmount
+      if (cur > currepert || cur < 0) {
+        this.$message({ type: 'warning', message: '不能小于0大于库存重量' })
+        this.rightTable[newVal].loadAmount = currepert
+        return this.rightTable[newVal].loadAmount
+      } else {
+        return this.rightTable[newVal].loadAmount
       }
       this.$emit('change', this.rightTable)
     },
     changLoadWeight(newVal) { // 修改配载重量
-      if (this.rightTable && newVal) {
-        this.rightTable.forEach((e) => {
-          if (newVal > e.repertoryWeight || newVal < 0) {
-            this.$message({ type: 'warning', message: '不能大于库存重量' })
-            e.loadWeight = Number(e.repertoryWeight)
-          } else {
-            e.loadWeight = Number(newVal)
-          }
-          console.log(e.loadWeight, e)
-        })
+      let cur = this.rightTable[newVal].loadWeight
+      let currepert = this.rightTable[newVal].repertoryWeight
+      if (cur > currepert || cur < 0) {
+        this.$message({ type: 'warning', message: '不能小于0大于库存重量' })
+        this.rightTable[newVal].loadWeight = currepert
+        return this.rightTable[newVal].loadWeight
+      } else {
+        return this.rightTable[newVal].loadWeight
       }
       this.$emit('change', this.rightTable)
-      console.log(this.rightTable)
     },
     changLoadVolume(newVal) { // 修改配载体积
-      if (this.rightTable && newVal) {
-        this.rightTable.forEach((e) => {
-          if (newVal > e.repertoryVolume) {
-            this.$message({ type: 'warning', message: '不能大于库存体积' })
-            e.loadVolume = Number(e.repertoryVolume)
-          }
-          e.loadVolume = Number(newVal)
-        })
+      let cur = this.rightTable[newVal].loadVolume
+      let currepert = this.rightTable[newVal].repertoryVolume
+      if (cur > currepert || cur < 0) {
+        this.$message({ type: 'warning', message: '不能小于0大于库存重量' })
+        this.rightTable[newVal].loadVolume = currepert
+        return this.rightTable[newVal].loadVolume
+      } else {
+        return this.rightTable[newVal].loadVolume
       }
       this.$emit('change', this.rightTable)
     },
@@ -313,8 +339,7 @@ export default {
           e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
+          if (item !== -1) { // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
           }
         })
@@ -351,11 +376,11 @@ export default {
       this.doAction('goRight')
     },
     addALLList() { // 添加全部
-      this.selectedRight = Object.assign([], this.leftTable)
+      this.selectedRight = objectMerge2([], this.leftTable)
       this.doAction('goLeft')
     },
     minusAllList() { // 减去全部
-      this.selectedLeft = Object.assign([], this.rightTable)
+      this.selectedLeft = objectMerge2([], this.rightTable)
       this.doAction('goRight')
     }
   }

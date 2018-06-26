@@ -59,7 +59,7 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="username" label="短驳经办人">
           </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="备注">
+          <el-table-column sortable width="150" prop="remark" label="备注">
           </el-table-column>
         </el-table>
       </div>
@@ -172,6 +172,7 @@ export default {
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
         case 'export':
+          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
       }
     },
@@ -181,7 +182,7 @@ export default {
     setTable() {
       this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
     },
-    clickDetails(row) { //打勾勾
+    clickDetails(row) { //打勾勾 toggle
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) { // 获取列表勾选项
@@ -235,14 +236,19 @@ export default {
       let data = {}
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
-      postCancelPut(data).then(data => {
-          this.$message({ type: 'success', message: '取消入库成功' })
-          this.getAllList()
-          this.clearInfo()
-        })
-        .catch(error => {
-          this.$message({ type: 'success', message: '操作失败' })
-        })
+      if (this.loadInfo.bathStatusName === '已入库') {
+        postCancelPut(data).then(data => {
+            this.$message({ type: 'success', message: '取消入库成功' })
+            this.getAllList()
+            this.clearInfo()
+          })
+          .catch(error => {
+            this.$message({ type: 'success', message: '操作失败' })
+          })
+      } else {
+        this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消入库' })
+        this.clearInfo()
+      }
     },
     getAllList() { // 获取短驳到货列表
       this.loading = true
@@ -267,7 +273,7 @@ export default {
       this.editInfoVisible = false
       this.$refs.multipleTable.clearSelection()
     },
-    isSuccess (obj) {
+    isSuccess(obj) {
       if (obj) {
         // this.$router.push({path: '././shortDepart', query:{tableKey: Math.random()}})
         this.getAllList()

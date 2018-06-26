@@ -66,24 +66,19 @@
           <el-table-column fixed width="50" sortable type="selection"></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
           <el-table-column sortable width="120" prop="shipId" label="运单号"></el-table-column>
-          <el-table-column sortable width="110" prop="actualAmountall" label="实到件数">
+          <el-table-column sortable width="110" prop="actualAmount" label="实到件数">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualAmountall" @change="changeAmount[scope.$index]"></el-input>
+              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeAmount(scope.$index)" required></el-input>
             </template>
           </el-table-column>
-          <el-table-column sortable width="110" prop="actualWeigntall" label="实到重量">
+          <el-table-column sortable width="110" prop="actualWeight" label="实到重量">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualWeigntall" @change="changeWeight[scope.$index]"></el-input>
+              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeWeight(scope.$index)" required></el-input>
             </template>
           </el-table-column>
-          <!-- <el-table-column sortable width="120" prop="actualVolumeall" label="实到体积">
+          <el-table-column prop="actualVolume" sortable label="实到体积" width="110">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualVolumeall" @change="changeVolume[scope.$index]"></el-input>
-            </template>
-          </el-table-column> -->
-          <el-table-column prop="actualVolumeall" sortable label="实到体积" width="110">
-            <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualVolumeall" @change="changVolume[scope.$index]"></el-input>
+              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeVolume(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
@@ -134,6 +129,7 @@ export default {
         tmsOrderLoadDetailsList: {},
         tmsOrderLoad: {}
       },
+      selectDetailList: [],
       message: false,
       query: {
         arriveOrgid: 0,
@@ -180,12 +176,36 @@ export default {
           break
       }
     },
-    clickDetails(row) {
-      this.$refs.multipleTable.toggleRowSelection(row)
+    checkItem() { // 判断当行
+      this.detailList.forEach(e => {
+        if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+          this.$refs.multipleTable.toggleRowSelection(e, false)
+        } else {
+          this.$refs.multipleTable.toggleRowSelection(e, true)
+        }
+      })
     },
-    getSelection(list) {
-      // list = this.detailList
-      this.multipleSelection = list.length
+    changeAmount(newVal) {
+      console.log('amount', newVal)
+      if (this.detailList && newVal) {
+        this.checkItem()
+        return this.detailList[newVal].actualWeight
+      }
+    },
+    changeWeight(newVal) {
+      console.log('weight', newVal)
+      if (this.detailList && newVal) {
+        this.checkItem()
+        return this.detailList[newVal].actualWeight
+      }
+
+    },
+    changeVolume(newVal) {
+      console.log('volume', newVal)
+      if (this.detailList && newVal) {
+        this.checkItem()
+        return this.detailList[newVal].actualVolume
+      }
     },
     setData() {
       let dataFee = {} // 配载费用
@@ -236,18 +256,29 @@ export default {
       dataLoad.updateTime = this.info.updateTime
       dataLoad.userId = this.info.userId
       // 实到体积/重量/件数 
-      this.detailList.forEach((e, index) => {
-        e.actualWeigntall = e.loadWeight
-        e.actualVolumeall = e.loadVolume
-        e.actualAmountall = e.loadAmount
-      })
+      // this.detailList.forEach((e, index) => {
+      //   e.actualWeight = e.loadWeight
+      //   e.actualVolume = e.loadVolume
+      //   e.actualAmount = e.loadAmount
+      // })
       // setData 后台需要的数据结构
+      // this.selectDetailList.forEach(e => {
+      //   if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+      //     console.log('not select')
+      //     this.$refs.multipleTable.toggleRowSelection(e, false)
+      //     let item = this.selectDetailList.indexOf(e)
+      //     if (item !== -1) {
+      //       this.selectDetailList.splice(item, 1)
+      //     }
+      //   }
+      // })
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
-      this.newData.tmsOrderLoadDetailsList = objectMerge2([], this.detailList)
+      this.newData.tmsOrderLoadDetailsList = objectMerge2([], this.selectDetailList)
     },
     postAddRepertory() {
       this.setData()
+
       postAddRepertory(50, this.newData).then(data => {
           if (data.status === 200) {
             this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
@@ -274,34 +305,23 @@ export default {
         }
       })
     },
+    clickDetails(row) {
+      // this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectDetailList = objectMerge2([], list)
+      console.log('select', this.selectDetailList)
+    },
     toggleAllRows() {
-      this.detailList.forEach((e, index) => {
-        this.$refs.multipleTable.toggleRowSelection(e, true)
+      this.$nextTick(() => {
+        this.detailList.forEach((e, index) => {
+          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+            this.$refs.multipleTable.toggleRowSelection(e, false)
+          } else {
+            this.$refs.multipleTable.toggleRowSelection(e, true)
+          }
+        })
       })
-    },
-    changeAmount(newVal) {
-      if (this.detailTable && newVal) {
-        this.detailTable.forEach((e) => {
-          e.actualAmountall = Number(newVal)
-        })
-      }
-      this.$emit('change', this.detailTable)
-    },
-    changeWeight(newVal) {
-      if (this.detailTable && newVal) {
-        this.detailTable.forEach((e) => {
-          e.actualWeigntall = Number(newVal)
-        })
-      }
-      this.$emit('change', this.detailTable)
-    },
-    changeVolume(newVal) {
-      if (this.detailTable && newVal) {
-        this.detailTable.forEach((e) => {
-          e.actualVolumeall = Number(newVal)
-        })
-      }
-      this.$emit('change', this.detailTable)
     }
   }
 }
@@ -327,7 +347,7 @@ export default {
           font-size: 14px;
           th {
             background-color: #eaf0ff;
-            color:#999;
+            color: #999;
             width: 16.6%;
             height: 36px;
           }

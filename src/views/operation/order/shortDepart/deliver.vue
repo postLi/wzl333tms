@@ -27,9 +27,9 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
           </el-table-column>
-          <el-table-column sortable width="155" prop="departureTime" label="短驳时间">
+          <el-table-column sortable width="155" prop="loadTime" label="短驳时间">
             <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
@@ -59,7 +59,7 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="userName" label="短驳经办人">
           </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="备注">
+          <el-table-column sortable width="150" prop="remark" label="备注">
           </el-table-column>
         </el-table>
       </div>

@@ -21,6 +21,9 @@
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
                     <el-input size="mini" v-model="formModel.deliveryFee" clearable></el-input>
                   </el-form-item>
+                  <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId!==39&&loadTypeId!==40">
+                    <el-input size="mini" v-model="formModel.shortFee" clearable></el-input>
+                  </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini">
                     </SelectTree>
@@ -81,16 +84,17 @@
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12" v-if="loadTypeId===40">
+                <el-col :span="18" v-if="loadTypeId === 39">
                   <el-form-item label="备注">
                     <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="18" v-else>
+                <el-col :span="12" v-else>
                   <el-form-item label="备注">
                     <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
+                
               </el-row>
             </el-form>
             <!-- 费用参数 -->
@@ -197,6 +201,7 @@ import SelectTree from '@/components/selectTree/index'
 import addTruckInfo from './components/addTruckInfo'
 import addDriverInfo from './components/addDriverInfo'
 import loadChart from './components/loadChart'
+import { objectMerge2 } from '@/utils/index'
 export default {
   data() {
     const validateInt = function(rule, value, callback) {
@@ -325,11 +330,11 @@ export default {
     },
     orgid() {},
     loadTruckInfo() {
-      let data = Object.assign({}, this.formModel)
+      let data = objectMerge2({}, this.formModel)
       return data
     },
     loadInfoPercent() {
-      let data = Object.assign([], this.loadInfoPercentOrg)
+      let data = objectMerge2([], this.loadInfoPercentOrg)
       return data
     },
     loadTimeFormName() {
@@ -358,10 +363,11 @@ export default {
       this.$refs['formModel'].resetFields()
       this.setLoadTypeId()
       this.initIsEdit()
-      this.getSelectAddLoadRepertoryList()
+
       this.formModel.orgid = this.orgid
       this.DriverList = this.Drivers
       this.TruckList = this.Trucks
+      this.getSelectAddLoadRepertoryList()
       if (!this.inited) {
         this.inited = true
         this.initInfo()
@@ -391,10 +397,11 @@ export default {
         data.truckLoad = this.orgData.truckLoad
         data.truckVolume = this.orgData.truckVolume
         data.loadTime = this.orgData.loadTime
+        data.shortFee = this.orgData.shortFee
         data.requireArrivedTime = this.orgData.requireArrivedTime
         data.remark = this.orgData.remark
         data.deliveryFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
-        this.formModel = Object.assign({}, data)
+        this.formModel = objectMerge2({}, data)
         // formFee 数据
         let dataFee = {}
         dataFee.nowpayCarriage = this.orgData.nowpayCarriage
@@ -408,10 +415,10 @@ export default {
         dataFee.leaveOtherFee = this.orgData.leaveOtherFee
         dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
         dataFee.arriveOtherFee = this.orgData.arriveOtherFee
-        this.formFee = Object.assign({}, dataFee)
+        this.formFee = objectMerge2({}, dataFee)
+
       } else {
         this.orgData = JSON.parse(JSON.stringify(this.$data.orgData))
-        // this.orgData = {}
         this.isEdit = false
         this.getLoadNo()
       }
@@ -429,6 +436,7 @@ export default {
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
+          console.log('不修改 ')
         })
       }
     },
@@ -438,7 +446,7 @@ export default {
     doAction(type) {
       switch (type) {
         case 'reset':
-          this.$nextTick(() =>{
+          this.$nextTick(() => {
             this.resetFieldsForm()
           })
           break
@@ -482,7 +490,7 @@ export default {
               this.submitvalidate = false
             }
           })
-        } else if (valid && this.loadTypeId !==39) {
+        } else if (valid && this.loadTypeId !== 39) {
           this.submitvalidate = true
         } else {
           this.$message({ type: 'warning', message: '请填写完整表单' })
@@ -493,13 +501,13 @@ export default {
     gotoPage() { // 跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart' })
+          this.$router.push({ path: '././shortDepart', query:{tablekey:Math.random()} })
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart' })
+          this.$router.push({ path: '././arteryDepart', query:{tablekey:Math.random()} })
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage' })
+          this.$router.push({ path: '././deliverManage', query:{tablekey:Math.random()} })
           break
       }
     },
@@ -512,7 +520,6 @@ export default {
             putLoadInfo(this.loadInfo).then(data => {
               this.$message({ type: 'success', message: '修改配载信息成功' })
               this.resetFieldsForm()
-              // this.resetFieldsForm('formFee')
               this.$nextTick(() => {
                 this.gotoPage()
               })
@@ -521,7 +528,6 @@ export default {
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.$message({ type: 'success', message: '插入配载信息成功' })
               this.resetFieldsForm()
-              // this.resetFieldsForm('formFee')
               this.$nextTick(() => {
                 this.gotoPage()
               })
@@ -544,13 +550,13 @@ export default {
       }
     },
     getLoadTable(obj) { // 获取穿梭框表格数据列表
-      this.loadInfoPercentOrg = Object.assign([], obj)
+      this.loadInfoPercentOrg = objectMerge2([], obj)
       this.loadTableInfo = obj
     },
     resetFieldsForm() { // resetFields表单验证---------------------------------------------
       const formName = ['formModel', 'formFee']
       const loadtypeid = this.$route.query.loadTypeId
-      Object.assign(this.$data, this.$options.data())
+      objectMerge2(this.$data, this.$options.data())
       this.$nextTick(() => {
         if (loadtypeid === 39) { // 只有39-干线有表单formFee，38-短驳费 40-送货费
           formName.forEach(e => {
@@ -560,12 +566,9 @@ export default {
           this.$refs[formName[0]].resetFields()
         }
       })
-      console.log('loadtypeid', loadtypeid)
       if (loadtypeid) {
         this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
-      } else {
-        // this.$router.push({ path: '././load' })
-      }
+      } else {}
       this.init()
     },
     /**
@@ -596,6 +599,9 @@ export default {
         }
       } else {
         this.loadTypeId = 38 // 默认是新增短驳
+        this.batchTypeIdFinish = 47 // 完成配载
+        this.batchTypeIdFinishTruck = 48 // 配载并发车
+        console.log('默认38',this.loadTypeId,this.batchTypeIdFinish,this.batchTypeIdFinishTruck)
       }
     },
     setData() { // 完成配载 ：处理数据格式。。。
@@ -608,39 +614,46 @@ export default {
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId)
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish)
-      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
-      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
-      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      this.loadInfo.tmsOrderLoadFee = objectMerge2(this.loadInfo.tmsOrderLoadFee, this.formFee)
+      this.loadInfo.tmsOrderLoad = objectMerge2(this.loadInfo.tmsOrderLoad, this.formModel)
+      this.loadInfo.tmsOrderLoadDetailsList = objectMerge2(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
       if (this.loadTypeId === 40) {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
+      console.log('短驳完成发车', this.loadInfo)
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinishTruck) // 批次状态： 干线(52已装车,53在途中)
-      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
-      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
-      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      this.loadInfo.tmsOrderLoadFee = objectMerge2(this.loadInfo.tmsOrderLoadFee, this.formFee)
+      this.loadInfo.tmsOrderLoad = objectMerge2(this.loadInfo.tmsOrderLoad, this.formModel)
+      this.loadInfo.tmsOrderLoadDetailsList = objectMerge2(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
     },
-    getUpdateRepertoryLeft() {
+    getUpdateRepertoryLeft() { // 修改时 左边的数据列表
+      console.log('left', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
-          this.setLoadTableList.left = data.data
-          // console.log('修改ing左边列表', this.setLoadTableList.left)
+          this.$set(this.setLoadTableList, 'left', data.data)
+          // this.setLoadTableList.left = objectMerge2([], data.data)
+          console.log('修改ing左边列表', this.setLoadTableList.left)
         })
       }
+      return this.setLoadTableList
     },
-    getUpdateRepertoryRight() {
+    getUpdateRepertoryRight() { // 修改时 右边的数据列表
+      console.log('right', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
-          this.setLoadTableList.right = data.data
-          // console.log('修改ing右边列表', this.setLoadTableList.right)
+          this.$set(this.setLoadTableList, 'right', data.data)
+          // this.setLoadTableList.right = objectMerge2([], data.data)
+          console.log('修改ing右边列表', this.setLoadTableList.right)
         })
       }
+      return this.setLoadTableList
     },
     addTruck() {
       // console.log('添加车辆信息')
