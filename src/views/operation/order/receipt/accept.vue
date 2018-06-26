@@ -53,7 +53,7 @@
                 sortable
                 width="120"
                 label="开单日期">
-                <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
+                <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
               </el-table-column>
               <el-table-column
                 prop="shipSn"

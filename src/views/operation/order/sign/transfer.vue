@@ -651,7 +651,7 @@ export default {
                 this.dotInfo = ids
         
                 this.isSongh = true
-              
+                this.isModify = true;
                 this.isDelivery = true
                 this.isPick = false
                 this.openAddBatch()
