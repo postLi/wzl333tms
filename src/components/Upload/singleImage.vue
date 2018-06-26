@@ -38,6 +38,7 @@
 <script>
 // 上传接口
 import { getUploadPolicy } from '@/api/common'
+import { parseTime } from '@/utils/'
 
 export default {
   name: 'singleImageUpload',
@@ -192,7 +193,7 @@ export default {
             reject(false)
         } else {
             // 设置文件名
-            this.upload.key = this.dir + this.random_string() + type
+            this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
             resolve(true)
         }
       })
