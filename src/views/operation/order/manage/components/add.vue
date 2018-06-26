@@ -7,22 +7,23 @@
           <tr>
             <td>
               <el-form-item label="发货方:">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="customSend.companyName"
-                  :fetch-suggestions="querySearchSender('companyName')"
-                  value-key="companyName"
-                  :maxlength="25"
-                  placeholder="请选择"
-                  @select="handleSelectSender"
-                >
-                  <template slot-scope="{ item }">
-                    <div class="selectListOption_lrl">
-                      <span class="name">{{ item.companyName }}</span>
-                      <span class="addr">{{ item.customerName }}</span>
-                    </div>
-                  </template>
-                </el-autocomplete>
+                <!--<el-autocomplete-->
+                  <!--class="inline-input"-->
+                  <!--v-model="customSend.companyName"-->
+                  <!--:fetch-suggestions="querySearchSender('companyName')"-->
+                  <!--value-key="companyName"-->
+                  <!--:maxlength="25"-->
+                  <!--placeholder="请选择"-->
+                  <!--@select="handleSelectSender"-->
+                <!--&gt;-->
+                  <!--<template slot-scope="{ item }">-->
+                    <!--<div class="selectListOption_lrl">-->
+                      <!--<span class="name">{{ item.companyName }}</span>-->
+                      <!--<span class="addr">{{ item.customerName }}</span>-->
+                    <!--</div>-->
+                  <!--</template>-->
+                <!--</el-autocomplete>-->
+                <querySelect search="companyName" type="sender" valuekey="companyName" v-model="form.customSend.companyName" @change="setSender" />
               </el-form-item>
             </td>
             <td>
@@ -228,12 +229,15 @@
           <tr>
             <td>
               <el-form-item label="出发城市">
-                <el-input v-model="form.tmsOrderPre.orderFromCityCode" maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input v-model="form.tmsOrderPre.orderFromCityCode" maxlength="25" auto-complete="off" clearable></el-input>-->
+
+                <querySelect search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderPre.orderFromCityCode" :remote="true" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="到达城市">
-                <el-input v-model="form.tmsOrderPre.orderToCityCode" maxlength="25" auto-complete="off" clearable></el-input>
+                <!--<el-input v-model="form.tmsOrderPre.orderToCityCode" maxlength="25" auto-complete="off" clearable></el-input>-->
+                <querySelect @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderPre.orderToCityCode" :remote="true" />
               </el-form-item>
             </td>
             <td>
@@ -323,7 +327,8 @@ export default {
     popRight,
     Upload,
     SelectTree,
-    SelectType
+    SelectType,
+    querySelect
   },
   props: {
     popVisible: {
@@ -353,6 +358,8 @@ export default {
   },
   data () {
     return {
+      fromCityName: '',
+      toCityName: '',
       btnsize: 'mini',
       senderList: [],
       receiverList: [],
@@ -507,15 +514,39 @@ export default {
     }
   },
   methods: {
+    // 选择出发城市
+    selectFromCity (item, city) {
+      if(item){
+        this.form.tmsOrderShip.shipFormCityName = item.longAddr
+      } else {
+        this.form.tmsOrderShip.shipFormCityName = city || ''
+      }
+    },
+    // 选择到达城市
+    selectToCity (item, city) {
+      if(item){
+        this.form.tmsOrderShip.shipToCityName = item.longAddr
+      } else {
+        this.form.tmsOrderShip.shipToCityName = city || ''
+      }
+    },
     /** 收货人/发货人 */
     setSender(item, type){
       type = type ? type : 'sender'
       if(item){
+
+        //customerId
+        // // 发货人
+        // companyName:'',
+        //   senderName:'',
+        //   senderMobile:'',
+        //   detailedAddress:'',
+        //   customerType:1
         this.form[type].customerId = item.customerId || ''
         this.form[type].customerType = type === 'sender' ? 1 : 2
         this.form[type].customerUnit = item.customerUnit
         this.form[type].customerName = item.customerName
-        this.form[type].customerMobile = item.customerMobile
+        this.form[type].senderMobile = item.customerMobile
         this.form[type].detailedAddress = item.detailedAddress
         console.log('setSender:', item, type,  this.form[type])
       }
@@ -838,6 +869,7 @@ manage-add-table-top .el-form-item__error {
 .info_order{
   margin-top:0;
   border: 1px solid transparent;
+  border-top: 1px solid #ccc;
 }
 .manage-add-table-foot .el-form-item--mini {
   margin-left: 12px;
