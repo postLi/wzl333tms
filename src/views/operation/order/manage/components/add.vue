@@ -7,44 +7,12 @@
           <tr>
             <td>
               <el-form-item label="发货方:">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--v-model="customSend.companyName"-->
-                  <!--:fetch-suggestions="querySearchSender('companyName')"-->
-                  <!--value-key="companyName"-->
-                  <!--:maxlength="25"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectSender"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.companyName }}</span>-->
-                      <!--<span class="addr">{{ item.customerName }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="companyName" type="sender" valuekey="companyName" v-model="customSend.companyName" @change="setSender" />
+                <querySelect search="customerUnit" type="sender" valuekey="companyName" v-model="form.customSend.customerUnit" @change="setSender" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货方:">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--v-model="customRece.companyName"-->
-                  <!--:fetch-suggestions="querySearchReceiver('companyName')"-->
-                  <!--value-key="companyName"-->
-                  <!--:maxlength="25"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectReceiver"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.companyName }}</span>-->
-                      <!--<span class="addr">{{ item.customerName }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="companyName" type="sender" valuekey="companyName" v-model="customRece.companyName" @change="setSender" />
+                <querySelect search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.customRece.customerUnit" @change="setReceiver" />
               <!--</el-form-item>-->
               </el-form-item>
             </td>
@@ -53,134 +21,39 @@
           <tbody>
           <tr>
             <td>
-              <el-form-item label="发货人:" prop="senderName">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--v-model="customSend.senderName"-->
-                  <!--:fetch-suggestions="querySearchSender('customerName')"-->
-                  <!--value-key="customerName"-->
-                  <!--:maxlength="25"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectSender"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.customerName }}</span>-->
-                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="senderName" type="sender" valuekey="senderName" v-model="customSend.senderName" @change="setSender" />
+              <el-form-item label="发货人:" prop="customSend.customerName">
+                <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.customSend.customerName" @change="setSender" />
 
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="收货人:" prop="receiverName">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--v-model="customRece.receiverName"-->
-                  <!--:fetch-suggestions="querySearchReceiver('customerName')"-->
-                  <!--value-key="customerName"-->
-                  <!--:maxlength="25"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectReceiver"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.customerName }}</span>-->
-                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="receiverName" type="sender" valuekey="receiverName" v-model="customRece.receiverName" @change="setSender" />
+              <el-form-item label="收货人:" prop="customRece.customerName">
+                <querySelect search="customerName" type="receiver" valuekey="customerName" v-model="form.customRece.customerName" @change="setReceiver" />
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
-              <el-form-item label="联系号码:" prop="senderMobile">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--v-model="customSend.senderMobile"-->
-                  <!--value-key="customerMobile"-->
-                  <!--:fetch-suggestions="querySearchSender('customerMobile')"-->
-                  <!--:maxlength="11"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectSender"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.customerName }}</span>-->
-                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="senderMobile" type="sender" valuekey="senderMobile" v-model="customSend.senderMobile" @change="setSender" />
+              <!--发-->
+              <el-form-item label="联系号码:" prop="customSend.customerMobile">
+                <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.customSend.customerMobile" @change="setSender" />
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="联系号码:" prop="receiverMobile">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--v-model="customRece.receiverMobile"-->
-                  <!--value-key="customerMobile"-->
-                  <!--:fetch-suggestions="querySearchReceiver('customerMobile')"-->
-                  <!--:maxlength="11"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectReceiver"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.customerName }}</span>-->
-                      <!--<span class="addr">{{ item.customerMobile }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="receiverMobile" type="sender" valuekey="receiverMobile" v-model="customRece.receiverMobile" @change="setSender" />
+              <el-form-item label="联系号码:" prop="customRece.customerMobile">
+                <querySelect search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.customRece.customerMobile" @change="setReceiver" />
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="发货地址:">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--value-key="detailedAddress"-->
-                  <!--v-model="customSend.detailedAddress"-->
-                  <!--:fetch-suggestions="querySearchSender('detailedAddress')"-->
-                  <!--:maxlength="25"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectSender"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.customerName }}</span>-->
-                      <!--<span class="addr">{{ item.detailedAddress }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="customSend.detailedAddress" @change="setSender" />
+                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.customSend.detailedAddress" @change="setSender" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="收货地址:">
-                <!--<el-autocomplete-->
-                  <!--class="inline-input"-->
-                  <!--value-key="detailedAddress"-->
-                  <!--v-model="customRece.detailedAddress"-->
-                  <!--:fetch-suggestions="querySearchReceiver('detailedAddress')"-->
-                  <!--:maxlength="25"-->
-                  <!--placeholder="请选择"-->
-                  <!--@select="handleSelectReceiver"-->
-                <!--&gt;-->
-                  <!--<template slot-scope="{ item }">-->
-                    <!--<div class="selectListOption_lrl">-->
-                      <!--<span class="name">{{ item.customerName }}</span>-->
-                      <!--<span class="addr">{{ item.detailedAddress }}</span>-->
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</el-autocomplete>-->
-                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="customRece.detailedAddress" @change="setSender" />
+                <querySelect search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.customRece.detailedAddress" @change="setReceiver" />
               </el-form-item>
             </td>
           </tr>
@@ -193,14 +66,15 @@
           <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">-->
             <ul>
               <li>
-                <p>货品名</p>
-                <el-form-item prop="nowpayCarriage">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoName"></el-input>
+                <p><i>*</i> 货品名</p>
+                <el-form-item prop="tmsOrderCargoList.cargoName" >
+                  <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="form.tmsOrderCargoList.cargoName" />
+                  <!--<el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoName"></el-input>-->
                 </el-form-item>
               </li>
               <li>
-                <p>件数</p>
-                <el-form-item prop="nowpayCarriage">
+                <p><i>*</i> 件数</p>
+                <el-form-item prop="tmsOrderCargoList.cargoAmount">
                   <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount"></el-input>
                 </el-form-item>
               </li>
@@ -219,13 +93,14 @@
               <li>
                 <p>包装</p>
                 <el-form-item prop="nowpayCarriage">
-                  <el-input maxlength="10"  v-model="form.tmsOrderCargoList.cargoPack"></el-input>
+                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.tmsOrderCargoList.cargoPack" />
+                  <!--<el-input maxlength="10"  v-model="form.tmsOrderCargoList.cargoPack"></el-input>-->
                 </el-form-item>
               </li>
               <li>
                 <p>品种规格</p>
-                <el-form-item prop="nowpayCarriage">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.description"></el-input>
+                <el-form-item prop="tmsOrderCargoList.description">
+                  <el-input maxlength="20" v-model="form.tmsOrderCargoList.description"></el-input>
                 </el-form-item>
               </li>
             </ul>
@@ -238,15 +113,13 @@
           <tr>
             <td>
               <el-form-item label="出发城市">
-                <!--<el-input v-model="form.tmsOrderPre.orderFromCityCode" maxlength="25" auto-complete="off" clearable></el-input>-->
 
-                <querySelect search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderPre.orderFromCityCode" :remote="true" />
+                <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityCode" :remote="true" />
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="到达城市">
-                <!--<el-input v-model="form.tmsOrderPre.orderToCityCode" maxlength="25" auto-complete="off" clearable></el-input>-->
-                <querySelect @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderPre.orderToCityCode" :remote="true" />
+              <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityCode">
+                <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityCode" :remote="true" />
               </el-form-item>
             </td>
             <td>
@@ -269,7 +142,7 @@
             </td>
             <td>
               <el-form-item label="紧急度">
-                <SelectType v-model="form.tmsOrderPre.orderEffective" type="order_effective" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderEffective" type="ship_effective" placeholder="请选择" />
               </el-form-item>
             </td>
 
@@ -287,7 +160,7 @@
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="order_pay_way" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" placeholder="请选择" />
               </el-form-item>
             </td>
 
@@ -330,6 +203,7 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import querySelect from '@/components/querySelect/index'
 import { mapGetters } from 'vuex'
+import {objectMerge2} from '@/utils/index'
 
 export default {
   components: {
@@ -366,12 +240,53 @@ export default {
       ])
   },
   data () {
+    const validateOnlyNumberAndLetter = (rule, value, callback) => {
+      if(REGEX.ONLY_NUMBER_AND_LETTER.test(value)){
+        callback()
+      } else {
+        // this.$message.error('只能输入数字或者字母')
+        callback(new Error('只能输入数字或者字母'))
+      }
+    }
+    const validateMobile = (rule, value, callback) => {
+      if(REGEX.MOBILE.test(value)){
+        callback()
+      } else {
+        callback(new Error('请输入正确的联系号码~'))
+      }
+    }
     return {
+      rules:{
+        "tmsOrderPre.orderToCityCode": [
+          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change']}
+        ],
+        "customSend.customerName": [
+          {required: true,validator: this.validateIsEmpty('发货人不能为空'), trigger: 'change'}
+        ],
+        "customSend.customerMobile": [
+          {required: true,validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'change'},
+          { validator: validateMobile, trigger: 'change' }
+        ],
+        "customRece.customerName": [
+          {required: true,validator: this.validateIsEmpty('收货人不能为空'), trigger: 'change'}
+        ],
+        "customRece.customerMobile": [
+          {required: true,validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'change'},
+          { validator: validateMobile, trigger: 'change' }
+        ],
+        "tmsOrderCargoList.cargoName": [
+          {validator: this.validateIsEmpty('货品名不能为空'), trigger: 'change'}
+        ],
+        "tmsOrderCargoList.cargoAmount": [
+          {validator: this.validateIsEmpty('件数不能为空'), trigger: 'change'}
+        ],
+        "tmsOrderCargoList.description": [
+          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] }
+        ]
+      },
       fromCityName: '',
       toCityName: '',
       btnsize: 'mini',
-      senderList: [],
-      receiverList: [],
       searchSend: {
         "currentPage": 1,
         "pageSize": 100,
@@ -388,9 +303,6 @@ export default {
           customerType: 2
         }
       },
-      phoneshort: '', // 固话区号
-      phonelong: '', // 固话号码
-      //fixPhone: '',
       carObj: {
         cargoName:'',  // 货品名
         cargoAmount:'',  // 件数
@@ -400,6 +312,25 @@ export default {
         description:''  // 品种规格
       },
       form: {
+
+        customSend:{
+          //customerId
+          // 发货人
+          // customerId,
+          customerUnit:'',
+          customerName:'',
+          customerMobile:'',
+          detailedAddress:'',
+          customerType:1
+        },
+        customRece:{
+          // customerId,
+          customerUnit:'',
+          customerName:'',
+          customerMobile:'',//
+          detailedAddress:'',
+          customerType:2
+        },
         customerList:[{},{}],
         //货物信息
         tmsOrderCargoList: [
@@ -432,6 +363,7 @@ export default {
       customSend:{
         //customerId
         // 发货人
+        // customerId,
         companyName:'',
         senderName:'',
         senderMobile:'',
@@ -439,6 +371,7 @@ export default {
         customerType:1
       },
       customRece:{
+        // customerId,
         companyName:'',
         receiverName:'',
         receiverMobile:'',//
@@ -449,27 +382,8 @@ export default {
       formLabelWidth: '100px',
       tooltip: false,
       popTitle: '新建',
-      orgArr: [],
-      rolesArr: [],
-      departmentArr: [],
       loading: false,
-      departments: [],
-      groups: [],
-      inited: false,
-      rules: {
-        "senderName": [
-          { required: true, trigger: 'blur',message: '请输入姓名', }
-        ],
-        "receiverName": [
-          { required: true, trigger: 'blur',message: '请输入姓名', }
-        ],
-        "senderMobile": [
-          { required: true, trigger: 'blur',message: '请输入手机号码', }
-        ],
-        "receiverMobile": [
-          { required: true, trigger: 'blur',message: '请输入手机号码', }
-        ]
-      },
+      inited: false
 
 
     }
@@ -479,18 +393,7 @@ export default {
       this.inited = true
       this.initInfo()
     }
-    this.fetchAllCustomerFa(this.orgid).then(res => {
-      this.loading = false
-      // return res || []
-      this.senderList = res
-      // if(res == null){
-      //
-      // }
-    })
-    this.fetchAllCustomerShou(this.orgid).then(res => {
-      this.loading = false
-      this.receiverList = res
-    })
+
     this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
   },
   watch: {
@@ -505,6 +408,7 @@ export default {
     info () {
       if(this.isModify){
         this.popTitle = '修改'
+
         this.form.tmsOrderCargoList.cargoName = this.info.cargoName
         this.form.tmsOrderCargoList.cargoAmount = this.info.cargoAmount
         this.form.tmsOrderCargoList.cargoWeight = this.info.cargoWeight
@@ -516,129 +420,59 @@ export default {
       } else {
         this.popTitle = '新增'
         this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
-        this.form.tmsOrderCargoList = [Object.assign({}, this.carObj)]
+        this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
+        // this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
         this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
       }
-      // this.form.tmsOrderPre.orderPickupMethod = 1
+      // this.form.tmsOrderPre.orderPickupMethod = 1 Object.assign
     }
   },
   methods: {
+    validateIsEmpty (msg = '不能为空！') {
+      return (rule, value, callback) => {
+        if(!value){
+          callback(new Error(msg))
+        }else{
+          callback()
+        }
+      }
+    },
     // 选择出发城市
     selectFromCity (item, city) {
       if(item){
-        this.form.tmsOrderShip.shipFormCityName = item.longAddr
+        this.form.tmsOrderPre.orderFromCityCode = item.id
       } else {
-        this.form.tmsOrderShip.shipFormCityName = city || ''
+        //this.form.tmsOrderPre.orderFromCityCode = city || ''
       }
     },
     // 选择到达城市
     selectToCity (item, city) {
       if(item){
-        this.form.tmsOrderShip.shipToCityName = item.longAddr
+        this.form.tmsOrderPre.orderToCityCode = item.id
       } else {
-        this.form.tmsOrderShip.shipToCityName = city || ''
       }
     },
     /** 收货人/发货人 */
     setSender(item, type){
-      type = type ? type : 'sender'
+      type = type ? 'customRece' : 'customSend'
       if(item){
-
-        //customerId
-        // // 发货人
-        // companyName:'',
-        //   senderName:'',
-        //   senderMobile:'',
-        //   detailedAddress:'',
-        //   customerType:1
-        this.customSend[type].customerId = item.customerId || ''
-        this.customSend[type].customerType = type === 'sender' ? 1 : 2
-        this.customSend[type].customerUnit = item.customerUnit
-        this.customSend[type].companyName = item.companyName
-        this.customSend[type].senderMobile = item.customerMobile
-        this.customSend[type].detailedAddress = item.detailedAddress
-        console.log('setSender:', item, type,  this.customSend[type])
+        this.form[type].customerId = item.customerId || ''
+        this.form[type].customerType = type === 'customSend' ? 1 : 2
+        this.form[type].customerUnit = item.customerUnit
+        this.form[type].customerName = item.customerName
+        this.form[type].customerMobile = item.customerMobile
+        this.form[type].detailedAddress = item.detailedAddress
       }
     },
     setReceiver(item){
       this.setSender(item, 'receiver')
     },
 
-    querySearchSender (name) {
-      let _this = this
-      return function(query, cb){
-        let data = _this.senderList.filter(el => {
-          return el[name].indexOf(query) !== -1
-        })
-        cb(data)
-      }
-    },
-    handleSelectSender(res){
-      this.customSend.senderName = res.customerName
-      this.customSend.companyName = res.companyName
-      this.customSend.senderMobile = res.customerMobile
-      this.customSend.detailedAddress = res.detailedAddress
-      this.customSend.customerType = res.customerType
-    },
-    querySearchReceiver (name) {
-      let _this = this
-      return function(query, cb){
-        let data = _this.receiverList.filter(el => {
-          return el[name].indexOf(query) !== -1
-        })
-        cb(data)
-      }
-    },
-    handleSelectReceiver(res){
-      // receiverName:'',
-      //   receiverMobile:'',//
-      //   detailedAddress:'',
-      this.customRece.receiverName = res.customerName
-      this.customRece.companyName = res.companyName
-      this.customRece.receiverMobile = res.customerMobile
-      this.customRece.detailedAddress = res.detailedAddress
-      this.customRece.customerType = res.customerType
-    },
     setObject(obj1, obj2) {
       for (var i in obj1) {
         obj1[i] = obj2 ? obj2[i] : ''
       }
       return obj1
-    },
-    //
-    fetchAllCustomerFa () {
-      this.loading = true
-      return getAllCustomer(this.searchSend).then(data => {
-        return data.list || []
-        let res = data.list[0]
-        if(res){
-          this.customSend.senderName = res.customerName
-          this.customSend.companyName = res.companyName
-          this.customSend.senderMobile = res.customerMobile
-          this.customSend.detailedAddress = res.detailedAddress
-          this.customSend.customerType = res.customerType
-        }
-
-        this.loading = false
-      })
-    },
-    fetchAllCustomerShou () {
-      this.loading = true
-      return getAllCustomer(this.searchShou).then(data => {
-        return data.list || []
-        let res = data.list[0]
-        if(res){
-          // for(var i in this.customRece){
-          //   this.customRece[i] = res[i]
-          // }
-          this.customRece.senderName = res.customerName
-          this.customRece.companyName = res.companyName
-          this.customRece.senderMobile = res.customerMobile
-          this.customRece.detailedAddress = res.detailedAddress
-          this.customRece.customerType = res.customerType
-        }
-        this.loading = false
-      })
     },
     initInfo () {
       this.loading = false
@@ -650,17 +484,22 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.form.customerList[0] = this.customSend
-          this.form.customerList[1] = this.customRece
+          this.form.customerList[0] = this.form.customSend
+          this.form.customerList[1] = this.form.customRece
+
           let promiseObj
+          let data = objectMerge2({}, this.form)
+          delete data.customSend
+          delete data.customRece
+          let obj = {}
+          for(let i in data.tmsOrderCargoList) {
+            obj[i] = data.tmsOrderCargoList[i]
+          }
+          data.tmsOrderCargoList = [obj]
           // 判断操作，调用对应的函数
           if(this.isModify){
-            this.form.customerList[0].customerId = 1
-            this.form.customerList[1].customerId = 1
-            let data = this.form
             promiseObj = postModifyOrder(data)
           } else {
-            let data = this.form
             promiseObj = postAddOrder(data)
           }
 
@@ -683,9 +522,9 @@ export default {
     },
     reset () {
       this.$refs['ruleForm'].resetFields()
-      this.form.licensePicture = ''
-      this.form.idCardPositive = ''
-      this.form.idCardVerso = ''
+      this.form.customerList[0] = ''
+      this.form.customerList[1] = ''
+      // this.form.tmsOrderCargoList = ''
     },
     closeMe (done) {
       this.reset()
@@ -919,7 +758,9 @@ manage-add-table-top .el-form-item__error {
           font-size: 14px;
           text-align: center;
           line-height: 34px;
-
+          i{
+            color: red;
+          }
         }
       }
       .el-form-item{

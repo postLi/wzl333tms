@@ -154,7 +154,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orderReceiverName"
+            prop="receiverName"
             label="收货人"
             width="90"
             sortable
@@ -267,7 +267,7 @@ import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-
+import {objectMerge2} from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -335,9 +335,7 @@ export default {
       this.searchForms.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      // console.log("getSearchParam：", obj)
-
-      this.searchForms.vo = Object.assign(this.searchForms.vo, obj)
+      this.searchForms.vo = objectMerge2(this.searchForms.vo, obj)
       this.fetchAllList()
     },
     showImport () {
@@ -378,6 +376,7 @@ export default {
               //受理  acceptance
           case 'acceptance':
             this.isModify = false
+            this.closeAddCustomer()
             this.selectInfo = this.selected[0]
             if(this.selected.length > 1){
               this.$message({
@@ -410,10 +409,10 @@ export default {
               }
             else if(this.selected[0].orderStatus === 213){
               this.openAddCustomer()
+
               this.isModify = true
             }
               this.selectInfo = this.selected[0]
-              // this.openAddCustomer()
               break;
         // 作废
         case 'cancel':
