@@ -73,20 +73,13 @@ export function putRremoveShip(params) {
   })
 }
 /**
- * /order/pickup/v1/removeShip
- 根据运单号或货号查询运单
- */
-export function postFindByShipSnOrGoodSn(params) {
-  return fetch.post('/api-order/order/v1/findByShipSnOrGoodSn/', params).then(res => {
-    return res.data || {}
-  })
-}
-/**
  * /order/pickup/v1/findShipByid
- 根据提货id查询提货单
+ 根据提货id查询运单
  */
 export function getFindShipByid(id) {
-  return fetch.get('/api-order/order/pickup/v1/findShipByid/' + id)
+  return fetch.get('/api-order/order/pickup/v1/findShipByid/' + id).then(res => {
+    return res.data || {}
+  })
 }
 
 // http://localhost:7010/api-system/system/trunk/v1/list?access_token=

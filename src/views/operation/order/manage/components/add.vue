@@ -80,13 +80,13 @@
               </li>
               <li>
                 <p>重量</p>
-                <el-form-item prop="nowpayCarriage">
+                <el-form-item prop="tmsOrderCargoList.cargoWeight">
                   <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>体积</p>
-                <el-form-item prop="nowpayCarriage">
+                <el-form-item prop="tmsOrderCargoList.cargoVolume">
                   <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume"></el-input>
                 </el-form-item>
               </li>
@@ -262,6 +262,25 @@ export default {
         callback(new Error('发货人不能为空111'))
       }
     }
+    const validatePickupNum = function (rule, value, callback) {
+      if(REGEX.ONLY_NUMBER.test(value)){
+        callback()
+      } else {
+        callback(new Error('只能输入数字'))
+      }
+    }
+    let hasOne = false
+    const validateVolumnWeight = (rule, value, callback) => {
+      if(this.form.tmsOrderCargoList.cargoVolume === '' && this.form.tmsOrderCargoList.cargoWeight === '' ){
+        hasOne = false
+      }
+      if(!value && !hasOne){
+        callback(new Error('体积或重量必填其中一项'))
+      }else{
+        hasOne = true
+        callback()
+      }
+    }
     return {
       rules:{
         "tmsOrderPre.orderToCityCode": [
@@ -282,12 +301,19 @@ export default {
           { validator: validateMobile, trigger: 'change' }
         ],
         "tmsOrderCargoList.cargoName": [
-          {validator: this.validateIsEmpty('货品名不能为空'), trigger: 'change'},
+          {validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur'},
           // { validator: validateCargoName, trigger: 'change' }
         ],
         "tmsOrderCargoList.cargoAmount": [
-          {validator: this.validateIsEmpty('件数不能为空'), trigger: 'change'}
+          {validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur'},
+          {validator: validatePickupNum, trigger: 'blur'}
         ],
+        'tmsOrderCargoList.cargoVolume': [{
+          validator: validateVolumnWeight, trigger: 'blur'
+        }],
+        'tmsOrderCargoList.cargoWeight': [{
+          validator: validateVolumnWeight, trigger: 'blur'
+        }],
         "tmsOrderCargoList.description": [
           { validator: validateOnlyNumberAndLetter,trigger: ['change'] }
         ]
@@ -357,11 +383,11 @@ export default {
           orderToCityCode:'',
           orderFromOrgid:'',
           orderToOrgid:'',//目的网点
-          orderPickupMethodName:'',//提货方式
-          orderEffectiveName:'',//紧急度
+          orderPickupMethodName:218,//提货方式
+          orderEffectiveName:94,//紧急度
           agencyFund:'',//代收款
           commissionFee:'',//代收款手续费
-          orderPayWay:'',//付款方式 orderPayWayName
+          orderPayWay:76,//付款方式 orderPayWayName
           deliveryFee:'',//运费
           productPrice:'',//声明价值
           orderRemarks:''//声明价值

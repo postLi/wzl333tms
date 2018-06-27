@@ -373,6 +373,7 @@ export default {
               break;
         // 提货完成
         case 'finishPick':
+          this.closeAddCustomer()
           if(this.selected.length > 1){
             this.$message({
               message: '每次只能生成单条数据~',
@@ -392,6 +393,7 @@ export default {
           break;
           //关联运单
         case 'relevance':
+          this.closeAddCustomer()
           if(this.selected.length > 1){
             this.$message({
               message: '每次只能生成单条数据~',
@@ -404,6 +406,7 @@ export default {
           break;
           // 删除客户
           case 'delete':
+            this.closeAddCustomer()
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
                   //=>todo 删除多个
                   let ids = this.selected.map(item => {

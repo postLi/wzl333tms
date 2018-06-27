@@ -4,18 +4,18 @@
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div ref="ruleForm" class="depmain-div">
-          <el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth">
+          <el-form :inline="true" :model="getMentInfo" :rules="rules" class="demo-form-inline" :label-width="formLabelWidth">
             <el-form-item label="提货批次">
-              <el-input v-model="getMentInfo.pickupBatchNumber" placeholder=""></el-input>
+              <el-input v-model="getMentInfo.pickupBatchNumber" disabled></el-input>
             </el-form-item>
             <el-form-item label="派车费用">
-              <el-input v-model="getMentInfo.truckFee" placeholder=""></el-input>
+              <el-input v-model="getMentInfo.truckFee" disabled></el-input>
             </el-form-item>
             <el-form-item label="车牌号码">
-              <el-input v-model="getMentInfo.truckIdNumber" placeholder=""></el-input>
+              <el-input v-model="getMentInfo.truckIdNumber" disabled></el-input>
             </el-form-item>
             <el-form-item label="司机姓名">
-              <el-input v-model="getMentInfo.driverName" placeholder=""></el-input>
+              <el-input v-model="getMentInfo.driverName" disabled></el-input>
             </el-form-item>
           </el-form>
           <el-table
@@ -59,14 +59,16 @@
           </el-table>
 
           <el-form :inline="true" :model="formInline" class="order_bottom" :label-width="formLabelWidth">
-            <el-form-item label="运单号">
-              <el-input v-model="formInline.shipSn"></el-input>
+            <el-form-item label="运单号" prop="shipSn">
+              <!--<el-input v-model="formInline.shipSn"></el-input>-->
+              <querySelect valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
             </el-form-item>
-            <el-form-item label="货号">
-              <el-input v-model="formInline.pickupName"></el-input>
+            <el-form-item label="货号" prop="shipGoodsSn">
+              <!--<el-input v-model="formInline.shipGoodsSn"></el-input>-->
+              <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
             </el-form-item>
-            <el-form-item label="本单提货费">
-              <el-input v-model="formInline.user"></el-input>
+            <el-form-item label="本单提货费" prop="pickupFee">
+              <el-input v-model="formInline.pickupFee"></el-input>
             </el-form-item>
           </el-form>
 
@@ -74,7 +76,7 @@
       </template>
       <div slot="footer" class="dialog-footer-frame" >
         <el-button type="primary" @click="submitForm('ruleForm')">加入列表</el-button>
-        <el-button @click="closeMe">从列表移除</el-button>
+        <el-button @click="removeList">从列表移除</el-button>
       </div>
 
     </PopFrame>
@@ -83,12 +85,14 @@
 </template>
 
 <script>
+  import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import { postFindByShipSnOrGoodSn,getFindShipByid} from '@/api/operation/pickup'
+  import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
   export default {
     components: {
-      PopFrame
+      PopFrame,
+      querySelect
     },
     props: {
       popVisible: {
@@ -106,12 +110,45 @@
       createrId: [Number,String]
     },
     data() {
+      let hasOne = false
+      let validateShipNum = (rule,value,callback) =>{
+        if(this.formInline.shipSn ==='' && this.formInline.shipSn ===''){
+          hasOne = false
+        }
+        if(!value && !hasOne){
+          callback(new Error('运单号或货号必填其中一项'))
+        }
+        else{
+          hasOne = true
+          callback()
+        }
+
+      }
+      let validatePickupFee = (rule,value,callback) =>{
+        if(REGEX.ONLY_NUMBER.test(value) || !value.length){
+          callback()
+        }
+        else {
+          callback(new Error('只能输入数字'))
+        }
+      }
       return {
+        rules:{
+          shipSn:[
+            { validator:validateShipNum, trigger: 'blur' }
+          ],
+          shipGoodsSn:[
+            { validator:validateShipNum, trigger: 'blur' }
+          ],
+          pickupFee: [
+            {validator: validatePickupFee, trigger: 'change'}
+          ],
+        },
         formLabelWidth:'90',
         formInline: {
           shipSn: '',
-          pickupName: '',
-          region: ''
+          shipGoodsSn: '',
+          pickupFee: ''
         },
         usersArr: [],
         checked1: true,
@@ -124,15 +161,13 @@
             truckIdNumber:'',//车牌
             driverName:''//司机姓名
           },
+        sendId:{
+          pickupId:'',
+          shipId:'',
+          pickupFee:''
+        },
         //首行
         input: '',
-        orderId: '',
-        resInfo:[
-          {
-            dictName:''
-          }
-        ],
-        restaurants: [],
       }
     },
     computed: {
@@ -157,15 +192,9 @@
         this.getMentInfo.driverName = this.dotInfo.driverName
         this.getMentInfo.getMentInfo = this.dotInfo.getMentInfo
         this.getMentInfo.truckFee = this.dotInfo.truckFee
-        //  pickupBatchNumber:'',
-        //派车费用
-        // truckIdNumber:'',//车牌
-          // driverName:''//司机姓名
-        // this.getMentInfo = this.dotInfo
-        // console.log(typeof this.dotInfo)
+        this.sendId.pickupId = this.dotInfo.id
       },
       popVisible (newVal) {
-        // console.log('popVisible:', newVal)
       },
       createrId(newVal){
 
@@ -173,29 +202,36 @@
     },
     mounted() {
       if(this.popVisible){
-        console.log('1')
-        this.getSelectDict()
+        this.fetchData()
+        this.sendId.pickupId = this.dotInfo.id
+        console.log(this.sendId.pickupId);
       }
 
     },
     methods: {
-      getSelectDict() {
-
+      fetchFindByShipSnOrGoodSn() {
         this.loading = true
-        getFindShipByid(this.dotInfo.id).then(res => {
-          this.loading = false
-          // this.getMentInfo = res
-          console.log(res)
+
+        return getFindShipByid(this.sendId.pickupId).then(data => {
+          console.log(data)
+          // this.usersArr = data.list
+          // this.loading = false
         })
-
       },
-      getAddDate() {
-        // this.loading = true
-        // return postDict(this.createrId , this.dictName).then(res => {
-        //   this.loading = false
-        //   this.dictName = ''
-        // })
-
+      fetchData() {
+        this.fetchFindByShipSnOrGoodSn()
+      },
+      getShipSn(order){
+        if(order){
+          this.formInline.shipGoodsSn = order.shipGoodsSn
+          this.sendId.pickupId = order.id
+        }
+      },
+      getShipGoodsSn(order){
+        if(order){
+          this.formInline.shipSn = order.shipSn
+          this.sendId.pickupId = order.id
+        }
       },
       closeMe (done) {
         this.$emit('update:popVisible', false);
@@ -204,44 +240,32 @@
         }
       },
       submitForm(formName) {
-        this.$message({
-          message: '开单页面~',
-          type: 'warning'
-        })
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-        //     this.loading = true
-        //     this.form.tmsCustomer = this.customSend
-        //     this.form.tmsOrderPickup.outTime = this.newDate
-        //     this.form.tmsOrderPickup.arriveTime = this.endDate
-        //     // console.log(this.form)
-        //     let data = this.form
-        //     // let data = Object.assign({},this.form)
-        //     // data.fixPhone = this.fixPhone
-        //     let promiseObj
-        //     // 判断操作，调用对应的函数
-        //     if(this.isModify){
-        //       // promiseObj = putUpdatePickup(data)
-        //     } else {
-        //       // promiseObj = postAddPickup(data)
-        //     }
-        //
-        //     promiseObj.then(res => {
-        //       this.loading = false
-        //       this.$alert('操作成功', '提示', {
-        //         confirmButtonText: '确定',
-        //         callback: action => {
-        //           this.closeMe()
-        //           this.$emit('success')
-        //         }
-        //       });
-        //     }).catch(err => {
-        //       this.loading = false
-        //     })
-        //   } else {
-        //     return false;
-        //   }
-        // });
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            this.sendId.pickupFee = this.formInline.pickupFee
+            let data =this.sendId
+            let promiseObj = putRelevancyShip(data)
+
+            promiseObj.then(res => {
+              this.loading = false
+              this.$alert('操作成功', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  // this.closeMe()
+
+                }
+              });
+            }).catch(err => {
+              this.loading = false
+            })
+          } else {
+            return false;
+          }
+        });
+      },
+      removeList(){
+      //   if(this.selected[0])
       },
       clickDetails(row, event, column){
         this.$refs.multipleTable.toggleRowSelection(row)

@@ -21,7 +21,9 @@
         </div>
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
-            <el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>
+            <!--<el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>-->
+            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" />
+
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
             <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" ></el-input>
@@ -40,7 +42,7 @@
             <!--默认为现付-->
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" placeholder="请选择" class="pickup-way" />
           </el-form-item>
-          <el-form-item label="到达城市" prop="" class="order_toCityCode">
+          <el-form-item label="到达城市" class="order_toCityCode">
             <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityCode" :remote="true" />
           </el-form-item>
           <el-form-item label="备注" prop="tmsOrderPickup.remark" class="order_remark">
@@ -54,17 +56,20 @@
           <el-form-item label="代收费用" prop="tmsOrderPickup.collectionFee">
             <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" ></el-input>
           </el-form-item>
-          <el-form-item label="车牌号" prop="tmsTruck.truckIdNumber">
-            <el-input v-model="form.tmsTruck.truckIdNumber"  auto-complete="off" ></el-input>
+          <el-form-item label="车牌号" prop="tmsDriver.truckIdNumber">
+            <!--<el-input v-model="form.tmsTruck.truckIdNumber" auto-complete="off" ></el-input>-->
+            <querySelect search="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" />
           </el-form-item>
           <el-form-item label="司机姓名" prop="tmsDriver.driverName">
-            <el-input v-model="form.tmsDriver.driverName" auto-complete="off" ></el-input>
+            <!--<el-input v-model="form.tmsDriver.driverName" auto-complete="off" ></el-input>-->
+            <querySelect search="driverName" valuekey="driverName" type="driver" @change="getdriverName" :remote="true" v-model="form.tmsDriver.driverName" />
           </el-form-item>
           <el-form-item label="车辆类型">
             <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" />
           </el-form-item>
           <el-form-item label="司机手机" prop="tmsDriver.driverMobile">
             <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" ></el-input>
+            <!--<querySelect search="driverMobile" type="driver"  @change="getdriverMobile" :remote="true" v-model="form.tmsDriver.driverMobile" />-->
           </el-form-item>
           <el-form-item label="车辆单位" prop="tmsTruck.truckUnit">
             <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" ></el-input>
@@ -95,7 +100,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item class='checked'>
-            <el-checkbox v-model="checked">发送短信给司机</el-checkbox>
+            <el-checkbox v-model="checked" disabled>发送短信给司机</el-checkbox>
           </el-form-item>
 
         </div>
@@ -154,87 +159,67 @@ export default {
       ...mapGetters([
           'otherinfo'
       ])
-      // "fixPhone": {
-      //   get(){
-      //     return this.phoneshort+'-'+this.phonelong
-      //   },
-      //   set (val){
-      //     //let names = val.match(/(.*)(.{7})$/)
-      //     let names = val ?　val.split('-')　: ''
-      //     if(names){
-      //       this.phoneshort = names[1] ? names[0] : ''
-      //       this.phonelong = names[1] ? names[1] : names[0]
-      //     } else {
-      //       this.phoneshort = ''
-      //       this.phonelong = ''
-      //     }
-      //   }
-      // }
+
   },
   data () {
     const _this = this
     const validatePickupNum = function (rule, value, callback) {
-      if(REGEX.ONLY_NUMBER.test(value)){
-        callback()
-      } else if(!REGEX.ONLY_NUMBER.test(value)){
-        callback(new Error('只能输入数字'))
-
-      }else {
-        callback()
-      }
-    }
-    const validateMobile = (rule, value, callback) => {
-      if(REGEX.MOBILE.test(value)){
-        callback()
-      } else if(value === ''){
+      if(REGEX.ONLY_NUMBER.test(value) || !value.length){
         callback()
       }
       else {
+        callback(new Error('只能输入数字'))
+      }
+    }
+    const validateMobile = (rule, value, callback) => {
+      if(REGEX.MOBILE.test(value) || !value.length){
+        callback()
+      }else {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
     return {
       rules: {
-        "tmsOrderPickup.pickupName":[
+        'tmsOrderPickup.pickupName':[
           { max: 8, message: '货品名最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsOrderPickup.pickupAmount": [
-          { validator:validatePickupNum,message: '只能输入数字', trigger: 'blur' },
+        'tmsOrderPickup.pickupAmount': [
+          { validator:validatePickupNum, trigger: 'blur' },
           { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
           // { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
         ],
-        "tmsOrderPickup.pickupVolume":[
-          { validator:validatePickupNum,message: '只能输入数字', trigger: 'blur' },
+        'tmsOrderPickup.pickupVolume':[
+          { validator:validatePickupNum, trigger: 'blur' },
           { max: 8, message: '体积最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsOrderPickup.pickupWeight":[
-          { validator:validatePickupNum,message: '只能输入数字', trigger: 'blur' },
+        'tmsOrderPickup.pickupWeight':[
+          { validator:validatePickupNum, trigger: 'blur' },
           { max: 8, message: '重量最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsOrderPickup.carriage": [
-          { validator:validatePickupNum,message: '只能输入数字', trigger: 'blur' },
+        'tmsOrderPickup.carriage': [
+          { validator:validatePickupNum,mtrigger: 'blur' },
           { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsOrderPickup.remark":[
+        'tmsOrderPickup.remark':[
           { max: 300, message: '备注最多可输入300个字符', trigger: 'blur' }
         ],
-        "tmsOrderPickup.truckFee": [
-          { validator:validatePickupNum,message: '只能输入数字', trigger: 'blur' },
+        'tmsOrderPickup.truckFee': [
+          { validator:validatePickupNum, trigger: 'blur' },
         ],
-        "tmsOrderPickup.collectionFee": [
-          { validator:validatePickupNum,message: '只能输入数字', trigger: 'blur' },
+        'tmsOrderPickup.collectionFee': [
+          { validator:validatePickupNum, trigger: 'blur' },
           { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsTruck.truckIdNumber":[
+        'tmsDriver.truckIdNumber':[
           { max: 8, message: '车牌号最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsDriver.driverName":[
+        'tmsDriver.driverName':[
           { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' }
         ],
-        "tmsDriver.driverMobile": [
+        'tmsDriver.driverMobile': [
           { validator: validateMobile, trigger: 'change' }
         ],
-        "tmsTruck.truckUnit":[
+        'tmsTruck.truckUnit':[
           { max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur' }
         ]
       },
@@ -268,7 +253,7 @@ export default {
         tmsTruck:{
           truckIdNumber:'', //车牌号 /
           truckType:'',//车辆类型
-          truckUnit:''//车辆单位
+          truckUnit:'辆'//车辆单位
         },
         tmsOrderPickup:{
           pickupBatchNumber:'',//提货批次
@@ -277,7 +262,7 @@ export default {
           pickupVolume:'',// 体积
           pickupWeight:'',// 重量
           carriage:'',// 运费
-          payMethod:'',// 付款方式
+          payMethod:76,// 付款方式
           toCityCode:'',// 到达城市
           remark:'',
           truckFee:'',//车费
@@ -306,6 +291,7 @@ export default {
     }
 
     this.fetchGetPickUp()
+    // this.form.tmsOrderPickup.payMethod =
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -319,12 +305,14 @@ export default {
     },
     info () {
       if (this.isModify) {
+        this.popTitle = '修改派车单',
         // console.log(this.info);
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
         this.form.tmsOrderPickup.id = this.info.id
         // this.form.tmsDriver = this.setObject(this.form.tmsDriver,this.info)
       } else {
+        this.popTitle = '提货派车单',
         // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
 
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
@@ -335,6 +323,16 @@ export default {
     }
   },
   methods: {
+    getTrunkName(trunk){
+      if(trunk){
+        this.form.tmsDriver.driverName = trunk.driverName
+        this.form.tmsDriver.driverMobile = trunk.driverMobile
+        this.form.tmsTruck.truckType = trunk.truckType
+        this.form.tmsTruck.truckUnit = trunk.truckUnit
+      }
+
+      console.log(trunk)
+    },
     setObject(obj1, obj2) {
       for (var i in obj1) {
         obj1[i] = obj2 ? obj2[i] : ''
@@ -352,11 +350,11 @@ export default {
     },
     /** 收货人/发货人  tmsCustomer*/
     setSender(item, type){
-      type = 'sender'
+      type = type ? 'customRece' : 'tmsCustomer'
       if(item){
         // this.form[type].customerId = item.customerId || ''
-        // this.form[type].customerType = type === 'customSend' ? 1 : 2
-        this.form[type].customerType = type
+        this.form[type].customerType = type === 'tmsCustomer' ? 1 : 2
+        // this.form[type].customerType = type
         this.form[type].customerName = item.customerName
         this.form[type].customerMobile = item.customerMobile
         this.form[type].detailedAddress = item.detailedAddress
@@ -365,6 +363,20 @@ export default {
     selectToCity (item, city) {
       if(item){
         this.form.tmsOrderPickup.toCityCode = item.id
+      } else {
+      }
+    },
+    //司机姓名
+    getdriverName (item, city) {
+      if(item){
+        this.form.tmsDriver.driverName = item.driverName
+      } else {
+      }
+    },
+    //司机姓名
+    getdriverMobile (item, city) {
+      if(item){
+        this.form.tmsDriver.driverMobile = item.driverMobile
       } else {
       }
     },
