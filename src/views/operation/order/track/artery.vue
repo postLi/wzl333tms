@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content">
+  <div class="tab-content" v-loading="loading">
     <!-- 干线跟踪 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <div class="tab_info">
@@ -123,7 +123,7 @@ export default {
       trackId: 0,
       selectInfo: [],
       trackInfo: {},
-      loading: false,
+      loading: true,
       editInfoVisible: false,
       searchQuery: {
         currentPage: 1,

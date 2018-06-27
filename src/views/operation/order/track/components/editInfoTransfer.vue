@@ -68,7 +68,7 @@
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保存</el-button>
         </el-form-item> -->
       </el-form>
-       <el-button type="primary" @click="submitForm('formModel')" size="mini">保存</el-button>
+      <el-button type="primary" @click="submitForm('formModel')" size="mini">保存</el-button>
     </div>
   </pop-right>
 </template>
@@ -78,6 +78,8 @@ import popRight from '@/components/PopRight/index'
 import { getTransferTrack, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
+import { getSystemTime } from '@/api/common'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     popRight
@@ -127,31 +129,47 @@ export default {
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()
+        // this.getSystemTime()
       }
     }
   },
-  mounted() {
-    if (this.popVisible) {
-      this.getDetail()
-    }
-  },
+  // mounted() {
+  //   if (this.popVisible) {
+  //     this.getDetail()
+  //     this.getSystemTime()
+  //   }
+  // },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.formModel.id) {
-            this.editTrack()
+            this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.editTrack()
+            })
           } else {
-            this.addTrack()
+            this.$confirm('此操作将添加跟踪信息, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.addTrack()
+            })
           }
         }
       })
     },
     getDetail() {
       let transferId = this.id
-      console.log('id', this.id)
       return getTransferTrack(transferId).then(data => {
-        this.trackDetail = Object.assign([], data)
+        this.trackDetail = objectMerge2([], data)
+        this.$nextTick(() => {
+          console.log('获取列表：',this.trackDetail[this.trackDetail.length-1].operatorTime)
+        })
       })
     },
     closeMe(done) {
@@ -161,19 +179,21 @@ export default {
       }
     },
     deleteTrack(item) {
-      // console.log(item)
-      return deleteTrack(item.id).then(data => {
-        this.$message({ type: 'success', message: '删除成功' })
-        this.getDetail()
+      this.$confirm('此操作将删除本跟踪信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return deleteTrack(item.id).then(data => {
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getDetail()
+        })
       })
     },
     editItem(item) {
-      // console.log(item)
-      this.resetForm()
-      this.formModel = Object.assign({}, item)
+      this.formModel = objectMerge2({}, item)
     },
     editTrack() {
-      // console.log('修改')
       this.formModel.transferId = this.id
       return putUpdateTrack(this.formModel).then(data => {
         this.$message({ type: 'success', message: '修改成功' })
@@ -182,16 +202,33 @@ export default {
       })
     },
     addTrack() {
-      // console.log('添加')
       this.formModel.transferId = this.id
+      this.formModel.operatorTime = Date.parse(new Date(this.formModel.operatorTime))
       return postAddTrack(this.formModel).then(data => {
+        console.log('提交：',this.formModel.operatorTime)
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
       })
     },
+    // getSystemTime() { // 获取系统时间
+    //   if (!this.formModel.id) {
+    //     getSystemTime().then(data => {
+    //         // this.formModel.operatorTime = Date.parse(new Date(data.trim()))
+    //         this.formModel.operatorTime= ( new Date(data.trim())).valueOf();
+    //         console.log('系统：',this.formModel.operatorTime)
+    //       })
+    //       .catch(error => {
+    //         this.$message({ type: 'error', message: '获取系统时间失败' })
+    //       })
+    //   }
+    // },
     resetForm() {
-      this.$refs['formModel'].resetFields()
+     this.$nextTick(() => {
+        this.$refs['formModel'].resetFields()
+        this.formModel = this.$options.data().formModel
+        // this.getSystemTime()
+      })
     }
   }
 }
@@ -218,8 +255,9 @@ export default {
 .popRight {
   width: 800px !important;
 }
+
 .editInfoPop_content {
-  width: 100%; 
+  width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -233,7 +271,7 @@ export default {
         width: 100%;
         height: 36px;
         line-height: 36px;
-        padding-left:30px;
+        padding-left: 30px;
       }
       .el-step.is-vertical {
         padding-left: 20px;
@@ -255,16 +293,17 @@ export default {
     }
   }
 }
+
 .stepFrom {
-  display:block;
-  width:100%;
-  height:100%;
+  display: block;
+  width: 100%;
+  height: 100%;
   padding-top: 15px;
-  .el-form--inline .el-form-item{
-    margin-right:0;
-    float:left;
-    display:flex;
-    width:28%;
+  .el-form--inline .el-form-item {
+    margin-right: 0;
+    float: left;
+    display: flex;
+    width: 28%;
   }
   .el-date-editor.el-input,
   .el-date-editor.el-input__inner {
@@ -278,10 +317,10 @@ export default {
   .el-form-item__content {
     flex: 1;
   }
-  .el-button--primary{
+  .el-button--primary {
     position: absolute;
-    top:23px;
-    right:10px;
+    top: 23px;
+    right: 10px;
   }
 }
 
@@ -324,4 +363,5 @@ export default {
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
+
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content">
+  <div class="tab-content" v-loading="loading">
     <!-- 短驳跟踪 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <div class="tab_info">
@@ -189,7 +189,7 @@ export default {
       transferId: 0,
       selectInfo: [],
       trackInfo: {},
-      loading: false,
+      loading: true,
       editInfoVisible: false,
       searchQuery: {
         currentPage: 1,
@@ -209,7 +209,7 @@ export default {
       }
     }
   },
-  mounted() {
+  activated() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchList()
   },
@@ -274,6 +274,7 @@ export default {
     },
     isTransferTrack() {
       if (this.$route.query.transfer) {
+        console.log('transfer',this.$route.query.transfer)
         this.setInfo()
       } else {
         this.closeMe()

@@ -68,7 +68,7 @@
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
@@ -89,7 +89,8 @@ import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
+import { getSystemTime } from '@/api/common'
 export default {
   components: {
     popRight,
@@ -154,7 +155,17 @@ export default {
     }
   },
   methods: {
-    submitForm(formName) {
+    getSystemTime() { // 获取系统时间
+      // if (!this.formModel.id) {
+      //   getSystemTime().then(data => {
+      //       this.formModel.operatorTime = Date.parse(new Date(data.trim()))
+      //     })
+      //     .catch(error => {
+      //       this.$message({ type: 'error', message: '获取系统时间失败' })
+      //     })
+      // }
+    },
+    submitForm(formName) { // 底部表单提交
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.formModel.id) {
@@ -183,15 +194,13 @@ export default {
         this.trackDetail = objectMerge2([], data)
       })
     },
-    reset() {},
-    closeMe(done) {
-      this.reset()
+    closeMe(done) { // 关闭右边弹出框
       this.$emit('update:popVisible', false);
       if (typeof done === 'function') {
         done()
       }
     },
-    deleteTrack(item) {
+    deleteTrack(item) { // 删除一条跟踪信息
       this.$confirm('此操作将删除本跟踪信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -200,14 +209,17 @@ export default {
         return deleteTrack(item.id).then(data => {
           this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message({ type: 'success', message: '删除失败' })
         })
       })
     },
     editItem(item) {
-      this.resetForm()
       this.formModel = objectMerge2({}, item)
     },
-    editTrack() {
+    editTrack() { // 修改跟踪信息
       console.log('修改', this.formModel)
       this.formModel.transferId = 0
       return putUpdateTrack(this.formModel).then(data => {
@@ -216,26 +228,29 @@ export default {
         this.resetForm()
       })
     },
-    addTrack() {
+    addTrack() { // 添加跟踪信息
       console.log('添加')
       this.formModel.loadId = this.id
       return postAddTrack(this.formModel).then(data => {
-        console.log(this.formModel, 'MODE')
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
       })
     },
-    handleClick() {
+    handleClick() { // 底部按钮区显示
       if (this.activeName === 'second') {
         this.isFootEdit = true
+        this.getSystemTime()
       } else {
         this.isFootEdit = false
       }
     },
-    resetForm() {
-      this.$refs['formModel'].resetFields()
-      this.formModel = this.$options.data().formModel
+    resetForm() { // 清空表单及验证
+      this.$nextTick(() => {
+        this.$refs['formModel'].resetFields()
+        this.formModel = this.$options.data().formModel
+        this.getSystemTime()
+      })
     }
   }
 }
@@ -390,144 +405,5 @@ export default {
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
-
-// .icon_man {
-//   background-image: url(../../../../../assets/icom/human.svg);
-//   background-size: 24px;
-//   display: inline-block;
-//   width: 24px;
-//   height: 24px;
-//   vertical-align: middle;
-// }
-// .icon_blank {
-//   background-size: 24px;
-//   display: inline-block;
-//   width: 24px;
-//   height: 24px;
-//   vertical-align: middle;
-// }
-// .popRight {
-//   width: 800px !important;
-// }
-// .content_head {
-//   background-color: #E9F3FA;
-//   line-height: 36px;
-//   height: 36px;
-//   padding: 0 10px;
-// }
-// .stepFrom {
-//   background-color:#eee;
-//   display:block;
-//   width:100%;
-//   height:100%;
-//   padding-top: 15px;
-//   .el-form--inline .el-form-item{
-//     margin-right:0;
-//     float:left;
-//     display:flex;
-//     width:28%;
-//   }
-//   .el-date-editor.el-input,
-//   .el-date-editor.el-input__inner {
-//     width: 100%;
-//   }
-//   .el-form-item__label {
-//     font-size: 12px;
-//   }
-//   .el-form-item__content {
-//     flex: 1;
-//   }
-//   .el-button--primary{
-//     position: absolute;
-//     top:23px;
-//     right:10px;
-//   }
-// }
-// .animated {
-//   -webkit-animation-duration: 0.5s;
-//   animation-duration: 0.5s;
-//   -webkit-animation-fill-mode: both;
-//   animation-fill-mode: both;
-// }
-// @-webkit-keyframes fadeInRight {
-//   from {
-//     opacity: 0;
-//     -webkit-transform: translate3d(100%, 0, 0);
-//     transform: translate3d(100%, 0, 0);
-//   }
-//   to {
-//     opacity: 1;
-//     -webkit-transform: translate3d(0, 0, 0);
-//     transform: translate3d(0, 0, 0);
-//   }
-// }
-// @keyframes fadeInRight {
-//   from {
-//     opacity: 0;
-//     -webkit-transform: translate3d(100%, 0, 0);
-//     transform: translate3d(100%, 0, 0);
-//   }
-//   to {
-//     opacity: 1;
-//     -webkit-transform: translate3d(0, 0, 0);
-//     transform: translate3d(0, 0, 0);
-//   }
-// }
-// .fadeInRight {
-//   -webkit-animation-name: fadeInRight;
-//   animation-name: fadeInRight;
-// }
-// .editInfoPop_content {
-//   padding: 0 10px;
-//   width: 100%;
-//   height: 93%;
-//   .el-tabs {
-//     height: 100%;
-//     .el-tabs__content {
-//       height: 100%;
-//     }
-//   }
-//   .info {
-//     background-color: rgb(238, 241, 246);
-//     margin-top: -30px;
-//     padding: 10px;
-//   }
-//   .info p {
-//     font-weight: 900;
-//     font-size: 16px;
-//     margin-bottom: 0px;
-//   }
-//   .info-content {
-//     margin-top: 10px;
-//     padding: 20px 10px 10px;
-//     background-color: #FFF;
-//     border: 2px dotted rgb(238, 241, 246);
-//   }
-//   .itemRecharge {
-//     background-color: rgb(238, 241, 246);
-//     padding: 10px;
-//   }
-//   .tab_box {
-//     padding-left: 10px;
-//     display: flex;
-//     flex-direction: row;
-//     .stepItem_title {
-//       margin: 10px 0 10px 10px;
-//       font-size: 14px;
-//       width: 165%;
-//     }
-//     .stepItem {
-//       font-size: 14px;
-//       color: #666;
-//       margin-bottom: 20px;
-//       width: 160%;
-//       p {
-//         word-wrap: break-word;
-//         word-break: normal;
-//         display: block;
-//       }
-//     }
-//   }
-// }
 
 </style>

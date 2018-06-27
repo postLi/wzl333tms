@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content">
+  <div class="tab-content" v-loading="loading">
     <!-- 短驳到货 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -95,7 +95,7 @@ export default {
       selected: [],
       tableKey: 0,
       loadId: 0,
-      loading: false,
+      loading: true,
       isModify: false,
       editInfoVisible: false,
       selectInfo: {},
@@ -229,6 +229,7 @@ export default {
         })
         .catch(error => {
           this.$message({ type: 'error', message: '操作失败' })
+          this.clearInfo()
         })
     },
     repertory() { // 短驳入库-打开弹出框
@@ -246,6 +247,7 @@ export default {
           })
           .catch(error => {
             this.$message({ type: 'error', message: '操作失败' })
+            this.clearInfo()
           })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消到车' })
@@ -265,6 +267,7 @@ export default {
           })
           .catch(error => {
             this.$message({ type: 'error', message: '操作失败' })
+            this.clearInfo()
           })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消入库' })

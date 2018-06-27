@@ -6,24 +6,20 @@
           <tr>
             <th>到达网点</th>
             <td>
-              <!-- {{info.currentOrgName}} -->
               <el-input v-model="info.currentOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
             <td>
-              <!-- {{info.dirverName}} -->
               <el-input v-model="info.dirverName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机电话</th>
             <td>
-              <!-- {{info.dirverMobile}} -->
               <el-input v-model="info.dirverMobile" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
             <th>车牌号码</th>
             <td>
-              <!-- {{info.truckIdNumber}} -->
              <el-input v-model="info.truckIdNumber" :size="btnsize" disabled></el-input>
            </td>
             <th>短驳费</th>

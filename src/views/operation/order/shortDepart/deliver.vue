@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content">
+  <div class="tab-content" v-loading="loading">
     <!-- 短驳发车 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -17,7 +17,7 @@
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
           <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchNo" label="发货批次">
+          <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">
           </el-table-column>
           <el-table-column sortable width="120" prop="batchTypeName" label="批次状态">
           </el-table-column>
@@ -27,9 +27,9 @@
           </el-table-column>
           <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
           </el-table-column>
-          <el-table-column sortable width="155" prop="loadTime" label="短驳时间">
+          <el-table-column sortable width="155" prop="departureTime" label="短驳时间">
             <template slot-scope="scope">
-              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
@@ -40,12 +40,6 @@
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="shortFee" label="短驳费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualAmountall" label="实到件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualWeigntall" label="实到重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualVolumeall" label="实到体积">
           </el-table-column>
           <el-table-column sortable width="120" prop="loadAmountall" label="配载总件数">
           </el-table-column>
@@ -90,7 +84,7 @@ export default {
       btnsize: 'mini',
       setupTableVisible: false,
       selected: [],
-      loading: false,
+      loading: true,
       selectedList: [],
       isModify: false,
       isBatch: false,
@@ -126,7 +120,7 @@ export default {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
-  mounted() {
+  activated() {
     this.searchQuery.orgId = this.otherinfo.orgid
     this.fetchAllShortDepartList()
   },

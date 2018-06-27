@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content">
+  <div class="tab-content" v-loading="loading">
     <!-- 库存总表 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -185,7 +185,7 @@ export default {
       setupTableVisible: false,
       repertoryArr: [],
       selected: [],
-      loading: false,
+      loading: true,
       colorpickerVisible: false,
       isModify: false,
       selectInfo: [],

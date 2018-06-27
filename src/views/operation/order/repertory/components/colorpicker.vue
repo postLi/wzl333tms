@@ -55,8 +55,8 @@ export default {
     return {
       popTitle: '提醒颜色设置',
       repertorySetting: {},
-      inited: false,
       loading: false,
+      isShow: false,
       rules: {
         sectionOne: [{ validator: pretimeIdentifier, tigger: 'blur' }],
         sectionTwo: [{ validator: timingIdentifier, tigger: 'blur' }],
@@ -82,29 +82,20 @@ export default {
     }
   },
   watch: {
-    popVisible(newVal) {
-      if (!this.inited) {
-        this.inited = true
-        this.getColor()
+    popVisible() {
+      if (this.popVisible) {
+        this.isShow = true
+        // this.getColor()
       }
     }
   },
   mounted() {
-    if (!this.inited) {
-      this.inited = true
-      this.getColor()
-    }
+    this.getColor()
   },
   computed: {
     ...mapGetters([
       'otherinfo'
-    ]),
-    isShow: {
-      get() {
-        return this.popVisible
-      },
-      set() {}
-    }
+    ])
   },
   methods: {
     closeMe(done) {
@@ -114,17 +105,19 @@ export default {
       }
     },
     getColor() {
-      return getRepertoryColor(this.otherinfo.orgid).then(data => {
-        if (data) {
-          let list = data.data.repertorySetting
-          this.$nextTick(() => {
-            this.repertorySetting = objectMerge2({}, list)
-            // this.repertorySetting = Object.assign(this.repertorySetting, list)
-            this.colorSetting = data.data
-            this.$emit('success', this.colorSetting.repertorySetting)
-          })
-        }
-      })
+      getRepertoryColor(this.otherinfo.orgid).then(data => {
+          if (data) {
+            let list = data.data.repertorySetting
+            this.$nextTick(() => {
+              this.repertorySetting = objectMerge2({}, list)
+              this.colorSetting = data.data
+              this.$emit('success', this.colorSetting.repertorySetting)
+            })
+          }
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: '获取颜色列表失败' })
+        })
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -135,11 +128,14 @@ export default {
           putRepertoryColor(colorData, this.otherinfo.orgid, this.colorSetting.id).then(data => {
               this.$message({ type: 'success', message: '修改成功' })
               this.loading = false
+              this.isShow = false
               this.getColor()
-              this.$emit('success', colorData.repertorySetting)
+              this.$nextTick(() => {
+                this.$refs[formName].resetFields()
+              })
             })
             .catch(error => {
-              this.$message({ type: 'danger', message: '修改失败' })
+              this.$message({ type: 'error', message: '修改失败' })
               this.loading = false
             })
         }

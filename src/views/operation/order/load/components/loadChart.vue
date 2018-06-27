@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 配载率 -->
-    <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading" :before-close="closeMe" width="60%" :close-on-click-modal="false" center>
+    <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading" :before-close="closeMe" width="50%" :close-on-click-modal="false" center>
       <el-row>
         <el-col :span="12">
           <div :class="className" :id="idWeigth" :style="{height:height,width:width}" ref="echartWeight"></div>
@@ -46,7 +46,7 @@ export default {
     },
     width: {
       type: String,
-      default: '500px'
+      default: '400px'
     },
     height: {
       type: String,
@@ -129,11 +129,11 @@ export default {
           series: [{
             name: '注册信息',
             type: 'pie',
-            radius: '45%',
+            radius: '40%',
             label: {
               normal: {
                 show: true,
-                formatter: '{b} : {c}',
+                formatter: '{b}:\n\n{c}吨\n\n{d}%',
                 textStyle: {
                   fontWeight: 'normal',
                   fontSize: 16,
@@ -179,11 +179,11 @@ export default {
           series: [{
             name: '注册信息',
             type: 'pie',
-            radius: '45%',
+            radius: '40%',
             label: {
               normal: {
                 show: true,
-                formatter: '{b} : {c}',
+                formatter: '{b}:\n\n{c}方\n\n{d}%',
                 textStyle: {
                   fontWeight: 'normal',
                   fontSize: 16,

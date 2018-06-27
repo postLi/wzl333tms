@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager">
+  <div class="customer-manager" :key="key">
     <div class="eltab clearfix">
       <!-- 短驳管理 -->
       <span @click="component = 'deliver'" class="tab-label" :class="{'active-tab': component.indexOf('deliver')!==-1}">短驳发车</span>
@@ -26,7 +26,8 @@ export default {
   },
   data() {
     return {
-      component: 'deliver'
+      component: 'deliver',
+      key: 0
     }
   },
   activated() {

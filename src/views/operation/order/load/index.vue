@@ -21,7 +21,7 @@
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
                     <el-input size="mini" v-model="formModel.deliveryFee" clearable></el-input>
                   </el-form-item>
-                  <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId!==39&&loadTypeId!==40">
+                  <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
                     <el-input size="mini" v-model="formModel.shortFee" clearable></el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid">

@@ -7,7 +7,7 @@
             <th>到达网点</th>
             <td>
               <!-- {{info.currentOrgName}} -->
-              <el-input v-model="info.currentOrgName" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.endOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
             <td>
@@ -32,14 +32,14 @@
               <!-- <el-input v-model="info.shortFee" :size="btnsize"></el-input> -->
             </td>
             <th>分摊方式</th>
-            <td>{{info.dirverName}}</td>
+            <td>{{info.truckLoad}}</td>
           </tr>
           <tr>
             <th>可载体积</th>
-            <td>{{info.actualVolumeall}}</td>
+            <td>{{info.truckVolume}}</td>
             <th>短驳日期</th>
             <!-- <td>{{info.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</td> -->
-            <td>{{info.departureTime}}</td>
+            <td>{{info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</td>
             <th>要求到达时间</th>
             <td>{{info.receivingTime}}</td>
           </tr>
@@ -209,6 +209,7 @@ export default {
       return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
     },
     setData() {
+      console.log('info', this.info)
       let dataFee = {} // 配载费用
       dataFee.arriveHandlingFee = this.info.arriveHandlingFee
       dataFee.arriveOtherFee = this.info.arriveOtherFee
