@@ -137,12 +137,12 @@
           <tr>
             <td>
               <el-form-item label="提货方式">
-                <SelectType v-model="form.tmsOrderPre.orderPickupMethod" type="order_pickup_method" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderPickupMethodName" type="order_pickup_method" placeholder="请选择" />
               </el-form-item>
             </td>
             <td>
               <el-form-item label="紧急度">
-                <SelectType v-model="form.tmsOrderPre.orderEffective" type="ship_effective" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderEffectiveName" type="ship_effective" placeholder="请选择" />
               </el-form-item>
             </td>
 
@@ -160,7 +160,7 @@
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderPayWayName" type="ship_pay_way" placeholder="请选择" />
               </el-form-item>
             </td>
 
@@ -195,7 +195,6 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { getAllCustomer } from '@/api/company/customerManage'
 import { postAddOrder , postModifyOrder } from '@/api/operation/manage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
@@ -243,8 +242,9 @@ export default {
     const validateOnlyNumberAndLetter = (rule, value, callback) => {
       if(REGEX.ONLY_NUMBER_AND_LETTER.test(value)){
         callback()
-      } else {
-        // this.$message.error('只能输入数字或者字母')
+      } else if(value == ''){
+        callback()
+      }else{
         callback(new Error('只能输入数字或者字母'))
       }
     }
@@ -253,6 +253,13 @@ export default {
         callback()
       } else {
         callback(new Error('请输入正确的联系号码~'))
+      }
+    }
+    const validateCargoName = (rule,value,callback) => {
+      if(value == ''){
+        callback(new Error('发货人不能为空1113'))
+      }else {
+        callback(new Error('发货人不能为空111'))
       }
     }
     return {
@@ -275,13 +282,14 @@ export default {
           { validator: validateMobile, trigger: 'change' }
         ],
         "tmsOrderCargoList.cargoName": [
-          {validator: this.validateIsEmpty('货品名不能为空'), trigger: 'change'}
+          {validator: this.validateIsEmpty('货品名不能为空'), trigger: 'change'},
+          // { validator: validateCargoName, trigger: 'change' }
         ],
         "tmsOrderCargoList.cargoAmount": [
           {validator: this.validateIsEmpty('件数不能为空'), trigger: 'change'}
         ],
         "tmsOrderCargoList.description": [
-          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] }
+          { validator: validateOnlyNumberAndLetter,trigger: ['change'] }
         ]
       },
       fromCityName: '',
@@ -349,11 +357,11 @@ export default {
           orderToCityCode:'',
           orderFromOrgid:'',
           orderToOrgid:'',//目的网点
-          orderPickupMethod:'',//提货方式
-          orderEffective:'',//紧急度
+          orderPickupMethodName:'',//提货方式
+          orderEffectiveName:'',//紧急度
           agencyFund:'',//代收款
           commissionFee:'',//代收款手续费
-          orderPayWay:'',//付款方式
+          orderPayWay:'',//付款方式 orderPayWayName
           deliveryFee:'',//运费
           productPrice:'',//声明价值
           orderRemarks:''//声明价值

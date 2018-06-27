@@ -58,20 +58,20 @@
             label="运费核销状态">
           </el-table-column>
           <el-table-column
-            prop="sendtomerName"
+            prop="customerName"
             sortable
-            width="90"
+            width="120"
             label="发货人">
           </el-table-column>
           <el-table-column
             sortable
             prop="customerMobile"
-            width="120"
+            width="130"
             label="手机号">
           </el-table-column>
           <el-table-column
             label="提货地址"
-            width="150"
+            width="170"
             prop="detailedAddress"
             sortable
             >
