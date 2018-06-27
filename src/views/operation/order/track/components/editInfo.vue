@@ -9,7 +9,7 @@
           <el-tab-pane label="批次详情" name="first">
             <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
           </el-tab-pane>
-          <el-tab-pane label="批次跟踪" name="second" >
+          <el-tab-pane label="批次跟踪" name="second">
             <div class="tab_box animated fadeInRight">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
@@ -74,11 +74,8 @@
         <el-form-item label="操作信息" prop="operatorInfo">
           <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
-       <!--  <el-form-item>
-          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
-        </el-form-item> -->
       </el-form>
-       <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
+      <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else="isFootEdit">
       <el-button @click="closeMe">关闭</el-button>
@@ -92,6 +89,7 @@ import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     popRight,
@@ -123,9 +121,9 @@ export default {
       activeName: 'first',
       formModel: {},
       ruleForm: {
-        loadStatus: [{required: true, trigger: 'blur', message: '不能为空'}],
-        operatorTime: [{required: true, trigger: 'blur', message: '不能为空'}],
-        operatorInfo: [{required: true, trigger: 'blur', message: '不能为空'}]
+        loadStatus: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        operatorTime: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        operatorInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
       isShowBtn: true,
       isFootEdit: false,
@@ -156,19 +154,25 @@ export default {
     }
   },
   methods: {
-    showBtnBox() {
-      console.log('show')
-    },
-    hideBtnBox() {
-      console.log('hide')
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.formModel.id) {
-            this.editTrack()
+            this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.editTrack()
+            })
           } else {
-            this.addTrack()
+            this.$confirm('此操作将添加跟踪信息, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.addTrack()
+            })
           }
         }
       })
@@ -176,7 +180,7 @@ export default {
     getDetail() {
       let id = this.id
       return getLoadDetail(id).then(data => {
-        this.trackDetail = Object.assign([], data)
+        this.trackDetail = objectMerge2([], data)
       })
     },
     reset() {},
@@ -188,14 +192,20 @@ export default {
       }
     },
     deleteTrack(item) {
-      return deleteTrack(item.id).then(data => {
-        this.$message({ type: 'success', message: '删除成功' })
-        this.getDetail()
+      this.$confirm('此操作将删除本跟踪信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return deleteTrack(item.id).then(data => {
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getDetail()
+        })
       })
     },
     editItem(item) {
       this.resetForm()
-      this.formModel = Object.assign({}, item)
+      this.formModel = objectMerge2({}, item)
     },
     editTrack() {
       console.log('修改', this.formModel)
@@ -310,16 +320,17 @@ export default {
     }
   }
 }
+
 .stepFrom {
-  display:block;
-  width:100%;
-  height:100%;
+  display: block;
+  width: 100%;
+  height: 100%;
   padding-top: 15px;
-  .el-form--inline .el-form-item{
-    margin-right:0;
-    float:left;
-    display:flex;
-    width:28%;
+  .el-form--inline .el-form-item {
+    margin-right: 0;
+    float: left;
+    display: flex;
+    width: 28%;
   }
   .el-date-editor.el-input,
   .el-date-editor.el-input__inner {
@@ -333,12 +344,13 @@ export default {
   .el-form-item__content {
     flex: 1;
   }
-  .el-button--primary{
+  .el-button--primary {
     position: absolute;
-    top:23px;
-    right:10px;
+    top: 23px;
+    right: 10px;
   }
 }
+
 .animated {
   -webkit-animation-duration: 0.5s;
   animation-duration: 0.5s;
@@ -387,7 +399,6 @@ export default {
 //   height: 24px;
 //   vertical-align: middle;
 // }
-
 // .icon_blank {
 //   background-size: 24px;
 //   display: inline-block;
@@ -395,11 +406,9 @@ export default {
 //   height: 24px;
 //   vertical-align: middle;
 // }
-
 // .popRight {
 //   width: 800px !important;
 // }
-
 // .content_head {
 //   background-color: #E9F3FA;
 //   line-height: 36px;
@@ -422,11 +431,9 @@ export default {
 //   .el-date-editor.el-input__inner {
 //     width: 100%;
 //   }
-
 //   .el-form-item__label {
 //     font-size: 12px;
 //   }
-
 //   .el-form-item__content {
 //     flex: 1;
 //   }
@@ -448,28 +455,24 @@ export default {
 //     -webkit-transform: translate3d(100%, 0, 0);
 //     transform: translate3d(100%, 0, 0);
 //   }
-
 //   to {
 //     opacity: 1;
 //     -webkit-transform: translate3d(0, 0, 0);
 //     transform: translate3d(0, 0, 0);
 //   }
 // }
-
 // @keyframes fadeInRight {
 //   from {
 //     opacity: 0;
 //     -webkit-transform: translate3d(100%, 0, 0);
 //     transform: translate3d(100%, 0, 0);
 //   }
-
 //   to {
 //     opacity: 1;
 //     -webkit-transform: translate3d(0, 0, 0);
 //     transform: translate3d(0, 0, 0);
 //   }
 // }
-
 // .fadeInRight {
 //   -webkit-animation-name: fadeInRight;
 //   animation-name: fadeInRight;

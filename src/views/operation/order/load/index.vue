@@ -94,7 +94,6 @@
                     <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
-                
               </el-row>
             </el-form>
             <!-- 费用参数 -->
@@ -454,10 +453,22 @@ export default {
           this.showPercent()
           break
         case 'finish': // 完成配载
-          this.finishLoadInfo()
+          this.$confirm('此操作将完成配载, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.finishLoadInfo()
+          })
           break
         case 'finishTruck': // 完成并发车
-          this.finishTruckInfo()
+          this.$confirm('此操作将完成并发车, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.finishTruckInfo()
+          })
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -498,16 +509,16 @@ export default {
         }
       })
     },
-    gotoPage() { // 跳转回到配载列表页面
+    gotoPage() { // 操作成功后跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart', query:{tablekey:Math.random()} })
+          this.$router.push({ path: '././shortDepart', query: { tablekey: Math.random() } })
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart', query:{tablekey:Math.random()} })
+          this.$router.push({ path: '././arteryDepart', query: { tablekey: Math.random() } })
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage', query:{tablekey:Math.random()} })
+          this.$router.push({ path: '././deliverManage', query: { tablekey: Math.random() } })
           break
       }
     },
@@ -544,7 +555,6 @@ export default {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
             this.$message({ type: 'success', message: '操作成功' })
             this.resetFieldsForm()
-            // this.resetFieldsForm('formFee')
           })
         })
       }
@@ -601,7 +611,7 @@ export default {
         this.loadTypeId = 38 // 默认是新增短驳
         this.batchTypeIdFinish = 47 // 完成配载
         this.batchTypeIdFinishTruck = 48 // 配载并发车
-        console.log('默认38',this.loadTypeId,this.batchTypeIdFinish,this.batchTypeIdFinishTruck)
+        console.log('默认38', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
       }
     },
     setData() { // 完成配载 ：处理数据格式。。。

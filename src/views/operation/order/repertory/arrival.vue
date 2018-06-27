@@ -1,6 +1,6 @@
 <template>
   <div class="tab-content">
-  <!-- 库存总表 -->
+  <!-- 到货库存 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
   <div class="tab_info">
     <div class="btns_box">
@@ -318,10 +318,10 @@ export default {
       selectionColorSetting: {},
       reportorSelect: {},
       searchQuery: {
-        'currentPage': 1,
-        'pageSize': 100,
+        currentPage: 1,
+        pageSize: 100,
         vo: {
-          'orgid': 1
+          orgid: 1
         }
       }
     }
@@ -408,7 +408,7 @@ export default {
         this.loading = false
       })
       .catch(error => {
-        this.$message({type: 'danger', message: '错误'})
+        this.$message({type: 'error', message: '获取列表失败'})
         this.loading = false
       })
     },

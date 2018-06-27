@@ -192,10 +192,10 @@ export default {
       selectionColorSetting: {},
       reportorSelect: {},
       searchQuery: {
-        'currentPage': 1,
-        'pageSize': 100,
+        currentPage: 1,
+        pageSize: 100,
         vo: {
-          'orgid': 1
+          orgid: 1
         }
       }
     }
@@ -275,13 +275,13 @@ export default {
     },
     getAllOrderRepertory() {
       this.loading = true
-      return postAllOrderRepertory(this.searchQuery).then(data => {
+       postAllOrderRepertory(this.searchQuery).then(data => {
           this.repertoryArr = data.list
           this.total = data.total
           this.loading = false
         })
         .catch(error => {
-          this.$message({ type: 'danger', message: '获取列表失败' })
+          this.$message({ type: 'error', message: '获取列表失败' })
           this.loading = false
         })
     },

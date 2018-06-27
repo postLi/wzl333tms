@@ -145,24 +145,42 @@ export default {
         isWork = true
       }
       switch (type) {
-        case 'truck':
+        case 'truck': // 短驳到车
           if (isWork) {
-            this.truck()
+            this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.truck()
+            })
           }
           break
-        case 'repertory':
+        case 'repertory': // 短驳入库
           if (isWork) {
             this.repertory()
           }
           break
-        case 'chanelTruck':
+        case 'chanelTruck': // 取消到车
           if (isWork) {
-            this.chanelTruck()
+            this.$confirm('此操作将取消到车, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.chanelTruck()
+            })
           }
           break
-        case 'chanelRepertory':
+        case 'chanelRepertory': // 取消入库
           if (isWork) {
-            this.chanelRepertory()
+            this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.chanelRepertory()
+            })
           }
           break
         case 'printPaper':
@@ -205,10 +223,13 @@ export default {
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'typeId', 49) // 49为短驳到车，54为干线到车
       postConfirmToCar(data).then(data => {
-        this.$message({ type: 'success', message: '短驳到车操作成功' })
-        this.getAllList()
-        this.clearInfo()
-      })
+          this.$message({ type: 'success', message: '短驳到车操作成功' })
+          this.getAllList()
+          this.clearInfo()
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: '操作失败' })
+        })
     },
     repertory() { // 短驳入库-打开弹出框
       this.setInfo()
@@ -224,7 +245,7 @@ export default {
             this.clearInfo()
           })
           .catch(error => {
-            this.$message({ type: 'success', message: '操作失败' })
+            this.$message({ type: 'error', message: '操作失败' })
           })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消到车' })
@@ -243,7 +264,7 @@ export default {
             this.clearInfo()
           })
           .catch(error => {
-            this.$message({ type: 'success', message: '操作失败' })
+            this.$message({ type: 'error', message: '操作失败' })
           })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消入库' })

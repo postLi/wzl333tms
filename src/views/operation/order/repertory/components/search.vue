@@ -5,13 +5,15 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="运单号" prop="shipSn">
-      <el-input v-model="searchForm.shipSn" maxlength="15" auto-complete="off" clearable></el-input>
+      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
     </el-form-item>
     <el-form-item label="出发城市">
-      <el-input v-model="searchForm.shipFromCityName" maxlength="15" auto-complete="off" clearable></el-input>
+      <!-- <el-input v-model="searchForm.shipFromCityName" maxlength="15" auto-complete="off" clearable></el-input> -->
+      <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
     </el-form-item>
     <el-form-item label="到达城市">
-      <el-input v-model="searchForm.shipToCityName" maxlength="15" auto-complete="off" clearable></el-input>
+      <!-- <el-input v-model="searchForm.shipToCityName" maxlength="15" auto-complete="off" clearable></el-input> -->
+      <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -22,10 +24,12 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import querySelect from '@/components/querySelect/index'
 import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
-    SelectTree
+    SelectTree,
+    querySelect
   },
   props: {
     btnsize: {
@@ -96,6 +100,7 @@ export default {
       }
       this.$emit('change', searchObj)
       this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {

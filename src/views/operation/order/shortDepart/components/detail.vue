@@ -68,17 +68,17 @@
           <el-table-column sortable width="120" prop="shipId" label="运单号"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeAmount(scope.$index)" required></el-input>
+              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="110" prop="actualWeight" label="实到重量">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeWeight(scope.$index)" required></el-input>
+              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="actualVolume" sortable label="实到体积" width="110">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeVolume(scope.$index)" required></el-input>
+              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
@@ -153,20 +153,23 @@ export default {
   watch: {
     isShow() {
       if (this.isShow) {
-        this.fecthSelectLoadList()
+        this.getLoadTrack()
         this.toggleAllRows()
       }
     }
   },
   methods: {
     setTable() {},
-    fecthSelectLoadList() {
-      this.getLoadTrack()
-    },
     doAction(type) {
       switch (type) {
-        case 'add':
-          this.postAddRepertory()
+        case 'add': // 短驳入库
+          this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.postAddRepertory()
+          })
           break
         case 'print':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
@@ -176,36 +179,34 @@ export default {
           break
       }
     },
-    checkItem() { // 判断当行
-      this.detailList.forEach(e => {
-        if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-          this.$refs.multipleTable.toggleRowSelection(e, false)
-        } else {
-          this.$refs.multipleTable.toggleRowSelection(e, true)
-        }
-      })
-    },
-    changeAmount(newVal) {
-      console.log('amount', newVal)
-      if (this.detailList && newVal) {
-        this.checkItem()
-        return this.detailList[newVal].actualWeight
+    changeData(newVal) { // 判断当行
+      let curAmount = this.detailList[newVal].actualAmount // 实到件数
+      let curWeight = this.detailList[newVal].actualWeight // 实到重量
+      let curVolume = this.detailList[newVal].actualVolume // 实到体积
+      let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
+      let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
+      let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
+        this.$notify({
+          title: '提示',
+          message: '实到数量都为0时,取消本条运单入库',
+          type: 'warning'
+        })
+      } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+        this.$notify({
+          title: '提示',
+          message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+          type: 'warning'
+        })
+        this.detailList[newVal].actualAmount = curloadAmount
+        this.detailList[newVal].actualWeight = curloadWeight
+        this.detailList[newVal].actualVolume = curloadVolume
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+      } else {
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       }
-    },
-    changeWeight(newVal) {
-      console.log('weight', newVal)
-      if (this.detailList && newVal) {
-        this.checkItem()
-        return this.detailList[newVal].actualWeight
-      }
-
-    },
-    changeVolume(newVal) {
-      console.log('volume', newVal)
-      if (this.detailList && newVal) {
-        this.checkItem()
-        return this.detailList[newVal].actualVolume
-      }
+      return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
     },
     setData() {
       let dataFee = {} // 配载费用
@@ -278,7 +279,6 @@ export default {
     },
     postAddRepertory() {
       this.setData()
-
       postAddRepertory(50, this.newData).then(data => {
           if (data.status === 200) {
             this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
@@ -302,6 +302,13 @@ export default {
           this.detailList = data.data
           this.setData()
           this.toggleAllRows()
+          this.$nextTick(() => { // 默认设置实到数量为配载数量
+            this.detailList.forEach(e => {
+              e.actualAmount = e.loadAmount
+              e.actualWeight = e.loadWeight
+              e.actualVolume = e.loadVolume
+            })
+          })
         }
       })
     },

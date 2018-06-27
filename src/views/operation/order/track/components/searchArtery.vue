@@ -1,31 +1,25 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <!-- <el-row>
-      <el-col :span="20"> -->
-        <el-form-item label="发车时间">
-          <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="批次状态" prop="batchTypeId">
-          <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type" clearable></selectBatchType>
-        </el-form-item>
-        <el-form-item label="发车批次">
-          <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="车牌号">
-          <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
-        </el-form-item>
-        <el-form-item label="司机名称">
-          <querySelect search="driverName" valuekey="dirverName" type="driver" v-model="searchForm.dirverName" label="driverName" :remote="true" clearable />
-        </el-form-item>
-     <!--  </el-col>
-      <el-col :span="4"> -->
-        <el-form-item class="staff_searchinfo--btn">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
-        </el-form-item>
-     <!--  </el-col>
-    </el-row> -->
+    <el-form-item label="发车时间">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item label="批次状态" prop="batchTypeId">
+      <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type" clearable></selectBatchType>
+    </el-form-item>
+    <el-form-item label="发车批次">
+      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
+    </el-form-item>
+    <el-form-item label="车牌号">
+      <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
+    </el-form-item>
+    <el-form-item label="司机名称">
+      <querySelect search="driverName" valuekey="dirverName" type="driver" v-model="searchForm.dirverName" label="driverName" :remote="true" clearable />
+    </el-form-item>
+    <el-form-item class="staff_searchinfo--btn">
+      <el-button type="primary" @click="onSubmit">查询</el-button>
+      <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
+    </el-form-item>
   </el-form>
 </template>
 <script>
@@ -33,6 +27,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import selectBatchType from '@/components/selectType/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -72,10 +67,6 @@ export default {
         // shortBatchType: '',
         // startTime: '',
         // truckIdNumber: ''
-      },
-      searchData: {
-        loadTypeId: 39,
-        orgId: 0
       },
       cityName: {},
       rules: {
@@ -128,12 +119,12 @@ export default {
         this.searchForm.endTime = this.searchTime[1]
       }
       this.$emit('change', this.searchForm)
-      this.searchForm = Object.assign({}, this.searchData)
+      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
       this.searchTime = []
-      this.searchForm = Object.assign({}, this.searchData)
+      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     }
   }
 }
@@ -141,11 +132,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tab-content {
-  .el-input--mini{
-    width:150px;
+  .el-input--mini {
+    width: 150px;
   }
-  .el-range-editor--mini.el-input__inner{
-    width:200px;
+  .el-range-editor--mini.el-input__inner {
+    width: 200px;
   }
   .staff_searchinfo {
     padding: 15px 20px;

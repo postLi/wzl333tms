@@ -64,17 +64,17 @@
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadAmount(scope.$index)" required></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadWeight(scope.$index)"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadVolume(scope.$index)"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
@@ -292,40 +292,47 @@ export default {
           break
       }
     },
-    changLoadAmount(newVal) { // 修改配载件数
-      let cur = this.rightTable[newVal].loadAmount
-      let currepert = this.rightTable[newVal].repertoryAmount
-      if (cur > currepert || cur < 0) {
-        this.$message({ type: 'warning', message: '不能小于0大于库存重量' })
-        this.rightTable[newVal].loadAmount = currepert
-        return this.rightTable[newVal].loadAmount
+    changLoadData(newVal) { // 修改右边表格是配载数量 newVal为rightTable的下标index
+      let curAmount = this.rightTable[newVal].loadAmount // 配载件数
+      let curWeight = this.rightTable[newVal].loadWeight // 配载重量
+      let curVolume = this.rightTable[newVal].loadVolume // 配载体积
+      let currepertAmount = this.rightTable[newVal].repertoryAmount // 库存件数
+      let currepertWeight = this.rightTable[newVal].repertoryWeight // 库存重量
+      let currepertVolume = this.rightTable[newVal].repertoryVolume // 库存体积
+      if (curAmount > currepertAmount || curAmount < 1 || curWeight > currepertWeight || curWeight < 0 || curVolume > currepertVolume || curVolume < 0) {
+        this.$notify({
+          title: '警告',
+          message: '配载件数不能小于1,配载重量和体积不能小于0,都不能大于库存数量,默认为该库存数量',
+          type: 'warning'
+        })
+        this.rightTable[newVal].loadAmount = currepertAmount
+        this.rightTable[newVal].loadWeight = currepertWeight
+        this.rightTable[newVal].loadVolume = currepertVolume
+        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
+      } else if (curAmount === currepertAmount) {
+        this.$notify({
+          title: '提示',
+          message: '配载件数等于该库存大小,即所有配载数量为库存数量',
+          type: 'warning'
+        })
+        this.rightTable[newVal].loadAmount = currepertAmount
+        // this.rightTable[newVal].loadWeight = currepertWeight
+        // this.rightTable[newVal].loadVolume = currepertVolume
+        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
+      } else if (curVolume === currepertVolume && curWeight === currepertWeight) {
+        this.$notify({
+          title: '提示',
+          message: '配载重量与配载体积都等于该库存大小,即所有配载数量为库存数量',
+          type: 'warning'
+        })
+        // this.rightTable[newVal].loadAmount = currepertAmount
+        this.rightTable[newVal].loadWeight = currepertWeight
+        this.rightTable[newVal].loadVolume = currepertVolume
+        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
       } else {
-        return this.rightTable[newVal].loadAmount
+        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
       }
-      this.$emit('change', this.rightTable)
-    },
-    changLoadWeight(newVal) { // 修改配载重量
-      let cur = this.rightTable[newVal].loadWeight
-      let currepert = this.rightTable[newVal].repertoryWeight
-      if (cur > currepert || cur < 0) {
-        this.$message({ type: 'warning', message: '不能小于0大于库存重量' })
-        this.rightTable[newVal].loadWeight = currepert
-        return this.rightTable[newVal].loadWeight
-      } else {
-        return this.rightTable[newVal].loadWeight
-      }
-      this.$emit('change', this.rightTable)
-    },
-    changLoadVolume(newVal) { // 修改配载体积
-      let cur = this.rightTable[newVal].loadVolume
-      let currepert = this.rightTable[newVal].repertoryVolume
-      if (cur > currepert || cur < 0) {
-        this.$message({ type: 'warning', message: '不能小于0大于库存重量' })
-        this.rightTable[newVal].loadVolume = currepert
-        return this.rightTable[newVal].loadVolume
-      } else {
-        return this.rightTable[newVal].loadVolume
-      }
+      return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
       this.$emit('change', this.rightTable)
     },
     goLeft() { // 数据从左边穿梭到右边
