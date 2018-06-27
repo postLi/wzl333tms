@@ -139,7 +139,7 @@
         <table>
           <thead>
             <tr>
-              <th>
+              <th class="addButtonTh">
                 <span class="addButton" v-if="form.cargoList.length < maxCargoLength" @click="addCargoList()"><i class="el-icon-plus"></i></span>
                 </th>
               <th v-for="item in feeConfig" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :key="item.id">
@@ -816,6 +816,8 @@ export default {
     this.loading = true
     let preId = this.$route.query.preId || ''
     let prePromise = Promise.resolve('')
+
+    // this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
     
     // 判断是否从预订单页面过来
     if(preId){
@@ -863,6 +865,10 @@ export default {
     })
   },
   beforeDestroy () {
+  },
+  // 路由更新时触发，用来切换渲染数据
+  beforeRouteUpdate (to, from, next) {
+    console.info('beforeRouteUpdate:', to, from)
   },
   methods: {
     validateIsEmpty (msg = '不能为空！') {
@@ -914,6 +920,9 @@ export default {
       let doc = document
       let parentEle = doc.querySelector('.order-main')
       this.findAllInput()
+      if(!parentEle){
+        console.log('errorr parentEle:', parentEle)
+      }
       parentEle.addEventListener('keydown', (e) => {
         let ele = e.srcElement
         // 如果是左右按键，则屏蔽其默认事件以及禁止冒泡
@@ -1593,6 +1602,9 @@ $backgroundcolor: #cbe1f7;
         vertical-align: middle;
         border-left: 1px solid #88bef3;
         text-align: center;
+      }
+      .addButtonTh{
+        min-width: 50px;
       }
       .el-input__inner{
         border-color: transparent;

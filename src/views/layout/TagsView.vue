@@ -6,7 +6,7 @@
           <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard" >
           首页
           </router-link><router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
-            :to="tag.path" :key="tag.path"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span>
+            :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span>
             {{generateTitle(tag.title)}}<span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
           </router-link>
         </div>
@@ -23,11 +23,11 @@
         <div class="menu-line"></div>
         <ul class="contextmenu contextmenu-list">
           <router-link tag="li" to="/dashboard">
-            <i :class="isActive({path:'/dashboard'})?'el-icon-check':''"></i>
+            <i :class="isActive({path:'/dashboard', fullPath: '/dashboard'})?'el-icon-check':''"></i>
             首页
           </router-link>
-          <router-link :class="isActive(tag)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)"
-          :to="tag.path" :key="tag.path">
+          <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)"
+          :to="tag.fullPath" :key="tag.fullPath">
           <i class="el-icon-check"></i>
           {{generateTitle(tag.title)}}
           </router-link>
@@ -49,7 +49,7 @@ export default {
       left: 0,
       selectedTag: {},
       hideCloseCurrentMenu: false,
-      indexTag: {path:'/dashboard', name:'首页', lock: true}
+      indexTag: {path:'/dashboard', fullPath:'/dashboard', name:'首页', lock: true}
     }
   },
   computed: {
@@ -60,10 +60,10 @@ export default {
   watch: {
     $route(newpath, oldpath) {
       // 如果新的路径是三级路径以上，则不进行加入
-      if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
+      // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
         this.addViewTags()
         this.moveToCurrentTag()
-      }
+      // }
       
     },
     visible(value) {
@@ -76,19 +76,35 @@ export default {
   },
   mounted() {
     this.addViewTags()
+    // 用来替换当前路由
+    // 调用方式类似：
+    // this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
+    this.eventBus.$on('replaceCurrentView', (route) => {
+      let lastRoute = this.$route
+      route = typeof route === 'string' ? {'path': route} : route
+      this.$router.replace(route, () => {
+        this.$store.dispatch('delVisitedViews', lastRoute)
+      })
+    })
   },
   methods: {
     generateTitle (title) {
       return title
     },
+    // 判断是否为非首页
     generateRoute() {
       if (this.$route.name && this.$route.name !== '首页' ) {
         return this.$route
       }
       return false
     },
-    isActive(route) {
-      if(route.path === this.$route.path || route.name === this.$route.name){
+    isActive(route, isMenu) {
+      //if(route.path === this.$route.path || route.name === this.$route.name){
+        
+      // if((route.fullPath === this.$route.fullPath) || (route.name === this.$route.name)){
+      // 如果是tab，则只判断全路径
+      let ison = route.tab ? (route.fullPath === this.$route.fullPath) : (route.path === this.$route.path)
+      if(ison){
         this.selectedTag = route
         return true
       } else {

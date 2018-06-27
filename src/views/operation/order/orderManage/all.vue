@@ -57,7 +57,6 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-    <AddOrder :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -65,7 +64,6 @@
 import orderManageApi from '@/api/operation/orderManage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import {parseTime} from '@/filters/'
@@ -74,8 +72,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddOrder
+    TableSetup
   },
   computed: {
       ...mapGetters([
@@ -100,7 +97,6 @@ export default {
       //加载状态
       loading: true,
       setupTableVisible: false,
-      AddOrderVisible: false,
       isModify: false,
       selectInfo: {},
       // 选中的行
@@ -403,7 +399,16 @@ export default {
   },
   methods: {
     viewDetails (row) {
-      this.$router.push('/operation/order/createOrder/' + row.id + '?type=view&tab=查看' + row.shipSn)
+      this.$router.push({
+        path: '/operation/order/createOrder', 
+        params: {
+          orderid: row.id
+        }, 
+        query: {
+          type: 'view',
+          tab: '查看' + row.shipSn 
+        }
+      })
     },
     fetchAllOrder () {
       this.loading = true
@@ -430,7 +435,6 @@ export default {
 
       // 判断是否有选中项
       if(!this.selected.length && type !== 'add'){
-          this.closeAddOrder()
           this.$message({
               message: '请选择要操作的项~',
               type: 'warning'
@@ -446,7 +450,7 @@ export default {
           case 'add':
               this.isModify = false
               this.selectInfo = {}
-              this.$router.push('/operation/order/createOrder/')
+              this.$router.push({ path: '/operation/order/createOrder/'})
               break;
           // 修改运单信息
           case 'modify':
@@ -458,7 +462,17 @@ export default {
                   })
               }
               this.selectInfo = this.selected[0]
-              this.$router.push('/operation/order/createOrder/' + this.selectInfo.id + '?type=modify&tab=修改' + this.selectInfo.shipSn)
+              this.$router.push({
+                path: '/operation/order/createOrder', 
+                params: {
+                  orderid: this.selectInfo.id
+                }, 
+                query: {
+                  type: 'modify',
+                  // tab: '修改' + this.selectInfo.shipSn 
+                  tab: '改单'
+                }
+              })
               break;
           // 删除运单
           case 'delete':
@@ -552,12 +566,6 @@ export default {
     },
     closeSetupTable () {
       this.setupTableVisible = false
-    },
-    openAddOrder () {
-      this.AddOrderVisible = true
-    },
-    closeAddOrder () {
-      this.AddOrderVisible = false
     },
     clickDetails(row, event, column){
       this.$refs.multipleTable.toggleRowSelection(row)

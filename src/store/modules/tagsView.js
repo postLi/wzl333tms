@@ -6,12 +6,20 @@ const tagsView = {
   mutations: {
     ADD_VISITED_VIEWS: (state, view) => {
       // 判断是否已经添加过
-      if (state.visitedViews.some(v => v.path === view.path)) return
+      // 判断是否需要新开一个tab，通过参数tab设置
+      if (view.query.tab) {
+        if (state.visitedViews.some(v => v.fullPath === view.fullPath)) return
+      } else {
+        if (state.visitedViews.some(v => v.path === view.path)) return
+      }
+      console.log('add view:', view.query.tab, view.name)
       state.visitedViews.push({
-        name: view.name,
+        name: view.query.tab || view.name,
         path: view.path,
+        fullPath: view.fullPath,
+        tab: view.query.tab || '',
         lock: false,
-        title: view.meta.title || '未命名'
+        title: view.query.tab || view.meta.title || '未命名'
       })
       if (!view.meta.noCache) {
         state.cachedViews.push(view.name)

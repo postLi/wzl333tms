@@ -88,36 +88,48 @@ export default {
       isModify: false,
       addCarrierVisible: false,
       loading: false,
-      carrierName: ''
+      carrierName: '',
+      // 缓存数据
+      dataCache: {},
+      cache: {}
     }
   },
   mounted() {
     console.log('transferId:', this.$route)
-    let transferId = this.$route.params.transferId
-    if(typeof transferId !== 'undefined'){
-      // 表示进来修改
-      this.isModify = true
-      this.formModel.transferBatchNo = transferId
-      // 获取批次信息
-      this.getUpdateTransferDetail()
-    } else {
-      // 表示进来新增
-      this.isModify = false
-      // 先获取批次号
-      this.gettransferBatchNo()
-      // 设置为当前日期
-      getSystemTime().then(time => {
-        this.formModel.transferTime = parseTime(new Date(time))
-      })
-    }
-    this.getSelectAddLoadRepertoryList()
+    this.init()
   },
   methods: {
+    init () {
+      let transferId = this.$route.params.transferId
+      this.reset()
+      if(typeof transferId !== 'undefined'){
+        // 表示进来修改
+        this.isModify = true
+        this.formModel.transferBatchNo = transferId
+        // 获取批次信息
+        this.getUpdateTransferDetail()
+      } else {
+        // 表示进来新增
+        this.isModify = false
+        // 先获取批次号
+        this.gettransferBatchNo()
+        // 设置为当前日期
+        getSystemTime().then(time => {
+          this.formModel.transferTime = parseTime(new Date(time))
+        })
+      }
+      this.getSelectAddLoadRepertoryList()
+    },
     // 获取中转批次号码
     gettransferBatchNo() {
-      return transferManageApi.getBatchNo(this.otherinfo.orgid).then(res => {
-        this.formModel.transferBatchNo = res.data
-      })
+      if(this.cache.transferBatchNo){
+        this.formModel.transferBatchNo = this.cache.transferBatchNo
+      } else {
+        return transferManageApi.getBatchNo(this.otherinfo.orgid).then(res => {
+          this.cache.transferBatchNo = res.data
+          this.formModel.transferBatchNo = res.data
+        })
+      }
     },
     // 获取左边列表信息
     getSelectAddLoadRepertoryList() {
@@ -133,15 +145,15 @@ export default {
     },
     goTransferList() {
       // 跳转到中转管理页面
-      let lastRoute = this.$route
-      this.$router.replace({
-        path: '/operation/order/transfer'
-      }, () => {
-        this.$store.dispatch('delVisitedViews', lastRoute)
-      })
+      this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
     },
     // 获取批次详细信息
     getUpdateTransferDetail() {
+      let key = this.otherinfo.orgid+':'+this.formModel.transferBatchNo
+      if(this.dataCache[key]){
+        this.setTransferDetail(this.dataCache[key])
+        return true
+      }
       return transferManageApi.getUpdateTransferDetail(this.otherinfo.orgid, this.formModel.transferBatchNo).then(res => {
         let data = res.data
         if(!data.transferBatchNo){
@@ -153,13 +165,8 @@ export default {
             }
           });
         } else {
-          for(let i in this.formModel){
-            this.formModel[i] = data[i]
-          }
-          this.formModel.transferTime = parseTime(new Date(this.formModel.transferTime))
-          this.rightData = data.tmsOrderTransferDetails || []
-          this.loadTableInfo = this.rightData
-          this.carrierName = res.data.carrierName
+          this.dataCache[key] = data
+          this.setTransferDetail(data)
         }
       }).catch(errRes => {
         // 当这个批次号不能获取到信息时，提示用户
@@ -171,6 +178,15 @@ export default {
             }
           });
       })
+    },
+    setTransferDetail(data){
+      for(let i in this.formModel){
+        this.formModel[i] = data[i]
+      }
+      this.formModel.transferTime = parseTime(new Date(this.formModel.transferTime))
+      this.rightData = data.tmsOrderTransferDetails || []
+      this.loadTableInfo = this.rightData
+      this.carrierName = data.carrierName
     },
     doAction(type) {
       switch (type) {
@@ -255,6 +271,10 @@ export default {
     addCarrier() {
       this.addCarrierVisible = true
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    next()
+    this.init()
   }
 }
 

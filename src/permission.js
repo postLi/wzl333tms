@@ -6,6 +6,7 @@ import { getToken, removeToken } from '@/utils/auth' // 验权
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
+  /* must call `next` */
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {

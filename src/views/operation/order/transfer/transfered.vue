@@ -471,7 +471,9 @@ export default {
                   })
               }
               this.selectInfo = this.selected[0]
-              this.$router.push({path: '/operation/order/transferLoad/' + this.selectInfo.transferBatchNo })
+              this.$router.push({path: '/operation/order/transferLoad/' + this.selectInfo.transferBatchNo, query: {
+                tab: '中转' + this.selectInfo.transferBatchNo
+              } })
               break;
           // 跟踪中转
           case 'track':
