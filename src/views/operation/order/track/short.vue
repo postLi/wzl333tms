@@ -61,6 +61,8 @@
       </div>
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfo>
+      <!-- 表格设置弹出框 -->
+      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchList"></TableSetup>
     </div>
   </div>
 </template>
@@ -70,11 +72,13 @@ import { mapGetters } from 'vuex'
 import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
+import TableSetup from './components/tableSetup'
 export default {
   components: {
     SearchForm,
     Pager,
-    editInfo
+    editInfo,
+    TableSetup
   },
   computed: {
     ...mapGetters([
@@ -95,6 +99,7 @@ export default {
       trackInfo: {},
       loading: true,
       editInfoVisible: false,
+      setupTableVisible: false,
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
@@ -147,7 +152,12 @@ export default {
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    setTable() {},
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
     setInfo() {
       this.editInfoVisible = true
       this.$refs.multipleTable.clearSelection()

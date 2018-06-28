@@ -333,7 +333,13 @@ export default {
       return data
     },
     loadInfoPercent() {
-      let data = objectMerge2([], this.loadInfoPercentOrg)
+      let data = []
+      if (this.$route.query) {
+      data = Object.assign([], this.loadInfoPercentOrg)
+      } else {
+        data = []
+      }
+      console.log('data', data)
       return data
     },
     loadTimeFormName() {
@@ -476,9 +482,6 @@ export default {
         case 'addDriver': // 添加司机信息
           this.addDriver()
           break
-        case 'addOrg': // 添加网点
-          this.addOrg()
-          break
       }
     },
     showPercent() {
@@ -512,13 +515,13 @@ export default {
     gotoPage() { // 操作成功后跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart', query: { tablekey: Math.random() } })
+          this.$router.push({ path: '././shortDepart' })
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart', query: { tablekey: Math.random() } })
+          this.$router.push({ path: '././arteryDepart' })
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage', query: { tablekey: Math.random() } })
+          this.$router.push({ path: '././deliverManage' })
           break
       }
     },
@@ -532,7 +535,7 @@ export default {
               this.$message({ type: 'success', message: '修改配载信息成功' })
               this.resetFieldsForm()
               this.$nextTick(() => {
-                this.gotoPage()
+                this.gotoPage() // 操作成功后跳转到配载列表页面
               })
             })
           } else {
@@ -563,7 +566,7 @@ export default {
       this.loadInfoPercentOrg = objectMerge2([], obj)
       this.loadTableInfo = obj
     },
-    resetFieldsForm() { // resetFields表单验证---------------------------------------------
+    resetFieldsForm() { // resetFields表单验证
       const formName = ['formModel', 'formFee']
       const loadtypeid = this.$route.query.loadTypeId
       objectMerge2(this.$data, this.$options.data())
@@ -665,17 +668,12 @@ export default {
       }
       return this.setLoadTableList
     },
-    addTruck() {
-      // console.log('添加车辆信息')
+    addTruck() { // 添加车辆信息
       this.addTruckVisible = true
     },
-    addDriver() {
+    addDriver() { // 添加司机信息
       this.infoDriver = {}
       this.addDriverVisible = true
-      // console.log('添加司机信息')
-    },
-    addOrg() {
-      // console.log('添加网点信息')
     },
     fetchData() {},
     closeAddDriver() {

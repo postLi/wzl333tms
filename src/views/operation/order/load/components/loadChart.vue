@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 配载率 -->
-    <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" class="addDriverPop" v-loading="loading" :before-close="closeMe" width="50%" :close-on-click-modal="false" center>
+    <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" v-loading="loading" :before-close="closeMe" width="50%" :close-on-click-modal="false" center>
       <el-row>
         <el-col :span="12">
           <div :class="className" :id="idWeigth" :style="{height:height,width:width}" ref="echartWeight"></div>
@@ -18,6 +18,7 @@
 </template>
 <script>
 import echarts from 'echarts'
+import { objectMerge2 } from '@/utils/index'
 export default {
   props: {
     info: { // 表格里面的数据
@@ -75,7 +76,13 @@ export default {
     }
   },
   watch: {
-    info() {},
+    info(newVal) {
+      if (newVal) {
+        return newVal
+      }else {
+        return this.$options.data().baseInfo
+      }
+    },
     truckInfo() {
       this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
       this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
@@ -86,10 +93,11 @@ export default {
           if (this.baseInfo.totalWeight || this.baseInfo.weight) {
             this.initChart()
           } else {
-            this.baseInfo = Object.assign({}, this.newInfo)
+            this.baseInfo = objectMerge2({}, this.$options.data().baseInfo)
             this.initChart()
           }
         })
+      } else {
       }
     }
   },
@@ -98,6 +106,7 @@ export default {
       if (this.popVisible) {
         this.baseInfo.weight = 0
         this.baseInfo.volume = 0
+        console.log(this.baseInfo)
         this.info.forEach(e => {
           this.baseInfo.weight += Number(e.loadWeight)
           this.baseInfo.volume += Number(e.loadVolume)
@@ -106,8 +115,11 @@ export default {
     },
     initChart() {
       this.initData()
-      this.initChartWeight()
-      this.initChartVolume()
+      this.$nextTick(() => {
+        this.initChartWeight()
+        this.initChartVolume()
+      })
+
     },
     initChartWeight() {
       let surweight = this.baseInfo.totalWeight - this.baseInfo.weight

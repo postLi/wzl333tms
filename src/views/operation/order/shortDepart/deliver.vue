@@ -64,6 +64,8 @@
         </div>
       </div>
     </div>
+   <!-- 表格设置 -->
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchAllShortDepartList"  ></TableSetup>
   </div>
 </template>
 <script>
@@ -72,11 +74,13 @@ import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
+import TableSetup from './components/tableSetup'
 export default {
   components: {
     Pager,
     SearchForm,
-    postAllshortDepartList
+    postAllshortDepartList,
+    TableSetup
   },
   data() {
     return {
@@ -191,7 +195,12 @@ export default {
           break
       }
     },
-    setTable() {},
+    setTable () {
+      this.setupTableVisible = true
+    },
+    closeSetupTable () {
+      this.setupTableVisible = false
+    },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },

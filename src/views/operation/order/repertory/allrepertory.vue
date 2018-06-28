@@ -161,7 +161,10 @@
           <Pager :total="total" @change="handlePageChange" />
         </div>
       </div>
+      <!-- 颜色设置弹出框 -->
       <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect" @close="closeColorpicker" @success="setColumColor"></Colorpicker>
+      <!-- 表格设置弹出框 -->
+      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="openColor"></TableSetup>
     </div>
   </div>
 </template>
@@ -171,11 +174,13 @@ import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Colorpicker from './components/colorpicker'
 import Pager from '@/components/Pagination/index'
+import TableSetup from './components/tableSetup'
 export default {
   components: {
     Pager,
     SearchForm,
-    Colorpicker
+    Colorpicker,
+    TableSetup
   },
   data() {
     return {
@@ -208,11 +213,28 @@ export default {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
+  created () {
+     // this.initTable()
+  },
   mounted() {
+    this.initTable()
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllOrderRepertory()
+    // this.fetchAllOrderRepertory()
   },
   methods: {
+    initTable() {
+      let str = this.$refs.multipleTable.$children
+      str.forEach((e, index) => {
+        if (e.columnConfig && index > 0) {
+          if (e.columnConfig.label === '运单标识') {
+            e.columnConfig.fixed = true
+            console.log(index, e.columnConfig.label, e.columnConfig.fixed)
+            // this.tablekey = Math.random()
+          }
+        }
+      })
+      console.log('-----------------')
+    },
     tableRowColor({ row, rowIndex }) {
       let orgTime = new Date().getTime() - row.repertoryCreateTime
       let timeOne = this.selectionColorSetting.sectionOne * 3600
@@ -253,7 +275,12 @@ export default {
           break
       }
     },
-    setTable() {},
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
@@ -275,10 +302,15 @@ export default {
     },
     getAllOrderRepertory() {
       this.loading = true
-       postAllOrderRepertory(this.searchQuery).then(data => {
+      postAllOrderRepertory(this.searchQuery).then(data => {
           this.repertoryArr = data.list
           this.total = data.total
           this.loading = false
+          this.$nextTick(() => {
+            if (data) {
+
+            }
+          })
         })
         .catch(error => {
           this.$message({ type: 'error', message: '获取列表失败' })

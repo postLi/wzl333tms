@@ -71,6 +71,8 @@
       </div>
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
+      <!-- 表格设置弹出框 -->
+      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="getAllList"  ></TableSetup>
     </div>
   </div>
 </template>
@@ -81,11 +83,13 @@ import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import { objectMerge2 } from '@/utils/index'
+import TableSetup from './components/tableSetup'
 export default {
   components: {
     Pager,
     SearchForm,
-    editInfo
+    editInfo,
+    TableSetup
   },
   data() {
     return {
@@ -124,6 +128,7 @@ export default {
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.getAllList()
+    this.eventBus.$on('updateCurrentData')
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
@@ -197,8 +202,11 @@ export default {
     editTruck(row, column, cell, event) { // 双击单元格弹出详情页
       this.setInfo()
     },
-    setTable() {
-      this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+    setTable () {
+      this.setupTableVisible = true
+    },
+    closeSetupTable () {
+      this.setupTableVisible = false
     },
     clickDetails(row) { //打勾勾 toggle
       this.$refs.multipleTable.toggleRowSelection(row)
