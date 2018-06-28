@@ -344,7 +344,7 @@ export default {
                 selectInfo: {},
                 selected:[],
                 dataset:[],
-                // loading:false,
+                loading:false,
                 searchQuery: {
                     // "currentPage":1,
                     // "pageSize":10,

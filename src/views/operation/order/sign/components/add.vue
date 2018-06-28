@@ -88,8 +88,8 @@
         </tr>
         <tr>
           <td>
-            <el-form-item label="签收人:" prop="shipsignNameSn">
-                <el-input maxlength="10" v-model="form.shipsignNameSn" auto-complete="off"></el-input>
+            <el-form-item label="签收人:" prop="signName">
+                <el-input maxlength="10" v-model="form.signName" auto-complete="off"></el-input>
               </el-form-item>
           </td>
           <td>
@@ -223,7 +223,7 @@ export default {
       senderList: [],
       receiverList: [],
       dataset:[],
-      searchCreatTime: [ +new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime:  +new Date(),
       pickOption2:'',
       form:{},
       dataform:{},
@@ -256,7 +256,7 @@ export default {
         "childShipId":"",//子运单id
       },
       rules: {
-        shipsignNameSn: [   
+        signName: [   
           { required: true, trigger: 'blur', validator: validateNameSn }
         ],
         signCocumentTypeId:[
@@ -271,6 +271,9 @@ export default {
         remark:[
           // { required: true, message: '请输入签收备注', trigger: 'blur' },
            { required: true, trigger: 'blur', validator: validateremark }
+        ],
+        searchCreatTime:[
+          { required: true, message: '请选择时间', trigger: 'blur' },
         ]
       },
       formLabelWidth: '100px',
@@ -413,8 +416,7 @@ export default {
           }
           promiseObj.then(res=>{
             // console.log(res);
-            if(res.status === 200){
-              this.$alert('保存成功', '提示', {
+            this.$alert('保存成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
                   this.loading = false
@@ -422,11 +424,10 @@ export default {
                   this.$emit('success')
                 }
               })
-            }else if(res.status === 100) {
-              this.loading = false
+          }).catch(res => {
+            this.loading = false
               this.$message.warning(res.text)
               this.closeMe()
-            }
           })
         }else{
           return false

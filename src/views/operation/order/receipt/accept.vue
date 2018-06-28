@@ -449,7 +449,7 @@ export default {
                     this.closeAddDot()
                   })
                 }else{
-                  this.$message.warning('回单已发放不可取消~')
+                  this.$message.warning('不可重复取消~')
                 }
               
               break;

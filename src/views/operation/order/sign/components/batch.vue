@@ -249,6 +249,11 @@ export default {
       },
       immediate: true
     },
+    isSongh:{
+      handler(newVal){
+        this.popTitle = '批量签收'
+      }
+    },
     createrId(newVal){
     }
     
@@ -273,6 +278,7 @@ export default {
         if(valid){
           this.loading = true
           let data = objectMerge2({},this.form)
+          console.log(this.dotInfo);
           data.repertoryIds = this.dotInfo.map(el => {
             return el.repertoryId
           })
@@ -281,10 +287,11 @@ export default {
         
           if(this.isModify){
             promiseObj = postPickupBatchSign(data)//自提批量
-            console.log(66);
+           
           }
           else if(this.isSongh){
             data.shipIds = this.dotInfo.map(el=>{
+               console.log(66);
               return el.shipId
             })
             data.childShipIds = this.dotInfo.map(el=>{
@@ -294,8 +301,7 @@ export default {
           }
           promiseObj.then(res=>{
               console.log(res);
-              if(res.status === 200){
-                this.$alert('保存成功', '提示', {
+              this.$alert('保存成功', '提示', {
                   confirmButtonText: '确定',
                   callback: action => {
                     this.loading = false
@@ -303,11 +309,10 @@ export default {
                     this.$emit('success')
                   }
                 })
-              }else if(res.status === 100) {
+            }).catch(res => {
                 this.loading = false
                 this.$message.warning(res.text)
                 this.closeMe()
-              }
             })
         }else{
           return false

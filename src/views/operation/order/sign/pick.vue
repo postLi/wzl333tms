@@ -667,7 +667,7 @@ export default {
                 this.openAddBatch()
                 this.isPick = false
                 // this.show = true
-              }else{
+              }else if(ids.length){
                 this.repertoryId = this.selected[0]
                 this.openAddSign()
               }
@@ -688,8 +688,11 @@ export default {
                   this.openAddSign()
                 }
               break;
-             
             case 'cancel':
+              let _ids = this.selected.filter(el=>{
+                return el.signStatus === 227
+              })
+              if(_ids.length){
               let repertoryId = this.selected[0].repertoryId
               let signId = this.selected[0].signId
           
@@ -703,10 +706,14 @@ export default {
                 })
                   this.fetchAllreceipt()
                   return false
-                }).catch(err => {
-                  this.$message.error(err)
-                  // this.closeAddDot()
+                }).catch(res => {
+                  // this.loading = false
+                  this.$message.warning(res.text)
+                  // this.closeMe()
                 })
+              }else{
+                  this.$message.warning('不可取消~')
+                }
               break;
             }
           // 清除选中状态，避免影响下个操作

@@ -651,7 +651,7 @@ export default {
                 this.dotInfo = ids
         
                 this.isSongh = true
-                this.isModify = true;
+                // this.isModify = true;
                 this.isDelivery = true
                 this.isPick = false
                 this.openAddBatch()
@@ -681,8 +681,12 @@ export default {
               break;
              
             case 'cancel':
-              let shipId = this.selected[0].shipId
-              let signId = this.selected[0].signId
+              let _id = this.selected.filter(el=>{
+                return el.signStatus === 227
+              })
+              if(_id.lenght){
+                let shipId = this.selected[0].shipId
+                let signId = this.selected[0].signId
           
               this.searchQuery.vo.shipId = shipId
               this.searchQuery.vo.signId = signId
@@ -694,10 +698,14 @@ export default {
                 })
                   this.fetchAllreceipt()
                   return false
-                }).catch(err => {
-                  this.$message.error(err)
-                  // this.closeAddDot()
+                }).catch(res => {
+                  // this.loading = false
+                    this.$message.warning(res.text)
+                    // this.closeMe()
                 })
+              }else{
+                  this.$message.warning('不可取消~')
+                }
               break;
             }
           // 清除选中状态，避免影响下个操作

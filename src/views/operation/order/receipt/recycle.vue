@@ -455,11 +455,11 @@ export default {
                     this.fetchAllreceipt()
                     return false
                   }).catch(err => {
-                    this.$message.error(err)
+                    this.$message.error(status.text)
                     this.closeAddDot()
                   })
                 }else{
-                  this.$message.warning('回单已经寄出不能回收~')
+                  this.$message.warning('不可重复取消~')
                 }
               
               break;

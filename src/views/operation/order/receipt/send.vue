@@ -434,8 +434,8 @@ export default {
                     })
                     this.fetchAllreceipt()
                     return false
-                  }).catch(err => {
-                    this.$message.error(err)
+                  }).catch(res => {
+                    this.$message.error(res.text)
                     // this.closeAddDot()
                   })
                 }else{
