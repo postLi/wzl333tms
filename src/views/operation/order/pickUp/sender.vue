@@ -259,6 +259,7 @@ import PickupMain from './components/pickupMain'
 import PickupRelevance from './components/pickupRelevance'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import {objectMerge2} from '@/utils/index'
 
 export default {
   components: {
@@ -331,7 +332,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
+      this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
     showImport () {

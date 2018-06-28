@@ -4,7 +4,7 @@
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div ref="ruleForm" class="depmain-div">
-          <el-form :inline="true" :model="getMentInfo" :rules="rules" class="demo-form-inline" :label-width="formLabelWidth">
+          <el-form :inline="true" :rules="rules" class="demo-form-inline" :model="formInline" :label-width="formLabelWidth" ref="formName">
             <el-form-item label="提货批次">
               <el-input v-model="getMentInfo.pickupBatchNumber" disabled></el-input>
             </el-form-item>
@@ -45,7 +45,7 @@
             <el-table-column
               fixed
               sortable
-              prop="pickupBatchNumber"
+              prop="shipGoodsSn"
               width="150"
               label="货号">
             </el-table-column>
@@ -58,7 +58,7 @@
             </el-table-column>
           </el-table>
 
-          <el-form :inline="true" :model="formInline" class="order_bottom" :label-width="formLabelWidth">
+          <el-form :inline="true"  class="order_bottom" :label-width="formLabelWidth">
             <el-form-item label="运单号" prop="shipSn">
               <!--<el-input v-model="formInline.shipSn"></el-input>-->
               <querySelect valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
@@ -75,7 +75,7 @@
         </div>
       </template>
       <div slot="footer" class="dialog-footer-frame" >
-        <el-button type="primary" @click="submitForm('ruleForm')">加入列表</el-button>
+        <el-button type="primary" @click="submitForm('formName')">加入列表</el-button>
         <el-button @click="removeList">从列表移除</el-button>
       </div>
 
@@ -89,6 +89,7 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
+
   export default {
     components: {
       PopFrame,
@@ -133,6 +134,7 @@
         }
       }
       return {
+        selected: [],
         rules:{
           shipSn:[
             { validator:validateShipNum, trigger: 'blur' }
@@ -145,15 +147,16 @@
           ],
         },
         formLabelWidth:'90',
+
+        usersArr: [],
+        checked1: true,
+        popTitle: '关联运单',
+        loading:false,
         formInline: {
           shipSn: '',
           shipGoodsSn: '',
           pickupFee: ''
         },
-        usersArr: [],
-        checked1: true,
-        popTitle: '关联运单',
-        loading:false,
         getMentInfo:
           {
             pickupBatchNumber:'',
@@ -165,9 +168,7 @@
           pickupId:'',
           shipId:'',
           pickupFee:''
-        },
-        //首行
-        input: '',
+        }
       }
     },
     computed: {
@@ -193,6 +194,8 @@
         this.getMentInfo.getMentInfo = this.dotInfo.getMentInfo
         this.getMentInfo.truckFee = this.dotInfo.truckFee
         this.sendId.pickupId = this.dotInfo.id
+        // console.log(this.sendId.pickupId);
+        this.fetchData()
       },
       popVisible (newVal) {
       },
@@ -202,21 +205,19 @@
     },
     mounted() {
       if(this.popVisible){
-        this.fetchData()
         this.sendId.pickupId = this.dotInfo.id
-        console.log(this.sendId.pickupId);
+
       }
+      // this.fetchData()
 
     },
     methods: {
-      //
       fetchFindByShipSnOrGoodSn() {
         this.loading = true
-
-        return getFindShipByid(this.sendId.pickupId).then(data => {
-          console.log(data)
-          // this.usersArr = data.list
-          // this.loading = false
+        return getFindShipByid(this.dotInfo.id).then(data => {
+          // console.log(data)
+          this.usersArr = data
+          this.loading = false
         })
       },
       fetchData() {
@@ -225,13 +226,13 @@
       getShipSn(order){
         if(order){
           this.formInline.shipGoodsSn = order.shipGoodsSn
-          this.sendId.pickupId = order.id
+          this.sendId.shipId = order.id
         }
       },
       getShipGoodsSn(order){
         if(order){
           this.formInline.shipSn = order.shipSn
-          this.sendId.pickupId = order.id
+          this.sendId.shipId = order.id
         }
       },
       closeMe (done) {
@@ -245,15 +246,18 @@
           if (valid) {
             this.loading = true
             this.sendId.pickupFee = this.formInline.pickupFee
-            let data =this.sendId
-            let promiseObj = putRelevancyShip(data)
+            let pickupFee =this.sendId.pickupFee || ''
+            // parseInt(data.pickupFee)
+            // console.log(data);
+            // console.log(typeof parseInt(data.pickupFee));
+            let promiseObj = putRelevancyShip(this.sendId.pickupId,this.sendId.shipId,pickupFee)
 
             promiseObj.then(res => {
               this.loading = false
               this.$alert('操作成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
-                  // this.closeMe()
+                  this.fetchData()
 
                 }
               });
@@ -266,7 +270,31 @@
         });
       },
       removeList(){
-      //   if(this.selected[0])
+        console.log(this.selected.length)
+        if(!this.selected.length){
+          this.$message({
+            message: '请选择要操作的列表项~',
+            type: 'warning'
+          })
+          return false
+        }else{
+          // let data =
+          let promiseObj = putRremoveShip(this.sendId.pickupId,this.sendId.shipId)
+        //  putRremoveShip
+
+          promiseObj.then(res => {
+            this.loading = false
+            this.$alert('操作成功', '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.fetchData()
+
+              }
+            });
+          }).catch(err => {
+            this.loading = false
+          })
+        }
       },
       clickDetails(row, event, column){
         this.$refs.multipleTable.toggleRowSelection(row)

@@ -1,6 +1,6 @@
 <template>
   <div class="dep-maintain">
-    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading">
+    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" :model="getMentInfo">
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div ref="ruleForm" class="depmain-div">
@@ -8,7 +8,7 @@
             <div class="pick_center">是否生成托运单？</div>
             <div class="pick_input">
               生成票数
-              <el-input v-model="input" placeholder="请输入内容"></el-input>
+              <el-input v-model="input" placeholder="请输入内容">{{getMentInfo.dictName}}</el-input>
             </div>
         </div>
       </template>
@@ -47,17 +47,13 @@
           popTitle: '提示',
           loading:false,
           getMentInfo:[
-            {dictName:'',id:''}
-          ],
-          //首行
-          input: '',
-          orderId: '',
-          resInfo:[
             {
-              dictName:''
+              dictName:1,
+              id:''
             }
           ],
-          restaurants: [],
+          //首行
+          orderId: '',
         }
       },
       computed: {
@@ -81,7 +77,7 @@
           // this.getMentInfo = this.dotInfo
         },
         popVisible (newVal) {
-          console.log('popVisible:', newVal)
+          // console.log('popVisible:', newVal)
         },
         createrId(newVal){
 
