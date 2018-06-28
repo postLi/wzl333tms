@@ -39,7 +39,7 @@ service.interceptors.request.use(config => {
       // config.url = '/wukunzhi' + config.url
       // config.url = '/huangyuwen' + config.url
       // config.url = '/dingfei' + config.url
-      // config.url = '/ceshi' + config.url
+      config.url = '/ceshi' + config.url
     }
   }
 

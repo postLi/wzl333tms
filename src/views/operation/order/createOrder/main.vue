@@ -384,7 +384,8 @@
                     @change="setOddNumbers" v-model="form.tmsOrderTransfer.oddNumbers" />
                   </td>
                   <td>
-                    <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier" v-model="form.tmsOrderTransfer.carrierId" />
+                    <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier"
+                    :filterable="false" show="select" v-model="form.tmsOrderTransfer.carrierId" />
                   </td>
                   <td>
                     <el-input size="mini" maxlength="20"  v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
@@ -689,15 +690,15 @@ export default {
           "shipDeliveryMethod": '',
           "shipDriverName": "",
           "shipEffective": 94, // 默认为普通
-          "shipFormCityName": "",
+          "shipFromCityName": "",
           "shipFromCityCode": "",
           "shipFromOrgid": '',
           "shipGoodsSn": "",
-          "shipIsAbnormal": '',
-          "shipIsControll": '',
-          "shipIsSeparate": '',
-          "shipIsTransfer": '',
-          "shipIsUpdate": '',
+          // "shipIsAbnormal": '',
+          // "shipIsControll": '',
+          // "shipIsSeparate": '',
+          // "shipIsTransfer": '',
+          // "shipIsUpdate": '',
           "shipMonthpayFee": '',
           "shipNowpayFee": '',
           "shipOther": "",
@@ -712,7 +713,7 @@ export default {
           "shipSenderId": '',
           "shipShippingType": '',
           "shipSn": "",
-          "shipStatus": '',
+          // "shipStatus": '',
           "shipToCityCode": "",
           "shipToCityName": "",
           "shipToOrgid": '',
@@ -755,8 +756,13 @@ export default {
       // 是否允许修改huo号
       canChangeCargoNum: true,
       nowTime: '',
+      // 保存城市名
       fromCityName: '',
-      toCityName: ''
+      toCityName: '',
+      // 用来保存外部参数信息
+      output: {},
+      // 用来缓存当前页面的一些信息
+      dataCache: {}
     }
   },
   computed: {
@@ -810,67 +816,20 @@ export default {
         this.setShipFee()
       },
       immediate: true
+    },
+    '$route'(to, from){
+      if(to.path.indexOf('/operation/order/createOrder') !== -1){
+        this.initIndex()
+      }
     }
   },
   mounted () {
     this.loading = true
-    let preId = this.$route.query.preId || ''
-    let prePromise = Promise.resolve('')
 
-    // this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
-    
-    // 判断是否从预订单页面过来
-    if(preId){
-      this.preId = preId
-      this.isPreOrder = true
-      // 先查询是否存在此订单
-      // 判断是否为未受理可开单状态
-      prePromise = preOrderManage.getSearchOrder(this.preId)
-    }
-    Promise.all([getAllSetting({
-      orgid: this.otherinfo.orgid,
-      type: '',
-      module: 'order'
-    }), orderManage.getCargoSetting(this.otherinfo.orgid), orderManage.getPersonalSetup(this.otherinfo.id), orderManage.getCreateOrderDate(), prePromise]).then(dataArr => {
-      // 获取全局设置
-      this.config = dataArr[0]
-      // 获取费用设置
-      this.feeConfig = dataArr[1]
-      // 获取个人设置
-      this.personConfig = dataArr[2]
-      // 获取后台时间
-      this.nowTime = dataArr[3]
-      // 先初始化页面
-      this.init()
-      // 如果是预订单过来
-      if(this.isPreOrder){
-        this.form.tmsOrderPre = dataArr[4].data
-        console.log('dataArr[4].data:', dataArr[4].data)
-        
-        this.initPreOrder()
-
-        if(this.form.tmsOrderPre.orderStatus !== 213){
-          this.$message.warning('此订单不是 非受理 状态，将不能关联创建的运单。')
-          this.form.tmsOrderPre = {}
-          this.isPreOrder = false
-        }
-      }
-      // 如果是查看运单
-
-      // 如果是修改运单
-
-      // 如果是提货过来
-      
-      this.loading = false
-    })
-  },
-  beforeDestroy () {
-  },
-  // 路由更新时触发，用来切换渲染数据
-  beforeRouteUpdate (to, from, next) {
-    console.info('beforeRouteUpdate:', to, from)
+    this.initIndex()
   },
   methods: {
+    // 公共工具函数
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
         if(!value){
@@ -880,6 +839,58 @@ export default {
           callback()
         }
       }
+    },
+    // 各个接口
+    // 为了方便缓存数据，重新包装各个接口
+    // 获取预订单数据
+    getPreOrder(preId){
+      return preOrderManage.getSearchOrder(preId)
+    },
+    // 获取运单数据
+    getOrderInfo(orderId){
+      return orderManage.getOrderInfoById(orderId)
+    },
+    // 获取公司全部设置
+    getAllSetting(){
+      if(this.dataCache['allSeting']){
+        return Promise.resolve(this.dataCache['allSeting'])
+      } else {
+        return getAllSetting({
+          orgid: this.otherinfo.orgid,
+          type: '',
+          module: 'order'
+        })
+      }
+    },
+    // 获取个人设置
+    getPersonSetting(){
+      if(this.dataCache['personSeting']){
+        return Promise.resolve(this.dataCache['personSeting'])
+      } else {
+        return orderManage.getPersonalSetup(this.otherinfo.id)
+      }
+    },
+    // 获取货物设置
+    getCargoSetting(){
+      if(this.dataCache['cargoSeting']){
+        return Promise.resolve(this.dataCache['cargoSeting'])
+      } else {
+        return orderManage.getCargoSetting(this.otherinfo.orgid)
+      }
+    },
+    // 获取基本设置信息
+    getBaseSetting(){
+      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate()]).then(dataArr => {
+        // 获取全局设置
+        this.config = dataArr[0]
+        // 获取费用设置
+        this.feeConfig = dataArr[1]
+        // 获取个人设置
+        this.personConfig = dataArr[2]
+        // 获取后台时间
+        this.nowTime = dataArr[3]
+
+      })
     },
     // 初始化各个表单的情况
     init() {
@@ -1004,9 +1015,9 @@ export default {
     // 选择出发城市
     selectFromCity (item, city) {
       if(item){
-        this.form.tmsOrderShip.shipFormCityName = item.longAddr
+        this.form.tmsOrderShip.shipFromCityName = item.longAddr
       } else {
-        this.form.tmsOrderShip.shipFormCityName = city || ''
+        this.form.tmsOrderShip.shipFromCityName = city || ''
       }
     },
     // 选择到达城市
@@ -1034,8 +1045,11 @@ export default {
       this.feeConfig.sort((a,b)=>{
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       })
-      this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
-      this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
+      if(this.output.iscreate){
+        this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
+        this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
+      }
+      
     },
     // 设置中转表单
     setOrderTransfer () {
@@ -1074,7 +1088,161 @@ export default {
     /**
      * 初始化各类情况
      */
+    initIndex(){
+      // 1.判断有无运单id
+      // 1.1 判断是否为修改
+      // 1.1.1 判断是否已结算，设置可修改部分
+      // 1.1.1 如果为完全不能修改，则限制可修改部分
+      // 1.2 判断是否为查看
+      // 1.2.1 如果有运单id，但无操作参数，则表示为查看运单
+      // 1.3 如果找不到订单，则提示用户并退回到运单管理页面
+      // 2.判断有无订单id
+      // 2.1 订单有数据且可关联
+      // 2.2 订单有数据但不能关联→填充订单数据到页面，但不关联
+      // 2.3 订单无数据，提示用户并退回到订单页面
+      // 3.判断是否有提货批次信息
+      // 3.1 有批次信息且可关联
+      // 3.2 有批次信息不可关联，提示并回退到提货管理(删除状态)
+      // 3.3 无批次信息，提示并回退到提货管理
+      // 4.1 正常的创建运单
+      this.loading = true
+      this.reset()
+      this.getBaseSetting().then(res => {
+        console.log('base setting info:', res, this.$route)
+        let route = this.$route
+        if(route.params.orderid){
+          this.output.orderid = this.$route.params.orderid
+          this.output.isOrder = true
+          this.initOrder()
+        } else if(route.query.preid){
+          this.output.preId = this.$route.query.preid
+          this.output.isPreOrder = true
+          this.initPreOrder()
+        } else if(route.query.batchid){
+          this.output.batchid = this.$route.params.batchid
+          // 如果传过来的非正常字符，则默认为1
+          // 如果传过来的数字大于50，则设置为50
+          this.output.ordernum = Math.min(parseInt(this.$route.params.ordernum, 10) || 1, 50)
+          this.output.isbatch = true
+          this.initBatch()
+        } else {
+          this.outpu.iscreate = true
+          this.initCreate()
+        }
+        
+      }).catch(err => {
+        console.log('base setting error:', err)
+        this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
+      })
+    },
+    // 创建订单
+    initCreate(){
+      this.init()
+      this.loading = false
+    },
+    // 初始化运单
+    initOrder(){
+      let type = this.$route.query.type
+      if(type === 'modify'){
+        this.output.ismodify = true
+      } else {
+        this.output.isview = true
+      }
+      let errFn = () => {
+        this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
+          confirmButtonText: '返回运单列表页',
+          cancelButtonText: '创建运单',
+          type: 'warning'
+        }).then(() => {
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+        }).catch(() => {
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder')
+        })
+      }
+      this.getOrderInfo(this.output.orderid).then(res => {
+        this.orderData = res.data
+        // 找到运单信息
+        this.setOrderData(res.data)
+        if(this.output.ismodify){
+          this.modifyOrder()
+        } else {
+          this.viewOrder()
+        }
+        this.init()
+        this.loading = false
+      }).catch(err => {
+        errFn()
+      })
+    },
+    // 修改运单
+    modifyOrder(){
+
+    },
+    // 查看运单
+    viewOrder(){
+
+    },
+    // 从订单创建运单
     initPreOrder () {
+      let errFn = () => {
+        this.$confirm('查无此订单信息：' + this.output.preId, '提示', {
+          confirmButtonText: '返回订单列表页',
+          cancelButtonText: '创建运单',
+          type: 'warning'
+        }).then(() => {
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/manage')
+        }).catch(() => {
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder')
+        })
+      }
+
+      return this.getPreOrder(this.output.preId).then(res => {
+        this.form.tmsOrderPre = res.data
+        this.setPreOrder()
+        if(this.form.tmsOrderPre.orderStatus !== 213){
+          this.$message.warning('此订单不是 非受理 状态，将不能关联创建的运单。')
+          this.form.tmsOrderPre = {}
+          this.output.isPreOrder = false
+        }
+        this.init()
+        this.loading = false
+      }).catch(err => {
+        errFn()
+      })
+    },
+    // 从提货创建运单
+    initBatch(){
+
+    },
+    // 回填运单信息
+    setOrderData (data) {
+      // 设置运单信息
+      for(let i in this.form.tmsOrderShip){
+        this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
+      }
+      // 设置城市名称
+      this.fromCityName = data.tmsOrderShip.shipFromCityName
+      this.toCityName = data.tmsOrderShip.shipToCityName
+      // 设置货物信息
+      this.form.cargoList = data.tmsOrderCargoList
+      //this.$set(this.form.cargoList, data.tmsOrderCargoList)
+      // 设置收发货人信息
+      for(let i in this.form.sender){
+        this.form.sender[i] = data.customerList[0][i]
+      }
+      for(let i in this.form.receiver){
+        this.form.receiver[i] = data.customerList[1][i]
+      }
+      this.form.customerList = data.customerList
+      console.log('setOrderInfo:',data, this.form)
+      // 设置中转信息
+      // 设置运单信息
+      for(let i in this.form.tmsOrderTransfer){
+        this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
+      }
+    },
+    // 回填订单信息
+    setPreOrder(){
       // 将数据回填到页面上
       // 网点信息
       let data = this.form.tmsOrderPre
@@ -1258,7 +1426,7 @@ export default {
       this.receiver = {}
       this.form.tmsOrderShip = this.resetObj(this.form.tmsOrderShip)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
-      this.setOrderDate()
+      // this.setOrderDate()
     },
     /*** 提交表单 */
     submitForm () {
@@ -1285,6 +1453,9 @@ export default {
               data.tmsOrderTransfer = {}
             } else {
               data.tmsOrderTransfer.createTime = new Date(data.tmsOrderTransfer.createTime).getTime()
+              if(this.output.ismodify){
+                data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer.id
+              }
             }
             // 判断收发货人信息
             let changeSender = false
@@ -1304,9 +1475,13 @@ export default {
             data.customerList[1] = this.form.receiver
             if(changeSender){
               data.customerList[0].customerId = ''
+            }else{
+              data.tmsOrderShip.shipSenderId = data.customerList[0].customerId
             }
             if(changeReceiver){
               data.customerList[1].customerId = ''
+            }else{
+              data.tmsOrderShip.shipReceiverId = data.customerList[1].customerId
             }
             data.tmsOrderCargoList = this.form.cargoList.map(el => {
               let b = {}
@@ -1320,12 +1495,24 @@ export default {
               return b
             })
             data.tmsOrderShip.createTime = new Date(data.tmsOrderShip.createTime).getTime()
+            console.log('this.output.ismodify:', this.output.ismodify)
+            if(this.output.ismodify){
+              data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
+              console.log('change Order:', data)
+              orderManage.putChangeOrder(data).then(res => {
+                this.$message.success('成功修改运单！')
+              }).catch(err => {
+                this.message.error('修改失败，原因：' + err.text)
+              })
+            } else {
+              orderManage.postNewOrder(data).then(res => {
+                this.$message.success('成功创建运单！')
+              }).catch(err => {
+                this.message.error('创建失败，原因：' + err.text)
+              })
+            }
 
-            orderManage.postNewOrder(data).then(res => {
-              this.$message.success('成功创建运单！')
-            }).catch(err => {
-              this.message.error('创建失败，原因：' + err.text)
-            })
+            
           }
         }
       })
@@ -1371,6 +1558,11 @@ export default {
     getKeySetup () {
       this.changeFlag = Math.random()
     }
+  },// 路由更新时触发，用来切换渲染数据
+  // 需要对应router-view的组件才能触发
+  beforeRouteUpdate (to, from, next) {
+    next()
+    console.log('beforeRouteUpdate:', to, from)
   }
 }
 </script>

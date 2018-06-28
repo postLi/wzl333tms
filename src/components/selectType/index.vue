@@ -16,6 +16,7 @@
 import { eventBus } from '@/eventBus'
 import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
+import CACHE from '@/utils/cache'
 
 /**
  * 可选的type值
@@ -79,6 +80,10 @@ export default {
     },
     value: {
       type: [Number, String, Array]
+    },
+    remote: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -101,14 +106,29 @@ export default {
     }
   },
   mounted () {
-    getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(data => {
-      this.types = data
-    })
+    // 因为字典的数据修改频率极其小，
+    // 尝试缓存以减少网络请求
+    if(this.remote){
+      this.fetchData()
+    } else {
+      let data = CACHE.get(this.type)
+      if(data === ''){
+        this.fetchData()
+      } else {
+        this.types = data
+      }
+    }
     eventBus.$on('closepopbox', () => {
       this.$refs.myautocomplete.handleClose()
     })
   },
   methods: {
+    fetchData() {
+      return getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(data => {
+        this.types = data
+        CACHE.set(this.type, data)
+      })
+    },
     change (item) {
       this.$emit('input', this.val)
       this.$emit('change', item)

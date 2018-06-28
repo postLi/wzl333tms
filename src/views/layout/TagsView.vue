@@ -22,8 +22,8 @@
         </ul>
         <div class="menu-line"></div>
         <ul class="contextmenu contextmenu-list">
-          <router-link tag="li" to="/dashboard">
-            <i :class="isActive({path:'/dashboard', fullPath: '/dashboard'})?'el-icon-check':''"></i>
+          <router-link tag="li" :class="isActive(indexTag)?'active-menu':''" to="/dashboard">
+            <i class="el-icon-check"></i>
             首页
           </router-link>
           <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)"
@@ -131,7 +131,7 @@ export default {
       
       this.$nextTick(() => {
         for (const tag of tags) {
-          if (tag.to === this.$route.path) {
+          if (tag.fullPath === this.$route.fullPath) {
             this.moveToTarget(tag.$el)
             break
           }
@@ -143,7 +143,7 @@ export default {
         if (this.isActive(view)) {
           const latestView = views.slice(-1)[0]
           if (latestView) {
-            this.$router.push(latestView.path)
+            this.$router.push(latestView.fullPath)
           } else {
             this.$router.push('/')
           }
@@ -154,7 +154,7 @@ export default {
       this.$parent.refreshKey()
     },
     closeOthersTags() {
-      this.$router.push(this.selectedTag.path)
+      this.$router.push(this.selectedTag.fullPath)
       this.$store.dispatch('delOthersViews', this.selectedTag).then(() => {
         this.moveToCurrentTag()
       })
@@ -198,7 +198,7 @@ export default {
       const $targetLeft = $target.offsetLeft
       const $targetWidth = $target.offsetWidth
 
-      console.log($target,$containerWidth,$targetLeft,$targetWidth)
+      // console.log($target,$containerWidth,$targetLeft,$targetWidth)
 
       if ($targetLeft <= -this.left) {
         // tag in the left

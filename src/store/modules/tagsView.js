@@ -27,7 +27,7 @@ const tagsView = {
     },
     DEL_VISITED_VIEWS: (state, view) => {
       for (const [i, v] of state.visitedViews.entries()) {
-        if (v.path === view.path) {
+        if (v.fullPath === view.fullPath) {
           state.visitedViews.splice(i, 1)
           break
         }
@@ -42,7 +42,7 @@ const tagsView = {
     },
     DEL_OTHERS_VIEWS: (state, view) => {
       for (const [i, v] of state.visitedViews.entries()) {
-        if (v.path === view.path) {
+        if (v.fullPath === view.fullPath) {
           state.visitedViews = state.visitedViews.slice(i, i + 1)
           break
         }

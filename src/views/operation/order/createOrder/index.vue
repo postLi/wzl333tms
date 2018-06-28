@@ -4,7 +4,6 @@
   </div>
 </template>
 <script>
-import { getUserInfo } from "../../../../utils/auth";
 import Main from './main'
 
 export default {
@@ -17,7 +16,6 @@ export default {
     }
   },
   mounted () {
-    this.userinfo = getUserInfo()
   }
 }
 </script>

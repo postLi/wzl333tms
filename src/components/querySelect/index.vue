@@ -6,6 +6,7 @@
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
+  @focus="initData"
   :placeholder="place"
   ref="myautocomplete"
   @select="handleSelect"
@@ -30,6 +31,7 @@
     popper-class="query-select-autocomplete"
     :filterable="filterable"
     @change="handleSelect"
+    @focus="initData"
     remote
     :placeholder="place"
     :remote-method="querySearch"
@@ -52,6 +54,7 @@
     v-if="show === 'select' && !remote"
     v-model="handlevalue"
     @change="handleSelect"
+    @focus="initData"
     popper-class="query-select-autocomplete"
     :filterable="filterable"
     :placeholder="place"
@@ -346,13 +349,7 @@ export default {
     // 初始化请求、请求参数等
     this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
-    // 判断是否需要每次都请求
-    if(!this.remote){
-      this.fetchFn().then(data => {
-        this.allData = data
-        this.searchData = data
-      })
-    }
+    
     this.initEvent()
   },
   methods: {
@@ -360,6 +357,18 @@ export default {
       eventBus.$on('closepopbox', () => {
         this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
       })
+    },
+    initData(){
+      if(!this.inited){
+        this.inited = true
+        // 判断是否需要每次都请求
+        if(!this.remote){
+          this.fetchFn().then(data => {
+            this.allData = data
+            this.searchData = data
+          })
+        }
+      }
     },
     highLight (item, key) {
       if(key === this.search && this.lastQuery !== ''){

@@ -400,10 +400,7 @@ export default {
   methods: {
     viewDetails (row) {
       this.$router.push({
-        path: '/operation/order/createOrder', 
-        params: {
-          orderid: row.id
-        }, 
+        path: '/operation/order/createOrder/' + row.id,
         query: {
           type: 'view',
           tab: '查看' + row.shipSn 
@@ -463,10 +460,7 @@ export default {
               }
               this.selectInfo = this.selected[0]
               this.$router.push({
-                path: '/operation/order/createOrder', 
-                params: {
-                  orderid: this.selectInfo.id
-                }, 
+                path: '/operation/order/createOrder/' + this.selectInfo.id,
                 query: {
                   type: 'modify',
                   // tab: '修改' + this.selectInfo.shipSn 

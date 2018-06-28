@@ -3,8 +3,8 @@
     <transition name="fade" mode="out-in">
       <!-- <keep-alive :include="cachedViews"> -->
       <keep-alive>
-        <!-- <router-view :key="key"></router-view> -->
-        <router-view></router-view>
+        <router-view :key="key"></router-view>
+        <!-- <router-view></router-view> -->
       </keep-alive>
     </transition>
   </section>

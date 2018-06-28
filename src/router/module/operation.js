@@ -9,7 +9,10 @@ export default {
   name: '运营管理',
   noDropdown: true,
   children: [{
-    path: '/operation/order/createOrder/:orderid?', icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
+    path: '/operation/order/createOrder/:orderid?', hidden: true, icon: 'QQ', name: '查看运单', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '查看运单', noCache: false }
+  },
+  {
+    path: '/operation/order/createOrder/', icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
   },
   {
     path: '/operation/order/orderManage', icon: 'QQ', name: '运单管理', component: _import('operation/order/orderManage/index'), meta: { role: ['admin'], title: '运单管理', noCache: true }
