@@ -162,7 +162,7 @@ export default {
       }
     }
     return {
-      searchCreatTime: [ new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: +new Date(),
       pickOption2:'',
       checked1: true,
       popTitle: '',
