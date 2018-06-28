@@ -1,15 +1,19 @@
 <template>
   <div class="dep-maintain">
-    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" :model="getMentInfo">
+    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
-        <div ref="ruleForm" class="depmain-div">
-
+        <div class="depmain-div">
+          <el-form :inline="true" :model="getMentInfo" :label-width="formLabelWidth" ref="ruleForm" :rules="rules">
             <div class="pick_center">是否生成托运单？</div>
-            <div class="pick_input">
-              生成票数
-              <el-input v-model="input" placeholder="请输入内容">{{getMentInfo.dictName}}</el-input>
+            <div class="pick_input_Main" >
+
+              <el-form-item label="生成票数">
+                <el-input v-model="getMentInfo.dictNum" placeholder="请输入内容" @click="validNum"></el-input>
+              </el-form-item>
+
             </div>
+          </el-form>
         </div>
       </template>
       <div slot="footer" class="dialog-footer-frame" >
@@ -23,6 +27,7 @@
 </template>
 
 <script>
+    import { REGEX } from '@/utils/validate'
     import PopFrame from '@/components/PopFrame/index'
     import { getSelectDictInfo,postDict,deletePerManage,putDict } from '@/api/company/groupManage'
     export default {
@@ -39,19 +44,37 @@
           type:Boolean,
           default:false
         },
-        createrId: [Number,String]
+        createrId: [Object,Number,String]
       },
       data() {
+        const validatePickupNum = function (rule, value, callback) {
+          if(REGEX.ONLY_NUMBER.test(value) || !value.length){
+            callback()
+          }
+          if(value.length>50){
+            callback(new Error('最多可生成50票'))
+          }
+          else {
+            callback(new Error('只能输入数字'))
+          }
+        }
         return {
+          rules:{
+            dictName:[
+              {validator:validatePickupNum,trigger:'blur'}
+            ]
+          },
+          formLabelWidth:'90',
+          input:'',
           checked1: true,
           popTitle: '提示',
           loading:false,
-          getMentInfo:[
+          getMentInfo:
             {
-              dictName:1,
+              dictNum:1,
               id:''
             }
-          ],
+          ,
           //首行
           orderId: '',
         }
@@ -87,6 +110,9 @@
         this.getSelectDict(this.createrId)
       },
       methods: {
+        validNum(){
+
+        },
         getSelectDict(orgId) {
           //
           // this.loading = true
@@ -110,45 +136,36 @@
             done()
           }
         },
-        submitForm(formName) {
-          this.$message({
-            message: '开单页面~',
-            type: 'warning'
-          })
-          // this.$refs[formName].validate((valid) => {
-          //   if (valid) {
-          //     this.loading = true
-          //     this.form.tmsCustomer = this.customSend
-          //     this.form.tmsOrderPickup.outTime = this.newDate
-          //     this.form.tmsOrderPickup.arriveTime = this.endDate
-          //     // console.log(this.form)
-          //     let data = this.form
-          //     // let data = Object.assign({},this.form)
-          //     // data.fixPhone = this.fixPhone
-          //     let promiseObj
-          //     // 判断操作，调用对应的函数
-          //     if(this.isModify){
-          //       // promiseObj = putUpdatePickup(data)
-          //     } else {
-          //       // promiseObj = postAddPickup(data)
-          //     }
-          //
-          //     promiseObj.then(res => {
-          //       this.loading = false
-          //       this.$alert('操作成功', '提示', {
-          //         confirmButtonText: '确定',
-          //         callback: action => {
-          //           this.closeMe()
-          //           this.$emit('success')
-          //         }
-          //       });
-          //     }).catch(err => {
-          //       this.loading = false
-          //     })
-          //   } else {
-          //     return false;
-          //   }
-          // });
+        submitForm(ruleForm) {
+          this.$refs[ruleForm].validate((valid) => {
+            if (valid) {
+              // this.loading = true
+              // this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
+              // let data = this.form
+              // let promiseObj
+              // // 判断操作，调用对应的函数
+              // if(this.isModify){
+              //   promiseObj = putUpdatePickup(data)
+              // } else {
+              //   promiseObj = postAddPickup(data)
+              // }
+              //
+              // promiseObj.then(res => {
+              //   this.loading = false
+              //   this.$alert('操作成功', '提示', {
+              //     confirmButtonText: '确定',
+              //     callback: action => {
+              //       this.closeMe()
+              //       this.$emit('success')
+              //     }
+              //   });
+              // }).catch(err => {
+              //   this.loading = false
+              // })
+            } else {
+              return false;
+            }
+          });
         },
       }
     }
@@ -172,13 +189,10 @@
   padding-top: 80px;
   font-size: 16px;
 }
-  .pick_input{
+  .pick_input_Main{
     padding-top: 60px;
     text-align: center;
     font-size: 14px;
-    .el-input{
-      width: 40%;
 
-    }
   }
 </style>

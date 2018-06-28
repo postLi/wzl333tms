@@ -3,8 +3,8 @@
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading">
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
-        <div ref="ruleForm" class="depmain-div">
-          <el-form :inline="true" :rules="rules" class="demo-form-inline" :model="formInline" :label-width="formLabelWidth" ref="formName">
+        <div class="depmain-div">
+          <el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth" ref="formName">
             <el-form-item label="提货批次">
               <el-input v-model="getMentInfo.pickupBatchNumber" disabled></el-input>
             </el-form-item>
@@ -58,7 +58,7 @@
             </el-table-column>
           </el-table>
 
-          <el-form :inline="true"  class="order_bottom" :label-width="formLabelWidth">
+          <el-form :inline="true"  class="order_bottom" :label-width="formLabelWidth" :rules="rules" :model="getMentInfo" >
             <el-form-item label="运单号" prop="shipSn">
               <!--<el-input v-model="formInline.shipSn"></el-input>-->
               <querySelect valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
@@ -67,8 +67,8 @@
               <!--<el-input v-model="formInline.shipGoodsSn"></el-input>-->
               <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
             </el-form-item>
-            <el-form-item label="本单提货费" prop="pickupFee">
-              <el-input v-model="formInline.pickupFee"></el-input>
+            <el-form-item label="本单提货费" >
+              <el-input v-model="formInline.pickupFee" v-numberOnly></el-input>
             </el-form-item>
           </el-form>
 
@@ -116,23 +116,19 @@
         if(this.formInline.shipSn ==='' && this.formInline.shipSn ===''){
           hasOne = false
         }
-        if(!value && !hasOne){
+        if(!value.length && !hasOne){
           callback(new Error('运单号或货号必填其中一项'))
         }
+        // else if(!value.length){
+        //   callback(new Error('运单号或货号必填其中一项1'))
+        // }
         else{
           hasOne = true
           callback()
         }
 
       }
-      let validatePickupFee = (rule,value,callback) =>{
-        if(REGEX.ONLY_NUMBER.test(value) || !value.length){
-          callback()
-        }
-        else {
-          callback(new Error('只能输入数字'))
-        }
-      }
+
       return {
         selected: [],
         rules:{
@@ -141,13 +137,9 @@
           ],
           shipGoodsSn:[
             { validator:validateShipNum, trigger: 'blur' }
-          ],
-          pickupFee: [
-            {validator: validatePickupFee, trigger: 'change'}
-          ],
+          ]
         },
         formLabelWidth:'90',
-
         usersArr: [],
         checked1: true,
         popTitle: '关联运单',
@@ -236,31 +228,39 @@
         }
       },
       closeMe (done) {
+        this.reset()
         this.$emit('update:popVisible', false);
         if(typeof done === 'function'){
           done()
         }
       },
+      reset(){
+        this.formInline = ''
+      },
+
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true
             this.sendId.pickupFee = this.formInline.pickupFee
             let pickupFee =this.sendId.pickupFee || ''
-            // parseInt(data.pickupFee)
-            // console.log(data);
-            // console.log(typeof parseInt(data.pickupFee));
             let promiseObj = putRelevancyShip(this.sendId.pickupId,this.sendId.shipId,pickupFee)
 
             promiseObj.then(res => {
               this.loading = false
-              this.$alert('操作成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.fetchData()
-
-                }
-              });
+              // this.$alert('操作成功', '提示', {
+              //   confirmButtonText: '确定',
+              //   callback: action => {
+              //     this.fetchData()
+              //
+              //   }
+              // });
+              this.$message({
+                message: '添加成功~',
+                type: 'success'
+              })
+              this.fetchData()
+              this.reset()
             }).catch(err => {
               this.loading = false
             })
