@@ -78,6 +78,15 @@ export function getFindShipByid(id) {
   })
 }
 
+/**
+ * /order/pickup/v1/findShipByid
+ 提货完成 --修改状态
+ */
+export function putUpdatePickkupStatus(pickupId) {
+  return fetch.put('/api-order/order/pickup/v1/updatePickkupStatus/' + pickupId).then(res => {
+    return res.data || {}
+  })
+}
 // http://localhost:7010/api-system/system/trunk/v1/list?access_token=
 // {
 //   "currentPage":1,

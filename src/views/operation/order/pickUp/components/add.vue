@@ -8,74 +8,72 @@
             <el-input v-model="pickupBatchNumber" auto-complete="off" disabled></el-input>
           </el-form-item>
           <el-form-item label="发货人" prop="" class="senderName_lrl">
-            <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.tmsCustomer.customerName" @change="setSender" />
+            <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.tmsCustomer.customerName" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="手机号" prop="" class="senderName_lrl">
-            <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.tmsCustomer.customerMobile" @change="setSender" />
+            <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.tmsCustomer.customerMobile" @change="setSender" :disabled="isDbclick"/>
           <!--</el-form-item>-->
           </el-form-item>
           <el-form-item label="提货地址" prop="" class="senderName_lrl">
 
-            <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.tmsCustomer.detailedAddress" @change="setSender" />
+            <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.tmsCustomer.detailedAddress" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
         </div>
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
             <!--<el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>-->
-            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" />
+            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"/>
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
-            <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="体积" prop="tmsOrderPickup.pickupVolume">
-            <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="重量" prop="tmsOrderPickup.pickupWeight">
-            <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="运费" prop="tmsOrderPickup.carriage">
-            <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="付款方式" >
             <!--<el-input v-model="form.tmsOrderPickup.payMethod" auto-complete="off" ></el-input>-->
             <!--默认为现付-->
-            <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" placeholder="请选择" class="pickup-way" />
+            <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="到达城市" class="order_toCityCode">
-            <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityCode" :remote="true" />
+            <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityCode" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="备注" prop="tmsOrderPickup.remark" class="order_remark">
-            <el-input v-model="form.tmsOrderPickup.remark"  type="textarea" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.remark" type="textarea" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
         </div>
         <div class="pickUp-bottom">
           <el-form-item label="车费" prop="tmsOrderPickup.truckFee">
-            <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="代收费用" prop="tmsOrderPickup.collectionFee">
-            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="tmsDriver.truckIdNumber">
-            <!--<el-input v-model="form.tmsTruck.truckIdNumber" auto-complete="off" ></el-input>-->
-            <querySelect search="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" />
+            <querySelect search="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="司机姓名" prop="tmsDriver.driverName">
-            <!--<el-input v-model="form.tmsDriver.driverName" auto-complete="off" ></el-input>-->
-            <querySelect search="driverName" valuekey="driverName" type="driver" @change="getdriverName" :remote="true" v-model="form.tmsDriver.driverName" />
+            <querySelect search="driverName" valuekey="driverName" type="driver" @change="getdriverName" :remote="true" v-model="form.tmsDriver.driverName" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="车辆类型">
-            <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" />
+            <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="司机手机" prop="tmsDriver.driverMobile">
-            <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" :disabled="isDbclick"></el-input>
             <!--<querySelect search="driverMobile" type="driver"  @change="getdriverMobile" :remote="true" v-model="form.tmsDriver.driverMobile" />-->
           </el-form-item>
           <el-form-item label="车辆单位" prop="tmsTruck.truckUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" ></el-input>
+            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="提货状态" prop="tmsOrderPickup.pickupStatus">
-            <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" />
+            <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="出车时间" class="customerunit">
               <el-date-picker
@@ -85,6 +83,7 @@
                 placeholder="选择日期"
                 value-format="timestamp"
                 :picker-options="pickOption"
+                :disabled="isDbclick"
               >
               </el-date-picker>
           </el-form-item>
@@ -96,6 +95,7 @@
               :picker-options="pickOption2"
               placeholder="选择日期"
               value-format="timestamp"
+              :disabled="isDbclick"
             >
             </el-date-picker>
           </el-form-item>
@@ -107,7 +107,10 @@
 
       </el-form>
     </template>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer" class="dialog-footer" v-if="isDbclick">
+      <el-button @click="closeMe">取 消</el-button>
+    </div>
+    <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="submit">保存并打印</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
@@ -142,7 +145,12 @@ export default {
     orgid: {
       required: true
     },
+    //isDbclick
     isModify: {
+      type: Boolean,
+      default: false
+    },
+    isDbclick: {
       type: Boolean,
       default: false
     },
@@ -244,10 +252,8 @@ export default {
           detailedAddress:''
         },
         tmsDriver:{
-
           driverName:'',//司机姓名
           driverMobile:'',//司机手机 /
-
           //  发送短信给司机
         },
         tmsTruck:{
@@ -308,17 +314,25 @@ export default {
         this.popTitle = '修改派车单',
         // console.log(this.info);
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
+        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
         this.form.tmsOrderPickup.id = this.info.id
-        // this.form.tmsDriver = this.setObject(this.form.tmsDriver,this.info)
-      } else {
+        this.form.tmsTruck.truckUnit = '辆'
+      }
+      else if(this.isDbclick) {
+        this.popTitle = '修改派车单',
+        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
+        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
+        this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
+        this.form.tmsOrderPickup.id = this.info.id
+        this.form.tmsTruck.truckUnit = '辆'
+      }
+      else {
         this.popTitle = '提货派车单',
-        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
         this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-
+        this.form.tmsTruck.truckUnit = '辆'
       }
     }
   },
@@ -343,8 +357,6 @@ export default {
       this.loading = true
       return fetchGetPickUp().then(data => {
         this.pickupBatchNumber = data.data
-        // this.form.tmsOrderPickup.pickupBatchNumber = data
-
         this.loading = false
       })
     },
@@ -352,9 +364,7 @@ export default {
     setSender(item, type){
       type = type ? 'customRece' : 'tmsCustomer'
       if(item){
-        // this.form[type].customerId = item.customerId || ''
         this.form[type].customerType = type === 'tmsCustomer' ? 1 : 2
-        // this.form[type].customerType = type
         this.form[type].customerName = item.customerName
         this.form[type].customerMobile = item.customerMobile
         this.form[type].detailedAddress = item.detailedAddress
@@ -369,14 +379,16 @@ export default {
     //司机姓名
     getdriverName (item, city) {
       if(item){
+        console.log(item);
         this.form.tmsDriver.driverName = item.driverName
+        this.form.tmsDriver.driverMobile = item.driverMobile
       } else {
       }
     },
     //司机姓名
     getdriverMobile (item, city) {
       if(item){
-        this.form.tmsDriver.driverMobile = item.driverMobile
+        // this.form.tmsDriver.driverMobile = item.driverMobile
       } else {
       }
     },

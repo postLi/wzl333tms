@@ -168,7 +168,7 @@ export default {
       }
   }
 }
-  .customer-manager .tab-content .staff_searchinfo .el-form-item:nth-of-type(5){
+  .customer-manager .tab-content .staff_searchinfo .el-form-item.staff_searchinfo--btn{
     margin-top: 10px;
   }
 </style>

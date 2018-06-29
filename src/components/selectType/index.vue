@@ -130,8 +130,8 @@ export default {
       })
     },
     change (item) {
-      this.$emit('input', this.val)
       this.$emit('change', item)
+      this.$emit('input', this.val)
     }
   }
 }

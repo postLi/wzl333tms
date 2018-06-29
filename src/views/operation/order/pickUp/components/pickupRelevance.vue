@@ -25,7 +25,7 @@
             border
             @row-click="clickDetails"
             @selection-change="getSelection"
-            height="110"
+            height="160"
             tooltip-effect="dark"
             :default-sort = "{prop: 'id', order: 'ascending'}"
             style="width: 100%">
@@ -60,12 +60,10 @@
 
           <el-form :inline="true"  class="order_bottom" :label-width="formLabelWidth" :rules="rules" :model="getMentInfo" >
             <el-form-item label="运单号" prop="shipSn">
-              <!--<el-input v-model="formInline.shipSn"></el-input>-->
-              <querySelect valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
+              <querySelect :searchFn="search" valuekey="shipSn" :param="{shipFromOrgid: otherinfo.orgid}" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
             </el-form-item>
             <el-form-item label="货号" prop="shipGoodsSn">
-              <!--<el-input v-model="formInline.shipGoodsSn"></el-input>-->
-              <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
+              <querySelect :searchFn="search" :param="{shipFromOrgid: otherinfo.orgid}" valuekey="shipGoodsSn" search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
             </el-form-item>
             <el-form-item label="本单提货费" >
               <el-input v-model="formInline.pickupFee" v-numberOnly></el-input>
@@ -113,17 +111,16 @@
     data() {
       let hasOne = false
       let validateShipNum = (rule,value,callback) =>{
-        if(this.formInline.shipSn ==='' && this.formInline.shipSn ===''){
+        if(this.formInline.shipSn ==='' && this.formInline.shipGoodsSn ===''){
           hasOne = false
+        } else {
+          hasOne = true
         }
-        if(!value.length && !hasOne){
+        if(!hasOne){
+          console.log(value, hasOne, this.formInline.shipSn, this.formInline.shipGoodsSn)
           callback(new Error('运单号或货号必填其中一项'))
         }
-        // else if(!value.length){
-        //   callback(new Error('运单号或货号必填其中一项1'))
-        // }
         else{
-          hasOne = true
           callback()
         }
 
@@ -133,10 +130,10 @@
         selected: [],
         rules:{
           shipSn:[
-            { validator:validateShipNum, trigger: 'blur' }
+            { validator:validateShipNum, trigger: ['blur','change'] }
           ],
           shipGoodsSn:[
-            { validator:validateShipNum, trigger: 'blur' }
+            { validator:validateShipNum, trigger: ['blur','change']}
           ]
         },
         formLabelWidth:'90',
@@ -204,6 +201,9 @@
 
     },
     methods: {
+      search (item) {
+        return item.pickupBatchNumber ? false : true
+      },
       fetchFindByShipSnOrGoodSn() {
         this.loading = true
         return getFindShipByid(this.dotInfo.id).then(data => {
@@ -217,12 +217,14 @@
       },
       getShipSn(order){
         if(order){
+          console.log('getShipSn', order)
           this.formInline.shipGoodsSn = order.shipGoodsSn
           this.sendId.shipId = order.id
         }
       },
       getShipGoodsSn(order){
         if(order){
+          console.log('getShipGoodsSn', order)
           this.formInline.shipSn = order.shipSn
           this.sendId.shipId = order.id
         }
@@ -235,7 +237,11 @@
         }
       },
       reset(){
-        this.formInline = ''
+
+        this.formInline.shipSn = ''
+        this.formInline.shipGoodsSn = ''
+        this.formInline.pickupFee = ''
+        // this.formInline = ''
       },
 
       submitForm(formName) {
@@ -259,6 +265,8 @@
                 message: '添加成功~',
                 type: 'success'
               })
+              // delete this.sendId.pickupId
+              delete this.sendId.shipId
               this.fetchData()
               this.reset()
             }).catch(err => {
@@ -270,7 +278,6 @@
         });
       },
       removeList(){
-        console.log(this.selected.length)
         if(!this.selected.length){
           this.$message({
             message: '请选择要操作的列表项~',
@@ -278,22 +285,32 @@
           })
           return false
         }else{
-          // let data =
-          let promiseObj = putRremoveShip(this.sendId.pickupId,this.sendId.shipId)
-        //  putRremoveShip
-
-          promiseObj.then(res => {
-            this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.fetchData()
-
-              }
-            });
-          }).catch(err => {
-            this.loading = false
-          })
+          if(this.selected.length>1){
+            this.$message({
+              message: '每次只能选择单条数据~',
+              type: 'warning'
+            })
+            return false
+          }
+          else{
+            let _this = this
+            // _this.sendId.pickupId=this.selected[0].id
+            // _this.sendId.shipId=this.selected[0].shipId
+            console.log(this.selected[0].id);
+            console.log(this.selected[0].shipId);
+            let promiseObj = putRremoveShip(this.selected[0].id,this.selected[0].shipId)
+            promiseObj.then(res => {
+              this.loading = false
+              this.$alert('操作成功', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.fetchData()
+                }
+              });
+            }).catch(err => {
+              this.loading = false
+            })
+          }
         }
       },
       clickDetails(row, event, column){
@@ -310,8 +327,8 @@
   .pick-maintain .pickpopDepMain{
     top: 29%;
     bottom: auto;
-    min-width: 550px;
-    max-width:  550px;
+    min-width: 580px;
+    max-width:  580px;
     /*min-height: 450px;*/
     /*max-height:  100%;*/
 
@@ -321,19 +338,20 @@
     box-sizing: border-box;
     .el-form--inline .el-form-item{
       margin-right: -8px;
-      /*margin-bottom: 15px;*/
+      margin-bottom: 5px;
     }
     .el-input{
       width: 90%;
 
     }
     .order_bottom{
-      margin-top: 10px;
+      padding-top: 5px;
       .el-form-item{
-        margin-right: 10px;
+        margin-right: 0;
+        margin-bottom: 0
       }
       .el-input{
-        width: 100px;
+        width: 125px;
 
       }
     }
@@ -343,6 +361,7 @@
 
     }
   }
+
   .pick_center{
     text-align: center;
     padding-top: 80px;

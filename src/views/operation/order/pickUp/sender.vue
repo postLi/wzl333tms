@@ -242,9 +242,9 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
-    <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" ></PickupMain>
+    <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" :dotInfo="selectInfo"></PickupMain>
     <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
 
   </div>
@@ -299,6 +299,7 @@ export default {
       releMaintainisible:false,
       isModify: false,
       isDepMain: false,
+      isDbclick: false,
       selectInfo: {},
       // 选中的行
       selected: [],
@@ -354,15 +355,17 @@ export default {
           return false
       }
       switch (type) {
-          // 添加客户
+          // 新增
           case 'add':
               this.isModify = false
+              this.isDbclick = false
               this.selectInfo = {}
               this.openAddCustomer()
               break;
-          // 修改客户信息
+          // 修改
           case 'modify':
               this.isModify = true
+              this.isDbclick = false
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
@@ -485,9 +488,10 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event){
-      // this.selectInfo = row
-      // this.isModify = false
-      // this.openAddCustomer()
+      this.selectInfo = row
+      this.isModify = false
+      this.isDbclick = true
+      this.openAddCustomer()
     }
   }
 }

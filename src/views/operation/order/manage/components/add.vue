@@ -148,30 +148,30 @@
 
             <td>
               <el-form-item label="代收款">
-                <el-input v-model="form.tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="代收款手续费">
-                <el-input v-model="form.tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <SelectType v-model="form.tmsOrderPre.orderPayWayName" type="ship_pay_way" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" placeholder="请选择" />
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="运费">
-                <el-input v-model="form.tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="声明价值">
-                <el-input v-model="form.tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -255,13 +255,6 @@ export default {
         callback(new Error('请输入正确的联系号码~'))
       }
     }
-    const validateCargoName = (rule,value,callback) => {
-      if(value == ''){
-        callback(new Error('发货人不能为空1113'))
-      }else {
-        callback(new Error('发货人不能为空111'))
-      }
-    }
     const validatePickupNum = function (rule, value, callback) {
       if(REGEX.ONLY_NUMBER.test(value)){
         callback()
@@ -284,7 +277,7 @@ export default {
     return {
       rules:{
         "tmsOrderPre.orderToCityCode": [
-          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change']}
+          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur']}
         ],
         "customSend.customerName": [
           {required: true,validator: this.validateIsEmpty('发货人不能为空'), trigger: 'change'}
@@ -348,7 +341,6 @@ export default {
       form: {
 
         customSend:{
-          //customerId
           // 发货人
           // customerId,
           customerUnit:'',
@@ -358,7 +350,6 @@ export default {
           customerType:1
         },
         customRece:{
-          // customerId,
           customerUnit:'',
           customerName:'',
           customerMobile:'',//

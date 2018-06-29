@@ -63,18 +63,15 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
-                    <!--<template slot-scope="scope">
-                      <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-                    <!--</template>-->
                     <el-input
-                      v-model="formModel.loadTime"
+                      :value="formModel.loadTime | parseTime('{y}/{m}/{d}')"
                       maxlength="15"
                       clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
                     <el-input
-                      v-model="formModel.requireArrivedTime"
+                      :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')"
                       maxlength="15"
                       clearable disabled
                     >
@@ -164,10 +161,8 @@
                   </ul>
                 </el-form>
               </div>
-              <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <!--<el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">{{popTitle}}</el-button>-->
 
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出清单</el-button>
@@ -443,7 +438,7 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled v-model="formModel.departureTime"></el-input>，到达时间为<el-input size="mini" disabled v-model="formModel.planArrivedTime"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}/{m}/{d}')" ></el-input>，到达时间为<el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}/{m}/{d}')"></el-input>。
 
 
                     </el-form-item>

@@ -5,11 +5,11 @@
         <!--isDepMain-->
         <div class="depmain-div">
           <el-form :inline="true" :model="getMentInfo" :label-width="formLabelWidth" ref="ruleForm" :rules="rules">
-            <div class="pick_center">是否生成托运单？</div>
-            <div class="pick_input_Main" >
+            <div class="_pick_center">是否生成托运单？</div>
+            <div class="_pick_input_Main" >
 
-              <el-form-item label="生成票数">
-                <el-input v-model="getMentInfo.dictNum" placeholder="请输入内容" @click="validNum"></el-input>
+              <el-form-item label="生成票数" prop="dictNum">
+                <el-input v-model.number="getMentInfo.dictNum" placeholder="请输入内容"  ></el-input>
               </el-form-item>
 
             </div>
@@ -18,7 +18,7 @@
       </template>
       <div slot="footer" class="dialog-footer-frame" >
         <el-button type="primary" @click="submitForm('ruleForm')">生成</el-button>
-        <el-button @click="closeMe">不生成</el-button>
+        <el-button @click="pickFinish('ruleForm')">提货完成</el-button>
       </div>
 
     </PopFrame>
@@ -29,7 +29,7 @@
 <script>
     import { REGEX } from '@/utils/validate'
     import PopFrame from '@/components/PopFrame/index'
-    import { getSelectDictInfo,postDict,deletePerManage,putDict } from '@/api/company/groupManage'
+    import { putUpdatePickkupStatus } from '@/api/operation/pickup'
     export default {
       components: {
         PopFrame
@@ -47,21 +47,21 @@
         createrId: [Object,Number,String]
       },
       data() {
-        const validatePickupNum = function (rule, value, callback) {
-          if(REGEX.ONLY_NUMBER.test(value) || !value.length){
+        const validatePickupNum = function(rule, value, callback) {
+          if(value > 10){
+            callback(new Error('最多可生成10票'))
+          }
+          else if(value < 1) {
+            callback(new Error('最少可生成1票'))
+          } else {
             callback()
-          }
-          if(value.length>50){
-            callback(new Error('最多可生成50票'))
-          }
-          else {
-            callback(new Error('只能输入数字'))
           }
         }
         return {
           rules:{
-            dictName:[
-              {validator:validatePickupNum,trigger:'blur'}
+            dictNum:[
+              {pattern: REGEX.ONLY_NUMBER, trigger:'blur', message: '只能输入1-10的整数'},
+              {validator: validatePickupNum, trigger:'blur'}
             ]
           },
           formLabelWidth:'90',
@@ -72,7 +72,7 @@
           getMentInfo:
             {
               dictNum:1,
-              id:''
+              pickupId:''
             }
           ,
           //首行
@@ -97,7 +97,7 @@
           }
         },
         dotInfo (newVal) {
-          // this.getMentInfo = this.dotInfo
+          this.getMentInfo.pickupId = this.dotInfo.id
         },
         popVisible (newVal) {
           // console.log('popVisible:', newVal)
@@ -107,27 +107,13 @@
         }
       },
       mounted() {
-        this.getSelectDict(this.createrId)
       },
       methods: {
-        validNum(){
-
+        validNum(item){
+          console.log(item)
         },
-        getSelectDict(orgId) {
-          //
-          // this.loading = true
-          // getSelectDictInfo(this.createrId).then(res => {
-          //   this.loading = false
-          //   this.getMentInfo = res
-          // })
-
-        },
-        getAddDate() {
-          // this.loading = true
-          // return postDict(this.createrId , this.dictName).then(res => {
-          //   this.loading = false
-          //   this.dictName = ''
-          // })
+        reset() {
+          this.getMentInfo.dictNum = 1
 
         },
         closeMe (done) {
@@ -137,36 +123,54 @@
           }
         },
         submitForm(ruleForm) {
+          this.reset()
           this.$refs[ruleForm].validate((valid) => {
             if (valid) {
-              // this.loading = true
-              // this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
-              // let data = this.form
-              // let promiseObj
-              // // 判断操作，调用对应的函数
-              // if(this.isModify){
-              //   promiseObj = putUpdatePickup(data)
-              // } else {
-              //   promiseObj = postAddPickup(data)
-              // }
-              //
-              // promiseObj.then(res => {
-              //   this.loading = false
-              //   this.$alert('操作成功', '提示', {
-              //     confirmButtonText: '确定',
-              //     callback: action => {
-              //       this.closeMe()
-              //       this.$emit('success')
-              //     }
-              //   });
-              // }).catch(err => {
-              //   this.loading = false
-              // })
+
+              this.loading = true
+              let promiseObj = putUpdatePickkupStatus(this.getMentInfo.pickupId)
+              promiseObj.then(res => {
+                this.loading = false
+                this.$alert('操作成功', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.closeMe()
+                    this.$emit('success')
+                    this.$router.push('/operation/order/createOrder?batchid=' + this.getMentInfo.pickupId + '&ordernum=' + this.getMentInfo.dictNum)
+                  }
+                });
+              }).catch(err => {
+                this.loading = false
+              })
             } else {
               return false;
             }
           });
         },
+      //  pickFinish
+        pickFinish(ruleForm) {
+          this.reset()
+          this.$refs[ruleForm].validate((valid) => {
+            if (valid) {
+              this.loading = true
+              let promiseObj = putUpdatePickkupStatus(this.getMentInfo.pickupId)
+              promiseObj.then(res => {
+                this.loading = false
+                this.$alert('操作成功', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.closeMe()
+                    this.$emit('success')
+                  }
+                });
+              }).catch(err => {
+                this.loading = false
+              })
+            } else {
+              return false;
+            }
+          });
+        }
       }
     }
 </script>
@@ -175,24 +179,38 @@
   .dep-maintain .pickpopDepMain{
     top: 29%;
     bottom: auto;
-    min-width: 390px;
-    max-width:  390px;
-
+    min-width: 486px;
+    max-width:  486px;
+    min-height: 230px;
+    max-height: 230px;
   }
   .dep-maintain .pickRelationPop-content{
     padding: 20px 20px 0;
     box-sizing: border-box;
 
   }
-.pick_center{
-  text-align: center;
-  padding-top: 80px;
-  font-size: 16px;
+._pick_center{
+  padding-left: 100px;
+  margin-top: 38px;
+  font-size: 14px;
 }
-  .pick_input_Main{
-    padding-top: 60px;
+  ._pick_input_Main{
     text-align: center;
     font-size: 14px;
-
+    padding-top: 10px;
+    .el-form-item{
+      margin-bottom: 0;
+      .el-form-item__label{
+        line-height: 24px;
+      }
+      .el-form-item__content{
+        .el-input{
+          .el-input__inner{
+            height: 24px;
+            line-height: 24px;
+          }
+        }
+      }
+    }
   }
 </style>

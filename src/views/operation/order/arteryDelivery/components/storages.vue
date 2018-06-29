@@ -64,7 +64,7 @@
                   </el-form-item>
                   <el-form-item label="配载日期:">
                     <el-input
-                      v-model="formModel.loadTime"
+                      :value="formModel.loadTime | parseTime('{y}/{m}/{d}')"
                       maxlength="15"
                       clearable disabled>
                     </el-input>
@@ -75,9 +75,9 @@
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
                     <el-input
-                      v-model="formModel.requireArrivedTime"
                       maxlength="15"
                       clearable disabled
+                      :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')"
                     >
                     </el-input>
                   </el-form-item>
@@ -422,7 +422,7 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled v-model="formModel.departureTime"></el-input>，到达时间为<el-input size="mini" disabled v-model="formModel.planArrivedTime"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}/{m}/{d}')"></el-input>，到达时间为<el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}/{m}/{d}')"></el-input>。
 
 
                     </el-form-item>
