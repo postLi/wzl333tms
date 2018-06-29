@@ -78,7 +78,7 @@
             sortable
             >
             <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
             </template>
           </el-table-column>
           <!--<el-table-column-->
@@ -91,13 +91,13 @@
           <el-table-column
             sortable
             prop="dirverName"
-            width="110"
+            width="130"
             label="司机名称">
           </el-table-column>
           <el-table-column
             prop="dirverMobile"
             label="司机电话"
-            width="110"
+            width="130"
             sortable
             >
           </el-table-column>
@@ -243,11 +243,13 @@
           >
           </el-table-column>
           <el-table-column
-            prop="DateTimeFormat"
             label="配载时间"
-            width="110"
+            width="160"
             sortable
           >
+            <template slot-scope="scope">
+              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="username"
@@ -266,7 +268,7 @@
           <el-table-column
             prop="remark"
             label="备注"
-            width="80"
+            width="150"
             sortable
           >
           </el-table-column>

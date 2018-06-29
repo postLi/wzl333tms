@@ -246,11 +246,13 @@
           >
           </el-table-column>
           <el-table-column
-            prop="loadTime"
             label="配载时间"
-            width="110"
+            width="160"
             sortable
           >
+            <template slot-scope="scope">
+              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="userName"
@@ -269,7 +271,7 @@
           <el-table-column
             prop="remark"
             label="备注"
-            width="80"
+            width="150"
             sortable
           >
           </el-table-column>

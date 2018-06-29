@@ -31,7 +31,7 @@
       <el-form-item label="发站:">
           <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
-      <el-form-item label="发车批次:" class="art_marginTop">
+      <el-form-item label="发车批次:">
           <el-input
               v-model="searchForm.batchNo"
               maxlength="15"
