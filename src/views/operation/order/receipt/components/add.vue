@@ -220,16 +220,16 @@ export default {
           let promiseObj
           promiseObj = putUpdateReceipt(data)
           promiseObj.then(res=>{
-            this.$alert('保存成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.loading = false
-                this.closeMe()
-                this.$emit('success')
-              }
-            })
+            this.$message({
+                message: '保存成功~',
+                type: 'success'
+                
+              })
+              this.closeMe()
+              this.$emit('success')
           }).catch(res => {
-            alert(res)
+            this.$message.warning(res.text)
+            this.closeMe()
           })
         }else{
           return false

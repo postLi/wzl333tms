@@ -219,13 +219,13 @@ export default {
       this.form.num = this.dotInfo.length
       let total = 0
       this.dotInfo.map(el => {
-        total += el.shipArrivepayFee
+        total += el.shipArrivepayFee ? el.shipArrivepayFee : 0
       })
       this.form.shipArrivepayFee = total
 
       total = 0
       this.dotInfo.map(el => {
-        total += el.agencyFund
+        total += el.agencyFund ? el.agencyFund : 0
       })
       this.form.agencyFund = total
     },
@@ -301,14 +301,21 @@ export default {
           }
           promiseObj.then(res=>{
               console.log(res);
-              this.$alert('保存成功', '提示', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-                    this.loading = false
-                    this.closeMe()
-                    this.$emit('success')
-                  }
-                })
+              this.$message({
+                message: '签收成功~',
+                type: 'success'
+                
+              })
+              this.closeMe()
+              this.$emit('success')
+              // this.$alert('保存成功', '提示', {
+                //   confirmButtonText: '确定',
+                //   callback: action => {
+                //     this.loading = false
+                //     this.closeMe()
+                //     this.$emit('success')
+                //   }
+                // })
             }).catch(res => {
                 this.loading = false
                 this.$message.warning(res.text)

@@ -605,6 +605,7 @@ export default {
                     message: '已放货成功~',
                     type: 'success'
                   })
+                  // fetchData()
                   return false
                 }) 
               }

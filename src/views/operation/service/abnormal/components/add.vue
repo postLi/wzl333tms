@@ -4,10 +4,13 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
-          <el-form-item label="运单号" prop="shipSn" class="label">
+          <!-- <el-form-item label="运单号" prop="shipSn" class="label">
             <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
-          </el-form-item>
-          
+          </el-form-item> -->
+          <el-form-item label="运单号" prop="shipSn">
+              <!--<el-input v-model="formInline.shipSn"></el-input>-->
+              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false"/>
+            </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
             <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
@@ -55,13 +58,13 @@
           <el-form-item label="异常类型" prop="abnormalType" class="label">
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
-          <el-form-item label="异常件数" prop="abnormalAmount" >
+          <el-form-item label="异常件数" v-numberOnly prop="abnormalAmount" >
             <el-input v-model="form.abnormalAmount" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="处理网点" prop="orgName" class="label">
             <SelectTree v-model="form.orgName" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
-          <el-form-item label="异常金额" prop="registerFee" >
+          <el-form-item label="异常金额" v-number-only:point prop="registerFee" >
             <el-input v-model="form.registerFee" maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="责任网点" prop="dutyOrgName" >
@@ -129,12 +132,14 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 import {objectMerge2} from '@/utils/index'
+import querySelect from '@/components/querySelect/index'
 export default {
   components: {
     popRight,
     Upload,
     SelectTree,
-    SelectType
+    SelectType,
+    querySelect
   },
   props: {
     popVisible: {
@@ -198,13 +203,13 @@ export default {
         callback(new Error('只能输入数字'))
       }
     }
-    const validateshipSn = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('请输入运单号'))
-      }else {
-        callback()
-      }
-    }
+    // const validateshipSn = function(rule, value, callback) {
+    //   if (value === '' || value === null || !value || value === undefined) {
+    //     callback(new Error('请输入运单号'))
+    //   }else {
+    //     callback()
+    //   }
+    // }
     return {
       form: {
         "abnormalAmount": "",
@@ -219,15 +224,22 @@ export default {
         "disposeOpinion": "",
         "orgName": "",
         "disposePicture": "",
-        "disposeResult": "",
+        "disposeResult": "228",
         "disposeTime": "",
         "disposeName": "",
         "dutyOrgName": "",
         "orgId": "",
         "registerFee": "",
         "registerName": "",
-        "shipId": ""
+        "shipId": "",
+        shipSn: '',
+        shipGoodsSn:'',
+        createTime:'',
+        cargoName:'',
+        cargoPack:'',
+        cargoAmount:'',
       },
+      
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
@@ -253,7 +265,8 @@ export default {
           { required: true, message: '必填', trigger: 'blur' }
         ],
         shipSn: [
-          { required: true, trigger: 'blur', validator: validateshipSn}
+          // { required: true, trigger: 'blur', validator: validateshipSn}
+          { required: true, message: '请输入运单号', trigger: 'change' }
         ]
       },
       // fileList2:[],
@@ -395,6 +408,24 @@ export default {
     getOrgid (id) {
       this.form.orgid = id
     },
+    // getShipSn(data){
+        // if(data){
+          // this.formInline.shipGoodsSn = order.shipGoodsSn
+          // this.sendId.pickupId = order.id
+
+        //   this.form.shipSn = data.shipSn
+        //   this.form.shipGoodsSn = data.shipGoodsSn
+        //   this.form.createTime = data.createTime
+        //   this.form.cargoName = data.cargoName
+        //   this.form.cargoPack = data.cargoPack
+        //   this.form.cargoAmount = data.cargoAmount
+        // }else{
+        //   this.$message({
+        //       message: '查无此信息~',
+        //       type: 'warning'
+        //     })
+        // }
+      // },
     fetchShipInfo (type) {
       let oldVal = this.form[type]
       orderManage.getFindByShipSnOrGoodSn({
@@ -409,10 +440,10 @@ export default {
           this.form.cargoPack = data.cargoPack
           this.form.cargoAmount = data.cargoAmount
         }else{
-          this.$message({
-              message: '查无此信息~',
-              type: 'warning'
-            })
+          // this.$message({
+          //     message: '查无此信息~',
+          //     type: 'warning'
+          //   })
           this.form.shipSn = ''
           this.form.shipGoodsSn = ''
           this.form.createTime = ''
@@ -440,15 +471,16 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            });
-          }).catch(err => {
+            this.$message({
+                message: '保存成功~',
+                type: 'success'
+              })
+              this.closeMe()
+              this.$emit('success')
+          }).catch(res => {
             this.loading = false
+             this.$message.warning(res.text)
+              this.closeMe()
           })
         } else {
           return false;

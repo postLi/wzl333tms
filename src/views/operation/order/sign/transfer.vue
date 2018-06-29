@@ -642,8 +642,9 @@ export default {
           switch (type) {
               //签收
             case 'pick':
-              let ids = this.selected
-           
+              let ids = this.selected.filter(el=>{
+                return el.signStatus !== 227
+              })
               if(ids.length > 1 ){
                /*  this.searchQuery.vo.repertoryId = ids.map(el => {
                   return el.repertoryId
@@ -655,12 +656,16 @@ export default {
                 this.isDelivery = true
                 this.isPick = false
                 this.openAddBatch()
-              }else{
+              }else if(ids.length){
                 this.repertoryId = this.selected[0]
                  this.isDelivery = true
                  this.isPick = false
-                 
                 this.openAddSign()
+              }else{
+                this.$message({
+                  message: '不可重复签收',
+                  type: 'warning'
+                })
               }
             break;
             case 'amend': 

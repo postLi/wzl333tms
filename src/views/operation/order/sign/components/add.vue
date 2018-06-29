@@ -233,10 +233,10 @@ export default {
         "repertoryId":'',
         "signTime":"",
         "signName":"",
-        "signCocumentTypeId":96,
+        "signCocumentTypeId":"96",
         "shipsignNameSn": "",
         "documentNum":"",
-        "signTypeId":99,
+        "signTypeId":"99",
         "remark":"",
         "signPic":""
       },
@@ -416,14 +416,20 @@ export default {
           }
           promiseObj.then(res=>{
             // console.log(res);
-            this.$alert('保存成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.loading = false
-                  this.closeMe()
-                  this.$emit('success')
-                }
+            this.$message({
+                message: '签收成功~',
+                type: 'success'
               })
+              this.closeMe()
+              this.$emit('success')
+            // this.$alert('保存成功', '提示', {
+              //   confirmButtonText: '确定',
+              //   callback: action => {
+              //     this.loading = false
+              //     this.closeMe()
+              //     this.$emit('success')
+              //   }
+              // })
           }).catch(res => {
             this.loading = false
               this.$message.warning(res.text)

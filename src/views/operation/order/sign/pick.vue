@@ -570,6 +570,7 @@ export default {
         },
         data() {
             return {
+              returnData:[],
               btnsize: 'mini',
               component: 'Send',
               selectInfo: {},
@@ -655,12 +656,12 @@ export default {
           switch (type) {
               //签收
             case 'pick':
-              let ids = this.selected
+              // let idss = this.selected
+               let ids = this.selected.filter(el=>{
+                return el.signStatus !== 227
+              })
               // console.log(ids.length)
               if(ids.length > 1 ){
-               /*  this.searchQuery.vo.repertoryId = ids.map(el => {
-                  return el.repertoryId
-                }) */
                 this.dotInfo = ids
                 // console.log(ids);
                 this.isModify = true
@@ -670,6 +671,11 @@ export default {
               }else if(ids.length){
                 this.repertoryId = this.selected[0]
                 this.openAddSign()
+              }else{
+                this.$message({
+                  message: '不可重复签收',
+                  type: 'warning'
+                })
               }
             break;
             case 'amend': 
