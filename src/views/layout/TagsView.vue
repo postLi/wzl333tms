@@ -86,6 +86,12 @@ export default {
         this.$store.dispatch('delVisitedViews', lastRoute)
       })
     })
+    // 关闭当前路由
+    let _this = this
+    this.eventBus.$on('closeCurrentView', (route) => {
+      console.log('closeCurrent:', _this.selectedTag)
+      _this.closeSelectedTag(_this.selectedTag)
+    })
   },
   methods: {
     generateTitle (title) {

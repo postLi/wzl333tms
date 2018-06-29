@@ -471,7 +471,8 @@ export default {
                   })
               }
               this.selectInfo = this.selected[0]
-              this.$router.push({path: '/operation/order/transferLoad/' + this.selectInfo.transferBatchNo, query: {
+              this.$router.push({path: '/operation/order/transferLoad', query: {
+                transferId: this.selectInfo.transferBatchNo,
                 tab: '中转' + this.selectInfo.transferBatchNo
               } })
               break;

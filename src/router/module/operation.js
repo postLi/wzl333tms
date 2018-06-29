@@ -9,9 +9,6 @@ export default {
   name: '运营管理',
   noDropdown: true,
   children: [{
-    path: '/operation/order/createOrder/:orderid?', hidden: true, icon: 'QQ', name: '查看运单', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '查看运单', noCache: false }
-  },
-  {
     path: '/operation/order/createOrder/', icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
   },
   {
@@ -54,7 +51,7 @@ export default {
     path: '/operation/order/transfer', icon: 'QQ', name: '中转管理', component: _import('operation/order/transfer/index'), meta: { role: ['admin'], title: '中转管理', noCache: true }
   },
   {
-    path: '/operation/order/transferLoad/:transferId?', icon: 'QQ', hidden: true, name: '中转外发', component: _import('operation/order/transferLoad/index'), meta: { role: ['admin'], title: '中转外发', noCache: true }
+    path: '/operation/order/transferLoad/', icon: 'QQ', hidden: true, name: '中转外发', component: _import('operation/order/transferLoad/index'), meta: { role: ['admin'], title: '中转外发', noCache: true }
   },
   {
     path: '/operation/order/pickClip', hidden: true, icon: 'QQ', name: '挑单夹', component: _import('operation/order/pickClip/index'), meta: { role: ['admin'], title: '挑单夹', noCache: true }

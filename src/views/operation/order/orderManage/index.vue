@@ -1,7 +1,7 @@
 <template>
   <div class="order-manager tab-wrapper">
     <div class="eltab clearfix">
-      <span @click="component = 'All'" class="tab-label" :class="{'active-tab': component.indexOf('All')!==-1}">全部订单</span>
+      <span @click="component = 'All'" class="tab-label" :class="{'active-tab': component.indexOf('All')!==-1}">全部运单</span>
       <span @click="component = 'History'" class="tab-label" :class="{'active-tab': component.indexOf('History')!==-1}">改单记录</span>
       <span @click="component = 'Dashboard'" class="tab-label" :class="{'active-tab': component.indexOf('Dashboard')!==-1}">草稿箱</span>
     </div>

@@ -400,8 +400,9 @@ export default {
   methods: {
     viewDetails (row) {
       this.$router.push({
-        path: '/operation/order/createOrder/' + row.id,
+        path: '/operation/order/createOrder',
         query: {
+          orderid: row.id,
           type: 'view',
           tab: '查看' + row.shipSn 
         }
@@ -460,8 +461,9 @@ export default {
               }
               this.selectInfo = this.selected[0]
               this.$router.push({
-                path: '/operation/order/createOrder/' + this.selectInfo.id,
+                path: '/operation/order/createOrder',
                 query: {
+                  orderid: this.selectInfo.id,
                   type: 'modify',
                   // tab: '修改' + this.selectInfo.shipSn 
                   tab: '改单'
@@ -476,68 +478,85 @@ export default {
                           type: 'warning'
                       })
                   }
-                  let deleteItem = this.selected[0].shipSn
-                  let id = this.selected[0].id
-
-                  this.$confirm('确定要删除 ' + deleteItem + ' 运单吗？', '提示', {
-                      confirmButtonText: '删除',
-                      cancelButtonText: '取消',
-                      type: 'warning'
-                  }).then(() => {
-                      orderManageApi.deleteOrderInfoById(id).then(res => {
-                          this.$message({
-                              type: 'success',
-                              message: '删除成功!'
-                          })
-                          this.fetchData()
-                      }).catch(err=>{
-                          this.$message({
-                              type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })  
-                      })
-                      
-                  }).catch(() => {
-                      this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                      })          
-                  })
+                  let deleteItem = this.selected.filter(el => el.shipStatus === 59)
+                  console.log('delete:', deleteItem)
+                  if(deleteItem.length === 0){
+                    this.$message({
+                      message: '只有已入库状态才能删除~',
+                      type: 'info'
+                    })
+                  } else {
+                    let id = this.deleteItem[0].id
+                    this.$confirm('确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？', '提示', {
+                        confirmButtonText: '删除',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        orderManageApi.deleteOrderInfoById(id).then(res => {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            })
+                            this.fetchData()
+                        }).catch(err=>{
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                            })  
+                        })
+                        
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        })          
+                    })
+                  }
               break;
           // 作废运单
           case 'cancel':
               if(this.selected.length > 1){
-                    this.$message({
-                        message: '每次只能操作单条数据~',
-                        type: 'warning'
+                this.$message({
+                  message: '每次只能操作单条数据~',
+                  type: 'warning'
+                })
+              }
+              // shipStatus 59 已入库
+              let cancelItem = this.selected.filter(el => el.shipStatus === 59)
+              if(cancelItem.length === 0){
+                this.$message({
+                  message: '只有已入库状态才能作废~',
+                  type: 'info'
+                })
+              } else {
+                let theid = cancelItem[0].id
+
+                this.$confirm('确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？', '提示', {
+                    confirmButtonText: '作废',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    orderManageApi.deleteCancleOrderById(theid).then(res => {
+                        this.$message({
+                            type: 'success',
+                            message: '作废成功!'
+                        })
+                        this.fetchData()
+                    }).catch(err=>{
+                        this.$message({
+                            type: 'info',
+                            message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                        })  
                     })
-                }
-                let cancelItem = this.selected[0].shipSn
-                let theid = this.selected[0].id
-              this.$confirm('确定要作废 ' + cancelItem + ' 运单吗？', '提示', {
-                      confirmButtonText: '作废',
-                      cancelButtonText: '取消',
-                      type: 'warning'
-                  }).then(() => {
-                      orderManageApi.deleteCancleOrderById(theid).then(res => {
-                          this.$message({
-                              type: 'success',
-                              message: '作废成功!'
-                          })
-                          this.fetchData()
-                      }).catch(err=>{
-                          this.$message({
-                              type: 'info',
-                              message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })  
-                      })
-                      
-                  }).catch(() => {
-                      this.$message({
-                          type: 'info',
-                          message: '已取消作废'
-                      })          
-                  })
+                    
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消作废'
+                    })          
+                })
+              }
+                
               break;
           // 导出数据
           case 'export':

@@ -1,5 +1,5 @@
 <template>
-  <div class="createOrder-main" v-loading="loading">
+  <div class="OrderDetail-main" v-loading="loading">
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <el-form :model="form" label-width="100px" :rules="rules2" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
@@ -817,11 +817,6 @@ export default {
         this.setShipFee()
       },
       immediate: true
-    },
-    '$route'(to, from){
-      if(to.path.indexOf('/operation/order/createOrder') !== -1){
-        this.initIndex()
-      }
     }
   },
   mounted () {
@@ -1464,7 +1459,7 @@ export default {
             } else {
               data.tmsOrderTransfer.createTime = new Date(data.tmsOrderTransfer.createTime).getTime()
               if(this.output.ismodify){
-                data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer ? this.orderData.tmsOrderTransfer.id : ''
+                data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer.id
               }
             }
             // 判断收发货人信息
@@ -1580,7 +1575,7 @@ export default {
 $bordercolor: #d4d4d4;
 $backgroundcolor: #cbe1f7;
 
-  .createOrder-main{
+  .OrderDetail-main{
     margin-left: 12px;
     margin-right: 12px;
     box-shadow: 0px 0px 10px 0px 

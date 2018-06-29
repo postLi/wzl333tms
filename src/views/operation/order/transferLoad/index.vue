@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     init () {
-      let transferId = this.$route.params.transferId
+      let transferId = this.$route.query.transferId
       this.reset()
       if(typeof transferId !== 'undefined'){
         // 表示进来修改

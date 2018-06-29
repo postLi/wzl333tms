@@ -15,6 +15,7 @@
           stripe
           border
           @row-click="clickDetails"
+          @row-dblclick="openAddOrder"
           @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
@@ -80,7 +81,7 @@ export default {
       ]),
       orgid () {
         console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgId || this.otherinfo.orgid
       }
   },
   mounted () {
@@ -125,9 +126,6 @@ export default {
         "width": "150",
         "slot": function(scope){
           return scope.row.transferBatchNo
-        },
-        'click': function(scope){
-          _this.openAddOrder(scope.row)
         }
       },{
         "label": "中转时间",
