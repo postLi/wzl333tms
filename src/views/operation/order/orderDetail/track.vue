@@ -2,18 +2,19 @@
   <div class="setpinfo_box">
     <h3 class="steptitle">物流信息</h3>
     <el-row class="stepItem_title">
-      <el-col :span="4" :offset="5">操作时间</el-col>
+      <el-col :span="5" >类型</el-col>
+      <el-col :span="4" >操作时间</el-col>
       <el-col :span="3">操作网点</el-col>
-      <el-col :span="2">操作人</el-col>
-      <el-col :span="3">操作信息</el-col>
+      <el-col :span="6">操作信息</el-col>
+      <el-col :span="6">操作明细</el-col>
     </el-row>
     <div class="stepinfo">
       <el-steps direction="vertical">
       <el-step v-for="(item, index) in trackDetail" :key="index" icon="el-icon-location">
         <template slot="description">
           <el-row class="stepItem">
-            <el-col :span="4">
-              <el-popover placement="right" width="50" trigger="hover" v-if="item.track_type===1?true:false">
+            <el-col :span="5">
+              <el-popover placement="right" width="50" trigger="hover" v-if="item.track_type===1">
                 <el-tooltip class="item" effect="dark" content="修改" placement="bottom">
                   <el-button type="text" icon="el-icon-edit-outline" @click="editItem(item)"></el-button>
                 </el-tooltip>
@@ -24,20 +25,20 @@
               </el-popover>
               <el-button size="mini" v-else>{{item.trackNode}}</el-button>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <p>{{item.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
             </el-col>
             <el-col :span="3">
               <p>{{item.orgName}}</p>
             </el-col>
-            <el-col :span="3">
-              <p>
-                <icon-svg icon-class="human" v-if="item.track_type===1" />
-                <i class="icon_blank" v-else></i> {{item.trackDetailed}}
-              </p>
+            <el-col :span="6">
+              <p>{{item.trackInfo}}</p>
             </el-col>
-            <el-col :span="8">
-              <p>{{item.operatorInfo}}</p>
+            <el-col :span="6">
+              <p>
+                <img class="track-human" src="../../../../assets/png/person-icon.png" v-if="item.trackDetailed" />
+                 {{item.trackDetailed}}
+              </p>
             </el-col>
           </el-row>
         </template>
@@ -54,8 +55,8 @@
           <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+        <el-form-item label="操作信息" prop="trackInfo">
+          <el-input v-model="formModel.trackInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
@@ -102,12 +103,37 @@ export default {
 </script>
 <style lang="scss">
 .setpinfo_box{
+  
   .steptitle{
     font-size: 14px;
     color: #333;
+    height: 34px;
   }
   .stepItem_title{
     color: #666;
+    padding-left: 34px;
+    height: 34px;
+    .el-col{
+      text-align: center;
+    }
+  }
+  .el-step__main{
+    padding-bottom: 10px;
+  }
+  .el-step__description{
+      padding-right: 0;
+      font-size: 14px;
+      color: #333;
+    }
+  .stepItem{
+    
+    .el-col>p{
+      min-width: 1px;
+      min-height: 1px;
+    }
+  }
+  .stepinfo-footer{
+    height: 83px;
   }
 }
 </style>

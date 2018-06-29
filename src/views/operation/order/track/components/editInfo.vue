@@ -63,7 +63,7 @@
       </div>
     </template>
     <div slot="footer" class="dialog-footer stepFrom" v-if="isFootEdit">
-      <el-form inline :model="formModel" :rules="ruleForm" ref="formModel" label-width="80px">
+      <el-form inline :model="formModel" size="mini" :rules="ruleForm" ref="formModel" label-width="80px">
         <el-form-item label="类型" prop="loadStatus">
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
