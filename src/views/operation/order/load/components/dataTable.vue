@@ -258,12 +258,11 @@ export default {
       if (this.isModify) {
         this.leftTable = this.orgData.left
         this.rightTable = this.orgData.right
-        console.log('----------修改')
         this.$emit('loadTable', this.rightTable)
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-          console.log('----------不修改')
           this.leftTable = data.data
+          this.$emit('loadTable', this.rightTable)
         })
       }
     },

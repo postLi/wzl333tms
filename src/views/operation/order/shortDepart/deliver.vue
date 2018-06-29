@@ -64,8 +64,8 @@
         </div>
       </div>
     </div>
-   <!-- 表格设置 -->
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchAllShortDepartList"  ></TableSetup>
+    <!-- 表格设置 -->
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchAllShortDepartList"></TableSetup>
   </div>
 </template>
 <script>
@@ -195,10 +195,10 @@ export default {
           break
       }
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
     clickDetails(row) {
@@ -250,12 +250,10 @@ export default {
       let data = {}
       this.$set(data, 'loadTypeId', 38) // 短驳
       this.$set(data, 'loadIds', [])
-      if (this.isDisBtn) {
+      if (this.isDisBtn) { // 批量操作
         this.selectedList.forEach((e, index) => {
           if (e.batchTypeId === type) { // 47-短驳发车 48-短驳中
-            data.loadIds.push(e.loadId)
-          } else {
-            this.isBatch = false
+            data.loadIds.push(e.loadId) // 将符合type的id选取
           }
         })
       } else {
@@ -268,12 +266,16 @@ export default {
         })
       }
       data.loadIds = data.loadIds.join(',')
+      if (!data.loadIds){ // 如果id为空，即请求状态不对，拦截请求
+        this.isBatch = false
+      }
       this.commonTruck = data
       data = {}
     },
-    truck() {
+    truck() { // 发车
       this.setData(47)
       if (this.isBatch) {
+        console.log('loadIds', this.commonTruck.loadIds)
         putTruckDepart(this.commonTruck).then(data => {
             if (data) {
               this.$message({ type: 'success', message: '发车成功！' })
@@ -289,7 +291,7 @@ export default {
       }
       this.clearData()
     },
-    chanelTruck() {
+    chanelTruck() { // 取消发车
       this.setData(48)
       if (this.isBatch) {
         putTruckChanel(this.commonTruck).then(data => {
@@ -307,7 +309,7 @@ export default {
       }
       this.clearData()
     },
-    chanelRepertory() {
+    chanelRepertory() { // 取消装车
       this.setData(47)
       if (this.isBatch) {
         putTruckLoad(this.commonTruck).then(data => {
@@ -325,7 +327,7 @@ export default {
       }
       this.clearData()
     },
-    edit() {
+    edit() { // 修改
       let batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
         this.$router.push({ path: '././load', query: { loadTypeId: 38, info: this.selectedData } })

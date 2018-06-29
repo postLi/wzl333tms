@@ -77,11 +77,11 @@ export default {
   },
   watch: {
     info(newVal) {
-      if (newVal) {
-        return newVal
-      }else {
-        return this.$options.data().baseInfo
-      }
+      // if (newVal) {
+      //   return newVal
+      // } else {
+      //   return this.$options.data().baseInfo
+      // }
     },
     truckInfo() {
       this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
@@ -97,7 +97,6 @@ export default {
             this.initChart()
           }
         })
-      } else {
       }
     }
   },
@@ -115,11 +114,8 @@ export default {
     },
     initChart() {
       this.initData()
-      this.$nextTick(() => {
-        this.initChartWeight()
-        this.initChartVolume()
-      })
-
+      this.initChartWeight()
+      this.initChartVolume()
     },
     initChartWeight() {
       let surweight = this.baseInfo.totalWeight - this.baseInfo.weight

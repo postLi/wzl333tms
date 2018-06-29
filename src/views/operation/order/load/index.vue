@@ -10,10 +10,11 @@
           <div class=" loadFrom clearfix">
             <el-form :model="formModel" :size="mini" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
               <div class="loadFrom-type">
-                <!-- <el-checkbox-group v-model="formModel.types">
+                <!-- <el-checkbox-group v-model="formModel.types" v-if="loadTypeId === 39">
                   <el-checkbox label="直送" name="types1"></el-checkbox>
                   <el-checkbox label="投车整保" name="types2"></el-checkbox>
                 </el-checkbox-group> -->
+                <el-checkbox v-if="loadTypeId === 39" v-model="isDirectDelivery" @change="changeDirect">直送</el-checkbox>
               </div>
               <!-- 基本信息 -->
               <el-row :gutter="4">
@@ -25,7 +26,7 @@
                     <el-input size="mini" v-model="formModel.shortFee" clearable></el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid">
-                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini">
+                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
                     </SelectTree>
                   </el-form-item>
                 </el-col>
@@ -256,6 +257,7 @@ export default {
       formModel: {
         orgid: ''
       },
+      isDirectDelivery: false,
       formFee: {},
       loadTruck: 'loadTruckOne',
       showRightTablePercent: false,
@@ -299,7 +301,7 @@ export default {
       batchTypeIdFinishTruck: 48,
       inited: false,
       formModelRules: {
-        arriveOrgid: [{ required: true, trigger: 'change', message: '非直送不能为空' }],
+        // arriveOrgid: [{ required: true, trigger: 'change', message: '非直送不能为空' }],
         apportionTypeName: [{ required: true, trigger: 'change', message: '必选' }],
         truckIdNumber: [{ required: true, trigger: 'change', validator: validateStringEight }],
         dirverName: [{ required: true, trigger: 'change', validator: validateStringTen }],
@@ -330,16 +332,16 @@ export default {
     orgid() {},
     loadTruckInfo() {
       let data = objectMerge2({}, this.formModel)
+      if (!data.truckLoad) {
+        this.$set(data, 'truckLoad', 0)
+      }
+      if (!data.truckVolume) {
+        this.$set(data, 'truckVolume', 0)
+      }
       return data
     },
     loadInfoPercent() {
-      let data = []
-      if (this.$route.query) {
-      data = Object.assign([], this.loadInfoPercentOrg)
-      } else {
-        data = []
-      }
-      console.log('data', data)
+      let data = Object.assign([], this.loadInfoPercentOrg)
       return data
     },
     loadTimeFormName() {
@@ -347,8 +349,6 @@ export default {
     },
     typeid() {
       return this.$route.params.loadTypeId
-      console.log('computed', this.typeid)
-      // console.log('获取router-typeId', this.$route.params.loadTypeId)
     }
   },
   components: {
@@ -616,6 +616,18 @@ export default {
         this.batchTypeIdFinishTruck = 48 // 配载并发车
         console.log('默认38', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
       }
+    },
+    changeDirect(newVal) { // true-直送 false-不直送
+      if (newVal) { // 如果直送就不用选择网点
+        this.formModel.arriveOrgid = ''
+      } else { // 不直送要判断网点
+        if (this.isEdit) { // 编辑配载信息时
+          this.formModel.arriveOrgid = this.orgData.orgid
+        } else { // 添加配载信息时
+          this.formModel.arriveOrgid = ''
+        }
+      }
+      console.log(newVal, this.formModel.arriveOrgid)
     },
     setData() { // 完成配载 ：处理数据格式。。。
       this.setLoadTypeId()

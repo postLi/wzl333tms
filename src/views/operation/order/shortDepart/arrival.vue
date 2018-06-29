@@ -72,7 +72,7 @@
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="getAllList"  ></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="getAllList"></TableSetup>
     </div>
   </div>
 </template>
@@ -202,13 +202,13 @@ export default {
     editTruck(row, column, cell, event) { // 双击单元格弹出详情页
       this.setInfo()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-    clickDetails(row) { //打勾勾 toggle
+    clickDetails(row) { //勾选列 toggle
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) { // 获取列表勾选项
@@ -230,18 +230,29 @@ export default {
       let data = {}
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'typeId', 49) // 49为短驳到车，54为干线到车
-      postConfirmToCar(data).then(data => {
-          this.$message({ type: 'success', message: '短驳到车操作成功' })
-          this.getAllList()
-          this.clearInfo()
-        })
-        .catch(error => {
-          this.$message({ type: 'error', message: '操作失败' })
-          this.clearInfo()
-        })
+      if (this.loadInfo.bathStatusName === '短驳中') {
+        postConfirmToCar(data).then(data => {
+            this.$message({ type: 'success', message: '短驳到车操作成功' })
+            this.getAllList()
+            this.clearInfo()
+          })
+          .catch(error => {
+            this.$message({ type: 'error', message: '操作失败' })
+            this.clearInfo()
+          })
+      } else {
+        this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
+        this.clearInfo()
+      }
+
     },
     repertory() { // 短驳入库-打开弹出框
-      this.setInfo()
+      if (this.loadInfo.bathStatusName === '短驳中' || this.loadInfo.bathStatusName === '已到车') {
+        this.setInfo()
+      } else {
+        this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳入库' })
+        this.clearInfo()
+      }
     },
     chanelTruck() { // 取消到车
       let data = {}

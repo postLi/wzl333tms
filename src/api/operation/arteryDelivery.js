@@ -6,8 +6,8 @@ import fetch from '../../utils/fetch'
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function postArtList(params) {
-  return fetch.post('/api-order/order/load/v1/list', params).then(res => {
-    return res.data || {}
+  return fetch.post('/api-order/order/load/v1/list/', params).then(res => {
+    return res.data || { list: [], totalCount: 0 }
   })
 }
 
@@ -18,8 +18,8 @@ export function postArtList(params) {
  * @returns {AxiosPromise<any>}
  */
 export function postSelectLoadMainInfoList(params) {
-  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList', params).then(res => {
-    return res.data || {}
+  return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', params).then(res => {
+    return res.data || { list: [], totalCount: 0 }
   })
 }
 
@@ -84,4 +84,10 @@ export function postCancelPut(id, loadTypeId) {
  */
 export function getBatchNoId(orgid, loadTypeId) {
   return fetch.get('/api-order/order/load/v1/getBatchNo/?orgId=' + orgid + '&loadTypeId=' + loadTypeId)
+}
+/**
+ * 取消送货
+ */
+export function putDeliveyLoad(data) {
+  return fetch.put('/api-order/order/load/v1/cancelLoadTruck/?loadTypeId=' + data.loadTypeId + '&loadIds=' + data.loadIds)
 }
