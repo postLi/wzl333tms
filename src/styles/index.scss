@@ -124,6 +124,14 @@ table{
   fill: currentColor;
   overflow: hidden;
 }
+/** png图标 **/
+.track-human{
+  background: url("./assets/png/person-icon.png") no-repeat;
+  display: inline-block;
+  width: 14px;
+  height: 16px;
+  vertical-align: middle;
+}
 // 弹窗大图样式
 .showPictureWrapper{
   width: auto;

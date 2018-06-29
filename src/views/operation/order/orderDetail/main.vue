@@ -421,12 +421,6 @@
 
     </div>
     </el-form>
-    <!-- 底部按钮操作部分 -->
-    <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
-    <!-- 弹窗 -->
-    <FeeDialog :dialogVisible.sync="dialogVisible" />
-    <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
-    <ManageRemarks :popVisible.sync="popVisible" />
   </div>
 </template>
 <script>
@@ -1101,7 +1095,6 @@ export default {
       // 3.2 有批次信息不可关联，提示并回退到提货管理(删除状态)
       // 3.3 无批次信息，提示并回退到提货管理
       // 4.1 正常的创建运单
-      this.loading = true
       this.reset()
       this.getBaseSetting().then(res => {
         console.log('base setting info:', res, this.$route)

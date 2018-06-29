@@ -520,5 +520,36 @@ export default {
     return fetch.post('/api-order/order/shipTrack/v1/findAll/' + shipId).then(res => {
       return res.data || []
     })
+  },
+  /**
+   * 新增跟踪信息
+   * @param {*} data 跟踪详情
+   * {
+  "createTime": "2018-06-29T10:22:40.054Z",
+  "id": 0,
+  "orgid": 0,
+  "shipId": 0,
+  "trackDetailed": "string",
+  "trackInfo": "string",
+  "trackNode": "string",
+  "trackType": 0
+}
+   */
+  postTrackinfo(data) {
+    return fetch.post('/api-order/order/shipTrack/v1/add', data)
+  },
+  /**
+   * 修改跟踪信息
+   * @param {*} data 同新增，多了 id 参数
+   */
+  putTrackinfo(data) {
+    return fetch.put('/api-order/order/shipTrack/v1/edit', data)
+  },
+  /**
+   * 删除指定的跟踪信息
+   * @param {*} trackId 跟踪信息id
+   */
+  deleteTrackinfo(trackId) {
+    return fetch.delete('/api-order/order/shipTrack/v1/deleteById/' + trackId)
   }
 }
