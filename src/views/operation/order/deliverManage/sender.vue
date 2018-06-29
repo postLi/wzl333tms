@@ -5,15 +5,17 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增送货</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('edit')">修改</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('cancelDeliver')" plain>取消送货</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('edit')">修改</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancelDeliver')" plain>取消送货</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deliverFinish')" plain>送货完成</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button> -->
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+        <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <el-table-column fixed sortable prop="id" label="序号" width="80">
@@ -58,35 +60,38 @@
         </div>
       </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
+    <!-- 批次详情 -->
+    <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" @sendInfoData="sendInfo">
+    </editInfo>
+    <!-- 表格设置弹出框 -->
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" />
+    <!-- 签收弹出框 -->
+    <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
   </div>
 </template>
 <script>
-// import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-// import { postArtList, postCancelLoad, postCancelPut } from '@/api/operation/arteryDelivery'
-// import { postSelectLoadMainInfoList } from '@/api/operation/arteryDepart'
 import { postSelectLoadMainInfoList, putDeliverLoad, putCompleteDelivery } from '@/api/operation/deliverManage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/storages'
+import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-
+import { objectMerge2 } from '@/utils/index'
+import SignFrom from './components/sign'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    editInfo,
+    SignFrom
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
     orgid() {
-      // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-      // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
@@ -104,13 +109,19 @@ export default {
       infoList: [],
       total: 0,
       trackId: '',
+      loadId: 0,
+      tablekey: 0,
+      dotInfo: {},
       //加载状态
       // loading: true,
       setupTableVisible: false,
-      AddCustomerVisible: false,
+      // AddCustomerVisible: false,
+      editInfoVisible: false,
+      signVisible: false,
       isModify: false,
       isBatch: false,
       selectInfo: {},
+      loadInfo: [],
       commonData: {},
       // 选中的行
       selected: [],
@@ -151,7 +162,11 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
-      this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
+      this.searchQuery.vo = objectMerge2({}, obj)
+      if (!this.searchQuery.vo.orgId) {
+        this.searchQuery.vo.orgId = this.otherinfo.orgid
+      }
+      console.log('sumit', this.searchQuery.vo)
       this.fetchAllData()
     },
     getSelection(selection) {
@@ -226,7 +241,7 @@ export default {
           type: 'warning'
         })
         return false
-      }else if (this.selected[0].batchTypeId !== 57){
+      } else if (this.selected[0].batchTypeId !== 57) {
         this.$message({ type: 'warning', message: '送货中状态才可以编辑' })
       } else if (this.selected.length === 1) {
         this.selectInfo = this.selected[0]
@@ -262,6 +277,11 @@ export default {
         this.$message({ type: 'warning', message: '送货中状态才可以取消送货' })
       }
     },
+    deliverDetail(row, column, cell, event) { // 双击单元格弹出详情页
+      this.loadInfo = objectMerge2([], row)
+      this.setInfo()
+      console.log(this.loadInfo)
+    },
     clearData() {
       this.isBatch = false
       this.commonTruck = {}
@@ -274,14 +294,38 @@ export default {
     closeSetupTable() {
       this.setupTableVisible = false
     },
-    openAddCustomer() {
-      this.AddCustomerVisible = true
-    },
-    closeAddCustomer() {
-      this.AddCustomerVisible = false
-    },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    closeMe() { // 关闭弹出框
+      this.editInfoVisible = false
+    },
+    closeSign() {
+      this.signVisible = false
+    },
+    setInfo() { // 打开弹出框
+      this.editInfoVisible = true
+      this.$refs.multipleTable.clearSelection()
+    },
+    clearInfo() { // 清空数据
+      this.editInfoVisible = false
+      this.$refs.multipleTable.clearSelection()
+    },
+    isSuccess(obj) {
+      if (obj) {
+        this.getAllList()
+      }
+    },
+    sendInfo(obj) { // 孙子-打开签收弹出框
+      // console.log('祖父',JSON.stringify(obj))
+      this.dotInfo = objectMerge2({}, obj)
+      this.$nextTick(() => {
+        this.signVisible = true
+      })
+    },
+    signMessage(obj) { // 孙子-获取签收弹出框信息
+      this.tablekey = Math.random()
+      this.closeMe()
     }
   }
 }

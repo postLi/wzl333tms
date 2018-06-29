@@ -7,13 +7,13 @@
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="批次详情" name="first">
-            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
+            <Detail :info="info" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight" @sendInfoData="sendInfo"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="tab_box animated fadeInRight">
               <div class="tab_box_item">
                 <el-row class="stepItem_title">
-                  <el-col :span="4" :offset="5"><b>操作时间</b></el-col>
+                  <el-col :span="5" :offset="5"><b>操作时间</b></el-col>
                   <el-col :span="3"><b>操作网点</b></el-col>
                   <el-col :span="2"><b>操作人</b></el-col>
                   <el-col :span="3"><b>操作信息</b></el-col>
@@ -34,7 +34,7 @@
                           </el-popover>
                           <el-button size="mini" v-else>{{item.loadStatus}}</el-button>
                         </el-col>
-                        <el-col :span="5">
+                        <el-col :span="6">
                           <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
                         </el-col>
                         <el-col :span="3">
@@ -62,13 +62,13 @@
         </el-tabs>
       </div>
     </template>
-    <div slot="footer" class="dialog-footer stepFrom" v-if="isFootEdit">
-      <el-form inline :model="formModel" size="mini" :rules="ruleForm" ref="formModel" label-width="80px">
+    <div slot="footer" class="stepFrom" v-if="isFootEdit">
+      <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
         <el-form-item label="类型" prop="loadStatus">
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker value-format="yyyy-MM-dd" v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
@@ -77,7 +77,7 @@
       </el-form>
       <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
     </div>
-    <div slot="footer" class="dialog-footer" v-else="isFootEdit">
+    <div slot="footer" class="" v-else="isFootEdit">
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -89,7 +89,6 @@ import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
-import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 export default {
   components: {
@@ -109,8 +108,8 @@ export default {
       default: 0
     },
     info: {
-      type: Object,
-      default: {}
+      type: Array,
+      default: () => {}
     }
   },
   data() {
@@ -126,7 +125,7 @@ export default {
         operatorTime: [{ required: true, trigger: 'blur', message: '不能为空' }],
         operatorInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
-      isShowBtn: true,
+      isShowBtn: false,
       isFootEdit: false,
       formModel: {
         addStatus: 1,
@@ -153,110 +152,97 @@ export default {
     if (this.popVisible) {
       this.getDetail()
     }
+    this.getSystemTime()
   },
   methods: {
-    getSystemTime() { // 获取系统时间
-      // if (!this.formModel.id) {
-      //   getSystemTime().then(data => {
-      //       this.formModel.operatorTime = Date.parse(new Date(data.trim()))
-      //     })
-      //     .catch(error => {
-      //       this.$message({ type: 'error', message: '获取系统时间失败' })
-      //     })
-      // }
+    getSystemTime() {
+      getSystemTime().then(data => {
+        if (data) {
+          this.formModel.operatorTime = new Date(data)
+        }
+      })
     },
-    submitForm(formName) { // 底部表单提交
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.formModel.id) {
-            this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.editTrack()
-            })
+            this.editTrack()
           } else {
-            this.$confirm('此操作将添加跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.addTrack()
-            })
+            this.addTrack()
           }
         }
       })
     },
     getDetail() {
       let id = this.id
-      return getLoadDetail(id).then(data => {
-        this.trackDetail = objectMerge2([], data)
+      getLoadDetail(id).then(data => {
+        this.trackDetail = Object.assign([], data)
       })
     },
-    closeMe(done) { // 关闭右边弹出框
+    closeMe(done) {
       this.$emit('update:popVisible', false);
       if (typeof done === 'function') {
         done()
       }
     },
-    deleteTrack(item) { // 删除一条跟踪信息
-      this.$confirm('此操作将删除本跟踪信息, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        return deleteTrack(item.id).then(data => {
-          this.$message({ type: 'success', message: '删除成功' })
-          this.getDetail()
-          this.resetForm()
-        })
-        .catch(error => {
-          this.$message({ type: 'success', message: '删除失败' })
-        })
+    deleteTrack(item) {
+      return deleteTrack(item.id).then(data => {
+        this.$message({ type: 'success', message: '删除成功' })
+        this.getDetail()
       })
     },
     editItem(item) {
-      this.formModel = objectMerge2({}, item)
+      this.resetForm()
+      this.formModel = Object.assign({}, item)
     },
-    editTrack() { // 修改跟踪信息
-      console.log('修改', this.formModel)
+    editTrack() { // 修改
       this.formModel.transferId = 0
-      return putUpdateTrack(this.formModel).then(data => {
+      putUpdateTrack(this.formModel).then(data => {
         this.$message({ type: 'success', message: '修改成功' })
         this.getDetail()
         this.resetForm()
       })
     },
-    addTrack() { // 添加跟踪信息
-      console.log('添加')
+    addTrack() { // 添加
       this.formModel.loadId = this.id
-      return postAddTrack(this.formModel).then(data => {
+      postAddTrack(this.formModel).then(data => {
+        console.log(this.formModel, 'MODE')
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
+        this.getSystemTime()
       })
     },
-    handleClick() { // 底部按钮区显示
+    handleClick() {
       if (this.activeName === 'second') {
         this.isFootEdit = true
-        this.getSystemTime()
       } else {
         this.isFootEdit = false
       }
     },
-    resetForm() { // 清空表单及验证
-      this.$nextTick(() => {
-        this.$refs['formModel'].resetFields()
-        this.formModel = this.$options.data().formModel
-        this.getSystemTime()
-      })
+    resetForm() {
+      this.$refs['formModel'].resetFields()
+      this.formModel = this.$options.data().formModel
+    },
+    isSuccess (obj) {
+      console.log(obj)
+      if (obj) {
+        this.closeMe()
+        // this.$router.push({path:'././shortDepart', query:{tableKey: Math.random()}})
+        this.$emit('isSuccess', obj)
+      }
+    },
+   sendInfo (obj) {
+      console.log('父',obj)
+      // this.signVisible = true
+       this.$emit('sendInfoData',obj)
     }
   }
 }
 
 </script>
 <style lang="scss">
+
 .icon_man {
   background-image: url(../../../../../assets/icom/human.svg);
   background-size: 24px;
@@ -291,9 +277,10 @@ export default {
 }
 
 .editInfoPop_content {
-  width: 100%;
+  width: 100%; 
   display: flex;
   flex-direction: column;
+  background-color: #fbfbfb;
 
   .el-tabs__header {
     position: fixed;
@@ -336,16 +323,35 @@ export default {
   }
 }
 
+// .stepFrom {
+//   .el-form--inline .el-form-item {
+//     margin-right: 0;
+//     float: left;
+//     display: inline-flex;
+//     flex-direction: column;
+//     flex-grow: 1;
+//     width:25%;
+//     .el-input {
+//       width: 150px;
+//       padding: 0;
+//       margin-left: -5px;
+//     }
+//     .el-button {
+//       margin-left: 10px;
+//     }
+//   }
+// }
 .stepFrom {
-  display: block;
-  width: 100%;
-  height: 100%;
+  background-color:#eee;
+  display:block;
+  width:100%;
+  height:100%;
   padding-top: 15px;
-  .el-form--inline .el-form-item {
-    margin-right: 0;
-    float: left;
-    display: flex;
-    width: 28%;
+  .el-form--inline .el-form-item{
+    margin-right:0;
+    float:left;
+    display:flex;
+    width:28%;
   }
   .el-date-editor.el-input,
   .el-date-editor.el-input__inner {
@@ -359,10 +365,10 @@ export default {
   .el-form-item__content {
     flex: 1;
   }
-  .el-button--primary {
+  .el-button--primary{
     position: absolute;
-    top: 23px;
-    right: 10px;
+    top:23px;
+    right:10px;
   }
 }
 

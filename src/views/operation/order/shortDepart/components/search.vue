@@ -128,7 +128,6 @@ export default {
 </script>
 <style lang="scss">
 .tab-content {
-
   .staff_searchinfo {
     padding: 15px 20px;
     border-bottom: 1px dashed #999;

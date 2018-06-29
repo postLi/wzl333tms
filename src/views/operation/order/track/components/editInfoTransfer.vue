@@ -15,7 +15,7 @@
                 <template slot="description">
                   <el-row class="stepItem">
                     <el-col :span="4">
-                      <el-popover placement="right" width="50" trigger="hover" v-if="item.addStatus===1?true:false">
+                      <el-popover placement="right" width="50" trigger="hover" v-if="item.addStatus===1">
                         <el-tooltip class="item" effect="dark" content="修改" placement="bottom">
                           <el-button type="text" icon="el-icon-edit-outline" @click="editItem(item)"></el-button>
                         </el-tooltip>
@@ -34,7 +34,7 @@
                     </el-col>
                     <el-col :span="3">
                       <p>
-                        <i class="icon_man" v-if="item.addStatus===1?true:false"></i>
+                        <i class="icon_man" v-if="item.addStatus===1"></i>
                         <i class="icon_blank" v-else></i> {{item.operatorUsername}}
                       </p>
                     </el-col>
