@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="popTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="setupTablePop">
+  <el-dialog :title="popTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
     <el-form ref="ruleForm" :model="repertorySetting" :rules="rules" class="colorpickerForm">
       <el-form-item class="colorpickerItem" prop="sectionOne">
         <b>超过：</b>
@@ -17,9 +17,9 @@
         <el-color-picker v-model.number="repertorySetting.sectionThreeColour" :predefine="predefineColors"></el-color-picker>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="closeMe">取 消</el-button>
+    <div slot="footer">
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button @click="closeMe">取 消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -75,6 +75,14 @@ export default {
       ]
     }
   },
+  computed: {
+    isShow: {
+      get() {
+        return this.popVisible
+      },
+      set() {}
+    }
+  },
   props: {
     popVisible: {
       type: Boolean,
@@ -85,7 +93,8 @@ export default {
     popVisible() {
       if (this.popVisible) {
         this.isShow = true
-        // this.getColor()
+      }else {
+        this.isShow = false
       }
     }
   },
@@ -145,19 +154,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
-.setupTablePop {
-  .el-dialog {
-    max-width: 546px;
-    min-width: 300px;
-  }
-  .transfer-footer {
-    line-height: 20px;
-    color: #666;
-    font-size: 12px;
-  }
-}
-
+<style lang="scss">
 .colorpickerItem {
   display: -webkit-flex;
   display: flex;

@@ -161,7 +161,7 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         if (data) {
-          this.formModel.operatorTime = data
+          this.formModel.operatorTime = new Date(data)
         }
       })
     },

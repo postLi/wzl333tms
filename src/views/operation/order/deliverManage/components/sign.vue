@@ -101,14 +101,6 @@ export default {
       }
     }
   },
-  computed: {
-    isShow: {
-      get() {
-        return this.popVisible
-      },
-      set() {}
-    }
-  },
   watch: {
     isDepMain() {},
     dotInfo(newVal) {

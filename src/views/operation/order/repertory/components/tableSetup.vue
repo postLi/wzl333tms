@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="表格设置" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="setupTablePop">
+  <el-dialog title="表格设置" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
     <el-transfer
       style="text-align: left; display: inline-block"
       v-model="value2"
@@ -18,9 +18,9 @@
       <div class="transfer-footer" slot="left-footer">双击，可快速左右切换。</div>
       <div class="transfer-footer" slot="right-footer">拖拽，可调整上下顺序。<br>列表最多只能显示50个字段。</div>
     </el-transfer>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="closeMe">取 消</el-button>
+    <div slot="footer">
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button @click="closeMe">取 消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -86,16 +86,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.setupTablePop{
-  .el-dialog{
-    max-width: 546px;
-    min-width: 300px;
-  }
-  .transfer-footer{
-    line-height: 20px;
-    color: #666;
-    font-size: 12px;
-  }
-}
-</style>

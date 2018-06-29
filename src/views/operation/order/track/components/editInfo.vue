@@ -135,7 +135,7 @@ export default {
         loadStatus: '',
         operatorInfo: '',
         operatorOrgid: 1,
-        operatorTime: '',
+        operatorTime: +new Date(),
         operatorUserid: 0
       }
     }
