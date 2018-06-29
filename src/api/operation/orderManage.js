@@ -473,5 +473,52 @@ export default {
    */
   putCargoSetting(data) {
     return fetch.put('/api-order/order/tmsorderfield/v1/', data).then(checkStatus)
+  },
+  /**
+   * 查看运单的修改日志
+   * @param {*} shipId 运单id
+   * {
+  "currentPage": 0,
+  "pageSize": 0,
+  "vo": {
+    "id": 0,
+    "newValue": "string",
+    "oldValue": "string",
+    "shipId": 0,
+    "updateContent": "string",
+    "updateTime": "2018-06-29T01:30:52.420Z",
+    "userId": 0,
+    "userName": "string"
+  }
+}
+   */
+  getShipLog(shipId) {
+    return fetch.post('/api-order/order/change/v1/', {
+      currentPage: 1,
+      pageSize: 100,
+      vo: {
+        shipId
+      }
+    }).then(res => {
+      return res.data || { list: [], total: 0 }
+    })
+  },
+  /**
+   * 查询运单的异常记录
+   * @param {*} shipId 运单id
+   */
+  getShipAbnormal(shipId) {
+    return fetch.get('/api-order/order/abnormal/v1/findAbnormaByShipId/' + shipId).then(res => {
+      return res.data || []
+    })
+  },
+  /**
+   * 查询运单的跟踪信息
+   * @param {*} shipId 运单id
+   */
+  getShipTrackinfo(shipId) {
+    return fetch.post('/api-order/order/shipTrack/v1/findAll/' + shipId).then(res => {
+      return res.data || []
+    })
   }
 }

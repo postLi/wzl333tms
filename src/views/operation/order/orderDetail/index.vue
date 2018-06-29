@@ -1,20 +1,20 @@
 <template>
-  <div class="orderinfo-manager" v-loading="loading">
-    <el-tabs type="border-card" value="one" :before-leave="canViewOther">
+  <div class="orderinfo-manager" v-loading="loading" >
+    <el-tabs type="border-card" :value="activeIndex" :before-leave="canViewOther" @tab-click="setTabShow">
       <el-tab-pane name="one" label="运单信息">
-        <orderdetail :orderdata="orderdata" :feeconfig="feeconfig" />
+        <orderdetail :orderdata="orderdata" />
       </el-tab-pane>
-      <el-tab-pane name="two" label="费用信息">
-        <fee orderid="output.orderid" />
-      </el-tab-pane>
+      <!-- <el-tab-pane name="two" label="费用信息">
+        <fee orderid="output.orderid" v-if="activeTab.two" />
+      </el-tab-pane> -->
       <el-tab-pane name="three" label="运单跟踪">
-        <ordertrack orderid="output.orderid" />
+        <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
-        <abnormal orderid="output.orderid" />
+        <abnormal v-if="activeTab.four" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="five" label="改单日志">
-        <log orderid="output.orderid" />
+        <log v-if="activeTab.five" :orderid="output.orderid" />
       </el-tab-pane>
   </el-tabs>
   </div>
@@ -33,7 +33,10 @@ import log from './log'
 export default {
   // 当作为弹窗时使用
   props: {
-    orderid: [String, Number]
+    orderid: {
+      type: [String, Number],
+      default: 'nonetms'
+    }
   },
   components: {
     orderdetail,
@@ -61,60 +64,50 @@ export default {
       canview: true,
       dataCache: {},
       orderdata: {},
-      feeconfig: {},
+      activeIndex:'one',
+      activeTab: {
+        "two": false,
+        "three": false,
+        "four": false,
+        "five": false
+      },
       output: {
         orderid: ''
       }
     }
   },
   methods: {
-    // 获取货物设置
-    getCargoSetting(){
-      if(this.dataCache['cargoSeting']){
-        return Promise.resolve(this.dataCache['cargoSeting'])
-      } else {
-        return orderManage.getCargoSetting(this.otherinfo.orgid).then(data => {
-          this.dataCache['cargoSeting'] = data
-          return data
-        })
-      }
-    },
-    // 获取基本设置信息
-    getBaseSetting(){
-      return this.getCargoSetting().then(data => {
-        this.feeconfig = data
-
-      })
-    },
     // 获取运单数据
     getOrderInfo(orderId){
       return orderManage.getOrderInfoById(orderId)
     },
+    setTabShow (tab){
+      this.activeTab[tab.name] = true
+    },
     init () {
       this.loading = true
 
-      this.getBaseSetting().then(res => {
-        let route = this.$route
-        // 是否可以点击查看其它tab页
-        this.canview = true
-        if(this.orderid){
-          // 在弹窗中访问
-          this.output.orderid = this.orderid
-          this.output.ispop = true
-        } else if(route.query.orderid){
-          // 在窗口访问
-          this.output.orderid = this.$route.query.orderid
-          this.output.iswindow = true
-        } else {
-          this.canview = false
-          
-          this.showError()
-          return false
-        }
-        this.initOrder()
-      }).catch(err => {
-        this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
-      })
+      let route = this.$route
+      // 是否可以点击查看其它tab页
+      this.canview = true
+
+      if(this.orderid !== 'nonetms'){
+        // 在弹窗中访问
+        this.output.orderid = this.orderid
+        this.output.ispop = true
+      } else {
+        // 在窗口访问
+        this.output.orderid = this.$route.query.orderid || ""
+        this.output.iswindow = true
+      }
+      // 如果没有运单id信息
+      if(!this.output.orderid) {
+        this.canview = false
+        this.showError()
+        return false
+      }
+      
+      this.initOrder()
     },
     showError() {
       this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
@@ -161,6 +154,12 @@ export default {
       .el-tabs__content{
         flex: 1;
         overflow: auto;
+      }
+      .el-tab-pane{
+        height: 100%;
+        &>div{
+          height: 100%;
+        }
       }
     }
     
