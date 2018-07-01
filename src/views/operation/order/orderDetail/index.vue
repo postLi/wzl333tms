@@ -1,8 +1,8 @@
 <template>
   <div class="orderinfo-manager" v-loading="loading" >
-    <el-tabs type="border-card" :value="activeIndex" :before-leave="canViewOther" @tab-click="setTabShow">
-      <el-tab-pane name="one" label="运单信息">
-        <orderdetail :orderdata="orderdata" />
+    <el-tabs type="border-card" v-model="activeIndex" :before-leave="canViewOther" @tab-click="setTabShow">
+      <el-tab-pane class="ordermaininfo" name="one" label="运单信息">
+        <orderdetail :orderid="orderid" :orderdata="orderdata" />
       </el-tab-pane>
       <!-- <el-tab-pane name="two" label="费用信息">
         <fee orderid="output.orderid" v-if="activeTab.two" />
@@ -35,7 +35,11 @@ export default {
   props: {
     orderid: {
       type: [String, Number],
-      default: 'nonetms'
+      default: ''
+    },
+    ispop: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -52,6 +56,11 @@ export default {
         if(!this.orderid){
           this.init()
         }
+      }
+    },
+    orderid(newVal){
+      if(newVal){
+        this.init()
       }
     }
   },
@@ -91,7 +100,7 @@ export default {
       // 是否可以点击查看其它tab页
       this.canview = true
 
-      if(this.orderid !== 'nonetms'){
+      if(this.ispop){
         // 在弹窗中访问
         this.output.orderid = this.orderid
         this.output.ispop = true
@@ -120,11 +129,12 @@ export default {
           if(this.output.iswindow){
             this.eventBus.$emit('closeCurrentView')
           } else {
-            this.$emit('close')
+            this.eventBus.$emit('hideOrderDetail')
           }
         })
     },
     initOrder () {
+      this.activeIndex = "one"
       this.getOrderInfo(this.output.orderid).then(res => {
         this.orderdata = res.data
         this.loading = false

@@ -1,6 +1,7 @@
 <template>
   <div class="setpinfo_box" v-loading="loading">
     <h3 class="steptitle">物流信息</h3>
+
     <el-row class="stepItem_title">
       <el-col :span="5" class="tracktype" >类型</el-col>
       <el-col :span="4" >操作时间</el-col>
@@ -17,8 +18,8 @@
             <el-col :span="5">
               <span class="typebox">{{item.trackNode}}</span>
               <template v-if="item.trackType===1">
-                <span @click="editItem(item)" class="modifybtn"></span>
-                <span @click="deleteTrack(item)" class="deletebtn"></span>
+                <span title="编辑" @click="editItem(item)" class="modifybtn"></span>
+                <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
               </template>
             </el-col>
             <el-col :span="4" class="textcenter">
@@ -61,7 +62,6 @@
           <el-button v-if="isModify" type="warning" @click="reset()" size="mini">取 消</el-button>
         </el-form-item>
       </el-form>
-      
     </div>
   </div>
 </template>
@@ -95,6 +95,16 @@ export default {
         "trackInfo": "",
         "trackNode": "",
         "trackType": ''
+      }
+    }
+  },
+  watch: {
+    orderid (newVal) {
+      if(newVal !== '') {
+        console.log('aaaa:', newVal)
+        this.init()
+      } else {
+        this.reset()
       }
     }
   },
@@ -155,25 +165,25 @@ export default {
     },
     // 提交跟踪信息
     submitForm() {
-      let data = objectMerge2({}, this.formModel)
-      let promObj
-      if(!this.isModify){
-        promObj = orderManage.postTrackinfo(data)
-      } else {
-        data.id = this.itemid
-        promObj = orderManage.putTrackinfo(data)
-      }
-      promObj.then(res => {
-        this.$message.success('操作成功')
-        this.reset()
-        this.getDetail()
-      }).catch(err => {
-        this.$message.error('操作失败，原因：' + err.text)
+      this.$refs['formModel'].validate((valid) => {
+        if (valid) {
+          let data = objectMerge2({}, this.formModel)
+          let promObj
+          if(!this.isModify){
+            promObj = orderManage.postTrackinfo(data)
+          } else {
+            data.id = this.itemid
+            promObj = orderManage.putTrackinfo(data)
+          }
+          promObj.then(res => {
+            this.$message.success('操作成功')
+            this.reset()
+            this.getDetail()
+          }).catch(err => {
+            this.$message.error('操作失败，原因：' + err.text)
+          })
+        }
       })
-    },
-    // 取消编辑
-    cancelForm(item) {
-      this.reset()
     },
     // 重置表单
     reset () {
@@ -210,10 +220,35 @@ export default {
 .setpinfo_box{
   display: flex;
   flex-direction: column;
-
+  /* 覆盖ele样式 */
   .el-form--inline .el-form-item{
     margin-bottom: 0;
   }
+  .el-step.is-vertical .el-step__head{
+    width: 18px;
+    position: relative;
+    top: 5px;
+  }
+  .el-step.is-vertical .el-step__line{
+    left: 8px;
+  }
+  .el-step__icon.is-text{
+    border-color: transparent;
+    border: 0;
+    width: 18px;
+    height: 18px;
+  }
+  .el-steps--vertical{
+    height: auto;
+  }
+  .el-step__main{
+    padding-bottom: 10px;
+  }
+  .el-step__description{
+      padding-right: 0;
+      font-size: 14px;
+      color: #333;
+    }
 
   .textcenter{
     text-align: center;
@@ -247,20 +282,7 @@ export default {
     &:hover{
     }
   }
-  .el-step.is-vertical .el-step__head{
-    width: 18px;
-    position: relative;
-    top: 5px;
-  }
-  .el-step.is-vertical .el-step__line{
-    left: 8px;
-  }
-  .el-step__icon.is-text{
-    border-color: transparent;
-    border: 0;
-    width: 18px;
-    height: 18px;
-  }
+  /* 鼠标划过样式 */
   .trackactive{
     .modifybtn, .deletebtn{
       display: inline-block;
@@ -298,19 +320,9 @@ export default {
       text-indent: 20px;
     }
   }
-  .el-steps--vertical{
-    height: auto;
-  }
-  .el-step__main{
-    padding-bottom: 10px;
-  }
-  .el-step__description{
-      padding-right: 0;
-      font-size: 14px;
-      color: #333;
-    }
+  
   .stepItem{
-    
+    /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
     .el-col>p{
       min-width: 1px;
       min-height: 1px;

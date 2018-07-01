@@ -137,10 +137,16 @@ table{
   width: auto;
   min-width: 100px;
   max-width: 80%;
+  max-height: 100%;
+
+  .el-message-box__content,.showPictureBox,.el-message-box__message,.el-message-box__message p{
+    max-height: 100%;
+  }
 
   .showPictureBox{
     img{
-      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
     }
   }
 }

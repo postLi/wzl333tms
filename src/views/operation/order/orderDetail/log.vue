@@ -45,6 +45,15 @@ export default {
       usersArr: []
     }
   },
+  watch: {
+    orderid (newVal) {
+      if(newVal !== '') {
+        this.fetchData()
+      } else {
+        this.usersArr = []
+      }
+    }
+  },
   mounted () {
     this.fetchData()
   },
