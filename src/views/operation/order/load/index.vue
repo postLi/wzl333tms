@@ -5,15 +5,11 @@
       <el-collapse v-model="loadTruck">
         <el-collapse-item name="loadTruckOne">
           <template slot="title">
-            车辆信息&nbsp; <b>{{loadTypeId===40?'送货':'发车'}}批次：{{truckMessage}} 合同编号：{{contractNo}}</b>
+            车辆信息&nbsp; <b>{{loadTypeId===40?'送货':'发车'}}批次：{{truckMessage}} <span v-if="loadTypeId===39">合同编号：{{contractNo}}</span></b>
           </template>
           <div class=" loadFrom clearfix">
             <el-form :model="formModel" :size="mini" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
               <div class="loadFrom-type">
-                <!-- <el-checkbox-group v-model="formModel.types" v-if="loadTypeId === 39">
-                  <el-checkbox label="直送" name="types1"></el-checkbox>
-                  <el-checkbox label="投车整保" name="types2"></el-checkbox>
-                </el-checkbox-group> -->
                 <el-checkbox v-if="loadTypeId === 39" v-model="isDirectDelivery" @change="changeDirect">直送</el-checkbox>
               </div>
               <!-- 基本信息 -->
@@ -173,10 +169,9 @@
       </el-collapse>
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
-        <!-- <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">清空并新增{{loadTypeId===38?'短驳':(loadTypeId===39?'干线':'送货')}}</el-button> -->
-        <el-button size="mini" icon="el-icon-goods" plain type="primary" @click="doAction('precent')">配载率</el-button>
-        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成配载</el-button>
-        <el-button size="mini" icon="el-icon-news" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '>完成并发车</el-button>
+        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('precent')">配载率</el-button>
+        <el-button size="mini" icon="el-icon-edit-outline" plain type="primary" @click="doAction('finish')">完成配载</el-button>
+        <el-button size="mini" icon="el-icon-circle-check-outline" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '>完成并发车</el-button>
       </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
@@ -808,7 +803,7 @@ export default {
       border: 1px solid #E0E0E0;
     }
     .el-collapse-item__header {
-      background-color: #E9F3FA;
+      // background-color: #E9F3FA;
       padding: 0 0 0 20px;
       height: 40px;
       line-height: 40px;

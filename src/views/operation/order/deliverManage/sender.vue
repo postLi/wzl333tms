@@ -16,42 +16,35 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
           </el-table-column>
-          <el-table-column fixed sortable prop="id" label="序号" width="80">
-          </el-table-column>
-          <el-table-column fixed sortable prop="batchNo" width="120" label="送货批次">
-          </el-table-column>
-          <el-table-column fixed sortable prop="batchTypeName" width="120" label="批次状态">
-          </el-table-column>
-          <el-table-column label="送货时间" width="160" sortable>
-            <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column label="完成时间" width="160" sortable>
-            <template slot-scope="scope">
-              {{ scope.row.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="truckIdNumber" width="110" sortable label="车牌号">
-          </el-table-column>
-          <el-table-column sortable prop="dirverName" width="110" label="司机名称">
-          </el-table-column>
-          <el-table-column prop="dirverMobile" label="司机电话" width="110" sortable>
-          </el-table-column>
-          <el-table-column prop="amountall" label="送货件数" width="120" sortable>
-          </el-table-column>
-          <el-table-column prop="weightall" label="送货重量" width="120" sortable>
-          </el-table-column>
-          <el-table-column prop="volumeall" label="送货体积" width="120" sortable>
-          </el-table-column>
-          <el-table-column prop="weightLoadRate" label="重量装载率" width="120" sortable>
-          </el-table-column>
-          <el-table-column prop="volumeLoadRate" label="体积装载率" width="120" sortable>
-          </el-table-column>
-          <el-table-column prop="remark" label="备注" width="150" sortable>
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              :prop="column.prop"
+              v-if="!column.slot"
+              :width="column.width">
+            </el-table-column>
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              v-else
+              :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }}
@@ -76,7 +69,7 @@ import TableSetup from './components/tableSetup'
 import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import SignFrom from './components/sign'
 export default {
   components: {
@@ -142,7 +135,94 @@ export default {
           truckIdNumber: '',
           dirverName: ''
         }
-      }
+      },
+      tableColumn: [
+        {
+          label: "ID",
+          prop: "id",
+          width: "110"
+        },
+        {
+          label: "送货批次",
+          prop: "batchNo",
+          width: "110"
+        },
+        {
+          label: "批次状态",
+          prop: "batchTypeName",
+          width: "120"
+        },
+        {
+          label: "车牌号",
+          prop: "truckIdNumber",
+          width: "120"
+        },
+        {
+          label: "司机",
+          prop: "dirverName",
+          width: "120"
+        },
+        {
+          label: "司机电话",
+          prop: "dirverMobile",
+          width: "120"
+        },
+        {
+          label: "送货时间",
+          prop: "departureTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "目的网点",
+          prop: "arriveOrgName",
+          width: "120"
+        },
+        {
+          label: "完成时间",
+          prop: "receivingTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "短驳费",
+          prop: "shortFee",
+          width: "120"
+        },
+        {
+          label: "送货件数",
+          prop: "amountall",
+          width: "120"
+        },
+        {
+          label: "送货重量",
+          prop: "weightall",
+          width: "120"
+        },
+        {
+          label: "送货体积",
+          prop: "volumeall",
+          width: "120"
+        },
+        {
+          label: "重量装载率",
+          prop: "weightLoadRate",
+          width: "120"
+        },{
+          label: "体积装载率",
+          prop: "volumeLoadRate",
+          width: "120"
+        },
+        {
+          label: "备注",
+          prop: "remark",
+          width: "120"
+        }
+      ]
     }
   },
   methods: {

@@ -14,47 +14,36 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
-          <el-table-column fixed width="50" sortable type="selection">
+        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
+          <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="batchTypeName" label="批次状态">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverName" label="司机">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
-          </el-table-column>
-          <el-table-column sortable width="155" prop="departureTime" label="短驳时间">
-            <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
-          </el-table-column>
-          <el-table-column sortable width="155" prop="receivingTime" label="接收时间">
-            <template slot-scope="scope">
-              {{ scope.row.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shortFee" label="短驳费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="loadAmountall" label="配载总件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="loadWeightall" label="配载总重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="loadVolumeall" label="配载总体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="weightLoadRate" label="重量装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="volumeLoadRate" label="体积装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="userName" label="短驳经办人">
-          </el-table-column>
-          <el-table-column sortable width="150" prop="remark" label="备注">
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              :prop="column.prop"
+              v-if="!column.slot"
+              :width="column.width">
+            </el-table-column>
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              v-else
+              :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -66,6 +55,8 @@
     </div>
     <!-- 表格设置 -->
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchAllShortDepartList"></TableSetup>
+    <!-- 在途跟踪 -->
+    <editInfo :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
   </div>
 </template>
 <script>
@@ -73,14 +64,16 @@ import { postAllshortDepartList, putTruckDepart, putTruckChanel, putTruckLoad } 
 import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime  } from '@/utils/index'
 import TableSetup from './components/tableSetup'
+import editInfo from './components/editInfo'
 export default {
   components: {
     Pager,
     SearchForm,
     postAllshortDepartList,
-    TableSetup
+    TableSetup,
+    editInfo
   },
   data() {
     return {
@@ -90,12 +83,15 @@ export default {
       selected: [],
       loading: true,
       selectedList: [],
+      loadInfo: [],
       isModify: false,
       isBatch: false,
       commonTruck: {},
+      loadId: 0,
       selectInfo: {},
       isDisBtn: true,
       selectedData: {},
+      editInfoVisible: false,
       dataList: [],
       searchQueryData: {
         pageSize: 100,
@@ -113,7 +109,94 @@ export default {
         batchNo: '',
         truckIdNumber: '',
         dirverName: ''
-      }
+      },
+      tableColumn: [
+        {
+          label: "发车批次",
+          prop: "batchNo",
+          width: "110"
+        },
+        {
+          label: "批次状态",
+          prop: "batchTypeName",
+          width: "120"
+        },
+        {
+          label: "车牌号",
+          prop: "truckIdNumber",
+          width: "120"
+        },
+        {
+          label: "司机",
+          prop: "dirverName",
+          width: "120"
+        },
+        {
+          label: "司机电话",
+          prop: "dirverMobile",
+          width: "120"
+        },
+        {
+          label: "短驳时间",
+          prop: "departureTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "目的网点",
+          prop: "arriveOrgName",
+          width: "120"
+        },
+        {
+          label: "接收时间",
+          prop: "receivingTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "短驳费",
+          prop: "shortFee",
+          width: "120"
+        },
+        {
+          label: "配载总件数",
+          prop: "loadAmountall",
+          width: "120"
+        },
+        {
+          label: "配载总重量",
+          prop: "loadWeightall",
+          width: "120"
+        },
+        {
+          label: "配载总体积",
+          prop: "loadVolumeall",
+          width: "120"
+        },
+        {
+          label: "重量装载率",
+          prop: "weightLoadRate",
+          width: "120"
+        },{
+          label: "体积装载率",
+          prop: "volumeLoadRate",
+          width: "120"
+        },
+        {
+          label: "短驳经办人",
+          prop: "userName",
+          width: "120"
+        },
+        {
+          label: "备注",
+          prop: "remark",
+          width: "120"
+        }
+      ]
     }
   },
   computed: {
@@ -129,6 +212,9 @@ export default {
     this.fetchAllShortDepartList()
   },
   methods: {
+    closeMe() { // 关闭弹出框
+      this.editInfoVisible = false
+    },
     getSearchParam(obj) {
       this.searchQuery = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.orgId) {
@@ -246,6 +332,15 @@ export default {
       this.selectedData = {}
       this.$refs.multipleTable.clearSelection()
     },
+    truckDetail(row) {
+      console.log(row)
+      this.loadId = row.id
+      this.loadInfo = objectMerge2([], row)
+      this.$nextTick(() => {
+        this.editInfoVisible = true
+        this.$refs.multipleTable.clearSelection()
+      })
+    },
     setData(type) {
       let data = {}
       this.$set(data, 'loadTypeId', 38) // 短驳
@@ -266,7 +361,7 @@ export default {
         })
       }
       data.loadIds = data.loadIds.join(',')
-      if (!data.loadIds){ // 如果id为空，即请求状态不对，拦截请求
+      if (!data.loadIds) { // 如果id为空，即请求状态不对，拦截请求
         this.isBatch = false
       }
       this.commonTruck = data
@@ -335,6 +430,11 @@ export default {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
       }
       this.clearData()
+    },
+    isSuccess(obj) {
+      if (obj) {
+        this.getAllList()
+      }
     }
   }
 }

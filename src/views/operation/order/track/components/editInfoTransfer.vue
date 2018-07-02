@@ -6,8 +6,8 @@
           <el-col :span="5" class="tracktype">类型</el-col>
           <el-col :span="4">操作时间</el-col>
           <el-col :span="3">操作网点</el-col>
+          <el-col :span="2">操作人</el-col>
           <el-col :span="6">操作信息</el-col>
-          <el-col :span="6">操作明细</el-col>
         </el-row>
         <div class="stepinfo">
           <el-steps direction="vertical">
@@ -28,14 +28,14 @@
                   <el-col :span="3" class="textcenter">
                     <p>{{item.orgName}}</p>
                   </el-col>
-                  <el-col :span="8">
-                    <p>{{item.operatorInfo}}</p>
-                  </el-col>
                   <el-col :span="4">
                     <p>
                       <i class="track-human" v-if="item.addStatus===1"></i>
                       <i class="icon_blank" v-else></i> {{item.operatorUsername}}
                     </p>
+                  </el-col>
+                  <el-col :span="8">
+                    <p>{{item.operatorInfo}}</p>
                   </el-col>
                 </el-row>
               </template>

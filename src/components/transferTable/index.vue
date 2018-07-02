@@ -2,12 +2,16 @@
   <div class="transferTable">
     <!-- 穿梭框 -->
     <div class="transferTable_header">
+      <transition name="el-zoom-in-bottom">
+        <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')"  plain class="transferTable_fresh clearfix"></el-button>
+      </transition>
       <div class="transferTable_header_btn_direction">
-        <el-button icon="el-icon-arrow-right" type="primary" circle :disabled="isShowLeft" size="mini" @click="doAction('showAllLeft')"></el-button>
-        <el-button icon="el-icon-arrow-left" type="primary" circle :disabled="isShowRight"  size="mini" @click="doAction('showAllRight')"></el-button>
-        <transition name="el-zoom-in-bottom">
-          <el-button icon="el-icon-menu" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')"></el-button>
-        </transition>
+        <el-tooltip effect="dark" content="向左侧拉伸" placement="top-end">
+          <el-button icon="el-icon-arrow-right" type="primary" circle :disabled="isShowLeft" size="mini" @click="doAction('showAllLeft')" plain></el-button>
+        </el-tooltip>
+        <el-tooltip effect="dark" content="向右侧拉伸" placement="top-start">
+          <el-button icon="el-icon-arrow-left" type="primary" circle :disabled="isShowRight" size="mini" @click="doAction('showAllRight')" plain></el-button>
+        </el-tooltip>
       </div>
     </div>
     <div class="transferTable_content">
@@ -75,6 +79,11 @@ export default {
     width: 100%;
     text-align: center;
     position: relative;
+    .transferTable_fresh {
+      position: absolute;
+      left: 10px;
+      top: 0px;
+    }
   }
   .transferTable_content {
     display: flex;
@@ -87,7 +96,7 @@ export default {
     .transferTable_content_table {
       width: 50%;
       height: 100%;
-      transition:0.5s;
+      transition: 0.5s;
       .el-table {
         table {
           width: 100%;

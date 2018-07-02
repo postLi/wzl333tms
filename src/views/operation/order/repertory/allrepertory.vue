@@ -15,7 +15,7 @@
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="shipSn" label="运单号">
           </el-table-column>
-          <el-table-column sortable width="120" prop="shipStatusName" label="运单状态">
+          <el-table-column sortable width="120" prop="shipStatusName" label="运单状态" :fixed="false">
           </el-table-column>
           <el-table-column sortable width="120" prop="shipIdentifying" label="运单标识">
           </el-table-column>
@@ -184,6 +184,7 @@ export default {
   },
   data() {
     return {
+      isFix: false,
       total: 0,
       tablekey: '',
       btnsize: 'mini',
@@ -213,9 +214,6 @@ export default {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
-  created () {
-     // this.initTable()
-  },
   mounted() {
     this.initTable()
     this.searchQuery.vo.orgid = this.otherinfo.orgid
@@ -226,16 +224,28 @@ export default {
       this.eventBus.$emit('showOrderDetail', order.id)
     },
     initTable() {
-      let str = this.$refs.multipleTable.$children
-      str.forEach((e, index) => {
-        if (e.columnConfig && index > 0) {
-          if (e.columnConfig.label === '运单标识') {
-            e.columnConfig.fixed = true
-            console.log(index, e.columnConfig.label, e.columnConfig.fixed)
-            // this.tablekey = Math.random()
+      // let strArray = this.$refs.multipleTable.$children
+      let strArray = this.$refs.multipleTable.columns
+      console.log(this.$refs.multipleTable)
+      this.$refs.multipleTable.columns.forEach((e, index) => {
+        if ( index > 0) {
+          if (e.label === '运单状态') {
+             e.fixed = true
+            console.log(index, e.label, e.fixed)
           }
         }
       })
+      // this.$refs.multipleTable.$children[2].fixed = true
+      // str.forEach((e, index) => {
+      //   if (e.columnConfig && index > 0) {
+      //     if (e.columnConfig.label === '运单状态') {
+      //       // this.isFix = true
+      //       e.columnConfig.fixed = true
+      //       console.log(index, e.columnConfig.label, e.columnConfig.fixed)
+      //       console.log(e.columnConfig)
+      //     }
+      //   }
+      // })
       console.log('-----------------')
     },
     tableRowColor({ row, rowIndex }) {

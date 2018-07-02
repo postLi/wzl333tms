@@ -6,48 +6,55 @@
           <tr>
             <th>到达网点</th>
             <td>
-              <!-- {{info.currentOrgName}} -->
               <el-input v-model="info.endOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
             <td>
-              <!-- {{info.dirverName}} -->
               <el-input v-model="info.dirverName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机电话</th>
             <td>
-              <!-- {{info.dirverMobile}} -->
               <el-input v-model="info.dirverMobile" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
             <th>车牌号码</th>
             <td>
-              <!-- {{info.truckIdNumber}} -->
               <el-input v-model="info.truckIdNumber" :size="btnsize" disabled></el-input>
             </td>
             <th>短驳费</th>
             <td>
-              {{info.shortFee}}
-              <!-- <el-input v-model="info.shortFee" :size="btnsize"></el-input> -->
+              <el-input v-model="info.shortFee" :size="btnsize"></el-input>
             </td>
             <th>分摊方式</th>
-            <td>{{info.truckLoad}}</td>
+            <td>
+            <!-- {{info.truckLoad}} -->
+           <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled></el-input>
+          </td>
           </tr>
           <tr>
             <th>可载体积</th>
-            <td>{{info.truckVolume}}</td>
+            <td>
+            <el-input v-model="info.truckVolume" :size="btnsize" disabled></el-input>
+          </td>
             <th>短驳日期</th>
-            <!-- <td>{{info.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</td> -->
-            <td>{{info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</td>
+            <td>
+            <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+          </td>
             <th>要求到达时间</th>
-            <td>{{info.receivingTime}}</td>
+            <td>
+             <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+          </td>
           </tr>
           <tr>
             <th>可载重量</th>
-            <td>{{info.actualVolumeall}}</td>
+            <td>
+            <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+          </td>
             <th>备注</th>
-            <td colspan="3">{{info.remark}}</td>
+            <td colspan="3">
+              <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -59,7 +66,7 @@
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
       </div>
-      <div class="info_tab">
+      <div class="detailinfo_tab">
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
@@ -344,24 +351,27 @@ export default {
   padding: 0 10px;
   position: relative;
 
-
   .detailTable_info {
-    border: 1px solid #eee;
+    border-bottom: 2px dotted #ddd;
     background-color: #fff;
+    margin-top:5px;
     table {
       width: 100%;
       tbody {
         tr {
           font-size: 14px;
           th {
-            background-color: #eaf0ff;
             color: #999;
-            width: 16.6%;
-            height: 36px;
+            width: 12%;
+            height: 34px;
           }
           td {
-            width: 16.6%;
+            width: 21.3%;
             padding: 0 3px;
+            .el-input.is-disabled .el-input__inner{
+              background-color: #fff;
+              color:#999;
+            }
           }
         }
       }
@@ -383,9 +393,9 @@ export default {
         margin-left: 10px;
       }
     }
-    .info_tab {
+    .detailinfo_tab {
       width: 100%;
-      height: calc(100vh - 430px);
+      height: calc(100vh - 440px);
       flex-grow: 1;
     }
   }

@@ -6,7 +6,7 @@
           <tr>
             <th>到达网点</th>
             <td>
-              <el-input v-model="info.currentOrgName" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.arriveOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
             <td>
@@ -20,29 +20,40 @@
           <tr>
             <th>车牌号码</th>
             <td>
-             <el-input v-model="info.truckIdNumber" :size="btnsize" disabled></el-input>
-           </td>
+              <el-input v-model="info.truckIdNumber" :size="btnsize" disabled></el-input>
+            </td>
             <th>短驳费</th>
             <td>
-              {{info.shortFee}}
-              <!-- <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input> -->
+              <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input>
             </td>
             <th>分摊方式</th>
-            <td>{{info.dirverName}}</td>
+            <td>
+              <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled></el-input>
+            </td>
           </tr>
           <tr>
             <th>可载体积</th>
-            <td>{{info.actualVolumeall}}</td>
+            <td>
+              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+            </td>
             <th>短驳日期</th>
-            <td>{{info.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</td>
+            <td>
+              <el-input :value="info.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+            </td>
             <th>要求到达时间</th>
-            <td>{{info.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</td>
+            <td>
+              <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+            </td>
           </tr>
           <tr>
             <th>可载重量</th>
-            <td>{{info.actualVolumeall}}</td>
+            <td>
+              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+            </td>
             <th>备注</th>
-            <td colspan="3">{{info.remark}}</td>
+            <td colspan="3">
+              <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -161,7 +172,7 @@ export default {
   padding: 0 10px;
   position: relative;
   .detailTable_info {
-    border: 1px solid #eee;
+    border-bottom: 2px dotted #eee;
     background-color: #fff;
     table {
       width: 100%;
@@ -169,14 +180,17 @@ export default {
         tr {
           font-size: 14px;
           th {
-           background-color: #eaf0ff;
-            color:#999;
-            width: 16.6%;
+            color: #999;
+            width: 12%;
             height: 36px;
           }
           td {
-            width: 16.6%;
+            width: 21.3%;
             padding: 0 3px;
+            .el-input.is-disabled .el-input__inner{
+              background-color: #fff;
+              color:#999;
+            }
           }
         }
       }

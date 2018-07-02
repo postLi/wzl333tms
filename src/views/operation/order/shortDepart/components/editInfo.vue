@@ -5,7 +5,7 @@
         批次号： {{info.batchNo}}
       </div>
       <div class="editInfoPop_content">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
           <el-tab-pane label="批次详情" name="first">
             <Detail :info="info" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight"></Detail>
           </el-tab-pane>
@@ -15,8 +15,8 @@
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
                 <el-col :span="3">操作网点</el-col>
+                <el-col :span="2">操作人</el-col>
                 <el-col :span="6">操作信息</el-col>
-                <el-col :span="6">操作明细</el-col>
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
@@ -37,14 +37,14 @@
                         <el-col :span="3" class="textcenter">
                           <p>{{item.orgName}}</p>
                         </el-col>
-                        <el-col :span="8">
-                          <p>{{item.operatorInfo}}</p>
-                        </el-col>
                         <el-col :span="4">
                           <p>
                             <i class="track-human" v-if="item.addStatus===1"></i>
                             <i class="icon_blank" v-else></i> {{item.operatorUsername}}
                           </p>
+                        </el-col>
+                        <el-col :span="8">
+                          <p>{{item.operatorInfo}}</p>
                         </el-col>
                       </el-row>
                     </template>
@@ -103,9 +103,9 @@ export default {
       type: Boolean,
       default: false
     },
-    orgid: {
-      required: true
-    },
+    // orgid: {
+    //   required: true
+    // },
     id: {
       type: Number,
       default: 0
@@ -285,10 +285,10 @@ export default {
 </script>
 <style lang="scss">
 .icon_blank {
-  background-size: 24px;
+  background-size: 15px;
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 16px;
   vertical-align: middle;
 }
 

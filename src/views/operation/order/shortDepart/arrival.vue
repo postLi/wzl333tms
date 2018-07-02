@@ -14,8 +14,47 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="infoList" stripe border @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
-          <el-table-column fixed width="50" sortable type="selection">
+        <el-table ref="multipleTable" 
+        @cell-dblclick="editTruck" 
+        @row-click="clickDetails" 
+        @selection-change="getSelection" 
+        height="100%" 
+        style="width:100%;" 
+        tooltip-effect="dark" 
+        :data="infoList" stripe border 
+        :default-sort="{prop: 'id', order: 'ascending'}" 
+        :key="tableKey">
+        <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
+          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              :prop="column.prop"
+              v-if="!column.slot"
+              :width="column.width">
+            </el-table-column>
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              v-else
+              :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+
+         <!--  <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="batchNo" label="发货批次">
           </el-table-column>
@@ -60,7 +99,7 @@
           <el-table-column sortable width="120" prop="username" label="短驳经办人">
           </el-table-column>
           <el-table-column sortable width="150" prop="remark" label="备注">
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -114,7 +153,103 @@ export default {
           loadTypeId: 38,
           orgid: 0
         }
-      }
+      },
+      tableColumn: [{
+          label: "发货批次",
+          prop: "batchNo",
+          width: "110"
+        },
+        {
+          label: "批次状态",
+          prop: "bathStatusName",
+          width: "120"
+        },
+        {
+          label: "车牌号",
+          prop: "truckIdNumber",
+          width: "120"
+        },
+        {
+          label: "司机",
+          prop: "dirverName",
+          width: "120"
+        },
+        {
+          label: "司机电话",
+          prop: "dirverMobile",
+          width: "120"
+        },
+        {
+          label: "短驳时间",
+          prop: "departureTime",
+          width: "180"
+        },
+        {
+          label: "目的网点",
+          prop: "endOrgName",
+          width: "120"
+        },
+        {
+          label: "接收时间",
+          prop: "receivingTime",
+          width: "180"
+        },
+        {
+          label: "短驳费",
+          prop: "shortFee",
+          width: "120"
+        },
+        {
+          label: "实到件数",
+          prop: "actualAmount",
+          width: "120"
+        },
+        {
+          label: "实到重量",
+          prop: "actualWeight",
+          width: "120"
+        },
+        {
+          label: "实到体积",
+          prop: "actualVolume",
+          width: "120"
+        },
+        {
+          label: "配载总件数",
+          prop: "amountall",
+          width: "120"
+        },
+        {
+          label: "配载总重量",
+          prop: "weightall",
+          width: "120"
+        },
+        {
+          label: "配载总体积",
+          prop: "volumeall",
+          width: "120"
+        },
+        {
+          label: "重量装载率",
+          prop: "weightRate",
+          width: "120"
+        },
+        {
+          label: "体积装载率",
+          prop: "volumeRate",
+          width: "120"
+        },
+        {
+          label: "短驳经办人",
+          prop: "username",
+          width: "120"
+        },
+        {
+          label: "备注",
+          prop: "remark",
+          width: "120"
+        }
+      ]
     }
   },
   computed: {

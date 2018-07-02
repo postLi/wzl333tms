@@ -569,7 +569,7 @@ export default {
 .tab-content{
     height: calc(100% - 33px);
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     position: relative;
 
     .tab_info{

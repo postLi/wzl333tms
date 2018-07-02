@@ -7,7 +7,7 @@
       <div class="storagesInfoPop_content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-card">
           <el-tab-pane label="批次详情" name="first">
-            <div class="tab-content" v-loading="loading">
+            <div class="tabs-content" v-loading="loading">
               <div class="info_form">
                 <!--<el-form-item label="网点">-->
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
@@ -58,7 +58,7 @@
                   </el-form-item>
                 </el-form>
               </div>
-              <div class="info_table">
+              <div class="infos_table">
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">
                   <ul>
                     <li>
@@ -138,8 +138,8 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
-                <div class="info_tab">
-                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="200px" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+                <div class="infos_tab">
+                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="height: 100%">
                     <el-table-column fixed sortable type="selection" width="50">
                     </el-table-column>
                     <!--<el-table-column-->
@@ -199,7 +199,7 @@
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
                 <el-col :span="3">操作网点</el-col>
-                <el-col :span="6">操作信息</el-col>
+                <el-col :span="2">操作信息</el-col>
                 <el-col :span="6">操作明细</el-col>
               </el-row>
               <div class="stepinfo">
@@ -221,14 +221,14 @@
                         <el-col :span="3" class="textcenter">
                           <p>{{item.orgName}}</p>
                         </el-col>
-                        <el-col :span="8">
-                          <p>{{item.operatorInfo}}</p>
-                        </el-col>
                         <el-col :span="4">
                           <p>
                             <i class="track-human" v-if="item.addStatus===1"></i>
                             <i class="icon_blank" v-else></i> {{item.operatorUsername}}
                           </p>
+                        </el-col>
+                        <el-col :span="8">
+                          <p>{{item.operatorInfo}}</p>
                         </el-col>
                       </el-row>
                     </template>
@@ -857,14 +857,14 @@ export default {
 
 </script>
 <style lang="scss">
-.tab-content {
-  height: calc(100% - 33px);
+.tabs-content {
+  // height: calc(100% - 33px);
   display: flex;
   flex-direction: column;
   position: relative;
 
   .tab_info {
-    /*padding:10px 30px 40px;*/
+    padding:0 10px;
     height: 100%;
     flex-grow: 1;
     display: flex;
@@ -886,9 +886,9 @@ export default {
       /*margin-left: 400px;*/
       /*}*/
     }
-    .info_tab {
+    .infos_tab {
       width: 100%;
-      height: calc(100% - 68px);
+      height: calc(100vh - 570px);
       flex-grow: 1;
 
       .el-table {
@@ -908,7 +908,7 @@ export default {
       }
     }
   }
-  .info_tab_footer {
+  .infos_tab_footer {
     padding-left: 20px;
     background: #eee;
     height: 40px;
@@ -939,10 +939,10 @@ export default {
       }
     }
   }
-  .info_table {
+  .infos_table {
+    padding: 0 10px 10px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
-    padding: 0 30px;
     ul {
       /*border-top: 2px dotted #bbbbbb;
         margin: 10px -10px -10px 0;
@@ -1113,9 +1113,9 @@ export default {
   }
 }
 
-.tab-content {
+.tabs-content {
   .info_form,
-  .info_table {
+  .infos_table {
     .el-input.is-disabled .el-input__inner {
       background-color: #fff;
       /*border-color: #e4e7ed;*/
@@ -1150,19 +1150,11 @@ export default {
   z-index: 34;
 }
 
-// .icon_man {
-//   background-image: url(../../../../../assets/icom/human.svg);
-//   background-size: 24px;
-//   display: inline-block;
-//   width: 24px;
-//   height: 24px;
-//   vertical-align: middle;
-// }
 .icon_blank {
-  background-size: 24px;
+  background-size: 15px;
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 16px;
   vertical-align: middle;
 }
 
