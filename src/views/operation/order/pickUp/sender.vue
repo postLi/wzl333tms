@@ -147,14 +147,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="toCityCode"
+            prop="toCityName"
             label="到达城市"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-          prop="payMethod"
+          prop="payMethodName"
           label="付款方式"
           width="120"
           sortable

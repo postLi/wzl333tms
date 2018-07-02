@@ -59,7 +59,7 @@ export default {
     return {
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        orderStatus: '',
+        orderStatus: 213,
         orderSn: ''
       }
     }

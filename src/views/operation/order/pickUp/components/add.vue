@@ -385,18 +385,8 @@ export default {
       } else {
       }
     },
-    //司机姓名
-    getdriverMobile (item, city) {
-      if(item){
-        // this.form.tmsDriver.driverMobile = item.driverMobile
-      } else {
-      }
-    },
     initInfo () {
       this.loading = false
-    },
-    getOrgid (id) {
-
     },
     submit(){
       console.log('保存并打印')
@@ -411,6 +401,7 @@ export default {
           // 判断操作，调用对应的函数
           if(this.isModify){
             promiseObj = putUpdatePickup(data)
+            this.reset()
           } else {
             promiseObj = postAddPickup(data)
           }
@@ -420,8 +411,8 @@ export default {
             this.$alert('操作成功', '提示', {
               confirmButtonText: '确定',
               callback: action => {
-                this.closeMe()
                 this.$emit('success')
+                this.closeMe()
               }
             });
           }).catch(err => {
@@ -432,7 +423,7 @@ export default {
         }
       });
     },
-    reset () {
+    reset() {
       this.$refs['ruleForm'].resetFields()
       this.form.tmsCustomer = ''
       this.form.tmsDriver = ''
@@ -440,7 +431,6 @@ export default {
       this.form.tmsOrderPickup = ''
     },
     closeMe (done) {
-      this.reset()
       this.$emit('update:popVisible', false);
       if(typeof done === 'function'){
         done()

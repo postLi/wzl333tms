@@ -1,184 +1,161 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add" label-width="180px">
-        <table class="manage-add-table-top">
-          <thead>
-          <tr>
-            <td>
-              <el-form-item label="发货方:">
-                <querySelect search="customerUnit" type="sender" valuekey="companyName" v-model="form.customSend.customerUnit" @change="setSender" />
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="收货方:">
-                <querySelect search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.customRece.customerUnit" @change="setReceiver" />
-              <!--</el-form-item>-->
-              </el-form-item>
-            </td>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>
-              <el-form-item label="发货人:" prop="customSend.customerName">
-                <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.customSend.customerName" @change="setSender" />
+      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add" label-width="100px">
+        <div class="info_order clearfloat">发货人信息</div>
+        <div class="info_send clearfloat">
+          <ul>
+            <li><el-form-item label="发货方:">
+              <querySelect search="customerUnit" type="sender" valuekey="companyName" v-model="form.customSend.customerUnit" @change="setSender" :disabled="isDbclick" />
+            </el-form-item></li>
+            <li> <el-form-item label="发货人:" prop="customSend.customerName">
+              <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.customSend.customerName" @change="setSender" :disabled="isDbclick"/>
 
+            </el-form-item></li>
+            <li ><el-form-item label="联系号码:" prop="customSend.customerMobile">
+              <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.customSend.customerMobile" @change="setSender" :disabled="isDbclick"/>
+            </el-form-item></li>
+            <li>
+              <el-form-item label="发货地址:" >
+                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.customSend.detailedAddress" @change="setSender" class="send_detailedAddress" :disabled="isDbclick"/>
               </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="收货人:" prop="customRece.customerName">
-                <querySelect search="customerName" type="receiver" valuekey="customerName" v-model="form.customRece.customerName" @change="setReceiver" />
-              </el-form-item>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <!--发-->
-              <el-form-item label="联系号码:" prop="customSend.customerMobile">
-                <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.customSend.customerMobile" @change="setSender" />
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="联系号码:" prop="customRece.customerMobile">
-                <querySelect search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.customRece.customerMobile" @change="setReceiver" />
-              </el-form-item>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <el-form-item label="发货地址:">
-                <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.customSend.detailedAddress" @change="setSender" />
-              </el-form-item>
-            </td>
-            <td>
+            </li>
+          </ul>
+        </div>
+        <div class="info_order clearfloat">收货人信息</div>
+        <div class="info_send clearfloat">
+          <ul>
+            <li class="marginTop_10"><el-form-item label="收货方:">
+              <querySelect search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.customRece.customerUnit" @change="setReceiver" :disabled="isDbclick"/>
+            </el-form-item></li>
+            <li class="marginTop_10"><el-form-item label="收货人:" prop="customRece.customerName">
+              <querySelect search="customerName" type="receiver" valuekey="customerName" v-model="form.customRece.customerName" @change="setReceiver" :disabled="isDbclick"/>
+            </el-form-item></li>
+            <li class="marginTop_10"><el-form-item label="联系号码:" prop="customRece.customerMobile">
+              <querySelect search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.customRece.customerMobile" @change="setReceiver" :disabled="isDbclick"/>
+            </el-form-item></li>
+            <li>
               <el-form-item label="收货地址:">
-                <querySelect search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.customRece.detailedAddress" @change="setReceiver" />
+                <querySelect search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.customRece.detailedAddress" @change="setReceiver" :disabled="isDbclick"/>
               </el-form-item>
-            </td>
-          </tr>
-          </tbody>
+            </li>
+          </ul>
+        </div>
 
-        </table>
-
-        <div class="info_order">货物信息</div>
+        <div class="info_order" >货物信息</div>
         <div class="info_table">
-          <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">-->
             <ul>
               <li>
                 <p><i>*</i> 货品名</p>
                 <el-form-item prop="tmsOrderCargoList.cargoName" >
-                  <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="form.tmsOrderCargoList.cargoName" />
-                  <!--<el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoName"></el-input>-->
+                  <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="form.tmsOrderCargoList.cargoName" :disabled="isDbclick"/>
                 </el-form-item>
               </li>
               <li>
                 <p><i>*</i> 件数</p>
                 <el-form-item prop="tmsOrderCargoList.cargoAmount">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount"></el-input>
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>重量</p>
                 <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight"></el-input>
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>体积</p>
                 <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume"></el-input>
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>包装</p>
                 <el-form-item prop="nowpayCarriage">
-                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.tmsOrderCargoList.cargoPack" />
-                  <!--<el-input maxlength="10"  v-model="form.tmsOrderCargoList.cargoPack"></el-input>-->
+                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.tmsOrderCargoList.cargoPack" :disabled="isDbclick"/>
                 </el-form-item>
               </li>
               <li>
                 <p>品种规格</p>
                 <el-form-item prop="tmsOrderCargoList.description">
-                  <el-input maxlength="20" v-model="form.tmsOrderCargoList.description"></el-input>
+                  <el-input maxlength="20" v-model="form.tmsOrderCargoList.description" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
             </ul>
-          <!--</el-form>-->
         </div>
 
-        <div class="info">订单信息</div>
+        <div class="info_order" style="margin-top: 12px">订单信息</div>
         <table class="manage-add-table-foot">
           <tbody>
           <tr>
             <td>
               <el-form-item label="出发城市">
 
-                <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityCode" :remote="true" />
+                <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"/>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityCode">
-                <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityCode" :remote="true" />
+                <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="开单网点">
-                <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled="disabled"/>
+                <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled="disabled" :disabled="isDbclick"/>
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="目的网点" >
-                <SelectTree v-model="form.tmsOrderPre.orderToOrgid" />
+                <SelectTree v-model="form.tmsOrderPre.orderToOrgid" :disabled="isDbclick"/>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="提货方式">
-                <SelectType v-model="form.tmsOrderPre.orderPickupMethodName" type="order_pickup_method" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderPickupMethodName" type="order_pickup_method"  :disabled="isDbclick"/>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="紧急度">
-                <SelectType v-model="form.tmsOrderPre.orderEffectiveName" type="ship_effective" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderEffective" type="ship_effective" :disabled="isDbclick" />
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="代收款">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="代收款手续费">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="付款方式">
-                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" placeholder="请选择" />
+                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" :disabled="isDbclick" />
               </el-form-item>
             </td>
 
             <td>
               <el-form-item label="运费">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="声明价值">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="备注">
-                <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea"></el-input>
+                <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea" placeholder="少于300字" :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -187,7 +164,10 @@
         </table>
       </el-form>
     </template>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer" class="dialog-footer" v-if="isDbclick">
+      <el-button @click="closeMe">关 闭</el-button>
+    </div>
+    <div slot="footer" class="dialog-footer" v-else>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -224,6 +204,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isDbclick: {
+      type: Boolean,
+      default: false
+    },
     info: {
       type: Object,
       default: () => {}
@@ -251,7 +235,9 @@ export default {
     const validateMobile = (rule, value, callback) => {
       if(REGEX.MOBILE.test(value)){
         callback()
-      } else {
+      } else if(this.isDbclick){
+        callback()
+      }else {
         callback(new Error('请输入正确的联系号码~'))
       }
     }
@@ -280,17 +266,17 @@ export default {
           {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur']}
         ],
         "customSend.customerName": [
-          {required: true,validator: this.validateIsEmpty('发货人不能为空'), trigger: 'change'}
+          {required: true,validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur'}
         ],
         "customSend.customerMobile": [
-          {required: true,validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'change'},
+          {required: true,validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'blur'},
           { validator: validateMobile, trigger: 'change' }
-        ],
+        ] ,
         "customRece.customerName": [
-          {required: true,validator: this.validateIsEmpty('收货人不能为空'), trigger: 'change'}
+          {required: true,validator: this.validateIsEmpty('收货人不能为空'), trigger: 'blur'}
         ],
         "customRece.customerMobile": [
-          {required: true,validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'change'},
+          {required: true,validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'blur'},
           { validator: validateMobile, trigger: 'change' }
         ],
         "tmsOrderCargoList.cargoName": [
@@ -311,25 +297,7 @@ export default {
           { validator: validateOnlyNumberAndLetter,trigger: ['change'] }
         ]
       },
-      fromCityName: '',
-      toCityName: '',
       btnsize: 'mini',
-      searchSend: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgid": 1,
-          customerType: 1
-        }
-      },
-      searchShou: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgid": 1,
-          customerType: 2
-        }
-      },
       carObj: {
         cargoName:'',  // 货品名
         cargoAmount:'',  // 件数
@@ -339,7 +307,6 @@ export default {
         description:''  // 品种规格
       },
       form: {
-
         customSend:{
           // 发货人
           // customerId,
@@ -371,11 +338,13 @@ export default {
         //订单信息
         tmsOrderPre: {
           orderFromCityCode:'',
+          orderFromCityName:'',
           orderToCityCode:'',
+          orderToCityName:'',
           orderFromOrgid:'',
           orderToOrgid:'',//目的网点
           orderPickupMethodName:218,//提货方式
-          orderEffectiveName:94,//紧急度
+          orderEffective:94,//紧急度
           agencyFund:'',//代收款
           commissionFee:'',//代收款手续费
           orderPayWay:76,//付款方式 orderPayWayName
@@ -386,7 +355,6 @@ export default {
         }
       },
       customSend:{
-        //customerId
         // 发货人
         // customerId,
         companyName:'',
@@ -403,14 +371,9 @@ export default {
         detailedAddress:'',
         customerType:2
       },
-
-      formLabelWidth: '100px',
-      tooltip: false,
       popTitle: '新建',
       loading: false,
       inited: false
-
-
     }
   },
   mounted () {
@@ -418,7 +381,6 @@ export default {
       this.inited = true
       this.initInfo()
     }
-
     this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
   },
   watch: {
@@ -433,26 +395,62 @@ export default {
     info () {
       if(this.isModify){
         this.popTitle = '修改'
-
-        this.form.tmsOrderCargoList.cargoName = this.info.cargoName
-        this.form.tmsOrderCargoList.cargoAmount = this.info.cargoAmount
-        this.form.tmsOrderCargoList.cargoWeight = this.info.cargoWeight
-        this.form.tmsOrderCargoList.cargoVolume = this.info.cargoVolume
-        this.form.tmsOrderCargoList.cargoPack = this.info.cargoPack
-        this.form.tmsOrderCargoList.description = this.info.description
-        // 订单信息
-        this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre, this.info)
-      } else {
-        this.popTitle = '新增'
-        this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
-        this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
-        // this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
-        this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
+        this.infoData(this.info)
+      }else if(this.isDbclick) {
+        this.popTitle = '查看'
+        this.infoData(this.info)
       }
-      // this.form.tmsOrderPre.orderPickupMethod = 1 Object.assign
+      else {
+        this.popTitle = '新增'
+        // this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
+        this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
+        this.form.customSend = objectMerge2({}, this.customSend)
+        this.form.customRece = objectMerge2({}, this.customRece)
+        this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
+        this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
+        this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
+        this.form.tmsOrderPre.orderEffectiveName = ''
+        this.form.tmsOrderPre.agencyFund = ''
+        this.form.tmsOrderPre.commissionFee = ''
+        this.form.tmsOrderPre.deliveryFee = ''
+        this.form.tmsOrderPre.productPrice = ''
+        this.form.tmsOrderPre.orderRemarks = ''
+        this.form.tmsOrderPre.orderPickupMethodName = 218
+        this.form.tmsOrderPre.orderEffective = 94
+        this.form.tmsOrderPre.orderPayWay = 76
+      }
     }
   },
   methods: {
+    infoData(item){
+      this.form.tmsOrderCargoList.cargoName = item.cargoName
+      this.form.tmsOrderCargoList.cargoAmount = item.cargoAmount
+      this.form.tmsOrderCargoList.cargoWeight = item.cargoWeight
+      this.form.tmsOrderCargoList.cargoVolume = item.cargoVolume
+      this.form.tmsOrderCargoList.cargoPack = item.cargoPack
+      this.form.tmsOrderCargoList.description = item.description
+      //发
+      this.form.customSend.customerName = item.senderName
+      this.form.customSend.customerMobile = item.senderMobile
+      this.form.customSend.detailedAddress = item.senderAddr
+      this.form.customSend.customerUnit = item.senderUnit
+      //收
+      this.form.customRece.customerName = item.receiverName
+      this.form.customRece.customerMobile = item.receiverMobile
+      this.form.customRece.detailedAddress = item.receiverAddr
+      this.form.customRece.customerUnit = item.receiverUnit
+
+      // 订单信息
+      this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
+      this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
+      // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
+      this.form.tmsOrderPre.orderEffectiveName = item.orderEffectiveName
+      this.form.tmsOrderPre.agencyFund = item.agencyFund
+      this.form.tmsOrderPre.commissionFee = item.orderProcedureFee
+      this.form.tmsOrderPre.deliveryFee = item.deliveryFee
+      this.form.tmsOrderPre.productPrice = item.productPrice
+      this.form.tmsOrderPre.orderRemarks = item.orderRemarks
+    },
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
         if(!value){
@@ -466,6 +464,7 @@ export default {
     selectFromCity (item, city) {
       if(item){
         this.form.tmsOrderPre.orderFromCityCode = item.id
+        this.form.tmsOrderPre.orderFromCityName = item.longAddr
       } else {
         //this.form.tmsOrderPre.orderFromCityCode = city || ''
       }
@@ -474,6 +473,7 @@ export default {
     selectToCity (item, city) {
       if(item){
         this.form.tmsOrderPre.orderToCityCode = item.id
+        this.form.tmsOrderPre.orderToCityName = item.longAddr
       } else {
       }
     },
@@ -616,7 +616,6 @@ export default {
   }
 
   .popRight-content{
-    /*padding: 20px 24px 0;*/
     box-sizing: border-box;
   }
 
@@ -635,20 +634,29 @@ export default {
     float: right;
   }
 
-  .el-select .el-input__inner{
-    /*padding-right: 15px;*/
-  }
 }
   /*收货-发货方*/
-.manage-add-table-top,.manage-add-table-foot{
+.info_send{
+  ul{
+    margin-top: 10px;
+    li{
+      float: left;
+
+      .send_detailedAddress{
+
+      }
+    }
+  }
+}
+
+.manage-add-table-foot{
   height: 100%;
   width: 100%;
-  /*margin-left: 10px;*/
 }
 .manage-add-table-foot{
   margin-top: 10px;
 }
-.manage-add-table-top th,.manage-add-table-foot th{
+.manage-add-table-foot th{
   width: 50%;
   height: 30px;
   background: #eee;
@@ -674,76 +682,22 @@ export default {
     }
   }
   .add-textarea{
-    width: 570%;
-    .el-textarea__inner{
-      width: 570%;
-    }
+    width: 630%;
   }
 }
-.manage-add-table-top th, .manage-add-table-top td {
-  /*border: 1px solid #ccc;*/
-  padding: 2px;
-  text-align: left;
-  font-size: 14px;
-}
-.manage-add-table-top th:nth-of-type(1) {
-  padding-left: 10px !important;
-}
-.manage-add-table-top .el-input--mini .el-input__inner{
-  height: 40px;
-  line-height: 40px;
-  padding: 0;
-}
-
-.manage-add-table-top .el-form-item__label{
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  padding-left: 10px;
-}
-.manage-add-table-top .el-input__inner{
-  border-color: transparent;
-}
-.manage-add-table-top .el-input__inner:hover{
-  border-color: transparent;
-}
-.manage-add-table-top .el-input__inner:focus{
-  border-color: transparent;
-}
 
 
-.manage-add-table-top .el-form-item--mini .el-form-item__content{
-  line-height: 0;
-}
-.manage-add-table-top .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus{
-  border-color: transparent;
-  /*height: 30px;*/
-  line-height: 30px;
-}
-manage-add-table-top .el-form-item__error {
-  color: #f56c6c;
-  font-size: 12px;
-  line-height: 1;
-  padding-top: 4px;
-  position: absolute;
-  top: 37%;
-  left: 59%;
-}
-.info ,.info_order{
+.info_order,.info_rece{
   height: 36px;
   line-height: 36px;
-  border: 1px solid #ccc;
-  margin-top: 12px;
+  /*margin-top: 12px;*/
   padding-left: 10px;
   font-size: 14px;
-  color: #333;
+  color: #666;
   font-weight: 600;
-
-}
-.info_order{
-  margin-top:0;
-  border: 1px solid transparent;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d4d4d4;
+  background: #e9f3fa;
 }
 .manage-add-table-foot .el-form-item--mini {
   margin-left: 12px;
@@ -752,22 +706,16 @@ manage-add-table-top .el-form-item__error {
   .manage-add div.el-form-item{
     width: 40%;
   }
-  .add-textarea .el-textarea__inner {
-    width: 570%;
-    padding: 15px 0 0 10px;
-  }
   .info_table{
     border-color: #dcdfe6;
+    margin: 22px 0 20px;
     ul{
-      /*border-top: 2px dotted #bbbbbb;
-      margin: 10px -10px -10px 0;
-      padding: 5px 10px 10px 10px;
-      /*background-color: #fbfbfb;*/
       width: 100%;
       display: -ms-flexbox;
       display: flex;
       -ms-flex-direction: row;
       flex-direction: row;
+
       li:nth-of-type(1){
         padding-left: 0;
       }
@@ -775,19 +723,23 @@ manage-add-table-top .el-form-item__error {
         border-right: none;
       }
       li{
-        border: 1px solid #eee;
+        border: 1px solid #d4d4d4;
         width: 30%;
-        border-bottom: none;
         border-left: none;
+        padding-bottom: 10px;
+
         p{
           font-size: 14px;
           text-align: center;
           line-height: 34px;
+          background: #e8e8e8;
+          margin-bottom: 5px;
           i{
             color: red;
           }
         }
       }
+
       .el-form-item{
         margin-bottom: 0;
         margin-right: 0;
@@ -796,5 +748,18 @@ manage-add-table-top .el-form-item__error {
     }
 
   }
+  /*清除浮动代码*/
+  .clearfloat:after{
+    display:block;
+    clear:both;
+    content:"";
+    visibility:hidden;
+    height:0
+  }
+  .clearfloat{
+    zoom:1
+  }
+
+
 </style>
 

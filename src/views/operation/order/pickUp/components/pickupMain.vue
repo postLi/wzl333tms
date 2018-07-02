@@ -154,9 +154,8 @@
             }
           });
         },
-      //  pickFinish
         pickFinish(ruleForm) {
-          this.reset()
+
           this.$refs[ruleForm].validate((valid) => {
             if (valid) {
               this.loading = true
@@ -168,6 +167,7 @@
                   callback: action => {
                     this.closeMe()
                     this.$emit('success')
+                    this.reset()
                   }
                 });
               }).catch(err => {

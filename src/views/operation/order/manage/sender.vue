@@ -19,6 +19,7 @@
           :data="usersArr"
           stripe
           border
+          @row-dblclick="getDbClick"
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -142,7 +143,7 @@
           <el-table-column
             prop="senderName"
             label="发货人"
-            width="90"
+            width="150"
             sortable
           >
           </el-table-column>
@@ -156,7 +157,7 @@
           <el-table-column
             prop="receiverName"
             label="收货人"
-            width="90"
+            width="150"
             sortable
           >
           </el-table-column>
@@ -177,19 +178,19 @@
           <el-table-column
             prop="orderRemarks"
             label="备注"
-            width="80"
+            width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="orderFromCityCode"
+            prop="orderFromCityName"
             label="出发城市"
             width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="orderToCityCode"
+            prop="orderToCityName"
             label="目的城市"
             width="110"
             sortable
@@ -255,7 +256,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -301,6 +302,7 @@ export default {
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
+      isDbclick: false,
       selectInfo: {},
       // 选中的行
       selected: [],
@@ -370,12 +372,14 @@ export default {
           // 添加客户
           case 'add':
               this.isModify = false
+              this.isDbclick = false
               this.selectInfo = {}
               this.openAddCustomer()
               break;
               //受理  acceptance
           case 'acceptance':
             this.isModify = false
+            this.isDbclick = false
             this.closeAddCustomer()
             this.selectInfo = this.selected[0]
             if(this.selected.length > 1){
@@ -414,6 +418,7 @@ export default {
               this.openAddCustomer()
 
               this.isModify = true
+              this.isDbclick = false
             }
               this.selectInfo = this.selected[0]
               break;
@@ -598,6 +603,12 @@ export default {
     getSelection (selection) {
       this.selected = selection
     },
+    getDbClick(row, event){
+      this.selectInfo = row
+      this.isModify = false
+      this.isDbclick = true
+      this.openAddCustomer()
+    }
   }
 }
 </script>
