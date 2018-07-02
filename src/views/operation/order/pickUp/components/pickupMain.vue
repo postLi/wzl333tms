@@ -123,7 +123,7 @@
           }
         },
         submitForm(ruleForm) {
-          this.reset()
+
           this.$refs[ruleForm].validate((valid) => {
             if (valid) {
 
@@ -134,9 +134,16 @@
                 this.$alert('操作成功', '提示', {
                   confirmButtonText: '确定',
                   callback: action => {
-                    this.closeMe()
+
                     this.$emit('success')
-                    this.$router.push('/operation/order/createOrder?batchid=' + this.getMentInfo.pickupId + '&ordernum=' + this.getMentInfo.dictNum)
+                    // this.$router.push('/operation/order/createOrder?batchid=' + this.getMentInfo.pickupId + '&ordernum=' + this.getMentInfo.dictNum)
+                    this.eventBus.$emit('showCreateOrder', {
+                      batchid: this.getMentInfo.pickupId,
+                      ordernum: this.getMentInfo.dictNum,
+                      batchobj: this.dotInfo
+                    })
+                    this.closeMe()
+                    this.reset()
                   }
                 });
               }).catch(err => {

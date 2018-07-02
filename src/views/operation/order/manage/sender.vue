@@ -385,7 +385,10 @@ export default {
               })
             }
             if(this.selected[0].orderStatus === 213){
-              this.$router.push('/operation/order/createOrder?preId=' + this.selected[0].id)
+              // this.$router.push('/operation/order/createOrder?preId=' + this.selected[0].id)
+              this.eventBus.$emit('showCreateOrder',{
+                preid: this.selected[0].id
+              })
 
             //  订单至少需要一个预订单，点击受理跳转到开单页面
             }else if(this.selected[0].orerStatusName === "已受理" ) {

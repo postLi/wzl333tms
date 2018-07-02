@@ -49,7 +49,8 @@ export default {
             orderid: '',
             batchid: '',
             preid: '',
-            ordernum: 1
+            ordernum: 1,
+            batchobj: {}
           },
           showDetail: false,
           showCreate: false,
@@ -71,7 +72,7 @@ export default {
             this.showDetail = true
             this.showDetailVisible = true
           }
-          
+
       })
       this.eventBus.$on('hideOrderDetail', (orderid) => {
           this.showDetailVisible = false
@@ -80,13 +81,13 @@ export default {
       this.eventBus.$on('showCreateOrder', (orderobj) => {
           // 避免重复触发的事件
           if(!this.showCreateVisible){
-            let data = objectMerge2(this._orderobj, orderobj) 
+            let data = objectMerge2(this._orderobj, orderobj)
             console.log('showCreateOrder:', orderobj, data)
             this.orderobj = data
             this.showCreate = true
-            this.showCreateVisible = true  
+            this.showCreateVisible = true
           }
-                  
+
       })
       this.eventBus.$on('hideCreateOrder', (orderid) => {
           this.showCreateVisible = false
@@ -131,7 +132,7 @@ export default {
                 display: none;
             }
             .sidebar-container{
-                padding-top: 80px;                
+                padding-top: 80px;
             }
         }
         .sidebar-wrapper {
@@ -187,7 +188,7 @@ export default {
         flex-direction: column;
         top: 5%;
     }
-    
+
 
     .el-dialog__body{
         padding:5px 10px 10px;
