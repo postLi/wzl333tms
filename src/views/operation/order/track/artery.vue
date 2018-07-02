@@ -8,7 +8,14 @@
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+        <el-table ref="multipleTable"
+         :data="dataList" stripe border 
+         @row-dblclick="setInfo"
+        @row-click="clickDetails"
+         @selection-change="getSelection" 
+         height="100%" tooltip-effect="dark" 
+         style="width:100%;"
+          :default-sort="{prop: 'id', order: 'ascending'}">
           <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">

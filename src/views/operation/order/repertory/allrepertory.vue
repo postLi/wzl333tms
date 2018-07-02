@@ -10,7 +10,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+        <el-table ref="multipleTable" @row-dblclick="showDetail" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed width="50" sortable type="selection">
           </el-table-column>
           <el-table-column fixed sortable width="110" prop="shipSn" label="运单号">
@@ -222,6 +222,9 @@ export default {
     // this.fetchAllOrderRepertory()
   },
   methods: {
+    showDetail(order){
+      this.eventBus.$emit('showOrderDetail', order.id)
+    },
     initTable() {
       let str = this.$refs.multipleTable.$children
       str.forEach((e, index) => {

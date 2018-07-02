@@ -1,7 +1,6 @@
 <template>
   <div class="setpinfo_box" v-loading="loading">
     <h3 class="steptitle">物流信息</h3>
-
     <el-row class="stepItem_title">
       <el-col :span="5" class="tracktype" >类型</el-col>
       <el-col :span="4" >操作时间</el-col>
