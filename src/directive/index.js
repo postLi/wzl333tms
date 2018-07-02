@@ -48,7 +48,7 @@ Vue.directive('numberOnly', {
     VueDirectiveObject.findInput(el).removeEventListener('keydown', VueDirectiveObject.onkeydown)
   }
 })
-
+// 展示大图
 Vue.directive('showPicture', {
   bind: function(el) {
     el.addEventListener('click', function(e) {
@@ -59,7 +59,11 @@ Vue.directive('showPicture', {
         showConfirmButton: false,
         closeOnClickModal: true,
         center: true,
-        customClass: 'showPictureWrapper'
+        customClass: 'showPictureWrapper',
+        // 必须指定callback 或者 promise回调，否则会报错
+        callback: () => {
+
+        }
       })
     })
   },

@@ -1,5 +1,9 @@
 <template>
   <div class="createOrder-main" v-loading="loading">
+    <div class="batchlist" v-if="output.isbatch">
+      <span class="batchNum" :class="{'on': i === currentBatch}" v-for="i in output.ordernum" @click="currentBatch = i" :key="i">第{{ i }}票</span>
+    </div>
+    <div class="createOrderWrapper">
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <el-form :model="form" label-width="100px" :rules="rules2" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
@@ -427,6 +431,7 @@
     <FeeDialog :dialogVisible.sync="dialogVisible" />
     <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
     <ManageRemarks :popVisible.sync="popVisible" />
+    </div>
   </div>
 </template>
 <script>
@@ -434,7 +439,7 @@
 import { eventBus } from '@/eventBus'
 // 工具函数
 import { REGEX } from '@/utils/validate'
-import { closest, getTotal, objectMerge2 } from '@/utils/'
+import { closest, getTotal, objectMerge2, parseTime } from '@/utils/'
 // 请求接口
 import { getSystemTime } from  '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
@@ -461,6 +466,16 @@ export default {
     SelectCity,
     querySelect,
     ManageRemarks
+  },
+  props: {
+    ispop: {
+      type: Boolean,
+      default: false
+    },
+    orderobj: {
+      type: Object,
+      default: () => {}
+    }
   },
   data () {
     let _this = this
@@ -506,6 +521,7 @@ export default {
     }
 
     return {
+      currentBatch: 1,
       activeNames: ['1'],
       rules2: {
         "tmsOrderShip.shipSn": [
@@ -772,6 +788,12 @@ export default {
     }
   },
   watch: {
+    orderobj (newVal) {
+      // 如果是弹窗才响应这个变化
+      if(this.ispop){
+        this.initIndex()
+      }
+    },
     transferTotalFee (newVal) {
       this.form.tmsOrderTransfer.totalCost = newVal
     },
@@ -819,7 +841,7 @@ export default {
       immediate: true
     },
     '$route'(to, from){
-      if(to.path.indexOf('/operation/order/createOrder') !== -1){
+      if(to.path.indexOf('/operation/order/createOrder') !== -1 && !this.ispop){
         this.initIndex()
       }
     }
@@ -900,9 +922,15 @@ export default {
       this.setOrderDate()
       this.setOrderFee()
       this.setOrderTransfer()
-      this.setDefaultValue()
+      // 当为修改运单时，不设置默认值
+      if(!this.output.isOrder){
+        this.setDefaultValue()
+      }
       setTimeout(() => {
-        this.bindTabWithArrow()
+        // 避免重复绑定
+        if(!this.isbindtab){
+          this.bindTabWithArrow()
+        }
       }, 1000);
     },
     // 查找当前表单所有存在的input元素
@@ -928,6 +956,7 @@ export default {
     },
     // 绑定左右按键
     bindTabWithArrow () {
+      this.isbindtab = true
       // closest(ele, '.order-main')
       let doc = document
       let parentEle = doc.querySelector('.order-main')
@@ -963,9 +992,13 @@ export default {
         if(this.config.shipNo.systemNumberImmutable === '1'){
           this.canChangeOrderNum = false
         }
-        orderManage.getShipSn(this.otherinfo.orgid).then(res => {
-          this.form.tmsOrderShip.shipSn = res.data
-        })
+        // 非修改运单，需要生成运单信息
+        if(!this.output.isOrder){
+          orderManage.getShipSn(this.otherinfo.orgid).then(res => {
+            this.form.tmsOrderShip.shipSn = res.data
+          })
+        }
+        
       }
     },
     // 设置货号规则 
@@ -986,18 +1019,20 @@ export default {
               "cargoAmount": 4
             }
           ] */
-        orderManage.postGenerateGoodsSn({
-          "tmsOrderShip":{
-            "shipSn": this.form.tmsOrderShip.shipSn
-          },
-          "tmsOrderCargoList": this.form.cargoList.map(el => {
-            let a = {}
-            a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
-            return a
+        if(!this.output.isOrder){
+          orderManage.postGenerateGoodsSn({
+            "tmsOrderShip":{
+              "shipSn": this.form.tmsOrderShip.shipSn
+            },
+            "tmsOrderCargoList": this.form.cargoList.map(el => {
+              let a = {}
+              a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
+              return a
+            })
+          }).then(res => {
+            this.form.tmsOrderShip.shipGoodsSn = res.data
           })
-        }).then(res => {
-          this.form.tmsOrderShip.shipGoodsSn = res.data
-        })
+        }
       }
     },
     // 设置运单日期规则 
@@ -1011,7 +1046,9 @@ export default {
       } else if(this.config.shipPageFunc.shipTimeRule === '33') {
 
       }
-      this.form.tmsOrderTransfer.createTime = this.nowTime
+      if(!this.output.isOrder){
+        this.form.tmsOrderTransfer.createTime = this.nowTime
+      }
     },
     // 选择出发城市
     selectFromCity (item, city) {
@@ -1106,24 +1143,32 @@ export default {
       // 3.2 有批次信息不可关联，提示并回退到提货管理(删除状态)
       // 3.3 无批次信息，提示并回退到提货管理
       // 4.1 正常的创建运单
+      // 5. 从弹窗过来
       this.loading = true
       this.reset()
       this.getBaseSetting().then(res => {
         console.log('base setting info:', res, this.$route)
-        let route = this.$route
-        if(route.query.orderid){
-          this.output.orderid = this.$route.query.orderid
+        let param
+        if(this.ispop){
+          console.log('pop create order:', this.orderobj)
+          param = this.orderobj
+        } else {
+          param = this.$route.query
+        }
+
+        if(param.orderid){
+          this.output.orderid = param.orderid
           this.output.isOrder = true
           this.initOrder()
-        } else if(route.query.preid){
-          this.output.preId = this.$route.query.preid
+        } else if(param.preid){
+          this.output.preId = param.preid
           this.output.isPreOrder = true
           this.initPreOrder()
-        } else if(route.query.batchid){
-          this.output.batchid = this.$route.query.batchid
+        } else if(param.batchid){
+          this.output.batchid = param.batchid
           // 如果传过来的非正常字符，则默认为1
-          // 如果传过来的数字大于50，则设置为50
-          this.output.ordernum = Math.min(parseInt(this.$route.query.ordernum, 10) || 1, 50)
+          // 如果传过来的数字大于10，则设置为10
+          this.output.ordernum = Math.min(parseInt(param.ordernum, 10) || 1, 10)
           this.output.isbatch = true
           this.initBatch()
         } else {
@@ -1143,12 +1188,8 @@ export default {
     },
     // 初始化运单
     initOrder(){
-      let type = this.$route.query.type
-      if(type === 'modify'){
-        this.output.ismodify = true
-      } else {
-        this.output.isview = true
-      }
+      this.output.ismodify = true
+
       let errFn = () => {
         this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
           confirmButtonText: '返回运单列表页',
@@ -1163,13 +1204,9 @@ export default {
       this.getOrderInfo(this.output.orderid).then(res => {
         this.orderData = res.data
         // 找到运单信息
-        this.setOrderData(res.data)
-        if(this.output.ismodify){
-          this.modifyOrder()
-        } else {
-          this.viewOrder()
-        }
         this.init()
+        this.setOrderData(res.data)
+        this.modifyOrder()
         this.loading = false
       }).catch(err => {
         console.log('initOrder err:', err)
@@ -1178,10 +1215,6 @@ export default {
     },
     // 修改运单
     modifyOrder(){
-
-    },
-    // 查看运单
-    viewOrder(){
 
     },
     // 从订单创建运单
@@ -1200,13 +1233,13 @@ export default {
 
       return this.getPreOrder(this.output.preId).then(res => {
         this.form.tmsOrderPre = res.data
+        this.init()
         this.setPreOrder()
         if(this.form.tmsOrderPre.orderStatus !== 213){
           this.$message.warning('此订单不是 非受理 状态，将不能关联创建的运单。')
           this.form.tmsOrderPre = {}
           this.output.isPreOrder = false
         }
-        this.init()
         this.loading = false
       }).catch(err => {
         errFn()
@@ -1214,14 +1247,17 @@ export default {
     },
     // 从提货创建运单
     initBatch(){
-
+      this.init()
+      this.loading = false
     },
     // 回填运单信息
     setOrderData (data) {
+      data.tmsOrderShip = data.tmsOrderShip || {}
       // 设置运单信息
       for(let i in this.form.tmsOrderShip){
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
       }
+      this.form.tmsOrderShip.createTime = parseTime(this.form.tmsOrderShip.createTime)
       // 设置城市名称
       this.fromCityName = data.tmsOrderShip.shipFromCityName
       this.toCityName = data.tmsOrderShip.shipToCityName
@@ -1240,7 +1276,7 @@ export default {
         }
       }
       
-      this.form.customerList = data.customerList
+      this.form.customerList = data.customerList || []
       console.log('setOrderInfo:',data, this.form)
       // 设置中转信息
       // 设置运单信息
@@ -1248,6 +1284,7 @@ export default {
         for(let i in this.form.tmsOrderTransfer){
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
+        this.form.tmsOrderTransfer.createTime = parseTime(this.form.tmsOrderTransfer.createTime)
       }
       
     },
@@ -1593,7 +1630,6 @@ $backgroundcolor: #cbe1f7;
     max-height: 100%;
     min-width: 1316px;
     display: flex;
-    flex-direction: column;
     position: relative;
 
     .el-dialog__wrapper,.v-modal{
@@ -1607,6 +1643,40 @@ $backgroundcolor: #cbe1f7;
     .el-form-item--mini.el-form-item{
       margin: 0;
     }
+
+    .batchlist{
+      width: 60px;
+      margin-right: 10px;
+      border-top: 1px solid #666;
+      span{
+        display: block;
+        border: 1px solid #666;
+        border-top: none;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+
+        &.on{
+          color: #000;
+          background: #cbe1f7;
+        }
+      }
+    }
+
+    .createOrderWrapper{
+      flex: 1;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      position: relative;
+      &>.el-form{
+        //height: calc( 100% - 100px);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
     
     .createOrder-title{
       font-size: 24px;
@@ -1617,7 +1687,7 @@ $backgroundcolor: #cbe1f7;
       text-align: center;
       height: 28px;
       position: absolute;
-      top: 24px;
+      top: 0;
       left: 0;
       width: 100%;
 
@@ -1664,12 +1734,7 @@ $backgroundcolor: #cbe1f7;
         font-weight: normal;
       }
     }
-    &>.el-form{
-      //height: calc( 100% - 100px);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
+    
     .order-form-item{
       float: none;
     }

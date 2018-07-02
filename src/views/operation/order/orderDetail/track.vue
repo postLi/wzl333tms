@@ -101,7 +101,6 @@ export default {
   watch: {
     orderid (newVal) {
       if(newVal !== '') {
-        console.log('aaaa:', newVal)
         this.init()
       } else {
         this.reset()
@@ -197,7 +196,8 @@ export default {
       this.formModel.trackNode = ''
       // 1 表示为用户新增的信息
       this.formModel.trackType = 1
-      delete this.formModel.id 
+      delete this.formModel.id
+      this.$refs['formModel'].resetFields()
     },
     // 取消高亮样式
     offThisActive(e){

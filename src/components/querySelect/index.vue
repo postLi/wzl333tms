@@ -32,6 +32,7 @@
     :filterable="filterable"
     @change="handleSelect"
     @focus="initData"
+    :value-key="showkey"
     remote
     :placeholder="place"
     :remote-method="querySearch"
@@ -55,6 +56,7 @@
     v-model="handlevalue"
     @change="handleSelect"
     @focus="initData"
+    :value-key="showkey"
     popper-class="query-select-autocomplete"
     :filterable="filterable"
     :placeholder="place"

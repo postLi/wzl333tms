@@ -25,6 +25,7 @@
 //http://wangchujiang.com/hotkeys/
 //键盘事件
 import hotkeys from '@/utils/hotkeys'
+import {closest} from '@/utils/'
 import OrderApi from  '@/api/operation/orderManage'
 
 export default {
@@ -83,8 +84,14 @@ export default {
     bindKey() {
       for(const i in this.keys){
         hotkeys(this.keys[i], (e)=>{
-          e.preventDefault()
-          this.doAction(i)
+          // 需要判断是否为开单页面才触发
+          let elem = document.querySelector('.createOrder-main')
+          if(elem){
+            if(!!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )){
+              e.preventDefault()
+              this.doAction(i)
+            }
+          }
         })
       }
     },

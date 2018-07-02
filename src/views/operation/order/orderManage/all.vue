@@ -18,7 +18,7 @@
           stripe
           border
           @row-click="clickDetails"
-          @row-dblclick="viewDetails"
+          @row-dblclick="showDetail"
           @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
@@ -407,6 +407,9 @@ export default {
           tab: '查看' + row.shipSn 
         }
       })
+    },
+    showDetail(order){
+      this.eventBus.$emit('showOrderDetail', order.id)
     },
     fetchAllOrder () {
       this.loading = true

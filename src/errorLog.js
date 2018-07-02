@@ -8,6 +8,16 @@ if (process.env.NODE_ENV !== 'production') {
   window.addEventListener('error', function() {
     console.error('window error:', arguments)
   }, true)
+  window.addEventListener('unhandledrejection', event =>
+  {
+    console.error('unhandledRejection', event.reason); // 打印未捕获的promise错误
+  });
+    
+  window.addEventListener('rejectionhandled', event =>
+  {
+    console.error('rejection handled', event); // 打印捕获的promise错误
+  });
+  
 }
 
 Vue.config.errorHandler = function(err, vm, info, a) {

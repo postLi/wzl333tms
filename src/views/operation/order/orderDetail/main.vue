@@ -7,7 +7,7 @@
         {{ form.tmsOrderShip.shipSn }}
         </span></div>
       <div class="create-num">开单日期： <span class="create-num-info">
-         {{ form.tmsOrderShip.createTime }}
+         {{ form.tmsOrderShip ? form.tmsOrderShip.createTime : '' }}
       </span></div>
     </div>
     <div class="order-main">
@@ -327,7 +327,7 @@
         <tbody>
           <tr>
             <td>
-              {{ form.tmsOrderTransfer.createTime }}
+              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
             </td>
             <td>
               {{ form.tmsOrderTransfer.oddNumbers }}
@@ -387,7 +387,7 @@
         <tbody>
           <tr>
             <td>
-              {{ form.tmsOrderTransfer.createTime }}
+              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
             </td>
             <td>
               {{ form.tmsOrderTransfer.oddNumbers }}
@@ -444,7 +444,7 @@
         <tbody>
           <tr>
             <td>
-              {{ form.tmsOrderTransfer.createTime }}
+              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
             </td>
             <td>
               {{ form.tmsOrderTransfer.oddNumbers }}
@@ -502,7 +502,7 @@
         <tbody>
           <tr>
             <td>
-              {{ form.tmsOrderTransfer.createTime }}
+              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
             </td>
             <td>
               {{ form.tmsOrderTransfer.oddNumbers }}
@@ -773,6 +773,7 @@ export default {
   },
   watch: {
     orderdata (newVal) {
+      console.log('watch orderdata:', newVal)
       if(newVal){
         this.initIndex()
       }
@@ -833,18 +834,21 @@ export default {
         this.initOrder()
       }).catch(err => {
         console.log('base setting error:', err)
-        this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
+        this.$message.error('获取信息失败：' + (err.text || err) + ' 请尝试重新刷新页面。')
       })
     },
     // 初始化运单
     initOrder(){
       // 找到运单信息
-      this.setOrderData(this.orderdata)
       this.init()
+      this.setOrderData(this.orderdata)
       this.loading = false
     },
     // 回填运单信息
     setOrderData (data) {
+      data.customerList = data.customerList || []
+      data.tmsOrderCargoList = data.tmsOrderCargoList || []
+      data.tmsOrderShip = data.tmsOrderShip || {}
       // 设置运单信息
       for(let i in this.form.tmsOrderShip){
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
@@ -854,7 +858,6 @@ export default {
       this.toCityName = data.tmsOrderShip.shipToCityName
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
-      //this.$set(this.form.cargoList, data.tmsOrderCargoList)
       // 设置收发货人信息
       if(data.customerList[0]){
         for(let i in this.form.sender){
@@ -875,12 +878,14 @@ export default {
         for(let i in this.form.tmsOrderTransfer){
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
+        console.log('setOrderInfo2:',data.tmsOrderTransfer, this.form.tmsOrderTransfer)
       }
 
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
       this.form.tmsShLoadsList = data.tmsShLoadsList || []
       this.form.tmsGxLoadsList = data.tmsGxLoadsList || []
       this.form.tmsDbLoadsList = data.tmsDbLoadsList || []
+      console.log('setOrderInfo3:',data, this.form)
     },
     getCarrier (item) {
       if(item){

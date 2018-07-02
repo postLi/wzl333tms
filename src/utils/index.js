@@ -454,6 +454,7 @@ export function getTotal() {
   // 最后再除以10000返回
   args.map(el => {
     // 保留俩位小数
+    el = el || 0
     el = el.toString().replace(/([^.]*)(\.?)(\d)?(\d)?(.*)/, '$1$2$3$4')
     el = ((parseFloat(el, 10) || 0) * 10000).toString().replace('\..*$', '')
     total += parseInt(el, 10)

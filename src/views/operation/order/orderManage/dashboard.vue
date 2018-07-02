@@ -14,6 +14,7 @@
           stripe
           border
           @row-click="clickDetails"
+          @row-dblclick="showDetail"
           @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
@@ -535,6 +536,12 @@ export default {
     getSelection (selection) {
       this.selected = selection
     },
+    showDetail(order){
+      // 当为草稿时，双击表示查看并可修改创建
+      this.eventBus.$emit('showCreateOrder', {
+        orderid: order.id
+      })
+    }
   }
 }
 </script>
