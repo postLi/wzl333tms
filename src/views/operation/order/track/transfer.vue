@@ -9,144 +9,35 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
-          <el-table-column fixed width="50" sortable type="selection">
+           <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="shipFromOrgid" label="开单网点">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="carrierName" label="承运商">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="carrierMobile" label="承运商电话">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arrivalMobile" label="到站电话">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipStatusName" label="运单状态">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="运单号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="oddNumbers" label="中转单号">
-          </el-table-column>
-          <!--  <el-table-column sortable width="120" prop="batchTypeId" label="中转批次">
-          </el-table-column> -->
-          <el-table-column sortable width="160" prop="createTime" label="开单时间">
-            <template slot-scope="scope">
-              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="160" prop="transferTime" label="中转时间">
-            <template slot-scope="scope">
-              {{ scope.row.transferTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="transferCharge" label="中转运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="deliveryExpense" label="中转送货费">
-          </el-table-column>
-          <!-- <el-table-column sortable width="120" prop="batchTypeId" label="中转费其他费">
-          </el-table-column> -->
-          <el-table-column sortable width="120" prop="totalCost" label="中转费合计">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="paymentId" label="中转付款方式">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="codService" label="代收货款">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="senderName" label="发货人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="senderMobile" label="发货人电话">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="receiverName" label="收货人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="receiverMobile" label="收货人电话">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipFromCityCode" label="出发城市">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipToCityCode" label="到达城市">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="cargoName" label="货物名称">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="cargoAmount" label="件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="cargoWeight" label="重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="cargoVolume" label="体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="cargoPack" label="包装">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipRemarks" label="运单备注">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="中转备注">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="senderUnit" label="发货单位">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="senderAddr" label="发货地址">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="receiverUnit" label="收货单位">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="receiverAddr" label="收货地址">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipFee" label="运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipToOrgid" label="目的网点">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipDeliveryMethod" label="交接方式">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipGoodsSn" label="货号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="description" label="品种规格">
-          </el-table-column>
-          <!-- <el-table-column sortable width="120" prop="batchTypeId" label="件数单价">
-          </el-table-column> -->
-          <el-table-column sortable width="120" prop="weightFee" label="重量单价">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="volumeFee" label="体积单价">
-          </el-table-column>
-          <!--  <el-table-column sortable width="120" prop="batchTypeId" label="等通知放货">
-          </el-table-column> -->
-          <el-table-column sortable width="120" prop="shipReceiptRequire" label="回单要求">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipReceiptNum" label="回单份数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="commissionFee" label="代收款手续费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipPayWay" label="付款方式">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipNowpayFee" label="现付">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipArrivepayFee" label="到付">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipReceiptpayFee" label="回单付">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipMonthpayFee" label="月结">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipTotalFee" label="运费合计">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="name" label="制单人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="brokerageFee" label="回扣">
-          </el-table-column>
-          <!-- <el-table-column sortable width="120" prop="batchTypeId" label="客户单号">
-          </el-table-column> -->
-          <el-table-column sortable width="120" prop="deliveryFee" label="送货费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="productPrice" label="声明价值">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="insuranceFee" label="保险费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="handlingFee" label="装卸费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="packageFee" label="包装费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="pickupFee" label="提货费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="realityhandlingFee" label="实际提货费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="goupstairsFee" label="上楼费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="customsFee" label="报关费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="otherfeeIn" label="其他费收入">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="otherfeeOut" label="其他费支出">
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              :prop="column.prop"
+              v-if="!column.slot"
+              :width="column.width">
+            </el-table-column>
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              v-else
+              :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -169,6 +60,7 @@ import { postTransferList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfoTransfer from './components/editInfoTransfer'
 import TableSetup from './components/tableSetup'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -211,7 +103,334 @@ export default {
           // startTime: '',
           // truckIdNumber: ''
         }
-      }
+      },
+      tableColumn: [
+        {
+          label: "开单网点",
+          prop: "shipFromOrgid",
+          width: "110"
+        },
+        {
+          label: "承运商",
+          prop: "carrierName",
+          width: "120"
+        },
+        {
+          label: "承运商电话",
+          prop: "carrierMobile",
+          width: "120"
+        },
+        {
+          label: "到站电话",
+          prop: "arrivalMobile",
+          width: "120"
+        },
+        {
+          label: "运单状态",
+          prop: "shipStatusName",
+          width: "120"
+        },
+        {
+          label: "运单号",
+          prop: "shipSn",
+          width: "120"
+        },
+        {
+          label: "中转单号",
+          prop: "oddNumbers",
+          width: "120"
+        },
+        // {
+        //   label: "中转批次",
+        //   prop: "batchTypeId",
+        //   width: "120"
+        // },
+        {
+          label: "开单时间",
+          prop: "createTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "中转时间",
+          prop: "transferTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "中转运费",
+          prop: "transferCharge",
+          width: "120"
+        },
+        {
+          label: "中转送货费",
+          prop: "deliveryExpense",
+          width: "120"
+        },
+        // {
+        //   label: "中转费其他费",
+        //   prop: "batchTypeId",
+        //   width: "120"
+        // },
+        {
+          label: "中转费合计",
+          prop: "totalCost",
+          width: "120"
+        },
+        {
+          label: "中转付款方式",
+          prop: "paymentId",
+          width: "120"
+        },
+        {
+          label: "代收货款",
+          prop: "codService",
+          width: "120"
+        },
+        {
+          label: "发货人",
+          prop: "senderName",
+          width: "120"
+        },
+        {
+          label: "发货人电话",
+          prop: "senderMobile",
+          width: "120"
+        },
+        {
+          label: "收货人",
+          prop: "receiverName",
+          width: "120"
+        },
+        {
+          label: "收货人电话",
+          prop: "receiverMobile",
+          width: "120"
+        },
+        {
+          label: "出发城市",
+          prop: "shipFromCityCode",
+          width: "120"
+        },
+        {
+          label: "到达城市",
+          prop: "shipToCityCode",
+          width: "120"
+        },
+        {
+          label: "货物名称",
+          prop: "cargoName",
+          width: "120"
+        },
+        {
+          label: "件数",
+          prop: "cargoAmount",
+          width: "120"
+        },
+        {
+          label: "重量",
+          prop: "cargoWeight",
+          width: "120"
+        },
+        {
+          label: "体积",
+          prop: "cargoVolume",
+          width: "120"
+        },
+        {
+          label: "包装",
+          prop: "cargoPack",
+          width: "120"
+        },
+        {
+          label: "运单备注",
+          prop: "shipRemarks",
+          width: "120"
+        },
+        {
+          label: "中转备注",
+          prop: "remark",
+          width: "120"
+        },
+        {
+          label: "发货单位",
+          prop: "senderUnit",
+          width: "120"
+        },
+        {
+          label: "发货地址",
+          prop: "senderAddr",
+          width: "120"
+        },{
+          label: "收货单位",
+          prop: "receiverUnit",
+          width: "120"
+        },
+        {
+          label: "收货地址",
+          prop: "receiverAddr",
+          width: "120"
+        },
+        {
+          label: "运费",
+          prop: "shipFee",
+          width: "120"
+        },
+        {
+          label: "交接方式",
+          prop: "shipDeliveryMethod",
+          width: "120"
+        },
+        {
+          label: "货号",
+          prop: "shipGoodsSn",
+          width: "120"
+        },
+        {
+          label: "品种规格",
+          prop: "description",
+          width: "120"
+        },
+        {
+          label: "重量单价",
+          prop: "weightFee",
+          width: "120"
+        },
+        {
+          label: "体积单价",
+          prop: "volumeFee",
+          width: "120"
+        },
+        /*{
+          label: "件数单价",
+          prop: "batchTypeId",
+          width: "120"
+        },*/
+        // {
+        //   label: "等通知放货",
+        //   prop: "batchTypeId",
+        //   width: "120"
+        // },
+        {
+          label: "回单要求",
+          prop: "shipReceiptRequire",
+          width: "120"
+        },
+        {
+          label: "回单份数",
+          prop: "shipReceiptNum",
+          width: "120"
+        },
+         {
+          label: "代收款手续费",
+          prop: "commissionFee",
+          width: "120"
+        },
+         {
+          label: "付款方式",
+          prop: "shipPayWay",
+          width: "120"
+        },
+         {
+          label: "现付",
+          prop: "shipNowpayFee",
+          width: "120"
+        },
+         {
+          label: "到付",
+          prop: "shipArrivepayFee",
+          width: "120"
+        },
+         {
+          label: "回单付",
+          prop: "shipReceiptpayFee",
+          width: "120"
+        },
+         {
+          label: "月结",
+          prop: "shipMonthpayFee",
+          width: "120"
+        },
+         {
+          label: "运费合计",
+          prop: "shipTotalFee",
+          width: "120"
+        },
+         {
+          label: "制单人",
+          prop: "name",
+          width: "120"
+        },
+         {
+          label: "回扣",
+          prop: "brokerageFee",
+          width: "120"
+        },
+        //  {
+        //   label: "客户单号",
+        //   prop: "batchTypeId",
+        //   width: "120"
+        // },
+         {
+          label: "送货费",
+          prop: "deliveryFee",
+          width: "120"
+        },
+         {
+          label: "声明价值",
+          prop: "productPrice",
+          width: "120"
+        },
+        {
+          label: "保险费",
+          prop: "insuranceFee",
+          width: "120"
+        },
+        {
+          label: "装卸费",
+          prop: "handlingFee",
+          width: "120"
+        },
+        {
+          label: "包装费",
+          prop: "packageFee",
+          width: "120"
+        },
+        {
+          label: "提货费",
+          prop: "pickupFee",
+          width: "120"
+        },
+        {
+          label: "实际提货费",
+          prop: "realityhandlingFee",
+          width: "120"
+        },
+        {
+          label: "上楼费",
+          prop: "goupstairsFee",
+          width: "120"
+        },
+        {
+          label: "报关费",
+          prop: "customsFee",
+          width: "120"
+        },
+        {
+          label: "其他费收入",
+          prop: "otherfeeIn",
+          width: "120"
+        },
+        {
+          label: "其他费支出",
+          prop: "otherfeeOut",
+          width: "120"
+        }
+      ]
     }
   },
   activated() {
@@ -292,8 +511,8 @@ export default {
     }
   }
 }
-
 </script>
+
 <style lang="scss">
 .tab-content {
   height: calc(100% - 33px);

@@ -700,7 +700,7 @@ export default {
       })
     },
     editItem(item) {
-      this.resetForm()
+      // this.resetForm()
       this.formModel = objectMerge2({}, item)
       this.isCancelFootEdit = true
     },

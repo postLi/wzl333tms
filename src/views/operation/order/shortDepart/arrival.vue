@@ -54,52 +54,6 @@
             </el-table-column>
           </template>
 
-         <!--  <el-table-column fixed width="50" sortable type="selection">
-          </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchNo" label="发货批次">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="bathStatusName" label="批次状态">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverName" label="司机">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
-          </el-table-column>
-          <el-table-column sortable width="180" prop="departureTime" label="短驳时间">
-            <template slot-scope="scope">
-              {{ scope.row.departureTime}}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="endOrgName" label="目的网点">
-          </el-table-column>
-          <el-table-column sortable width="155" prop="receivingTime" label="接收时间">
-            <template slot-scope="scope">
-              {{ scope.row.receivingTime }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shortFee" label="短驳费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualAmount" label="实到件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualWeight" label="实到重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualVolume" label="实到体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="amountall" label="配载总件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="weightall" label="配载总重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="volumeall" label="配载总体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="weightRate" label="重量装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="volumeRate" label="体积装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="username" label="短驳经办人">
-          </el-table-column>
-          <el-table-column sortable width="150" prop="remark" label="备注">
-          </el-table-column> -->
         </el-table>
       </div>
       <div class="info_tab_footer">

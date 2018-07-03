@@ -11,78 +11,35 @@
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" 
         style="width:100%;" 
         :default-sort="{prop: 'id', order: 'ascending'}"  @row-dblclick="setInfo">
-          <el-table-column fixed width="50" sortable type="selection">
+         <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckIdNumber" label="发车网点">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="batchTypeName" label="车辆状态">
-          </el-table-column>
-          <el-table-column sortable width="160" prop="departureTime" label="发车时间">
-            <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverName" label="司机">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualAmountall" label="实载总件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualWeigntall" label="实载总重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualVolumeall" label="实载总体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipAmount" label="运单总件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipWeigntall" label="运单总重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipVolumeall" label="运单总体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="weightLoadRate" label="重量装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="volumeLoadRate" label="体积装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="nowpayCarriage" label="现付运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="nowpayOilCard" label="现付油卡">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arrivepayCarriage" label="到付运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arrivepayOilCard" label="到付油卡">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="backpayOilCard" label="回付油卡">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="backpayOilCard" label="回付运费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="运费合计">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="carloadInsuranceFee" label="整车保险费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="leaveHandlingFee" label="发站装卸费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="leaveOtherFee" label="发站其他费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveHandlingFee" label="到站装卸费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOtherFee" label="到站其他费">
-          </el-table-column>
-          <el-table-column sortable width="160" prop="loadTime" label="配载时间">
-            <template slot-scope="scope">
-              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="username" label="配载人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckUsername" label="发车人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="备注">
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              :prop="column.prop"
+              v-if="!column.slot"
+              :width="column.width">
+            </el-table-column>
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              v-else
+              :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -105,6 +62,7 @@ import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import TableSetup from './components/tableSetup'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -148,7 +106,169 @@ export default {
           // startTime: '',
           // truckIdNumber: ''
         }
-      }
+      },
+      tableColumn: [
+        {
+          label: "发车批次",
+          prop: "batchNo",
+          width: "110"
+        },
+        {
+          label: "车牌号",
+          prop: "truckIdNumber",
+          width: "120"
+        },
+        {
+          label: "发车网点",
+          prop: "truckIdNumber",
+          width: "120"
+        },
+        {
+          label: "目的网点",
+          prop: "arriveOrgName",
+          width: "120"
+        },
+        {
+          label: "车辆状态",
+          prop: "batchTypeName",
+          width: "120"
+        },
+        {
+          label: "发车时间",
+          prop: "departureTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "司机",
+          prop: "dirverName",
+          width: "120"
+        },
+        {
+          label: "司机电话",
+          prop: "dirverMobile",
+          width: "120"
+        },
+        {
+          label: "实载总件数",
+          prop: "actualAmountall",
+          width: "120"
+        },
+        {
+          label: "实载总重量",
+          prop: "actualWeigntall",
+          width: "120"
+        },
+        {
+          label: "实载总体积",
+          prop: "actualVolumeall",
+          width: "120"
+        },
+        {
+          label: "运单总件数",
+          prop: "shipAmount",
+          width: "120"
+        },
+        {
+          label: "运单总重量",
+          prop: "shipWeigntall",
+          width: "120"
+        },
+        {
+          label: "运单总体积",
+          prop: "shipVolumeall",
+          width: "120"
+        },
+        {
+          label: "重量装载率",
+          prop: "weightLoadRate",
+          width: "120"
+        },{
+          label: "体积装载率",
+          prop: "volumeLoadRate",
+          width: "120"
+        },
+        {
+          label: "现付油卡",
+          prop: "nowpayOilCard",
+          width: "120"
+        },
+        {
+          label: "到付运费",
+          prop: "arrivepayCarriage",
+          width: "120"
+        },
+        {
+          label: "到付油卡",
+          prop: "arrivepayOilCard",
+          width: "120"
+        },
+        {
+          label: "回付油卡",
+          prop: "backpayOilCard",
+          width: "120"
+        },
+        {
+          label: "回付运费",
+          prop: "backpayOilCard",
+          width: "120"
+        },
+        {
+          label: "运费合计",
+          prop: "remark",
+          width: "120"
+        },
+        {
+          label: "整车保险费",
+          prop: "carloadInsuranceFee",
+          width: "120"
+        },
+        {
+          label: "发站装卸费",
+          prop: "leaveHandlingFee",
+          width: "120"
+        },
+        {
+          label: "发站其他费",
+          prop: "leaveOtherFee",
+          width: "120"
+        },
+        {
+          label: "到站装卸费",
+          prop: "arriveHandlingFee",
+          width: "120"
+        },
+        {
+          label: "到站其他费",
+          prop: "arriveOtherFee",
+          width: "120"
+        },
+        {
+          label: "配载时间",
+          prop: "loadTime",
+          width: "120",
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "配载人",
+          prop: "username",
+          width: "120"
+        },
+        {
+          label: "发车人",
+          prop: "truckUsername",
+          width: "120"
+        },
+        {
+          label: "备注",
+          prop: "remark",
+          width: "120"
+        }
+      ]
     }
   },
   mounted() {

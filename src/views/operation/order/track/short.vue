@@ -9,48 +9,35 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}"  @row-dblclick="setInfo">
-          <el-table-column fixed width="50" sortable type="selection">
+          <el-table-column
+            fixed
+            sortable
+            type="selection"
+            width="50">
           </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchNo" label="发车批次">
-          </el-table-column>
-          <el-table-column fixed sortable width="110" prop="batchTypeName" label="批次状态">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="truckIdNumber" label="车牌号">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverName" label="司机">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="dirverMobile" label="司机电话">
-          </el-table-column>
-          <el-table-column sortable width="160" prop="departureTime" label="短驳时间">
-            <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="arriveOrgName" label="目的网点">
-          </el-table-column>
-          <el-table-column sortable width="160" prop="receivingTime" label="接收时间">
-            <template slot-scope="scope">
-              {{ scope.row.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shortFee" label="短驳费">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualAmountall" label="总件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualWeigntall" label="总重量">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="actualVolumeall" label="总体积">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="shipAmount" label="总件数">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="weightLoadRate" label="重量装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="volumeLoadRate" label="体积装载率">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="username" label="短驳经办人">
-          </el-table-column>
-          <el-table-column sortable width="120" prop="remark" label="备注">
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              :prop="column.prop"
+              v-if="!column.slot"
+              :width="column.width">
+            </el-table-column>
+            <el-table-column
+              :key="column.id"
+              :fixed="column.fixed"
+              sortable
+              :label="column.label"
+              v-else
+              :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -73,6 +60,7 @@ import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import TableSetup from './components/tableSetup'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -116,7 +104,94 @@ export default {
           // startTime: '',
           // truckIdNumber: ''
         }
-      }
+      },
+      tableColumn: [{
+          label: "发货批次",
+          prop: "batchNo",
+          width: "110"
+        },
+        {
+          label: "批次状态",
+          prop: "bathStatusName",
+          width: "120"
+        },
+        {
+          label: "车牌号",
+          prop: "truckIdNumber",
+          width: "120"
+        },
+        {
+          label: "司机",
+          prop: "dirverName",
+          width: "120"
+        },
+        {
+          label: "司机电话",
+          prop: "dirverMobile",
+          width: "120"
+        },
+        {
+          label: "短驳时间",
+          prop: "departureTime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "目的网点",
+          prop: "endOrgName",
+          width: "120"
+        },
+        {
+          label: "接收时间",
+          prop: "receivingTime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
+        },
+        {
+          label: "短驳费",
+          prop: "shortFee",
+          width: "120"
+        },
+        {
+          label: "总件数",
+          prop: "actualAmount",
+          width: "120"
+        },
+        {
+          label: "总重量",
+          prop: "actualWeight",
+          width: "120"
+        },
+        {
+          label: "总体积",
+          prop: "actualVolume",
+          width: "120"
+        },
+        {
+          label: "重量装载率",
+          prop: "weightRate",
+          width: "120"
+        },
+        {
+          label: "体积装载率",
+          prop: "volumeRate",
+          width: "120"
+        },
+        {
+          label: "短驳经办人",
+          prop: "username",
+          width: "120"
+        },
+        {
+          label: "备注",
+          prop: "remark",
+          width: "120"
+        }
+      ]
     }
   },
   mounted() {

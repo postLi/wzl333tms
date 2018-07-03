@@ -324,10 +324,10 @@ export default {
 </script>
 <style lang="scss">
 .icon_blank {
-  background-size: 24px;
+  background-size: 15px;
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 16px;
   vertical-align: middle;
 }
 
