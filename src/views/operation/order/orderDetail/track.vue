@@ -32,7 +32,7 @@
             </el-col>
             <el-col :span="5" :offset="1">
               <p>
-                <span class="track-human"  v-if="item.trackDetailed" ></span>
+                <span class="track-human"  v-if="item.trackType===1" ></span>
                  {{item.trackDetailed}}
               </p>
             </el-col>

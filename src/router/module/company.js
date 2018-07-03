@@ -34,8 +34,8 @@ export default {
       name: '客户管理',
       component: _import('company/customerManage/index'),
       // redirect: '/company/customerManage/sender',
-      meta: { title: '客户管理', stitle: '客户', noCache: true },
-      /*children: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender/index'), meta: { title: '发货人', noCache: true }},
+      meta: { title: '客户管理', stitle: '客户', noCache: true }
+      /* children: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender/index'), meta: { title: '发货人', noCache: true }},
       { path: '/company/customerManage/receiver', hidden: false, name: '收货人', component: _import('company/customerManage/receiver/index'), meta: { title: '收货人', noCache: true }}] */
     },
     {

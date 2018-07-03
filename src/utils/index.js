@@ -152,7 +152,7 @@ export function objectMerge(target, source) {
 export function objectMerge2() {
   let i = 1,
       target = arguments[0] || {},
-      deep = false,
+      deep = true, // 默认为深层拷贝
       length = arguments.length,
       name, options, src, copy,
       copyIsArray, clone

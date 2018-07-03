@@ -1,7 +1,7 @@
 <template>
   <div class="createOrder-main" v-loading="loading">
     <div class="batchlist" v-if="output.isbatch">
-      <span class="batchNum" :class="{'on': i === currentBatch}" v-for="i in output.ordernum" @click="currentBatch = i" :key="i">第{{ i }}票</span>
+      <span class="batchNum" :class="{'on': i === currentBatch}" v-for="i in output.ordernum" @click="changeBatch(i)" :key="i">第{{ i }}票</span>
     </div>
     <div class="createOrderWrapper">
     <div class="createOrder-title"><span>收发货凭证</span></div>
@@ -140,7 +140,36 @@
       </div>
       <!-- 货物费用 -->
       <div class="order-cargo-form">
-        <table>
+        <el-table ref="cargoListTable" :data="form.cargoList" border tooltip-effect="dark" triped width="100%">
+          <el-table-column class="addButtonTh" fixed :render-header="setHeader" width="50">
+            <template slot-scope="scope">
+              <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
+            </template>
+          </el-table-column>
+          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" class="addButtonTh" :fixed="item.isfixed !== 0" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :label="item.fieldName">
+            <template slot-scope="scope">
+              <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoName'" required :rules="{ validator: validateIsEmpty('货品名不能为空！'), trigger: 'blur' }">
+                    <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+                  </el-form-item>
+                </template>
+                <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
+                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
+                </template>
+                <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" required :rules="{ validator: validateIsEmpty('货品件数不能为空！'), trigger: 'blur' }">
+                  <el-input size="mini" maxlength="20"
+                  v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
+                  </el-form-item>
+                </template>
+                <template v-else>
+                  <el-input size="mini" maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    />
+                </template>
+              </template>
+          </el-table-column>  
+        </el-table>
+        <!-- <table>
           <thead>
             <tr>
               <th class="addButtonTh">
@@ -174,13 +203,11 @@
                 <template v-else>
                   <el-input size="mini" maxlength="20" :value="form.cargoList[index][item.fieldProperty]" @change="(val) => changeFee(index, item.fieldProperty, val)"
                     />
-                  <!-- <el-input size="mini" maxlength="20"
-                  v-model="form.cargoList[index][item.fieldProperty]" /> -->
                 </template>
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
       </div>
       <!-- 其它项 -->
       <div class="order-other-form clearfix">
@@ -521,7 +548,13 @@ export default {
     }
 
     return {
+      // 提货批次相关
       currentBatch: 1,
+      // 最近编辑的批次，用来返回或者切换到下一个未保存的票
+      lastEditBatch: 1,
+      // 记录batch对应的list保存状态
+      batchSaveList: {},
+
       activeNames: ['1'],
       rules2: {
         "tmsOrderShip.shipSn": [
@@ -711,11 +744,11 @@ export default {
           "shipFromCityCode": "",
           "shipFromOrgid": '',
           "shipGoodsSn": "",
-          // "shipIsAbnormal": '',
-          // "shipIsControll": '',
-          // "shipIsSeparate": '',
-          // "shipIsTransfer": '',
-          // "shipIsUpdate": '',
+          "shipIsAbnormal": 0,
+          "shipIsControll": 0,
+          "shipIsSeparate": 0,
+          "shipIsTransfer": 0,
+          "shipIsUpdate": 0,
           "shipMonthpayFee": '',
           "shipNowpayFee": '',
           "shipOther": "",
@@ -734,7 +767,7 @@ export default {
           "shipToCityCode": "",
           "shipToCityName": "",
           "shipToOrgid": '',
-          "shipTotalFee": '',
+          "shipTotalFee": 0,
           "shipTruckIdNumber": "",
           "shipUserid": ''
         },
@@ -760,7 +793,7 @@ export default {
       // 系统设置
       config: {},
       // 费用设置
-      feeConfig: {},
+      feeConfig: [],
       // 个人设置
       personConfig: {},
       loading: false,
@@ -785,14 +818,35 @@ export default {
   computed: {
     'transferTotalFee' () {
       return getTotal(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.codService)
+    },
+    'theFeeConfig' () {
+      // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
+      this.feeConfig = this.feeConfig.filter(el => {
+        // 如果是fixed元素，则给其较小的序号保证其排在前面
+        el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
+        if(el.ischeck !== 0){
+          this.cargoObject[el.fieldProperty] = ''
+          return true
+        } else {
+          return false
+        }
+        return el.ischeck !== 0
+      })
+      this.feeConfig.sort((a,b)=>{
+        return a.fieldOrder < b.fieldOrder ? -1 : 1
+      })
+      return this.feeConfig
     }
   },
   watch: {
-    orderobj (newVal) {
-      // 如果是弹窗才响应这个变化
-      if(this.ispop){
-        this.initIndex()
-      }
+    orderobj: {
+      handler(newVal) {
+        // 如果是弹窗才响应这个变化
+        if(this.ispop){
+          this.initIndex()
+        }
+      },
+      deep: true
     },
     transferTotalFee (newVal) {
       this.form.tmsOrderTransfer.totalCost = newVal
@@ -862,6 +916,24 @@ export default {
           callback()
         }
       }
+    },
+    setHeader(h, {column}){
+      return h('span',{
+        props: {
+        },
+        "class": {
+          "addButton": true
+        },
+        on: {
+          click: this.addCargoList
+        }
+      },[
+        h('i',{
+          "class": {
+            "el-icon-plus": true
+          }
+        })
+      ])
     },
     // 各个接口
     // 为了方便缓存数据，重新包装各个接口
@@ -1068,7 +1140,7 @@ export default {
     },
     // 设置费用列 
     setOrderFee () {
-      // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
+      /* // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       this.feeConfig = this.feeConfig.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
         el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
@@ -1082,10 +1154,11 @@ export default {
       })
       this.feeConfig.sort((a,b)=>{
         return a.fieldOrder < b.fieldOrder ? -1 : 1
-      })
+      }) */
       if(this.output.iscreate){
         this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
         this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
+        console.log('theFeeConfig:', this.cargoObject, this.cargoList)
       }
       
     },
@@ -1165,11 +1238,13 @@ export default {
           this.output.isPreOrder = true
           this.initPreOrder()
         } else if(param.batchid){
+          // 此batchid实为batchnumber
           this.output.batchid = param.batchid
           // 如果传过来的非正常字符，则默认为1
           // 如果传过来的数字大于10，则设置为10
           this.output.ordernum = Math.min(parseInt(param.ordernum, 10) || 1, 10)
           this.output.isbatch = true
+          this.output.batchinfo = param.batchobj
           this.initBatch()
         } else {
           this.output.iscreate = true
@@ -1246,9 +1321,196 @@ export default {
       })
     },
     // 从提货创建运单
+    getBatchInfo(batchid){
+      if(this.ispop){
+        // 如果是弹窗页面，可以直接获取到信息
+        return Promise.resolve(this.output.batchinfo)
+      } else {
+        // 如果非弹窗，需要先请求后台接口拿数据
+        return orderManage.getBatchInfo(batchid).then(res => {
+          if(res.data){
+            return res.data
+          } else {
+            return Promise.reject('查无此提货信息~~~~')
+          }
+        })
+      }
+    },
     initBatch(){
+      let errFn = () => {
+        this.$confirm('查无此提货批次信息：' + this.output.batchid, '提示', {
+          confirmButtonText: '返回提货列表页',
+          cancelButtonText: '关闭',
+          type: 'warning'
+        }).then(() => {
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/pickUp')
+        }).catch(() => {
+          // 弹窗页则关闭弹窗
+          if(this.ispop){
+            this.eventBus.$emit('hideCreateOrder')
+          } else {
+          // 关闭标签页
+            this.eventBus.$emit('closeCurrentView')
+          }
+        })
+      }
+
+      this.getBatchInfo(this.output.btachid).then(data => {
+        console.log('batch info：', this.output.batchinfo)
+
+        this.output.batchinfo = data
+        // 先重置原有的信息
+        this.batchSaveList = {}
+        for(let i = 0; i < this.output.ordernum; i++){
+          this.batchSaveList[i+1] = {
+            issave: false,
+            data: {},
+            ischange: false
+          }
+        }
+        
+        this.gotoBatch(this.currentBatch)
+      }).catch(err => {
+        console.log('getBatchInfo error:', err)
+        errFn()
+      })
+      
+    },
+    // 设置batch信息
+    setBatchInfo (data) {
+      
+      if(this.output.ismodify){
+        // 当为修改时，当作运单修改
+        this.setOrderData(data)
+      } else {
+        data = this.output.batchinfo
+        // 城市信息
+        this.form.tmsOrderShip.shipToCityCode = data.toCityCode
+        this.toCityName = data.toCityName
+        // 收发货人信息
+        this.form.sender.customerType = 1
+        this.form.sender.customerName = data.customerName
+        this.form.sender.customerMobile = data.customerMobile
+        this.form.sender.detailedAddress = data.detailedAddress
+        this.form.sender.customerId = data.senderId
+        // 设置货物信息
+        let cargoData = {}
+        for(let i in this.cargoObject){
+          if(typeof data[i] !== 'undefined'){
+            // cargoData[i] = data[i]
+          } else {
+            cargoData[i] = this.cargoObject[i]
+          }
+          if(i==='cargoName'){
+            cargoData[i] = data.pickupName
+          }
+          if(i==='cargoAmount'){
+            cargoData[i] = data.pickupAmount
+          }
+          if(i==='cargoWeight'){
+            cargoData[i] = data.pickupWeight
+          }
+          if(i==='cargoVolume'){
+            cargoData[i] = data.pickupVolume
+          }
+          if(i==='shipFee'){
+            cargoData[i] = data.carriage
+          }
+        }
+        // pickupBatchNumber
+        // id
+        // truckIdNumber
+        this.form.tmsOrderShip.shipTruckIdNumber = data.truckIdNumber
+        this.form.tmsOrderShip.shipBatchId = data.id
+
+
+        this.$set(this.form.cargoList, 0, cargoData)
+
+        // 其它设置
+        this.form.tmsOrderShip.shipPayWay = data.payMethod
+        this.form.tmsOrderShip.shipRemarks = data.remark
+      }
+
+      console.log('setBatchInfo data:', data)
+    },
+    gotoBatch(i){
+      this.loading = true
+      // 判断此票是修改还是创建
+      if(this.batchSaveList[i].issave){
+        this.output.ismodify = true
+      } else {
+        this.output.ismodify = false
+      }
+      // 重新设置界面
       this.init()
+      // 填充数据
+      this.setBatchInfo(this.batchSaveList[i].data)
       this.loading = false
+    },
+    // 切换批次列表
+    changeBatch(i){
+      // 当点击当前选中项时，不做处理
+      if(i === this.currentBatch){
+        return false
+      }
+      // 如果当前项未保存，则其为最近的未保存可编辑项
+      if(!this.batchSaveList[this.currentBatch].issave){
+        this.lastEditBatch = this.currentBatch
+      }
+      
+      // 检查目标票是否被保存，已保存才能切换过去
+      if(this.batchSaveList[i].issave){
+        // 当切换后，将其对应的数据保存一份，方便返回继续填写
+        if(!this.batchSaveList[this.currentBatch].issave){
+          // 只有未保存项，才缓存其数据
+          // 为什么？不知道
+          // 暂时不做取出缓存回显的操作，此操作与修改运单有冲突
+          this.batchSaveList[this.currentBatch].data = objectMerge2({}, this.form)
+        }
+        // 执行跳转
+        this.currentBatch = i
+        this.gotoBatch(i)
+        
+      }else if(this.batchSaveList[this.currentBatch].issave){
+        // 当切换到最近的编辑项时，才执行跳转
+        if((i === this.lastEditBatch) || (this.lastEditBatch === this.currentBatch)){
+          this.currentBatch = i
+          this.lastEditBatch = i
+          this.gotoBatch(i)
+        } else {
+          this.$message.warning('第' + this.lastEditBatch + '单还没保存，请先保存！')
+        }
+      } else {
+        this.$message.warning('第' + this.currentBatch + '单还没保存，请先保存！')
+      }
+      
+    },
+    // 跳转到下一个可编辑的票
+    goNextEditBatch (){
+      // 如果当前票已经是最后一票了，则提示用户去不去运单页面
+      if(this.currentBatch >= this.output.ordernum){
+        this.$confirm('已经完成全票填写，下一步操作？', '提示', {
+          confirmButtonText: '查看运单列表页',
+          cancelButtonText: '关闭',
+          type: 'warning'
+        }).then(() => {
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+        }).catch(() => {
+          // 弹窗页则关闭弹窗
+          if(this.ispop){
+            this.eventBus.$emit('hideCreateOrder')
+          } else {
+          // 关闭标签页
+            this.eventBus.$emit('closeCurrentView')
+          }
+        })
+      } else {
+        if(this.currentBatch === this.lastEditBatch) {
+          this.changeBatch(this.lastEditBatch + 1)
+        } else {
+          this.changeBatch(this.lastEditBatch)
+        }
+      }
     },
     // 回填运单信息
     setOrderData (data) {
@@ -1472,7 +1734,17 @@ export default {
       this.sender = {}
       this.receiver = {}
       this.form.tmsOrderShip = this.resetObj(this.form.tmsOrderShip)
+      this.form.tmsOrderShip.shipIsAbnormal = 0
+      this.form.tmsOrderShip.shipIsControll = 0
+      this.form.tmsOrderShip.shipIsSeparate = 0
+      this.form.tmsOrderShip.shipIsTransfer = 0
+      this.form.tmsOrderShip.shipIsUpdate = 0
+      this.form.tmsOrderShip.shipTotalFee = 0
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
+
+      this.currentBatch = 1
+      this.lastEditBatch = 1
+      this.batchSaveList = {}
       // this.setOrderDate()
     },
     /*** 提交表单 */
@@ -1482,6 +1754,7 @@ export default {
         if (valid) {
           // 判断运费是否符合总计
           if(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee) !== this.form.tmsOrderShip.shipTotalFee) {
+            console.log(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee),this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
             this.$message.error('各付款方式之和与合计运费不等~')
           } else {
             // 再提取各个表格项里的数据
@@ -1542,20 +1815,73 @@ export default {
               return b
             })
             data.tmsOrderShip.createTime = new Date(data.tmsOrderShip.createTime).getTime()
-            console.log('this.output.ismodify:', this.output.ismodify)
+
             if(this.output.ismodify){
+              /* this.$message.success('成功修改运单！')
+                this.batchSaveList[this.currentBatch].data = data
+                if(!this.output.isbatch){
+                  if(this.ispop){
+                    this.eventBus.$emit('hideCreateOrder')
+                    this.eventBus.$on('showOrderDetail', data.tmsOrderShip.id)
+                  } else {
+                    // this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + data.tmsOrderShip.id + '&tab=查看' + data.tmsOrderShip.shipSn)
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+                  }
+                }
+                return */
               data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
               console.log('change Order:', data)
               orderManage.putChangeOrder(data).then(res => {
                 this.$message.success('成功修改运单！')
+                
+                if(!this.output.isbatch){
+                  if(this.ispop){
+                    this.eventBus.$emit('hideCreateOrder')
+                    this.eventBus.$on('showOrderDetail', data.tmsOrderShip.id)
+                  } else {
+                    // this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + data.tmsOrderShip.id + '&tab=查看' + data.tmsOrderShip.shipSn)
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+                  }
+                } else {
+                  this.batchSaveList[this.currentBatch].data = data
+                }
               }).catch(err => {
-                this.message.error('修改失败，原因：' + err.text)
+                this.$message.error('修改失败，原因：' + err.text)
               })
             } else {
+              /* this.$message.success('成功创建运单！')
+                this.batchSaveList[this.currentBatch].data = data
+                this.batchSaveList[this.currentBatch].issave = true
+                // 当为批次列表过来的，不作处理
+                if(!this.output.isbatch){
+                  if(this.ispop){
+                    this.eventBus.$emit('hideCreateOrder')
+                    this.eventBus.$on('showOrderDetail', 9)
+                  } else {
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + 9 + '&tab=查看' + data.tmsOrderShip.shipSn)
+                  }
+                }
+
+                return */
               orderManage.postNewOrder(data).then(res => {
                 this.$message.success('成功创建运单！')
+                // 当为批次列表过来的，不作处理
+                if(!this.output.isbatch){
+                  if(this.ispop){
+                    this.eventBus.$emit('hideCreateOrder')
+                    this.eventBus.$on('showOrderDetail', 9)
+                  } else {
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + 9 + '&tab=查看' + data.tmsOrderShip.shipSn)
+                  }
+                } else {
+                  this.batchSaveList[this.currentBatch].data = data
+                  this.batchSaveList[this.currentBatch].issave = true
+                  this.goNextEditBatch()
+                }
+                
+                
               }).catch(err => {
-                this.message.error('创建失败，原因：' + err.text)
+                this.$message.error('创建失败，原因：' + err.text)
               })
             }
 
@@ -1647,18 +1973,21 @@ $backgroundcolor: #cbe1f7;
     .batchlist{
       width: 60px;
       margin-right: 10px;
-      border-top: 1px solid #666;
+      margin-top: 38px;
+      border-top: 1px solid #999;
       span{
         display: block;
-        border: 1px solid #666;
+        border: 1px solid #999;
         border-top: none;
         height: 36px;
         line-height: 36px;
         text-align: center;
+        cursor: pointer;
 
         &.on{
-          color: #000;
+          color: #333;
           background: #cbe1f7;
+          cursor: default;
         }
       }
     }
@@ -1853,7 +2182,20 @@ $backgroundcolor: #cbe1f7;
     .order-cargo-form{
       overflow: auto;
       margin-bottom: 1px;
-      table, td{
+      width: 100%;
+
+      th{
+        min-width: 110px;
+        background: #d5e7f9;
+        color: #666;
+        height: 28px;
+        vertical-align: middle;
+        border-left: 1px solid #88bef3;
+        text-align: center;
+        font-weight: normal;
+      }
+
+      /* table, td{
         border: 1px solid $bordercolor;
         text-align: center;
       }
@@ -1869,7 +2211,7 @@ $backgroundcolor: #cbe1f7;
         vertical-align: middle;
         border-left: 1px solid #88bef3;
         text-align: center;
-      }
+      } */
       .addButtonTh{
         min-width: 50px;
       }

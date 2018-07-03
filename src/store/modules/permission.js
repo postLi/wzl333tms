@@ -64,13 +64,13 @@ const permission = {
       })
     },
     GenerateSidebarRoutes({ commit, state }, data) {
-      return new Promise(reslove => {
+      return new Promise(resolve => {
         const currentRouters = state.routers
         const subRouter = currentRouters.find(route => {
           return route.name === data
         })
         commit('SET_SIDEBAR_ROUTERS', subRouter.children || [])
-        reslove()
+        resolve()
       })
     }
   }

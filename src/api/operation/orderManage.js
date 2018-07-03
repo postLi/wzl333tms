@@ -551,5 +551,16 @@ export default {
    */
   deleteTrackinfo(trackId) {
     return fetch.delete('/api-order/order/shipTrack/v1/deleteById/' + trackId)
+  },
+  /**
+   * 根据批次号码获得批次的详细信息
+   * @param {*} batchNum 批次号码
+   */
+  getBatchInfo(batchNum) {
+    return fetch.get('/api-order/order/pickup/v1/findByBatch/', {
+      params: {
+        batchNum
+      }
+    })
   }
 }

@@ -6,7 +6,7 @@ import fetch from '@/utils/fetch'
 export function getCityInfo(name = '') {
   return fetch.get('/tmsorderservice/order/region/v1/name', {
     params: {
-      name: name
+      name: name || ''
     }
   }).then(res => {
     return res.data || []

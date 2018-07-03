@@ -138,7 +138,7 @@
                     this.$emit('success')
                     // this.$router.push('/operation/order/createOrder?batchid=' + this.getMentInfo.pickupId + '&ordernum=' + this.getMentInfo.dictNum)
                     this.eventBus.$emit('showCreateOrder', {
-                      batchid: this.getMentInfo.pickupId,
+                      batchid: this.dotInfo.pickupBatchNumber,
                       ordernum: this.getMentInfo.dictNum,
                       batchobj: this.dotInfo
                     })
