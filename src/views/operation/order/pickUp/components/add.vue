@@ -281,9 +281,7 @@ export default {
       checked: true,
       formLabelWidth: '80px',
       popTitle: '提货派车单',
-      departmentArr: [],
       loading: false,
-      groups: [],
       inited: false,
       pickupBatchNumber:'',
 
@@ -311,24 +309,28 @@ export default {
     },
     info () {
       if (this.isModify) {
-        this.popTitle = '修改派车单',
-        // console.log(this.info);
+        this.popTitle = '修改派车单'
+        console.log(this.info);
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
         this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
         this.form.tmsOrderPickup.id = this.info.id
+        this.pickupBatchNumber = this.info.pickupBatchNumber
+
         this.form.tmsTruck.truckUnit = '辆'
       }
       else if(this.isDbclick) {
-        this.popTitle = '修改派车单',
+        this.popTitle = '查看派车单'
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
         this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
         this.form.tmsOrderPickup.id = this.info.id
+        this.pickupBatchNumber = this.info.pickupBatchNumber
         this.form.tmsTruck.truckUnit = '辆'
+        console.log(this.info);
       }
       else {
-        this.popTitle = '提货派车单',
+        this.popTitle = '提货派车单'
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
         this.form.tmsDriver = this.setObject(this.form.tmsDriver)
@@ -345,7 +347,12 @@ export default {
         this.form.tmsTruck.truckUnit = trunk.truckUnit
       }
 
-      console.log(trunk)
+      // console.log(trunk)
+    },
+    infoData(item){
+      // this.form.tmsOrderPickup.pickupName = item.pickupName
+      // this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
+      // this.form.tmsOrderPickup.pickupWeight = item.pickupAmount
     },
     setObject(obj1, obj2) {
       for (var i in obj1) {
@@ -403,6 +410,10 @@ export default {
             promiseObj = putUpdatePickup(data)
             this.reset()
           } else {
+            // customerId
+            delete data.customSend.customerId
+            delete data.customRece.customerId
+            delete data.tmsOrderCargoList.cargoId
             promiseObj = postAddPickup(data)
           }
 

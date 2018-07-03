@@ -37,7 +37,7 @@
             sortable
             prop="id"
             label="序号"
-            width="80">
+            width="180">
           </el-table-column>
           <el-table-column
             fixed
@@ -225,7 +225,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orderProcedureFee"
+            prop="pickupWeight"
             label="代收款手续费"
             width="130"
             sortable

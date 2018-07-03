@@ -1,5 +1,5 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
+  <pop-right :title="popTitle +  orderSn" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add" label-width="100px">
         <div class="info_order clearfloat">发货人信息</div>
@@ -59,14 +59,14 @@
               </li>
               <li>
                 <p>重量</p>
-                <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
+                <el-form-item prop="tmsOrderCargoList.weightFee">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.weightFee" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>体积</p>
-                <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
+                <el-form-item prop="tmsOrderCargoList.volumeFee">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.volumeFee" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
@@ -95,7 +95,7 @@
               </el-form-item>
             </td>
             <td>
-              <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityCode">
+              <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityName">
                 <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
               </el-form-item>
             </td>
@@ -114,7 +114,7 @@
           <tr>
             <td>
               <el-form-item label="提货方式">
-                <SelectType v-model="form.tmsOrderPre.orderPickupMethodName" type="order_pickup_method"  :disabled="isDbclick"/>
+                <SelectType v-model="form.tmsOrderPre.orderPickupMethod" type="order_pickup_method"  :disabled="isDbclick"/>
               </el-form-item>
             </td>
             <td>
@@ -125,12 +125,12 @@
 
             <td>
               <el-form-item label="代收款">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderCargoList.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="代收款手续费">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderCargoList.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -143,12 +143,12 @@
 
             <td>
               <el-form-item label="运费">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.deliveryFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderCargoList.shipFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="声明价值">
-                <el-input v-numberOnly v-model="form.tmsOrderPre.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-input v-numberOnly v-model="form.tmsOrderCargoList.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -250,7 +250,7 @@ export default {
     }
     let hasOne = false
     const validateVolumnWeight = (rule, value, callback) => {
-      if(this.form.tmsOrderCargoList.cargoVolume === '' && this.form.tmsOrderCargoList.cargoWeight === '' ){
+      if(this.form.tmsOrderCargoList.volumeFee === '' && this.form.tmsOrderCargoList.weightFee === '' ){
         hasOne = false
       }
       if(!value && !hasOne){
@@ -262,7 +262,7 @@ export default {
     }
     return {
       rules:{
-        "tmsOrderPre.orderToCityCode": [
+        "tmsOrderPre.orderToCityName": [
           {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur']}
         ],
         "customSend.customerName": [
@@ -287,10 +287,10 @@ export default {
           {validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur'},
           {validator: validatePickupNum, trigger: 'blur'}
         ],
-        'tmsOrderCargoList.cargoVolume': [{
+        'tmsOrderCargoList.volumeFee': [{
           validator: validateVolumnWeight, trigger: 'blur'
         }],
-        'tmsOrderCargoList.cargoWeight': [{
+        'tmsOrderCargoList.weightFee': [{
           validator: validateVolumnWeight, trigger: 'blur'
         }],
         "tmsOrderCargoList.description": [
@@ -301,15 +301,15 @@ export default {
       carObj: {
         cargoName:'',  // 货品名
         cargoAmount:'',  // 件数
-        cargoWeight:'',  // 重量
-        cargoVolume:'',  // 体积
+        weightFee:'',  // 重量
+        volumeFee:'',  // 体积
         cargoPack:'',  // 包装
-        description:''  // 品种规格
+        // description:''  // 品种规格
       },
       form: {
         customSend:{
           // 发货人
-          // customerId,
+          customerId:'',
           customerUnit:'',
           customerName:'',
           customerMobile:'',
@@ -317,6 +317,7 @@ export default {
           customerType:1
         },
         customRece:{
+          customerId:'',
           customerUnit:'',
           customerName:'',
           customerMobile:'',//
@@ -329,10 +330,15 @@ export default {
           {
             cargoName:'',  // 货品名
             cargoAmount:'',  // 件数
-            cargoWeight:'',  // 重量
-            cargoVolume:'',  // 体积
+            weightFee:'',  // 重量
+            volumeFee:'',  // 体积
             cargoPack:'',  // 包装
-            description:''  // 品种规格
+            description:'' , // 品种规格
+            commissionFee:'',//代收款手续费
+            agencyFund:'',//代收款
+            productPrice:'',//声明价值
+            shipFee:'',//运费shipFee
+            cargoId:''
           }
         ],
         //订单信息
@@ -343,35 +349,36 @@ export default {
           orderToCityName:'',
           orderFromOrgid:'',
           orderToOrgid:'',//目的网点
-          orderPickupMethodName:218,//提货方式
+          orderPickupMethod :218,//提货方式
           orderEffective:94,//紧急度
-          agencyFund:'',//代收款
-          commissionFee:'',//代收款手续费
           orderPayWay:76,//付款方式 orderPayWayName
-          deliveryFee:'',//运费
-          productPrice:'',//声明价值
-          orderRemarks:''//声明价值
-
+          // deliveryFee:'',//运费
+          // commissionFee:'',//代收款手续费
+          // agencyFund:'',//代收款
+          // productPrice:'',//声明价值
+          orderRemarks:''//
+          // cargoId,senderId,receiverId
         }
       },
       customSend:{
         // 发货人
-        // customerId,
-        companyName:'',
-        senderName:'',
-        senderMobile:'',
+        // customerId:'',
+        customerUnit:'',
+        customerName:'',
+        customerMobile:'',
         detailedAddress:'',
         customerType:1
       },
       customRece:{
-        // customerId,
-        companyName:'',
-        receiverName:'',
-        receiverMobile:'',//
+        // customerId:'',
+        customerUnit:'',
+        customerName:'',
+        customerMobile:'',//
         detailedAddress:'',
         customerType:2
       },
-      popTitle: '新建',
+      popTitle: '新增订单',
+      orderSn: '',
       loading: false,
       inited: false
     }
@@ -394,14 +401,19 @@ export default {
     },
     info () {
       if(this.isModify){
-        this.popTitle = '修改'
+        this.popTitle = '修改订单'
+        this.orderSn = this.info.orderSn
         this.infoData(this.info)
+        console.log(this.info);
       }else if(this.isDbclick) {
-        this.popTitle = '查看'
+        this.popTitle = '查看订单'
+        this.orderSn = this.info.orderSn
         this.infoData(this.info)
       }
       else {
-        this.popTitle = '新增'
+        this.popTitle = '新增订单'
+        this.orderSn = ''
+        // cargoId
         // this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
         this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
         this.form.customSend = objectMerge2({}, this.customSend)
@@ -409,13 +421,13 @@ export default {
         this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
         this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
         this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
-        this.form.tmsOrderPre.orderEffectiveName = ''
-        this.form.tmsOrderPre.agencyFund = ''
-        this.form.tmsOrderPre.commissionFee = ''
-        this.form.tmsOrderPre.deliveryFee = ''
-        this.form.tmsOrderPre.productPrice = ''
+        // this.form.tmsOrderPre.orderEffectiveName = ''
+        this.form.tmsOrderCargoList.agencyFund = ''
+        this.form.tmsOrderCargoList.commissionFee = ''
+        this.form.tmsOrderCargoList.shipFee = ''
+        this.form.tmsOrderCargoList.productPrice = ''
         this.form.tmsOrderPre.orderRemarks = ''
-        this.form.tmsOrderPre.orderPickupMethodName = 218
+        this.form.tmsOrderPre.orderPickupMethod  = 218
         this.form.tmsOrderPre.orderEffective = 94
         this.form.tmsOrderPre.orderPayWay = 76
       }
@@ -425,31 +437,37 @@ export default {
     infoData(item){
       this.form.tmsOrderCargoList.cargoName = item.cargoName
       this.form.tmsOrderCargoList.cargoAmount = item.cargoAmount
-      this.form.tmsOrderCargoList.cargoWeight = item.cargoWeight
-      this.form.tmsOrderCargoList.cargoVolume = item.cargoVolume
+      this.form.tmsOrderCargoList.weightFee = item.cargoWeight
+      this.form.tmsOrderCargoList.volumeFee = item.cargoVolume
       this.form.tmsOrderCargoList.cargoPack = item.cargoPack
       this.form.tmsOrderCargoList.description = item.description
+      this.form.tmsOrderCargoList.agencyFund = item.agencyFund
+      this.form.tmsOrderCargoList.commissionFee = item.orderProcedureFee
+      this.form.tmsOrderCargoList.shipFee = item.deliveryFee
+      this.form.tmsOrderCargoList.productPrice = item.productPrice
+      this.form.tmsOrderCargoList.cargoId = item.id
       //发
       this.form.customSend.customerName = item.senderName
       this.form.customSend.customerMobile = item.senderMobile
       this.form.customSend.detailedAddress = item.senderAddr
       this.form.customSend.customerUnit = item.senderUnit
+      this.form.customSend.customerId = item.senderId
       //收
       this.form.customRece.customerName = item.receiverName
       this.form.customRece.customerMobile = item.receiverMobile
       this.form.customRece.detailedAddress = item.receiverAddr
       this.form.customRece.customerUnit = item.receiverUnit
+      this.form.customRece.customerId = item.receiverId
 
       // 订单信息
       this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
+      console.log(this.form.tmsOrderPre.orderFromCityName);
       this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
-      // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
-      this.form.tmsOrderPre.orderEffectiveName = item.orderEffectiveName
-      this.form.tmsOrderPre.agencyFund = item.agencyFund
-      this.form.tmsOrderPre.commissionFee = item.orderProcedureFee
-      this.form.tmsOrderPre.deliveryFee = item.deliveryFee
-      this.form.tmsOrderPre.productPrice = item.productPrice
       this.form.tmsOrderPre.orderRemarks = item.orderRemarks
+      // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
+      this.form.tmsOrderPre.orderEffective = item.orderEffectiveName
+
+
     },
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -481,7 +499,8 @@ export default {
     setSender(item, type){
       type = type ? 'customRece' : 'customSend'
       if(item){
-        this.form[type].customerId = item.customerId || ''
+
+        // this.form[type].customerId = item.customerId || ''
         this.form[type].customerType = type === 'customSend' ? 1 : 2
         this.form[type].customerUnit = item.customerUnit
         this.form[type].customerName = item.customerName
