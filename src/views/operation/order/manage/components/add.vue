@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle +  orderSn" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add" label-width="100px">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add manage-add_lrl" label-width="100px">
         <div class="info_order clearfloat">发货人信息</div>
         <div class="info_send clearfloat">
           <ul>
@@ -370,7 +370,6 @@ export default {
         customerType:1
       },
       customRece:{
-        // customerId:'',
         customerUnit:'',
         customerName:'',
         customerMobile:'',//
@@ -404,7 +403,6 @@ export default {
         this.popTitle = '修改订单'
         this.orderSn = this.info.orderSn
         this.infoData(this.info)
-        console.log(this.info);
       }else if(this.isDbclick) {
         this.popTitle = '查看订单'
         this.orderSn = this.info.orderSn
@@ -461,7 +459,6 @@ export default {
 
       // 订单信息
       this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
-      console.log(this.form.tmsOrderPre.orderFromCityName);
       this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
       this.form.tmsOrderPre.orderRemarks = item.orderRemarks
       // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
@@ -778,7 +775,9 @@ export default {
   .clearfloat{
     zoom:1
   }
-
+  /*.el-input.is-disabled .el-input__inner, .el-textarea.is-disabled .el-textarea__inner{*/
+    /*background-color: #fff;*/
+  /*}*/
 
 </style>
 

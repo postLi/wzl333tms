@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="pickup_lrl">
 
         <div class="pickUp-top">
           <el-form-item label="提货批次" prop="customerUnit">
@@ -40,7 +40,7 @@
           <el-form-item label="付款方式" >
             <!--<el-input v-model="form.tmsOrderPickup.payMethod" auto-complete="off" ></el-input>-->
             <!--默认为现付-->
-            <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
+            <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way"  class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="到达城市" class="order_toCityCode">
             <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityCode" :remote="true" :disabled="isDbclick"/>
@@ -310,7 +310,6 @@ export default {
     info () {
       if (this.isModify) {
         this.popTitle = '修改派车单'
-        console.log(this.info);
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
         this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
@@ -327,7 +326,7 @@ export default {
         this.form.tmsOrderPickup.id = this.info.id
         this.pickupBatchNumber = this.info.pickupBatchNumber
         this.form.tmsTruck.truckUnit = '辆'
-        console.log(this.info);
+
       }
       else {
         this.popTitle = '提货派车单'
@@ -335,6 +334,7 @@ export default {
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
         this.form.tmsDriver = this.setObject(this.form.tmsDriver)
         this.form.tmsTruck.truckUnit = '辆'
+        this.form.tmsOrderPickup.payMethod = 76
       }
     }
   },
@@ -352,7 +352,23 @@ export default {
     infoData(item){
       // this.form.tmsOrderPickup.pickupName = item.pickupName
       // this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
-      // this.form.tmsOrderPickup.pickupWeight = item.pickupAmount
+      // this.form.tmsOrderPickup.pickupWeight = item.pickupWeight
+      // this.form.tmsOrderPickup.carriage = item.carriage
+      // this.form.tmsOrderPickup.collectionFee = item.collectionFee
+      // this.form.tmsOrderPickup.payMethod = item.payMethodName
+
+
+      // this.form.tmsTruck.truckIdNumber = item.truckIdNumber
+      // this.form.tmsTruck.truckType = item.truckType
+
+      // this.form.tmsDriver.driverName = item.driverName
+      // this.form.tmsDriver.driverMobile = item.driverMobile
+
+      // this.form.tmsCustomer.customerName = item.customerName
+      // this.form.tmsCustomer.customerMobile = item.customerMobile
+      // this.form.tmsCustomer.detailedAddress = item.detailedAddress
+
+
     },
     setObject(obj1, obj2) {
       for (var i in obj1) {
@@ -517,13 +533,9 @@ export default {
 .pickup-way .el-input__suffix{
   right: 20px;
 }
-/*.customerunit {*/
-  /*.el-form-item--mini{*/
-    /*.el-input__inner{*/
-      /*width: 100%;*/
-    /*}*/
-  /*}*/
-/*}*/
+  .pickup_lrl .el-input.is-disabled .el-input__inner,.pickup_lrl .el-textarea.is-disabled .el-textarea__inner{
+    background-color: #fff;
+  }
 
 </style>
 

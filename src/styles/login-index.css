@@ -109,6 +109,8 @@
   font-size: 18px;
   background-color: #0a84ff;
   letter-spacing: 2px;
+  padding: 4px 20px;
+  border: none;
 }
 
 .login{
