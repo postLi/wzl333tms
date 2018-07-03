@@ -46,7 +46,7 @@
             :data="usersArr"
             stripe
             border
-            height="700"
+            height="100%"
             tooltip-effect="dark"
             @row-click="clickDetails"
             @selection-change="seleClick"

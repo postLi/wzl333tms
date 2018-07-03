@@ -379,7 +379,7 @@ export default {
       flex-grow: 1;
       overflow-x: hidden;
       overflow-y: auto;
-      padding: 10px 21px 0 12px;
+      padding: 10px 10px 0 10px;
 
       .el-collapse{
         border: 1px solid #E0E0E0;

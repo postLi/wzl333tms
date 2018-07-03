@@ -1,5 +1,5 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="driver_searchinfo clearfix">
       <el-form-item label="网点">
           <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
@@ -20,7 +20,7 @@
               clearable>
           </el-input>
       </el-form-item>
-      <el-form-item class="staff_searchinfo--btn">
+      <el-form-item class="driver_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
       </el-form-item>
@@ -103,30 +103,31 @@ export default {
 
 
 <style lang="scss">
-.tab-content{
-    .staff_searchinfo{
-        padding:15px 20px;
+
+    .driver_searchinfo{
+        padding:10px 0;
+        margin: 0 10px;
         border-bottom:1px dashed #999;
         .el-form-item{
             margin-bottom: 0;
         }
-        
+        .driver_searchinfo--btn{
+            float: right;
+            margin-right: 0;
+        }
     }
-    .staff_searchinfo--btn{
-        float: right;
-    }
-}
+    
+
 @media screen and (max-width:1308px){
-  .tab-content {
-      .staff_searchinfo{
+
+      .driver_searchinfo{
           .el-form-item{
               margin-bottom: 10px;
           }
       }
-      .staff_searchinfo--btn{
+      .driver_searchinfo--btn{
           float: none;
       }
   }
-}
 </style>
 

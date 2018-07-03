@@ -54,7 +54,7 @@ background-color: rgb(195,232,255);
 .side_right {
   flex: 1;
   flex-wrap:wrap;
-  padding: 0px 13px 20px 7px;
+  padding: 0px 10px 10px 10px;
   height: 100%;
   flex-direction: column;
   display: flex;
@@ -108,12 +108,12 @@ background-color: rgb(195,232,255);
 }
 
 /*表格功能*/
-.side_right_bottom {
+.company .side_right_bottom {
   flex: 1;
   flex-direction: column;
   display: flex;
 }
-.side_right_bottom .btns_box_lrl{
+.company .side_right_bottom .btns_box_lrl{
   margin:10px 0 10px 14px;
   height: 32px;
 }
@@ -134,13 +134,12 @@ background-color: rgb(195,232,255);
 /*分页*/
 
 
-.info_news_footer{
+.company .info_news_footer{
   padding-left: 20px;
   background: #eee;
   height: 40px;
   line-height: 40px;
   box-shadow: 0 -2px 2px rgba(0,0,0,.1);
-  position: relative;
   z-index: 10;
   position: absolute;
   bottom: 0;
@@ -170,27 +169,28 @@ background-color: rgb(195,232,255);
   /*padding: 8px 12px 8px 10px;*/
   cursor: pointer;
 }
-.el-table {
+.company .el-table {
   width: 100% !important;
 }
-.el-table table{
+.company .el-table table{
   width: 100% !important;
 
 }
-.el-table th,td{
+.company .el-table th,td{
   text-align:center;
 }
 /*表格功能*/
 
 /*表格内容*/
-.info_news {
-  margin: 0 0px 41px 13px;
+.company .info_news {
+  margin: 0 0px 0;
   flex: 1;
+  overflow: auto;
 }
-.info_news .el-table__header{
+.company .info_news .el-table__header{
   background-color: #eee;
 }
-.info_news .cell{
+.company .info_news .cell{
   color: #333;
   font-size: 14px;
 }

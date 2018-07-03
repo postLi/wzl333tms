@@ -1,5 +1,5 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm"  class="staff_searchinfo clearfix">
       <el-form-item label="归属网点">
           <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
@@ -94,7 +94,8 @@ export default {
 <style lang="scss">
 .staff_manage{
     .staff_searchinfo{
-        padding:10px 20px;
+        padding:10px 0;
+        margin: 0 10px;
         border-bottom:1px dashed #ccc;
         .el-form-item{
             margin-bottom: 0;
@@ -103,6 +104,7 @@ export default {
     }
     .staff_searchinfo--btn{
         float: right;
+        margin-right: 0;
     }
 }
 @media screen and (max-width:1308px){

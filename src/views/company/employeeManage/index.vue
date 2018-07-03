@@ -314,68 +314,68 @@ export default{
 
 <style type="text/css" lang="scss">
     
-    .staff_manage{
+.staff_manage{
+    height: 100%;
+    display: flex;
+    flex-direction:column;
+    position: relative;
+
+    .staff_info{
+        padding:10px 10px 40px;
         height: 100%;
+        flex-grow: 1;
         display: flex;
         flex-direction:column;
-        position: relative;
 
-        .staff_info{
-            padding:10px 30px 40px;
-            height: 100%;
-            flex-grow: 1;
-            display: flex;
-            flex-direction:column;
-
-            .btns_box{
-                margin-bottom:10px;
-                .el-button{
-                    margin-right:10px;
-                }
-                .table_setup{
-                    float: right;
-                    margin-right: 0;
-                }
+        .btns_box{
+            margin-bottom:10px;
+            .el-button{
+                margin-right:10px;
             }
-            .info_news{
-                width: 100%;
-                height: calc(100% - 90px);
-                flex-grow: 1;
-                
-                .el-table{
-                    table{
-                        th,td{
-                            text-align:center;
-                        }
-                    }
-                    .unauth{
-                        color: #f00;
-                    }
-                }
-                .el-table td, .el-table th{
-                    padding: 5px 0;
-                }
+            .table_setup{
+                float: right;
+                margin-right: 0;
             }
         }
-        .info_news_footer{
-            padding-left: 20px;
-            background: #eee;
-            height: 40px;
-            line-height: 40px;
-            box-shadow: 0 -2px 2px rgba(0,0,0,.1);
-            position: relative;
-            z-index: 10;
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        .info_news{
             width: 100%;
-        }
-
-        .show_pager{
-            float: right;
-            line-height: 40px;
-            height: 40px;
-            overflow: hidden;
+            height: calc(100% - 90px);
+            flex-grow: 1;
+            
+            .el-table{
+                table{
+                    th,td{
+                        text-align:center;
+                    }
+                }
+                .unauth{
+                    color: #f00;
+                }
+            }
+            .el-table td, .el-table th{
+                padding: 5px 0;
+            }
         }
     }
+    .info_news_footer{
+        padding-left: 20px;
+        background: #eee;
+        height: 40px;
+        line-height: 40px;
+        box-shadow: 0 -2px 2px rgba(0,0,0,.1);
+        position: relative;
+        z-index: 10;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .show_pager{
+        float: right;
+        line-height: 40px;
+        height: 40px;
+        overflow: hidden;
+    }
+}
 </style>

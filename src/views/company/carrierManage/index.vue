@@ -303,7 +303,7 @@ export default {
   .carrier-manager{
     height: 100%;
     width: 100%;
-    padding: 12px 0 20px;
+    padding: 0 0 40px;
   }
 </style>
 <style lang="scss">
@@ -313,7 +313,7 @@ export default {
     position: relative;
 
     .tab_info{
-        padding:10px 30px 40px;
+        padding:10px;
         height: 100%;
         flex-grow: 1;
         display: flex;

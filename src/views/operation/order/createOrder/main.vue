@@ -1494,6 +1494,9 @@ export default {
           cancelButtonText: '关闭',
           type: 'warning'
         }).then(() => {
+          if(this.ispop){
+            this.eventBus.$emit('hideCreateOrder')
+          }
           this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
         }).catch(() => {
           // 弹窗页则关闭弹窗

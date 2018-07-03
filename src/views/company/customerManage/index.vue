@@ -35,7 +35,7 @@ export default {
 <style lang="scss" scoped>
   .customer-manager{
     height: 100%;
-    padding-top: 12px;
+    padding-top: 5px;
     .eltab{
       width: 100%;
       height: 32px;
@@ -76,7 +76,7 @@ export default {
     }
     .tab-content{
       width: 100%;
-      padding: 0 20px;
+      padding: 0 10px;
     }
   }
 </style>

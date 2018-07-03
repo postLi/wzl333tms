@@ -15,7 +15,7 @@
       </div>
 
       <div class="side_right">
-        <el-collapse accordion>
+        <el-collapse accordion change="doLayout">
           <el-collapse-item>
             <div class="side_right_top">
               <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
@@ -35,7 +35,7 @@
                   <el-input v-model="form.servicePhone" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="上级网点" :label-width="formLabelWidth">
-                  <el-input v-model="form.parentName || form.orgName" disabled></el-input>
+                  <el-input :value="form.parentName || form.orgName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="经营类型" :label-width="formLabelWidth">
                   <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
@@ -94,8 +94,8 @@
               :data="usersArr"
               stripe
               border
-              height="100%"
               tooltip-effect="dark"
+              height="100%"
               @row-click="clickDetails"
               @selection-change="seleClick"
               style="width: 100%;">
@@ -164,7 +164,7 @@
       </div>
       <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
        <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
-      <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" @success="" :createrId ="otherinfo.id"></DepMaintain>
+      <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" :createrId ="otherinfo.id"></DepMaintain>
     </div>
     <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
   </div>
@@ -402,6 +402,9 @@
           },
           handlePageChange (obj) {
             this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
+          },
+          doLayout(){
+            this.$refs.multipleTable.doLayout()
           },
           clickDetails(row, event, column){
             this.$refs.multipleTable.toggleRowSelection(row)

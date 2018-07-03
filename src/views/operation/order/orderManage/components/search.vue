@@ -126,7 +126,8 @@ export default {
 <style lang="scss">
 .tab-content{
     .staff_searchinfo{
-        padding:15px 20px;
+        padding:10px 0;
+        margin: 0 10px;
         border-bottom:1px dashed #999;
         .el-form-item{
             margin-bottom: 0;
@@ -145,6 +146,7 @@ export default {
     }
     .staff_searchinfo--btn{
         float: right;
+        margin-right: 0;
     }
 }
 @media screen and (max-width:1308px){
