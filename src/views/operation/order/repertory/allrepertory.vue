@@ -74,7 +74,7 @@
         :popVisible="setupTableVisible" 
         :columns='tableColumn'
         @close="closeSetupTable"
-        @success="openColor" @selectFixed="getSelectFixed"></TableSetup>
+        @success="openColor"></TableSetup>
     </div>
   </div>
 </template>
@@ -625,9 +625,6 @@ export default {
       this.closeColorpicker()
       this.fetchAllOrderRepertory()
       this.tablekey = Math.random()
-    },
-    getSelectFixed (obj) { // 设置表格固定列
-      console.log('obj', obj)
     }
   }
 }

@@ -13,11 +13,13 @@
         </div>
         <div class="tableSetup_content">
           <el-checkbox-group v-model="checkListLeft" @change="handleCheckChangeLeft">
-            <el-row v-for="column in columnData">
-              <el-checkbox :label="column" :key="column.key">
-                {{column.label}}
-              </el-checkbox>
-            </el-row>
+            <transition-group name="el-zoom-in-center">
+              <el-row v-for="(column, index) in columnData" :key="index">
+                <el-checkbox :label="column">
+                  {{column.label}}
+                </el-checkbox>
+              </el-row>
+            </transition-group>
           </el-checkbox-group>
         </div>
         <div class="tableSetup_tips">
@@ -33,7 +35,7 @@
       <!-- 右边列表 -->
       <div class="tableSetup_list">
         <div class="tableSetup_head">
-          <el-checkbox :indeterminate="isIndeterminateRight" v-model="checkAllLeft" @change="handChangeAllRight">显示列 {{rightListLen}}</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminateRight" v-model="checkAllRight" @change="handChangeAllRight">显示列 {{rightListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchRight" :fetch-suggestions="querySearchRight" placeholder="请输入内容" @select="handleSearchRight" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -42,11 +44,19 @@
         </div>
         <div class="tableSetup_content">
           <el-checkbox-group v-model="checkListRight" @change="handleCheckChangeRight">
-            <el-row v-for="column in showColumnData">
-              <el-checkbox :label="column" :key="column.key">
-                {{column.label}}
-              </el-checkbox>
-            </el-row>
+             <draggable :move="canDragStart" :list="showColumnData" class="dragArea">
+            <transition-group name="el-zoom-in-center">
+              
+
+              <el-row v-for="(column, index) in showColumnData" :key="index">
+                <el-checkbox :label="column">
+                  {{column.label}}
+                </el-checkbox>
+                <el-switch v-model="column.fixed" :active-text="column.fixed?'固定':'活动'" @change="handleSwitch(column)"></el-switch>
+              </el-row>
+            
+            </transition-group>
+            </draggable>
           </el-checkbox-group>
         </div>
         <div class="tableSetup_tips">
@@ -95,14 +105,32 @@ export default {
   data() {
     const generateData = _ => { // 获取左边列表
       const data = []
-      this.columns.forEach((e, index) => {
-        data.push({
-          label: e.label + e.fixed,
-          key: index,
-          fixed: e.fixed,
-          prop: e.prop
+      if (this.columns.length > 0) {
+        this.columns.forEach((e, index) => {
+          data.push({
+            label: e.label,
+            key: index,
+            fixed: e.fixed,
+            prop: e.prop,
+          })
         })
-      })
+      }
+      return data
+    }
+    const generateRightData = _ => {
+      const data = []
+      if (this.columns.length > 0) {
+        this.columns.forEach((e, index) => {
+          if (e.fixed) {
+            data.push({
+              label: e.label,
+              key: index,
+              fixed: e.fixed,
+              prop: e.prop
+            })
+          }
+        })
+      }
       return data
     }
     const setLeftDefaultChecked = _ => { // 设置左边默认checked项
@@ -119,7 +147,7 @@ export default {
     }
     return {
       columnData: generateData(),
-      showColumnData: [],
+      showColumnData: generateRightData(),
       leftDefaultChecked: setLeftDefaultChecked(),
       list: [],
       rightList: [],
@@ -147,32 +175,45 @@ export default {
           break
       }
     },
+    canDragStart(list){
+      console.log(list)
+      // return !list.draggedContext.element.isfixed
+    },
+    setColumnNum() {
+      this.leftListLen = this.columnData.length
+      this.rightListLen = this.showColumnData.length
+    },
     goRight() {
-      let data = []
       this.checkListLeft.forEach((e, index) => {
-        data.push(e)
+        this.showColumnData.push(e) // 将左边勾选的数据项添加到右边
         let item = this.columnData.indexOf(e)
-        if (item !== -1) {
-          // 源数据减去被穿梭的数据
+        if (item !== -1) { // 源数据减去被穿梭的数据
           this.columnData.splice(item, 1)
         }
       })
-      this.checkListRight = objectMerge2([], data)
-      this.showColumnData = objectMerge2([], data)
-      data = []
-      console.log('goRight', this.checkListLeft)
+      this.checkListLeft = [] // 清空左边勾选列表
+      this.setColumnNum()
     },
-    goLeft() {},
+    goLeft() {
+      this.checkListRight.forEach((e, index) => {
+        this.columnData.push(e) // 将右边勾选的数据项返回到左边
+        let item = this.showColumnData.indexOf(e)
+        if (item !== -1) { // 源数据减去被穿梭的数据
+          this.showColumnData.splice(item, 1)
+        }
+      })
+      this.checkListRight = [] // 清空右边勾选列表
+      this.setColumnNum()
+    },
     handChangeAllLeft(val) { // 左边列表全选
       this.checkListLeft = val ? this.columnData : []
       this.isIndeterminate = false
-      console.log('handChangeAllLeft', this.checkListLeft, val)
     },
     handleCheckChangeLeft(val) { // 勾选左边列表项
-      console.log('勾选左边列表项', val)
+      // console.log('勾选左边列表项', val)
     },
     handleCheckChangeRight(val) { // 勾选右边列表项
-      console.log('勾选右边列表项', val)
+      // console.log('勾选右边列表项', val)
     },
     querySearchLeft(queryString, cb) {
       let col = this.columnData
@@ -186,10 +227,9 @@ export default {
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
-    handChangeAllRight(val) {
-      this.checkListRight = val ? this.columnData : []
+    handChangeAllRight(val) { // 右边列表全选
+      this.checkListRight = val ? this.showColumnData : []
       this.isIndeterminate = false
-      console.log('handChangeAllLeft', this.checkListRight, val)
     },
     createFilter(queryString) {
       return (data) => {
@@ -197,10 +237,10 @@ export default {
       }
     },
     handleSearchLeft(val) {
-      console.log('handleSearchLeft', val)
+      // console.log('handleSearchLeft', val)
     },
     handleSearchRight(val) {
-      console.log('handleSearchRight', val)
+      // console.log('handleSearchRight', val)
     },
     closeMe(done) {
       this.$emit('close')
@@ -210,22 +250,22 @@ export default {
     },
     handleChange(value, direction, movedKeys) {
       this.rightList = objectMerge2([], value)
-      console.log(value, direction, movedKeys)
+    },
+    handleSwitch(obj) {
+      // console.log(obj)
     },
     submitForm(formName) {
-      let list = this.rightList
-      let data = objectMerge2([], this.columns)
-      data.forEach(e => {
+      // this.columns = objectMerge2([], this.showColumnData)
+      this.columns.forEach(e => {
         e.fixed = false
       })
-      list.forEach((e, index) => {
-        data[e].fixed = true
+      this.showColumnData.forEach((e, index) => {
+        if (e.fixed) {
+          this.columns[e.key].fixed = true
+        }
       })
       this.listKey = Math.random()
-      this.$emit('selectFixed', data)
       this.closeMe()
-      data = []
-      list = []
     }
   }
 }
@@ -253,10 +293,24 @@ export default {
     border: 1px solid #eee;
     text-align: left;
     .el-row {
-      .el-checkbox {
-        width: 100%;
-        border-bottom: 1px solid #eee;
-        padding: 10px;
+      position: relative;
+      border-bottom: 1px solid #eee;
+      padding: 10px;
+      .el-checkbox {}
+      .el-switch {
+        position: absolute;
+        right: 30px;
+        .el-switch__core {
+          width: 63px !important;
+        }
+        .el-switch__label * {
+          font-size: 10px;
+        }
+        .el-switch__label--right {
+          margin-left: -44px;
+          color: #fff;
+          z-index: 2;
+        }
       }
     }
     .tableSetup_head {
