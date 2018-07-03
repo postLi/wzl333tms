@@ -16,6 +16,7 @@
           :data="dataset"
           stripe
           border
+          @row-dblclick="getDbClick"
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -529,7 +530,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      <Addsign :issender="true" :isPick="isPick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
+      <Addsign :issender="true" :isPick="isPick" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
       <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :show="show"></Addbatch>
       <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
@@ -587,6 +588,7 @@ export default {
               repertoryId:'',
               signId:'',
               disabled:false,
+              isDbclick:false, 
               signStatus:'',
               // loading:false,
               searchQuery: {
@@ -667,9 +669,11 @@ export default {
                 this.isModify = true
                 this.openAddBatch()
                 this.isPick = false
+                this.isDbclick = true
                 // this.show = true
               }else if(ids.length){
                 this.repertoryId = this.selected[0]
+                this.isDbclick = true
                 this.openAddSign()
               }else{
                 this.$message({
@@ -688,6 +692,8 @@ export default {
                   })
                 }else{
                   this.isPick = true
+                  this.isDbclick = true
+                  // this.selectInfo = this.selected[0];
                   this.repertoryId = this.selected[0]
                   this.id = this.selected[0].signId
                   console.log(this.id);
@@ -749,8 +755,14 @@ export default {
         },
         getSelection(selected){
           this.selected = selected
+        },
+        getDbClick(row, event){
+          this.repertoryId = row
+          // this.AddSignVisible = true
+          this.isDbclick = true
+          this.isPick = false
+          this.openAddSign()
         }
-       
     }
 }
 </script>

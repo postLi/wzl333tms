@@ -55,7 +55,7 @@
         </tr>
         <tr>
           <td>
-            <el-form-item label="签收时间:" prop="signTime">
+            <el-form-item label="签收时间:" prop="signTime" >
               <el-date-picker
                   v-model="searchCreatTime"
                   align="right"
@@ -63,6 +63,7 @@
                   :picker-options="pickOption2"
                   placeholder="选择日期"
                   value-format="timestamp"
+                  :disabled="isDbclick"
                   >
               </el-date-picker>
             </el-form-item>
@@ -89,40 +90,43 @@
         <tr>
           <td>
             <el-form-item label="签收人:" prop="signName">
-                <el-input maxlength="10" v-model="form.signName" auto-complete="off"></el-input>
+                <el-input maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick"></el-input>
               </el-form-item>
           </td>
           <td>
             <el-form-item label="签收证件:" prop="signCocumentTypeId" >
-              <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type"/>
+              <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>
             </el-form-item>
           </td>
           <td>
             <el-form-item label="证件号码:" prop="documentNum">
-              <el-input v-model="form.documentNum" auto-complete="off"></el-input>
+              <el-input v-model="form.documentNum" auto-complete="off" :disabled="isDbclick"></el-input>
             </el-form-item>
           </td>
           <td>
            <el-form-item label="签收类型:" prop="signTypeId" >
-              <SelectType v-model="form.signTypeId" type="sign_type"/>
+              <SelectType v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
             </el-form-item>
           </td>
         </tr>
         <tr>
           <td>备注</td>
-          <td colspan="7" prop="remark" ><input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%;height:48px;line-hieght:48px"/></td>
+          <td colspan="7" prop="remark" ><input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%;height:48px;line-hieght:48px" :disabled="isDbclick"/></td>
         </tr>
         <tr style="height:152px">
           <td>签收凭证</td>
           <td colspan="7" class="imgshow">
             <div class="clearfix uploadcard">
-              <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.signPic"/>
+              <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.signPic" :disabled="isDbclick"/>
             </div>
           </td>
         </tr> 
       </table>
       </el-form>
     </template>
+    <div slot="footer" class="dialog-footer" v-if="isDbclick">
+      <el-button @click="closeMe">关 闭</el-button>
+    </div>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('ruleForm')" v-if="isPick">修改签收</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')" v-if="!isPick">签 收</el-button>
@@ -178,7 +182,11 @@ export default {
     issender: {
       type: Boolean,
       dafault: false
-    }
+    },
+     isDbclick: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
       ...mapGetters([
@@ -228,6 +236,7 @@ export default {
       form:{},
       dataform:{},
       childShipId:'',
+      disabled:false,
       // getrepertoryId:'',
       form: {
         "repertoryId":'',
@@ -322,6 +331,10 @@ export default {
       handler(newVal) {
         if(this.isPick){
           this.popTitle = '自提修改签收'
+        }else if(this.isDbclick) {
+          this.popTitle = '查看信息'
+          // this.orderSn = this.info.orderSn
+          // this.infoData(this.info)
         }else{
           this.popTitle = '自提签收录入' 
         }
@@ -517,7 +530,7 @@ export default {
         border-color: rgba(201, 201, 201, 1);
         font-size:14px;
         text-align :center;
-        background: #f5f7fa;
+        // background: #f5f7fa;
         // label{
         //   background:#fff;
         // }
@@ -527,7 +540,7 @@ export default {
           line-height: 32px;
           border:none;
           padding-left:10px;
-          
+          background: #fff;
         }
         .el-date-editor.el-input, .el-date-editor.el-input__inner{
           width:182px;
@@ -561,6 +574,9 @@ export default {
       }
       .el-input__prefix i{
         display: none;
+      }
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
       }
     }
   }
