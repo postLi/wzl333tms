@@ -75,7 +75,8 @@
           </el-form-item>
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
-          <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck || isDeal}">
+            <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
+          <div class="clearfix uploadcard"  >
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" :disabled="isCheck || isDeal ? true : false"/>
           </div>
         </div>
@@ -109,7 +110,8 @@
           </el-form-item>
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
-          <div class="clearfix uploadcard"  :class="{'disabledUpload': isCheck}">
+            <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
+          <div class="clearfix uploadcard"  >
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
           </div>
         </div>
@@ -174,6 +176,10 @@ export default {
     licenseTypes: {
       type: Array,
       default: () => []
+    },
+    isDbclick: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -310,41 +316,72 @@ export default {
     },
     isModify: {
       handler(newVal) {
-        if(this.isModify){
-          this.popTitle = '异常修改'
-          GetLook(this.id).then(res => {
-            this.form = res;
-          })
-        }else if(!this.isModify && !this.isCheck){
-          this.popTitle = '异常登记'
-          this.form.orgId = this.orgid
-          this.form.registerTime = new Date();
-          this.dengji();   
-        }
+        this.setTitle ()
+        // if(this.isModify){
+        //   this.popTitle = '异常修改'
+        //   GetLook(this.id).then(res => {
+        //     this.form = res;
+        //   })
+        // }
+        // else if(this.isCheck){
+        //   // this.setTitle ()
+        //   this.popTitle = '查看明细'
+        //   GetLook(this.id).then(res => {
+        //     this.form = res;
+        //   })
+        // }
+        // else{
+        //   this.popTitle = '异常登记'
+        //   this.form.orgId = this.orgid
+        //   this.form.registerTime = new Date();
+        //   this.dengji();   
+        // }
       },
       immediate: true
     },
     isCheck: {
-      handler(newVal) {
-        if(newVal){
-          this.popTitle = '查看明细'
-          GetLook(this.id).then(res => {
-            this.form = res;
-          })
-        }
+    handler(newVal) {
+        this.setTitle ()
+        console.log(this.isDeal + "ppp");
+        // if(this.isModify){
+        //   this.popTitle = '异常修改'
+        //   GetLook(this.id).then(res => {
+        //     this.form = res;
+        //   })
+        // }
+        // else if(this.isCheck){
+        //   // this.setTitle ()
+        //   this.popTitle = '查看明细'
+        //   GetLook(this.id).then(res => {
+        //     this.form = res;
+        //   })
+        // }
+        // else{
+        //   this.popTitle = '异常登记'
+        //   this.form.orgId = this.orgid
+        //   this.form.registerTime = new Date();
+        //   this.dengji();   
+        // }
+        // if(newVal){
+        //   this.popTitle = '查看明细'
+        //   GetLook(this.id).then(res => {
+        //     this.form = res;
+        //   })
+        // }
       },
       immediate: true
     },
 
     isDeal: {
       handler(newVal) {
-        if(newVal){
-          this.popTitle = '异常处理'
-          GetLook(this.id).then(res => {
-            this.form = res;
-            this.form.disposeTime = new Date();             
-          })
-        }
+         this.setTitle ()
+        // if(this.isDeal){
+        //   this.popTitle = '异常处理'
+        //   GetLook(this.id).then(res => {
+        //     this.form = res;
+        //     this.form.disposeTime = new Date();             
+        //   })
+        // }
       },
       immediate: true
     }
@@ -376,6 +413,32 @@ export default {
     // handlePreview(file) {
     //   console.log(file);
     // },
+    setTitle (){
+      if(this.isCheck){
+        this.popTitle = '查看明细'
+          GetLook(this.id).then(res => {
+            this.form = res;
+        })
+      }else if(this.isModify){
+          this.popTitle = '异常修改'
+          GetLook(this.id).then(res => {
+            this.form = res;
+          })
+      }
+      else if(this.isDeal){
+        this.popTitle = '异常处理'
+        GetLook(this.id).then(res => {
+          this.form = res;
+          this.form.disposeTime = new Date();             
+        })
+      }
+      else{
+        this.popTitle = '异常登记'
+        this.form.orgId = this.orgid
+        this.form.registerTime = new Date();
+        this.dengji();   
+      }
+    },
     dengji(){
       return GetAbnormalNo().then(res=>{
           // this.form = res;
@@ -614,6 +677,7 @@ export default {
       margin-bottom:5px;
       color:black;
       position: relative;
+      background: #e9f3fa;
       h4{
         font-size: 14px;
         color:black;

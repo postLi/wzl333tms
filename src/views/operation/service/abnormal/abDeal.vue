@@ -17,6 +17,7 @@
           :data="dataset"
           stripe
           border
+          @row-dblclick="getDbClick"
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -332,6 +333,13 @@ export default {
         closeSetupTable () {
           this.setupTableVisible = false
         },
+         getDbClick(row, event){
+          this.repertoryId = row
+          this.isCheck = true
+          this.isModify = false
+          // this.isDbclick = true
+          this.openAddAbnormal()
+        }
     }
 }
 </script>

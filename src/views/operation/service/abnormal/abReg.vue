@@ -17,6 +17,7 @@
           :data="dataset"
           stripe
           border
+          @row-dblclick="getDbClick"
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -231,6 +232,7 @@ export default {
                 isCheck:false,
                 AddAbnormalVisible:false,
                 setupTableVisible: false,
+                isDbclick:false,
                 licenseTypes: [],
                 selected:[],
                 
@@ -294,6 +296,7 @@ export default {
               case 'reg':
                 this.isModify = false
                 this.isCheck = false
+                // this.isDbclick = false
                 console.log(this.isModify)
                 this.selectInfo = {}
                 this.openAddAbnormal()
@@ -308,6 +311,7 @@ export default {
                 }else{
                   this.isModify = true
                   this.isCheck = false
+                  //  this.isDbclick = false
                   this.id = this.selected[0].id
                   console.log(this.id);
                   this.openAddAbnormal();
@@ -321,6 +325,7 @@ export default {
                       type:'warning'
                     })
                   }else{
+                    // this.isDbclick = false
                     this.isModify = false
                     this.isCheck = true
                     this.id = this.selected[0].id
@@ -383,6 +388,13 @@ export default {
         closeSetupTable () {
           this.setupTableVisible = false
         },
+        getDbClick(row, event){
+          this.repertoryId = row
+          this.isCheck = true
+          this.isModify = false
+          // this.isDbclick = true
+          this.openAddAbnormal()
+        }
     }
 }
 </script>

@@ -110,12 +110,15 @@
           </td>
         </tr>
         <tr>
-          <td>备注</td>
-          <td colspan="7" prop="remark" ><input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" style="width:100%;height:48px;line-hieght:48px" :disabled="isDbclick"/></td>
+          <!-- <td>备注</td> -->
+          <td colspan="7" prop="remark" class="mark">
+            <label class="label">备注</label>
+            <input type="text" v-model.trim="form.remark" placeholder="备注最多输入250个字符" maxlength="250" :disabled="isDbclick"/></td>
         </tr>
         <tr style="height:152px">
-          <td>签收凭证</td>
-          <td colspan="7" class="imgshow">
+          <!-- <td>签收凭证</td> -->
+          <td colspan="7" class="imgshow mark">
+            <div class="pz"><div>签收凭证<span class="ts">（最多可上传6张）</span></div></div>
             <div class="clearfix uploadcard">
               <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.signPic" :disabled="isDbclick"/>
             </div>
@@ -574,25 +577,71 @@ export default {
   .table{
     border-collapse :collapse ;
     color: #333333;
+    // border-left:1px solid #ccc;
     tr{
+      .mark .label{
+        display: block;
+        float:left;
+        text-align:center;
+        width:100px;
+        height:50px;
+        line-height:50px;
+        background:#f2f2f2;
+        border-right:1px solid #ccc;
+      }
+      .mark input{
+        width:1000px;
+        height:48px;
+        line-height: 48px;
+        padding-left: 20px;
+      }
+      .mark .pz{
+        width:100px;
+        height: 167px;
+        // margin-top:30px;
+        // line-height: 167px;
+         border-right:1px solid #ccc;
+        float:left;
+        text-align: center;
+        background: #f2f2f2;
+        div{
+          height: 167px;
+          margin-top:50px;
+         
+        // line-height: 167px;
+          .ts{
+            display: block;
+            color:#999999;
+          }
+        }
+        
+      }
+      .upload-container[data-v-de7091b2]{
+        margin-left: 40px;
+      }
       td{
         // width:157px;
         height:50px;
         border :1px solid black;
         border-color: rgba(201, 201, 201, 1);
         font-size:14px;
-        text-align :center;
+        // text-align :center;
         // background: #f5f7fa;
         // label{
         //   background:#fff;
         // }
-        
+        label{
+          border-right:1px solid #ccc;
+        }
         input{
           height: 32px;
           line-height: 32px;
           border:none;
           padding-left:10px;
           background: #fff;
+        }
+        .el-form-item__label{
+          background:#f2f2f2;
         }
         .el-date-editor.el-input, .el-date-editor.el-input__inner{
           width:182px;
