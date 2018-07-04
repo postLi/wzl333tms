@@ -1,6 +1,6 @@
 <template>
-  <!-- <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="delivery_searchinfo clearfix"> -->
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="delivery_searchinfo clearfix">
+  <!-- <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix"> -->
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="送货时间:">
       <el-date-picker v-model="searchCreatTime" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
       </el-date-picker>
@@ -18,7 +18,7 @@
     <el-form-item label="司机名称">
       <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable />
     </el-form-item>
-    <el-form-item class="delivery_searchinfo--btn art_marginTop">
+    <el-form-item class="staff_searchinfo--btn art_marginTop">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
     </el-form-item>
@@ -149,65 +149,3 @@ export default {
 }
 
 </script>
-<style lang="scss">
-.tab-content {
-  .delivery_searchinfo {
-    padding: 15px 20px;
-    border-bottom: 1px dashed #999;
-    .el-form-item {
-      margin-bottom: 10px;
-    }
-    .el-input--mini {
-      width: 150px;
-    }
-    .el-range-editor--mini.el-input__inner {
-      width: 200px;
-    }
-  }
-  .delivery_searchinfo--btn {
-    float: right;
-  }
-}
-
-@media screen and (max-width:1308px) {
-  .tab-content {
-    .delivery_searchinfo {
-      .el-form-item {
-        margin-bottom: 0px;
-      }
-    }
-    .delivery_searchinfo--btn {
-      float: none;
-    }
-  }
-}
-
-// .tab-content{
-//     .delivery_searchinfo{
-//         padding:15px 20px;
-//         border-bottom:1px dashed #999;
-//         .el-form-item{
-//             margin-bottom: 0;
-//         }
-//     }
-//     .delivery_searchinfo--btn{
-//         float: right;
-//     }
-//   .art_marginTop{
-//     margin-top: 10px;
-//   }
-// }
-// @media screen and (max-width:1308px){
-//   .tab-content {
-//       .delivery_searchinfo{
-//           .el-form-item{
-//               margin-bottom: 10px;
-//           }
-//       }
-//       .delivery_searchinfo--btn{
-//           float: none;
-//       }
-//   }
-// }
-
-</style>

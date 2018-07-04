@@ -187,35 +187,3 @@ export default {
 }
 </script>
 
-
-<style lang="scss">
-.tab-content{
-    .staff_searchinfo{
-        padding:15px 20px;
-        border-bottom:1px dashed #999;
-        .el-form-item{
-            margin-bottom: 0;
-        }
-
-    }
-    .staff_searchinfo--btn{
-        float: right;
-    }
-  .art_marginTop{
-    margin-top: 10px;
-  }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .staff_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .staff_searchinfo--btn{
-          float: none;
-      }
-  }
-}
-</style>
-

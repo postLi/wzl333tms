@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="receipt_searchinfo clearfix">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
       <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
@@ -36,7 +36,7 @@
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
             <SelectCity @change="getToCity" />
         </el-form-item>
-        <el-form-item class="receipt_searchinfo--btn">
+        <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
         </el-form-item>
@@ -141,36 +141,4 @@ export default {
     }
   }
 }
-</script> 
-<style lang="scss">
-.tab-content{
-    .receipt_searchinfo{
-        padding:15px 20px;
-        border-bottom:1px dashed #999;
-        .el-form-item{
-            margin-bottom: 0;
-            margin-top:10px;
-        }
-        
-    }
-    .receipt_searchinfo--btn{
-        float: right;
-    }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .receipt_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .receipt_searchinfo--btn{
-          float: none;
-      }
-  }
-}
-.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
-  width:200px;
-}
-</style>
-
+</script>

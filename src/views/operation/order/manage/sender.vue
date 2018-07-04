@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content manage-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -613,71 +613,10 @@ export default {
 }
 </script>
 <style lang="scss">
-.tab-content{
-    height: calc(100% - 33px);
-    display: flex;
-    flex-direction:column;
-    position: relative;
-
-    .tab_info{
-        padding:10px 30px 40px;
-        height: 100%;
-        flex-grow: 1;
-        display: flex;
-        flex-direction:column;
-
-        .btns_box{
-            margin-bottom:10px;
-            .el-button{
-                margin-right:0;
-            }
-            .table_setup{
-                float: right;
-                margin-right: 0;
-            }
-        }
-        .info_tab{
-            width: 100%;
-            height: calc(100% - 68px);
-            flex-grow: 1;
-
-            .el-table{
-                table{
-                    th,td{
-                        text-align:center;
-                    }
-                }
-                .unauth{
-                    color: #f00;
-                }
-            }
-            .el-table td, .el-table th{
-                padding: 5px 0;
-            }
-        }
+.manage-content{
+    .el-message-box__message{
+      padding-left: 0;
     }
-    .info_tab_footer{
-        padding-left: 20px;
-        background: #eee;
-        height: 40px;
-        line-height: 40px;
-        box-shadow: 0 -2px 2px rgba(0,0,0,.1);
-        position: relative;
-        z-index: 10;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-    }
-
-    .show_pager{
-        float: right;
-        line-height: 40px;
-        height: 40px;
-        overflow: hidden;
-    }
-  .el-message-box__message{
-    padding-left: 0;
-  }
+  
 }
 </style>

@@ -130,37 +130,3 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
-.tab-content {
-  .el-input--mini {
-    width: 150px;
-  }
-  .el-range-editor--mini.el-input__inner {
-    width: 200px;
-  }
-  .staff_searchinfo {
-    padding: 15px 20px;
-    border-bottom: 1px dashed #999;
-    .el-form-item {
-      margin-bottom: 5px;
-    }
-  }
-  .staff_searchinfo--btn {
-    float: right;
-  }
-}
-
-@media screen and (max-width:1308px) {
-  .tab-content {
-    .staff_searchinfo {
-      .el-form-item {
-        margin-bottom: 10px;
-      }
-    }
-    .staff_searchinfo--btn {
-      float: none;
-    }
-  }
-}
-
-</style>

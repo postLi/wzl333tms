@@ -1,5 +1,5 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="90px" class="staff_searchinfo clearfix">
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
       <el-form-item label="出车时间:">
         <div class="block">
           <el-date-picker
@@ -140,36 +140,3 @@ export default {
   }
 }
 </script>
-
-
-<style lang="scss">
-.tab-content{
-    .staff_searchinfo{
-        padding:15px 20px;
-        border-bottom:1px dashed #999;
-        .el-form-item{
-            margin-bottom: 0;
-        }
-
-    }
-    .staff_searchinfo--btn{
-        float: right;
-    }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .staff_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .staff_searchinfo--btn{
-          float: none;
-      }
-  }
-}
-  .customer-manager .tab-content .staff_searchinfo .el-form-item.staff_searchinfo--btn{
-    margin-top: 10px;
-  }
-</style>
-
