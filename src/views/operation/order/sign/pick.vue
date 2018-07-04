@@ -588,7 +588,7 @@ export default {
               repertoryId:'',
               signId:'',
               disabled:false,
-              isDbclick:false, 
+              isDbclick:false,
               signStatus:'',
               // loading:false,
               searchQuery: {
@@ -669,11 +669,12 @@ export default {
                 this.isModify = true
                 this.openAddBatch()
                 this.isPick = false
-                this.isDbclick = true
                 // this.show = true
               }else if(ids.length){
                 this.repertoryId = this.selected[0]
-                this.isDbclick = true
+                this.isDbclick = false
+                this.isPick = false
+                // this.selectInfo = this.selected[0]
                 this.openAddSign()
               }else{
                 this.$message({
@@ -692,9 +693,9 @@ export default {
                   })
                 }else{
                   this.isPick = true
-                  this.isDbclick = true
-                  // this.selectInfo = this.selected[0];
+                  this.isDbclick = false
                   this.repertoryId = this.selected[0]
+                  // this.selectInfo = this.selected[0]
                   this.id = this.selected[0].signId
                   console.log(this.id);
                   this.openAddSign()
@@ -757,12 +758,12 @@ export default {
           this.selected = selected
         },
         getDbClick(row, event){
-          this.repertoryId = row
-          // this.AddSignVisible = true
-          this.isDbclick = true
-          this.isPick = false
-          this.openAddSign()
-        }
+        this.repertoryId = row
+        this.isPick = false
+        this.isDbclick = true
+        this.openAddSign()
+      }
+       
     }
 }
 </script>

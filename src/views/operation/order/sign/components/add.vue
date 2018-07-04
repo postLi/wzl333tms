@@ -90,7 +90,7 @@
         <tr>
           <td>
             <el-form-item label="签收人:" prop="signName">
-                <el-input maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick"></el-input>
+                <el-input maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false"></el-input>
               </el-form-item>
           </td>
           <td>
@@ -127,9 +127,9 @@
     <div slot="footer" class="dialog-footer" v-if="isDbclick">
       <el-button @click="closeMe">关 闭</el-button>
     </div>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer" class="dialog-footer" v-else>
       <el-button type="primary" @click="submitForm('ruleForm')" v-if="isPick">修改签收</el-button>
-      <el-button type="primary" @click="submitForm('ruleForm')" v-if="!isPick">签 收</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')" v-else>签 收</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
@@ -183,7 +183,7 @@ export default {
       type: Boolean,
       dafault: false
     },
-     isDbclick: {
+    isDbclick: {
       type: Boolean,
       default: false
     },
@@ -304,8 +304,97 @@ export default {
     // dotInfo (newVal) {
     //   this.getMentInfo = this.dotInfo
     // },
-    repertoryId(newVal){
-      this.form = this.repertoryId
+    repertoryId:{
+      handler(newVal){
+        //this.setInfo()
+        console.log('repertoryId:', this.form, newVal)
+      },
+      deep: true
+    },
+    
+    popVisible (newVal, oldVal) {
+      if(!this.inited){
+        this.inited = true
+        // this.initInfo()
+      }
+      console.log('popVisible:', newVal, this.repertoryId)
+      if(newVal){
+        this.setInfo()
+      }
+    },
+    // repertoryId(){
+
+    //     if(this.isPick){
+    //       this.popTitle = '自提修改签收'
+    //       console.log(this.isPick)
+    //     }
+    //     else if(this.isDbclick) {
+    //       this.popTitle = '查看信息'
+    //     }
+    //     else{
+    //       this.popTitle = '自提签收录入' 
+    //     }
+    //     immediate: true
+    // },
+    orgid (newVal) {
+      this.form.orgid = newVal
+    },
+    isDbclick:{
+      handler(newVal){
+        this.setTitle()
+        // this.DelModfiy()
+      },
+      immediate: true
+    },
+    isPick: {
+      handler(newVal) {
+        this.setTitle()
+        // if(this.isPick){
+        //   this.popTitle = '自提修改签收'
+        //   console.log(this.isPick)
+        // }
+        // else{
+        //   this.popTitle = '自提签收录入' 
+        // }
+      },
+      immediate: true
+    },
+    isDelivery:{
+      handler(newVal) {
+        this.setTitle () 
+        // console.log(this.isDelivery)
+        // if(!this.isDelivery){
+        //   this.popTitle = '送货修改签收'
+        // }else{
+        //   this.popTitle = '送货签收录入' 
+        // }
+      },
+    },
+    immediate: true
+  },
+  methods: {
+    setTitle () {
+      //查看信息1
+      if(this.isDbclick){
+        this.popTitle = '查看信息'
+      }else if(this.isPick){
+        this.popTitle = '修改签收'
+      }else{
+        this.popTitle = '签收录入'
+      }
+    },
+    DelModfiy(){
+      
+      // if(this.isDelivery){
+      //   this.popTitle = '送货签收录入'
+        
+      // }else{
+      //   this.popTitle = '送货修改签收'
+      // }
+    },
+    setInfo(){
+      // this.$set('form', this.repertoryId)
+      this.form = objectMerge2({}, this.form, this.repertoryId)
       this.obj.repertoryId = this.repertoryId.repertoryId
       this.obj.signTime = this.repertoryId.signTime
       this.obj.signName = this.repertoryId.signName
@@ -315,44 +404,7 @@ export default {
       this.obj.signTypeId = this.repertoryId.signTypeId
       this.obj.remark = this.repertoryId.remark
       this.obj.signPic = this.repertoryId.signPic
-      console.log('repertoryId:', this.form, newVal)
     },
-    
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
-        this.inited = true
-        // this.initInfo()
-      }
-    },
-    orgid (newVal) {
-      this.form.orgid = newVal
-    },
-    isPick: {
-      handler(newVal) {
-        if(this.isPick){
-          this.popTitle = '自提修改签收'
-        }else if(this.isDbclick) {
-          this.popTitle = '查看信息'
-          // this.orderSn = this.info.orderSn
-          // this.infoData(this.info)
-        }else{
-          this.popTitle = '自提签收录入' 
-        }
-      },
-      immediate: true
-    },
-    isDelivery:{
-      handler(newVal) {
-        if(!this.isDelivery){
-          this.popTitle = '送货修改签收'
-        }else{
-          this.popTitle = '送货签收录入' 
-        }
-      },
-    },
-    immediate: true
-  },
-  methods: {
     reset () {
       this.$refs['ruleForm'].resetFields()
     },
@@ -415,17 +467,17 @@ export default {
           let promiseObj
           if(this.isPick){
             promiseObj = putXiugai(this.id,data)
-            console.log(data);
+            // console.log(data);
             
           }
           else if(this.isDelivery){
-           
+        
             promiseObj = postSign(data)//不批量
-            console.log(666);
+           
           }
           else{
             promiseObj = postPickupSign(data)//不批量
-            // console.log(666);
+           
           }
           promiseObj.then(res=>{
             // console.log(res);
