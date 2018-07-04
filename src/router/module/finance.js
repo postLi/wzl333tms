@@ -33,6 +33,12 @@ export default {
     },
     {
       path: '/finance/reconciliation/', icon: 'QQ', name: '财务对账', component: _import('finance/reconciliation/index'), meta: { role: ['admin'], title: '财务对账', noCache: false }
+    },
+    {
+      path: '/finance/unusual/', icon: 'QQ', name: '异动费用', component: _import('finance/unusual/index'), meta: { role: ['admin'], title: '异动费用', noCache: false }
+    },
+    {
+      path: '/finance/payment/', icon: 'QQ', name: '货款管理', component: _import('finance/payment/index'), meta: { role: ['admin'], title: '货款管理', noCache: false }
     }
   ]
 }
