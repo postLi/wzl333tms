@@ -414,8 +414,13 @@ export default {
             this.closeAddCustomer()
                   let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
                   //=>todo 删除多个
-                  let ids = this.selected.map(item => {
-                      return item.id
+                  // let ids = this.selected.map(item => {
+                  //     return item.id
+                  // })
+                  let ids = this.selected.filter(el=>{
+                    return el.pickupStatus === 237
+                  }).map(el => {
+                    return  el.id
                   })
                   ids = ids.join(',')
 

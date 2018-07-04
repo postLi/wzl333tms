@@ -335,20 +335,17 @@ export default {
     info () {
       if (this.isModify) {
         this.popTitle = '修改派车单'
-        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
-        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
-        this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
-        this.form.tmsOrderPickup.id = this.info.id
-        this.pickupBatchNumber = this.info.pickupBatchNumber
-
-        this.form.tmsTruck.truckUnit = '辆'
-      }
-      else if(this.isDbclick) {
-        this.popTitle = '查看派车单'
         // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
         // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
         // this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
+        // this.form.tmsOrderPickup.id = this.info.id
+        // this.pickupBatchNumber = this.info.pickupBatchNumber
 
+        this.form.tmsTruck.truckUnit = '辆'
+        this.infoData(this.info)
+      }
+      else if(this.isDbclick) {
+        this.popTitle = '查看派车单'
         this.form.tmsTruck.truckUnit = '辆'
         this.infoData(this.info)
       }
@@ -367,9 +364,9 @@ export default {
   methods: {
     getTrunkName(trunk){
       if(trunk){
-        console.log(trunk)
+        console.log(trunk);
         this.form.tmsDriver.driverName = trunk.driverName
-        this.form.tmsDriver.driverMobile = trunk.driverMobile
+        this.form.tmsDriver.driverMobile = trunk.dirverMobile
         this.form.tmsTruck.truckType = trunk.truckType
         this.form.tmsTruck.truckUnit = trunk.truckUnit
         this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
