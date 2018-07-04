@@ -178,7 +178,8 @@ export function objectMerge2() {
 
 	// 当只传了一个参数过来时
   if (i === length) {
-    target = {}
+    // 当仅传一个参数时
+    target = Array.isArray(target) ? [] : {}
     i--
   }
 
