@@ -8,30 +8,13 @@
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
-           <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
+        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo" :key="tablekey">
+          <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -49,7 +32,7 @@
       <!-- 在途跟踪 -->
       <editInfoTransfer :orgid="orgid" :id='transferId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchList"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -59,7 +42,7 @@ import { mapGetters } from 'vuex'
 import { postTransferList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfoTransfer from './components/editInfoTransfer'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
@@ -83,6 +66,7 @@ export default {
       total: 0,
       isDisBtn: true,
       transferId: 0,
+      tablekey: 0,
       selectInfo: [],
       trackInfo: {},
       loading: true,
@@ -104,8 +88,7 @@ export default {
           // truckIdNumber: ''
         }
       },
-      tableColumn: [
-        {
+      tableColumn: [{
           label: "开单网点",
           prop: "shipFromOrgid",
           width: "110"
@@ -265,7 +248,7 @@ export default {
           label: "发货地址",
           prop: "senderAddr",
           width: "120"
-        },{
+        }, {
           label: "收货单位",
           prop: "receiverUnit",
           width: "120"
@@ -325,47 +308,47 @@ export default {
           prop: "shipReceiptNum",
           width: "120"
         },
-         {
+        {
           label: "代收款手续费",
           prop: "commissionFee",
           width: "120"
         },
-         {
+        {
           label: "付款方式",
           prop: "shipPayWay",
           width: "120"
         },
-         {
+        {
           label: "现付",
           prop: "shipNowpayFee",
           width: "120"
         },
-         {
+        {
           label: "到付",
           prop: "shipArrivepayFee",
           width: "120"
         },
-         {
+        {
           label: "回单付",
           prop: "shipReceiptpayFee",
           width: "120"
         },
-         {
+        {
           label: "月结",
           prop: "shipMonthpayFee",
           width: "120"
         },
-         {
+        {
           label: "运费合计",
           prop: "shipTotalFee",
           width: "120"
         },
-         {
+        {
           label: "制单人",
           prop: "name",
           width: "120"
         },
-         {
+        {
           label: "回扣",
           prop: "brokerageFee",
           width: "120"
@@ -375,12 +358,12 @@ export default {
         //   prop: "batchTypeId",
         //   width: "120"
         // },
-         {
+        {
           label: "送货费",
           prop: "deliveryFee",
           width: "120"
         },
-         {
+        {
           label: "声明价值",
           prop: "productPrice",
           width: "120"
@@ -503,12 +486,17 @@ export default {
     },
     isTransferTrack() {
       if (this.$route.query.transfer) {
-        console.log('transfer',this.$route.query.transfer)
+        console.log('transfer', this.$route.query.transfer)
         this.setInfo()
       } else {
         this.closeMe()
       }
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
+
 </script>

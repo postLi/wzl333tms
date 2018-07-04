@@ -14,46 +14,19 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" 
-        @cell-dblclick="editTruck" 
-        @row-click="clickDetails" 
-        @selection-change="getSelection" 
-        height="100%" 
-        style="width:100%;" 
-        tooltip-effect="dark" 
-        :data="infoList" stripe border 
-        :default-sort="{prop: 'id', order: 'ascending'}" 
-        :key="tableKey">
-        <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
+        <el-table ref="multipleTable" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark" :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
+          <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
           </template>
-
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -65,7 +38,7 @@
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="getAllList"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -76,7 +49,7 @@ import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import { objectMerge2 } from '@/utils/index'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 export default {
   components: {
     Pager,
@@ -410,6 +383,10 @@ export default {
         // this.$router.push({path: '././shortDepart', query:{tableKey: Math.random()}})
         this.getAllList()
       }
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

@@ -1,10 +1,47 @@
 <template>
+  <!--
+    USAGE【表格设置组件】-用法-父组件引入：
+
+    //html
+    <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+
+    <el-table :key="tablekey"></el-table>
+
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+
+    //script
+      import TableSetup from '@/components/tableSetup'
+      export default {
+        components: {
+          TableSetup
+        },
+        data () {
+          return {
+            setupTableVisible: false, // 默认弹出框关闭
+            tablekey: 0, // 初始化表格视图key
+            tableColumn: [] // 后台接口获取到的列表数据
+          }
+        }
+        methods: {
+          setTable() {
+            this.setupTableVisible = true
+          },
+          closeSetupTable() { // 关闭弹出框
+            this.setupTableVisible = false
+          },
+          setColumn(obj) { // 重绘表格列表
+            this.tableColumn = obj
+            this.tablekey = Math.random() // 刷新表格视图
+          }
+        }
+     }
+  -->
   <el-dialog title="表格设置" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
     <div class="tableSetup_warp">
       <!-- 左边列表 -->
       <div class="tableSetup_list">
         <div class="tableSetup_head">
-          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft.label" @change="handChangeAllLeft">隐藏列 {{leftCheckLen}} / {{leftListLen}}</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列 {{leftCheckLen}} / {{leftListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchLeft" :fetch-suggestions="querySearchLeft" placeholder="请输入内容" @select="handleSearchLeft" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -214,11 +251,11 @@ export default {
     },
     handChangeAllLeft(val) { // 左边列表全选
       this.checkListLeft = val ? Object.assign([], this.columnData) : []
-      this.isIndeterminate = false
+      this.isIndeterminateLeft = false
     },
     handChangeAllRight(val) { // 右边列表全选
       this.checkListRight = val ? Object.assign([], this.showColumnData) : []
-      this.isIndeterminate = false
+      this.isIndeterminateRight = false
     },
     goRight() { // 将隐藏列勾选的项转移到显示列（左边->右边）
       if (this.checkListLeft.length + this.rightListLen > this.maxLen || this.rightListLen > this.maxLen - 1) {
@@ -336,7 +373,6 @@ export default {
     handleSwitch(obj) {},
     submitForm(formName) {
       let data = Object.assign([], this.showColumnData)
-      console.log(data)
       this.$emit('success', data)
       this.listKey = Math.random()
       this.closeMe()

@@ -14,30 +14,13 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
+          <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -54,7 +37,7 @@
       </div>
     </div>
     <!-- 表格设置 -->
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchAllShortDepartList"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 在途跟踪 -->
     <editInfo :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
   </div>
@@ -64,8 +47,8 @@ import { postAllshortDepartList, putTruckDepart, putTruckChanel, putTruckLoad } 
 import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, parseTime  } from '@/utils/index'
-import TableSetup from './components/tableSetup'
+import { objectMerge2, parseTime } from '@/utils/index'
+import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 export default {
   components: {
@@ -80,6 +63,7 @@ export default {
       total: 0,
       btnsize: 'mini',
       setupTableVisible: false,
+      tablekey: 0, // 初始化表格视图key
       selected: [],
       loading: true,
       selectedList: [],
@@ -110,8 +94,7 @@ export default {
         truckIdNumber: '',
         dirverName: ''
       },
-      tableColumn: [
-        {
+      tableColumn: [{
           label: "发车批次",
           prop: "batchNo",
           width: "110"
@@ -181,7 +164,7 @@ export default {
           label: "重量装载率",
           prop: "weightLoadRate",
           width: "120"
-        },{
+        }, {
           label: "体积装载率",
           prop: "volumeLoadRate",
           width: "120"
@@ -435,6 +418,10 @@ export default {
       if (obj) {
         this.getAllList()
       }
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

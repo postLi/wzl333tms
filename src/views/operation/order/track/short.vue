@@ -8,30 +8,13 @@
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}"  @row-dblclick="setInfo">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
+          <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -49,7 +32,7 @@
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfo>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchList"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -59,7 +42,7 @@ import { mapGetters } from 'vuex'
 import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
@@ -83,6 +66,7 @@ export default {
       total: 0,
       isDisBtn: true,
       trackId: 0,
+      tablekey: 0,
       selectInfo: [],
       trackInfo: {},
       loading: true,
@@ -217,7 +201,7 @@ export default {
           this.trackInfo = Object.assign({}, e)
         })
         this.trackId = tid
-      } else if (list.length > 1){
+      } else if (list.length > 1) {
         this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
         this.isDisBtn = true
       } else {
@@ -259,6 +243,10 @@ export default {
           this.loading = false
         }
       })
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

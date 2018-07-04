@@ -10,51 +10,19 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" 
-          @row-dblclick="showDetail" 
-          :data="repertoryArr" 
-          border 
-          @row-click="clickDetails" 
-          @selection-change="getSelection" 
-          height="100%" 
-          tooltip-effect="dark" 
-          :row-style="tableRowColor" 
-          :key="tablekey" 
-          style="width:100%;" 
-          :default-sort="{prop: 'id', order: 'ascending'}" 
-          stripe>
-            <el-table-column 
-              fixed sortable 
-              type="selection" 
-              width="50">
+        <el-table ref="multipleTable" @row-dblclick="showDetail" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50">
+          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <template v-for="column in tableColumn">
-              <el-table-column 
-                :key="column.id" 
-                :fixed="column.fixed" 
-                sortable 
-                :label="column.label" 
-                :prop="column.prop" 
-                v-if="!column.slot" 
-                :width="column.width">
-              </el-table-column>
-              <el-table-column 
-                :key="column.id" 
-                :fixed="column.fixed" 
-                sortable 
-                :label="column.label" 
-                v-else 
-                :width="column.width">
-                <template slot-scope="scope">
-                  <span class="clickitem" 
-                  v-if="column.click" 
-                  v-html="column.slot(scope)" 
-                  @click.stop="column.click(scope)"></span>
-                  <span v-else 
-                  v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -64,17 +32,9 @@
         </div>
       </div>
       <!-- 颜色设置弹出框 -->
-      <Colorpicker 
-        :popVisible="colorpickerVisible" 
-        :reportors="reportorSelect" 
-        @close="closeColorpicker"
-        @success="setColumColor"></Colorpicker>
+      <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect" @close="closeColorpicker" @success="setColumColor"></Colorpicker>
       <!-- 表格设置弹出框 -->
-      <TableSetup 
-        :popVisible="setupTableVisible" 
-        :columns='tableColumn'
-        @close="closeSetupTable"
-        @success="openColor"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -84,7 +44,7 @@ import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Colorpicker from './components/colorpicker'
 import Pager from '@/components/Pagination/index'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
@@ -624,6 +584,10 @@ export default {
       this.selectionColorSetting = obj
       this.closeColorpicker()
       this.fetchAllOrderRepertory()
+      this.tablekey = Math.random()
+    },
+    setColumn(obj) {
+      this.tableColumn = obj
       this.tablekey = Math.random()
     }
   }

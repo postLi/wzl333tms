@@ -16,29 +16,12 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
+          <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -57,7 +40,7 @@
     <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" @sendInfoData="sendInfo">
     </editInfo>
     <!-- 表格设置弹出框 -->
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" />
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 签收弹出框 -->
     <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
   </div>
@@ -65,7 +48,7 @@
 <script>
 import { postSelectLoadMainInfoList, putDeliverLoad, putCompleteDelivery } from '@/api/operation/deliverManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -136,8 +119,7 @@ export default {
           dirverName: ''
         }
       },
-      tableColumn: [
-        {
+      tableColumn: [{
           label: "ID",
           prop: "id",
           width: "110"
@@ -212,7 +194,7 @@ export default {
           label: "重量装载率",
           prop: "weightLoadRate",
           width: "120"
-        },{
+        }, {
           label: "体积装载率",
           prop: "volumeLoadRate",
           width: "120"
@@ -406,6 +388,10 @@ export default {
     signMessage(obj) { // 孙子-获取签收弹出框信息
       this.tablekey = Math.random()
       this.closeMe()
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
