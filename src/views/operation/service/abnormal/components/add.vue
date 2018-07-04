@@ -14,7 +14,7 @@
           <el-form-item label="货号" prop="shipGoodsSn">
             <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-
+  
           <el-form-item label="开单时间" prop="createTime">
             <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
@@ -245,7 +245,7 @@ export default {
         cargoPack:'',
         cargoAmount:'',
       },
-
+      
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
@@ -317,57 +317,13 @@ export default {
     isModify: {
       handler(newVal) {
         this.setTitle ()
-        // if(this.isModify){
-        //   this.popTitle = '异常修改'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //   })
-        // }
-        // else if(this.isCheck){
-        //   // this.setTitle ()
-        //   this.popTitle = '查看明细'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //   })
-        // }
-        // else{
-        //   this.popTitle = '异常登记'
-        //   this.form.orgId = this.orgid
-        //   this.form.registerTime = new Date();
-        //   this.dengji();
-        // }
+        
       },
       immediate: true
     },
     isCheck: {
     handler(newVal) {
         this.setTitle ()
-        console.log(this.isDeal + "ppp");
-        // if(this.isModify){
-        //   this.popTitle = '异常修改'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //   })
-        // }
-        // else if(this.isCheck){
-        //   // this.setTitle ()
-        //   this.popTitle = '查看明细'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //   })
-        // }
-        // else{
-        //   this.popTitle = '异常登记'
-        //   this.form.orgId = this.orgid
-        //   this.form.registerTime = new Date();
-        //   this.dengji();
-        // }
-        // if(newVal){
-        //   this.popTitle = '查看明细'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //   })
-        // }
       },
       immediate: true
     },
@@ -379,13 +335,13 @@ export default {
         //   this.popTitle = '异常处理'
         //   GetLook(this.id).then(res => {
         //     this.form = res;
-        //     this.form.disposeTime = new Date();
+        //     this.form.disposeTime = new Date();             
         //   })
         // }
       },
       immediate: true
-    }
-
+    },
+    
 
 
     // info () {
@@ -414,29 +370,31 @@ export default {
     //   console.log(file);
     // },
     setTitle (){
-      if(this.isCheck){
-        this.popTitle = '查看明细'
-          GetLook(this.id).then(res => {
-            this.form = res;
+       if(this.isDeal){
+        this.popTitle = '异常处理'
+        GetLook(this.id).then(res => {
+          this.form = res;
+          this.form.disposeTime = new Date();             
         })
-      }else if(this.isModify){
+      }
+      else if(this.isModify){
           this.popTitle = '异常修改'
           GetLook(this.id).then(res => {
             this.form = res;
           })
       }
-      else if(this.isDeal){
-        this.popTitle = '异常处理'
-        GetLook(this.id).then(res => {
-          this.form = res;
-          this.form.disposeTime = new Date();
+      else if(this.isCheck){
+        console.log(this.isDeal + '异常查看');
+        this.popTitle = '查看明细'
+          GetLook(this.id).then(res => {
+            this.form = res;
         })
       }
       else{
         this.popTitle = '异常登记'
         this.form.orgId = this.orgid
         this.form.registerTime = new Date();
-        this.dengji();
+        this.dengji();   
       }
     },
     dengji(){
@@ -515,7 +473,7 @@ export default {
           this.form.cargoAmount = ''
           this.form[type] = oldVal
         }
-
+        
       })
     },
     submitForm(formName) {
@@ -588,7 +546,7 @@ export default {
   bottom: auto;
   min-width: 880px;
   max-width:  880px;
-
+   
   .box1{
     border:1px solid #C6E2FF;
     border-top:none;
@@ -608,7 +566,7 @@ export default {
     .el-form--inline .driverRemarks{
       width: 600px;
       // position:relative;
-
+      
     }
     .wz{
         font-size:12px;
@@ -617,7 +575,7 @@ export default {
           color: #606266;
           margin:0 15px;
         }
-
+        
       }
     .el-date-editor.el-input, .el-date-editor.el-input__inner{
       width: 100%;
@@ -682,7 +640,7 @@ export default {
         font-size: 14px;
         color:black;
         float:left;
-
+       
       }
       .result{
         position:absolute;
@@ -709,7 +667,7 @@ export default {
     label{
       color:red;
     }
-
+    
   }
   // .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
   //   margin-bottom: 6px;
