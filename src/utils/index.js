@@ -150,12 +150,83 @@ export function objectMerge(target, source) {
 }
 
 export function objectMerge2() {
+  var options
+  var name
+  var src
+  var copy
+  var copyIsArray
+  var clone
+  var target = arguments[ 0 ] || {}
+  var i = 1
+  var	length = arguments.length
+  var	deep = true
+  var obj = {}
+
+	// 是否深层拷贝可以通过第一个参数控制
+  if (typeof target === 'boolean') {
+    deep = target
+
+		// 往前移，去获取要合并的对象信息
+    target = arguments[ i ] || {}
+    i++
+  }
+
+	// 当合并对象为其它类型的值时，则忽略
+  if (typeof target !== 'object' && !(typeof target === 'function')) {
+    target = {}
+  }
+
+	// 当只传了一个参数过来时
+  if (i === length) {
+    target = {}
+    i--
+  }
+
+  for (; i < length; i++) {
+		// 合并对象必须为非null或者undefined值
+    if ((options = arguments[ i ]) != null) {
+			// Extend the base object
+      for (name in options) {
+        src = target[ name ]
+        copy = options[ name ]
+
+        // 避免循环引用的copy情况
+        if (target === copy) {
+          continue
+        }
+
+          // 当为数组或者对象时处理深层拷贝
+        if (deep && copy && (obj.toString.call(copy) === '[object Object]' ||
+              (copyIsArray = Array.isArray(copy)))) {
+          if (copyIsArray) {
+            copyIsArray = false
+            clone = src && Array.isArray(src) ? src : []
+          } else {
+            clone = src && obj.toString.call(src) ? src : {}
+          }
+
+                // 不要修改原有的数据
+          target[ name ] = objectMerge2(deep, clone, copy)
+
+            // undefined值不用传递过去
+        } else if (copy !== undefined) {
+          target[ name ] = copy
+        }
+      }
+    }
+  }
+
+	// Return the modified object
+  return target
+}
+
+export function objectMerge3() {
   let i = 1,
-      target = arguments[0] || {},
-      deep = true, // 默认为深层拷贝
-      length = arguments.length,
-      name, options, src, copy,
-      copyIsArray, clone
+    target = arguments[0] || {},
+    deep = true, // 默认为深层拷贝
+    length = arguments.length,
+    name, options, src, copy,
+    copyIsArray, clone
 
   // 如果第一个参数的数据类型是Boolean类型
   // target往后取第二个参数
@@ -210,7 +281,7 @@ export function objectMerge2() {
           // 深复制，所以递归调用copyObject函数
           // 返回值为target对象，即clone对象
           // copy是一个源对象
-          target[name] = objectMerge2(deep, clone, copy)
+          target[name] = objectMerge3(deep, clone, copy)
         } else if (copy !== undefined) {
           // 浅复制，直接复制到target对象上
           target[name] = copy
