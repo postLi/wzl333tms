@@ -22,7 +22,7 @@
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
             <!--<el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>-->
-            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"/>
+            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick" maxlength="8"/>
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
@@ -189,11 +189,11 @@ export default {
     return {
       rules: {
         'tmsOrderPickup.pickupName':[
-          { max: 8, message: '货品名最多可输入8个字符', trigger: 'blur' }
+          // { max: 8, message: '货品名最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator:validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
+          // { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
           // { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupVolume':[

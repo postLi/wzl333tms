@@ -131,21 +131,14 @@
               let promiseObj = putUpdatePickkupStatus(this.getMentInfo.pickupId)
               promiseObj.then(res => {
                 this.loading = false
-                this.$alert('操作成功', '提示', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-
-                    this.$emit('success')
-                    // this.$router.push('/operation/order/createOrder?batchid=' + this.getMentInfo.pickupId + '&ordernum=' + this.getMentInfo.dictNum)
-                    this.eventBus.$emit('showCreateOrder', {
-                      batchid: this.dotInfo.pickupBatchNumber,
-                      ordernum: this.getMentInfo.dictNum,
-                      batchobj: this.dotInfo
-                    })
-                    this.closeMe()
-                    this.reset()
-                  }
-                });
+                this.$emit('success')
+                this.eventBus.$emit('showCreateOrder', {
+                  batchid: this.dotInfo.pickupBatchNumber,
+                  ordernum: this.getMentInfo.dictNum,
+                  batchobj: this.dotInfo
+                })
+                this.closeMe()
+                this.reset()
               }).catch(err => {
                 this.loading = false
               })

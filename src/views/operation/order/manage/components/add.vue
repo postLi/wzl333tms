@@ -462,9 +462,7 @@ export default {
       this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
       this.form.tmsOrderPre.orderRemarks = item.orderRemarks
       // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
-      this.form.tmsOrderPre.orderEffective = item.orderEffectiveName
-
-
+      this.form.tmsOrderPre.orderEffective = item.orderEffective
     },
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -577,7 +575,7 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
   .selectListOption_lrl{
     clear:both;
     span{
@@ -661,6 +659,18 @@ export default {
       .send_detailedAddress{
 
       }
+    }
+    li:last-of-type{
+      width: 100%;
+      .el-form-item--mini{
+        .el-form-item__content{
+          width: 100%;
+          .el-autocomplete{
+            width: 100%;
+          }
+        }
+      }
+
     }
   }
 }
@@ -775,9 +785,10 @@ export default {
   .clearfloat{
     zoom:1
   }
-  /*.el-input.is-disabled .el-input__inner, .el-textarea.is-disabled .el-textarea__inner{*/
-    /*background-color: #fff;*/
-  /*}*/
+  .manage-add_lrl .el-input.is-disabled .el-input__inner,.manage-add_lrl .el-textarea.is-disabled .el-textarea__inner{
+    background-color: #fff;
+    /*color: red;*/
+  }
 
 </style>
 
