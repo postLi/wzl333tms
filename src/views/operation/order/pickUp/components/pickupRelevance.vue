@@ -98,13 +98,13 @@
         type: Boolean,
         default: false
       },
+      isDepMain: {
+        type: Boolean,
+        default: false
+      },
       dotInfo: {
         type: Object,
         default: false
-      },
-      isDepMain:{
-        type:Boolean,
-        default:false
       },
       createrId: [Number,String]
     },
@@ -166,48 +166,36 @@
           return this.popVisible
         },
         set(){
-
         }
       }
     },
     watch: {
-      isDepMain(){
-        if(this.isDepMain){
-
-        }else{
-        }
-      },
       dotInfo (newVal) {
-        this.getMentInfo.pickupBatchNumber = this.dotInfo.pickupBatchNumber
-        this.getMentInfo.driverName = this.dotInfo.driverName
-        this.getMentInfo.getMentInfo = this.dotInfo.getMentInfo
-        this.getMentInfo.truckFee = this.dotInfo.truckFee
-        this.sendId.pickupId = this.dotInfo.id
-        // console.log(this.sendId.pickupId);
-        this.fetchData()
+        this.infoData(this.dotInfo)
       },
       popVisible (newVal) {
+        this.fetchData()
       },
-      createrId(newVal){
-
-      }
     },
     mounted() {
       if(this.popVisible){
         this.sendId.pickupId = this.dotInfo.id
-
       }
-      // this.fetchData()
-
     },
     methods: {
+      infoData(item){
+        this.getMentInfo.pickupBatchNumber = item.pickupBatchNumber
+        this.getMentInfo.driverName = item.driverName
+        this.getMentInfo.getMentInfo = item.getMentInfo
+        this.getMentInfo.truckFee = item.truckFee
+        this.sendId.pickupId = item.id
+      },
       search (item) {
         return item.pickupBatchNumber ? false : true
       },
       fetchFindByShipSnOrGoodSn() {
         this.loading = true
         return getFindShipByid(this.dotInfo.id).then(data => {
-          // console.log(data)
           this.usersArr = data
           this.loading = false
         })
@@ -217,14 +205,12 @@
       },
       getShipSn(order){
         if(order){
-          console.log('getShipSn', order)
           this.formInline.shipGoodsSn = order.shipGoodsSn
           this.sendId.shipId = order.id
         }
       },
       getShipGoodsSn(order){
         if(order){
-          console.log('getShipGoodsSn', order)
           this.formInline.shipSn = order.shipSn
           this.sendId.shipId = order.id
         }
@@ -237,11 +223,9 @@
         }
       },
       reset(){
-
         this.formInline.shipSn = ''
         this.formInline.shipGoodsSn = ''
         this.formInline.pickupFee = ''
-        // this.formInline = ''
       },
 
       submitForm(formName) {
@@ -254,18 +238,10 @@
 
             promiseObj.then(res => {
               this.loading = false
-              // this.$alert('操作成功', '提示', {
-              //   confirmButtonText: '确定',
-              //   callback: action => {
-              //     this.fetchData()
-              //
-              //   }
-              // });
               this.$message({
                 message: '添加成功~',
                 type: 'success'
               })
-              // delete this.sendId.pickupId
               delete this.sendId.shipId
               this.fetchData()
               this.reset()
@@ -294,8 +270,6 @@
           }
           else{
             let _this = this
-            // _this.sendId.pickupId=this.selected[0].id
-            // _this.sendId.shipId=this.selected[0].shipId
             console.log(this.selected[0].id);
             console.log(this.selected[0].shipId);
             let promiseObj = putRremoveShip(this.selected[0].id,this.selected[0].shipId)
@@ -329,8 +303,6 @@
     bottom: auto;
     min-width: 580px;
     max-width:  580px;
-    /*min-height: 450px;*/
-    /*max-height:  100%;*/
 
   }
   .pick-maintain .popRight-content{

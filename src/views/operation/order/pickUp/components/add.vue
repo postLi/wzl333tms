@@ -12,7 +12,6 @@
           </el-form-item>
           <el-form-item label="手机号" prop="" class="senderName_lrl">
             <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.tmsCustomer.customerMobile" @change="setSender" :disabled="isDbclick"/>
-          <!--</el-form-item>-->
           </el-form-item>
           <el-form-item label="提货地址" prop="" class="senderName_lrl">
 
@@ -22,7 +21,7 @@
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
             <!--<el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>-->
-            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick" maxlength="8"/>
+            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
@@ -43,7 +42,7 @@
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way"  class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="到达城市" class="order_toCityCode">
-            <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityCode" :remote="true" :disabled="isDbclick"/>
+            <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="备注" prop="tmsOrderPickup.remark" class="order_remark">
             <el-input v-model="form.tmsOrderPickup.remark" type="textarea" auto-complete="off" :disabled="isDbclick"></el-input>
@@ -116,14 +115,15 @@
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
+
+
+
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { getAllCustomer } from '@/api/company/customerManage'
 import { fetchGetPickUp , putUpdatePickup , postAddPickup} from '@/api/operation/pickup'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
-// import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
@@ -182,19 +182,23 @@ export default {
     const validateMobile = (rule, value, callback) => {
       if(REGEX.MOBILE.test(value) || !value.length){
         callback()
-      }else {
+      }
+      else if(this.isDbclick){
+        callback()
+      }
+      else {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
     return {
       rules: {
         'tmsOrderPickup.pickupName':[
-          // { max: 8, message: '货品名最多可输入8个字符', trigger: 'blur' }
+          { max: 8, message: '货品名最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator:validatePickupNum, trigger: 'blur' },
           // { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
-          // { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
+          { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupVolume':[
           { validator:validatePickupNum, trigger: 'blur' },
@@ -270,11 +274,12 @@ export default {
           carriage:'',// 运费
           payMethod:76,// 付款方式
           toCityCode:'',// 到达城市
+          toCityName:'',// 到达城市
           remark:'',
           truckFee:'',//车费
-          outTime:'',//出车时间
           pickupStatus:'',//提货状态
           collectionFee:'',// 代收费用
+          outTime:'',//出车时间
           arriveTime:''//
         }
       },
@@ -288,7 +293,6 @@ export default {
     }
   },
   mounted () {
-    // this.orgid
     if(!this.inited){
       this.inited = true
       this.initInfo()
@@ -320,13 +324,12 @@ export default {
       }
       else if(this.isDbclick) {
         this.popTitle = '查看派车单'
-        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
-        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
-        this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
-        this.form.tmsOrderPickup.id = this.info.id
-        this.pickupBatchNumber = this.info.pickupBatchNumber
-        this.form.tmsTruck.truckUnit = '辆'
+        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
+        // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
+        // this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
 
+        this.form.tmsTruck.truckUnit = '辆'
+        this.infoData(this.info)
       }
       else {
         this.popTitle = '提货派车单'
@@ -350,25 +353,32 @@ export default {
       // console.log(trunk)
     },
     infoData(item){
-      // this.form.tmsOrderPickup.pickupName = item.pickupName
-      // this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
-      // this.form.tmsOrderPickup.pickupWeight = item.pickupWeight
-      // this.form.tmsOrderPickup.carriage = item.carriage
-      // this.form.tmsOrderPickup.collectionFee = item.collectionFee
-      // this.form.tmsOrderPickup.payMethod = item.payMethodName
+      console.log(item)
+      this.form.tmsOrderPickup.pickupName = item.pickupName
+      this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
+      this.form.tmsOrderPickup.pickupWeight = item.pickupWeight
+      this.form.tmsOrderPickup.carriage = item.carriage
+      this.form.tmsOrderPickup.collectionFee = item.collectionFee
+      this.form.tmsOrderPickup.payMethod = item.payMethod
+      this.form.tmsOrderPickup.pickupStatus = item.pickupStatus
+      this.form.tmsOrderPickup.remark = item.remark
+      this.form.tmsOrderPickup.arriveTime = item.arriveTime
+      this.form.tmsOrderPickup.outTime = item.outTime
+      this.form.tmsOrderPickup.toCityName = item.toCityName
+      this.form.tmsOrderPickup.id = item.id
 
+      this.form.tmsTruck.truckIdNumber = item.truckIdNumber
+      this.form.tmsTruck.truckType = item.truckType
 
-      // this.form.tmsTruck.truckIdNumber = item.truckIdNumber
-      // this.form.tmsTruck.truckType = item.truckType
+      this.form.tmsDriver.driverName = item.driverName
+      this.form.tmsDriver.driverMobile = item.driverMobile
 
-      // this.form.tmsDriver.driverName = item.driverName
-      // this.form.tmsDriver.driverMobile = item.driverMobile
+      this.form.tmsCustomer.customerName = item.customerName
+      this.form.tmsCustomer.customerMobile = item.customerMobile
+      this.form.tmsCustomer.detailedAddress = item.detailedAddress
 
-      // this.form.tmsCustomer.customerName = item.customerName
-      // this.form.tmsCustomer.customerMobile = item.customerMobile
-      // this.form.tmsCustomer.detailedAddress = item.detailedAddress
-
-
+      this.pickupBatchNumber = item.pickupBatchNumber
+      console.log(this.form.tmsOrderPickup.toCityCode);
     },
     setObject(obj1, obj2) {
       for (var i in obj1) {
@@ -396,13 +406,13 @@ export default {
     selectToCity (item, city) {
       if(item){
         this.form.tmsOrderPickup.toCityCode = item.id
-      } else {
+        this.form.tmsOrderPickup.toCityName = item.longAddr
+        } else {
       }
     },
     //司机姓名
     getdriverName (item, city) {
       if(item){
-        console.log(item);
         this.form.tmsDriver.driverName = item.driverName
         this.form.tmsDriver.driverMobile = item.driverMobile
       } else {
