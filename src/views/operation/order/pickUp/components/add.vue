@@ -10,10 +10,10 @@
           <el-form-item label="发货人" prop="" class="senderName_lrl">
             <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.tmsCustomer.customerName" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
-          <el-form-item label="手机号" prop="" class="senderName_lrl">
+          <el-form-item label="手机号" prop="tmsCustomer.customerMobile" class="senderName_lrl">
             <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.tmsCustomer.customerMobile" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
-          <el-form-item label="提货地址" prop="" class="senderName_lrl">
+          <el-form-item label="提货地址" prop="tmsCustomer.detailedAddress" class="senderName_lrl">
 
             <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.tmsCustomer.detailedAddress" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
@@ -21,7 +21,7 @@
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
             <!--<el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>-->
-            <querySelect search="value" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
+            <querySelect search="value" valuekey="value" :maxlength="8" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
@@ -56,7 +56,7 @@
             <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="tmsDriver.truckIdNumber">
-            <querySelect search="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick"/>
+            <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="司机姓名" prop="tmsDriver.driverName">
             <querySelect search="driverName" valuekey="driverName" type="driver" @change="getdriverName" :remote="true" v-model="form.tmsDriver.driverName" :disabled="isDbclick"/>
@@ -86,7 +86,7 @@
               >
               </el-date-picker>
           </el-form-item>
-          <el-form-item label="要求到达时间" class="arrive-time">
+          <el-form-item label="要求到达时间" class="arrive-time" prop="tmsOrderPickup.arriveTime">
             <el-date-picker
               v-model="form.tmsOrderPickup.arriveTime"
               align="right"
@@ -172,7 +172,7 @@ export default {
   data () {
     const _this = this
     const validatePickupNum = function (rule, value, callback) {
-      if(REGEX.ONLY_NUMBER.test(value) || !value.length){
+      if(REGEX.ONLY_NUMBER.test(value) || !value){
         callback()
       }
       else {
@@ -180,7 +180,7 @@ export default {
       }
     }
     const validateMobile = (rule, value, callback) => {
-      if(REGEX.MOBILE.test(value) || !value.length){
+      if(REGEX.MOBILE.test(value) || !value){
         callback()
       }
       else if(this.isDbclick){
@@ -190,15 +190,24 @@ export default {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
+    const num = (rule,value,callback) => {
+      // console.log(value)
+      if(!value){
+        callback(new Error('车牌号不能为空'))
+      }else {
+        callback()
+      }
+    }
     return {
       rules: {
         'tmsOrderPickup.pickupName':[
-          { max: 8, message: '货品名最多可输入8个字符', trigger: 'blur' }
+          {required: true,validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur'},
+          //{max: 8, message: '货品名最多可输入8个字符', trigger:'blur'}
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator:validatePickupNum, trigger: 'blur' },
-          // { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
-          { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
+          { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
+          // { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupVolume':[
           { validator:validatePickupNum, trigger: 'blur' },
@@ -223,17 +232,28 @@ export default {
           { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsDriver.truckIdNumber':[
-          { max: 8, message: '车牌号最多可输入8个字符', trigger: 'blur' }
+          { max: 8, message: '车牌号最多可输入8个字符'},
+         // {validator: this.validateIsEmpty('车牌号不能为空')},
         ],
         'tmsDriver.driverName':[
-          { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' }
+          { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
+          {required: true,validator: this.validateIsEmpty('司机姓名不能为空'), trigger: ['change','blur']},
         ],
         'tmsDriver.driverMobile': [
           { validator: validateMobile, trigger: 'change' }
         ],
         'tmsTruck.truckUnit':[
           { max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur' }
-        ]
+        ],
+        "tmsOrderPickup.arriveTime": [
+          {required: true,validator: this.validateIsEmpty('要求到达时间不能为空'), trigger: ['blur']}
+        ],
+        "tmsCustomer.customerMobile": [
+          {required: true,validator: this.validateIsEmpty('发货人手机号不能为空'), trigger: ['blur']}
+        ],
+        "tmsCustomer.detailedAddress": [
+          {required: true,validator: this.validateIsEmpty('提货地址不能为空'), trigger: ['blur']}
+        ],
       },
       pickOption: {
         firstDayOfWeek:1,
@@ -265,6 +285,7 @@ export default {
           truckType:'',//车辆类型
           truckUnit:'辆'//车辆单位
         },
+        // tmsOrderCargoList: {},
         tmsOrderPickup:{
           pickupBatchNumber:'',//提货批次
           pickupName:'',//货品名
@@ -277,7 +298,7 @@ export default {
           toCityName:'',// 到达城市
           remark:'',
           truckFee:'',//车费
-          pickupStatus:'',//提货状态
+          pickupStatus:236,//提货状态
           collectionFee:'',// 代收费用
           outTime:'',//出车时间
           arriveTime:''//
@@ -336,24 +357,28 @@ export default {
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
         this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
         this.form.tmsTruck.truckUnit = '辆'
         this.form.tmsOrderPickup.payMethod = 76
+        this.form.tmsOrderPickup.pickupStatus = 236
       }
     }
   },
   methods: {
     getTrunkName(trunk){
       if(trunk){
+        console.log(trunk)
         this.form.tmsDriver.driverName = trunk.driverName
         this.form.tmsDriver.driverMobile = trunk.driverMobile
         this.form.tmsTruck.truckType = trunk.truckType
         this.form.tmsTruck.truckUnit = trunk.truckUnit
+        this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
+
       }
 
       // console.log(trunk)
     },
     infoData(item){
-      console.log(item)
       this.form.tmsOrderPickup.pickupName = item.pickupName
       this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
       this.form.tmsOrderPickup.pickupWeight = item.pickupWeight
@@ -379,6 +404,15 @@ export default {
 
       this.pickupBatchNumber = item.pickupBatchNumber
       console.log(this.form.tmsOrderPickup.toCityCode);
+    },
+    validateIsEmpty (msg = '不能为空！') {
+      return (rule, value, callback) => {
+        if(!value){
+          callback(new Error(msg))
+        }else{
+          callback()
+        }
+      }
     },
     setObject(obj1, obj2) {
       for (var i in obj1) {
@@ -430,17 +464,19 @@ export default {
           this.loading = true
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
           let data = this.form
+
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
             promiseObj = putUpdatePickup(data)
-            this.reset()
+            // this.reset()
           } else {
             // customerId
-            delete data.customSend.customerId
-            delete data.customRece.customerId
-            delete data.tmsOrderCargoList.cargoId
+            // delete data.customSend.customerId
+            // delete data.customRece.customerId
+           // delete data.tmsOrderCargoList.cargoId
             promiseObj = postAddPickup(data)
+            console.log(data.tmsTruck)
           }
 
           promiseObj.then(res => {
@@ -468,6 +504,7 @@ export default {
       this.form.tmsOrderPickup = ''
     },
     closeMe (done) {
+      // this.reset()
       this.$emit('update:popVisible', false);
       if(typeof done === 'function'){
         done()
@@ -545,6 +582,10 @@ export default {
 }
   .pickup_lrl .el-input.is-disabled .el-input__inner,.pickup_lrl .el-textarea.is-disabled .el-textarea__inner{
     background-color: #fff;
+    color: #666;
+  }
+  .pickup_lrl{
+    padding-left: 10px;
   }
 
 </style>
