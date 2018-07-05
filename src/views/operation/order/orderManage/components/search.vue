@@ -23,7 +23,9 @@
           <el-option label="发货人" value="senderCustomerName"></el-option>
           <el-option label="发货人手机" value="senderCustomerMobile"></el-option>
           <el-option label="收货人" value="receiverCustomerName"></el-option>
-          <el-option label="收货人手机" value="receiverCustomerName"></el-option>
+          <el-option label="收货人手机" value="receiverCustomerMobile"></el-option>
+          <el-option label="货物名称" value="cargoName"></el-option>
+          <el-option label="货号" value="shipGoodsSn"></el-option>
         </el-select>
         <el-input
             v-model="searchForm.value"
