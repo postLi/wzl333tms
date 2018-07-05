@@ -149,7 +149,7 @@
           <el-table-column
             prop="toCityName"
             label="到达城市"
-            width="120"
+            width="150"
             sortable
           >
           </el-table-column>
@@ -163,7 +163,7 @@
         <el-table-column
           prop="remark"
           label="备注"
-          width="80"
+          width="120"
           sortable
         >
         </el-table-column>
@@ -218,7 +218,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="truckType"
+            prop="truckTypeName"
             label="车辆类型"
             width="110"
             sortable>
@@ -412,14 +412,12 @@ export default {
           // 删除客户
           case 'delete':
             this.closeAddCustomer()
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].pickupBatchNumber
                   //=>todo 删除多个
                   let ids = this.selected.filter(el=>{
                     return el.pickupStatus === 236
                   }).map(el => {
                     return  el.id
                   })
-            console.log(ids);
             if(!ids.length){
               this.$message.warning('提货完成的不可以删除~')
             }else {

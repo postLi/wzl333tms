@@ -20,7 +20,6 @@
         </div>
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
-            <!--<el-input v-model="form.tmsOrderPickup.pickupName" auto-complete="off" ></el-input>-->
             <querySelect search="value" valuekey="value" :maxlength="8" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
 
           </el-form-item>
@@ -37,8 +36,6 @@
             <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="付款方式" >
-            <!--<el-input v-model="form.tmsOrderPickup.payMethod" auto-complete="off" ></el-input>-->
-            <!--默认为现付-->
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way"  class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="到达城市" class="order_toCityCode">
@@ -281,7 +278,6 @@ export default {
           truckUnit:'',//车辆单位
           truckId:''
         },
-        // tmsOrderCargoList: {},
         tmsOrderPickup:{
           pickupBatchNumber:'',//提货批次
           pickupName:'',//货品名
@@ -306,7 +302,8 @@ export default {
       loading: false,
       inited: false,
       pickupBatchNumber:'',
-
+// 用来在提交
+      sender: {},
     }
   },
   mounted () {
@@ -316,7 +313,6 @@ export default {
     }
 
     this.fetchGetPickUp()
-    // this.form.tmsOrderPickup.payMethod =
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -325,24 +321,13 @@ export default {
         this.initInfo()
       }
     },
-    orgid (newVal) {
-      // this.form.orgid = newVal
-    },
     info () {
       if (this.isModify) {
         this.popTitle = '修改派车单'
-        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup,this.info)
-        // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer,this.info)
-        // this.form.tmsTruck = this.setObject(this.form.tmsTruck,this.info)
-        // this.form.tmsOrderPickup.id = this.info.id
-        // this.pickupBatchNumber = this.info.pickupBatchNumber
-
-        this.form.tmsTruck.truckUnit = ''
         this.infoData(this.info)
       }
       else if(this.isDbclick) {
         this.popTitle = '查看派车单'
-        this.form.tmsTruck.truckUnit = ''
         this.infoData(this.info)
       }
       else {
@@ -360,7 +345,6 @@ export default {
   methods: {
     getTrunkName(trunk){
       if(trunk){
-        console.log(trunk);
         this.form.tmsDriver.driverName = trunk.driverName
         this.form.tmsDriver.driverMobile = trunk.dirverMobile
         this.form.tmsDriver.driverId = trunk.driverId
@@ -370,8 +354,6 @@ export default {
         this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
 
       }
-
-      // console.log(trunk)
     },
     infoData(item){
       this.form.tmsOrderPickup.pickupName = item.pickupName
@@ -389,6 +371,7 @@ export default {
 
       this.form.tmsTruck.truckIdNumber = item.truckIdNumber
       this.form.tmsTruck.truckType = item.truckType
+      this.form.tmsTruck.truckUnit = item.truckUnit
 
       this.form.tmsDriver.driverName = item.driverName
       this.form.tmsDriver.driverMobile = item.driverMobile
@@ -398,7 +381,6 @@ export default {
       this.form.tmsCustomer.detailedAddress = item.detailedAddress
 
       this.pickupBatchNumber = item.pickupBatchNumber
-      console.log(this.form.tmsOrderPickup.toCityCode);
     },
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -426,13 +408,11 @@ export default {
     setSender(item, type){
       type = type ? 'customRece' : 'tmsCustomer'
       if(item){
-        console.log(item)
         this.form[type].customerType = type === 'tmsCustomer' ? 1 : 2
         this.form[type].customerName = item.customerName
         this.form[type].customerMobile = item.customerMobile
         this.form[type].detailedAddress = item.detailedAddress
         this.form[type].customerId = item.customerId
-        console.log(this.form.tmsCustomer.customerId)
       }
     },
     selectToCity (item, city) {
@@ -445,7 +425,6 @@ export default {
     //司机姓名
     getdriverName (item, city) {
       if(item){
-        console.log(item);
         this.form.tmsDriver.driverName = item.driverName
         this.form.tmsDriver.driverMobile = item.driverMobile
         this.form.tmsDriver.driverId = item.id
@@ -469,14 +448,19 @@ export default {
           // 判断操作，调用对应的函数
           if(this.isModify){
             promiseObj = putUpdatePickup(data)
-            // this.reset()
           } else {
-            // customerId
-            // delete data.customSend.customerId
-            // delete data.customRece.customerId
-           // delete data.tmsOrderCargoList.cargoId
+            let changeSender = false
+            for(let i in data.tmsCustomer){
+              if(this.sender[i] !== data.tmsCustomer[i]){
+                changeSender = true
+              }
+            }
+            if(changeSender){
+              data.tmsCustomer.customerId = ''
+            }else {
+              data.tmsCustomer.customerId = this.form.tmsCustomer.customerId
+            }
             promiseObj = postAddPickup(data)
-            console.log(data.tmsTruck)
           }
 
           promiseObj.then(res => {
@@ -504,7 +488,6 @@ export default {
       this.form.tmsOrderPickup = ''
     },
     closeMe (done) {
-      // this.reset()
       this.$emit('update:popVisible', false);
       if(typeof done === 'function'){
         done()

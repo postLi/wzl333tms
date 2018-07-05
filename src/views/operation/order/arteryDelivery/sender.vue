@@ -39,7 +39,7 @@
             sortable
             prop="id"
             label="序号"
-            width="80">
+            width="180">
           </el-table-column>
           <el-table-column
             fixed
@@ -77,9 +77,10 @@
             width="160"
             sortable
             >
-            <template slot-scope="scope">
-              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
+            <template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>
           </el-table-column>
           <!--<el-table-column-->
             <!--prop="vipNum"-->
@@ -247,9 +248,10 @@
             width="160"
             sortable
           >
-            <template slot-scope="scope">
-              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
+            <template slot-scope="scope">{{ new Date(scope.row.requireArrivedTime).toLocaleDateString() }}</template>
           </el-table-column>
           <el-table-column
             prop="username"
@@ -445,7 +447,6 @@ export default {
                   })
                   ids = ids.join(',')
                 if(this.selected[0].bathStatusName === '已到车'){
-                    console.log(this.selected.bathStatusName)
                   this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

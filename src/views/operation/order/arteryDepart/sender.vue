@@ -39,7 +39,7 @@
             sortable
             prop="id"
             label="序号"
-            width="80">
+            width="180">
           </el-table-column>
           <el-table-column
             fixed
@@ -80,9 +80,10 @@
 
             sortable
             >
-            <template slot-scope="scope">
-              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
+            <template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>
           </el-table-column>
           <!--<el-table-column-->
             <!--prop="vipNum"-->
@@ -250,9 +251,10 @@
             width="160"
             sortable
           >
-            <template slot-scope="scope">
-              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
+            <template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>
           </el-table-column>
           <el-table-column
             prop="userName"
@@ -310,7 +312,7 @@ export default {
       }
   },
   mounted () {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    // this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
     this.fetchAllCustomer()
     // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
@@ -342,12 +344,12 @@ export default {
           truckIdNumber:'',//车牌号
           batchTypeId: '',//批次状态
           batchNo:'',//发车批次
-          loadTypeId:38,//配载类型 38
+          loadTypeId:39,//配载类型 38
           loadEndTime:'',//结束时间
           loadStartTime:'',
           departureStartTime:'',
-          departureEndTime:'',
-          arriveOrgid:'',
+          departureEndTime:''
+          // arriveOrgid:'',
         }
       }
     }

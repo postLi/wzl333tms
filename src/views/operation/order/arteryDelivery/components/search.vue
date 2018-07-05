@@ -163,7 +163,7 @@ export default {
     }
   },
   mounted () {
-    this.searchForm.orgid = this.orgid
+    // this.searchForm.orgid = this.orgid
     // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
