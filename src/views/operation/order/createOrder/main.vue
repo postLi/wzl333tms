@@ -1732,12 +1732,13 @@ export default {
               console.log('this.isPreOrder:',this.isPreOrder)
               delete data.tmsOrderPre
             }
+            console.log('create submit data:', JSON.stringify(data))
             // 没有设置填写中转信息
             if(!this.shouldInputTransfer){
               delete data.tmsOrderTransfer
               data.tmsOrderTransfer = {}
             } else {
-              data.tmsOrderTransfer.createTime = new Date(data.tmsOrderTransfer.createTime).getTime()
+              data.tmsOrderTransfer.createTime = new Date((data.tmsOrderTransfer.createTime + '').trim()).getTime()
               if(this.output.ismodify){
                 data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer ? this.orderData.tmsOrderTransfer.id : ''
               }
@@ -1779,7 +1780,7 @@ export default {
               }
               return b
             })
-            data.tmsOrderShip.createTime = new Date(data.tmsOrderShip.createTime).getTime()
+            data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
 
             if(this.output.ismodify){
               /* this.$message.success('成功修改运单！')

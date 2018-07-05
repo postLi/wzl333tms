@@ -7,7 +7,7 @@
         {{ form.tmsOrderShipInfo.shipSn }}
         </span></div>
       <div class="create-num">开单日期： <span class="create-num-info">
-         {{ form.tmsOrderShipInfo.createTime | parseTime }}
+         {{ form.tmsOrderShipInfo.createTime }}
       </span></div>
     </div>
     <div class="order-main">

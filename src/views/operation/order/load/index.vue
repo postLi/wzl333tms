@@ -660,6 +660,10 @@ export default {
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
+
+      // 时间处理
+      this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
+      this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
       this.$set(this.formModel, 'batchNo', this.truckMessage)

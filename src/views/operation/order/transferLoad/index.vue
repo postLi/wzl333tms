@@ -240,6 +240,7 @@ export default {
               }
 
               this.$message.success('操作成功！')
+              this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
             }).catch(err => {
               this.$message.error(err.text || '未知错误')
             })
