@@ -364,7 +364,6 @@ export default {
   methods: {
     getTrunkName(trunk){
       if(trunk){
-        console.log(trunk);
         this.form.tmsDriver.driverName = trunk.driverName
         this.form.tmsDriver.driverMobile = trunk.dirverMobile
         this.form.tmsTruck.truckType = trunk.truckType
