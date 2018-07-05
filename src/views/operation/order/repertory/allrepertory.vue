@@ -471,8 +471,8 @@ export default {
   },
   methods: {
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
-      console.log(order.id)
+      this.eventBus.$emit('showOrderDetail', order.shipId)
+      console.log(order.shipId)
     },
     initTable() {
       // let strArray = this.$refs.multipleTable.$children

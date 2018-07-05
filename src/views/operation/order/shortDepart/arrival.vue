@@ -78,103 +78,129 @@ export default {
         pageSize: 100,
         vo: {
           loadTypeId: 38,
-          orgid: 0
+          arriveOrgid: 0
         }
       },
-      tableColumn: [{
+      tableColumn: [
+        {
+          label: "序号",
+          prop: "id",
+          width: "110",
+          fixed: true
+        },
+        {
           label: "发货批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
           prop: "bathStatusName",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "车牌号",
           prop: "truckIdNumber",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "司机",
           prop: "dirverName",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "司机电话",
           prop: "dirverMobile",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "短驳时间",
           prop: "departureTime",
-          width: "180"
+          width: "180",
+          fixed: false
         },
         {
           label: "目的网点",
           prop: "endOrgName",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "接收时间",
           prop: "receivingTime",
-          width: "180"
+          width: "180",
+          fixed: false
         },
         {
           label: "短驳费",
           prop: "shortFee",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "实到件数",
           prop: "actualAmount",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "实到重量",
           prop: "actualWeight",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "实到体积",
           prop: "actualVolume",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "配载总件数",
           prop: "amountall",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "配载总重量",
           prop: "weightall",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "配载总体积",
           prop: "volumeall",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "重量装载率",
           prop: "weightRate",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "体积装载率",
           prop: "volumeRate",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "短驳经办人",
           prop: "username",
-          width: "120"
+          width: "120",
+          fixed: false
         },
         {
           label: "备注",
           prop: "remark",
-          width: "120"
+          width: "120",
+          fixed: false
         }
       ]
     }
@@ -184,19 +210,19 @@ export default {
       'otherinfo'
     ]),
     orgid() {
-      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
     }
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
     this.getAllList()
     this.eventBus.$on('updateCurrentData')
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
       this.searchQuery.vo = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
-      if (!this.searchQuery.vo.orgid) {
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
+      if (!this.searchQuery.vo.arriveOrgid) {
+        this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
       }
       this.getAllList()
     },

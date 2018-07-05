@@ -90,8 +90,7 @@ export default {
       required: true
     },
     id: {
-      type: Number,
-      default: 0
+      type: [Number, String]
     }
   },
   data() {

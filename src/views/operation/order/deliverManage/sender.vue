@@ -1,5 +1,6 @@
 <template>
   <!--v-loading="loading"-->
+  <!-- 送货管理 -->
   <div class="tab-content">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -171,23 +172,23 @@ export default {
           }
         },
         {
-          label: "短驳费",
-          prop: "shortFee",
+          label: "送货费",
+          prop: "deliveryFee",
           width: "120"
         },
         {
           label: "送货件数",
-          prop: "amountall",
+          prop: "loadAmountall",
           width: "120"
         },
         {
           label: "送货重量",
-          prop: "weightall",
+          prop: "loadWeightall",
           width: "120"
         },
         {
           label: "送货体积",
-          prop: "volumeall",
+          prop: "loadVolumeall",
           width: "120"
         },
         {
@@ -341,6 +342,7 @@ export default {
     },
     deliverDetail(row, column, cell, event) { // 双击单元格弹出详情页
       this.loadInfo = objectMerge2([], row)
+      this.loadId = row.loadId
       this.setInfo()
       console.log(this.loadInfo)
     },

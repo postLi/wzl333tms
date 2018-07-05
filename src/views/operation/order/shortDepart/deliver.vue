@@ -94,7 +94,12 @@ export default {
         truckIdNumber: '',
         dirverName: ''
       },
-      tableColumn: [{
+      tableColumn: [
+        {
+          label: "序号",
+          prop: "id",
+          width: "110"
+        },{
           label: "发车批次",
           prop: "batchNo",
           width: "110"

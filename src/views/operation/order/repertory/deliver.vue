@@ -10,7 +10,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="repertoryArr" :key="tablekey" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+        <el-table ref="multipleTable" :data="repertoryArr" :key="tablekey" border  @row-dblclick="showDetail" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -411,6 +411,10 @@ export default {
     this.fetchAllOrderRepertory()
   },
   methods: {
+    showDetail(order) {
+      this.eventBus.$emit('showOrderDetail', order.shipId)
+      console.log(order.shipId)
+    },
     tableRowColor({ row, rowIndex }) {
       let orgTime = new Date().getTime() - row.repertoryCreateTime
       let timeOne = this.selectionColorSetting.sectionOne * 3600

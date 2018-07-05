@@ -10,7 +10,7 @@
             <Detail :info="info" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight" @sendInfoData="sendInfo"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
-             <div class="info_box" v-loading="loading">
+            <div class="info_box" v-loading="loading">
               <el-row class="stepItem_title">
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
@@ -32,7 +32,8 @@
                           </template>
                         </el-col>
                         <el-col :span="4" class="textcenter">
-                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
+                          <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p> -->
+                          <p>{{item.operatorTime }}</p>
                         </el-col>
                         <el-col :span="3" class="textcenter">
                           <p>{{item.orgName}}</p>
@@ -55,54 +56,6 @@
                 </el-steps>
               </div>
             </div>
-            <!--<div class="tab_box animated fadeInRight">
-               <div class="tab_box_item">
-                <el-row class="stepItem_title">
-                  <el-col :span="5" :offset="5"><b>操作时间</b></el-col>
-                  <el-col :span="3"><b>操作网点</b></el-col>
-                  <el-col :span="2"><b>操作人</b></el-col>
-                  <el-col :span="3"><b>操作信息</b></el-col>
-                </el-row>
-                <el-steps direction="vertical">
-                  <el-step v-for="(item, index) in trackDetail" :key="item.key" icon="el-icon-location">
-                    <template slot="description">
-                      <el-row class="stepItem">
-                        <el-col :span="4">
-                          <el-popover placement="right" width="50" trigger="hover" v-if="item.addStatus===1">
-                            <el-tooltip class="item" effect="dark" content="修改" placement="bottom">
-                              <el-button type="text" icon="el-icon-edit-outline" @click="editItem(item)"></el-button>
-                            </el-tooltip>
-                            <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                              <el-button type="text" icon="el-icon-delete" @click="deleteTrack(item)"></el-button>
-                            </el-tooltip>
-                            <el-button size="mini" slot="reference">{{item.loadStatus}}</el-button>
-                          </el-popover>
-                          <el-button size="mini" v-else>{{item.loadStatus}}</el-button>
-                        </el-col>
-                        <el-col :span="6">
-                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
-                        </el-col>
-                        <el-col :span="3">
-                          <p>{{item.orgName}}</p>
-                        </el-col>
-                        <el-col :span="3">
-                          <p>
-                            <i class="icon_man" v-if="item.addStatus===1"></i>
-                            <i class="icon_blank" v-else></i> {{item.operatorUsername}}
-                          </p>
-                        </el-col>
-                        <el-col :span="8">
-                          <p>{{item.operatorInfo}}</p>
-                        </el-col>
-                      </el-row>
-                    </template>
-                  </el-step>
-                  <el-step icon="el-icon-location"></el-step>
-                </el-steps>
-              </div>
-              <div class="tab_box_item">
-              </div>
-            </div> -->
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -127,21 +80,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <!-- <div slot="footer" class="stepFrom" v-if="isFootEdit">
-      <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
-        <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker value-format="yyyy-MM-dd" v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
-    </div> -->
     <div slot="footer" class="" v-else="isFootEdit">
       <el-button @click="closeMe">关闭</el-button>
     </div>
@@ -170,8 +108,7 @@ export default {
       required: true
     },
     id: {
-      type: Number,
-      default: 0
+      type: [Number, String]
     },
     info: {
       type: Array,
@@ -186,7 +123,6 @@ export default {
       infoId: {},
       trackDetail: [],
       activeName: 'first',
-      formModel: {},
       ruleForm: {
         loadStatus: [{ required: true, trigger: 'blur', message: '不能为空' }],
         operatorTime: [{ required: true, trigger: 'blur', message: '不能为空' }],
@@ -196,7 +132,7 @@ export default {
       isFootEdit: false,
       formModel: {
         addStatus: 1,
-        id: 0,
+        // id: 0,
         loadId: 0,
         loadStatus: '',
         operatorInfo: '',
@@ -233,16 +169,18 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.formModel.id) {
+            console.log('edit')
             this.editTrack()
           } else {
+            console.log('add')
             this.addTrack()
           }
         }
       })
     },
     getDetail() {
-      let id = this.id
-      getLoadDetail(id).then(data => {
+      let loadId = this.id
+      getLoadDetail(loadId).then(data => {
         this.trackDetail = objectMerge2([], data)
       })
     },
@@ -292,17 +230,17 @@ export default {
       this.formModel = this.$options.data().formModel
       this.isModify = false
     },
-    isSuccess (obj) {
+    isSuccess(obj) {
       if (obj) {
         this.closeMe()
         // this.$router.push({path:'././shortDepart', query:{tableKey: Math.random()}})
         this.$emit('isSuccess', obj)
       }
     },
-   sendInfo (obj) {
-      console.log('父',obj)
+    sendInfo(obj) {
+      console.log('父', obj)
       // this.signVisible = true
-       this.$emit('sendInfoData',obj)
+      this.$emit('sendInfoData', obj)
     },
     // 取消高亮样式
     offThisActive(e) {
@@ -348,7 +286,7 @@ export default {
 }
 
 .editInfoPop_content {
-  width: 100%; 
+  width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -362,216 +300,138 @@ export default {
     width: 100%;
   }
   .info_box {
-  margin: 76px 10px 0 10px;
-  display: flex;
-  flex-direction: column;
-  /* 覆盖ele样式 */
-  .el-form--inline .el-form-item {
-    margin-bottom: 0;
-  }
-  .el-step.is-vertical .el-step__head {
-    width: 18px;
-    position: relative;
-    top: 0px;
-  }
-  .el-step.is-vertical .el-step__line {
-    left: 8px;
-  }
-  .el-step__icon.is-text {
-    border-color: transparent;
-    border: 0;
-    width: 18px;
-    height: 18px;
-  }
-  .el-steps--vertical {
-    height: auto;
-  }
-  .el-step__main {
-    padding-bottom: 10px;
-  }
-  .el-step__description {
-    padding-right: 0;
-    font-size: 14px;
-    color: #333;
-  }
+    margin: 76px 10px 0 10px;
+    display: flex;
+    flex-direction: column;
+    /* 覆盖ele样式 */
+    .el-form--inline .el-form-item {
+      margin-bottom: 0;
+    }
+    .el-step.is-vertical .el-step__head {
+      width: 18px;
+      position: relative;
+      top: 0px;
+    }
+    .el-step.is-vertical .el-step__line {
+      left: 8px;
+    }
+    .el-step__icon.is-text {
+      border-color: transparent;
+      border: 0;
+      width: 18px;
+      height: 18px;
+    }
+    .el-steps--vertical {
+      height: auto;
+    }
+    .el-step__main {
+      padding-bottom: 10px;
+    }
+    .el-step__description {
+      padding-right: 0;
+      font-size: 14px;
+      color: #333;
+    }
 
-  .textcenter {
-    text-align: center;
-  }
-  .typebox {
-    background: url("../../../../../assets/png/track-bg.png") no-repeat;
-    width: 118px;
-    height: 24px;
-    padding-left: 16px;
-    text-align: center;
-    color: #333;
-    display: inline-block;
-    line-height: 24px;
-  }
-  .location {
-    background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-  }
-  .modifybtn,
-  .deletebtn {
-    display: inline-block;
-    display: none;
-    vertical-align: middle;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    margin-right: 3px;
-    background: url("../../../../../assets/png/delete-icon.png") no-repeat;
-
-    &:hover {}
-  }
-  /* 鼠标划过样式 */
-  .trackactive {
+    .textcenter {
+      text-align: center;
+    }
+    .typebox {
+      background: url("../../../../../assets/png/track-bg.png") no-repeat;
+      width: 118px;
+      height: 24px;
+      padding-left: 16px;
+      text-align: center;
+      color: #333;
+      display: inline-block;
+      line-height: 24px;
+    }
+    .location {
+      background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+    }
     .modifybtn,
     .deletebtn {
       display: inline-block;
-    }
-    .typebox {
-      background: url("../../../../../assets/png/track-active.png") no-repeat;
-      color: #fff;
-    }
-    .location {
-      background: url("../../../../../assets/png/active-point.png") no-repeat;
-    }
-    .el-step__line {
-      background-color: #3e9ff1;
-    }
-  }
-  .modifybtn {
-    margin-left: 10px;
-    background: url("../../../../../assets/png/edit-icon.png") no-repeat;
-    margin-right: 8px;
-  }
-  .steptitle {
-    font-size: 14px;
-    color: #333;
-    height: 34px;
-  }
-  .stepItem_title {
-    color: #333;
-    margin-top: 10px;
-    padding-left: 34px;
-    height: 34px;
-    .el-col {
-      text-align: center;
-    }
-    .tracktype {
-      text-align: left;
-      text-indent: 20px;
-    }
-  }
+      display: none;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-right: 3px;
+      background: url("../../../../../assets/png/delete-icon.png") no-repeat;
 
-  .stepItem {
-    /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
-    .el-col>p {
-      min-width: 1px;
-      min-height: 1px;
+      &:hover {}
     }
-  }
-  .stepinfo {
-    flex: 1;
-    overflow: auto;
-  }
-  .stepinfo-footer {
-    border-top: 1px solid #d8d8d8;
-    height: 70px;
-    padding-top: 30px;
+    /* 鼠标划过样式 */
+    .trackactive {
+      .modifybtn,
+      .deletebtn {
+        display: inline-block;
+      }
+      .typebox {
+        background: url("../../../../../assets/png/track-active.png") no-repeat;
+        color: #fff;
+      }
+      .location {
+        background: url("../../../../../assets/png/active-point.png") no-repeat;
+      }
+      .el-step__line {
+        background-color: #3e9ff1;
+      }
+    }
+    .modifybtn {
+      margin-left: 10px;
+      background: url("../../../../../assets/png/edit-icon.png") no-repeat;
+      margin-right: 8px;
+    }
+    .steptitle {
+      font-size: 14px;
+      color: #333;
+      height: 34px;
+    }
+    .stepItem_title {
+      color: #333;
+      margin-top: 10px;
+      padding-left: 34px;
+      height: 34px;
+      .el-col {
+        text-align: center;
+      }
+      .tracktype {
+        text-align: left;
+        text-indent: 20px;
+      }
+    }
+
+    .stepItem {
+      /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
+      .el-col>p {
+        min-width: 1px;
+        min-height: 1px;
+      }
+    }
+    .stepinfo {
+      flex: 1;
+      overflow: auto;
+    }
+    .stepinfo-footer {
+      border-top: 1px solid #d8d8d8;
+      height: 70px;
+      padding-top: 30px;
+    }
   }
 }
-  // .tab_box {
-  //   position: relative;
-  //   .tab_box_item {
-  //     margin: 76px 0 0 0;
-  //     .stepItem_title {
-  //       font-size: 14px;
-  //       color: #333;
-  //       width: 110%;
-  //       height: 36px;
-  //       line-height: 36px;
-  //     }
-  //     .el-step.is-vertical {
-  //       padding-left: 20px;
-  //       .stepItem {
-  //         width: 110%;
-  //         color: #666;
-  //         font-size: 14px;
-  //         padding: 10px;
-  //         margin: 0 0 3px 0;
-  //         background-color: #ffffff;
-  //         box-shadow: 0px 0px 10px #eaeaea;
-  //         transition: 0.4s;
-  //       }
-  //       .stepItem:hover {
-  //         transition: 0.2s;
-  //         background-color: #E9F3FA;
-  //       }
-  //     }
-  //   }
-  // }
-}
 
-// .stepFrom {
-//   .el-form--inline .el-form-item {
-//     margin-right: 0;
-//     float: left;
-//     display: inline-flex;
-//     flex-direction: column;
-//     flex-grow: 1;
-//     width:25%;
-//     .el-input {
-//       width: 150px;
-//       padding: 0;
-//       margin-left: -5px;
-//     }
-//     .el-button {
-//       margin-left: 10px;
-//     }
-//   }
-// }
-// .stepFrom {
-//   background-color:#eee;
-//   display:block;
-//   width:100%;
-//   height:100%;
-//   padding-top: 15px;
-//   .el-form--inline .el-form-item{
-//     margin-right:0;
-//     float:left;
-//     display:flex;
-//     width:28%;
-//   }
-//   .el-date-editor.el-input,
-//   .el-date-editor.el-input__inner {
-//     width: 100%;
-//   }
-
-//   .el-form-item__label {
-//     font-size: 12px;
-//   }
-
-//   .el-form-item__content {
-//     flex: 1;
-//   }
-//   .el-button--primary{
-//     position: absolute;
-//     top:23px;
-//     right:10px;
-//   }
-// }
 .stepFrom {
-  background-color:#f2f2f2;
-  box-shadow:-1px -1px 10px #bbb;
-  text-align:left;
-  padding:0 10px;
-  .el-form-item__content{
-    vertical-align:middle;
+  background-color: #f2f2f2;
+  box-shadow: -1px -1px 10px #bbb;
+  text-align: left;
+  padding: 0 10px;
+  .el-form-item__content {
+    vertical-align: middle;
   }
 }
 

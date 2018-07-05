@@ -32,7 +32,8 @@
                           </template>
                         </el-col>
                         <el-col :span="4" class="textcenter">
-                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
+                          <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p> -->
+                          <p>{{item.operatorTime }}</p>
                         </el-col>
                         <el-col :span="3" class="textcenter">
                           <p>{{item.orgName}}</p>
@@ -107,8 +108,7 @@ export default {
       required: true
     },
     id: {
-      type: Number,
-      default: 0
+      type: [Number, String]
     },
     info: {
       type: Object,
@@ -226,6 +226,7 @@ export default {
     editTrack() { // 修改跟踪信息
       console.log('修改', this.formModel)
       this.formModel.transferId = 0
+      this.formModel.operatorTime = parseTime(this.formModel.operatorTime)
       return putUpdateTrack(this.formModel).then(data => {
         this.$message({ type: 'success', message: '修改成功' })
         this.getDetail()

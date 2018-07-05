@@ -196,7 +196,8 @@ import SelectTree from '@/components/selectTree/index'
 import addTruckInfo from './components/addTruckInfo'
 import addDriverInfo from './components/addDriverInfo'
 import loadChart from './components/loadChart'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
+import { getSystemTime } from '@/api/common'
 export default {
   data() {
     const validateInt = function(rule, value, callback) {
@@ -354,11 +355,15 @@ export default {
     addDriverInfo,
     loadChart
   },
+  mounted() {
+  },
   activated() {
     this.init()
+    this.getSystemTime()
   },
   methods: {
     init() {
+
       this.formModel = {}
       this.$refs['formModel'].resetFields()
       this.setLoadTypeId()
@@ -430,6 +435,14 @@ export default {
       getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
         this.truckMessage = data.text // 批次号
         this.contractNo = data.text // 合同编号？？？？？
+      })
+    },
+    getSystemTime() { // 获取系统时间
+      return getSystemTime().then(data => {
+        this.$nextTick(() =>{
+          this.formModel.requireArrivedTime = new Date(data.trim())
+          this.formModel.loadTime = new Date(data.trim())
+        })
       })
     },
     getSelectAddLoadRepertoryList() {
