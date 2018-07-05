@@ -9,6 +9,7 @@
       popper-class="my-topNav-search"
       placeholder="快速查单"
       v-model="topSearch"
+      :maxlength="30"
       :visible-arrow="false"
       :fetch-suggestions="querySearch"
       :trigger-on-focus="false"
@@ -39,37 +40,37 @@ export default {
       searchList: [
         {
           name: '运单号',
-          key: 'orderNum',
+          key: 'shipSn',
           value: ''
         },
         {
           name: '发货人手机',
-          key: 'senderMobile',
+          key: 'senderCustomerMobile',
           value: ''
         },
         {
           name: '收货人手机',
-          key: 'receiverMobile',
+          key: 'receiverCustomerMobile',
           value: ''
         },
         {
           name: '发货人',
-          key: 'sender',
+          key: 'senderCustomerName',
           value: ''
         },
         {
           name: '收货人',
-          key: 'receiver',
+          key: 'receiverCustomerName',
           value: ''
         },
         {
           name: '货物名称',
-          key: 'goodsName',
+          key: 'cargoName',
           value: ''
         },
         {
           name: '货号',
-          key: 'goodsNum',
+          key: 'shipGoodsSn',
           value: ''
         },
       ]
@@ -93,6 +94,10 @@ export default {
     },
     handleSelect (index) {
       console.log('Top nav search List:', index)
+      this.$router.push({path: '/operation/order/orderManage', query: {
+        key: index.value,
+        value: index.key
+      }})
     },
     clearinput () {
       this.topSearch = ''

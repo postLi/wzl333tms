@@ -169,45 +169,6 @@
               </template>
           </el-table-column>  
         </el-table>
-        <!-- <table>
-          <thead>
-            <tr>
-              <th class="addButtonTh">
-                <span class="addButton" v-if="form.cargoList.length < maxCargoLength" @click="addCargoList()"><i class="el-icon-plus"></i></span>
-                </th>
-              <th v-for="item in feeConfig" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :key="item.id">
-                {{ item.fieldName }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in form.cargoList" :key="index">
-              <td>
-                <span class="minusButton" v-if="index !== 0" @click="deleteCargoList(index)"><i class="el-icon-minus"></i></span>
-                </td>
-              <td v-for="item in feeConfig" :key="item.id">
-                <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
-                  <el-form-item :prop="'cargoList.'+index + '.cargoName'" required :rules="{ validator: validateIsEmpty('货品名不能为空！'), trigger: 'blur' }">
-                    <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[index].cargoName" />
-                  </el-form-item>
-                </template>
-                <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
-                  <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[index].cargoPack" />
-                </template>
-                <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
-                  <el-form-item :prop="'cargoList.'+index + '.cargoAmount'" required :rules="{ validator: validateIsEmpty('货品件数不能为空！'), trigger: 'blur' }">
-                  <el-input size="mini" maxlength="20"
-                  v-model="form.cargoList[index].cargoAmount" @change="detectCargoNumChange" />
-                  </el-form-item>
-                </template>
-                <template v-else>
-                  <el-input size="mini" maxlength="20" :value="form.cargoList[index][item.fieldProperty]" @change="(val) => changeFee(index, item.fieldProperty, val)"
-                    />
-                </template>
-              </td>
-            </tr>
-          </tbody>
-        </table> -->
       </div>
       <!-- 其它项 -->
       <div class="order-other-form clearfix">
@@ -1868,13 +1829,14 @@ export default {
                 return */
               orderManage.postNewOrder(data).then(res => {
                 this.$message.success('成功创建运单！')
+                data.tmsOrderShip.id = res.data
                 // 当为批次列表过来的，不作处理
                 if(!this.output.isbatch){
                   if(this.ispop){
                     this.eventBus.$emit('hideCreateOrder')
-                    this.eventBus.$on('showOrderDetail', 9)
+                    this.eventBus.$on('showOrderDetail', res.data)
                   } else {
-                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + 9 + '&tab=查看' + data.tmsOrderShip.shipSn)
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + res.data + '&tab=查看' + data.tmsOrderShip.shipSn)
                   }
                 } else {
                   this.batchSaveList[this.currentBatch].data = data

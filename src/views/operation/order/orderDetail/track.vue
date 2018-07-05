@@ -118,6 +118,7 @@ export default {
         this.getSystemTime(),
         this.getDetail()
       ]).then(res => {
+        this.formModel.createTime = this.nowTime
         this.loading = false
       }).catch(err => {
         this.$message.error('数据加载错误： ' + err.text)
@@ -185,6 +186,7 @@ export default {
     },
     // 重置表单
     reset () {
+      this.$refs['formModel'].resetFields()
       this.isModify = false
       this.itemid = ''
       this.formModel.createTime = this.nowTime
@@ -196,7 +198,6 @@ export default {
       // 1 表示为用户新增的信息
       this.formModel.trackType = 1
       delete this.formModel.id
-      this.$refs['formModel'].resetFields()
     },
     // 取消高亮样式
     offThisActive(e){

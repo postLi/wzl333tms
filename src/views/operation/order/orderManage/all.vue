@@ -137,9 +137,9 @@ export default {
       },{
         "label": "开单时间",
         "prop": "createTime",
-        "width": "150",
+        "width": "200",
         "slot": function(scope){
-          return `${ parseTime(scope.row.createTime, '{y}{m}{d}') }`
+          return `${ parseTime(scope.row.createTime) }`
         }
       },{
         "label": "发货人",

@@ -4,10 +4,10 @@
     <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">
-        {{ form.tmsOrderShip.shipSn }}
+        {{ form.tmsOrderShipInfo.shipSn }}
         </span></div>
       <div class="create-num">开单日期： <span class="create-num-info">
-         {{ form.tmsOrderShip ? form.tmsOrderShip.createTime : '' }}
+         {{ form.tmsOrderShipInfo.createTime | parseTime }}
       </span></div>
     </div>
     <div class="order-main">
@@ -16,43 +16,43 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label">开单网点</span>
-            <el-form-item prop="tmsOrderShip.shipFromOrgid">
-              <SelectTree :disabled="true" :filterable="false" size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
+            <el-form-item prop="tmsOrderShipInfo.shipFromOrgid">
+              <SelectTree :disabled="true" :filterable="false" size="mini" v-model="form.tmsOrderShipInfo.shipFromOrgid" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
-            <el-input :value="form.tmsOrderShip.shipFromCityName" disabled size="mini" />
+            <el-input :value="form.tmsOrderShipInfo.shipFromCityName" disabled size="mini" />
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
-            <el-input :value="form.tmsOrderShip.shipToCityName" disabled size="mini" />
+            <el-input :value="form.tmsOrderShipInfo.shipToCityName" disabled size="mini" />
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label">目的网点</span>
-            <el-form-item prop="tmsOrderShip.shipToOrgid">
-              <SelectTree disabled :filterable="false" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+            <el-form-item prop="tmsOrderShipInfo.shipToOrgid">
+              <SelectTree disabled :filterable="false" size="mini" v-model="form.tmsOrderShipInfo.shipToOrgid" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label">交接方式</span>
-            <el-form-item prop="tmsOrderShip.shipDeliveryMethod">
-              <SelectType disabled size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" />
+            <el-form-item prop="tmsOrderShipInfo.shipDeliveryMethod">
+              <SelectType disabled size="mini" v-model="form.tmsOrderShipInfo.shipDeliveryMethod" type="ship_delivery_method" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label">货号</span>
-            <el-input size="mini" maxlength="20" disabled :value="form.tmsOrderShip.shipGoodsSn" />
+            <el-input size="mini" maxlength="20" disabled :value="form.tmsOrderShipInfo.shipGoodsSn" />
           </div>
         </el-col>
       </el-row>
@@ -143,7 +143,7 @@
             <div class="order-form-item">
               <span class="order-form-label">运费合计</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipTotalFee" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipTotalFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -151,7 +151,7 @@
             <div class="order-form-item">
               <span class="order-form-label">付款方式</span>
               <el-form-item>
-                <SelectType size="mini" disabled v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
+                <SelectType size="mini" disabled v-model="form.tmsOrderShipInfo.shipPayWay" type="ship_pay_way" />
               </el-form-item>
             </div>
           </el-col>
@@ -159,7 +159,7 @@
             <div class="order-form-item">
               <span class="order-form-label">现付</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipNowpayFee" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipNowpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -167,7 +167,7 @@
             <div class="order-form-item">
               <span class="order-form-label">到付</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipArrivepayFee" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipArrivepayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -175,7 +175,7 @@
             <div class="order-form-item">
               <span class="order-form-label">回单付</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipReceiptpayFee" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipReceiptpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -183,7 +183,7 @@
             <div class="order-form-item">
               <span class="order-form-label">月结</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipMonthpayFee" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipMonthpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -193,7 +193,7 @@
             <div class="order-form-item">
               <span class="order-form-label">回单要求</span>
               <el-form-item >
-                <SelectType disabled size="mini"  v-model="form.tmsOrderShip.shipReceiptRequire" type="ship_receipt_require" />
+                <SelectType disabled size="mini"  v-model="form.tmsOrderShipInfo.shipReceiptRequire" type="ship_receipt_require" />
               </el-form-item>
             </div>
           </el-col>
@@ -201,13 +201,13 @@
             <div class="order-form-item">
               <span class="order-form-label other-form-shipReceiptNum">
                 <el-form-item>
-                  <el-input size="mini" disabled  :value="form.tmsOrderShip.shipReceiptNum" >
+                  <el-input size="mini" disabled  :value="form.tmsOrderShipInfo.shipReceiptNum" >
                     <template slot="append">份</template>
                   </el-input>
                 </el-form-item>
               </span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipReceiptSn" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipReceiptSn" />
               </el-form-item>
             </div>
           </el-col>
@@ -215,7 +215,7 @@
             <div class="order-form-item">
               <span class="order-form-label">打印标签</span>
               <el-form-item >
-                <el-input size="mini" disabled :value="form.tmsOrderShip.shipPrintLib" >
+                <el-input size="mini" disabled :value="form.tmsOrderShipInfo.shipPrintLib" >
                   <template slot="append">份</template>
                 </el-input>
               </el-form-item>
@@ -225,7 +225,7 @@
             <div class="order-form-item">
               <span class="order-form-label required">客户单号</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipCustomerNumber" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipCustomerNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -233,7 +233,7 @@
             <div class="order-form-item">
               <span class="order-form-label">运输方式</span>
               <el-form-item >
-                <SelectType size="mini" disabled v-model="form.tmsOrderShip.shipShippingType" type="ship_shipping_type" />
+                <SelectType size="mini" disabled v-model="form.tmsOrderShipInfo.shipShippingType" type="ship_shipping_type" />
               </el-form-item>
             </div>
           </el-col>
@@ -241,7 +241,7 @@
             <div class="order-form-item">
               <span class="order-form-label">业务类型</span>
               <el-form-item>
-                <SelectType disabled size="mini" v-model="form.tmsOrderShip.shipBusinessType" type="ship_business_type" />
+                <SelectType disabled size="mini" v-model="form.tmsOrderShipInfo.shipBusinessType" type="ship_business_type" />
               </el-form-item>
             </div>
           </el-col>
@@ -251,7 +251,7 @@
             <div class="order-form-item">
               <span class="order-form-label">时效</span>
               <el-form-item>
-                <SelectType disabled size="mini" v-model="form.tmsOrderShip.shipEffective" type="ship_effective" />
+                <SelectType disabled size="mini" v-model="form.tmsOrderShipInfo.shipEffective" type="ship_effective" />
               </el-form-item>
             </div>
           </el-col>
@@ -259,7 +259,7 @@
             <div class="order-form-item">
               <span class="order-form-label">提货批次</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.pickupBatchNumber" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.pickupBatchNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -267,7 +267,7 @@
             <div class="order-form-item">
               <span class="order-form-label">车牌号</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.truckIdNumber" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.truckIdNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -275,7 +275,7 @@
             <div class="order-form-item">
               <span class="order-form-label">制单员</span>
               <el-form-item>
-                <querySelect disabled  size="mini" :name="otherinfo.name" show="select" search="name"  v-model="form.tmsOrderShip.shipUserid" />
+                <querySelect disabled  size="mini" :name="otherinfo.name" show="select" search="name"  v-model="form.tmsOrderShipInfo.shipUserid" />
               </el-form-item>
             </div>
           </el-col>
@@ -296,7 +296,7 @@
             <div class="order-form-item">
               <span class="order-form-label">备注</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShip.shipRemarks" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipRemarks" />
               </el-form-item>
             </div>
           </el-col>
@@ -681,7 +681,7 @@ export default {
         "tmsOrderPre": {
           
         },
-        "tmsOrderShip": {
+        "tmsOrderShipInfo": {
           // 修改的时候需要带上id
           // "id": 0,
           "createTime": "",
@@ -848,14 +848,14 @@ export default {
     setOrderData (data) {
       data.customerList = data.customerList || []
       data.tmsOrderCargoList = data.tmsOrderCargoList || []
-      data.tmsOrderShip = data.tmsOrderShip || {}
+      data.tmsOrderShipInfo = data.tmsOrderShipInfo || {}
       // 设置运单信息
-      for(let i in this.form.tmsOrderShip){
-        this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
+      for(let i in this.form.tmsOrderShipInfo){
+        this.form.tmsOrderShipInfo[i] = data.tmsOrderShipInfo[i]
       }
       // 设置城市名称
-      this.fromCityName = data.tmsOrderShip.shipFromCityName
-      this.toCityName = data.tmsOrderShip.shipToCityName
+      this.fromCityName = data.tmsOrderShipInfo.shipFromCityName
+      this.toCityName = data.tmsOrderShipInfo.shipToCityName
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
       // 设置收发货人信息
@@ -907,7 +907,7 @@ export default {
       this.form.tmsOrderCargoList = []
       this.sender = {}
       this.receiver = {}
-      this.form.tmsOrderShip = this.resetObj(this.form.tmsOrderShip)
+      this.form.tmsOrderShipInfo = this.resetObj(this.form.tmsOrderShipInfo)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
       // this.setOrderDate()
     }
