@@ -86,7 +86,7 @@ color: #ddd;
 /*.relation-per tbody .el-select .el-input{*/
   /*padding: 2px;*/
 /*}*/
-.relation-per th,td{
+.relation-per th,.relation-per td{
   border: 1px solid #ccc;
   padding: 2px;
   text-align: center;
