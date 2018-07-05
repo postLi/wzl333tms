@@ -130,10 +130,16 @@ export default {
   }
 }
 .index-flow{
-  width: 1171px;
+  width: 1172px;
+  width: 1176px;
   height: 754px;
   margin: 53px auto 0;
   background: url("../../assets/flow/index.png") no-repeat;
+  background: url("../../assets/flow/index.jpg") no-repeat;
+
+  *{
+    display: none;
+  }
 }
 
 </style>

@@ -4,10 +4,13 @@ const _import = require('../_import_' + process.env.NODE_ENV)
 export default {
   path: '/finance',
   component: Layout,
-  redirect: '/finance/handAccount',
+  redirect: '/finance/index',
   name: '财务管理',
   icon: 'caiwu',
   children: [
+    {
+      path: '/finance/index', icon: 'QQ', hidden: true, name: '财务管理', component: _import('finance/index'), meta: { role: ['admin'], title: '财务管理', noCache: false }
+    },
     {
       path: '/finance/handAccount/', icon: 'QQ', name: '员工交账', component: _import('finance/handAccount/index'), meta: { role: ['admin'], title: '员工交账', noCache: false }
     },

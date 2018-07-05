@@ -4,11 +4,13 @@ const _import = require('../_import_' + process.env.NODE_ENV)
 export default {
   path: '/operation',
   component: Layout,
-  redirect: '/operation/order/orderManage',
+  redirect: '/operation/index',
   icon: 'yunyingguanli',
   name: '运营管理',
   noDropdown: true,
   children: [{
+    path: '/operation/index', icon: 'QQ', hidden: true, name: '运营管理', component: _import('operation/index'), meta: { role: ['admin'], title: '运营管理', noCache: false }
+  }, {
     path: '/operation/order/createOrder/', icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
   },
   {
