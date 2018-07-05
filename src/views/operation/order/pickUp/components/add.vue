@@ -190,14 +190,7 @@ export default {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
-    const num = (rule,value,callback) => {
-      // console.log(value)
-      if(!value){
-        callback(new Error('车牌号不能为空'))
-      }else {
-        callback()
-      }
-    }
+
     return {
       rules: {
         'tmsOrderPickup.pickupName':[
@@ -273,17 +266,20 @@ export default {
         tmsCustomer:{
           customerName:'',
           customerMobile:'',
-          detailedAddress:''
+          detailedAddress:'',
+          customerId:''
         },
         tmsDriver:{
           driverName:'',//司机姓名
           driverMobile:'',//司机手机 /
+          driverId:''
           //  发送短信给司机
         },
         tmsTruck:{
           truckIdNumber:'', //车牌号 /
           truckType:'',//车辆类型
-          truckUnit:'辆'//车辆单位
+          truckUnit:'',//车辆单位
+          truckId:''
         },
         // tmsOrderCargoList: {},
         tmsOrderPickup:{
@@ -341,12 +337,12 @@ export default {
         // this.form.tmsOrderPickup.id = this.info.id
         // this.pickupBatchNumber = this.info.pickupBatchNumber
 
-        this.form.tmsTruck.truckUnit = '辆'
+        this.form.tmsTruck.truckUnit = ''
         this.infoData(this.info)
       }
       else if(this.isDbclick) {
         this.popTitle = '查看派车单'
-        this.form.tmsTruck.truckUnit = '辆'
+        this.form.tmsTruck.truckUnit = ''
         this.infoData(this.info)
       }
       else {
@@ -355,7 +351,7 @@ export default {
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
         this.form.tmsDriver = this.setObject(this.form.tmsDriver)
         this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
-        this.form.tmsTruck.truckUnit = '辆'
+        this.form.tmsTruck.truckUnit = ''
         this.form.tmsOrderPickup.payMethod = 76
         this.form.tmsOrderPickup.pickupStatus = 236
       }
@@ -364,8 +360,11 @@ export default {
   methods: {
     getTrunkName(trunk){
       if(trunk){
+        console.log(trunk);
         this.form.tmsDriver.driverName = trunk.driverName
         this.form.tmsDriver.driverMobile = trunk.dirverMobile
+        this.form.tmsDriver.driverId = trunk.driverId
+        this.form.tmsTruck.truckId = trunk.truckId
         this.form.tmsTruck.truckType = trunk.truckType
         this.form.tmsTruck.truckUnit = trunk.truckUnit
         this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
@@ -427,10 +426,13 @@ export default {
     setSender(item, type){
       type = type ? 'customRece' : 'tmsCustomer'
       if(item){
+        console.log(item)
         this.form[type].customerType = type === 'tmsCustomer' ? 1 : 2
         this.form[type].customerName = item.customerName
         this.form[type].customerMobile = item.customerMobile
         this.form[type].detailedAddress = item.detailedAddress
+        this.form[type].customerId = item.customerId
+        console.log(this.form.tmsCustomer.customerId)
       }
     },
     selectToCity (item, city) {
@@ -443,8 +445,10 @@ export default {
     //司机姓名
     getdriverName (item, city) {
       if(item){
+        console.log(item);
         this.form.tmsDriver.driverName = item.driverName
         this.form.tmsDriver.driverMobile = item.driverMobile
+        this.form.tmsDriver.driverId = item.id
       } else {
       }
     },

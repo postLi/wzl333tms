@@ -37,7 +37,7 @@
             sortable
             prop="id"
             label="序号"
-            width="80">
+            width="180">
           </el-table-column>
           <el-table-column
             fixed
@@ -386,7 +386,7 @@ export default {
             })
             return false
           }
-          if(this.selected[0].pickupStatusName === '提货完成'){
+          if(this.selected[0].pickupStatus === 237){
             this.$message({
               message: '已经提货完成了~',
               type: 'warning'
@@ -412,42 +412,43 @@ export default {
           // 删除客户
           case 'delete':
             this.closeAddCustomer()
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
+                  let deleteItem = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].pickupBatchNumber
                   //=>todo 删除多个
-                  // let ids = this.selected.map(item => {
-                  //     return item.id
-                  // })
                   let ids = this.selected.filter(el=>{
-                    return el.pickupStatus === 237
+                    return el.pickupStatus === 236
                   }).map(el => {
                     return  el.id
                   })
-                  ids = ids.join(',')
-
-                  this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-                      confirmButtonText: '删除',
-                      cancelButtonText: '取消',
-                      type: 'warning'
-                  }).then(() => {
-                    deletebatchDelete(ids).then(res => {
-                          this.$message({
-                              type: 'success',
-                              message: '删除成功!'
+            console.log(ids);
+            if(!ids.length){
+              this.$message.warning('提货完成的不可以删除~')
+            }else {
+              ids = ids.join(',')
+              this.$confirm('确定要删除提货批次吗？', '提示', {
+                          confirmButtonText: '删除',
+                          cancelButtonText: '取消',
+                          type: 'warning'
+                      }).then(() => {
+                        deletebatchDelete(ids).then(res => {
+                              this.$message({
+                                  type: 'success',
+                                  message: '删除成功!'
+                              })
+                              this.fetchData()
+                          }).catch(err=>{
+                              this.$message({
+                                  type: 'info',
+                                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                              })
                           })
-                          this.fetchData()
-                      }).catch(err=>{
+
+                      }).catch(() => {
                           this.$message({
                               type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                              message: '已取消删除'
                           })
                       })
-
-                  }).catch(() => {
-                      this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                      })
-                  })
+            }
               break;
           // 导出数据
           case 'export':
