@@ -119,7 +119,7 @@ export default {
           prop: "createTime",
           width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
           },
           fixed: false
         },
@@ -472,6 +472,7 @@ export default {
   methods: {
     showDetail(order) {
       this.eventBus.$emit('showOrderDetail', order.id)
+      console.log(order.id)
     },
     initTable() {
       // let strArray = this.$refs.multipleTable.$children

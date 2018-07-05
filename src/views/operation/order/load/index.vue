@@ -60,12 +60,12 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="可载重量">
+                  <el-form-item label="可载重量" prop="truckLoad">
                     <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="可载体积">
+                  <el-form-item label="可载体积" prop="truckVolume">
                     <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable></el-input>
                   </el-form-item>
                 </el-col>
@@ -336,7 +336,7 @@ export default {
       return data
     },
     loadInfoPercent() {
-      let data = Object.assign([], this.loadInfoPercentOrg)
+      let data = objectMerge2([], this.loadInfoPercentOrg)
       return data
     },
     loadTimeFormName() {
@@ -373,7 +373,10 @@ export default {
         this.initInfo()
       }
     },
-    getTableChange() {},
+    getTableChange(obj) {
+      this.loadInfoPercentOrg = objectMerge2([], obj)
+      this.loadTableInfo = obj
+    },
     initIsEdit() {
       this.orgData = JSON.parse(JSON.stringify(this.$data.orgData))
       this.formFee = JSON.parse(JSON.stringify(this.$data.formFee))
@@ -526,6 +529,7 @@ export default {
         this.setData() // 处理数据
         this.$nextTick(() => {
           if (this.isEdit) {
+            console.log('这里是编辑完成配载', this.loadInfo)
             putLoadInfo(this.loadInfo).then(data => {
               this.$message({ type: 'success', message: '修改配载信息成功' })
               this.resetFieldsForm()
@@ -534,6 +538,7 @@ export default {
               })
             })
           } else {
+            console.log('这里是添加完成配载', this.loadInfo)
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.$message({ type: 'success', message: '插入配载信息成功' })
               this.resetFieldsForm()
@@ -642,7 +647,6 @@ export default {
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
-      console.log('短驳完成发车', this.loadInfo)
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
       this.$set(this.formModel, 'batchNo', this.truckMessage)
@@ -652,6 +656,12 @@ export default {
       this.loadInfo.tmsOrderLoadFee = objectMerge2(this.loadInfo.tmsOrderLoadFee, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2(this.loadInfo.tmsOrderLoad, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      if (this.loadTypeId === 40) {
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
+      } else {
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
+      }
+      // console.log('短驳完成发车', this.loadInfo)
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
       console.log('left', this.orgData.orgid)

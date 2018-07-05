@@ -162,8 +162,7 @@ export default {
     setLoadTable: { // 深度监听数组变换
       handler(cval, oval) {
         if (cval) {
-          // this.orgData = Object.assign({}, cval)
-          this.orgData = objectMerge2({}, cval)
+          this.orgData = Object.assign({}, cval)
           this.getList()
           console.log('cval', cval)
         }
@@ -331,8 +330,9 @@ export default {
       } else {
         // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
       }
+      // this.$emit('change', this.rightTable)
+      this.$emit('loadTable', this.rightTable)
       return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
-      this.$emit('change', this.rightTable)
     },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
@@ -382,11 +382,11 @@ export default {
       this.doAction('goRight')
     },
     addALLList() { // 添加全部
-      this.selectedRight = objectMerge2([], this.leftTable)
+      this.selectedRight = Object.assign([], this.leftTable)
       this.doAction('goLeft')
     },
     minusAllList() { // 减去全部
-      this.selectedLeft = objectMerge2([], this.rightTable)
+      this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
     }
   }
