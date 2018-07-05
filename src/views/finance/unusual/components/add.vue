@@ -4,116 +4,68 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
-          <!-- <el-form-item label="运单号" prop="shipSn" class="label">
-            <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
-          </el-form-item> -->
+            <!-- <el-select v-model="form.shipSn" filterable multiple  placeholder="请输入关键词">
+            </el-select> -->
           <el-form-item label="运单号" prop="shipSn">
-              <!--<el-input v-model="formInline.shipSn"></el-input>-->
-              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false"/>
-            </el-form-item>
-          <el-form-item label="货号" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  placeholder="请输入运单号" v-model="form.shipSn"/>
           </el-form-item>
-  
           <el-form-item label="开单时间" prop="createTime">
             <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+          </el-form-item>
+          <el-form-item label="出发城市" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="到达城市" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="货品名" prop="cargoName">
             <el-input v-model="form.cargoName" maxlength="18" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
-          <el-form-item label="包装" prop="cargoPack">
-            <el-input v-model="form.cargoPack" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
-          </el-form-item>
           <el-form-item label="件数" prop="cargoAmount">
             <el-input v-model="form.cargoAmount" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
+          <el-form-item label="重量" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="体积" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="运费合计" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="付款方式" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="现付" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="到付" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="月结" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="回单付" prop="shipGoodsSn">
+            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          </el-form-item>
+  
         </div>
-        <!--异常登记-->
-        <div class="box1" style="height:500px">
-          <div class="titles">异常登记</div>
-          <el-form-item label="异常编号" prop="abnormalNo">
-          <el-input maxlength="20" v-model="form.abnormalNo" auto-complete="off"  :disabled="true" ></el-input>
+        <!--异动费用-->
+        <div class="box1">
+          <div class="titles">异动费用</div>
+          <el-form-item label="异动费用" v-number-only:point prop="registerFee" >
+            <el-input v-model="form.registerFee" maxlength="6" auto-complete="off" ></el-input>
           </el-form-item>
-          <el-form-item label="登记时间" prop="registerTime">
-            <el-input :value="form.registerTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
-            <!-- <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}{m}{d}') }}</template> -->
-          </el-form-item>
-          <el-form-item label="登记网点" prop="orgId"  >
-            <SelectTree v-model="form.orgId" :disabled="true"/>
-          </el-form-item>
-          <!-- <el-form-item label="登记人" prop="registerName" >
-            <el-autocomplete
-              popper-class="my-autocomplete"
-              v-model="form.registerName"
-              :fetch-suggestions="querySearch"
-              @select="handleSelect" :disabled="isCheck || isDeal ? true : false">
-              <template slot-scope="{ item }">
-                <div class="name">{{ item.name }}</div>
-              </template>
-            </el-autocomplete>
-          </el-form-item> -->
-           <el-form-item label="登记人" prop="registerName"  >
-            <SelectTree v-model="form.registerName" :disabled="true"/>
-          </el-form-item>
-          <el-form-item label="异常类型" prop="abnormalType" class="label">
+          <el-form-item label="费用类型" prop="abnormalType">
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
-          <el-form-item label="异常件数" v-numberOnly prop="abnormalAmount" >
-            <el-input v-model="form.abnormalAmount" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+  
+          <el-form-item label="异动时间" prop="createTime">
+            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  ></el-input>
           </el-form-item>
-          <el-form-item label="处理网点" prop="orgName" class="label">
-            <SelectTree v-model="form.orgName" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item class="driverRemarks ms" label="异动备注" prop="disposeOpinion" >
+            <el-input type="textarea" maxlength="200" v-model="form.disposeOpinion" placeholder="注：最多可输入200个字符"></el-input>
           </el-form-item>
-          <el-form-item label="异常金额" v-number-only:point prop="registerFee" >
-            <el-input v-model="form.registerFee" maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
-          </el-form-item>
-          <el-form-item label="责任网点" prop="dutyOrgName" >
-            <SelectTree v-model="form.dutyOrgName" :disabled="isCheck || isDeal ? true : false"/>
-          </el-form-item>
-          <el-form-item class="driverRemarks label ms" label="异常描述" prop="abnormalDescribe" >
-            <el-input type="textarea" maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
-          </el-form-item>
-            <p class="ts">注意：问题描述最多输入200字</p>
-            <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
-            <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
-          <div class="clearfix uploadcard"  >
-            <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" :disabled="isCheck || isDeal ? true : false"/>
-          </div>
-        </div>
-        <!--异常处理-->
-        <div class="box1 control" v-if="isDeal" style="height:400px">
-          <div class="titles">
-              <h4>异常处理</h4>
-              <el-form-item label="处理结果：" prop="disposeResult" class="result">
-                <SelectType v-model="form.disposeResult" type="dispose_result" :disabled="isCheck ? true : false"/>
-              </el-form-item>
-          </div>
-          <el-form-item label="处理时间" prop="disposeTime">
-            <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
-          </el-form-item>
-          <el-form-item label="处理网点" prop="orgName" >
-            <SelectTree v-model="form.orgName" :disabled=" true"/>
-          </el-form-item>
-          <el-form-item label="处理人" prop="disposeName" >
-            <el-autocomplete
-              popper-class="my-autocomplete"
-              v-model="form.disposeName"
-              :fetch-suggestions="querySearch"
-              @select="handleSelect" :disabled=" true">
-              <template slot-scope="{ item }">
-                <div class="name">{{ item.name }}</div>
-              </template>
-            </el-autocomplete>
-          </el-form-item>
-          <el-form-item class="driverRemarks ms" label="处理意见" prop="disposeOpinion" >
-            <el-input type="textarea" maxlength="125" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
-          </el-form-item>
-            <p class="ts">注意：问题描述最多输入200字</p>
-            <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
-            <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
-          <div class="clearfix uploadcard"  >
-            <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
-          </div>
         </div>
       </el-form>
     </template>
@@ -561,8 +513,9 @@ export default {
       }
     }
     .ms{
-      min-width: 723px;
       width:100%;
+      min-width:703px;
+      font-size: 13px;
     }
     .el-form--inline .driverRemarks{
       width: 600px;
@@ -654,6 +607,7 @@ export default {
     }
     .el-textarea__inner{
         // width: 207%;
+        min-width: 703px;
         height: 50%;
         line-height: 1.5;
     }

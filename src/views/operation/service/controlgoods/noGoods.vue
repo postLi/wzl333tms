@@ -3,9 +3,9 @@
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize"  plain @click="doAction('haveGoods')">放货</el-button>
-            <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-goods" plain @click="doAction('haveGoods')">放货</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2"  @click="doAction('export')" plain>导出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
           <el-table

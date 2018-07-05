@@ -3,12 +3,12 @@
       <SearchForm :orgid="otherinfo.orgid" type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize"  plain @click="doAction('recycle')">回单回收</el-button>
-            <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消回收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('recycle')">回单回收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消回收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>打印</el-button>
-            <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
             <el-table
