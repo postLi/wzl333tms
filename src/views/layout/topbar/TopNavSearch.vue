@@ -13,6 +13,7 @@
       :visible-arrow="false"
       :fetch-suggestions="querySearch"
       :trigger-on-focus="false"
+      @keypress.enter.native="handleEnter"
       @focus="addLong"
       @blur="setShort"
       @select="handleSelect">
@@ -92,11 +93,18 @@ export default {
       let data = this.searchListArr
       cb(data)
     },
+    handleEnter(){
+      this.handleSelect({
+        key: 'shipSn',
+        value: this.topSearch
+      })
+      // this.$refs.topNavSearchComplete.blur()
+    },
     handleSelect (index) {
       console.log('Top nav search List:', index)
       this.$router.push({path: '/operation/order/orderManage', query: {
-        key: index.value,
-        value: index.key
+        key: index.key,
+        value: index.value
       }})
     },
     clearinput () {

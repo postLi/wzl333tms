@@ -959,10 +959,11 @@ export default {
       if(!this.output.isOrder){
         this.setDefaultValue()
       }
+      let _this = this
       setTimeout(() => {
         // 避免重复绑定
-        if(!this.isbindtab){
-          this.bindTabWithArrow()
+        if(!_this.isbindtab){
+          _this.bindTabWithArrow()
         }
       }, 1000);
     },

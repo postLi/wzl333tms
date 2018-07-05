@@ -185,7 +185,11 @@ export default {
     name: {
       handler (newVal) {
         // 转成字符串格式
-        this.handlevalue = newVal + ''
+        if(newVal){
+          this.handlevalue = newVal + ''
+        } else {
+          this.handlevalue = ''
+        }
       },
       immediate: true
     },
@@ -194,7 +198,7 @@ export default {
         // 当绑定值跟搜索字段一致时，响应绑定值的变化
         // 当被清空时
         // 转成字符串格式
-        newVal += ''
+        newVal = newVal ? newVal+'' : ''
         if(this.search === this.valuekey || !newVal){
           this.handlevalue = newVal
           console.log('handkler: value')

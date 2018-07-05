@@ -4,39 +4,39 @@
       <!-- 第一块 -->
       <div class="sendGroup">
         <h3 class="thetitle">发货网点</h3>
-        <div class="flowitem send-tihuo">
-          <i class="flowicon tihuo"></i>
+        <div class="flowitem send-01tihuo">
+          <i class="flowicon 01tihuo"></i>
           <p class="flowtitle">提货</p>
         </div>
-        <div class="flowitem send-daoru">
-          <i class="flowicon daoru"></i>
+        <div class="flowitem send-02daoru">
+          <i class="flowicon 02daoru"></i>
           <p class="flowtitle">运单导入</p>
         </div>
-        <div class="flowitem send-kehu">
-          <i class="flowicon kehu"></i>
+        <div class="flowitem send-03dingdna">
+          <i class="flowicon 03dingdna"></i>
           <p class="flowtitle">客户订单</p>
         </div>
 
-        <div class="flowitem send-yundan">
-          <i class="flowicon yundan"></i>
+        <div class="flowitem send-04yundan">
+          <i class="flowicon 04yundan"></i>
           <p class="flowtitle">正式运单</p>
         </div>
 
-        <div class="flowitem send-waifa">
-          <i class="flowicon waifa"></i>
+        <div class="flowitem send-04zhongzhuan">
+          <i class="flowicon 04zhongzhuan"></i>
           <p class="flowtitle">中转外发</p>
         </div>
-        <div class="flowitem send-kucun">
-          <i class="flowicon kucun"></i>
+        <div class="flowitem send-06fahuokc">
+          <i class="flowicon 06fahuokc"></i>
           <p class="flowtitle">发货库存</p>
         </div>
-        <div class="flowitem send-duanbo">
-          <i class="flowicon duanbo"></i>
+        <div class="flowitem send-07duanbo">
+          <i class="flowicon 07duanbo"></i>
           <p class="flowtitle">短驳接收</p>
         </div>
 
-        <div class="flowitem send-fache">
-          <i class="flowicon fache"></i>
+        <div class="flowitem send-08peizai">
+          <i class="flowicon 08peizai"></i>
           <p class="flowtitle">配载发车</p>
         </div>
       </div>
@@ -47,55 +47,55 @@
       <div class="receiveGroup">
         <h3 class="thetitle">收货网点</h3>
 
-        <div class="flowitem receive-daohuo">
-          <i class="flowicon daohuo"></i>
+        <div class="flowitem receive-09daohuo">
+          <i class="flowicon 09daohuo"></i>
           <p class="flowtitle">到车/到货</p>
         </div>
 
-        <div class="flowitem receive-waifa">
-          <i class="flowicon waifa"></i>
+        <div class="flowitem receive-04zhongzhuan">
+          <i class="flowicon 04zhongzhuan"></i>
           <p class="flowtitle">中转外发</p>
         </div>
-        <div class="flowitem receive-daohuokucun">
-          <i class="flowicon daohuokucun"></i>
+        <div class="flowitem receive-10kucun">
+          <i class="flowicon 10kucun"></i>
           <p class="flowtitle">到货库存</p>
         </div>
-        <div class="flowitem receive-duanbofache">
-          <i class="flowicon duanbofache"></i>
+        <div class="flowitem receive-11duobofache">
+          <i class="flowicon 11duobofache"></i>
           <p class="flowtitle">短驳发车</p>
         </div>
 
-        <div class="flowitem receive-ziti">
-          <i class="flowicon ziti"></i>
+        <div class="flowitem receive-12ziti">
+          <i class="flowicon 12ziti"></i>
           <p class="flowtitle">自提</p>
         </div>
-        <div class="flowitem receive-songhuo">
-          <i class="flowicon songhuo"></i>
+        <div class="flowitem receive-13songhuosm">
+          <i class="flowicon 13songhuosm"></i>
           <p class="flowtitle">送货上门</p>
         </div>
 
-        <div class="flowitem receive-qianshou">
-          <i class="flowicon qianshou"></i>
+        <div class="flowitem receive-14qianshou">
+          <i class="flowicon 14qianshou"></i>
           <p class="flowtitle">签收</p>
         </div>
       </div>
       <!-- 第三块 -->
       <div class="receiptGroup">
         <h3 class="thetitle">回单管理</h3>
-        <div class="flowitem receipt-fafang">
-          <i class="flowicon fafang"></i>
+        <div class="flowitem receipt-18fafang">
+          <i class="flowicon 18fafang"></i>
           <p class="flowtitle">回单发放</p>
         </div>
-        <div class="flowitem receipt-jiehsou">
-          <i class="flowicon jiehsou"></i>
+        <div class="flowitem receipt-17jieshou">
+          <i class="flowicon 17jieshou"></i>
           <p class="flowtitle">回单接收</p>
         </div>
-        <div class="flowitem receipt-jichu">
-          <i class="flowicon jichu"></i>
+        <div class="flowitem receipt-16jichu">
+          <i class="flowicon 16jichu"></i>
           <p class="flowtitle">回单寄出</p>
         </div>
-        <div class="flowitem receipt-huishou">
-          <i class="flowicon huishou"></i>
+        <div class="flowitem receipt-15huishou">
+          <i class="flowicon 15huishou"></i>
           <p class="flowtitle">回单回收</p>
         </div>
       </div>
@@ -135,7 +135,5 @@ export default {
   margin: 53px auto 0;
   background: url("../../assets/flow/index.png") no-repeat;
 }
-.flowicon{
-  
-}
+
 </style>

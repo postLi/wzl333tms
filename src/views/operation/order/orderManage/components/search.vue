@@ -99,6 +99,13 @@ export default {
   },
   mounted () {
     this.searchForm.orgid = this.orgid
+    let key = this.$route.query.key
+    let value = this.$route.query.value
+    if(key && value){
+      console.log('search ship list:', key, value)
+      this.searchForm.type = key
+      this.searchForm.value = value
+    }
     this.onSubmit()
   },
   methods: {

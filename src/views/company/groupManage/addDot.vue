@@ -322,7 +322,7 @@
     },
     methods: {
       getCity (city) {
-        this.form.city = city
+        this.form.city = city ? city.longAddr : city
       },
       getOrgid (id){
         this.form.parentId = id
