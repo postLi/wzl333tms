@@ -144,9 +144,9 @@
                     <!--label="序号"-->
                     <!--width="80">-->
                     <!--</el-table-column>-->
-                    <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点">
+                    <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点" >
                     </el-table-column>
-                    <el-table-column prop="shipId" width="120" sortable label="运单号">
+                    <el-table-column prop="shipId" width="180" sortable label="运单号">
                     </el-table-column>
                     <el-table-column prop="childShipId" sortable width="120" label="子运单号">
                     </el-table-column>
@@ -454,7 +454,7 @@ export default {
   data() {
     return {
       getBatchNo: '',
-      popTitle: '到车入库',
+      popTitle: '查看详情',
       activeName: 'first',
       trackDetail: [],
       ruleForm: {},
@@ -929,6 +929,9 @@ export default {
       .el-form-item {
         margin-right: 0;
         margin-bottom: 15px;
+      }
+      .el-form-item.art_remk{
+        width: 100%;
       }
     }
   }

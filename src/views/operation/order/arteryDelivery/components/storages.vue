@@ -151,9 +151,9 @@
                     <!--</el-table-column>-->
                     <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点">
                     </el-table-column>
-                    <el-table-column prop="shipId" width="120" sortable label="运单号">
+                    <el-table-column prop="shipSn" width="160" sortable label="运单号">
                     </el-table-column>
-                    <el-table-column prop="childShipId" sortable width="120" label="子运单号">
+                    <el-table-column prop="childShipSn" sortable width="120" label="子运单号">
                     </el-table-column>
                     <!--actualAmount-->
                     <el-table-column prop="loadAmount" sortable width="120" label="实到件数">
@@ -560,10 +560,14 @@ export default {
     // orgid: {
     //   required: true
     // },
-    // isModify: {
-    //   type: Boolean,
-    //   default: false
-    // },
+    isDbClick: {
+      type: Boolean,
+      default: false
+    },
+    isModify: {
+      type: Boolean,
+      default: false
+    },
     info: {
       type: Object,
       default: () => {}
@@ -596,7 +600,21 @@ export default {
       if (this.isModify) {
         this.popTitle = '到车确定'
 
-      } else {
+      } else if(this.isDbClick){
+        this.popTitle = '查看详情'
+      }
+      else {
+        this.popTitle = '到车入库'
+      }
+    },
+    isModify(newVal) {
+      if (this.isModify) {
+        this.popTitle = '到车确定'
+
+      } else if(this.isDbClick){
+        this.popTitle = '查看详情'
+      }
+      else {
         this.popTitle = '到车入库'
       }
     },

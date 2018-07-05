@@ -37,9 +37,9 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
             label="序号"
-            width="180">
+            width="100">
+            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
@@ -278,13 +278,13 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :isDbClick="isDbClick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
+import { postArtList ,postCancelLoad ,postCancelPut ,postConfirmToCar} from '@/api/operation/arteryDelivery'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/storages'
@@ -328,6 +328,7 @@ export default {
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
+      isDbClick: false,
       selectInfo: {},
       // 选中的行
       selected: [],
@@ -400,9 +401,9 @@ export default {
               return false
 
             }else if(this.selected.length === 1){
-
               this.selectInfo = this.selected[0]
               this.isModify = false
+              this.isDbClick = false
               this.openAddCustomer()
             }
 
@@ -415,17 +416,24 @@ export default {
                       type: 'warning'
                   })
                 return false
-              }else if(this.selected.length === 1){
+              }else{
                 //在途中
-                if(this.selected[0].bathStatusName === "在途中"){
-                  this.$message({
-                    message: '到车确定成功~',
-                    type: 'success'
+                let id = this.selected[0].id
+                if(this.selected[0].bathStatusName === '在途中'){
+                  postConfirmToCar(id,39).then(res => {
+                    this.$message({
+                      type: 'success',
+                      message: '到车确定成功~'
+                    })
+                    this.fetchData()
+
+                  }).catch(err=>{
+                    this.$message({
+                      type: 'info',
+                      message: '到车失败，原因：' + err.errorInfo ? err.errorInfo : err
+                    })
                   })
-                  this.fetchData()
-                  // this.selectInfo = this.selected[0]
-                  // this.isModify = true
-                  // this.openAddCustomer()
+
                 }else{
                   let bathStatusName = this.selected[0].bathStatusName
                   this.$message({
@@ -440,46 +448,49 @@ export default {
 
           // deselectCar取消到车
           case 'deselectCar':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
-                  //=>todo 删除多个
-                  let ids = this.selected.map(item => {
-                      return item.id
-                  })
-                  ids = ids.join(',')
-                if(this.selected[0].bathStatusName === '已到车'){
-                  this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                  }).then(() => {
-                    postCancelLoad(ids,39).then(res => {
-                      this.$message({
-                        type: 'success',
-                        message: '取消到车成功~'
-                      })
-                      this.fetchData()
-                    }).catch(err=>{
-                      this.$message({
-                        type: 'info',
-                        message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
-                      })
-                    })
 
-                  }).catch(() => {
+
+            let ids = this.selected.filter(el=>{
+              return el.bathStatusName === '已到车'
+            }).map(el => {
+              return  el.id
+            })
+            if(!ids.length){
+              let bathStatusName = this.selected[0].bathStatusName
+              this.$message({
+                message: '批次状态为：' + bathStatusName + '不允许取消到车~',
+                type: 'warning'
+              })
+              return false
+            }else {
+              ids = ids.join(',')
+                this.$confirm('确定要取消到车？', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  postCancelLoad(ids, 39).then(res => {
+                    this.$message({
+                      type: 'success',
+                      message: '已取消到车~'
+                    })
+                    this.fetchData()
+
+                  }).catch(err => {
                     this.$message({
                       type: 'info',
-                      message: '已取消'
+                      message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
                     })
                   })
-                }else{
-                  let bathStatusName = this.selected[0].bathStatusName
-                  this.$message({
-                    message: '批次状态为：' + bathStatusName + '不允许取消到车~',
-                    type: 'warning'
-                  })
-                  return false
-                }
 
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消'
+                  })
+                })
+
+            }
               break;
           // 取消入库
           case 'deleteStor':
@@ -561,6 +572,7 @@ export default {
     getDbClick(row, event){
       this.selectInfo = row
       this.isModify = false
+      this.isDbClick = true
       this.openAddCustomer()
     }
   }

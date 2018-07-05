@@ -257,32 +257,11 @@ export default {
               this.openAddCustomer()
             // }
               break;
-          //到车确定
-          case 'sure':
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能修改单条数据~',
-                      type: 'warning'
-                  })
-                return false
-              }else if(this.selected.length === 1){
-                //在途中
-                if(this.selected[0].bathStatusName === "在途中"){
-                  this.$message({
-                    message: '到车确定成功~',
-                    type: 'success'
-                  })
-                  this.fetchData()
-                }else{
-                  let bathStatusName = this.selected[0].bathStatusName
-                  this.$message({
-                    message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
-                    type: 'warning'
-                  })
-                  return false
-                }
-              }
-              break;
+          case 'modify':
+              this.selectInfo = this.selected[0]
+              this.isModify = true
+              this.openAddCustomer()
+            break;
         // sure 到车确定   deselectCar取消到车  deleteStor取消入库
 
           // deselectCar取消到车

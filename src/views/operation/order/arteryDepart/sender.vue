@@ -37,9 +37,9 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
             label="序号"
-            width="180">
+            width="100">
+            <template slot-scope="scope">{{ ((searchQuery.pageNum - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
@@ -437,19 +437,19 @@ export default {
             case 'depart':
               if (this.selected[0].batchTypeName === '已装车') {
               // if (this.selected[0].batchTypeName === '已到车') {
-                let _deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
+                let _deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].batchNo
                 //=>todo 删除多个
                 let loadIds = this.selected.map(item => {
                   return item.id
                 })
                 loadIds = loadIds.join(',')
 
-                this.$confirm('确定要取消车牌号 ' + _deleteItem + ' 到车吗？', '提示', {
+                this.$confirm('确定要发车批次 ' + _deleteItem + '？', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  putLoadDepart(loadIds, 38).then(res => {
+                  putLoadDepart(loadIds, 39).then(res => {
                     this.$message({
                       type: 'success',
                       message: '发车成功!'
@@ -457,8 +457,8 @@ export default {
                     this.fetchData()
                   }).catch(err => {
                     this.$message({
-                      type: 'info',
-                      message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                      type: 'error',
+                      message: '发车失败，原因：' + err.text ? err.text : err
                     })
                   })
 
@@ -492,7 +492,7 @@ export default {
                       cancelButtonText: '取消',
                       type: 'warning'
                     }).then(() => {
-                      putCancelLoadDepart(ids,38).then(res => {
+                      putCancelLoadDepart(ids,39).then(res => {
                         this.$message({
                           type: 'success',
                           message: '取消成功!'

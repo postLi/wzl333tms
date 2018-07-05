@@ -4,7 +4,7 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="pickup_lrl">
 
 
-        <div class="pickUp-bottom">
+        <div class="iommanage-bottom">
           <el-form-item label="所属网点" prop="tmsOrderPickup.truckFee">
             <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
@@ -252,15 +252,15 @@ export default {
     },
     info () {
       if (this.isModify) {
-        this.popTitle = '修改派车单'
+        this.popTitle = '修改收支方式'
         this.infoData(this.info)
       }
       else if(this.isDbclick) {
-        this.popTitle = '查看派车单'
+        this.popTitle = '查看收支方式'
         this.infoData(this.info)
       }
       else {
-        this.popTitle = '提货派车单'
+        this.popTitle = '新增收支方式'
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
         this.form.tmsDriver = this.setObject(this.form.tmsDriver)
@@ -446,7 +446,7 @@ export default {
     }
   }
 
-  .pickUp-bottom .arrive-time .el-form-item__label{
+  .iommanage-bottom .arrive-time .el-form-item__label{
     width: 108px !important;
   }
 
