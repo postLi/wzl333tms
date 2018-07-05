@@ -72,7 +72,7 @@
           </el-table-column>
           <el-table-column fixed width="50" sortable type="selection"></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-          <el-table-column sortable width="120" prop="shipId" label="运单号"></el-table-column>
+          <el-table-column sortable width="120" prop="shipSn" label="运单号"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数">
             <template slot-scope="scope">
               <el-input type="number" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>

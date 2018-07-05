@@ -118,11 +118,11 @@ export default {
           prop: "arriveOrgName",
           width: "120"
         },
-        {
-          label: "短驳费",
-          prop: "shortFee",
-          width: "120"
-        },
+        // {
+        //   label: "短驳费",
+        //   prop: "shortFee",
+        //   width: "120"
+        // },
         {
           label: "实载总件数",
           prop: "actualAmountall",

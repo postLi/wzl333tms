@@ -90,36 +90,39 @@ export default {
         }
       },
       tableColumn: [{
-          label: "发车批次",
+          label: "送货批次",
           prop: "batchNo",
           width: "110"
         },
         {
-          label: "车牌号",
-          prop: "truckIdNumber",
+          label: "批次状态",
+          prop: "batchTypeName",
           width: "120"
         },
         {
-          label: "发车网点",
-          prop: "truckIdNumber",
-          width: "120"
+          label: "送货时间",
+          prop: "departureTime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          }
         },
         {
-          label: "目的网点",
+          label: "完成时间",
           prop: "arriveOrgName",
           width: "120"
         },
         {
-          label: "车辆状态",
+          label: "车牌号",
           prop: "batchTypeName",
           width: "120"
         },
         {
           label: "发车时间",
           prop: "departureTime",
-          width: "120",
+          width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
           }
         },
         {
@@ -133,35 +136,35 @@ export default {
           width: "120"
         },
         {
-          label: "实载总件数",
+          label: "送货件数",
           prop: "actualAmountall",
           width: "120"
         },
         {
-          label: "实载总重量",
+          label: "送货重量",
           prop: "actualWeigntall",
           width: "120"
         },
         {
-          label: "实载总体积",
+          label: "送货体积",
           prop: "actualVolumeall",
           width: "120"
         },
-        {
-          label: "运单总件数",
-          prop: "shipAmount",
-          width: "120"
-        },
-        {
-          label: "运单总重量",
-          prop: "shipWeigntall",
-          width: "120"
-        },
-        {
-          label: "运单总体积",
-          prop: "shipVolumeall",
-          width: "120"
-        },
+        // {
+        //   label: "运单总件数",
+        //   prop: "shipAmount",
+        //   width: "120"
+        // },
+        // {
+        //   label: "运单总重量",
+        //   prop: "shipWeigntall",
+        //   width: "120"
+        // },
+        // {
+        //   label: "运单总体积",
+        //   prop: "shipVolumeall",
+        //   width: "120"
+        // },
         {
           label: "重量装载率",
           prop: "weightLoadRate",
@@ -171,61 +174,61 @@ export default {
           prop: "volumeLoadRate",
           width: "120"
         },
-        {
-          label: "现付油卡",
-          prop: "nowpayOilCard",
-          width: "120"
-        },
-        {
-          label: "到付运费",
-          prop: "arrivepayCarriage",
-          width: "120"
-        },
-        {
-          label: "到付油卡",
-          prop: "arrivepayOilCard",
-          width: "120"
-        },
-        {
-          label: "回付油卡",
-          prop: "backpayOilCard",
-          width: "120"
-        },
-        {
-          label: "回付运费",
-          prop: "backpayOilCard",
-          width: "120"
-        },
-        {
-          label: "运费合计",
-          prop: "remark",
-          width: "120"
-        },
-        {
-          label: "整车保险费",
-          prop: "carloadInsuranceFee",
-          width: "120"
-        },
-        {
-          label: "发站装卸费",
-          prop: "leaveHandlingFee",
-          width: "120"
-        },
-        {
-          label: "发站其他费",
-          prop: "leaveOtherFee",
-          width: "120"
-        },
-        {
-          label: "到站装卸费",
-          prop: "arriveHandlingFee",
-          width: "120"
-        },
-        {
-          label: "到站其他费",
-          prop: "arriveOtherFee",
-          width: "120"
-        },
+        // {
+        //   label: "现付油卡",
+        //   prop: "nowpayOilCard",
+        //   width: "120"
+        // },
+        // {
+        //   label: "到付运费",
+        //   prop: "arrivepayCarriage",
+        //   width: "120"
+        // },
+        // {
+        //   label: "到付油卡",
+        //   prop: "arrivepayOilCard",
+        //   width: "120"
+        // },
+        // {
+        //   label: "回付油卡",
+        //   prop: "backpayOilCard",
+        //   width: "120"
+        // },
+        // {
+        //   label: "回付运费",
+        //   prop: "backpayOilCard",
+        //   width: "120"
+        // },
+        // {
+        //   label: "运费合计",
+        //   prop: "remark",
+        //   width: "120"
+        // },
+        // {
+        //   label: "整车保险费",
+        //   prop: "carloadInsuranceFee",
+        //   width: "120"
+        // },
+        // {
+        //   label: "发站装卸费",
+        //   prop: "leaveHandlingFee",
+        //   width: "120"
+        // },
+        // {
+        //   label: "发站其他费",
+        //   prop: "leaveOtherFee",
+        //   width: "120"
+        // },
+        // {
+        //   label: "到站装卸费",
+        //   prop: "arriveHandlingFee",
+        //   width: "120"
+        // },
+        // {
+        //   label: "到站其他费",
+        //   prop: "arriveOtherFee",
+        //   width: "120"
+        // },
         {
           label: "配载时间",
           prop: "loadTime",
