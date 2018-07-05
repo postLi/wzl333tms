@@ -30,7 +30,7 @@ export default {
     path: '/operation/order/shortDepart', icon: 'QQ', name: '短驳管理', component: _import('operation/order/shortDepart/index'), meta: { role: ['admin'], title: '短驳管理', noCache: true }
   },
   {
-    path: '/operation/order/load', icon: 'QQ', name: '新增配载', component: _import('operation/order/load/index'), meta: { role: ['admin'], title: '新增配载', noCache: true }
+    path: '/operation/order/load', icon: 'QQ', hidden: true, name: '新增配载', component: _import('operation/order/load/index'), meta: { role: ['admin'], title: '新增配载', noCache: true }
   },
   {
     path: '/operation/order/arteryDepart', icon: 'QQ', name: '干线发车', component: _import('operation/order/arteryDepart/index'), meta: { role: ['admin'], title: '干线发车', noCache: true }
