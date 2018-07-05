@@ -343,6 +343,10 @@
             this.loading = true
             let reqPromise
             if(this.isModify){
+              // 当修改最上级网点时，传0
+              if(this.form.id === this.form.parentId && this.form.parentId === this.otherinfo.companyId){
+                this.form.parentId = 0
+              }
               reqPromise = putOrgData(this.form)
             } else {
               if(this.form.accountStatus == true){
