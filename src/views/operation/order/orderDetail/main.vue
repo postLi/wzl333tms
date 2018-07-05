@@ -393,29 +393,28 @@
               {{ item.loadTime | parseTime }}
             </td>
             <td>
-              <querySelect disabled  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier"
-              :filterable="false" show="select" v-model="form.tmsOrderTransfer.carrierId" />
+              {{ item.receivingTime | parseTime }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.carrierMobile }}
+              {{ item.truckIdNumber }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.arrivalMobile }}
+              {{ item.dirverName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.transferCharge }}
+              {{ item.dirverMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.deliveryExpense }}
+              {{ item.shortFee }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.codService }}
+              {{ item.receivedUserName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.totalCost }}
+              {{ item.arriveOrgidName }}
             </td>
             <td>
-              <SelectType disabled size="mini" v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
+              {{ item.userName }}
             </td>
           </tr>
         </tbody>
