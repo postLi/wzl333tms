@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="receipt_searchinfo clearfix">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="receipt_searchinfo clearfix">
       <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
@@ -86,8 +86,7 @@ export default {
 
     return {
       searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      thestatus: 105,
-      // recStatus:105,
+      thestatus: '',
       searchForm: {
         shipFromOrgid:'',
         // number:'',
@@ -107,6 +106,24 @@ export default {
   watch: {
     orgid(newVal){
       this.searchForm.orgid = newVal
+    },
+    type: {
+      handler(status){
+        console.log(status)
+        if(status === 'rec_status'){
+          this.thestatus = 105
+        }
+        if(status === 'accept_status'){
+            this.thestatus = 109
+        }
+        if(status === 'send_status'){
+            this.thestatus = 107
+        }
+        if(status === 'giveout_status'){
+            this.thestatus = 111
+        }
+      },
+      immediate: true
     }
   },
   mounted () {
@@ -148,10 +165,9 @@ export default {
 }
 </script> 
 <style lang="scss">
-.receipt-manager{
+.tab-content{
     .receipt_searchinfo{
-        padding:10px 0;
-        margin: 0 10px;
+        padding:15px 20px;
         border-bottom:1px dashed #999;
         .el-form-item{
             margin-bottom: 0;
@@ -161,7 +177,6 @@ export default {
     }
     .receipt_searchinfo--btn{
         float: right;
-        margin-right: 0;
     }
 }
 @media screen and (max-width:1308px){
