@@ -203,7 +203,7 @@ export default {
       let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
       let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
       let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
-      if (this.selectDetailList.length === 1 && this.detailList.length === 1 && curAmount === 0) {
+      if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
         this.detailList[newVal].actualAmount = curloadAmount
         this.detailList[newVal].actualWeight = curloadWeight
@@ -211,6 +211,17 @@ export default {
         this.$notify({
           title: '提示',
           message: '实到件数不能为0',
+          type: 'warning'
+        })
+      }
+      if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
+        console.log(this.selectDetailList.length, this.detailList.length)
+        this.detailList[newVal].actualAmount = curloadAmount
+        this.detailList[newVal].actualWeight = curloadWeight
+        this.detailList[newVal].actualVolume = curloadVolume
+        this.$notify({
+          title: '提示',
+          message: '实到重量和实到体积不能同时为0',
           type: 'warning'
         })
       }
@@ -309,13 +320,19 @@ export default {
       //     }
       //   }
       // })
+      
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
       this.newData.tmsOrderLoadDetailsList = Object.assign([], this.selectDetailList)
     },
     postAddRepertory() {
       this.setData()
-      postAddRepertory(50, this.newData).then(data => {
+      if (this.newData.tmsOrderLoadDetailsList.length === 0) {
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[0], true)
+        this.$message({type: 'warning', message: '至少要有一条数据'})
+        return false
+      }else {
+        postAddRepertory(50, this.newData).then(data => {
           if (data.status === 200) {
             this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
             this.$message({ type: 'success', message: '短驳入库操作成功' })
@@ -330,6 +347,7 @@ export default {
           this.$emit('isSuccess', this.message)
 
         })
+      }
     },
     getLoadTrack() {
       this.loadId = this.info.id
