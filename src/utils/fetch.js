@@ -23,9 +23,7 @@ service.interceptors.request.use(config => {
     config.params['access_token'] = getToken()
     // console.log(config.url, config.params)
   }
-  if (config.url.indexOf('http://') !== -1) {
-
-  } else {
+  if (config.url.indexOf('http://') === -1) {
     // 如果是生产环境，强制访问157
     if (process.env.NODE_ENV === 'production') {
       config.url = '/api' + config.url
@@ -34,8 +32,8 @@ service.interceptors.request.use(config => {
        * 测试环境修改这里，不要修改上面那句代码
        */
       // 统一加上/api 前缀，方便后台转发接口
-      config.url = '/api' + config.url
-      // config.url = '/localapi' + config.url
+      // config.url = '/api' + config.url
+      config.url = '/localapi' + config.url
       // config.url = '/wukunzhi' + config.url
       // config.url = '/huangyuwen' + config.url
       // config.url = '/dingfei' + config.url

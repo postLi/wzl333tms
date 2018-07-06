@@ -49,7 +49,7 @@ export default {
       left: 0,
       selectedTag: {},
       hideCloseCurrentMenu: false,
-      indexTag: {path:'/dashboard', fullPath:'/dashboard', name:'首页', lock: true}
+      indexTag: { path: '/dashboard', fullPath: '/dashboard', name: '首页', lock: true }
     }
   },
   computed: {
@@ -61,10 +61,9 @@ export default {
     $route(newpath, oldpath) {
       // 如果新的路径是三级路径以上，则不进行加入
       // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
-        this.addViewTags()
-        this.moveToCurrentTag()
+      this.addViewTags()
+      this.moveToCurrentTag()
       // }
-      
     },
     visible(value) {
       if (value) {
@@ -80,47 +79,46 @@ export default {
     // 调用方式类似：
     // this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
     this.eventBus.$on('replaceCurrentView', (route) => {
-      let lastRoute = this.$route
-      route = typeof route === 'string' ? {'path': route} : route
+      const lastRoute = this.$route
+      route = typeof route === 'string' ? { 'path': route } : route
       this.$router.replace(route, () => {
         this.$store.dispatch('delVisitedViews', lastRoute)
       })
     })
     // 关闭当前路由
-    let _this = this
+    const _this = this
     this.eventBus.$on('closeCurrentView', (route) => {
       console.log('closeCurrent:', _this.selectedTag)
       _this.closeSelectedTag(_this.selectedTag)
     })
   },
   methods: {
-    generateTitle (title) {
+    generateTitle(title) {
       return title
     },
     // 判断是否为非首页
     generateRoute() {
-      if (this.$route.name && this.$route.name !== '首页' ) {
+      if (this.$route.name && this.$route.name !== '首页') {
         return this.$route
       }
       return false
     },
     isActive(route, isMenu) {
-      //if(route.path === this.$route.path || route.name === this.$route.name){
-        
+      // if(route.path === this.$route.path || route.name === this.$route.name){
+
       // if((route.fullPath === this.$route.fullPath) || (route.name === this.$route.name)){
       // 如果是tab，则只判断全路径
-      let ison = route.tab ? (route.fullPath === this.$route.fullPath) : (route.path === this.$route.path)
-      if(ison){
+      const ison = route.tab ? (route.fullPath === this.$route.fullPath) : (route.path === this.$route.path)
+      if (ison) {
         this.selectedTag = route
         return true
       } else {
         return false
       }
-      
     },
     addViewTags() {
       const route = this.generateRoute()
-      
+
       if (!route) {
         return false
       }
@@ -128,13 +126,13 @@ export default {
     },
     moveToCurrentTag() {
       // 针对首页特殊处理
-      if(this.$route.path == this.indexTag.path){
+      if (this.$route.path == this.indexTag.path) {
         this.moveToTarget(this.$refs.tagIndex.$el)
         return
       }
       // 因为首页为固定标签，所以初始页面时，this.$refs.tag还未传入任何值，为undefined，需要给个默认的值 []
       const tags = this.$refs.tag ? Array.isArray(this.$refs.tag) ? this.$refs.tag : [this.$refs.tag] : []
-      
+
       this.$nextTick(() => {
         for (const tag of tags) {
           if (tag.fullPath === this.$route.fullPath) {
@@ -156,7 +154,7 @@ export default {
         }
       })
     },
-    refreshSelectedTag (tag) {
+    refreshSelectedTag(tag) {
       this.$parent.refreshKey()
     },
     closeOthersTags() {
@@ -229,6 +227,7 @@ export default {
   height: $tabsHeight + 1px;
   top: $topNavHeight;
   background: #e6e6e6;
+  z-index: 999;
   
   left: 0;
   width: 100%;

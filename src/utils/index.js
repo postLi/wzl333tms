@@ -532,6 +532,6 @@ export function getTotal() {
     el = ((parseFloat(el, 10) || 0) * 10000).toString().replace('\..*$', '')
     total += parseInt(el, 10)
   })
-  console.log('total args:', args, total)
+  console.log('total args:', args, total, 'final:', (total / 10000))
   return (total / 10000)
 }

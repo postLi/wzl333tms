@@ -48,7 +48,6 @@
   </div>
 </template>
 <script>
-import { REGEX } from '@/utils/validate'
 import { parseTime } from '@/utils/'
 import * as transferManageApi from '@/api/operation/transfer'
 import { getSystemTime } from '@/api/common'
@@ -63,7 +62,6 @@ export default {
     querySelect
   },
   data() {
-    
     return {
       // 左边数据
       leftData: [],
@@ -73,12 +71,12 @@ export default {
       loadTableInfo: [],
       // 顶部表单
       formModel: {
-        "transferBatchNo":"",
-        "carrierId":'',
-        "carrierMobile":"",
-        "arrivalMobile":"",
-        "transferTime":"",
-        "remark":""
+        'transferBatchNo': '',
+        'carrierId': '',
+        'carrierMobile': '',
+        'arrivalMobile': '',
+        'transferTime': '',
+        'remark': ''
       },
       formModelRules: {
         transferTime: [{ required: true, trigger: 'blur', message: '请输入中转日期' }],
@@ -99,10 +97,10 @@ export default {
     this.init()
   },
   methods: {
-    init () {
-      let transferId = this.$route.query.transferId
+    init() {
+      const transferId = this.$route.query.transferId
       this.reset()
-      if(typeof transferId !== 'undefined'){
+      if (typeof transferId !== 'undefined') {
         // 表示进来修改
         this.isModify = true
         this.formModel.transferBatchNo = transferId
@@ -122,7 +120,7 @@ export default {
     },
     // 获取中转批次号码
     gettransferBatchNo() {
-      if(this.cache.transferBatchNo){
+      if (this.cache.transferBatchNo) {
         this.formModel.transferBatchNo = this.cache.transferBatchNo
       } else {
         return transferManageApi.getBatchNo(this.otherinfo.orgid).then(res => {
@@ -133,7 +131,7 @@ export default {
     },
     // 获取左边列表信息
     getSelectAddLoadRepertoryList() {
-      if(this.isModify){
+      if (this.isModify) {
         return transferManageApi.getUpdateLoadRepertoryList(this.otherinfo.orgid, this.formModel.transferBatchNo).then(data => {
           this.leftData = data.data
         })
@@ -149,21 +147,21 @@ export default {
     },
     // 获取批次详细信息
     getUpdateTransferDetail() {
-      let key = this.otherinfo.orgid+':'+this.formModel.transferBatchNo
-      if(this.dataCache[key]){
+      const key = this.otherinfo.orgid + ':' + this.formModel.transferBatchNo
+      if (this.dataCache[key]) {
         this.setTransferDetail(this.dataCache[key])
         return true
       }
       return transferManageApi.getUpdateTransferDetail(this.otherinfo.orgid, this.formModel.transferBatchNo).then(res => {
-        let data = res.data
-        if(!data.transferBatchNo){
+        const data = res.data
+        if (!data.transferBatchNo) {
           // 当这个批次号不能获取到信息时，提示用户
           this.$alert('当前批次号不存在', '提示', {
             confirmButtonText: '确定',
             callback: action => {
-              this.goTransferList()     
+              this.goTransferList()
             }
-          });
+          })
         } else {
           this.dataCache[key] = data
           this.setTransferDetail(data)
@@ -171,16 +169,16 @@ export default {
       }).catch(errRes => {
         // 当这个批次号不能获取到信息时，提示用户
         this.$alert('当前批次号不存在', '提示', {
-            confirmButtonText: '确定',
-            callback: action => {
+          confirmButtonText: '确定',
+          callback: action => {
               // 跳转到中转管理页面
-              this.goTransferList()
-            }
-          });
+            this.goTransferList()
+          }
+        })
       })
     },
-    setTransferDetail(data){
-      for(let i in this.formModel){
+    setTransferDetail(data) {
+      for (const i in this.formModel) {
         this.formModel[i] = data[i]
       }
       this.formModel.transferTime = parseTime(new Date(this.formModel.transferTime))
@@ -210,32 +208,32 @@ export default {
             // 判断是修改还是新增
             let PromiseObj
             // 处理提交数据
-            let data = Object.assign({}, this.formModel)
+            const data = Object.assign({}, this.formModel)
             data.tmsOrderTransferDetails = this.loadTableInfo.map(el => {
-              let item = {
-                "repertoryId": el.repertoryId,
-                "shipId": el.shipId,
-                "childShipId": el.childShipId,
-                "oddNumbers": el.oddNumbers,
-                "transferCharge": el.transferCharge,
-                "deliveryExpense": el.deliveryExpense,
-                "transferOtherFee": el.transferOtherFee,
-                "totalCost": el.totalCost,
-                "paymentId": el.paymentId
+              const item = {
+                'repertoryId': el.repertoryId,
+                'shipId': el.shipId,
+                'childShipId': el.childShipId,
+                'oddNumbers': el.oddNumbers,
+                'transferCharge': el.transferCharge,
+                'deliveryExpense': el.deliveryExpense,
+                'transferOtherFee': el.transferOtherFee,
+                'totalCost': el.totalCost,
+                'paymentId': el.paymentId
               }
               // 有Id，就是修改，无Id就是新增
-              if(el.id){
+              if (el.id) {
                 item.id = el.id
               }
               return item
             })
-            if(this.isModify){
+            if (this.isModify) {
               PromiseObj = transferManageApi.putModifyTransfer(data)
             } else {
               PromiseObj = transferManageApi.postNewTransfer(data)
             }
             PromiseObj.then(res => {
-              if(this.isModify){
+              if (this.isModify) {
                 // this.reset()
               }
 
@@ -265,7 +263,7 @@ export default {
       this.$refs[formName].resetFields()
     },
     // 获取选中的承运商
-    getCarrier (item) {
+    getCarrier(item) {
       this.formModel.carrierMobile = item.carrierMobile
     },
     // 显示新增承运商

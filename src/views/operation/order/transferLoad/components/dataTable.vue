@@ -62,20 +62,20 @@
         </el-table-column>
         <el-table-column prop="oddNumbers" sortable label="中转单号" width="120">
           <template slot-scope="scope">
-            <el-input size="mini"  :value="scope.row.oddNumbers" @change="(val) => changeRow('oddNumbers', scope.$index, val)" required></el-input>
+            <el-input size="mini"  :value="scope.row.oddNumbers" @change="(val) => changeRow('oddNumbers', scope, val)" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="transferCharge" sortable label="中转运费" width="120">
           <template slot-scope="scope">
             <el-input size="mini"
-            v-number-only:point  :value="scope.row.transferCharge" @change="(val) => changeRow('transferCharge', scope.$index, val)"  ></el-input>
+            v-number-only:point  :value="scope.row.transferCharge" @change="(val) => changeRow('transferCharge', scope, val)"  ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="deliveryExpense" sortable label="中转送货费" width="120">
           <template slot-scope="scope">
             <el-input size="mini"
             v-number-only:point 
-             @change="(val) => changeRow('deliveryExpense', scope.$index, val)"
+             @change="(val) => changeRow('deliveryExpense', scope, val)"
              :value="scope.row.deliveryExpense" ></el-input>
           </template>
         </el-table-column>
@@ -83,19 +83,19 @@
           <template slot-scope="scope">
             <el-input size="mini"
             v-number-only:point 
-            @change="(val) => changeRow('transferOtherFee', scope.$index, val)"  :value="scope.row.transferOtherFee" ></el-input>
+            @change="(val) => changeRow('transferOtherFee', scope, val)"  :value="scope.row.transferOtherFee" ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="totalCost" sortable label="中转费合计" width="120">
           <template slot-scope="scope">
             <el-input size="mini" disabled  
-            :value="scope.row.totalCost" ></el-input>
+            v-model="rightTable[scope.$index].totalCost" ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="paymentId" sortable label="中转费付款方式" width="120">
           <template slot-scope="scope">
             <selectType type="payment_type" size="mini"
-            @change="(val) => changeRow('paymentId', scope.$index, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
+            @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
           </template>
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
@@ -129,7 +129,7 @@
 <script>
 import transferTable from '@/components/transferTable'
 import selectType from '@/components/selectType/index'
-import {getTotal} from '@/utils/'
+import { getTotal } from '@/utils/'
 
 export default {
   props: {
@@ -143,7 +143,6 @@ export default {
   data() {
     return {
       tablekey: '',
-      loadTruck: '',
       truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
@@ -159,17 +158,17 @@ export default {
     selectType
   },
   watch: {
-    leftData(newVal){
+    leftData(newVal) {
       this.leftTable = newVal
     },
-    rightData(newVal){
+    rightData(newVal) {
       this.rightTable = newVal
-    },
+    }
   },
   mounted() {
   },
   methods: {
-    getSum(param, type){
+    getSum(param, type) {
       const { columns, data } = param
       const sums = []
       columns.forEach((column, index) => {
@@ -177,7 +176,7 @@ export default {
           sums[index] = '总计'
           return
         }
-        if(type!=='left'){
+        if (type !== 'left') {
           if (index === 1 || index === 2 || index === 10) {
             sums[index] = data.length + '单'
             return
@@ -196,7 +195,7 @@ export default {
             return
           }
         }
-        
+
         const values = data.map(item => Number(item[column.property]))
         if (!values.every(value => isNaN(value))) {
           sums[index] = values.reduce((prev, curr) => {
@@ -246,14 +245,15 @@ export default {
       }
     },
     // 设置对应行
-    changeRow(filed, index, val){
-      let _this = this
-      let current = _this.rightTable[index]
+    changeRow(filed, scope, val) {
+      const index = scope.$index
+      const _this = this
+      const current = _this.rightTable[index]
       current[filed] = val
       // 计算总费用
       current['totalCost'] = getTotal(current['transferCharge'], current['deliveryExpense'], current['transferOtherFee'])
+      _this.rightTable[index].totalCost = current['totalCost']
       _this.$emit('loadTable', _this.rightTable)
-
     },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
@@ -265,7 +265,7 @@ export default {
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
+          const item = this.leftTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
@@ -282,7 +282,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
-          let item = this.rightTable.indexOf(e)
+          const item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
             this.rightTable.splice(item, 1)
@@ -298,28 +298,28 @@ export default {
       this.selectedRight[index] = row
       this.doAction('goLeft')
     },
-    setHeader(h, {column}){
-      return h('el-button',{
+    setHeader(h, { column }) {
+      return h('el-button', {
         props: {
           icon: 'el-icon-plus',
           size: 'mini'
         },
-        "class": {
-          "tableItemBtn": true
+        'class': {
+          'tableItemBtn': true
         },
         on: {
           click: this.addALLList
         }
       })
     },
-    setHeader2(h, {column}){
-      return h('el-button',{
+    setHeader2(h, { column }) {
+      return h('el-button', {
         props: {
           icon: 'el-icon-minus',
           size: 'mini'
         },
-        "class": {
-          "tableItemBtn": true
+        'class': {
+          'tableItemBtn': true
         },
         on: {
           click: this.minusAllList

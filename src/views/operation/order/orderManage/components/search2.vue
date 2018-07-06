@@ -42,8 +42,7 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
-import { pickerOptions2 } from '@/utils/'
+import { pickerOptions2, parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 
@@ -66,12 +65,10 @@ export default {
       dafault: false
     }
   },
-  data () {
-    let _this = this
-
+  data() {
     return {
       searchCreatTime: [],
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
         orgid: '',
         shipSn: '',
@@ -79,7 +76,7 @@ export default {
       },
       rules: {
         mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
+          // validator: validateFormMobile, trigger: 'blur'
          // validator: validateFormNumber, trigger: 'change'
         }]
       },
@@ -89,17 +86,18 @@ export default {
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgid = this.orgid
+    this.searchCreatTime = this.defaultTime
     this.onSubmit()
   },
   methods: {
-    onSubmit () {
-      let searchObj = {}
+    onSubmit() {
+      const searchObj = {}
       searchObj.shipFromOrgid = this.searchForm.orgid
       searchObj.shipFormCityName = this.searchForm.shipFormCityName
       searchObj.startTime = this.searchCreatTime[0]
@@ -108,7 +106,8 @@ export default {
 
       this.$emit('change', searchObj)
     },
-    clearForm () {
+    clearForm() {
+      this.searchCreatTime = []
       this.searchForm.orgid = this.orgid
       this.searchForm.shipFormCityName = ''
       this.searchForm.startTime = ''
