@@ -497,37 +497,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(item, index) in form.tmsShLoadsList" :key="index">
             <td>
-              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
+              {{ item.bathNo }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.oddNumbers }}
+              {{ item.truckIdNumber }}
             </td>
             <td>
-              <querySelect disabled  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier"
-              :filterable="false" show="select" v-model="form.tmsOrderTransfer.carrierId" />
+              {{ item.dirverName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.carrierMobile }}
+              {{ item.dirverMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.arrivalMobile }}
+              {{ item.arrivalMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.transferCharge }}
+              {{ item.transferCharge }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.deliveryExpense }}
+              {{ item.createTime }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.codService }}
+              {{ item.codService }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.totalCost }}
+              {{ item.totalCost }}
             </td>
             <td>
-              <SelectType disabled size="mini" v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
+              <SelectType disabled size="mini" v-model="item.paymentId" type="payment_type" />
             </td>
             
           </tr>
@@ -565,7 +564,7 @@
               {{ form.tmsOrderShipSign.signTypeName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signPic }}
+              {{ form.tmsOrderShipSign.signCertificateName }}
             </td>
             <td>
               {{ form.tmsOrderShipSign.signRemark }}
@@ -879,9 +878,9 @@ export default {
       }
 
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
-      this.form.tmsShLoadsList = data.tmsShLoadsList || []
-      this.form.tmsGxLoadsList = data.tmsGxLoadsList || []
-      this.form.tmsDbLoadsList = data.tmsDbLoadsList || []
+      this.form.tmsShLoadsList = data.tmsShLoadsList || [{}]
+      this.form.tmsGxLoadsList = data.tmsGxLoadsList || [{}]
+      this.form.tmsDbLoadsList = data.tmsDbLoadsList || [{}]
       console.log('setOrderInfo3:',data, this.form)
     },
     getCarrier (item) {
@@ -1245,14 +1244,16 @@ $backgroundcolor: #cbe1f7;
     .order-transfer-form{
       margin-top: 12px;
       display: flex;
+      align-items: stretch;
 
       .show-form-title{
         width: 136px;
-        height: 61px;
         text-align: center;
         color: #000;
         font-size: 14px;
-        line-height: 61px;
+        display:flex;
+        align-items:center;
+        justify-content: center;
         background-color: #d5e7f9;
       }
 
@@ -1282,6 +1283,7 @@ $backgroundcolor: #cbe1f7;
         white-space: nowrap;
         padding: 0 5px;
         min-width: 100px;
+        height: 30px;
       }
       table{
         width: 100%;
