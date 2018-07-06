@@ -35,9 +35,9 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
             label="序号"
-            width="180">
+            width="100">
+            <template slot-scope="scope">{{ ((searchForms.currentPage - 1)*searchForms.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
@@ -325,6 +325,7 @@ export default {
       this.loading = true
       return getPostlist(this.searchForms).then(data => {
         this.usersArr = data.list
+        console.log(this.usersArr);
         this.total = data.totalCount
         this.loading = false
       })
@@ -617,6 +618,6 @@ export default {
     .el-message-box__message{
       padding-left: 0;
     }
-  
+
 }
 </style>

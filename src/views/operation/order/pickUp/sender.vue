@@ -35,9 +35,9 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
             label="序号"
-            width="180">
+            width="100">
+            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
