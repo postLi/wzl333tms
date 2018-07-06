@@ -5,7 +5,7 @@
         <tbody>
           <tr>
             <th>到达网点</th>
-            <td  v-if="info.arriveOrgName">
+            <td v-if="info.arriveOrgName">
               <el-input v-model="info.arriveOrgName" :size="btnsize" disabled></el-input>
             </td>
             <td v-else>
@@ -31,30 +31,30 @@
             </td>
             <th>分摊方式</th>
             <td>
-           <el-input v-model="info.apportionName" :size="btnsize"  disabled v-if="info.apportionName"></el-input>
-           <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled v-else></el-input>
-          </td>
+              <el-input v-model="info.apportionName" :size="btnsize" disabled v-if="info.apportionName"></el-input>
+              <el-input v-model="info.apportionTypeName" :size="btnsize" disabled v-else></el-input>
+            </td>
           </tr>
           <tr>
             <th>可载体积</th>
             <td>
-            <el-input v-model="info.truckVolume" :size="btnsize" disabled></el-input>
-          </td>
+              <el-input v-model="info.truckVolume" :size="btnsize" disabled></el-input>
+            </td>
             <th>短驳日期</th>
             <td>
-            <!-- <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input> -->
-            <el-input :value="info.loadTime" :size="btnsize" disabled></el-input>
-          </td>
+              <!-- <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input> -->
+              <el-input :value="info.loadTime" :size="btnsize" disabled></el-input>
+            </td>
             <th>要求到达时间</th>
             <td>
-             <el-input :value="info.requireArrivedTime" :size="btnsize" disabled></el-input>
-          </td>
+              <el-input :value="info.requireArrivedTime" :size="btnsize" disabled></el-input>
+            </td>
           </tr>
           <tr>
             <th>可载重量</th>
             <td>
-            <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
-          </td>
+              <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
+            </td>
             <th>备注</th>
             <td colspan="3">
               <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
@@ -79,17 +79,17 @@
           <el-table-column sortable width="120" prop="shipSn" label="运单号"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="110" prop="actualWeight" label="实到重量">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="actualVolume" sortable label="实到体积" width="110">
             <template slot-scope="scope">
-              <el-input type="number" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
@@ -141,6 +141,7 @@ export default {
         tmsOrderLoad: {}
       },
       selectDetailList: [],
+      isEditActual: false,
       message: false,
       query: {
         arriveOrgid: 0,
@@ -166,6 +167,11 @@ export default {
       if (this.isShow) {
         this.getLoadTrack()
         this.toggleAllRows()
+        if (this.info.arriveOrgName) {
+          this.isEditActual = true
+        }else {
+          this.isEditActual = false
+        }
       }
     }
   },
@@ -197,11 +203,29 @@ export default {
       let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
       let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
       let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
-      if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
+      if (this.selectDetailList.length === 1 && this.detailList.length === 1 && curAmount === 0) {
+        console.log(this.selectDetailList.length, this.detailList.length)
+        this.detailList[newVal].actualAmount = curloadAmount
+        this.detailList[newVal].actualWeight = curloadWeight
+        this.detailList[newVal].actualVolume = curloadVolume
         this.$notify({
           title: '提示',
-          message: '实到数量都为0时,取消本条运单入库',
+          message: '实到件数不能为0',
+          type: 'warning'
+        })
+      }
+      if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
+        console.log(this.selectDetailList.length)
+        if (this.selectDetailList.length === 0) {
+          this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+          this.detailList[newVal].actualAmount = curloadAmount
+          this.detailList[newVal].actualWeight = curloadWeight
+          this.detailList[newVal].actualVolume = curloadVolume
+        }
+        this.$notify({
+          title: '提示',
+          message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
           type: 'warning'
         })
       } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
@@ -287,7 +311,7 @@ export default {
       // })
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
-      this.newData.tmsOrderLoadDetailsList = objectMerge2([], this.selectDetailList)
+      this.newData.tmsOrderLoadDetailsList = Object.assign([], this.selectDetailList)
     },
     postAddRepertory() {
       this.setData()
@@ -358,7 +382,7 @@ export default {
   .detailTable_info {
     border-bottom: 2px dotted #ddd;
     background-color: #fff;
-    margin-top:5px;
+    margin-top: 5px;
     table {
       width: 100%;
       tbody {
@@ -372,9 +396,9 @@ export default {
           td {
             width: 21.3%;
             padding: 0 3px;
-            .el-input.is-disabled .el-input__inner{
+            .el-input.is-disabled .el-input__inner {
               background-color: #fff;
-              color:#999;
+              color: #999;
             }
           }
         }
