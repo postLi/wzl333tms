@@ -28,11 +28,13 @@
                       width="50">
                     </el-table-column>
                     <el-table-column
-                      fixed
-                      sortable
-                      prop="id"
-                      label="序号"
-                      width="80">
+                        fixed
+                        sortable
+                        label="序号"
+                        width="80">
+                        <template slot-scope="scope">
+                        {{ (searchForm.pageNum - 1)*searchForm.pageSize + scope.$index + 1 }}
+                        </template>
                     </el-table-column>
                     <el-table-column
                       fixed
