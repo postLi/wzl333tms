@@ -282,9 +282,10 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
-      this.loading = false
-    })
+    // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
+    //   this.loading = false
+    // })
+    // this.fetchData()
   },
   data () {
     return {

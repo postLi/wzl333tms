@@ -159,10 +159,11 @@ export default {
   },
   watch: {
     orgid(newVal){
-      // this.searchForm.orgid = newVal
+      // this.searchForm.orgid = this.orgid
     }
   },
   mounted () {
+    this.searchForm.orgid = this.orgid
     // this.searchForm.orgid = this.orgid
     // this.searchForm.batchTypeId = this.orgid
   },
@@ -171,15 +172,21 @@ export default {
       // this.searchForm.orgid = id
     },
     onSubmit () {
-      this.searchForm.beginTime = parseTime(this.searchCreatTime[0])
-      this.searchForm.endTime = parseTime(this.searchCreatTime[1])
-      this.searchForm.arrivedbeginDate = parseTime(this.searchEndTime[0])
-      this.searchForm.arrivedEndDate = parseTime(this.searchEndTime[1])
+      this.searchForm.beginTime = this.searchCreatTime[0] ? +this.searchCreatTime[0] : ''
+      this.searchForm.endTime = this.searchCreatTime[1] ? +this.searchCreatTime[1] : ''
+      this.searchForm.arrivedbeginDate = this.searchEndTime[0] ? +this.searchEndTime[0] : ''
+      this.searchForm.arrivedEndDate = this.searchEndTime[1] ? +this.searchEndTime[1] : ''
       this.$emit('change', this.searchForm)
     },
     clearForm () {
+      this.searchForm.beginTime = ''
+      this.searchForm.endTime = ''
+      this.searchForm.arrivedbeginDate = ''
+      this.searchForm.arrivedEndDate = ''
+      this.searchCreatTime = []
+      this.searchEndTime = []
       this.searchForm.dirverName = ''
-      this.searchForm.orgid = this.orgid
+      this.searchForm.orgid = ''
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
     }

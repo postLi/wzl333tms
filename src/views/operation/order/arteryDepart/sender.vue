@@ -286,14 +286,14 @@
   </div>
 </template>
 <script>
-import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
-import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
+import { getExportExcel } from '@/api/company/customerManage'
 import { postSelectLoadMainInfoList,putLoadDepart,putCancelLoadDepart ,putCancelLoadTruck} from '@/api/operation/arteryDepart'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import {objectMerge2} from '@/utils/index'
 
 export default {
   components: {
@@ -416,49 +416,96 @@ export default {
 
           break;
         //到车确定
-        case 'sure':
+            case 'sure':
 
-          if (this.selected.length > 1) {
-            this.$message({
-              message: '每次只能修改单条数据~',
-              type: 'warning'
-            })
-            return false
-          } else if (this.selected.length === 1) {
-
-            this.selectInfo = this.selected[0]
-            // this.isModify = true
-            // this.openAddCustomer()
-            this.$router.push({path: '././load', query: {loadTypeId:39, info:this.selectInfo}})
-            console.log('39-info', this.selectInfo)
-          }
-          break;
+              if (this.selected.length > 1) {
+                this.$message({
+                  message: '每次只能修改单条数据~',
+                  type: 'warning'
+                })
+                return false
+              } else if (this.selected.length === 1) {
+                this.selectInfo = this.selected[0]
+                this.$router.push({path: '././load', query: {loadTypeId:39, info:this.selectInfo}})
+              }
+              break;
         //    发车
             case 'depart':
-              if (this.selected[0].batchTypeName === '已装车') {
-              // if (this.selected[0].batchTypeName === '已到车') {
-                let _deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].batchNo
-                //=>todo 删除多个
-                let loadIds = this.selected.map(item => {
-                  return item.id
+              let loadIds = this.selected.filter(el=>{
+                return el.batchTypeName === '已装车'
+              }).map(el => {
+                return  el.id
+              })
+              if(!loadIds.length){
+                let batchTypeName = this.selected[0].batchTypeName
+                this.$message({
+                  message: '批次状态为：' + batchTypeName + '不允许发车~',
+                  type: 'warning'
                 })
-                loadIds = loadIds.join(',')
+                return false
+              }else {
+                  //=>todo 删除多个
+                  loadIds = loadIds.join(',')
+                  this.$confirm('确定要发车？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }).then(() => {
+                    putLoadDepart(loadIds, 39).then(res => {
+                      this.$message({
+                        type: 'success',
+                        message: '发车成功!'
+                      })
+                      this.fetchData()
+                    }).catch(err => {
+                      this.$message({
+                        type: 'error',
+                        message: '发车失败，原因：' + err.text ? err.text : err
+                      })
+                    })
 
-                this.$confirm('确定要发车批次 ' + _deleteItem + '？', '提示', {
+                  }).catch(() => {
+                    this.$message({
+                      type: 'info',
+                      message: '已取消'
+                    })
+                  })
+              }
+
+                break;
+          //  取消配载发车(批量)
+            case 'deselectCar':
+              let ids = this.selected.filter(el=>{
+                return el.batchTypeName==='已装车'
+              }).map(el => {
+                return  el.id
+              })
+              if(!ids.length){
+                let batchTypeName = this.selected[0].batchTypeName
+                this.$message({
+                  message: '批次状态为：' + batchTypeName + '不允许取消发车~',
+                  type: 'warning'
+                })
+                return false
+              }else {
+                //=>todo 删除多个
+
+                ids = ids.join(',')
+                this.$confirm('确定要取消装车？', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  putLoadDepart(loadIds, 39).then(res => {
+                  putCancelLoadDepart(ids, 39).then(res => {
                     this.$message({
                       type: 'success',
-                      message: '发车成功!'
+                      message: '取消装车成功!'
                     })
                     this.fetchData()
                   }).catch(err => {
                     this.$message({
-                      type: 'error',
-                      message: '发车失败，原因：' + err.text ? err.text : err
+                      type: 'info',
+                      message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
                     })
                   })
 
@@ -468,58 +515,8 @@ export default {
                     message: '已取消'
                   })
                 })
-              } else {
-                let batchTypeName = this.selected[0].batchTypeName
-                this.$message({
-                  message: '批次状态为：' + batchTypeName + '不允许发车~',
-                  type: 'warning'
-                })
-                return false
               }
                 break;
-          //  取消配载发车(批量)
-          case 'deselectCar':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
-                  //=>todo 删除多个
-                  if(this.selected[0].batchTypeName==='已装车'){
-                    let ids = this.selected.map(item => {
-                      return item.id
-                    })
-                    ids = ids.join(',')
-
-                    this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
-                      confirmButtonText: '确定',
-                      cancelButtonText: '取消',
-                      type: 'warning'
-                    }).then(() => {
-                      putCancelLoadDepart(ids,39).then(res => {
-                        this.$message({
-                          type: 'success',
-                          message: '取消成功!'
-                        })
-                        this.fetchData()
-                      }).catch(err=>{
-                        this.$message({
-                          type: 'info',
-                          message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
-                        })
-                      })
-
-                    }).catch(() => {
-                      this.$message({
-                        type: 'info',
-                        message: '已取消'
-                      })
-                    })
-                  }else {
-                    let batchTypeName = this.selected[0].batchTypeName
-                    this.$message({
-                      message: '批次状态为：' + batchTypeName + '不允许取消发车~',
-                      type: 'warning'
-                    })
-                    return false
-                  }
-              break;
         //  取消装车(批量)
         case 'deleteStor':
           let _delete = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
@@ -535,7 +532,7 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              putCancelLoadTruck(_ids,38).then(res => {
+              putCancelLoadTruck(_ids,39).then(res => {
                 this.$message({
                   type: 'success',
                   message: '取消成功!'

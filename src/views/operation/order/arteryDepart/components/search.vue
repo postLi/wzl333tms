@@ -36,7 +36,7 @@
     </el-form-item>
     <el-form-item label="司机名称:" prop="dirverName">
       <el-input
-        v-model="searchForm.driverName"
+        v-model="searchForm.dirverName"
         maxlength="15"
         clearable>
       </el-input>
@@ -120,8 +120,8 @@ export default {
         }
       },
       searchForm: {
-        orgid: '',
-        driverName: '',
+        orgId: '',
+        dirverName: '',
         truckIdNumber:'',//车牌号
         batchTypeId: '',//批次状态
         batchNo:'',//发车批次
@@ -134,7 +134,7 @@ export default {
           //validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }],
-        driverName: [{
+        dirverName: [{
           //validator: validateFormMobile, trigger: 'blur'
           validator: validateDriverName, trigger: 'change'
         }]
@@ -147,24 +147,24 @@ export default {
     }
   },
   mounted () {
-    this.searchForm.orgid = this.orgid
-    // this.searchForm.batchTypeId = this.orgid
-    // this.searchForm.batchTypeId = this.orgid
+    this.searchForm.orgId = this.orgid
   },
   methods: {
     getOrgid (id){
       // this.searchForm.orgid = id
     },
     onSubmit () {
-      this.searchForm.loadStartTime = parseTime(this.searchCreatTime[0])
-      this.searchForm.loadEndTime = parseTime(this.searchCreatTime[1])
-      console.log(this.searchForm.loadEndTime);
+      this.searchForm.loadStartTime = this.searchCreatTime[0] ? +this.searchCreatTime[0] : ''
+      this.searchForm.loadEndTime = this.searchCreatTime[1] ? +this.searchCreatTime[1] : ''
       this.$emit('change', this.searchForm)
 
     },
     clearForm () {
+      this.searchForm.loadStartTime = ''
+      this.searchForm.loadEndTime = ''
+      this.searchCreatTime = []
       this.searchForm.dirverName = ''
-      this.searchForm.orgid = this.orgid
+      this.searchForm.orgId = ''
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
 

@@ -325,7 +325,6 @@ export default {
       this.loading = true
       return getPostlist(this.searchForms).then(data => {
         this.usersArr = data.list
-        console.log(this.usersArr);
         this.total = data.totalCount
         this.loading = false
       })
