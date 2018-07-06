@@ -189,6 +189,9 @@ export default {
           // data.shipIds = e.shipId
           // data.childShipIds = e.childShipIds
           data.shipIds.push(e.shipId)
+          if (!e.childShipIds || e.childShipIds === '') {
+            e.childShipIds = null
+          }
           data.childShipIds.push(e.childShipIds)
         })
         // data.shipIds = data.shipIds.join(',')

@@ -85,7 +85,7 @@ export default {
         {
           label: "序号",
           prop: "id",
-          width: "110",
+          width: "180",
           fixed: true
         },
         {
@@ -300,12 +300,12 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) { // 获取列表勾选项
-      this.selected = objectMerge2([], list)
+      this.selected = Object.assign([], list)
       if (list.length === 1) {
         let lid = 0
         list.forEach(e => {
           lid = e.id
-          this.loadInfo = objectMerge2([], e)
+          this.loadInfo = Object.assign([], e)
         })
         this.loadId = lid
       }

@@ -31,7 +31,8 @@
             </td>
             <th>分摊方式</th>
             <td>
-           <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled></el-input>
+           <el-input v-model="info.apportionName" :size="btnsize"  disabled v-if="info.apportionName"></el-input>
+           <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled v-else></el-input>
           </td>
           </tr>
           <tr>
@@ -64,7 +65,7 @@
     </el-form>
     <div class="tab_infos">
       <div class="btns_box">
-        <el-button :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
+        <el-button v-if="info.endOrgName" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
@@ -327,7 +328,7 @@ export default {
       // this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
-      this.selectDetailList = objectMerge2([], list)
+      this.selectDetailList = Object.assign([], list)
       console.log('select', this.selectDetailList)
     },
     toggleAllRows() {

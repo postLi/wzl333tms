@@ -72,7 +72,7 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllData()
     // Promise.all(this.fetchAllData(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
@@ -123,12 +123,14 @@ export default {
       tableColumn: [{
           label: "ID",
           prop: "id",
-          width: "110"
+          width: "180",
+          fixed: true
         },
         {
           label: "送货批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
@@ -153,22 +155,17 @@ export default {
         {
           label: "送货时间",
           prop: "departureTime",
-          width: "120",
+          width: "150",
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
           }
         },
         {
-          label: "目的网点",
-          prop: "arriveOrgName",
-          width: "120"
-        },
-        {
           label: "完成时间",
           prop: "receivingTime",
-          width: "120",
+          width: "150",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
           }
         },
         {
