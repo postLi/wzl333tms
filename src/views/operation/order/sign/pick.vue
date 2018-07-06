@@ -520,7 +520,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="signTime"
             sortable
             width="120"
             label="签收时间">

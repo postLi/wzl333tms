@@ -97,11 +97,11 @@
 import PopFrame from '@/components/PopFrame/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import {postPickupBatchSign,postBatchSign } from '@/api/operation/sign'
-import { REGEX }  from '@/utils/validate'
-import { mapGetters } from 'vuex'
-import { exportWithIframe } from '@/utils';
-import {objectMerge2} from '@/utils/index'
+import { postPickupBatchSign, postBatchSign } from '@/api/operation/sign'
+import { REGEX } from '@/utils/validate'
+// import { mapGetters } from 'vuex'
+// import { exportWithIframe } from '@/utils'
+import { objectMerge2 } from '@/utils/index'
 export default {
   // computed: {
   // ...mapGetters([
@@ -110,10 +110,10 @@ export default {
   // },
   computed: {
     isShow: {
-      get(){
+      get() {
         return this.popVisible
       },
-      set(){
+      set() {
 
       }
     }
@@ -128,17 +128,17 @@ export default {
       type: Boolean,
       default: false
     },
-    dotInfo: [Object,Array],
+    dotInfo: [Object, Array],
     // searchQuery:[Object,Array],
-    isDepMain:{
-      type:Boolean,
-      default:false
+    isDepMain: {
+      type: Boolean,
+      default: false
     },
-    show:{
-      type:Boolean,
-      default:false
+    show: {
+      type: Boolean,
+      default: false
     },
-    createrId: [Number,String],
+    createrId: [Number, String],
     isModify: {
       type: Boolean,
       default: false
@@ -148,71 +148,71 @@ export default {
       default: false
     }
   },
-  
+
   data() {
     const validateNum = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入证件号码'))
-      }else if (value.length > 20) {
+      } else if (value.length > 20) {
         callback(new Error('最多可输入20位'))
-      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('只能输入字母和数字'))
       }
     }
     return {
       searchCreatTime: +new Date(),
-      pickOption2:'',
+      pickOption2: '',
       checked1: true,
       popTitle: '',
-      loading:false,
-      type:'',
-      form:{
-        "num":'',
-        "repertoryIds":[],
-        "signTime":"",
-        "signName":"",
-        "signCocumentTypeId":96,
-        "documentNum":"",
-        "signTypeId":99,
-        "remark":'',
-        "signPic":'',
+      loading: false,
+      type: '',
+      form: {
+        'num': '',
+        'repertoryIds': [],
+        'signTime': '',
+        'signName': '',
+        'signCocumentTypeId': 96,
+        'documentNum': '',
+        'signTypeId': 99,
+        'remark': '',
+        'signPic': '',
 
-        "shipIds":[],
-	      "childShipIds":[],
+        'shipIds': [],
+        'childShipIds': []
       },
       formLabelWidth: '80px',
       tooltip: false,
-      disabled:false,
+      disabled: false,
       rules: {
-       
+
       },
       rules: {
-        documentNum: [   
+        documentNum: [
           { required: true, trigger: 'blur', validator: validateNum }
-        ],
+        ]
       }
     }
   },
   computed: {
     isShow: {
-      get(){
+      get() {
         return this.popVisible
       },
-      set(){
+      set() {
 
       }
     }
   },
   mounted() {
-    
+
   },
   watch: {
-    isDepMain(){
-      
+    isDepMain() {
+
     },
-    dotInfo (newVal) {
+    dotInfo(newVal) {
       // this.form = this.dotInfo
       // console.log(this.dotInfo);
       // this.form = this.dotInfo
@@ -233,81 +233,78 @@ export default {
     //    this.form.repertoryId = this.searchQuery.vo.repertoryId
     //    console.log(this.searchQuery);
     // },
-    orgid (newVal) {
+    orgid(newVal) {
       this.form.orgid = newVal
     },
     isModify: {
       handler(newVal) {
-        if(this.isModify){
+        if (this.isModify) {
           this.popTitle = '批量签收'
           // this.form.pageType = this.searchQuery.vo.pageType
           // cocloseInfo);
           // this.showAlert = true
-        }else{
+        } else {
           // this.showAlert = false
         }
       },
       immediate: true
     },
-    isSongh:{
-      handler(newVal){
+    isSongh: {
+      handler(newVal) {
         this.popTitle = '批量签收'
       }
     },
-    createrId(newVal){
+    createrId(newVal) {
     }
-    
-  },
-  methods: {
-  reset () {
-    this.$refs['ruleForm'].resetFields()
-  },
-  closeMe(done){
-    this.$emit('close')
-    this.reset()
-    if(typeof done === 'function'){
-      done()
-    }
-    // console.log(this.$refs.batch_show);
-    // this.$refs.batch_show.className = 'batch_main'
 
   },
-  submitForm(formName){
+  methods: {
+    reset() {
+      this.$refs['ruleForm'].resetFields()
+    },
+    closeMe(done) {
+      this.$emit('close')
+      this.reset()
+      if (typeof done === 'function') {
+        done()
+      }
+    // console.log(this.$refs.batch_show);
+    // this.$refs.batch_show.className = 'batch_main'
+    },
+    submitForm(formName) {
       this.form.signTime = this.searchCreatTime[0]
       this.$refs[formName].validate((valid) => {
-        if(valid){
+        if (valid) {
           this.loading = true
-          let data = objectMerge2({},this.form)
-          console.log(this.dotInfo);
+          const data = objectMerge2({}, this.form)
+          console.log(this.dotInfo)
           data.repertoryIds = this.dotInfo.map(el => {
             return el.repertoryId
           })
           // console.log();
           let promiseObj
-        
-          if(this.isModify){
-            promiseObj = postPickupBatchSign(data)//自提批量
-           
-          }
-          else if(this.isSongh){
-            data.shipIds = this.dotInfo.map(el=>{
-               console.log(66);
+
+          if (this.isModify) {
+            promiseObj = postPickupBatchSign(data)// 自提批量
+          } else if (this.isSongh) {
+            data.shipIds = this.dotInfo.map(el => {
+              console.log(66)
               return el.shipId
             })
-            data.childShipIds = this.dotInfo.map(el=>{
+            data.childShipIds = this.dotInfo.map(el => {
               return el.childShipId
             })
-            promiseObj = postBatchSign(data)//送货批量
+            promiseObj = postBatchSign(data)// 送货批量
           }
-          promiseObj.then(res=>{
-              console.log(res);
-              this.$message({
-                message: '签收成功~',
-                type: 'success'
-                
-              })
-              this.closeMe()
-              this.$emit('success')
+          promiseObj.then(res => {
+            console.log(res)
+            this.$message({
+              message: '签收成功~',
+              type: 'success'
+
+            })
+            this.closeMe()
+            this.$emit('success')
               // this.$alert('保存成功', '提示', {
                 //   confirmButtonText: '确定',
                 //   callback: action => {
@@ -316,17 +313,17 @@ export default {
                 //     this.$emit('success')
                 //   }
                 // })
-            }).catch(res => {
-                this.loading = false
-                this.$message.warning(res.text)
-                this.closeMe()
-            })
-        }else{
+          }).catch(res => {
+            this.loading = false
+            this.$message.warning(res.text)
+            this.closeMe()
+          })
+        } else {
           return false
         }
       })
     }
-  },
+  }
 }
 </script>
 
