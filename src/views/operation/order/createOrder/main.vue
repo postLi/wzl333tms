@@ -429,7 +429,7 @@ import { eventBus } from '@/eventBus'
 import { REGEX } from '@/utils/validate'
 import { closest, getTotal, objectMerge2, parseTime } from '@/utils/'
 // 请求接口
-import { getSystemTime } from  '@/api/common'
+import { getSystemTime } from '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
 import orderManage from '@/api/operation/orderManage'
 import * as preOrderManage from '@/api/operation/manage'
@@ -465,11 +465,11 @@ export default {
       default: () => {}
     }
   },
-  data () {
-    let _this = this
-    const validateOrderNum= (rule, value, callback) => {
+  data() {
+    const _this = this
+    const validateOrderNum = (rule, value, callback) => {
       _this.detectOrderNum().then(isDulip => {
-        if(isDulip){
+        if (isDulip) {
           this.$message.error('重复的订单号')
           callback(new Error())
         } else {
@@ -479,7 +479,7 @@ export default {
     }
 
     const validateMobile = (rule, value, callback) => {
-      if(REGEX.MOBILE.test(value)){
+      if (REGEX.MOBILE.test(value)) {
         callback()
       } else {
         this.$message.error('请输入正确的联系号码~')
@@ -500,7 +500,7 @@ export default {
 
     // REGEX.ONLY_NUMBER_AND_LETTER
     const validateOnlyNumberAndLetter = (rule, value, callback) => {
-      if(REGEX.ONLY_NUMBER_AND_LETTER.test(value)){
+      if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
       } else {
         this.$message.error('只能输入数字或者字母')
@@ -518,29 +518,29 @@ export default {
 
       activeNames: ['1'],
       rules2: {
-        "tmsOrderShip.shipSn": [
-          {validator: this.validateIsEmpty('订单号不能为空！'), trigger: 'change'},
+        'tmsOrderShip.shipSn': [
+          { validator: this.validateIsEmpty('订单号不能为空！'), trigger: 'change' },
           { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] },
           { validator: validateOrderNum, trigger: 'change' }
         ],
-        "tmsOrderShip.shipToCityCode": [
-          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change']}
+        'tmsOrderShip.shipToCityCode': [
+          { validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change'] }
         ],
-        "sender.customerName": [
-          {validator: this.validateIsEmpty('发货人不能为空'), trigger: 'change'}
+        'sender.customerName': [
+          { validator: this.validateIsEmpty('发货人不能为空'), trigger: 'change' }
         ],
-        "sender.customerMobile": [
-          {validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'change'},
+        'sender.customerMobile': [
+          { validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'change' },
           { validator: validateMobile, trigger: 'change' }
         ],
-        "receiver.customerName": [
-          {validator: this.validateIsEmpty('收货人不能为空'), trigger: 'change'}
+        'receiver.customerName': [
+          { validator: this.validateIsEmpty('收货人不能为空'), trigger: 'change' }
         ],
-        "receiver.customerMobile": [
-          {validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'change'},
+        'receiver.customerMobile': [
+          { validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'change' },
           { validator: validateMobile, trigger: 'change' }
         ],
-        "tmsOrderShip.shipCustomerNumber": [
+        'tmsOrderShip.shipCustomerNumber': [
           { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] }
         ]
       },
@@ -558,21 +558,20 @@ export default {
       // 标记个人设置是否有改动
       changeFlag: Math.random(),
       pickoption: {
-        disabledDate (now) {
-          let time = +now
-          if(_this.config.shipPageFunc.shipTimeRule === '34') {
+        disabledDate(now) {
+          const time = +now
+          if (_this.config.shipPageFunc.shipTimeRule === '34') {
             return time > +(new Date(_this.nowTime))
-          } else if(_this.config.shipPageFunc.shipTimeRule === '33') {
-            let lastyear = +(new Date(_this.nowTime)) - 365 * 1 * 24 * 60 * 60 * 1000
-            let comyear = +(new Date(_this.nowTime)) + 365 * 1 * 24 * 60 * 60 * 1000
+          } else if (_this.config.shipPageFunc.shipTimeRule === '33') {
+            const lastyear = +(new Date(_this.nowTime)) - 365 * 1 * 24 * 60 * 60 * 1000
+            const comyear = +(new Date(_this.nowTime)) + 365 * 1 * 24 * 60 * 60 * 1000
             return (time < lastyear) || (time > comyear)
           }
-          
         }
       },
       pickoption2: {
-        disabledDate (now) {
-          let time = +now
+        disabledDate(now) {
+          const time = +now
           // 不小于开单时间
           return time < new Date(_this.form.tmsOrderShip.createTime).getTime()
         }
@@ -607,7 +606,7 @@ export default {
           detailedAddress: '',
           customerId: ''
         },
-        "customerList": [
+        'customerList': [
           /* {
             "bankCardNumber": "string",
             "bankName": "string",
@@ -631,7 +630,7 @@ export default {
             "vipNum": "string"
           } */
         ],
-        "tmsOrderCargoList": [
+        'tmsOrderCargoList': [
           /* {
             "agencyFund": 0,
             "brokerageFee": 0,
@@ -669,7 +668,7 @@ export default {
             "weightFee": 0
           } */
         ],
-        "tmsOrderPre": {
+        'tmsOrderPre': {
           /* "id": 0,
           "orderAgencyFund": 0,
           "orderEffective": 0,
@@ -690,65 +689,65 @@ export default {
           "refuseReason": "string",
           "shipId": 0 */
         },
-        "tmsOrderShip": {
+        'tmsOrderShip': {
           // 修改的时候需要带上id
           // "id": 0,
-          "createTime": "",
-          "shipArrivepayFee": '',
-          "shipBusinessType": '',
-          "shipCustomerNumber": "",
-          "shipDelete": '',
-          "shipDeliveryMethod": '',
-          "shipDriverName": "",
-          "shipEffective": 94, // 默认为普通
-          "shipFromCityName": "",
-          "shipFromCityCode": "",
-          "shipFromOrgid": '',
-          "shipGoodsSn": "",
-          "shipIsAbnormal": 0,
-          "shipIsControll": 0,
-          "shipIsSeparate": 0,
-          "shipIsTransfer": 0,
-          "shipIsUpdate": 0,
-          "shipMonthpayFee": '',
-          "shipNowpayFee": '',
-          "shipOther": "",
-          "shipPayWay": '',
-          "shipPrintLib": '',
-          "shipReceiptNum": '',
-          "shipReceiptRequire": '',
-          "shipReceiptSn": "",
-          "shipReceiptpayFee": '',
-          "shipReceiverId": '',
-          "shipRemarks": "",
-          "shipSenderId": '',
-          "shipShippingType": '',
-          "shipSn": "",
+          'createTime': '',
+          'shipArrivepayFee': '',
+          'shipBusinessType': '',
+          'shipCustomerNumber': '',
+          'shipDelete': '',
+          'shipDeliveryMethod': '',
+          'shipDriverName': '',
+          'shipEffective': 94, // 默认为普通
+          'shipFromCityName': '',
+          'shipFromCityCode': '',
+          'shipFromOrgid': '',
+          'shipGoodsSn': '',
+          'shipIsAbnormal': 0,
+          'shipIsControll': 0,
+          'shipIsSeparate': 0,
+          'shipIsTransfer': 0,
+          'shipIsUpdate': 0,
+          'shipMonthpayFee': '',
+          'shipNowpayFee': '',
+          'shipOther': '',
+          'shipPayWay': '',
+          'shipPrintLib': '',
+          'shipReceiptNum': '',
+          'shipReceiptRequire': '',
+          'shipReceiptSn': '',
+          'shipReceiptpayFee': '',
+          'shipReceiverId': '',
+          'shipRemarks': '',
+          'shipSenderId': '',
+          'shipShippingType': '',
+          'shipSn': '',
           // "shipStatus": '',
-          "shipToCityCode": "",
-          "shipToCityName": "",
-          "shipToOrgid": '',
-          "shipTotalFee": 0,
-          "shipTruckIdNumber": "",
-          "shipUserid": ''
+          'shipToCityCode': '',
+          'shipToCityName': '',
+          'shipToOrgid': '',
+          'shipTotalFee': 0,
+          'shipTruckIdNumber': '',
+          'shipUserid': ''
         },
-        "tmsOrderTransfer": {
-          "arrivalMobile": "",
-          "carrierId": '',
-          "carrierMobile": "",
-          "codService": '',
-          "createTime": "",
-          "deliveryExpense": '',
+        'tmsOrderTransfer': {
+          'arrivalMobile': '',
+          'carrierId': '',
+          'carrierMobile': '',
+          'codService': '',
+          'createTime': '',
+          'deliveryExpense': '',
           // 当修改运单时，是否可以修改中转信息
           // "id": '',
-          "oddNumbers": "",
-          "paymentId": '',
-          "remark": "",
-          "shipId": '',
-          "totalCost": '',
-          "transferCharge": '',
-          "transferTime": "",
-          "updateTime": ""
+          'oddNumbers': '',
+          'paymentId': '',
+          'remark': '',
+          'shipId': '',
+          'totalCost': '',
+          'transferCharge': '',
+          'transferTime': '',
+          'updateTime': ''
         }
       },
       // 系统设置
@@ -777,23 +776,22 @@ export default {
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return getTotal(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.codService)
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       this.feeConfig = this.feeConfig.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
         el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
-        if(el.ischeck !== 0){
+        if (el.ischeck !== 0) {
           this.cargoObject[el.fieldProperty] = ''
           return true
         } else {
           return false
         }
-        return el.ischeck !== 0
       })
-      this.feeConfig.sort((a,b)=>{
+      this.feeConfig.sort((a, b) => {
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       })
       return this.feeConfig
@@ -803,22 +801,22 @@ export default {
     orderobj: {
       handler(newVal) {
         // 如果是弹窗才响应这个变化
-        if(this.ispop){
+        if (this.ispop) {
           this.initIndex()
         }
       },
       deep: true
     },
-    transferTotalFee (newVal) {
+    transferTotalFee(newVal) {
       this.form.tmsOrderTransfer.totalCost = newVal
     },
-    shipOther (newVal) {
+    shipOther(newVal) {
       this.form.tmsOrderShip.shipOther = newVal.join(',')
       console.log('this.form.tmsOrderShip.shipOther:', this.form.tmsOrderShip.shipOther)
     },
     'form.tmsOrderShip.shipPrintLib': {
-      handler(newVal){
-        if(newVal > 500){
+      handler(newVal) {
+        if (newVal > 500) {
           this.form.tmsOrderShip.shipPrintLib = 500
         }
       },
@@ -826,14 +824,14 @@ export default {
     },
     // 运单号修改，对应的货号也修改
     'form.tmsOrderShip.shipSn': {
-      handler(newVal){
+      handler(newVal) {
         this.setCargoNum()
       }
     },
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
         let num = 1
-        if(newVal === 80){
+        if (newVal === 80) {
           num = 0
         }
         this.form.tmsOrderShip.shipReceiptNum = num
@@ -842,7 +840,7 @@ export default {
     },
     'form.tmsOrderShip.shipTotalFee': {
       handler(newVal) {
-        if(newVal === ''){
+        if (newVal === '') {
           this.form.tmsOrderShip.shipTotalFee = 0
         }
         this.setShipFee()
@@ -850,48 +848,48 @@ export default {
       immediate: true
     },
     'form.tmsOrderShip.shipPayWay': {
-      handler(newVal){
+      handler(newVal) {
         this.setShipFee()
       },
       immediate: true
     },
-    '$route'(to, from){
-      if(to.path.indexOf('/operation/order/createOrder') !== -1 && !this.ispop){
+    '$route'(to, from) {
+      if (to.path.indexOf('/operation/order/createOrder') !== -1 && !this.ispop) {
         this.initIndex()
       }
     }
   },
-  mounted () {
+  mounted() {
     this.loading = true
 
     this.initIndex()
   },
   methods: {
     // 公共工具函数
-    validateIsEmpty (msg = '不能为空！') {
+    validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
-        if(!value){
+        if (!value) {
           this.$message.error(msg)
           callback(new Error())
-        }else{
+        } else {
           callback()
         }
       }
     },
-    setHeader(h, {column}){
-      return h('span',{
+    setHeader(h, { column }) {
+      return h('span', {
         props: {
         },
-        "class": {
-          "addButton": true
+        'class': {
+          'addButton': true
         },
         on: {
           click: this.addCargoList
         }
-      },[
-        h('i',{
-          "class": {
-            "el-icon-plus": true
+      }, [
+        h('i', {
+          'class': {
+            'el-icon-plus': true
           }
         })
       ])
@@ -899,16 +897,16 @@ export default {
     // 各个接口
     // 为了方便缓存数据，重新包装各个接口
     // 获取预订单数据
-    getPreOrder(preId){
+    getPreOrder(preId) {
       return preOrderManage.getSearchOrder(preId)
     },
     // 获取运单数据
-    getOrderInfo(orderId){
+    getOrderInfo(orderId) {
       return orderManage.getOrderInfoById(orderId)
     },
     // 获取公司全部设置
-    getAllSetting(){
-      if(this.dataCache['allSeting']){
+    getAllSetting() {
+      if (this.dataCache['allSeting']) {
         return Promise.resolve(this.dataCache['allSeting'])
       } else {
         return getAllSetting({
@@ -919,23 +917,23 @@ export default {
       }
     },
     // 获取个人设置
-    getPersonSetting(){
-      if(this.dataCache['personSeting']){
+    getPersonSetting() {
+      if (this.dataCache['personSeting']) {
         return Promise.resolve(this.dataCache['personSeting'])
       } else {
         return orderManage.getPersonalSetup(this.otherinfo.id)
       }
     },
     // 获取货物设置
-    getCargoSetting(){
-      if(this.dataCache['cargoSeting']){
+    getCargoSetting() {
+      if (this.dataCache['cargoSeting']) {
         return Promise.resolve(this.dataCache['cargoSeting'])
       } else {
         return orderManage.getCargoSetting(this.otherinfo.orgid)
       }
     },
     // 获取基本设置信息
-    getBaseSetting(){
+    getBaseSetting() {
       return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate()]).then(dataArr => {
         // 获取全局设置
         this.config = dataArr[0]
@@ -945,7 +943,6 @@ export default {
         this.personConfig = dataArr[2]
         // 获取后台时间
         this.nowTime = dataArr[3]
-
       })
     },
     // 初始化各个表单的情况
@@ -956,32 +953,32 @@ export default {
       this.setOrderFee()
       this.setOrderTransfer()
       // 当为修改运单时，不设置默认值
-      if(!this.output.isOrder){
+      if (!this.output.isOrder) {
         this.setDefaultValue()
       }
-      let _this = this
+      const _this = this
       setTimeout(() => {
         // 避免重复绑定
-        if(!_this.isbindtab){
+        if (!_this.isbindtab) {
           _this.bindTabWithArrow()
         }
-      }, 1000);
+      }, 1000)
     },
     // 查找当前表单所有存在的input元素
     findAllInput() {
       this.inputEles = Array.prototype.slice.call(document.querySelectorAll('.order-main input'))
-      let len = this.inputEles.length
-      for(let i = 0; i< len; i++){
+      const len = this.inputEles.length
+      for (let i = 0; i < len; i++) {
         this.inputEles[i].setAttribute('taborder', i++)
       }
     },
     findNextInput(type, currentIndex) {
-      let nextIndex = type === 37 ? currentIndex - 1 : currentIndex + 1
-      if(nextIndex < 0 || nextIndex >= this.inputEles.length){
+      const nextIndex = type === 37 ? currentIndex - 1 : currentIndex + 1
+      if (nextIndex < 0 || nextIndex >= this.inputEles.length) {
         return null
       } else {
-        let ele = this.inputEles[nextIndex]
-        if(ele.disabled){
+        const ele = this.inputEles[nextIndex]
+        if (ele.disabled) {
           return this.findNextInput(type, nextIndex)
         } else {
           return ele
@@ -989,24 +986,24 @@ export default {
       }
     },
     // 绑定左右按键
-    bindTabWithArrow () {
+    bindTabWithArrow() {
       this.isbindtab = true
       // closest(ele, '.order-main')
-      let doc = document
-      let parentEle = doc.querySelector('.order-main')
+      const doc = document
+      const parentEle = doc.querySelector('.order-main')
       this.findAllInput()
-      if(!parentEle){
+      if (!parentEle) {
         console.log('errorr parentEle:', parentEle)
       }
       parentEle.addEventListener('keydown', (e) => {
-        let ele = e.srcElement
+        const ele = e.target || e.srcElement
         // 如果是左右按键，则屏蔽其默认事件以及禁止冒泡
         // 当前触发元素为input且非button时
-        if(ele.nodeName === 'INPUT' && (e.keyCode === 37 || e.keyCode === 39)){
-          let index = this.inputEles.indexOf(ele)
-          let nextEle = this.findNextInput(e.keyCode, index)
+        if (ele.nodeName === 'INPUT' && (e.keyCode === 37 || e.keyCode === 39)) {
+          const index = this.inputEles.indexOf(ele)
+          const nextEle = this.findNextInput(e.keyCode, index)
           console.log('nextEle:', index, ele, nextEle)
-          if(index >= 0 && index !== (this.inputEles.lenth - 1) && nextEle){
+          if (index >= 0 && index !== (this.inputEles.lenth - 1) && nextEle) {
             e.preventDefault()
             e.stopPropagation()
             // ele.blur()
@@ -1016,33 +1013,30 @@ export default {
         }
       }, false)
     },
-    // 设置运单号规则 
-    setOrderNum () {
+    // 设置运单号规则
+    setOrderNum() {
       // 允许手动输入
-      if(this.config.shipNo.manualInput === '1'){
-
-      } else {
+      if (this.config.shipNo.manualInput !== '1') {
         // 不允许修改系统生成的单号
-        if(this.config.shipNo.systemNumberImmutable === '1'){
+        if (this.config.shipNo.systemNumberImmutable === '1') {
           this.canChangeOrderNum = false
         }
         // 非修改运单，需要生成运单信息
-        if(!this.output.isOrder){
+        if (!this.output.isOrder) {
           orderManage.getShipSn(this.otherinfo.orgid).then(res => {
             this.form.tmsOrderShip.shipSn = res.data
           })
         }
-        
       }
     },
-    // 设置货号规则 
-    setCargoNum () {
+    // 设置货号规则
+    setCargoNum() {
       // 允许手动输入
-      if(this.config.cargoNo.manualInput === '1'){
+      if (this.config.cargoNo.manualInput === '1') {
 
       } else {
         // 不允许修改系统生成的单号
-        if(this.config.cargoNo.systemNumberNotAllowUpdate === '1'){
+        if (this.config.cargoNo.systemNumberNotAllowUpdate === '1') {
           this.canChangeCargoNum = false
         }
         /* [
@@ -1053,13 +1047,13 @@ export default {
               "cargoAmount": 4
             }
           ] */
-        if(!this.output.isOrder){
+        if (!this.output.isOrder) {
           orderManage.postGenerateGoodsSn({
-            "tmsOrderShip":{
-              "shipSn": this.form.tmsOrderShip.shipSn
+            'tmsOrderShip': {
+              'shipSn': this.form.tmsOrderShip.shipSn
             },
-            "tmsOrderCargoList": this.form.cargoList.map(el => {
-              let a = {}
+            'tmsOrderCargoList': this.form.cargoList.map(el => {
+              const a = {}
               a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
               return a
             })
@@ -1069,39 +1063,39 @@ export default {
         }
       }
     },
-    // 设置运单日期规则 
-    setOrderDate () {
+    // 设置运单日期规则
+    setOrderDate() {
       this.form.tmsOrderShip.createTime = this.nowTime
 
-      if(this.config.shipPageFunc.shipTimeRule === '35'){
+      if (this.config.shipPageFunc.shipTimeRule === '35') {
         this.canChangeOrderDate = false
-      } else if(this.config.shipPageFunc.shipTimeRule === '34') {
+      } else if (this.config.shipPageFunc.shipTimeRule === '34') {
 
-      } else if(this.config.shipPageFunc.shipTimeRule === '33') {
+      } else if (this.config.shipPageFunc.shipTimeRule === '33') {
 
       }
-      if(!this.output.isOrder){
+      if (!this.output.isOrder) {
         this.form.tmsOrderTransfer.createTime = this.nowTime
       }
     },
     // 选择出发城市
-    selectFromCity (item, city) {
-      if(item){
+    selectFromCity(item, city) {
+      if (item) {
         this.form.tmsOrderShip.shipFromCityName = item.longAddr
       } else {
         this.form.tmsOrderShip.shipFromCityName = city || ''
       }
     },
     // 选择到达城市
-    selectToCity (item, city) {
-      if(item){
+    selectToCity(item, city) {
+      if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
       } else {
         this.form.tmsOrderShip.shipToCityName = city || ''
       }
     },
-    // 设置费用列 
-    setOrderFee () {
+    // 设置费用列
+    setOrderFee() {
       /* // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       this.feeConfig = this.feeConfig.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
@@ -1117,19 +1111,18 @@ export default {
       this.feeConfig.sort((a,b)=>{
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       }) */
-      if(this.output.iscreate){
+      if (this.output.iscreate) {
         this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
         this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
         console.log('theFeeConfig:', this.cargoObject, this.cargoList)
       }
-      
     },
     // 设置中转表单
-    setOrderTransfer () {
-      this.shouldInputTransfer = this.personConfig.shipDefault.openOrderAndTransferInfo === "1" ? true : false
+    setOrderTransfer() {
+      this.shouldInputTransfer = this.personConfig.shipDefault.openOrderAndTransferInfo === '1'
     },
     // 设置默认值
-    setDefaultValue () {
+    setDefaultValue() {
       // 默认开单网点为本网点
       this.form.tmsOrderShip.shipFromOrgid = this.otherinfo.orgid
       // 默认制单人为当前用户
@@ -1148,9 +1141,9 @@ export default {
       this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverMode
     },
     // 检查运单号是否唯一
-    detectOrderNum () {
+    detectOrderNum() {
       return orderManage.getJudgeShipSn(this.form.tmsOrderShip.shipSn, this.otherinfo.orgid).then(res => {
-        if(res.data >= 1){
+        if (res.data >= 1) {
           // 有重复
           return true
         } else {
@@ -1161,7 +1154,7 @@ export default {
     /**
      * 初始化各类情况
      */
-    initIndex(){
+    initIndex() {
       // 1.判断有无运单id
       // 1.1 判断是否为修改
       // 1.1.1 判断是否已结算，设置可修改部分
@@ -1184,22 +1177,22 @@ export default {
       this.getBaseSetting().then(res => {
         console.log('base setting info:', res, this.$route)
         let param
-        if(this.ispop){
+        if (this.ispop) {
           console.log('pop create order:', this.orderobj)
           param = this.orderobj
         } else {
           param = this.$route.query
         }
 
-        if(param.orderid){
+        if (param.orderid) {
           this.output.orderid = param.orderid
           this.output.isOrder = true
           this.initOrder()
-        } else if(param.preid){
+        } else if (param.preid) {
           this.output.preId = param.preid
           this.output.isPreOrder = true
           this.initPreOrder()
-        } else if(param.batchid){
+        } else if (param.batchid) {
           // 此batchid实为batchnumber
           this.output.batchid = param.batchid
           // 如果传过来的非正常字符，则默认为1
@@ -1212,22 +1205,21 @@ export default {
           this.output.iscreate = true
           this.initCreate()
         }
-        
       }).catch(err => {
         console.log('base setting error:', err)
         this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
       })
     },
     // 创建订单
-    initCreate(){
+    initCreate() {
       this.init()
       this.loading = false
     },
     // 初始化运单
-    initOrder(){
+    initOrder() {
       this.output.ismodify = true
 
-      let errFn = () => {
+      const errFn = () => {
         this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
           confirmButtonText: '返回运单列表页',
           cancelButtonText: '创建运单',
@@ -1251,12 +1243,12 @@ export default {
       })
     },
     // 修改运单
-    modifyOrder(){
+    modifyOrder() {
 
     },
     // 从订单创建运单
-    initPreOrder () {
-      let errFn = () => {
+    initPreOrder() {
+      const errFn = () => {
         this.$confirm('查无此订单信息：' + this.output.preId, '提示', {
           confirmButtonText: '返回订单列表页',
           cancelButtonText: '创建运单',
@@ -1272,7 +1264,7 @@ export default {
         this.form.tmsOrderPre = res.data
         this.init()
         this.setPreOrder()
-        if(this.form.tmsOrderPre.orderStatus !== 213){
+        if (this.form.tmsOrderPre.orderStatus !== 213) {
           this.$message.warning('此订单不是 非受理 状态，将不能关联创建的运单。')
           this.form.tmsOrderPre = {}
           this.output.isPreOrder = false
@@ -1283,14 +1275,14 @@ export default {
       })
     },
     // 从提货创建运单
-    getBatchInfo(batchid){
-      if(this.ispop){
+    getBatchInfo(batchid) {
+      if (this.ispop) {
         // 如果是弹窗页面，可以直接获取到信息
         return Promise.resolve(this.output.batchinfo)
       } else {
         // 如果非弹窗，需要先请求后台接口拿数据
         return orderManage.getBatchInfo(batchid).then(res => {
-          if(res.data){
+          if (res.data) {
             return res.data
           } else {
             return Promise.reject('查无此提货信息~~~~')
@@ -1298,8 +1290,8 @@ export default {
         })
       }
     },
-    initBatch(){
-      let errFn = () => {
+    initBatch() {
+      const errFn = () => {
         this.$confirm('查无此提货批次信息：' + this.output.batchid, '提示', {
           confirmButtonText: '返回提货列表页',
           cancelButtonText: '关闭',
@@ -1308,7 +1300,7 @@ export default {
           this.eventBus.$emit('replaceCurrentView', '/operation/order/pickUp')
         }).catch(() => {
           // 弹窗页则关闭弹窗
-          if(this.ispop){
+          if (this.ispop) {
             this.eventBus.$emit('hideCreateOrder')
           } else {
           // 关闭标签页
@@ -1323,25 +1315,23 @@ export default {
         this.output.batchinfo = data
         // 先重置原有的信息
         this.batchSaveList = {}
-        for(let i = 0; i < this.output.ordernum; i++){
-          this.batchSaveList[i+1] = {
+        for (let i = 0; i < this.output.ordernum; i++) {
+          this.batchSaveList[i + 1] = {
             issave: false,
             data: {},
             ischange: false
           }
         }
-        
+
         this.gotoBatch(this.currentBatch)
       }).catch(err => {
         console.log('getBatchInfo error:', err)
         errFn()
       })
-      
     },
     // 设置batch信息
-    setBatchInfo (data) {
-      
-      if(this.output.ismodify){
+    setBatchInfo(data) {
+      if (this.output.ismodify) {
         // 当为修改时，当作运单修改
         this.setOrderData(data)
       } else {
@@ -1356,26 +1346,26 @@ export default {
         this.form.sender.detailedAddress = data.detailedAddress
         this.form.sender.customerId = data.senderId
         // 设置货物信息
-        let cargoData = {}
-        for(let i in this.cargoObject){
-          if(typeof data[i] !== 'undefined'){
+        const cargoData = {}
+        for (const i in this.cargoObject) {
+          if (typeof data[i] !== 'undefined') {
             // cargoData[i] = data[i]
           } else {
             cargoData[i] = this.cargoObject[i]
           }
-          if(i==='cargoName'){
+          if (i === 'cargoName') {
             cargoData[i] = data.pickupName
           }
-          if(i==='cargoAmount'){
+          if (i === 'cargoAmount') {
             cargoData[i] = data.pickupAmount
           }
-          if(i==='cargoWeight'){
+          if (i === 'cargoWeight') {
             cargoData[i] = data.pickupWeight
           }
-          if(i==='cargoVolume'){
+          if (i === 'cargoVolume') {
             cargoData[i] = data.pickupVolume
           }
-          if(i==='shipFee'){
+          if (i === 'shipFee') {
             cargoData[i] = data.carriage
           }
         }
@@ -1384,7 +1374,6 @@ export default {
         // truckIdNumber
         this.form.tmsOrderShip.shipTruckIdNumber = data.truckIdNumber
         this.form.tmsOrderShip.shipBatchId = data.id
-
 
         this.$set(this.form.cargoList, 0, cargoData)
 
@@ -1395,10 +1384,10 @@ export default {
 
       console.log('setBatchInfo data:', data)
     },
-    gotoBatch(i){
+    gotoBatch(i) {
       this.loading = true
       // 判断此票是修改还是创建
-      if(this.batchSaveList[i].issave){
+      if (this.batchSaveList[i].issave) {
         this.output.ismodify = true
       } else {
         this.output.ismodify = false
@@ -1410,20 +1399,20 @@ export default {
       this.loading = false
     },
     // 切换批次列表
-    changeBatch(i){
+    changeBatch(i) {
       // 当点击当前选中项时，不做处理
-      if(i === this.currentBatch){
+      if (i === this.currentBatch) {
         return false
       }
       // 如果当前项未保存，则其为最近的未保存可编辑项
-      if(!this.batchSaveList[this.currentBatch].issave){
+      if (!this.batchSaveList[this.currentBatch].issave) {
         this.lastEditBatch = this.currentBatch
       }
-      
+
       // 检查目标票是否被保存，已保存才能切换过去
-      if(this.batchSaveList[i].issave){
+      if (this.batchSaveList[i].issave) {
         // 当切换后，将其对应的数据保存一份，方便返回继续填写
-        if(!this.batchSaveList[this.currentBatch].issave){
+        if (!this.batchSaveList[this.currentBatch].issave) {
           // 只有未保存项，才缓存其数据
           // 为什么？不知道
           // 暂时不做取出缓存回显的操作，此操作与修改运单有冲突
@@ -1432,10 +1421,9 @@ export default {
         // 执行跳转
         this.currentBatch = i
         this.gotoBatch(i)
-        
-      }else if(this.batchSaveList[this.currentBatch].issave){
+      } else if (this.batchSaveList[this.currentBatch].issave) {
         // 当切换到最近的编辑项时，才执行跳转
-        if((i === this.lastEditBatch) || (this.lastEditBatch === this.currentBatch)){
+        if ((i === this.lastEditBatch) || (this.lastEditBatch === this.currentBatch)) {
           this.currentBatch = i
           this.lastEditBatch = i
           this.gotoBatch(i)
@@ -1445,24 +1433,23 @@ export default {
       } else {
         this.$message.warning('第' + this.currentBatch + '单还没保存，请先保存！')
       }
-      
     },
     // 跳转到下一个可编辑的票
-    goNextEditBatch (){
+    goNextEditBatch() {
       // 如果当前票已经是最后一票了，则提示用户去不去运单页面
-      if(this.currentBatch >= this.output.ordernum){
+      if (this.currentBatch >= this.output.ordernum) {
         this.$confirm('已经完成全票填写，下一步操作？', '提示', {
           confirmButtonText: '查看运单列表页',
           cancelButtonText: '关闭',
           type: 'warning'
         }).then(() => {
-          if(this.ispop){
+          if (this.ispop) {
             this.eventBus.$emit('hideCreateOrder')
           }
           this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
         }).catch(() => {
           // 弹窗页则关闭弹窗
-          if(this.ispop){
+          if (this.ispop) {
             this.eventBus.$emit('hideCreateOrder')
           } else {
           // 关闭标签页
@@ -1470,7 +1457,7 @@ export default {
           }
         })
       } else {
-        if(this.currentBatch === this.lastEditBatch) {
+        if (this.currentBatch === this.lastEditBatch) {
           this.changeBatch(this.lastEditBatch + 1)
         } else {
           this.changeBatch(this.lastEditBatch)
@@ -1478,10 +1465,10 @@ export default {
       }
     },
     // 回填运单信息
-    setOrderData (data) {
+    setOrderData(data) {
       data.tmsOrderShip = data.tmsOrderShip || {}
       // 设置运单信息
-      for(let i in this.form.tmsOrderShip){
+      for (const i in this.form.tmsOrderShip) {
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
       }
       this.form.tmsOrderShip.createTime = parseTime(this.form.tmsOrderShip.createTime)
@@ -1490,36 +1477,35 @@ export default {
       this.toCityName = data.tmsOrderShip.shipToCityName
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
-      //this.$set(this.form.cargoList, data.tmsOrderCargoList)
+      // this.$set(this.form.cargoList, data.tmsOrderCargoList)
       // 设置收发货人信息
-      if(data.customerList[0]){
-        for(let i in this.form.sender){
+      if (data.customerList[0]) {
+        for (const i in this.form.sender) {
           this.form.sender[i] = data.customerList[0][i]
         }
       }
-      if(data.customerList[1]){
-        for(let i in this.form.receiver){
+      if (data.customerList[1]) {
+        for (const i in this.form.receiver) {
           this.form.receiver[i] = data.customerList[1][i]
         }
       }
-      
+
       this.form.customerList = data.customerList || []
-      console.log('setOrderInfo:',data, this.form)
+      console.log('setOrderInfo:', data, this.form)
       // 设置中转信息
       // 设置运单信息
-      if(data.tmsOrderTransfer){
-        for(let i in this.form.tmsOrderTransfer){
+      if (data.tmsOrderTransfer) {
+        for (const i in this.form.tmsOrderTransfer) {
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
         this.form.tmsOrderTransfer.createTime = parseTime(this.form.tmsOrderTransfer.createTime)
       }
-      
     },
     // 回填订单信息
-    setPreOrder(){
+    setPreOrder() {
       // 将数据回填到页面上
       // 网点信息
-      let data = this.form.tmsOrderPre
+      const data = this.form.tmsOrderPre
       this.form.tmsOrderShip.shipFromOrgid = data.orderFromOrgid
       this.form.tmsOrderShip.shipToOrgid = data.orderToOrgid
       // 城市信息
@@ -1543,23 +1529,23 @@ export default {
       this.form.receiver.customerId = data.orderReceiverId
 
       // 设置货物信息
-      let cargoData = {}
-      for(let i in this.cargoObject){
-        if(typeof data[i] !== 'undefined'){
+      const cargoData = {}
+      for (const i in this.cargoObject) {
+        if (typeof data[i] !== 'undefined') {
           cargoData[i] = data[i]
         } else {
           cargoData[i] = this.cargoObject[i]
         }
-        if(i==='agencyFund'){
+        if (i === 'agencyFund') {
           cargoData[i] = data.orderAgencyFund
         }
-        if(i==='commissionFee'){
+        if (i === 'commissionFee') {
           cargoData[i] = data.orderProcedureFee
         }
-        if(i==='productPrice'){
+        if (i === 'productPrice') {
           cargoData[i] = data.productPrice
         }
-        if(i==='shipFee'){
+        if (i === 'shipFee') {
           cargoData[i] = data.orderTotalFee
         }
       }
@@ -1570,12 +1556,12 @@ export default {
       this.form.tmsOrderShip.shipPayWay = data.orderPayWay
       this.form.tmsOrderShip.shipRemarks = data.orderRemarks
 
-      console.log('preOrderInfo:',this.form)
+      console.log('preOrderInfo:', this.form)
     },
     /** 收货人/发货人 */
-    setSender(item, type){
-      type = type ? type : 'sender'
-      if(item){
+    setSender(item, type) {
+      type = type || 'sender'
+      if (item) {
         this.form[type].customerId = item.customerId || ''
         this.form[type].customerType = type === 'sender' ? 1 : 2
         this.form[type].customerUnit = item.customerUnit
@@ -1585,46 +1571,46 @@ export default {
         this[type] = item
       }
     },
-    setReceiver(item){
+    setReceiver(item) {
       this.setSender(item, 'receiver')
     },
     /** 货品列表 */
-    addCargoList(){
-      if(this.form.cargoList.length < this.maxCargoLength){
+    addCargoList() {
+      if (this.form.cargoList.length < this.maxCargoLength) {
         this.form.cargoList.push(objectMerge2({}, this.cargoObject))
       }
     },
-    deleteCargoList(index){
-      this.form.cargoList.splice(index,1)
+    deleteCargoList(index) {
+      this.form.cargoList.splice(index, 1)
     },
-    detectCargoNumChange () {
+    detectCargoNumChange() {
       this.setCargoNum()
     },
     // 修改货品列表
-    changeFee (index, name ,val) {
+    changeFee(index, name, val) {
       this.form.cargoList[index][name] = val
       // 修改时计算总运费
       this.getTotalFee()
     },
     // 其他表单
-    getBatch (item) {
-      this.form.tmsOrderShip.shipTruckIdNumber = item.truckIdNumber || '' 
+    getBatch(item) {
+      this.form.tmsOrderShip.shipTruckIdNumber = item.truckIdNumber || ''
     },
     // 获取总运费
-    getTotalFee () {
+    getTotalFee() {
       let total = 0
       this.form.cargoList.forEach(el => {
         // 匹配系统设置里的运费合计规则
-        for(let i in el){
-          if(this.config.shipFee[i] === '1'){
+        for (const i in el) {
+          if (this.config.shipFee[i] === '1') {
             total = getTotal(total, el[i])
           }
         }
       })
       this.form.tmsOrderShip.shipTotalFee = total
     },
-    setShipFee () {
-      let key = parseInt(this.form.tmsOrderShip.shipPayWay, 10)
+    setShipFee() {
+      const key = parseInt(this.form.tmsOrderShip.shipPayWay, 10)
       this.shipNowpayFeeDisabled = true
       this.shipArrivepayFeeDisabled = true
       this.shipReceiptpayFeeDisabled = true
@@ -1635,31 +1621,31 @@ export default {
       this.form.tmsOrderShip.shipMonthpayFee = 0
       this.form.tmsOrderShip.shipReceiptpayFee = 0
 
-      switch(key){
+      switch (key) {
         // 现付
         case 76:
           this.form.tmsOrderShip.shipNowpayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipNowpayFeeDisabled = false
-          break;
+          break
         // 到付
         case 77:
           this.form.tmsOrderShip.shipArrivepayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipArrivepayFeeDisabled = false
-          break;
+          break
         // 月结
         case 78:
           this.form.tmsOrderShip.shipMonthpayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipMonthpayFeeDisabled = false
-          break;
+          break
         // 回单付
         case 79:
           this.form.tmsOrderShip.shipReceiptpayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipReceiptpayFeeDisabled = false
-          break;
+          break
         // 免费
         case 103:
           this.form.tmsOrderShip.shipTotalFee = 0
-          break;
+          break
         // 多笔付
         case 104:
           this.shipNowpayFeeDisabled = false
@@ -1671,25 +1657,25 @@ export default {
 
           this.form.tmsOrderShip.shipArrivepayFee = this.form.tmsOrderShip.shipTotalFee / 2
 
-          break;
+          break
       }
     },
     // 中转信息
-    setOddNumbers(val){
+    setOddNumbers(val) {
       this.form.tmsOrderTransfer.oddNumbers = val.replace(/\s/g, '')
     },
-    getCarrier (item) {
-      if(item){
+    getCarrier(item) {
+      if (item) {
         this.form.tmsOrderTransfer.carrierMobile = item.carrierMobile
       }
     },
-    resetObj (obj) {
-      for(let i in obj){
+    resetObj(obj) {
+      for (const i in obj) {
         obj[i] = ''
       }
       return obj
     },
-    reset(){
+    reset() {
       this.$refs['ruleForm'].resetFields()
       this.form.cargoList = [{}, {}]
       this.form.sender = this.resetObj(this.form.sender)
@@ -1712,67 +1698,67 @@ export default {
       this.batchSaveList = {}
       // this.setOrderDate()
     },
-    /*** 提交表单 */
-    submitForm () {
+    /** * 提交表单 */
+    submitForm() {
       // 先判断表单必填项是否校验通过
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           // 判断运费是否符合总计
-          if(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee) !== this.form.tmsOrderShip.shipTotalFee) {
-            console.log(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee),this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
+          if (getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee) !== this.form.tmsOrderShip.shipTotalFee) {
+            console.log(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee), this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
             this.$message.error('各付款方式之和与合计运费不等~')
           } else {
             // 再提取各个表格项里的数据
-            let data = objectMerge2({}, this.form)
+            const data = objectMerge2({}, this.form)
             delete data.sender
             delete data.receiver
             delete data.cargoList
             // 非订单页面传过来
-            if(!this.isPreOrder){
-              console.log('this.isPreOrder:',this.isPreOrder)
+            if (!this.isPreOrder) {
+              console.log('this.isPreOrder:', this.isPreOrder)
               delete data.tmsOrderPre
             }
             console.log('create submit data:', JSON.stringify(data))
             // 没有设置填写中转信息
-            if(!this.shouldInputTransfer){
+            if (!this.shouldInputTransfer) {
               delete data.tmsOrderTransfer
               data.tmsOrderTransfer = {}
             } else {
               data.tmsOrderTransfer.createTime = new Date((data.tmsOrderTransfer.createTime + '').trim()).getTime()
-              if(this.output.ismodify){
+              if (this.output.ismodify) {
                 data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer ? this.orderData.tmsOrderTransfer.id : ''
               }
             }
             // 判断收发货人信息
             let changeSender = false
-            for(let i in this.form.sender){
-              if(this.sender[i] !== this.form.sender[i]){
+            for (const i in this.form.sender) {
+              if (this.sender[i] !== this.form.sender[i]) {
                 changeSender = true
               }
             }
             let changeReceiver = false
-            for(let i in this.form.receiver){
-              if(this.receiver[i] !== this.form.receiver[i]){
+            for (const i in this.form.receiver) {
+              if (this.receiver[i] !== this.form.receiver[i]) {
                 changeReceiver = true
               }
             }
 
             data.customerList[0] = this.form.sender
             data.customerList[1] = this.form.receiver
-            if(changeSender){
+            if (changeSender) {
               data.customerList[0].customerId = ''
-            }else{
+            } else {
               data.tmsOrderShip.shipSenderId = data.customerList[0].customerId
             }
-            if(changeReceiver){
+            if (changeReceiver) {
               data.customerList[1].customerId = ''
-            }else{
+            } else {
               data.tmsOrderShip.shipReceiverId = data.customerList[1].customerId
             }
             data.tmsOrderCargoList = this.form.cargoList.map(el => {
-              let b = {}
-              for(let i in el){
-                if(el[i] === ''){
+              const b = {}
+              for (const i in el) {
+                if (el[i] === '') {
                   b[i] = 0
                 } else {
                   b[i] = el[i]
@@ -1782,7 +1768,7 @@ export default {
             })
             data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
 
-            if(this.output.ismodify){
+            if (this.output.ismodify) {
               /* this.$message.success('成功修改运单！')
                 this.batchSaveList[this.currentBatch].data = data
                 if(!this.output.isbatch){
@@ -1799,9 +1785,9 @@ export default {
               console.log('change Order:', data)
               orderManage.putChangeOrder(data).then(res => {
                 this.$message.success('成功修改运单！')
-                
-                if(!this.output.isbatch){
-                  if(this.ispop){
+
+                if (!this.output.isbatch) {
+                  if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$on('showOrderDetail', data.tmsOrderShip.id)
                   } else {
@@ -1833,8 +1819,8 @@ export default {
                 this.$message.success('成功创建运单！')
                 data.tmsOrderShip.id = res.data
                 // 当为批次列表过来的，不作处理
-                if(!this.output.isbatch){
-                  if(this.ispop){
+                if (!this.output.isbatch) {
+                  if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$on('showOrderDetail', res.data)
                   } else {
@@ -1845,62 +1831,57 @@ export default {
                   this.batchSaveList[this.currentBatch].issave = true
                   this.goNextEditBatch()
                 }
-                
-                
               }).catch(err => {
                 this.$message.error('创建失败，原因：' + err.text)
               })
             }
-
-            
           }
         }
       })
-      
     },
     // 底部按钮操作
-    doAction (type) {
+    doAction(type) {
       switch (type) {
         case 'cleanKey':
           this.reset()
-          break;
+          break
         case 'printLibkey':
           this.$message.info('正在开发中，敬请期待。')
-          break;
+          break
         case 'printShipKey':
           this.$message.info('正在开发中，敬请期待。')
-          break;
+          break
         case 'saveShipKey':
           this.submitForm()
-          break;
+          break
         case 'savePrintKey':
           this.$message.info('正在开发中，敬请期待。')
-          break;
+          break
       }
     },
     // 右下角设置按钮菜单点击操作
     handleCommand(command) {
-      switch(command) {
+      switch (command) {
         case 'feeSetup':
           this.dialogVisible = true
-          break;
+          break
         case 'personalSetup':
           this.dialogVisiblePerson = true
-          break;
+          break
         case 'orderSetup':
-          this.$router.push('/company/systemSetup')          
-          break;
+          this.$router.push('/company/systemSetup')
+          break
         case 'openInNewWindow':
           this.$message('暂不支持新开窗口创建运单~')
-          break;
+          break
       }
     },
-    getKeySetup () {
+    getKeySetup() {
       this.changeFlag = Math.random()
     }
-  },// 路由更新时触发，用来切换渲染数据
+  }, // 路由更新时触发，用来切换渲染数据
   // 需要对应router-view的组件才能触发
-  beforeRouteUpdate (to, from, next) {
+  beforeRouteUpdate(to, from, next) {
     next()
     console.log('beforeRouteUpdate:', to, from)
   }

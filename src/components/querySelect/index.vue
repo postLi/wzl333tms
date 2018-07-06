@@ -364,6 +364,7 @@ export default {
   methods: {
     initEvent () {
       eventBus.$on('closepopbox', () => {
+        console.log('closepopbox querySelect:')
         this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
       })
     },

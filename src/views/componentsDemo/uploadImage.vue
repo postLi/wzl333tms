@@ -45,17 +45,17 @@ export default {
   components: {
     UploadImage
   },
-  data () {
+  data() {
     return {
       url: 'http://aflc.oss-cn-shenzhen.aliyuncs.com//tms/JepzficX6twzc2F76MtED8kMC53pxQmH.png',
       url1: '',
       url2: '',
       url3: '',
-      url4:["https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"]
+      url4: ['https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100']
     }
   },
   methods: {
-    getUrl (url) {
+    getUrl(url) {
       console.log('upload Url:', url)
     }
   }

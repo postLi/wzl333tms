@@ -6,7 +6,7 @@
 <style lang="scss">
 .dashboard {
   &-container {
-    margin: 30px;
+    padding: 30px;
   }
 }
 .caiwu-flow{

@@ -49,6 +49,7 @@ export default {
     this.aid = this.value
     this.init()
     eventBus.$on('closepopbox', () => {
+      console.log('closepopbox selectTree:')
       this.$refs.myautocomplete.handleClose()
     })
   },

@@ -22,13 +22,13 @@ export default {
   components: {
     SelectCity
   },
-  data () {
+  data() {
     return {
       city: '广州,广东省'
     }
   },
   methods: {
-    getcity (obj) {
+    getcity(obj) {
       // {
       //   pageNum: 1,
       //   pageSize: 100

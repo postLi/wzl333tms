@@ -14,6 +14,7 @@ export function parseTime(time, cFormat) {
   if (typeof time === 'object') {
     date = time
   } else {
+    time = typeof time === 'number' ? time : ('' + time).trim()
     if (('' + time).length === 10) time = parseInt(time) * 1000
     date = new Date(time)
   }

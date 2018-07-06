@@ -99,18 +99,13 @@
 </template>
 
 <script>
-  import { postOrgSaveDate, putOrgData,getNetWorkTypeInfo, getManageTypeInfo,getNetworkStatusInfo} from '../../../api/company/groupManage'
+  import { postOrgSaveDate, putOrgData, getNetWorkTypeInfo, getManageTypeInfo, getNetworkStatusInfo } from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
   import SelectCity from '@/components/selectCity/index'
-  import {REGEX } from '../../../utils/validate'
-  import { mapGetters } from 'vuex'
+  import { REGEX } from '../../../utils/validate'
+
   export default {
-    computed: {
-      ...mapGetters([
-        'otherinfo'
-      ])
-    },
     components: {
       popRight,
       SelectTree,
@@ -118,12 +113,12 @@
     },
     props: {
       popVisible: {
-        type : Boolean,
-        default:false
+        type: Boolean,
+        default: false
       },
       isModify: {
-        type : Boolean,
-        default:false
+        type: Boolean,
+        default: false
       },
       dotInfo: Object,
       orgid: {
@@ -135,32 +130,32 @@
     },
     computed: {
       isShow: {
-        get(){
+        get() {
           return this.popVisible
         },
-        set(){
+        set() {
 
         }
       }
     },
     watch: {
-      dotInfo (newVal) {
-        if(this.isModify){
+      dotInfo(newVal) {
+        if (this.isModify) {
           this.form = Object.assign({}, this.dotInfo)
         }
       },
-      isModify (newVal) {
-        if(newVal){
+      isModify(newVal) {
+        if (newVal) {
           this.popTitle = '修改网点'
           this.form = Object.assign({}, this.dotInfo)
           this.form.parentId = this.dotInfo.parentId || this.companyId
         } else {
           this.popTitle = '新增网点'
-          for(let i in this.form){
+          for (const i in this.form) {
             this.form[i] = ''
           }
-          if(this.form.id){
-            delete  this.form.id
+          if (this.form.id) {
+            delete this.form.id
           }
           delete this.form.createTime
           this.form.orgType = 1
@@ -171,7 +166,7 @@
       }
     },
     data() {
-      //REGEX
+      // REGEX
       var orgName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请输入网点名称'))
@@ -183,28 +178,27 @@
         callback()
       }
       var collectionFee = (rule, value, callback) => {
-        if (!REGEX.ONLY_NUMBER.test(value) && !value == '') {
-          return callback(new Error('请输入数字'));
+        if (!REGEX.ONLY_NUMBER.test(value) && !value === '') {
+          return callback(new Error('请输入数字'))
         } else {
-          callback();
+          callback()
         }
       }
 
       var benchmark = (rule, value, callback) => {
-        //暂定
+        // 暂定
         if (!REGEX.NUM_POINT.test(value) && !REGEX.NUM_PERCENTAGE.test(value) && value !== '') {
-          return callback(new Error('请输入百分比和小数点'));
+          return callback(new Error('请输入百分比和小数点'))
         } else {
-          callback();
+          callback()
         }
       }
       var networkCode = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('请输入网点代码'));
-        } else{
-          callback();
+          return callback(new Error('请输入网点代码'))
+        } else {
+          callback()
         }
-
       }
       var remarks = (rule, value, callback) => {
         callback()
@@ -218,65 +212,64 @@
       // }
       return {
         popTitle: '新增网点',
-        //多选框
+        // 多选框
         checked: true,
         loading: false,
-        netWorkType:[],
-        manageType:[],
-        netWorkStatus:[],
+        netWorkType: [],
+        manageType: [],
+        netWorkStatus: [],
         form: {
           orgName: '',
-          orgType:1,
-          status:32,
+          orgType: 1,
+          status: 32,
           responsibleTelephone: '',
           // createTime:'',
           responsibleName: '',
-          city:'',
-          serviceName:'',
-          parentName:'',//上级网点
-          servicePhone:'',
-          detailedAddr:'',
-          networkCode:'',//网点代码
-          collectionFee:'',//代收款额度
-          benchmark:'',
-          warningQuota:'',
-          lockMachineQuota:'',
-          manageType:3,
-          remarks:'',
-          //默认值
+          city: '',
+          serviceName: '',
+          parentName: '', // 上级网点
+          servicePhone: '',
+          detailedAddr: '',
+          networkCode: '', // 网点代码
+          collectionFee: '', // 代收款额度
+          benchmark: '',
+          warningQuota: '',
+          lockMachineQuota: '',
+          manageType: 3,
+          remarks: '',
+          // 默认值
           accountStatus: 0,
-          //id: '',
-          parentId:0
-
+          // id: '',
+          parentId: 0
 
         },
         rules: {
           orgName: [
-            { required: true,validator: orgName, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { required: true, validator: orgName, trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 15, message: '不可超过15个字符', trigger: 'blur' }
           ],
           responsibleName: [
             { validator: callBackName, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           responsibleTelephone: [
-            {pattern: REGEX.MOBILE, trigger: ['blur', 'change'] },
+            { pattern: REGEX.MOBILE, trigger: ['blur', 'change'] }
           ],
           serviceName: [
             { validator: callBackName, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           servicePhone: [
             { pattern: REGEX.TELEPHONE, trigger: ['blur', 'change'] },
             { max: 13, message: '不可超过13个字符', trigger: 'blur' }
           ],
-          //网点代码
+          // 网点代码
           networkCode: [
-            { required: true,validator: networkCode, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { required: true, validator: networkCode, trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
@@ -284,34 +277,34 @@
           ],
           collectionFee: [
             { validator: collectionFee, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           benchmark: [
-            { validator: benchmark, trigger: 'blur' },
+            { validator: benchmark, trigger: 'blur' }
           ],
           warningQuota: [
             { validator: collectionFee, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           lockMachineQuota: [
             { validator: collectionFee, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           remarks: [
             { validator: remarks, trigger: 'blur' },
-            { min: 2,  message: '最少2个字符', trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 300, message: '不可超过300个字符', trigger: 'blur' }
-          ],
+          ]
         },
         dialogVisible: false,
         formLabelWidth: '120px'
       }
     },
-    mounted(){
-      //this.form.parentId = this.isModify ?　this.companyId : (this.form.id || this.orgid)
+    mounted() {
+      // this.form.parentId = this.isModify ? this.companyId : (this.form.id || this.orgid)
       this.form.parentId = this.orgid || this.companyId
       Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
         this.loading = false
@@ -321,42 +314,42 @@
       })
     },
     methods: {
-      getCity (city) {
+      getCity(city) {
         this.form.city = city ? city.longAddr : city
       },
-      getOrgid (id){
+      getOrgid(id) {
         this.form.parentId = id
       },
-      reset () {
+      reset() {
         this.$refs['ruleForm'].resetFields()
       },
-      closeMe(done){
+      closeMe(done) {
         this.$emit('close')
         this.reset()
-        if(typeof done === 'function'){
+        if (typeof done === 'function') {
           done()
         }
       },
-      submitForm(formName){
+      submitForm(formName) {
         this.$refs[formName].validate((valid) => {
-          if(valid){
+          if (valid) {
             this.loading = true
             let reqPromise
-            if(this.isModify){
+            if (this.isModify) {
               // 当修改最上级网点时，传0
-              if(this.form.id === this.form.parentId && this.form.parentId === this.otherinfo.companyId){
+              if (this.form.id === this.form.parentId && this.form.parentId === this.otherinfo.companyId) {
                 this.form.parentId = 0
               }
               reqPromise = putOrgData(this.form)
             } else {
-              if(this.form.accountStatus == true){
+              if (this.form.accountStatus === true) {
                 this.form.accountStatus = 0
-              }else{
+              } else {
                 this.form.accountStatus = 1
               }
               reqPromise = postOrgSaveDate(this.form)
             }
-            reqPromise.then(res=>{
+            reqPromise.then(res => {
               this.$alert('保存成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
@@ -365,15 +358,14 @@
                   this.$emit('success')
                 }
               })
-
             })
-          }else{
+          } else {
             return false
           }
         })
       }
     }
-  };
+  }
 </script>
 <style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";

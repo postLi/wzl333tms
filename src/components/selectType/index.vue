@@ -119,6 +119,7 @@ export default {
       }
     }
     eventBus.$on('closepopbox', () => {
+      console.log('closepopbox selectType:')
       this.$refs.myautocomplete.handleClose()
     })
   },

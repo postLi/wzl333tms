@@ -588,21 +588,14 @@
 </template>
 <script>
 // 引入事件对象
-import { eventBus } from '@/eventBus'
 // 工具函数
-import { REGEX } from '@/utils/validate'
-import { closest, getTotal, objectMerge2 } from '@/utils/'
 // 请求接口
-import { getSystemTime } from  '@/api/common'
-import { getAllSetting } from '@/api/company/systemSetup'
 import orderManage from '@/api/operation/orderManage'
-import * as preOrderManage from '@/api/operation/manage'
 // 外部公用组件
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
-
 
 export default {
   components: {
@@ -621,8 +614,7 @@ export default {
       default: () => {}
     }
   },
-  data () {
-
+  data() {
     return {
       activeNames: ['1'],
       // 付款方式禁用
@@ -668,79 +660,79 @@ export default {
           detailedAddress: '',
           customerId: ''
         },
-        "customerList": [
-          
+        'customerList': [
+
         ],
-        "tmsOrderCargoList": [
-         
+        'tmsOrderCargoList': [
+
         ],
-        "tmsOrderPre": {
-          
+        'tmsOrderPre': {
+
         },
-        "tmsOrderShipInfo": {
+        'tmsOrderShipInfo': {
           // 修改的时候需要带上id
           // "id": 0,
-          "createTime": "",
-          "shipArrivepayFee": '',
-          "shipBusinessType": '',
-          "shipCustomerNumber": "",
-          "shipDelete": '',
-          "shipDeliveryMethod": '',
-          "shipDriverName": "",
-          "shipEffective": 94, // 默认为普通
-          "shipFromCityName": "",
-          "shipFromCityCode": "",
-          "shipFromOrgid": '',
-          "shipGoodsSn": "",
+          'createTime': '',
+          'shipArrivepayFee': '',
+          'shipBusinessType': '',
+          'shipCustomerNumber': '',
+          'shipDelete': '',
+          'shipDeliveryMethod': '',
+          'shipDriverName': '',
+          'shipEffective': 94, // 默认为普通
+          'shipFromCityName': '',
+          'shipFromCityCode': '',
+          'shipFromOrgid': '',
+          'shipGoodsSn': '',
           // "shipIsAbnormal": '',
           // "shipIsControll": '',
           // "shipIsSeparate": '',
           // "shipIsTransfer": '',
           // "shipIsUpdate": '',
-          "shipMonthpayFee": '',
-          "shipNowpayFee": '',
-          "shipOther": "",
-          "shipPayWay": '',
-          "shipPrintLib": '',
-          "shipReceiptNum": '',
-          "shipReceiptRequire": '',
-          "shipReceiptSn": "",
-          "shipReceiptpayFee": '',
-          "shipReceiverId": '',
-          "shipRemarks": "",
-          "shipSenderId": '',
-          "shipShippingType": '',
-          "shipSn": "",
+          'shipMonthpayFee': '',
+          'shipNowpayFee': '',
+          'shipOther': '',
+          'shipPayWay': '',
+          'shipPrintLib': '',
+          'shipReceiptNum': '',
+          'shipReceiptRequire': '',
+          'shipReceiptSn': '',
+          'shipReceiptpayFee': '',
+          'shipReceiverId': '',
+          'shipRemarks': '',
+          'shipSenderId': '',
+          'shipShippingType': '',
+          'shipSn': '',
           // "shipStatus": '',
-          "shipToCityCode": "",
-          "shipToCityName": "",
-          "shipToOrgid": '',
-          "shipTotalFee": '',
-          "shipTruckIdNumber": "",
-          "shipUserid": ''
+          'shipToCityCode': '',
+          'shipToCityName': '',
+          'shipToOrgid': '',
+          'shipTotalFee': '',
+          'shipTruckIdNumber': '',
+          'shipUserid': ''
         },
-        "tmsOrderTransfer": {
-          "arrivalMobile": "",
-          "carrierId": '',
-          "carrierMobile": "",
-          "codService": '',
-          "createTime": "",
-          "deliveryExpense": '',
+        'tmsOrderTransfer': {
+          'arrivalMobile': '',
+          'carrierId': '',
+          'carrierMobile': '',
+          'codService': '',
+          'createTime': '',
+          'deliveryExpense': '',
           // 当修改运单时，是否可以修改中转信息
           // "id": '',
-          "oddNumbers": "",
-          "paymentId": '',
-          "remark": "",
-          "shipId": '',
-          "totalCost": '',
-          "transferCharge": '',
-          "transferTime": "",
-          "updateTime": ""
+          'oddNumbers': '',
+          'paymentId': '',
+          'remark': '',
+          'shipId': '',
+          'totalCost': '',
+          'transferCharge': '',
+          'transferTime': '',
+          'updateTime': ''
         },
         tmsOrderShipSign: {},
         tmsShLoadsList: [],
         tmsGxLoadsList: [],
-        tmsDbLoadsList: [],
+        tmsDbLoadsList: []
       },
       // 系统设置
       config: {},
@@ -768,14 +760,14 @@ export default {
     }
   },
   watch: {
-    orderdata (newVal) {
+    orderdata(newVal) {
       console.log('watch orderdata:', newVal)
-      if(newVal){
+      if (newVal) {
         this.initIndex()
       }
     }
   },
-  mounted () {
+  mounted() {
     this.loading = true
 
     this.initIndex()
@@ -784,47 +776,45 @@ export default {
     // 各个接口
     // 为了方便缓存数据，重新包装各个接口
     // 获取货物设置
-    getCargoSetting(){
-      if(this.dataCache['cargoSeting']){
+    getCargoSetting() {
+      if (this.dataCache['cargoSeting']) {
         return Promise.resolve(this.dataCache['cargoSeting'])
       } else {
         return orderManage.getCargoSetting(this.otherinfo.orgid)
       }
     },
     // 获取基本设置信息
-    getBaseSetting(){
+    getBaseSetting() {
       return Promise.all([this.getCargoSetting()]).then(dataArr => {
         // 获取费用设置
         this.feeConfig = dataArr[0]
-
       })
     },
     // 初始化各个表单的情况
     init() {
       this.setOrderFee()
     },
-    // 设置费用列 
-    setOrderFee () {
+    // 设置费用列
+    setOrderFee() {
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       this.feeConfig = this.feeConfig.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
         el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
-        if(el.ischeck !== 0){
+        if (el.ischeck !== 0) {
           this.cargoObject[el.fieldProperty] = ''
           return true
         } else {
           return false
         }
-        return el.ischeck !== 0
       })
-      this.feeConfig.sort((a,b)=>{
+      this.feeConfig.sort((a, b) => {
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       })
     },
     /**
      * 初始化各类情况
      */
-    initIndex(){
+    initIndex() {
       this.reset()
       this.getBaseSetting().then(res => {
         this.initOrder()
@@ -834,19 +824,19 @@ export default {
       })
     },
     // 初始化运单
-    initOrder(){
+    initOrder() {
       // 找到运单信息
       this.init()
       this.setOrderData(this.orderdata)
       this.loading = false
     },
     // 回填运单信息
-    setOrderData (data) {
+    setOrderData(data) {
       data.customerList = data.customerList || []
       data.tmsOrderCargoList = data.tmsOrderCargoList || []
       data.tmsOrderShipInfo = data.tmsOrderShipInfo || {}
       // 设置运单信息
-      for(let i in data.tmsOrderShipInfo){
+      for (const i in data.tmsOrderShipInfo) {
         this.form.tmsOrderShipInfo[i] = data.tmsOrderShipInfo[i]
       }
       // 设置城市名称
@@ -855,46 +845,46 @@ export default {
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
       // 设置收发货人信息
-      if(data.customerList[0]){
-        for(let i in this.form.sender){
+      if (data.customerList[0]) {
+        for (const i in this.form.sender) {
           this.form.sender[i] = data.customerList[0][i]
         }
       }
-      if(data.customerList[1]){
-        for(let i in this.form.receiver){
+      if (data.customerList[1]) {
+        for (const i in this.form.receiver) {
           this.form.receiver[i] = data.customerList[1][i]
         }
       }
-      
+
       this.form.customerList = data.customerList
-      console.log('setOrderInfo:',data, this.form)
+      console.log('setOrderInfo:', data, this.form)
       // 设置中转信息
       // 设置运单信息
-      if(data.tmsOrderTransfer){
-        for(let i in this.form.tmsOrderTransfer){
+      if (data.tmsOrderTransfer) {
+        for (const i in this.form.tmsOrderTransfer) {
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
-        console.log('setOrderInfo2:',data.tmsOrderTransfer, this.form.tmsOrderTransfer)
+        console.log('setOrderInfo2:', data.tmsOrderTransfer, this.form.tmsOrderTransfer)
       }
 
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
       this.form.tmsShLoadsList = data.tmsShLoadsList || [{}]
       this.form.tmsGxLoadsList = data.tmsGxLoadsList || [{}]
       this.form.tmsDbLoadsList = data.tmsDbLoadsList || [{}]
-      console.log('setOrderInfo3:',data, this.form)
+      console.log('setOrderInfo3:', data, this.form)
     },
-    getCarrier (item) {
-      if(item){
+    getCarrier(item) {
+      if (item) {
         this.form.tmsOrderTransfer.carrierMobile = item.carrierMobile
       }
     },
-    resetObj (obj) {
-      for(let i in obj){
+    resetObj(obj) {
+      for (const i in obj) {
         obj[i] = ''
       }
       return obj
     },
-    reset(){
+    reset() {
       this.$refs['ruleForm'].resetFields()
       this.form.cargoList = [{}, {}]
       this.form.sender = this.resetObj(this.form.sender)

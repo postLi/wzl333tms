@@ -53,6 +53,7 @@ export default {
   },
   mounted () {
     eventBus.$on('closepopbox', () => {
+        console.log('closepopbox selectCity:')
       this.$refs.myautocomplete.close()
     })
   },
