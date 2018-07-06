@@ -120,193 +120,191 @@ import SetAuth from './authorization'
 import Pager from '@/components/Pagination/index'
 
 export default{
-    components: {
-        SearchForm,
-        TableSetup,
-        AddEmployeer,
-        SetAuth,
-        Pager
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ])
-    },
-    data(){
-        return{
+  components: {
+    SearchForm,
+    TableSetup,
+    AddEmployeer,
+    SetAuth,
+    Pager
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ])
+  },
+  data() {
+    return {
             // 请求获得的数据
-            groupsArr: [],
-            rolesArr: [],
-            departmentArr: [],
-            usersArr: [],
-            //加载状态
-            loading: true,
+      groupsArr: [],
+      rolesArr: [],
+      departmentArr: [],
+      usersArr: [],
+            // 加载状态
+      loading: true,
             // 选中的行
-            selected: [],
-            authUser: [],
+      selected: [],
+      authUser: [],
             // 保存要修改的用户
-            theUser: {},
+      theUser: {},
             // 按钮大小
-            btnsize: 'small',
+      btnsize: 'small',
             // 各个弹窗状态更改
-            setupTableVisible: false,
-            AddEmployeerVisible: false,
-            SetAuthVisible: false,
-            showTableSetup: false,
-            showSetAuth: false,
-            showAddEmployeer: false,
-            searchForm: {
-                name: '',
-                pageSize: 100,
-                pageNum: 1,
-                mobile: '',
-                orgid: ''
-            },
-            dialogFormVisible: false,
+      setupTableVisible: false,
+      AddEmployeerVisible: false,
+      SetAuthVisible: false,
+      showTableSetup: false,
+      showSetAuth: false,
+      showAddEmployeer: false,
+      searchForm: {
+        name: '',
+        pageSize: 100,
+        pageNum: 1,
+        mobile: '',
+        orgid: ''
+      },
+      dialogFormVisible: false,
             // 是否修改员工信息
-            isModify: false,
-            total: 0
-        }
-    },
-    mounted () {
-        Promise.all([getAllOrgInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
-            this.loading = false
-            this.groupsArr = resArr[0]
-            this.usersArr = resArr[1].list
-            this.total = resArr[1].total
-        })
-    },
-    methods: {
-        fetchAllUser (orgid, username, mobilephone) {
-            return getAllUser(orgid, username||'', mobilephone||'')
-        },
-        doAction (type) {
-            // 判断是否有选中项
-            if(!this.selected.length && type !== 'add'){
-                this.closeAuth()
-                this.closeAddEmployeer()
-                this.$message({
-                    message: '请选择要操作的员工~',
-                    type: 'warning'
-                })
-                return false
-            }
-
-            console.log("this.selected:", this.selected)
-            
-
-            switch (type) {
-                // 添加员工
-                case 'add':
-                    this.isModify = false
-                    this.theUser = {}
-                    this.openAddEmployeer()
-                    break;
-                // 修改员工信息
-                case 'modify':
-                    this.isModify = true
-                    if(this.selected.length > 1){
-                        this.$message({
-                            message: '每次只能修改单条数据~',
-                            type: 'warning'
-                        })
-                    }
-                    this.theUser = this.selected[0]
-                    this.openAddEmployeer()
-                    break;
-                // 删除员工
-                case 'delete':
-                        let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
-                        //=>todo 删除多个
-                        let ids = ''
-                        this.selected.map(item => {
-                            ids += item.id + ','
-                        })
-                        ids = ids.slice(0, ids.length - 1)
-
-                        let id = this.selected[0].id
-                        this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
-                            confirmButtonText: '删除',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
-                            deleteEmployeer(id).then(res => {
-                                this.$message({
-                                    type: 'success',
-                                    message: '删除成功!'
-                                })
-                                this.fetchData()
-                            }).catch(err=>{
-                                this.$message({
-                                    type: 'info',
-                                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                                })  
-                            })
-                            
-                        }).catch(() => {
-                            this.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            })          
-                        })
-                    break;
-                // 设置员工权限
-                case 'auth':
-                    this.authUser = this.selected
-                    this.openAuth()
-                    break;
-            }
-            // 清除选中状态，避免影响下个操作
-            this.$refs.multipleTable.clearSelection()
-        },
-        // 设置表格
-        setTable () {
-            this.showTableSetup = true
-            this.setupTableVisible = true
-        },
-        closeSetupTable () {
-            this.setupTableVisible = false
-        },
-        openAddEmployeer () {
-            this.showAddEmployeer = true
-            this.AddEmployeerVisible = true
-        },
-        closeAddEmployeer () {
-            this.AddEmployeerVisible = false
-        },
-        openAuth () {
-            this.showSetAuth = true            
-            this.SetAuthVisible = true
-        },
-        closeAuth () {
-            this.SetAuthVisible = false
-        },
-        clickDetails(row, event, column){
-            this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection (selection) {
-            this.selected = selection
-        },
-        fetchData (orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
-            this.loading = true
-            this.fetchAllUser(orgid, name, mobile).then(data => {
-                this.loading = false
-                this.usersArr = data.list
-                this.total = data.total
-            })
-        },
-        // 获取组件返回的搜索参数
-        getSearchParam (searchParam) {
-            // 根据搜索参数请求后台获取数据
-            Object.assign(this.searchForm, searchParam)
-            this.fetchData()
-        },
-        // 获取翻页返回的数据
-        handlePageChange (obj) {
-            Object.assign(this.searchForm, obj)
-            this.fetchData()
-        }
+      isModify: false,
+      total: 0
     }
+  },
+  mounted() {
+    Promise.all([getAllOrgInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
+      this.loading = false
+      this.groupsArr = resArr[0]
+      this.usersArr = resArr[1].list
+      this.total = resArr[1].total
+    })
+  },
+  methods: {
+    fetchAllUser(orgid, username, mobilephone) {
+      return getAllUser(orgid, username || '', mobilephone || '')
+    },
+    doAction(type) {
+            // 判断是否有选中项
+      if (!this.selected.length && type !== 'add') {
+        this.closeAuth()
+        this.closeAddEmployeer()
+        this.$message({
+          message: '请选择要操作的员工~',
+          type: 'warning'
+        })
+        return false
+      }
+
+      console.log('this.selected:', this.selected)
+
+      switch (type) {
+                // 添加员工
+        case 'add':
+          this.isModify = false
+          this.theUser = {}
+          this.openAddEmployeer()
+          break
+                // 修改员工信息
+        case 'modify':
+          this.isModify = true
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          }
+          this.theUser = this.selected[0]
+          this.openAddEmployeer()
+          break
+                // 删除员工
+        case 'delete':
+          var deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
+                        // =>todo 删除多个
+          var ids = ''
+          this.selected.map(item => {
+            ids += item.id + ','
+          })
+          ids = ids.slice(0, ids.length - 1)
+
+          // const id = this.selected[0].id
+          this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteEmployeer(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
+          break
+                // 设置员工权限
+        case 'auth':
+          this.authUser = this.selected
+          this.openAuth()
+          break
+      }
+            // 清除选中状态，避免影响下个操作
+      this.$refs.multipleTable.clearSelection()
+    },
+        // 设置表格
+    setTable() {
+      this.showTableSetup = true
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
+    openAddEmployeer() {
+      this.showAddEmployeer = true
+      this.AddEmployeerVisible = true
+    },
+    closeAddEmployeer() {
+      this.AddEmployeerVisible = false
+    },
+    openAuth() {
+      this.showSetAuth = true
+      this.SetAuthVisible = true
+    },
+    closeAuth() {
+      this.SetAuthVisible = false
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(selection) {
+      this.selected = selection
+    },
+    fetchData(orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
+      this.loading = true
+      this.fetchAllUser(orgid, name, mobile).then(data => {
+        this.loading = false
+        this.usersArr = data.list
+        this.total = data.total
+      })
+    },
+        // 获取组件返回的搜索参数
+    getSearchParam(searchParam) {
+            // 根据搜索参数请求后台获取数据
+      Object.assign(this.searchForm, searchParam)
+      this.fetchData()
+    },
+        // 获取翻页返回的数据
+    handlePageChange(obj) {
+      Object.assign(this.searchForm, obj)
+      this.fetchData()
+    }
+  }
 
 }
 </script>

@@ -178,9 +178,9 @@
 
     import { mapGetters } from 'vuex'
     import Pager from '@/components/Pagination/index'
-    import { getUserInfo } from '../../../utils/auth';
+    import { getUserInfo } from '../../../utils/auth'
 
-    export default {
+export default {
       components: {
         AddDot,
         AddPeople,
@@ -192,225 +192,224 @@
           'otherinfo'
         ])
       },
-        data() {
-            return {
-              btnsize: 'mini',
-              //加载状态
-              loading:true,
-              addDoTotVisible:false,
-              addPeopleVisible:false,
-              addDepMaintainisible:false,
-              hiddenDep:false,
-              isDepMain:false,
-              usersArr: [],
-              total: 0,
-              orgName:'',
+      data() {
+        return {
+          btnsize: 'mini',
+              // 加载状态
+          loading: true,
+          addDoTotVisible: false,
+          addPeopleVisible: false,
+          addDepMaintainisible: false,
+          hiddenDep: false,
+          isDepMain: false,
+          usersArr: [],
+          total: 0,
+          orgName: '',
               //
-              isModify: false,
-              //新建网点
-              ruleForm: {
-                name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                desc: ''
-              },
-               formLabelWidth: '120px',
-                //表格内容
-              selected:[],
-                //左边树形初始化数据
-                dataTree:[],
-                defaultProps: {
-                  children: 'children',
-                  label: 'name'
-                },
-                //左边树形初始化数据
-                getOrgId: '',//根据组织id获取列表
-                form: {
-                  orgName: '',
-                  orgType:1,
-                  status:32,
-                  responsibleTelephone: '',
+          isModify: false,
+              // 新建网点
+          ruleForm: {
+            name: '',
+            region: '',
+            date1: '',
+            date2: '',
+            delivery: false,
+            type: [],
+            resource: '',
+            desc: ''
+          },
+          formLabelWidth: '120px',
+                // 表格内容
+          selected: [],
+                // 左边树形初始化数据
+          dataTree: [],
+          defaultProps: {
+            children: 'children',
+            label: 'name'
+          },
+                // 左边树形初始化数据
+          getOrgId: '', // 根据组织id获取列表
+          form: {
+            orgName: '',
+            orgType: 1,
+            status: 32,
+            responsibleTelephone: '',
                   // creatTime:'',
-                  responsibleName: '',
-                  city:'',
-                  serviceName:'',
-                  parentName:'',//上级网点
-                  servicePhone:'',
-                  detailedAddr:'',
-                  networkCode:'',//网点代码
-                  collectionFee:'',//代收款额度
-                  benchmark:'',
-                  warningQuota:'',
-                  lockMachineQuota:'',
-                  manageType:3,
-                  remarks:'',
-                  //默认值
-                  accountStatus:'0',
-                  parentId:0
+            responsibleName: '',
+            city: '',
+            serviceName: '',
+            parentName: '', // 上级网点
+            servicePhone: '',
+            detailedAddr: '',
+            networkCode: '', // 网点代码
+            collectionFee: '', // 代收款额度
+            benchmark: '',
+            warningQuota: '',
+            lockMachineQuota: '',
+            manageType: 3,
+            remarks: '',
+                  // 默认值
+            accountStatus: '0',
+            parentId: 0
 
-                },
+          },
                   // 缓存节点数据
-                  orgInfoCache: {},
-                  userinfo: {}
-            };
-            },
-        mounted () {
-          this.fetchOrg()//左边树形数据
-          //部门维护
-          this.userinfo = getUserInfo()
-          if(this.userinfo.companyId == this.userinfo.orgid ){
-            this.hiddenDep = true
-          }
+          orgInfoCache: {},
+          userinfo: {}
+        }
+      },
+      mounted() {
+        this.fetchOrg()// 左边树形数据
+          // 部门维护
+        this.userinfo = getUserInfo()
+        if (this.userinfo.companyId === this.userinfo.orgid) {
+          this.hiddenDep = true
+        }
         //  部门维护
+      },
+      methods: {
+          // 左边树形数据
+        fetchOrg() {
+          getAllOrgInfo(this.otherinfo.orgid).then(data => {
+            this.dataTree = data
+            this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
+          })
         },
-        methods: {
-          //左边树形数据
-          fetchOrg() {
-            getAllOrgInfo(this.otherinfo.orgid).then(data => {
-                  this.dataTree = data
-                  this.fetchOrgId(this.dataTree[0].id)//根据组织id显示列表
-            })
-          },
           // 处理返回的节点数据
-          handleOrgInfo(data){
-            this.form = data
-          },
+        handleOrgInfo(data) {
+          this.form = data
+        },
           // 根据组织id显示列表
-          fetchOrgId(id) {
-            this.getOrgId = parseInt(id, 10)
-            this.fetchAllUsers(id)
-            if(this.orgInfoCache[id]){
-              this.handleOrgInfo(this.orgInfoCache[id])
-            } else {
-              getOrgId(id).then(res => {
-                this.orgInfoCache[id] = res.data
-                this.handleOrgInfo(res.data)
-              })
-            }
-          },
-          fetchAllUsers (orgid, name = "", mobile = "", pageSize = 100, pageNum = 1) {
-            getAllUser(orgid, name, mobile , pageSize, pageNum).then(res=>{
-              this.usersArr = res.list
-              this.total = res.total
+        fetchOrgId(id) {
+          this.getOrgId = parseInt(id, 10)
+          this.fetchAllUsers(id)
+          if (this.orgInfoCache[id]) {
+            this.handleOrgInfo(this.orgInfoCache[id])
+          } else {
+            getOrgId(id).then(res => {
+              this.orgInfoCache[id] = res.data
+              this.handleOrgInfo(res.data)
             })
-          },
-          seleClick(selected) {
-            this.selected = selected
-          },
-          doAction(type){
+          }
+        },
+        fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {
+          getAllUser(orgid, name, mobile, pageSize, pageNum).then(res => {
+            this.usersArr = res.list
+            this.total = res.total
+          })
+        },
+        seleClick(selected) {
+          this.selected = selected
+        },
+        doAction(type) {
           //  判断是否有选中项
-              if(!this.selected.length && type === 'deletePeople') {
-              this.$message({
-                message: '请选择要操作的员工~',
-                type: 'warning'
+          if (!this.selected.length && type === 'deletePeople') {
+            this.$message({
+              message: '请选择要操作的员工~',
+              type: 'warning'
+            })
+            return false
+          }
+          switch (type) {
+                // 新增员工
+            case 'addPeople':
+              this.addPeopleVisible = true
+              this.addDoTotVisible = false
+              this.addDepMaintainisible = false
+              this.isModify = false
+              this.isDepMain = false
+              break
+          //  新增网点
+            case 'addNot':
+              this.isModify = false
+              this.isDepMain = false
+              this.addDoTotVisible = true
+              this.addPeopleVisible = false
+              this.addDepMaintainisible = false
+              break
+          // 修改网点
+            case 'modifyNot':
+              this.isModify = true
+              this.isDepMain = false
+              this.addDoTotVisible = true
+              break
+          //  部门维护
+            case 'depMain':
+              this.isModify = false
+              this.isDepMain = true
+              this.addDepMaintainisible = true
+              this.addDoTotVisible = false
+              this.addPeopleVisible = false
+              break
+        //    删除员工
+            case 'deletePeople':
+              this.addDepMaintainisible = false
+              this.addDoTotVisible = false
+              this.addPeopleVisible = false
+              var deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
+                // =>todo 删除多个
+              var ids = ''
+              this.selected.map(item => {
+                ids += item.id + ','
               })
-              return false
-            }
-            switch (type){
-                //新增员工
-              case 'addPeople':
-                this.addPeopleVisible = true
-                this.addDoTotVisible = false
-                this.addDepMaintainisible = false
-                this.isModify = false
-                this.isDepMain = false
-                break;
-              //  新增网点
-              case 'addNot':
-                this.isModify = false
-                this.isDepMain = false
-                this.addDoTotVisible = true
-                this.addPeopleVisible = false
-                this.addDepMaintainisible = false
-                break;
-              //修改网点
-              case 'modifyNot':
-                this.isModify = true
-                this.isDepMain = false
-                this.addDoTotVisible = true
-                break;
-              //  部门维护
-              case 'depMain':
-                this.isModify = false
-                this.isDepMain = true
-                this.addDepMaintainisible = true
-                this.addDoTotVisible = false
-                this.addPeopleVisible = false
-                break;
-            //    删除员工
-              case 'deletePeople':
-                this.addDepMaintainisible = false
-                this.addDoTotVisible = false
-                this.addPeopleVisible = false
-                let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
-                //=>todo 删除多个
-                let ids = ''
-                this.selected.map(item => {
-                  ids += item.id + ','
-                })
-                ids = ids.slice(0, ids.length - 1)
+              ids = ids.slice(0, ids.length - 1)
 
-                let id = this.selected[0].id
-                this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
-                  confirmButtonText: '删除',
-                  cancelButtonText: '取消',
-                  type: 'warning'
-                }).then(() => {
-                  deleteEmployeer(id).then(res => {
-                    this.$message({
-                      type: 'success',
-                      message: '删除成功!'
-                    })
-                    this.fetchOrgId(this.getOrgId)
-                  }).catch(err=>{
-                    this.$message({
-                      type: 'info',
-                      message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                    })
+              // var id = this.selected[0].id
+              this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                deleteEmployeer(ids).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
                   })
-
-                }).catch(() => {
+                  this.fetchOrgId(this.getOrgId)
+                }).catch(err => {
                   this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
                   })
                 })
-              break;
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                })
+              })
+              break
 
-            }
-          },
-          //表头筛选
-          filterTag(value, row) {
-            return row.tag === value
-          },
-          getCheckedKeys() {
-            this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)//根据组织id显示列表
-          },
-          //新增网点
-          closeAddDot(){
-            this.addDoTotVisible = false
-          },
-          closeAddPeople(){
-            this.addPeopleVisible = false
-          },
-          closeDep(){
-            this.addDepMaintainisible = false
-          },
-          handlePageChange (obj) {
-            this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
-          },
-          doLayout(){
-            this.$refs.multipleTable.doLayout()
-          },
-          clickDetails(row, event, column){
-            this.$refs.multipleTable.toggleRowSelection(row)
           }
+        },
+          // 表头筛选
+        filterTag(value, row) {
+          return row.tag === value
+        },
+        getCheckedKeys() {
+          this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)// 根据组织id显示列表
+        },
+          // 新增网点
+        closeAddDot() {
+          this.addDoTotVisible = false
+        },
+        closeAddPeople() {
+          this.addPeopleVisible = false
+        },
+        closeDep() {
+          this.addDepMaintainisible = false
+        },
+        handlePageChange(obj) {
+          this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
+        },
+        doLayout() {
+          this.$refs.multipleTable.doLayout()
+        },
+        clickDetails(row, event, column) {
+          this.$refs.multipleTable.toggleRowSelection(row)
         }
       }
+    }
 </script>
 
 <style type="text/css" lang="scss">
