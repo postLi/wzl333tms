@@ -92,7 +92,7 @@ export default {
         shipFromCityCode: '',
         shipToCityCode: '',
         signCertificate: 230,
-        signStatus: 226,
+        signStatus: 227,
         startTime: '',
         endTime: ''
       },
