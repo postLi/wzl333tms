@@ -120,7 +120,7 @@ export default {
         },
         {
           label: "短驳时间",
-          prop: "departureTime",
+          prop: "loadTime",
           width: "180",
           fixed: false
         },

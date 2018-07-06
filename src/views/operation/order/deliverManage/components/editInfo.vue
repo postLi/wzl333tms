@@ -66,7 +66,7 @@
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="createTime">
-          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker v-model.trim="formModel.operatorTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="trackInfo">
@@ -137,7 +137,7 @@ export default {
         loadStatus: '',
         operatorInfo: '',
         operatorOrgid: 1,
-        operatorTime: +new Date(),
+        operatorTime: parseTime(new Date()),
         operatorUserid: 0
       }
     }
@@ -161,7 +161,7 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         if (data) {
-          this.formModel.operatorTime = new Date(data)
+          this.formModel.operatorTime = data
         }
       })
     },
@@ -170,10 +170,28 @@ export default {
         if (valid) {
           if (this.formModel.id) {
             console.log('edit')
-            this.editTrack()
+            this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.editTrack()
+              })
+              .catch(() => {
+                this.$message({ type: 'warning', message: '取消操作' })
+              })
           } else {
             console.log('add')
-            this.addTrack()
+            this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.addTrack()
+              })
+              .catch(() => {
+                this.$message({ type: 'warning', message: '取消操作' })
+              })
           }
         }
       })
@@ -191,10 +209,19 @@ export default {
       }
     },
     deleteTrack(item) {
-      return deleteTrack(item.id).then(data => {
-        this.$message({ type: 'success', message: '删除成功' })
-        this.getDetail()
-      })
+      this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          return deleteTrack(item.id).then(data => {
+            this.$message({ type: 'success', message: '删除成功' })
+            this.getDetail()
+          })
+        })
+        .catch(() => {
+          this.$message({ type: 'warning', message: '取消操作' })
+        })
     },
     editItem(item) {
       this.resetForm()

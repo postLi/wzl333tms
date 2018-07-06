@@ -2,8 +2,17 @@
   <!-- <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix"> -->
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="送货时间:">
-      <el-date-picker v-model="searchCreatTime" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-      </el-date-picker>
+      <!-- <el-date-picker v-model="searchTime" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
+      </el-date-picker> -->
+      <el-date-picker
+            v-model="searchTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions"
+            end-placeholder="结束日期">
+          </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态:">
       <SelectType v-model="searchForm.batchTypeId" type="delivery_batch_type" placeholder="请选择" class="pickup-way" />
@@ -26,11 +35,10 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, pickerOptions2, parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -82,21 +90,11 @@ export default {
     }
 
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      searchEndTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      pickOption: {
-        firstDayOfWeek: 1,
-        disabledDate(time) {
-          // 小于终止日
-          return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
-        }
-      },
-      pickOption2: {
-        firstDayOfWeek: 1,
-        disabledDate(time) {
-          // 大于起始日
-          return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
-        }
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      searchEndTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      defaultTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      pickerOptions: {
+        shortcuts: pickerOptions2
       },
       searchForm: {
         // orgId: '',
@@ -124,7 +122,6 @@ export default {
   },
   watch: {
     orgid(newVal) {
-      // this.searchForm.orgid = newVal
     }
   },
   methods: {
@@ -142,8 +139,7 @@ export default {
     clearForm(formName) {
       this.$refs[formName].resetFields()
       this.searchForm = objectMerge2({}, this.$options.data().searchForm)
-      this.searchTime = []
-      console.log(this.searchForm)
+      this.searchTime = this.$options.data().searchTime
     }
   }
 }

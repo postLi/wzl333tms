@@ -68,11 +68,11 @@ export default {
       'otherinfo'
     ]),
     orgid() {
-      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgId || this.otherinfo.orgid
     }
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllData()
     // Promise.all(this.fetchAllData(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
@@ -107,7 +107,7 @@ export default {
         // pageNum: 1,
         pageSize: 100,
         vo: {
-          orgId: 1,
+          // orgId: 1,
           loadTypeId: 40,
           loadStartTime: '',
           loadEndTime: '',
@@ -208,6 +208,7 @@ export default {
   methods: {
     fetchAllData() {
       this.loading = true
+      this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.infoList = data.list
         this.total = data.total

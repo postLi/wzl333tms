@@ -30,7 +30,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import selectBatchType from '@/components/selectType/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -57,15 +57,18 @@ export default {
         callback()
       }
     }
+    const setDefaultOrgid = _ => {
+      return this.orgid
+    }
     return {
-      searchTime: [],
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
-        orgid: '',
-        loadTypeId: 38
+        orgid: setDefaultOrgid(),
+        loadTypeId: 38,
         // apportionTypeId: '',
         // arriveOrgid: '',
         // batchNo: '',
-        // batchTypeId: '',
+        batchTypeId: 46
         // beginTime: '',
         // contractNo: '',
         // createTime: '',
@@ -82,7 +85,7 @@ export default {
       rules: {
         orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      defaultTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -122,12 +125,15 @@ export default {
         this.$set(this.searchForm, 'endTime', this.searchTime[1])
       }
       this.$emit('change', this.searchForm)
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      this.searchForm = this.$options.data().searchForm
+      this.searchForm.orgid = this.orgid
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
-      this.searchTime = []
+      console.log(this.$options.data().searchForm)
+      this.searchForm = this.$options.data().searchForm
+      this.searchTime = this.$options.data().searchTime
+      this.searchForm.orgid = this.orgid
     }
   }
 }

@@ -23,7 +23,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -58,8 +58,8 @@ export default {
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
-      searchTime: [],
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      defaultTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -104,7 +104,7 @@ export default {
       this.$nextTick(() => {
         objectMerge2(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
-        this.searchTime = []
+        this.searchTime = this.$options.data().searchTime
       })
     }
   }

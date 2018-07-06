@@ -1,8 +1,18 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
     <el-form-item label="短驳时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker>
+      <!-- <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker> -->
+      <el-date-picker
+            v-model="searchTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions"
+            end-placeholder="结束日期">
+          </el-date-picker>
+    </el-form-item>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
       <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit"></selectBatchType>
@@ -30,7 +40,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import selectBatchType from '@/components/selectType/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, pickerOptions2, parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -58,15 +68,15 @@ export default {
       }
     }
     return {
-      searchTime: [],
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
         orgId: '',
-        loadTypeId: 38
+        loadTypeId: 38,
         // "loadStartTime": '',
         // "loadEndTime": '',
         // "departureStartTime": '',
         // "departureEndTime": '',
-        // "batchTypeId": '',
+        batchTypeId: 46,
         // "arriveOrgid": '',
         // "batchNo": '',
         // "truckIdNumber": '',
@@ -75,41 +85,17 @@ export default {
       rules: {
         orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      defaultTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近两个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
+        shortcuts: pickerOptions2
       }
     }
   },
   methods: {
     onSubmit() {
       if (this.searchTime) {
-        this.searchForm.departureStartTime = this.searchTime[0]
-        this.searchForm.departureEndTime = this.searchTime[1]
+        this.searchForm.loadStartTime = this.searchTime[0]
+        this.searchForm.loadEndTime = this.searchTime[1]
       }
       if (this.searchForm.batchTypeId === 46) {
         this.searchForm.batchTypeId = undefined
@@ -120,7 +106,7 @@ export default {
     clearForm(formName) {
       this.$refs[formName].resetFields()
       this.searchForm = objectMerge2({}, this.$options.data().searchForm)
-      this.searchTime = []
+      this.searchTime = this.$options.data().searchTime
     }
   }
 }

@@ -77,7 +77,7 @@
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="要求到达日期">
-                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss"  type="datetime" placeholder="要求到达日期">
+                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="要求到达日期">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -355,8 +355,7 @@ export default {
     addDriverInfo,
     loadChart
   },
-  mounted() {
-  },
+  mounted() {},
   activated() {
     this.init()
     this.getSystemTime()
@@ -439,7 +438,7 @@ export default {
     },
     getSystemTime() { // 获取系统时间
       return getSystemTime().then(data => {
-        this.$nextTick(() =>{
+        this.$nextTick(() => {
           this.formModel.requireArrivedTime = new Date(data.trim())
           this.formModel.loadTime = new Date(data.trim())
         })
@@ -571,6 +570,9 @@ export default {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
             this.$message({ type: 'success', message: '操作成功' })
             this.resetFieldsForm()
+            this.$nextTick(() => {
+              this.gotoPage() // 操作成功后跳转到配载列表页面
+            })
           })
         })
       }

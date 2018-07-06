@@ -72,7 +72,7 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          orgid: 1
+          orgId: 1
         }
       },
       tableColumn: [{
@@ -461,12 +461,12 @@ export default {
       'otherinfo'
     ]),
     orgid() {
-      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgId || this.otherinfo.orgid
     }
   },
   mounted() {
     this.initTable()
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchQuery.vo.orgId = this.otherinfo.orgid
     // this.fetchAllOrderRepertory()
   },
   methods: {
