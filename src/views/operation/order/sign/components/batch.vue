@@ -272,7 +272,7 @@ export default {
     // this.$refs.batch_show.className = 'batch_main'
     },
     submitForm(formName) {
-      this.form.signTime = this.searchCreatTime[0]
+      this.form.signTime = this.searchCreatTime
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
