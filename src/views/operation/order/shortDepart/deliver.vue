@@ -14,6 +14,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
+       <!-- 完成并发车：有发车时间和配载时间
+            完成配载：只有配载时间 -->
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>

@@ -5,7 +5,10 @@
         <tbody>
           <tr>
             <th>到达网点</th>
-            <td>
+            <td  v-if="info.arriveOrgName">
+              <el-input v-model="info.arriveOrgName" :size="btnsize" disabled></el-input>
+            </td>
+            <td v-else>
               <el-input v-model="info.endOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
@@ -28,7 +31,6 @@
             </td>
             <th>分摊方式</th>
             <td>
-            <!-- {{info.truckLoad}} -->
            <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled></el-input>
           </td>
           </tr>
@@ -39,17 +41,18 @@
           </td>
             <th>短驳日期</th>
             <td>
-            <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+            <!-- <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input> -->
+            <el-input :value="info.loadTime" :size="btnsize" disabled></el-input>
           </td>
             <th>要求到达时间</th>
             <td>
-             <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+             <el-input :value="info.requireArrivedTime" :size="btnsize" disabled></el-input>
           </td>
           </tr>
           <tr>
             <th>可载重量</th>
             <td>
-            <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+            <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
           </td>
             <th>备注</th>
             <td colspan="3">

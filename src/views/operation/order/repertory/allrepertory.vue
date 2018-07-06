@@ -78,7 +78,7 @@ export default {
       tableColumn: [{
           label: "运单号",
           prop: "shipSn",
-          width: "110",
+          width: "150",
           fixed: true
         },
         {
@@ -97,9 +97,9 @@ export default {
           label: "入库时间",
           prop: "repertoryCreateTime",
           width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          // },
           fixed: false
         },
         {
@@ -118,9 +118,9 @@ export default {
           label: "开单时间",
           prop: "createTime",
           width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          // },
           fixed: false
         },
         {
@@ -168,13 +168,13 @@ export default {
         {
           label: "出发城市",
           prop: "shipFromCityName",
-          width: "120",
+          width: "150",
           fixed: false
         },
         {
           label: "到达城市",
           prop: "shipToCityName",
-          width: "120",
+          width: "150",
           fixed: false
         },
         {
@@ -320,7 +320,7 @@ export default {
         {
           label: "发货地址",
           prop: "senderDetailedAddress",
-          width: "120",
+          width: "150",
           fixed: false
         },
         {

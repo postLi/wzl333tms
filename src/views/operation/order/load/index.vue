@@ -21,7 +21,7 @@
                   <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
                     <el-input size="mini" v-model="formModel.shortFee" clearable></el-input>
                   </el-form-item>
-                  <el-form-item label="到达网点" prop="arriveOrgid">
+                  <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
                     </SelectTree>
                   </el-form-item>
@@ -71,17 +71,17 @@
                 </el-col>
                 <el-col :span="6">
                   <el-form-item :label="loadTimeFormName">
-                    <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" :placeholder="loadTimeFormName">
+                    <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" :placeholder="loadTimeFormName">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="要求到达日期">
-                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" type="datetime" placeholder="要求到达日期">
+                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss"  type="datetime" placeholder="要求到达日期">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
-                <el-col :span="18" v-if="loadTypeId === 39">
+                <el-col :span="18" v-if="loadTypeId !== 38">
                   <el-form-item label="备注">
                     <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
                   </el-form-item>
@@ -679,6 +679,9 @@ export default {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
       // console.log('短驳完成发车', this.loadInfo)
+      // 时间处理
+      this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
+      this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
       console.log('left', this.orgData.orgid)

@@ -35,8 +35,8 @@ service.interceptors.request.use(config => {
        */
       // 统一加上/api 前缀，方便后台转发接口
       // config.url = '/api' + config.url
-      config.url = '/localapi' + config.url
-      // config.url = '/wukunzhi' + config.url
+      // config.url = '/localapi' + config.url
+      config.url = '/wukunzhi' + config.url
       // config.url = '/huangyuwen' + config.url
       // config.url = '/dingfei' + config.url
       // config.url = '/ceshi' + config.url

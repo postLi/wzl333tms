@@ -13,6 +13,9 @@
           <el-button icon="el-icon-arrow-left" type="primary" circle :disabled="isShowRight" size="mini" @click="doAction('showAllRight')" plain></el-button>
         </el-tooltip>
       </div>
+      <div class="transferTable_header_btn_box clearfix">
+        <slot name="btnsBox"></slot>
+      </div>
     </div>
     <div class="transferTable_content">
       <div class="transferTable_content_table paddingRight" :class="[isShowLeft ? 'showTableLeft' : (isShowRight? 'shortTableLeft':'')]">
@@ -83,6 +86,11 @@ export default {
       position: absolute;
       left: 10px;
       top: 0px;
+    }
+    .transferTable_header_btn_box{
+      position:absolute;
+      right: 10px;
+      top:0px;
     }
   }
   .transferTable_content {
