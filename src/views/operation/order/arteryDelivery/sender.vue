@@ -379,14 +379,14 @@ export default {
         return false
       }
       // 判断是否有选中项
-        // if(!this.selected.length){
-        //     this.closeAddCustomer()
-        //     this.$message({
-        //         message: '请选择要操作的项~',
-        //         type: 'warning'
-        //     })
-        //     return false
-        // }
+        if(!this.selected.length){
+            this.closeAddCustomer()
+            this.$message({
+                message: '请选择要操作的项~',
+                type: 'warning'
+            })
+            return false
+        }
 
       switch (type) {
           // ruku
