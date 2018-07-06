@@ -308,7 +308,7 @@ export default {
       }
   },
   mounted () {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllCustomer()
     // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
@@ -334,12 +334,12 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgid": 1,
+          // "orgid": 1,
           dirverName: '',
           truckIdNumber:'',//车牌号
           batchTypeId: '',//批次状态
           batchNo:'',//发车批次
-          loadTypeId:39,//配载类型
+          loadTypeId:54,//配载类型
           endTime:'',//结束时间
           beginTime:'',//
           arrivedbeginDate:'',//到达时间(起始时间)
@@ -351,6 +351,7 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
+      this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
       return postArtList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
@@ -402,7 +403,6 @@ export default {
               this.selectInfo = this.selected[0]
               this.isModify = false
               this.openAddCustomer()
-              console.log(this.isModify);
             }
 
               break;
@@ -419,7 +419,7 @@ export default {
                 //在途中
                 let id = this.selected[0].id
                 if(this.selected[0].bathStatusName === '在途中'){
-                  postConfirmToCar(id,39).then(res => {
+                  postConfirmToCar(id,54).then(res => {
                     this.$message({
                       type: 'success',
                       message: '到车确定成功~'
@@ -468,7 +468,7 @@ export default {
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  postCancelLoad(ids, 39).then(res => {
+                  postCancelLoad(ids, 54).then(res => {
                     this.$message({
                       type: 'success',
                       message: '已取消到车~'
@@ -514,7 +514,7 @@ export default {
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  postCancelPut(_ids,39).then(res => {
+                  postCancelPut(_ids,54).then(res => {
                     this.$message({
                       type: 'success',
                       message: '已取消入库~'
@@ -579,27 +579,27 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event){
-      this.selectInfo = row
-      this.isModify = true
-      this.openAddCustomer()
+      // this.selectInfo = row
+      // this.isModify = true
+      // this.openAddCustomer()
 
-      // let ids = this.selected.filter(el=>{
-      //   return el.bathStatusName === '已到车'
-      // }).map(el => {
-      //   return  el.id
-      // })
-      // if(!ids.length){
-      //   let bathStatusName = this.selected[0].bathStatusName
-      //   this.$message({
-      //     message: '批次状态为：' + bathStatusName + '不允许取消到车~',
-      //     type: 'warning'
-      //   })
-      //   return false
-      // }else {
-      //   this.selectInfo = row
-      //   this.isModify = true
-      //   this.openAddCustomer()
-      // }
+      let ids = this.selected.filter(el=>{
+        return el.bathStatusName === '已到车'
+      }).map(el => {
+        return  el.id
+      })
+      if(!ids.length){
+        let bathStatusName = this.selected[0].bathStatusName
+        this.$message({
+          message: '批次状态为：' + bathStatusName + '不允许取消到车~',
+          type: 'warning'
+        })
+        return false
+      }else {
+        this.selectInfo = row
+        this.isModify = true
+        this.openAddCustomer()
+      }
 
     }
   }

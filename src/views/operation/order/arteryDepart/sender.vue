@@ -312,7 +312,7 @@ export default {
       }
   },
   mounted () {
-    // this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    //this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
     // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
@@ -339,7 +339,7 @@ export default {
         "pageNum": 1,
         "pageSize": 100,
         "vo": {
-          "orgId": 1,
+          "orgId": '',
           dirverName: '',
           truckIdNumber:'',//车牌号
           batchTypeId: '',//批次状态

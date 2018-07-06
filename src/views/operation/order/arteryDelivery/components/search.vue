@@ -29,7 +29,7 @@
       <!--<SelectTree v-model="searchForm.orgid" />-->
     </el-form-item>
       <el-form-item label="发站:">
-          <SelectTree v-model="searchForm.orgid" />
+          <SelectTree v-model="searchForm.orgId" />
       </el-form-item>
       <el-form-item label="发车批次:">
           <el-input
@@ -65,6 +65,7 @@ import { parseTime }  from '@/utils/'
 
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     SelectTree,
@@ -84,9 +85,9 @@ export default {
     }
   },
   computed: {
-    title () {
-
-    }
+    ...mapGetters([
+      'otherinfo'
+    ]),
   },
   data () {
     let _this = this
@@ -134,7 +135,7 @@ export default {
         }
       },
       searchForm: {
-        orgid: '',
+        // orgId: '',
         driverName: '',
         truckIdNumber:'',//车牌号
         batchTypeId: 51,//批次状态
@@ -159,13 +160,12 @@ export default {
   },
   watch: {
     orgid(newVal){
-      // this.searchForm.orgid = this.orgid
+      this.searchForm.orgId = this.otherinfo.orgid
+      // return this.orgid
     }
   },
   mounted () {
-    this.searchForm.orgid = this.orgid
-    // this.searchForm.orgid = this.orgid
-    // this.searchForm.batchTypeId = this.orgid
+    // this.searchForm.orgId = this.orgid
   },
   methods: {
     getOrgid (id){
@@ -186,7 +186,7 @@ export default {
       this.searchCreatTime = []
       this.searchEndTime = []
       this.searchForm.dirverName = ''
-      this.searchForm.orgid = this.orgid
+      this.searchForm.orgId = this.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
     }

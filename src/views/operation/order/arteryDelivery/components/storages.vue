@@ -608,12 +608,13 @@ export default {
 
     this.propsId = this.info.id
 
-    this.fetchBatchNo()
+
     // this.fetchSelectLoadList()
     if (this.popVisible) {
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
+      this.fetchBatchNo()
     }
   },
   methods: {
