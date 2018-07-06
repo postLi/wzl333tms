@@ -313,112 +313,112 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt,putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
+import { postReceipt, putUpdateReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
+  components: {
+    SearchForm,
+    Pager
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
             // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
-    },
-    mounted () {
+    }
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                this.loading = false
-            })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                selected:[],
-                dataset:[],
-                loading:false,
-                searchQuery: {
+    this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+      this.loading = false
+    })
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      selected: [],
+      dataset: [],
+      loading: false,
+      searchQuery: {
                     // "currentPage":1,
                     // "pageSize":10,
-                    "vo":{
-                        "pageType":4,
-                        "receiptIds":[]
-                    }
-                },
-                total: 0
-            }
-        },
-        methods: {
-        fetchAllreceipt() {
+        'vo': {
+          'pageType': 4,
+          'receiptIds': []
+        }
+      },
+      total: 0
+    }
+  },
+  methods: {
+    fetchAllreceipt() {
             // this.loading = true
-            return postReceipt(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
-            })
-        },
-        fetchData () {
-        this.fetchAllreceipt()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        getSearchParam (searchParam) {
-          Object.objectMerge2(this.searchQuery.vo, searchParam)
-          this.fetchAllreceipt()
-        },
-        doAction (type) {
-          if(type==='import'){
-            this.showImport()
-            return false
-          }
+      return postReceipt(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+      })
+    },
+    fetchData() {
+      this.fetchAllreceipt()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    getSearchParam(searchParam) {
+      objectMerge2(this.searchQuery.vo, searchParam)
+      this.fetchAllreceipt()
+    },
+    doAction(type) {
+      if (type === 'import') {
+        this.showImport()
+        return false
+      }
           // 判断是否有选中项
-          if(!this.selected.length ){
-              this.$message({
-                  message: '请选择要操作的项~',
-                  type: 'warning'
-              })
-               return false
-          }
+      if (!this.selected.length) {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
 
-          switch (type) {
-              //回单发放
-            case 'grant': 
-                 let ids = this.selected.filter(el=>{
-                  return el.giveoutStatus === 111
-                }).map(el => {
-                  return  el.receiptId
-                })
-                if(ids.length){
-                  this.searchQuery.vo.receiptIds = ids
-                  this.dotInfo = ids
-                  this.popVisible = true
-                  this.isAccept = true
-                  this.isModify = false
-                  this.searchQuery.vo.receiptIds = ids
-                  putUpdateReceipt(this.searchQuery.vo).then(res=>{
-                    this.$message({
-                      message: '回单发放成功~',
-                      type: 'success'
-                    })
-                    this.fetchAllreceipt()
-                    return false
-                  })
-                }else{
-                  this.$message.warning('请选择未发放项~')
-                }
-              break;
+      switch (type) {
+              // 回单发放
+        case 'grant':
+          const ids = this.selected.filter(el => {
+            return el.giveoutStatus === 111
+          }).map(el => {
+            return el.receiptId
+          })
+          if (ids.length) {
+            this.searchQuery.vo.receiptIds = ids
+            this.dotInfo = ids
+            this.popVisible = true
+            this.isAccept = true
+            this.isModify = false
+            this.searchQuery.vo.receiptIds = ids
+            putUpdateReceipt(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '回单发放成功~',
+                type: 'success'
+              })
+              this.fetchAllreceipt()
+              return false
+            })
+          } else {
+            this.$message.warning('请选择未发放项~')
+          }
+          break
               // case 'cancel':
               //  let _ids = this.selected.filter(el=>{
-              //     return el.giveoutStatus === 112 
+              //     return el.giveoutStatus === 112
               //   }).map(el => {
               //   return  el.receiptId
               // })
@@ -427,7 +427,7 @@ export default {
 
               // if(_ids.length){
               //     this.searchQuery.vo.receiptIds = _ids
-              //     putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
+              //   (this.searchQuery.vo).then(res=>{
               //       this.$message({
               //         message: '取消发放成功~',
               //         type: 'success'
@@ -435,22 +435,22 @@ export default {
               //       this.fetchAllreceipt()
               //       return false
               //     })
-                
-              //   }
-              
-              // break;
-              }
-          // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        setTable(){},
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection(selected){
-          this.selected = selected
-        }
 
+              //   }
+
+              // break;
+      }
+          // 清除选中状态，避免影响下个操作
+      this.$refs.multipleTable.clearSelection()
+    },
+    setTable() {},
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(selected) {
+      this.selected = selected
     }
+
+  }
 }
 </script>

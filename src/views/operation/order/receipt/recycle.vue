@@ -327,156 +327,154 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt,putUpdateCancelReceipt,putUpdateReceipt } from '@/api/operation/receipt'
+import { postReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import AddMark from './components/add'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager,
-        AddMark
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
+  components: {
+    SearchForm,
+    Pager,
+    AddMark
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
             // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
-    },
-    mounted () {
+    }
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+    this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                dataset:[],
-                selected:[],
-                dotInfo: [],
-                isModify: false,
-                popVisible:false,
-                isAccept:false,
+    })
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      dataset: [],
+      selected: [],
+      dotInfo: [],
+      isModify: false,
+      popVisible: false,
+      isAccept: false,
                 // rec_status:113,
                 // loading:false,
-                searchQuery: {
+      searchQuery: {
                     // "currentPage":1,
                     // "pageSize":10,
-                    "vo":{
-                        "pageType":1,
-                        "receiptIds":[]
-                    }
-                },
-                total: 0
-                
-            }
-        },
-        methods: {
-        fetchAllreceipt() {
+        'vo': {
+          'pageType': 1,
+          'receiptIds': []
+        }
+      },
+      total: 0
+
+    }
+  },
+  methods: {
+    fetchAllreceipt() {
             // this.loading = true
-            return postReceipt(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
+      return postReceipt(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
                 // this.loading = false
                 // console.log(data);
-            })
-        },
-        fetchData () {
-          this.fetchAllreceipt()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        getSearchParam (searchParam) {
+      })
+    },
+    fetchData() {
+      this.fetchAllreceipt()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    getSearchParam(searchParam) {
             // this.searchQuery.vo.orgid = obj.orgid
             // this.searchQuery.vo.customerMobile = obj.mobile
             // this.searchQuery.vo.customerName = obj.name
-            Object.objectMerge2(this.searchQuery.vo, searchParam)
-            this.fetchAllreceipt()
-        },
-        getSelection(selection) {
-          this.selected = selection
+      objectMerge2(this.searchQuery.vo, searchParam)
+      this.fetchAllreceipt()
+    },
+    getSelection(selection) {
+      this.selected = selection
           // console.log(this.selection)
-        },
-        doAction(type){
+    },
+    doAction(type) {
           // 判断是否有选中项
-          console.log(this.selected)
-          if(!this.selected.length){
-            this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-            })
-            return false
-          }
-          switch (type) {
-              //回单回收
-            case 'recycle': 
-              let ids = this.selected.filter(el=>{
-                  return el.recStatus === 105
-                }).map(el => {
-                  return  el.receiptId
-                })
-                console.log(ids);
-                if(ids.length){
-                  this.searchQuery.vo.receiptIds = ids
-                  this.dotInfo = ids
-                  this.popVisible = true
+      console.log(this.selected)
+      if (!this.selected.length) {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
+      switch (type) {
+              // 回单回收
+        case 'recycle':
+          const ids = this.selected.filter(el => {
+            return el.recStatus === 105
+          }).map(el => {
+            return el.receiptId
+          })
+          console.log(ids)
+          if (ids.length) {
+            this.searchQuery.vo.receiptIds = ids
+            this.dotInfo = ids
+            this.popVisible = true
                   // this.isAccept = true
-                  this.isModify = true
-                }else{
-                  this.$message.warning('请选择未回收项~')
-                }
-              break;
-           case 'cancel':
-            
-              let _ids = this.selected.filter(el=>{
-                  return el.recStatus === 106  && el.sendStatus === 107
-                }).map(el => {
-                return  el.receiptId
+            this.isModify = true
+          } else {
+            this.$message.warning('请选择未回收项~')
+          }
+          break
+        case 'cancel':
+          const _ids = this.selected.filter(el => {
+            return el.recStatus === 106 && el.sendStatus === 107
+          }).map(el => {
+            return el.receiptId
+          })
+
+          console.log(this.selected)
+
+          if (_ids.length) {
+            this.searchQuery.vo.receiptIds = _ids
+            putUpdateCancelReceipt(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '取消回收成功~',
+                type: 'success'
               })
+              this.fetchAllreceipt()
+              return false
+            }).catch(res => {
+              this.$message.error(res.text)
+              this.closeAddDot()
+            })
+          } else {
+            this.$message.warning('不可重复取消~')
+          }
 
-              console.log(this.selected)
-
-              if(_ids.length){
-                  this.searchQuery.vo.receiptIds = _ids
-                  putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
-                    this.$message({
-                      message: '取消回收成功~',
-                      type: 'success'
-                    })
-                    this.fetchAllreceipt()
-                    return false
-                  }).catch(err => {
-                    this.$message.error(status.text)
-                    this.closeAddDot()
-                  })
-                }else{
-                  this.$message.warning('不可重复取消~')
-                }
-              
-              break;
-            }
+          break
+      }
           // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        closeAddDot(){
-          this.popVisible = false;
+      this.$refs.multipleTable.clearSelection()
+    },
+    closeAddDot() {
+      this.popVisible = false
             // this.addDoTotVisible = false
-          },
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        setTable(){}
-       
-       
-    }
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    setTable() {}
+
+  }
 }
 </script>

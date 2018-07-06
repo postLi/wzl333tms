@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="receipt_searchinfo clearfix">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="receipt_searchinfo clearfix">
       <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
@@ -85,9 +85,8 @@ export default {
     }
 
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      thestatus: 105,
-      // recStatus:105,
+      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      thestatus: '',
       searchForm: {
         shipFromOrgid:'',
         // number:'',
@@ -107,6 +106,24 @@ export default {
   watch: {
     orgid(newVal){
       this.searchForm.orgid = newVal
+    },
+    type: {
+      handler(status){
+        console.log(status)
+        if(status === 'funds_rec_status'){
+          this.thestatus = 254 //回收状态
+        }
+        if(status === 'funds_remittance_status'){
+            this.thestatus = 257 //汇款状态
+        }
+        if(status === 'funds_account_status'){
+            this.thestatus = 260 //到账状态
+        }
+        if(status === 'funds_giveout_status'){
+            this.thestatus = 263 //发放状态
+        }
+      },
+      immediate: true
     }
   },
   mounted () {

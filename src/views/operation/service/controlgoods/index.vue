@@ -12,37 +12,37 @@
 </template>
 
 <script>
-import NoGoods from './noGoods'//登记
-import HaveGoods from './haveGoods'//处理
+import NoGoods from './noGoods'// 登记
+import HaveGoods from './haveGoods'// 处理
 export default {
-    components: {
-        NoGoods,
-        HaveGoods
-    },
-    props: {
-        isShow: {
-            type: Boolean,
-            default: false
-        }
-    },
-    computed: {
-    
-    },
-    mounted () {
+  components: {
+    NoGoods,
+    HaveGoods
+  },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
             // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
                 // this.loading = false
             // })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'NoGoods',
-            }
-        },
-        methods: {
-        }
-    
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'NoGoods'
     }
+  },
+  methods: {
+  }
+
+}
 </script>
 

@@ -480,33 +480,32 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {postReceipt} from '@/api/operation/receipt'
-import {PutFh, PostControlgoods} from '@/api/operation/dashboard'
+// import { postReceipt } from '@/api/operation/receipt'
+import { PutFh, PostControlgoods } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { deleteTrunkInfo } from '@/api/company/trunkManage';
-import {objectMerge2} from '@/utils/index'
+// import { deleteTrunkInfo } from '@/api/company/trunkManage'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ])
-    },
-    mounted () {
-      
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
-        Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
-            this.loading = false
+  components: {
+    SearchForm,
+    Pager
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ])
+  },
+  mounted() {
+    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
+      this.loading = false
             // this.licenseTypes = resArr[1]
-          })
-        },
-            //this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
+    })
+  },
+            // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            //})
+            // })
             //  this.searchQuery.vo.orgid = this.otherinfo.orgid
             // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false
@@ -514,37 +513,37 @@ export default {
             // })
             // this.fetchAllPutFh(this.otherinfo.orgid)
         // },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                dataset:[],
-                loading:false,
-                selected:[],
-                searchQuery: {
-                    "currentPage":1,
-                    "pageSize":10,
-                    "vo":{
-                        "status":1
-                    }
-                    
-                },
-                total: 0,
-                id:''
-            }
-        },
-        methods: {
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      dataset: [],
+      loading: false,
+      selected: [],
+      searchQuery: {
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+          'status': 1
+        }
+
+      },
+      total: 0,
+      id: ''
+    }
+  },
+  methods: {
           // PutFh
-          fetchAllPutFh() {
+    fetchAllPutFh() {
             // this.loading = true
-            return PostControlgoods(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
-                this.loading = false
+      return PostControlgoods(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+        this.loading = false
                 // console.log(data);
-            })
-        },
+      })
+    },
         // fetchAllPutFh() {
         //     // this.loading = true
         //     return postReceipt(this.searchQuery).then(data => {
@@ -554,72 +553,70 @@ export default {
         //         console.log(data);
         //     })
         // },
-        fetchData () {
-          this.fetchAllPutFh()
-        },
+    fetchData() {
+      this.fetchAllPutFh()
+    },
          // 获取组件返回的搜索参数
-        getSearchParam (searchParam) {
+    getSearchParam(searchParam) {
             // 根据搜索参数请求后台获取数据
-            objectMerge2(this.searchQuery.vo, searchParam)
-            //this.searchQuery.vo.orgId = searchParam.orgid
-            this.fetchData()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        getSelection(selected) {
-            this.selected = selected
-        },
+      objectMerge2(this.searchQuery.vo, searchParam)
+            // this.searchQuery.vo.orgId = searchParam.orgid
+      this.fetchData()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    getSelection(selected) {
+      this.selected = selected
+    },
 
-        doAction(type){
-          
+    doAction(type) {
           // 判断是否有选中项
-          if(!this.selected.length && type !== "export"){
+      if (!this.selected.length && type !== 'export') {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        console.log(this.selected)
+        return false
+      }
+      switch (type) {
+              // 放货
+        case 'haveGoods':
+          if (this.selected.length > 1) {
             this.$message({
-              message: '请选择要操作的项~',
+              message: '一次只能选择一条运单放货',
               type: 'warning'
             })
-            console.log(this.selected)
-            return false
-          }
-          switch (type) {
-              //放货
-            case 'haveGoods': 
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '一次只能选择一条运单放货',
-                      type: 'warning'
-                  })
-              }else{
+          } else {
                 // if(id){
 
                 // }
-                let id = this.selected[0].id
+            const id = this.selected[0].id
                 // console.log(id)
                 // let id = this.selected.map(el => {
                 //   return el.shipId
                 // })
-                PutFh(id).then(res=>{
-                  this.$message({
-                    message: '已放货成功~',
-                    type: 'success'
-                  })
+            PutFh(id).then(res => {
+              this.$message({
+                message: '已放货成功~',
+                type: 'success'
+              })
                   // fetchData()
-                  return false
-                }) 
-              }
-              
-            }
-          // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        setTable(){},
-       
+              return false
+            })
+          }
 
-    }
+      }
+          // 清除选中状态，避免影响下个操作
+      this.$refs.multipleTable.clearSelection()
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    setTable() {}
+
+  }
 }
 </script>

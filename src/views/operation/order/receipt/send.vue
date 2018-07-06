@@ -313,148 +313,148 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt,putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
+import { postReceipt, putUpdateReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
+  components: {
+    SearchForm,
+    Pager
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
             // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
-    },
-    mounted () {
+    }
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                this.loading = false
-            })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                selected:[],
-                dataset:[],
+    this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+      this.loading = false
+    })
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      selected: [],
+      dataset: [],
                 // loading:false,
-                searchQuery: {
+      searchQuery: {
                     // "currentPage":1,
                     // "pageSize":10,
-                    "vo":{
-                        "pageType":2,
-                        "receiptIds":[]
-                    }
-                },
-                total: 0
-            }
-        },
-        methods: {
-        fetchAllreceipt() {
-            // this.loading = true
-            return postReceipt(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
-            })
-        },
-        fetchData () {
-        this.fetchAllreceipt()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        getSearchParam (searchParam) {
-          Object.objectMerge2(this.searchQuery.vo, searchParam)
-          this.fetchAllreceipt()
-        },
-        doAction (type) {
-          if(type==='import'){
-            this.showImport()
-            return false
-          }
-          // 判断是否有选中项
-          if(!this.selected.length ){
-              this.$message({
-                  message: '请选择要操作的项~',
-                  type: 'warning'
-              })
-               return false
-          }
-
-          switch (type) {
-              //回单寄出
-            case 'send': 
-              let ids = this.selected.filter(el=>{
-                  return el.sendStatus === 107
-                }).map(el => {
-                  return  el.receiptId
-                })
-                if(ids.length){
-                  this.searchQuery.vo.receiptIds = ids
-                  this.dotInfo = ids
-                  this.popVisible = true
-                  this.isAccept = true
-                  this.isModify = false
-                  this.searchQuery.vo.receiptIds = ids
-                  putUpdateReceipt(this.searchQuery.vo).then(res=>{
-                    this.$message({
-                      message: '回单寄出成功~',
-                      type: 'success'
-                    })
-                    this.fetchAllreceipt()
-                    return false
-                  })
-                }else{
-                  this.$message.warning('回单已寄出请选择未寄出项~')
-                }
-              break;
-            case 'cancel':
-              let _ids = this.selected.filter(el=>{
-                  return el.sendStatus === 108  && el.acceptStatus === 109
-                }).map(el => {
-                return  el.receiptId
-              })
-
-              console.log(this.selected)
-
-              if(_ids.length){
-                  this.searchQuery.vo.receiptIds = _ids
-                  putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
-                    this.$message({
-                      message: '取消寄出成功~',
-                      type: 'success'
-                    })
-                    this.fetchAllreceipt()
-                    return false
-                  }).catch(res => {
-                    this.$message.error(res.text)
-                    // this.closeAddDot()
-                  })
-                }else{
-                  this.$message.warning('回单已接收不可取消~')
-                }
-              
-              break;
-              }
-          // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        setTable(){},
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection(selected){
-          this.selected = selected
+        'vo': {
+          'pageType': 2,
+          'receiptIds': []
         }
-
+      },
+      total: 0
     }
+  },
+  methods: {
+    fetchAllreceipt() {
+            // this.loading = true
+      return postReceipt(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+      })
+    },
+    fetchData() {
+      this.fetchAllreceipt()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    getSearchParam(searchParam) {
+      objectMerge2(this.searchQuery.vo, searchParam)
+      this.fetchAllreceipt()
+    },
+    doAction(type) {
+      if (type === 'import') {
+        this.showImport()
+        return false
+      }
+          // 判断是否有选中项
+      if (!this.selected.length) {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
+
+      switch (type) {
+              // 回单寄出
+        case 'send':
+          const ids = this.selected.filter(el => {
+            return el.sendStatus === 107
+          }).map(el => {
+            return el.receiptId
+          })
+          if (ids.length) {
+            this.searchQuery.vo.receiptIds = ids
+            this.dotInfo = ids
+            this.popVisible = true
+            this.isAccept = true
+            this.isModify = false
+            this.searchQuery.vo.receiptIds = ids
+            putUpdateReceipt(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '回单寄出成功~',
+                type: 'success'
+              })
+              this.fetchAllreceipt()
+              return false
+            })
+          } else {
+            this.$message.warning('回单已寄出请选择未寄出项~')
+          }
+          break
+        case 'cancel':
+          const _ids = this.selected.filter(el => {
+            return el.sendStatus === 108 && el.acceptStatus === 109
+          }).map(el => {
+            return el.receiptId
+          })
+
+          console.log(this.selected)
+
+          if (_ids.length) {
+            this.searchQuery.vo.receiptIds = _ids
+            putUpdateCancelReceipt(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '取消寄出成功~',
+                type: 'success'
+              })
+              this.fetchAllreceipt()
+              return false
+            }).catch(res => {
+              this.$message.error(res.text)
+                    // this.closeAddDot()
+            })
+          } else {
+            this.$message.warning('回单已接收不可取消~')
+          }
+
+          break
+      }
+          // 清除选中状态，避免影响下个操作
+      this.$refs.multipleTable.clearSelection()
+    },
+    setTable() {},
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(selected) {
+      this.selected = selected
+    }
+
+  }
 }
 </script>

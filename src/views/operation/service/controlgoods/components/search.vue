@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
-import { parseTime }  from '@/utils/index'
+import { REGEX } from '@/utils/validate'
+import { parseTime } from '@/utils/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -65,82 +65,79 @@ export default {
   computed: {
 
   },
-  data () {
-    let _this = this
+  data() {
+    const _this = this
     const orgidIdentifier = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
-       if (value === '' || value === null || !value || value === undefined) {
+      const reg = REGEX.ONLY_NUMBER
+      if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
-        callback(new Error('请输入最多20位数字'))
-      } else {
-        callback()
-      }
+         callback(new Error('请输入最多20位数字'))
+       } else {
+         callback()
+       }
     }
 
     return {
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      pickerOptions1:'',
-    
+      pickerOptions1: '',
+
       searchForm: {
         // orgid: '',
-        shipFromOrgid:'',
-        shipSn:'',
-        shipFromCityCode:'',
-        shipToCityCode:''
+        shipFromOrgid: '',
+        shipSn: '',
+        shipFromCityCode: '',
+        shipToCityCode: ''
       },
       rules: {
         shipSn: [{
-          
+
           validator: orgidIdentifier, trigger: 'change'
         }]
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
-    getFromCity(city){
-     
-      this.searchForm.shipFromCityCode = city.id.toString() 
+    getFromCity(city) {
+      this.searchForm.shipFromCityCode = city.id.toString()
     },
-    getToCity(city){
-      this.searchForm.shipToCityCode =  city.id.toString() 
+    getToCity(city) {
+      this.searchForm.shipToCityCode = city.id.toString()
     },
     // getOrgid (id){
     //   this.searchForm.orgid = id
     // },
-    onSubmit () {
+    onSubmit() {
       // this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
       // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
-      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
-      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
-      let data = objectMerge2({},this.searchForm)
-      if(this.searchForm.shipFromOrgid){
-        data.shipFromOrgid =[this.searchForm.shipFromOrgid]
-      }else{
-        delete  data.shipFromOrgid
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      const data = objectMerge2({}, this.searchForm)
+      if (this.searchForm.shipFromOrgid) {
+        data.shipFromOrgid = [this.searchForm.shipFromOrgid]
+      } else {
+        delete data.shipFromOrgid
       }
-      
+
       this.$emit('change', data)
     },
-    clearForm () {
+    clearForm() {
     //   this.searchForm.name = ''
       this.searchForm.orgid = this.orgid
       this.searchForm.shipSn = ''
       this.searchForm.shipFromCityCode = ''
       this.searchForm.shipToCityCode = ''
-       this.searchForm.shipFromOrgid = ''
+      this.searchForm.shipFromOrgid = ''
     }
   }
 }
 </script> 
-
-
 

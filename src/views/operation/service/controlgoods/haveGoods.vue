@@ -479,32 +479,31 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {postReceipt} from '@/api/operation/receipt'
-import {PutFh, PostControlgoods} from '@/api/operation/dashboard'
+// import { postReceipt } from '@/api/operation/receipt'
+import { PostControlgoods } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ])
-    },
-    mounted () {
-      
-        this.searchQuery.vo.orgid = this.otherinfo.orgid
-        Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
-            this.loading = false
+  components: {
+    SearchForm,
+    Pager
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ])
+  },
+  mounted() {
+    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
+      this.loading = false
             // this.licenseTypes = resArr[1]
-          })
-        },
-            //this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
+    })
+  },
+            // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            //})
+            // })
             //  this.searchQuery.vo.orgid = this.otherinfo.orgid
             // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false
@@ -512,43 +511,43 @@ export default {
             // })
             // this.fetchAllPutFh(this.otherinfo.orgid)
         // },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                dataset:[],
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      dataset: [],
                 // loading:false,
-                searchQuery: {
-                    "currentPage":1,
-                    "pageSize":10,
-                    "vo":{
-                        "status":2
-                    }
-                    
-                },
-                searchForm: {
+      searchQuery: {
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+          'status': 2
+        }
+
+      },
+      searchForm: {
                     // "currentPage":1,
                     // "pageSize":10,
                     // "vo":{
                     //     "pageType":1
                     // }
-                    id:''
-                },
-                total: 0
-            }
-        },
-        methods: {
+        id: ''
+      },
+      total: 0
+    }
+  },
+  methods: {
           // PutFh
-          fetchAllPutFh() {
+    fetchAllPutFh() {
             // this.loading = true
-            return PostControlgoods(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
-                this.loading = false
-                console.log(data);
-            })
-        },
+      return PostControlgoods(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+        this.loading = false
+        console.log(data)
+      })
+    },
         // fetchAllPutFh() {
         //     // this.loading = true
         //     return postReceipt(this.searchQuery).then(data => {
@@ -558,27 +557,27 @@ export default {
         //         console.log(data);
         //     })
         // },
-        fetchData () {
-          this.fetchAllPutFh()
-        },
+    fetchData() {
+      this.fetchAllPutFh()
+    },
          // 获取组件返回的搜索参数
-        getSearchParam (searchParam) {
+    getSearchParam(searchParam) {
             // 根据搜索参数请求后台获取数据
-            objectMerge2(this.searchQuery.vo, searchParam)
-            //this.searchQuery.vo.orgId = searchParam.orgid
-            this.fetchData()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        
-        setTable(){},
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection(){}
+      objectMerge2(this.searchQuery.vo, searchParam)
+            // this.searchQuery.vo.orgId = searchParam.orgid
+      this.fetchData()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
 
-    }
+    setTable() {},
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection() {}
+
+  }
 }
 </script>

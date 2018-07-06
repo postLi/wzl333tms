@@ -139,13 +139,13 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import {postPickuplist,postPickupSign,putXiugai,postSign } from '@/api/operation/sign'
+import { postPickuplist, postPickupSign, putXiugai, postSign } from '@/api/operation/sign'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     popRight,
@@ -158,13 +158,13 @@ export default {
       type: Boolean,
       default: false
     },
-    repertoryId:[Object,Array,String],
+    repertoryId: [Object, Array, String],
     // dotInfo: [Object,Array],
     orgid: {
       required: true
     },
     id: {
-      type: [Number,String]
+      type: [Number, String]
     },
     isModify: {
       type: Boolean,
@@ -189,139 +189,137 @@ export default {
     isDbclick: {
       type: Boolean,
       default: false
-    },
+    }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ])
+    ...mapGetters([
+      'otherinfo'
+    ])
   },
-  data () {
+  data() {
     const validateNum = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入证件号码'))
-      }else if (value.length > 20) {
+      } else if (value.length > 20) {
         callback(new Error('最多可输入20位'))
-      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('只能输入字母和数字'))
       }
     }
     const validateNameSn = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入签收人'))
-      }else if (value.length > 10) {
+      } else if (value.length > 10) {
         callback(new Error('最多可以输入10位字符'))
-      }else if (REGEX.USERNAME.test(value)) {
+      } else if (REGEX.USERNAME.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('不可以输入特殊字符和空格'))
       }
     }
     const validateremark = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入备注'))
-      }else if (value.length > 250) {
+      } else if (value.length > 250) {
         callback(new Error('最多可以输入250位字符'))
-      }else if (REGEX.KONGE.test(value)) {
+      } else if (REGEX.KONGE.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('不可以输入空格'))
       }
     }
     return {
       senderList: [],
       receiverList: [],
-      dataset:[],
-      searchCreatTime:  +new Date(),
-      pickOption2:'',
-      form:{},
-      dataform:{},
-      childShipId:'',
-      disabled:false,
+      dataset: [],
+      searchCreatTime: +new Date(),
+      pickOption2: '',
+      dataform: {},
+      childShipId: '',
+      disabled: false,
       // getrepertoryId:'',
       form: {
-        "repertoryId":'',
-        "signTime":"",
-        "signName":"",
-        "signCocumentTypeId":"96",
-        "shipsignNameSn": "",
-        "documentNum":"",
-        "signTypeId":"99",
-        "remark":"",
-        "signPic":""
+        'repertoryId': '',
+        'signTime': '',
+        'signName': '',
+        'signCocumentTypeId': '96',
+        'shipsignNameSn': '',
+        'documentNum': '',
+        'signTypeId': '99',
+        'remark': '',
+        'signPic': ''
       },
-      obj:{
-        "repertoryId":'',
-        "signTime":"",
-        "signName":"",
-        "signCocumentTypeId":96,
-        "shipsignNameSn": "",
-        "documentNum":"",
-        "signTypeId":99,
-        "remark":"",
-        "signPic":"",
-        "signId":""
+      obj: {
+        'repertoryId': '',
+        'signTime': '',
+        'signName': '',
+        'signCocumentTypeId': 96,
+        'shipsignNameSn': '',
+        'documentNum': '',
+        'signTypeId': 99,
+        'remark': '',
+        'signPic': '',
+        'signId': ''
       },
-      devobj:{
-        "childShipId":"",//子运单id
+      devobj: {
+        'childShipId': '' // 子运单id
       },
       rules: {
-        signName: [   
+        signName: [
           { required: true, trigger: 'blur', validator: validateNameSn }
         ],
-        signCocumentTypeId:[
-          { required: true, message: '请选择签收证件', trigger: 'blur' },
+        signCocumentTypeId: [
+          { required: true, message: '请选择签收证件', trigger: 'blur' }
         ],
-        documentNum:[   
+        documentNum: [
           { required: true, trigger: 'blur', validator: validateNum }
         ],
-        signTypeId:[
-          { required: true, message: '请选择签收类型', trigger: 'blur' },
+        signTypeId: [
+          { required: true, message: '请选择签收类型', trigger: 'blur' }
         ],
-        remark:[
+        remark: [
           // { required: true, message: '请输入签收备注', trigger: 'blur' },
            { required: true, trigger: 'blur', validator: validateremark }
         ],
-        searchCreatTime:[
-          { required: true, message: '请选择时间', trigger: 'blur' },
+        searchCreatTime: [
+          { required: true, message: '请选择时间', trigger: 'blur' }
         ]
       },
       formLabelWidth: '100px',
       tooltip: false,
       popTitle: '签收录入',
       loading: false,
-      inited: false,
+      inited: false
     }
   },
-  mounted () {
+  mounted() {
     this.form.signId = this.orgid
-    if(!this.inited){
+    if (!this.inited) {
       this.inited = true
       this.initInfo()
     }
-
   },
   watch: {
     // dotInfo (newVal) {
     //   this.getMentInfo = this.dotInfo
     // },
-    repertoryId:{
-      handler(newVal){
-        //this.setInfo()
+    repertoryId: {
+      handler(newVal) {
+        // this.setInfo()
         console.log('repertoryId:', this.form, newVal)
       },
       deep: true
     },
-    
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
+
+    popVisible(newVal, oldVal) {
+      if (!this.inited) {
         this.inited = true
         // this.initInfo()
       }
       console.log('popVisible:', newVal, this.repertoryId)
-      if(newVal){
+      if (newVal) {
         this.setInfo()
       }
     },
@@ -335,15 +333,15 @@ export default {
     //       this.popTitle = '查看信息'
     //     }
     //     else{
-    //       this.popTitle = '自提签收录入' 
+    //       this.popTitle = '自提签收录入'
     //     }
     //     immediate: true
     // },
-    orgid (newVal) {
+    orgid(newVal) {
       this.form.orgid = newVal
     },
-    isDbclick:{
-      handler(newVal){
+    isDbclick: {
+      handler(newVal) {
         this.setTitle()
         // this.DelModfiy()
       },
@@ -357,45 +355,45 @@ export default {
         //   console.log(this.isPick)
         // }
         // else{
-        //   this.popTitle = '自提签收录入' 
+        //   this.popTitle = '自提签收录入'
         // }
       },
       immediate: true
     },
-    isDelivery:{
+    isDelivery: {
       handler(newVal) {
-        this.setTitle () 
+        this.setTitle()
         // console.log(this.isDelivery)
         // if(!this.isDelivery){
         //   this.popTitle = '送货修改签收'
         // }else{
-        //   this.popTitle = '送货签收录入' 
+        //   this.popTitle = '送货签收录入'
         // }
-      },
+      }
     },
     immediate: true
   },
   methods: {
-    setTitle () {
-      //查看信息1
-      if(this.isDbclick){
+    setTitle() {
+      // 查看信息1
+      if (this.isDbclick) {
         this.popTitle = '查看信息'
-      }else if(this.isPick){
+      } else if (this.isPick) {
         this.popTitle = '修改签收'
-      }else{
+      } else {
         this.popTitle = '签收录入'
       }
     },
-    DelModfiy(){
-      
+    DelModfiy() {
+
       // if(this.isDelivery){
       //   this.popTitle = '送货签收录入'
-        
+
       // }else{
       //   this.popTitle = '送货修改签收'
       // }
     },
-    setInfo(){
+    setInfo() {
       // this.$set('form', this.repertoryId)
       this.form = objectMerge2({}, this.form, this.repertoryId)
       this.obj.repertoryId = this.repertoryId.repertoryId
@@ -408,47 +406,46 @@ export default {
       this.obj.remark = this.repertoryId.remark
       this.obj.signPic = this.repertoryId.signPic
     },
-    reset () {
+    reset() {
       this.$refs['ruleForm'].resetFields()
     },
-    querySearchSender (name) {
-      let _this = this
-      return function(query, cb){
-        let data = _this.senderList.filter(el => {
+    querySearchSender(name) {
+      const _this = this
+      return function(query, cb) {
+        const data = _this.senderList.filter(el => {
           return el[name].indexOf(query) !== -1
         })
         cb(data)
       }
     },
-    pick(){
-      return postPickuplist().then(res=>{
+    pick() {
+      return postPickuplist().then(res => {
           // this.form = res;
           // this.form.abnormalNo = res
-          console.log(res);
+        console.log(res)
           // console.log(res, "this.form.abnormalNo: ", this.form);
-        })
+      })
     },
-    handleSelectSender(res){
+    handleSelectSender(res) {
       this.customSend.senderName = res.customerName
       this.customSend.companyName = res.companyName
       this.customSend.senderMobile = res.customerMobile
       this.customSend.detailedAddress = res.detailedAddress
       this.customSend.customerType = res.customerType
-      
     },
-    querySearchReceiver (name) {
-      let _this = this
-      return function(query, cb){
-        let data = _this.receiverList.filter(el => {
+    querySearchReceiver(name) {
+      const _this = this
+      return function(query, cb) {
+        const data = _this.receiverList.filter(el => {
           return el[name].indexOf(query) !== -1
         })
         cb(data)
       }
     },
-    handleSelectReceiver(res){
-      
+    handleSelectReceiver(res) {
+
     },
-    initInfo () {
+    initInfo() {
       this.loading = false
       // getAllUser(this.orgid, '', '').then(res=>{
       //   this.resInfo = res.list
@@ -457,39 +454,33 @@ export default {
     // getOrgid (id) {
     //   this.form.orgid = id
     // },
-    submitForm(ruleForm){
+    submitForm(ruleForm) {
       this.form.signTime = this.searchCreatTime[0]
       this.$refs[ruleForm].validate((valid) => {
-        if(valid){
-          let data = objectMerge2({},this.obj)
-          for(let i in data){
+        if (valid) {
+          const data = objectMerge2({}, this.obj)
+          for (const i in data) {
             data[i] = this.form[i]
           }
           data.childShipId = this.repertoryId.childShipId
           data.shipId = this.repertoryId.shipId
           let promiseObj
-          if(this.isPick){
-            promiseObj = putXiugai(this.id,data)
+          if (this.isPick) {
+            promiseObj = putXiugai(this.id, data)
             // console.log(data);
-            
+          } else if (this.isDelivery) {
+            promiseObj = postSign(data)// 不批量
+          } else {
+            promiseObj = postPickupSign(data)// 不批量
           }
-          else if(this.isDelivery){
-        
-            promiseObj = postSign(data)//不批量
-           
-          }
-          else{
-            promiseObj = postPickupSign(data)//不批量
-           
-          }
-          promiseObj.then(res=>{
+          promiseObj.then(res => {
             // console.log(res);
             this.$message({
-                message: '签收成功~',
-                type: 'success'
-              })
-              this.closeMe()
-              this.$emit('success')
+              message: '签收成功~',
+              type: 'success'
+            })
+            this.closeMe()
+            this.$emit('success')
             // this.$alert('保存成功', '提示', {
               //   confirmButtonText: '确定',
               //   callback: action => {
@@ -500,10 +491,10 @@ export default {
               // })
           }).catch(res => {
             this.loading = false
-              this.$message.warning(res.text)
-              this.closeMe()
+            this.$message.warning(res.text)
+            this.closeMe()
           })
-        }else{
+        } else {
           return false
         }
       })
@@ -532,26 +523,20 @@ export default {
     //           this.loading = false
     //           this.closeMe()
     //         }
-            
+
     //       })
     //     }else{
     //       return false
     //     }
     //   })
     // },
-    reset () {
-      this.$refs['ruleForm'].resetFields()
-      this.form.licensePicture = ''
-      this.form.idCardPositive = ''
-      this.form.idCardVerso = ''
-    },
-    closeMe (done) {
+    closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
-      if(typeof done === 'function'){
+      this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
         done()
       }
-    },
+    }
   }
 }
 </script>

@@ -12,36 +12,36 @@
 </template>
 
 <script>
-import AbReg from './abReg'//登记
-import AbDeal from './abDeal'//处理
+import AbReg from './abReg'// 登记
+import AbDeal from './abDeal'// 处理
 export default {
-    components: {
-        AbReg,
-        AbDeal
-    },
-    props: {
-        isShow: {
-            type: Boolean,
-            default: false
-        }
-    },
-    computed: {
-    
-    },
-    mounted () {
+  components: {
+    AbReg,
+    AbDeal
+  },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
             // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
                 // this.loading = false
             // })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'AbReg',
-            }
-        },
-        methods: {
-        }
-    
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'AbReg'
     }
+  },
+  methods: {
+  }
+
+}
 </script>

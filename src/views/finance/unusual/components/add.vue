@@ -12,11 +12,11 @@
           <el-form-item label="开单时间" prop="createTime">
             <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
-          <el-form-item label="出发城市" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="出发城市" prop="shipFromCityCode">
+            <el-input v-model="form.shipFromCityCode"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="到达城市" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="到达城市" prop="shipToCityCode">
+            <el-input v-model="form.shipToCityCode"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="货品名" prop="cargoName">
             <el-input v-model="form.cargoName" maxlength="18" auto-complete="off" :disabled="true" ></el-input>
@@ -24,40 +24,40 @@
           <el-form-item label="件数" prop="cargoAmount">
             <el-input v-model="form.cargoAmount" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
-          <el-form-item label="重量" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="重量" prop="cargoWeight">
+            <el-input v-model="form.cargoWeight"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="体积" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="体积" prop="cargoVolume">
+            <el-input v-model="form.cargoVolume"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="运费合计" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipGoodsSn"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="付款方式" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="付款方式" prop="shipPayWay">
+            <el-input v-model="form.shipPayWay"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="现付" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="现付" prop="nowPayFee">
+            <el-input v-model="form.nowPayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="到付" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="到付" prop="arrivePayFee">
+            <el-input v-model="form.arrivePayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="月结" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="月结" prop="monthPayFee">
+            <el-input v-model="form.monthPayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="回单付" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="回单付" prop="receiptPayFee">
+            <el-input v-model="form.receiptPayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
   
         </div>
         <!--异动费用-->
         <div class="box1">
           <div class="titles">异动费用</div>
-          <el-form-item label="异动费用" v-number-only:point prop="registerFee" >
-            <el-input v-model="form.registerFee" maxlength="6" auto-complete="off" ></el-input>
+          <el-form-item label="异动费用" v-number-only:point prop="changeFee" >
+            <el-input v-model="form.changeFee" maxlength="6" auto-complete="off" ></el-input>
           </el-form-item>
-          <el-form-item label="费用类型" prop="abnormalType">
-            <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="费用类型" prop="feeTypeId">
+            <SelectType v-model="form.feeTypeId" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
   
           <el-form-item label="异动时间" prop="createTime">
@@ -76,16 +76,16 @@
   </pop-right>
 </template>
 <script>
-import { REGEX }  from '@/utils/validate'
-import {GetAbnormalNo, PostNewAbnormal, PutXiuGai,GetLook } from '@/api/operation/dashboard'
-import {getAllUser} from '@/api/company/employeeManage'
+import { REGEX } from '@/utils/validate'
+import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
+import { getAllUser } from '@/api/company/employeeManage'
 import orderManage from '@/api/operation/orderManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 import querySelect from '@/components/querySelect/index'
 export default {
   components: {
@@ -116,10 +116,10 @@ export default {
       default: false
     },
     id: {
-      type: [Number,String]
+      type: [Number, String]
     },
     companyId: {
-      type: [Number,String]
+      type: [Number, String]
     },
     info: {
       type: Object,
@@ -135,29 +135,28 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ])
+    ...mapGetters([
+      'otherinfo'
+    ])
   },
-  data () {
-    const _this = this
+  data() {
     const validateNameSn = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入异常件数'))
-      }else if (value.length > 5) {
+      } else if (value.length > 5) {
         callback(new Error('最多可输入5位'))
-      }else if (REGEX.ONLY_NUMBER_GT.test(value)) {
+      } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('只能输入数字从1开始'))
       }
     }
     const validatereg = function(rule, value, callback) {
-      if(value === '' || value === null || !value || value === undefined) {
+      if (value === '' || value === null || !value || value === undefined) {
         callback()
-      }else if(REGEX.ONLY_NUMBER.test(value)) {
+      } else if (REGEX.ONLY_NUMBER.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('只能输入数字'))
       }
     }
@@ -170,34 +169,32 @@ export default {
     // }
     return {
       form: {
-        "abnormalAmount": "",
-        "abnormalDescribe": "",
-        "abnormalNo": "",
-        "abnormalPicture": "",
-        "disposePicture":"",
-        "abnormalStatus": "",
-        "abnormalType": '',
-        "childShipId": "",
-        "createTime": "",
-        "disposeOpinion": "",
-        "orgName": "",
-        "disposePicture": "",
-        "disposeResult": "228",
-        "disposeTime": "",
-        "disposeName": "",
-        "dutyOrgName": "",
-        "orgId": "",
-        "registerFee": "",
-        "registerName": "",
-        "shipId": "",
+        'abnormalAmount': '',
+        'abnormalDescribe': '',
+        'abnormalNo': '',
+        'abnormalPicture': '',
+        'disposePicture': '',
+        'abnormalStatus': '',
+        'abnormalType': '',
+        'childShipId': '',
+        'createTime': '',
+        'disposeOpinion': '',
+        'orgName': '',
+        'disposeResult': '228',
+        'disposeTime': '',
+        'disposeName': '',
+        'dutyOrgName': '',
+        'orgId': '',
+        'registerFee': '',
+        'registerName': '',
+        'shipId': '',
         shipSn: '',
-        shipGoodsSn:'',
-        createTime:'',
-        cargoName:'',
-        cargoPack:'',
-        cargoAmount:'',
+        shipGoodsSn: '',
+        cargoName: '',
+        cargoPack: '',
+        cargoAmount: ''
       },
-      
+
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
@@ -228,7 +225,7 @@ export default {
         ]
       },
       // fileList2:[],
-      disabled:false,
+      disabled: false,
       popTitle: '',
       orgArr: [],
       rolesArr: [],
@@ -241,60 +238,57 @@ export default {
       // disabled:'',
       resInfo: [],
       pickOption2: {
-      firstDayOfWeek:1,
-      disabledDate(time) {
-        return time .getTime() < Date.now()
+        firstDayOfWeek: 1,
+        disabledDate(time) {
+          return time.getTime() < Date.now()
         }
       }
 
     }
   },
-  mounted () {
+  mounted() {
     this.form.orgid = this.orgid
-    if(!this.inited){
+    if (!this.inited) {
       this.inited = true
       this.initInfo()
     }
   },
   watch: {
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
+    popVisible(newVal, oldVal) {
+      if (!this.inited) {
         this.inited = true
-        this.initInfo();
+        this.initInfo()
       }
     },
-    orgid (newVal) {
+    orgid(newVal) {
       this.form.orgid = newVal
     },
     isModify: {
       handler(newVal) {
-        this.setTitle ()
-        
+        this.setTitle()
       },
       immediate: true
     },
     isCheck: {
-    handler(newVal) {
-        this.setTitle ()
+      handler(newVal) {
+        this.setTitle()
       },
       immediate: true
     },
 
     isDeal: {
       handler(newVal) {
-         this.setTitle ()
+        this.setTitle()
         // if(this.isDeal){
         //   this.popTitle = '异常处理'
         //   GetLook(this.id).then(res => {
         //     this.form = res;
-        //     this.form.disposeTime = new Date();             
+        //     this.form.disposeTime = new Date();
         //   })
         // }
       },
       immediate: true
-    },
-    
-
+    }
 
     // info () {
     //   if(this.isModify){
@@ -321,64 +315,61 @@ export default {
     // handlePreview(file) {
     //   console.log(file);
     // },
-    setTitle (){
-       if(this.isDeal){
+    setTitle() {
+      if (this.isDeal) {
         this.popTitle = '异常处理'
         GetLook(this.id).then(res => {
-          this.form = res;
-          this.form.disposeTime = new Date();             
+          this.form = res
+          this.form.disposeTime = new Date()
         })
-      }
-      else if(this.isModify){
-          this.popTitle = '异常修改'
-          GetLook(this.id).then(res => {
-            this.form = res;
-          })
-      }
-      else if(this.isCheck){
-        console.log(this.isDeal + '异常查看');
+      } else if (this.isModify) {
+        this.popTitle = '异常修改'
+        GetLook(this.id).then(res => {
+          this.form = res
+        })
+      } else if (this.isCheck) {
+        console.log(this.isDeal + '异常查看')
         this.popTitle = '查看明细'
-          GetLook(this.id).then(res => {
-            this.form = res;
+        GetLook(this.id).then(res => {
+          this.form = res
         })
-      }
-      else{
+      } else {
         this.popTitle = '异常登记'
         this.form.orgId = this.orgid
-        this.form.registerTime = new Date();
-        this.dengji();   
+        this.form.registerTime = new Date()
+        this.dengji()
       }
     },
-    dengji(){
-      return GetAbnormalNo().then(res=>{
+    dengji() {
+      return GetAbnormalNo().then(res => {
           // this.form = res;
-          this.form.abnormalNo = res
-          console.log(res, "this.form.abnormalNo: ", this.form);
-        })
+        this.form.abnormalNo = res
+        console.log(res, 'this.form.abnormalNo: ', this.form)
+      })
     },
     querySearch(queryString, cb) {
-        var restaurants = this.resInfo;
-        var results = queryString ? restaurants.filter(item => {
-          return item.name ? item.name.indexOf(queryString) !== -1 : false
-        }) : restaurants;
+      var restaurants = this.resInfo
+      var results = queryString ? restaurants.filter(item => {
+        return item.name ? item.name.indexOf(queryString) !== -1 : false
+      }) : restaurants
         // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return restaurant.name.indexOf(queryString) !== -1
-        };
-      },
-      handleSelect(item) {
-        this.form.registerName = item.name
-      },
-    initInfo () {
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return restaurant.name.indexOf(queryString) !== -1
+      }
+    },
+    handleSelect(item) {
+      this.form.registerName = item.name
+    },
+    initInfo() {
       this.loading = false
-      getAllUser(this.orgid, '', '').then(res=>{
+      getAllUser(this.orgid, '', '').then(res => {
         this.resInfo = res.list
       })
     },
-    getOrgid (id) {
+    getOrgid(id) {
       this.form.orgid = id
     },
     // getShipSn(data){
@@ -399,20 +390,20 @@ export default {
         //     })
         // }
       // },
-    fetchShipInfo (type) {
-      let oldVal = this.form[type]
+    fetchShipInfo(type) {
+      const oldVal = this.form[type]
       orderManage.getFindByShipSnOrGoodSn({
         [type]: this.form[type]
       }).then(res => {
-        let data = res.data
-        if(data){
+        const data = res.data
+        if (data) {
           this.form.shipSn = data.shipSn
           this.form.shipGoodsSn = data.shipGoodsSn
           this.form.createTime = data.createTime
           this.form.cargoName = data.cargoName
           this.form.cargoPack = data.cargoPack
           this.form.cargoAmount = data.cargoAmount
-        }else{
+        } else {
           // this.$message({
           //     message: '查无此信息~',
           //     type: 'warning'
@@ -425,18 +416,17 @@ export default {
           this.form.cargoAmount = ''
           this.form[type] = oldVal
         }
-        
       })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = objectMerge2({},this.form)
+          const data = objectMerge2({}, this.form)
           // data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
-          if(this.isModify){
+          if (this.isModify) {
             promiseObj = PutXiuGai(data)
           } else {
             promiseObj = PostNewAbnormal(data)
@@ -445,35 +435,35 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message({
-                message: '保存成功~',
-                type: 'success'
-              })
-              this.closeMe()
-              this.$emit('success')
+              message: '保存成功~',
+              type: 'success'
+            })
+            this.closeMe()
+            this.$emit('success')
           }).catch(res => {
             this.loading = false
-             this.$message.warning(res.text)
-              this.closeMe()
+            this.$message.warning(res.text)
+            this.closeMe()
           })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    reset () {
+    reset() {
       const oldVal = this.form.abnormalNo
       this.$refs['ruleForm'].resetFields()
-      if(!this.isModify){
+      if (!this.isModify) {
         this.form.abnormalNo = oldVal
       }
     },
-    closeMe (done) {
+    closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
-      if(typeof done === 'function'){
+      this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
         done()
       }
-    },
+    }
   }
 }
 </script>

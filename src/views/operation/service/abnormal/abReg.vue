@@ -192,62 +192,62 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {PostGetAbnormalList,delAbnormal} from '@/api/operation/dashboard'
+import { PostGetAbnormalList, delAbnormal } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager,
+  components: {
+    SearchForm,
+    Pager,
         // TableSetup,
-        Addabnormal
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
+    Addabnormal
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
-    },
-    mounted () {
-        this.searchQuery.vo.orgId = this.otherinfo.orgid
-        Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-            this.loading = false
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
+  },
+  mounted() {
+    this.searchQuery.vo.orgId = this.otherinfo.orgid
+    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+      this.loading = false
             // this.licenseTypes = resArr[1]
-          })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                loading: true,
-                dataset:[],
-                isModify: false,
-                isCheck:false,
-                AddAbnormalVisible:false,
-                setupTableVisible: false,
-                isDbclick:false,
-                licenseTypes: [],
-                selected:[],
-                
+    })
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      loading: true,
+      dataset: [],
+      isModify: false,
+      isCheck: false,
+      AddAbnormalVisible: false,
+      setupTableVisible: false,
+      isDbclick: false,
+      licenseTypes: [],
+      selected: [],
+
                 // loading:false,
-                searchQuery: {
-                    "currentPage":1,
-		                "pageSize":10,
-                    "vo":{ 
-                    }
-                },
-                total: 0,
-                id:''
-            }
-        },
-      methods: {
+      searchQuery: {
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+        }
+      },
+      total: 0,
+      id: ''
+    }
+  },
+  methods: {
         // getLicenType(id){
         //   let info = this.licenseTypes.filter(item => {
         //     console.log(item,id)
@@ -255,146 +255,145 @@ export default {
         //     })
         //   return info[0] ? info[0].dictName : id
         // },
-        fetchAllreceipt() {
-            this.loading = true
-            return PostGetAbnormalList(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
-                this.loading = false
-            })
-        },
-       
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        fetchData () {
-            this.fetchAllreceipt()
-        },
+    fetchAllreceipt() {
+      this.loading = true
+      return PostGetAbnormalList(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+        this.loading = false
+      })
+    },
+
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    fetchData() {
+      this.fetchAllreceipt()
+    },
          // 获取组件返回的搜索参数
-        getSearchParam (searchParam) {
+    getSearchParam(searchParam) {
             // 根据搜索参数请求后台获取数据
-            objectMerge2(this.searchQuery.vo, searchParam)
-            //this.searchQuery.vo.orgId = searchParam.orgid
-            this.fetchData()
-        },
-        doAction(type){
-          if(type==='export'){
-            this.showImport()
-            return false
-          }
+      objectMerge2(this.searchQuery.vo, searchParam)
+            // this.searchQuery.vo.orgId = searchParam.orgid
+      this.fetchData()
+    },
+    doAction(type) {
+      if (type === 'export') {
+        this.showImport()
+        return false
+      }
           // 判断是否有选中项
-          if(!this.selected.length &&type !== "reg"){
+      if (!this.selected.length && type !== 'reg') {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
+      switch (type) {
+              // 登记
+        case 'reg':
+          this.isModify = false
+          this.isCheck = false
+                // this.isDbclick = false
+          console.log(this.isModify)
+          this.selectInfo = {}
+          this.openAddAbnormal()
+          break
+              // 修改
+        case 'xiugai':
+          if (this.selected.length > 1) {
             this.$message({
-              message: '请选择要操作的项~',
+              message: '每次只能寄出单条数据',
               type: 'warning'
             })
-            return false
-          }
-          switch (type) {
-              //登记
-              case 'reg':
-                this.isModify = false
-                this.isCheck = false
-                // this.isDbclick = false
-                console.log(this.isModify)
-                this.selectInfo = {}
-                this.openAddAbnormal()
-                break;
-              //修改
-              case 'xiugai': 
-                if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能寄出单条数据',
-                      type: 'warning'
-                  })
-                }else{
-                  this.isModify = true
-                  this.isCheck = false
+          } else {
+            this.isModify = true
+            this.isCheck = false
                   //  this.isDbclick = false
-                  this.id = this.selected[0].id
-                  console.log(this.id);
-                  this.openAddAbnormal();
-                }
-                break;
-                //查看明细
-                case 'check':
-                  if(this.selected.length>1){
-                    this.$message({
-                      message:'每次自能查看单条数据',
-                      type:'warning'
-                    })
-                  }else{
+            this.id = this.selected[0].id
+            console.log(this.id)
+            this.openAddAbnormal()
+          }
+          break
+                // 查看明细
+        case 'check':
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次自能查看单条数据',
+              type: 'warning'
+            })
+          } else {
                     // this.isDbclick = false
-                    this.isModify = false
-                    this.isCheck = true
-                    this.id = this.selected[0].id
-                    this.openAddAbnormal();
-                  }
-                break;
-                //删除
-                case 'delete':
-                    let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
-                    //=>todo 删除多个
-                    let ids = this.selected.map(item => {
-                        return item.id
-                    })
-                    ids = ids.join(',')
+            this.isModify = false
+            this.isCheck = true
+            this.id = this.selected[0].id
+            this.openAddAbnormal()
+          }
+          break
+                // 删除
+        case 'delete':
+          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+                    // =>todo 删除多个
+          let ids = this.selected.map(item => {
+            return item.id
+          })
+          ids = ids.join(',')
 
-                    this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
-                        confirmButtonText: '删除',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        delAbnormal(ids).then(res => {
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            })
-                            this.fetchData()
-                        }).catch(err=>{
-                            this.$message({
-                                type: 'info',
-                                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                            })  
-                        })
-                        
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        })          
-                    })
-                break;
-              }
+          this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            delAbnormal(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
+          break
+      }
           // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        openAddAbnormal () {
-          this.AddAbnormalVisible = true
-        },
-        closeAddAbnormal () {
-          this.AddAbnormalVisible = false
-        },
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection (selection) {
-          this.selected = selection
-        },
-        setTable () {
-          this.setupTableVisible = true
-        },
-        closeSetupTable () {
-          this.setupTableVisible = false
-        },
-        getDbClick(row, event){
-          this.repertoryId = row
-          this.isCheck = true
-          this.isModify = false
+      this.$refs.multipleTable.clearSelection()
+    },
+    openAddAbnormal() {
+      this.AddAbnormalVisible = true
+    },
+    closeAddAbnormal() {
+      this.AddAbnormalVisible = false
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(selection) {
+      this.selected = selection
+    },
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
+    getDbClick(row, event) {
+      this.repertoryId = row
+      this.isCheck = true
+      this.isModify = false
           // this.isDbclick = true
-          this.openAddAbnormal()
-        }
+      this.openAddAbnormal()
     }
+  }
 }
 </script>

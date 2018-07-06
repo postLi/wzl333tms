@@ -537,73 +537,72 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {postPickuplist,postPickupSign,postCancelPickupSign } from '@/api/operation/sign'
+import { postPickuplist, postCancelPickupSign } from '@/api/operation/sign'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 // import TableSetup from './components/tableSetup'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    name: 'tab-content',
-    components: {
-        SearchForm,
-        Addsign,
-        Addbatch,
+  name: 'tab-content',
+  components: {
+    SearchForm,
+    Addsign,
+    Addbatch,
         // TableSetup,
-        Pager
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
+    Pager
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
-    },
-    mounted () {
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
+  },
+  mounted() {
         // this.searchQuery.vo.orgId = this.otherinfo.orgid
-        Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-            this.loading = false
+    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+      this.loading = false
             // this.licenseTypes = resArr[1]
-          })
-        },
-        data() {
-            return {
-              returnData:[],
-              btnsize: 'mini',
-              component: 'Send',
-              selectInfo: {},
-              selected:[],
-              dataset:[],
-              AddSignVisible:false,
-              AddBatchVisible:false,
-              setupTableVisible: false,
-              popVisible:false,
-              isModify: false,
-              show:false,
-              isPick:false,
-              dotInfo: [],
-              repertoryId:'',
-              signId:'',
-              disabled:false,
-              isDbclick:false,
-              signStatus:'',
+    })
+  },
+  data() {
+    return {
+      returnData: [],
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      selected: [],
+      dataset: [],
+      AddSignVisible: false,
+      AddBatchVisible: false,
+      setupTableVisible: false,
+      popVisible: false,
+      isModify: false,
+      show: false,
+      isPick: false,
+      dotInfo: [],
+      repertoryId: '',
+      signId: '',
+      disabled: false,
+      isDbclick: false,
+      signStatus: '',
               // loading:false,
-              searchQuery: {
-                "currentPage":1,
-                "pageSize":10000,
-                "vo":{
-                  "repertoryId":'',
-                  "signId":''
-                }
-              },
-              total: 0,
-              id:''
-            }
-      
-        },
+      searchQuery: {
+        'currentPage': 1,
+        'pageSize': 10000,
+        'vo': {
+          'repertoryId': '',
+          'signId': ''
+        }
+      },
+      total: 0,
+      id: ''
+    }
+  },
         // props:{
         //   type: { // 可以有confirm, 和inform两个类型
         //   type: String,
@@ -613,157 +612,157 @@ export default {
         //     },
         //   },
         // },
-        methods: {
-        fetchAllreceipt() {
-            this.loading = true
-            return postPickuplist(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
-                this.signId = data.signId
-                this.signStatus = data.signStatus
-            })
-        },
-        fetchData () {
-          this.fetchAllreceipt()
-        },
+  methods: {
+    fetchAllreceipt() {
+      this.loading = true
+      return postPickuplist(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+        this.signId = data.signId
+        this.signStatus = data.signStatus
+      })
+    },
+    fetchData() {
+      this.fetchAllreceipt()
+    },
          // 获取组件返回的搜索参数
-        getSearchParam (searchParam) {
+    getSearchParam(searchParam) {
             // 根据搜索参数请求后台获取数据
-            objectMerge2(this.searchQuery.vo, searchParam)
-            //this.searchQuery.vo.orgId = searchParam.orgid
-            this.fetchData()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
+      objectMerge2(this.searchQuery.vo, searchParam)
+            // this.searchQuery.vo.orgId = searchParam.orgid
+      this.fetchData()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
         // getSearchParam (searchParam) {
         //   Object.assign(this.searchQuery.vo, searchParam)
         //   this.fetchAllreceipt()
         // },
-        doAction (type) {
-          if(type==='import'){
-            this.showImport()
-            return false
-          }
+    doAction(type) {
+      if (type === 'import') {
+        this.showImport()
+        return false
+      }
           // 判断是否有选中项
-          if(!this.selected.length ){
-              this.$message({
-                  message: '请选择要操作的项~',
-                  type: 'warning'
-              })
-               return false
-          }
+      if (!this.selected.length) {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
 
-          switch (type) {
-              //签收
-            case 'pick':
+      switch (type) {
+              // 签收
+        case 'pick':
               // let idss = this.selected
-               let ids = this.selected.filter(el=>{
-                return el.signStatus !== 227
-              })
+          const ids = this.selected.filter(el => {
+            return el.signStatus !== 227
+          })
               // console.log(ids.length)
-              if(ids.length > 1 ){
-                this.dotInfo = ids
+          if (ids.length > 1) {
+            this.dotInfo = ids
                 // console.log(ids);
-                this.isModify = true
-                this.openAddBatch()
-                this.isPick = false
+            this.isModify = true
+            this.openAddBatch()
+            this.isPick = false
                 // this.show = true
-              }else if(ids.length){
-                this.repertoryId = this.selected[0]
-                this.isDbclick = false
-                this.isPick = false
+          } else if (ids.length) {
+            this.repertoryId = this.selected[0]
+            this.isDbclick = false
+            this.isPick = false
                 // this.selectInfo = this.selected[0]
-                this.openAddSign()
-              }else{
-                this.$message({
-                  message: '不可重复签收',
-                  type: 'warning'
-                })
-              }
-            break;
-            case 'amend': 
+            this.openAddSign()
+          } else {
+            this.$message({
+              message: '不可重复签收',
+              type: 'warning'
+            })
+          }
+          break
+        case 'amend':
               // this.repertoryId = this.selected[0]
               // this.openAddSign()
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能修改单条数据',
-                      type: 'warning'
-                  })
-                }else{
-                  this.isPick = true
-                  this.isDbclick = false
-                  this.repertoryId = this.selected[0]
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据',
+              type: 'warning'
+            })
+          } else {
+            this.isPick = true
+            this.isDbclick = false
+            this.repertoryId = this.selected[0]
                   // this.selectInfo = this.selected[0]
-                  this.id = this.selected[0].signId
-                  console.log(this.id);
-                  this.openAddSign()
-                }
-              break;
-            case 'cancel':
-              let _ids = this.selected.filter(el=>{
-                return el.signStatus === 227
-              })
-              if(_ids.length){
-              let repertoryId = this.selected[0].repertoryId
-              let signId = this.selected[0].signId
-          
-              this.searchQuery.vo.repertoryId = repertoryId
-              this.searchQuery.vo.signId = signId
+            this.id = this.selected[0].signId
+            console.log(this.id)
+            this.openAddSign()
+          }
+          break
+        case 'cancel':
+          const _ids = this.selected.filter(el => {
+            return el.signStatus === 227
+          })
+          if (_ids.length) {
+            const repertoryId = this.selected[0].repertoryId
+            const signId = this.selected[0].signId
+
+            this.searchQuery.vo.repertoryId = repertoryId
+            this.searchQuery.vo.signId = signId
                 // console.log(repertoryId);
-              postCancelPickupSign(this.searchQuery.vo).then(res=>{
-                this.$message({
-                  message: '取消签收成功~',
-                  type: 'success'
-                })
-                  this.fetchAllreceipt()
-                  return false
-                }).catch(res => {
+            postCancelPickupSign(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '取消签收成功~',
+                type: 'success'
+              })
+              this.fetchAllreceipt()
+              return false
+            }).catch(res => {
                   // this.loading = false
-                  this.$message.warning(res.text)
+              this.$message.warning(res.text)
                   // this.closeMe()
-                })
-              }else{
-                  this.$message.warning('不可取消~')
-                }
-              break;
-            }
-          // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        setTable () {
-          this.setupTableVisible = true
-        },
-        closeSetupTable () {
-          this.setupTableVisible = false
-        },
-        openAddSign () {
-          this.AddSignVisible = true
-        },
-        closeAddSign () {
-          this.AddSignVisible = false
-        },
-        openAddBatch () {
-          this.popVisible = true
-        },
-        closeAddBacth () {
-          // this.AddBacthVisible = false
-           this.popVisible = false;
-        },
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection(selected){
-          this.selected = selected
-        },
-        getDbClick(row, event){
-        this.repertoryId = row
-        this.isPick = false
-        this.isDbclick = true
-        this.openAddSign()
+            })
+          } else {
+            this.$message.warning('不可取消~')
+          }
+          break
       }
-       
+          // 清除选中状态，避免影响下个操作
+      this.$refs.multipleTable.clearSelection()
+    },
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
+    openAddSign() {
+      this.AddSignVisible = true
+    },
+    closeAddSign() {
+      this.AddSignVisible = false
+    },
+    openAddBatch() {
+      this.popVisible = true
+    },
+    closeAddBacth() {
+          // this.AddBacthVisible = false
+      this.popVisible = false
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(selected) {
+      this.selected = selected
+    },
+    getDbClick(row, event) {
+      this.repertoryId = row
+      this.isPick = false
+      this.isDbclick = true
+      this.openAddSign()
     }
+
+  }
 }
 </script>

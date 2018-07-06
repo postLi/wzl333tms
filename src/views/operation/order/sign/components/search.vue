@@ -44,11 +44,11 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
-import { parseTime }  from '@/utils/index'
+import { parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -70,14 +70,14 @@ export default {
   },
   computed: {
   },
-  data () {
-    let _this = this
+  data() {
+    // const _this = this
     const validateshipSn = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入运单号'))
-      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('只能输字母和数字'))
       }
     }
@@ -86,20 +86,20 @@ export default {
       searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       thestatus: '',
       searchForm: {
-        shipFromOrgid:'',
+        shipFromOrgid: '',
         // number:'',
-        shipSn:'',
-        shipFromCityCode:'',
-        shipToCityCode:'',
-        signCertificate:230,
-        signStatus:226,
-        startTime:'',
-        endTime:''
+        shipSn: '',
+        shipFromCityCode: '',
+        shipToCityCode: '',
+        signCertificate: 230,
+        signStatus: 226,
+        startTime: '',
+        endTime: ''
       },
       rules: {
         shipSn: [
-         
-          { required: true, trigger: 'blur', validator: validateshipSn}
+
+          { required: true, trigger: 'blur', validator: validateshipSn }
         ]
       }
     }
@@ -109,29 +109,28 @@ export default {
     //   this.searchForm.orgid = newVal
     // }
   },
-  mounted () {
+  mounted() {
     this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
     // getOrgid (id){
     //   this.searchForm.orgid = id
     // },
-    getFromCity(city){
-     
-      this.searchForm.shipFromCityCode = city.id.toString() 
+    getFromCity(city) {
+      this.searchForm.shipFromCityCode = city.id.toString()
     },
-    getToCity(city){
-      this.searchForm.shipToCityCode =  city.id.toString() 
+    getToCity(city) {
+      this.searchForm.shipToCityCode = city.id.toString()
     },
-    onSubmit () {
-      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
-      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
+    onSubmit() {
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
       // this.searchForm.startTime = this.searchCreatTime[0]
       // this.searchForm.endTime = this.searchCreatTime[1]
       // console.log(this.searchCreatTime[0],this.searchCreatTime[1]);
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.shipFromOrgid = ''
       this.searchForm.signStatus = ''
       this.searchForm.signCertificate = ''

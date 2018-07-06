@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import { parseTime }  from '@/utils/index'
+import { parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -72,10 +72,10 @@ export default {
   },
   computed: {
   },
-  data () {
-    let _this = this
+  data() {
+    const _this = this
 
-    const validateFormNumber = function (rule, value, callback) {
+    const validateFormNumber = function(rule, value, callback) {
       _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
@@ -83,49 +83,48 @@ export default {
     return {
       searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
-        orgId: '',//网点
-        shipSn:'' ,//  运单号
-        abnormalStatus:117,//异常状态
+        orgId: '', // 网点
+        shipSn: '', //  运单号
+        abnormalStatus: 117, // 异常状态
         // name: '',
         // mobile: '',
-        registerTime:'',//登记时间
-        statu:'',
-        number:'',
-        startcity:'',
-        endcity:'',
-        sendpepole:'',
-        recivepepole:''
-       
+        registerTime: '', // 登记时间
+        statu: '',
+        number: '',
+        startcity: '',
+        endcity: '',
+        sendpepole: '',
+        recivepepole: ''
+
       },
       rules: {
         mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
+          // validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }]
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgId = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgId = this.orgid
   },
   methods: {
-    getOrgid (id){
+    getOrgid(id) {
       this.searchForm.orgId = id
     },
-    onSubmit () {
+    onSubmit() {
       // this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
       // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
-      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
-      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
-      
+    clearForm() {
       this.searchForm.shipId = ''
       this.searchForm.orgId = ''
       // this.searchForm.orgId = this.orgid

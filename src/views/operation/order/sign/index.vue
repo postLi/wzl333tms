@@ -13,42 +13,41 @@
 </template>
 
 <script>
-import Pick from './pick'//自提签收
-import Delivery from './delivery'//送货签收
-import Transfer from './transfer'//中转签收
+import Pick from './pick'// 自提签收
+import Delivery from './delivery'// 送货签收
+import Transfer from './transfer'// 中转签收
 
 // import Flow from './flow'
 export default {
-    components: {
-        Pick,
-        Delivery,
-        Transfer
+  components: {
+    Pick,
+    Delivery,
+    Transfer
 
+  },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
 
-    },
-    props: {
-        isShow: {
-            type: Boolean,
-            default: false
-        }
-    },
-    computed: {
-    
-    },
-    mounted () {
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
             // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
                 // this.loading = false
             // })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Pick',
-            }
-        },
-        methods: {
-        }
-    
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Pick'
     }
+  },
+  methods: {
+  }
+
+}
 </script>

@@ -190,156 +190,156 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import {PostGetAbnormalList,delAbnormal} from '@/api/operation/dashboard'
+import { PostGetAbnormalList } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager,
-        Addabnormal
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
-            console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgId || this.otherinfo.orgid
-        }
-    },
-    mounted () {
-        this.searchQuery.vo.orgId = this.otherinfo.orgid
-        Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-            this.loading = false
-            this.licenseTypes = resArr[1]
-          })
-        },
-        data() {
-          return {
-              btnsize: 'mini',
-              component: 'Send',
-              selectInfo: {},
-              loading: true,
-              dataset:[],
-              isModify: false,
-              isCheck:false,
-              isDeal:false,
-              AddAbnormalVisible:false,
-              setupTableVisible: false,
-              licenseTypes: [],
-              selected:[],
-              
+  components: {
+    SearchForm,
+    Pager,
+    Addabnormal
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
+      console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgId || this.otherinfo.orgid
+    }
+  },
+  mounted() {
+    this.searchQuery.vo.orgId = this.otherinfo.orgid
+    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+      this.loading = false
+      this.licenseTypes = resArr[1]
+    })
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      loading: true,
+      dataset: [],
+      isModify: false,
+      isCheck: false,
+      isDeal: false,
+      AddAbnormalVisible: false,
+      setupTableVisible: false,
+      licenseTypes: [],
+      selected: [],
+
               // loading:false,
-              searchQuery: {
-                  "currentPage":1,
-                  "pageSize":10,
-                  "vo":{ 
-                  }
-              },
-              total: 0,
-              id:''
-          }
-        },
-        methods: {
-        fetchAllreceipt() {
+      searchQuery: {
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+        }
+      },
+      total: 0,
+      id: ''
+    }
+  },
+  methods: {
+    fetchAllreceipt() {
             // this.loading = true
-            return PostGetAbnormalList(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
+      return PostGetAbnormalList(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
                 // this.loading = false
-                console.log(data);
-            })
-        },
-        fetchData () {
-          this.fetchAllreceipt()
-        },
+        console.log(data)
+      })
+    },
+    fetchData() {
+      this.fetchAllreceipt()
+    },
          // 获取组件返回的搜索参数
-        getSearchParam (searchParam) {
+    getSearchParam(searchParam) {
             // 根据搜索参数请求后台获取数据
-            objectMerge2(this.searchQuery.vo, searchParam)
-            //this.searchQuery.vo.orgId = searchParam.orgid
-            this.fetchData()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        doAction(type){
-          if(type==='export'){
-            this.showImport()
-            return false
-          }
+      objectMerge2(this.searchQuery.vo, searchParam)
+            // this.searchQuery.vo.orgId = searchParam.orgid
+      this.fetchData()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    doAction(type) {
+      if (type === 'export') {
+        this.showImport()
+        return false
+      }
           // 判断是否有选中项
-          if(!this.selected.length &&type !== "reg"){
+      if (!this.selected.length && type !== 'reg') {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
+      switch (type) {
+              // 异常处理
+        case 'deal':
+          if (this.selected.length > 1) {
             this.$message({
-              message: '请选择要操作的项~',
+              message: '每次只能处理单条数据',
               type: 'warning'
             })
-            return false
+          } else {
+            this.isModify = true
+            this.isCheck = false
+            this.isDeal = true
+            this.id = this.selected[0].id
+            this.openAddAbnormal()
           }
-          switch (type) {
-              //异常处理
-              case 'deal': 
-                if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能处理单条数据',
-                      type: 'warning'
-                  })
-                }else{
-                  this.isModify = true
-                  this.isCheck = false
-                  this.isDeal = true
-                  this.id = this.selected[0].id
-                  this.openAddAbnormal();
-                }
-                break;
-                //查看明细
-                case 'check':
-                  if(this.selected.length>1){
-                    this.$message({
-                      message:'每次自能查看单条数据',
-                      type:'warning'
-                    })
-                  }else{
-                    this.isModify = false
-                    this.isCheck = true
-                    this.isDeal = true
-                    this.id = this.selected[0].id
-                    this.openAddAbnormal();
-                  }
-                break;
-              }
+          break
+                // 查看明细
+        case 'check':
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次自能查看单条数据',
+              type: 'warning'
+            })
+          } else {
+            this.isModify = false
+            this.isCheck = true
+            this.isDeal = true
+            this.id = this.selected[0].id
+            this.openAddAbnormal()
+          }
+          break
+      }
           // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        openAddAbnormal () {
-          this.AddAbnormalVisible = true
-        },
-        closeAddAbnormal () {
-          this.AddAbnormalVisible = false
-        },
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getSelection (selection) {
-          this.selected = selection
-        },
-        setTable () {
-          this.setupTableVisible = true
-        },
-        closeSetupTable () {
-          this.setupTableVisible = false
-        },
-         getDbClick(row, event){
-          this.repertoryId = row
-          this.isCheck = true
-          this.isModify = false
+      this.$refs.multipleTable.clearSelection()
+    },
+    openAddAbnormal() {
+      this.AddAbnormalVisible = true
+    },
+    closeAddAbnormal() {
+      this.AddAbnormalVisible = false
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(selection) {
+      this.selected = selection
+    },
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
+    getDbClick(row, event) {
+      this.repertoryId = row
+      this.isCheck = true
+      this.isModify = false
           // this.isDbclick = true
-          this.openAddAbnormal()
-        }
+      this.openAddAbnormal()
     }
+  }
 }
 </script>

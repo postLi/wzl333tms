@@ -14,44 +14,44 @@
 </template>
 
 <script>
-import Send from './send'//寄出
-import Recycle from './recycle'//回收
-import Grant from './grant'//发放
-import Accept from './accept'//接收
+import Send from './send'// 寄出
+import Recycle from './recycle'// 回收
+import Grant from './grant'// 发放
+import Accept from './accept'// 接收
 // import Flow from './flow'
 export default {
-    components: {
-        Send,
-        Recycle,
-        Grant,
-        Accept
+  components: {
+    Send,
+    Recycle,
+    Grant,
+    Accept
         // Flow
 
-    },
-    props: {
-        isShow: {
-            type: Boolean,
-            default: false
-        }
-    },
-    computed: {
-    
-    },
-    mounted () {
+  },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
             // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
                 // this.loading = false
             // })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Recycle',
-            }
-        },
-        methods: {
-        }
-    
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Recycle'
     }
+  },
+  methods: {
+  }
+
+}
 </script>
 
