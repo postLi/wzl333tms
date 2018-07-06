@@ -398,7 +398,6 @@ export default {
       this.form = objectMerge2({}, this.form, this.repertoryId)
       this.obj.repertoryId = this.repertoryId.repertoryId
       this.obj.signTime = this.repertoryId.signTime
-      this.obj.signName = this.repertoryId.signName
       this.obj.signCocumentTypeId = this.repertoryId.signCocumentTypeId
       this.obj.shipsignNameSn = this.repertoryId.shipsignNameSn
       this.obj.documentNum = this.repertoryId.documentNum
@@ -455,7 +454,7 @@ export default {
     //   this.form.orgid = id
     // },
     submitForm(ruleForm) {
-      this.form.signTime = this.searchCreatTime[0]
+      this.form.signTime = this.searchCreatTime
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           const data = objectMerge2({}, this.obj)

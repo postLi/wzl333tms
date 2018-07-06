@@ -470,7 +470,7 @@
             sortable
             >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="transferOrgName" 
             label="中转网点"
             width="120"
@@ -513,12 +513,12 @@
             >
           </el-table-column>
           <el-table-column
-            prop="paymentId"
+            prop="paymentName"
             label="中转付款方式"
             width="120"
             sortable
             >
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="signTime"
             sortable

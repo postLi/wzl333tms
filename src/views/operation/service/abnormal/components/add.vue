@@ -584,7 +584,9 @@ export default {
     .select-tree{
       width: 100%;
     }
-
+    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+      margin-top:8px;
+    }
     .drviercard,.certcard,.idcard{
       float: left;
       width: 100%;
@@ -595,7 +597,9 @@ export default {
       right:111px;
       top:111px;
     }
-
+    .el-textarea{
+      min-width: 722px;
+    }
     .upload-container{
       height: 100%;
     }
@@ -638,6 +642,8 @@ export default {
         position:absolute;
         top:0px;
         right:0px;
+        margin:0px;
+        margin-right: 48px;
       }
     }
     .el-input--prefix .el-input__inner {

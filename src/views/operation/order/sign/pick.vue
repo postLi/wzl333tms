@@ -470,7 +470,7 @@
             sortable
             >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="transferOrgName" 
             label="中转网点"
             width="120"
@@ -513,16 +513,16 @@
             >
           </el-table-column>
           <el-table-column
-            prop="paymentId"
+            prop="paymentName"
             label="中转付款方式"
             width="120"
             sortable
             >
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="signTime"
             sortable
-            width="120"
+            width="160"
             label="签收时间">
             <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
           </el-table-column>
