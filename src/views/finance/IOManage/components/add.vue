@@ -269,6 +269,26 @@ export default {
         this.form.tmsOrderPickup.payMethod = 76
         this.form.tmsOrderPickup.pickupStatus = 236
       }
+    },
+    isModify () {
+      if (this.isModify) {
+        this.popTitle = '修改收支方式'
+        this.infoData(this.info)
+      }
+      else if(this.isDbclick) {
+        this.popTitle = '查看收支方式'
+        this.infoData(this.info)
+      }
+      else {
+        this.popTitle = '新增收支方式'
+        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+        this.form.tmsTruck = this.setObject(this.form.tmsTruck)
+        this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
+        this.form.tmsTruck.truckUnit = ''
+        this.form.tmsOrderPickup.payMethod = 76
+        this.form.tmsOrderPickup.pickupStatus = 236
+      }
     }
   },
   methods: {

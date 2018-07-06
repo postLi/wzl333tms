@@ -479,9 +479,8 @@ export default {
       selected: [],
       //加载状态
       loading: true,
-      setupTableVisible: false,
-      AddCustomerVisible: false,
-      isModify: false,
+      // setupTableVisible: false,
+      // AddCustomerVisible: false,
       formMode1: {
         // arriveOrgName:'',//到达网点
         // truckIdNumber:'',//车牌号码
@@ -557,17 +556,10 @@ export default {
       type: Boolean,
       default: false
     },
-    // orgid: {
-    //   required: true
-    // },
-    isDbClick: {
-      type: Boolean,
-      default: false
-    },
     isModify: {
       type: Boolean,
       default: false
-    },
+      },
     info: {
       type: Object,
       default: () => {}
@@ -583,41 +575,29 @@ export default {
   },
   watch: {
     id(newVal) {
-      // this.propsId = this.id
-      // console.log(this.id)
     },
     info(newVal) {
-      if (this.isModify) {} else {
+      if (this.isModify) {
+        this.popTitle = '到车确定'
 
       }
+      else {
+        this.popTitle = '到车入库'
+      }
       this.propsId = this.info.id
-      // this.formModel = this.info
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
     },
-    isModify(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-
-      } else if(this.isDbClick){
-        this.popTitle = '查看详情'
-      }
-      else {
-        this.popTitle = '到车入库'
-      }
-    },
-    isModify(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-
-      } else if(this.isDbClick){
-        this.popTitle = '查看详情'
-      }
-      else {
-        this.popTitle = '到车入库'
-      }
-    },
+    // isModify(newVal) {
+    //   if (this.isModify) {
+    //     this.popTitle = '到车确定'
+    //
+    //   }
+    //   else {
+    //     this.popTitle = '到车入库'
+    //   }
+    // },
     popVisible(newVal, oldVal) {
       if (!this.inited) {
         this.inited = true

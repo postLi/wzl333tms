@@ -278,12 +278,12 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbClick="isDbClick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
-import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
+import { getExportExcel } from '@/api/company/customerManage'
 import { postArtList ,postCancelLoad ,postCancelPut ,postConfirmToCar} from '@/api/operation/arteryDelivery'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
@@ -321,14 +321,12 @@ export default {
       btnsize: 'mini',
       usersArr: [],
       total: 0,
-      trackId:'',
       batchTypeId:'',//批次状态
       //加载状态
       // loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
-      isDbClick: false,
       selectInfo: {},
       // 选中的行
       selected: [],
@@ -381,14 +379,14 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length){
-          this.closeAddCustomer()
-          this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-          })
-          return false
-      }
+      // if(!this.selected.length){
+      //     this.closeAddCustomer()
+      //     this.$message({
+      //         message: '请选择要操作的项~',
+      //         type: 'warning'
+      //     })
+      //     return false
+      // }
 
       switch (type) {
           // ruku
@@ -403,7 +401,6 @@ export default {
             }else if(this.selected.length === 1){
               this.selectInfo = this.selected[0]
               this.isModify = false
-              this.isDbClick = false
               this.openAddCustomer()
             }
 
@@ -494,46 +491,55 @@ export default {
               break;
           // 取消入库
           case 'deleteStor':
-            let deleteItemName = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
-            //=>todo 删除多个
-            let _ids = this.selected.map(item => {
-              return item.id
-            })
-            _ids = _ids.join(',')
-
-            if(this.selected[0].bathStatusName === '已入库'){
-              this.$confirm('确定要取消车牌号 ' + deleteItemName + ' 入库吗？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                postCancelPut(_ids,39).then(res => {
-                  this.$message({
-                    type: 'success',
-                    message: '到货入库成功~'
-                  })
-                  this.fetchData()
-                }).catch(err=>{
-                  this.$message({
-                    type: 'info',
-                    message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
-                  })
-                })
-
-              }).catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '已取消删除'
-                })
-              })
-            }else{
-              let bathStatusName = this.selected[0].bathStatusName
+            if(this.selected.length > 1){
               this.$message({
-                message: '批次状态为：' + bathStatusName + '不允许取消入库~',
+                message: '每次只能修改单条数据~',
                 type: 'warning'
               })
               return false
+            }else{
+              let deleteItemName =this.selected[0].batchNo
+              //=>todo 删除多个
+              let _ids = this.selected.map(item => {
+                return item.id
+              })
+              _ids = _ids.join(',')
+
+              if(this.selected[0].bathStatusName === '已入库'){
+                this.$confirm('确定要取消发车批次 ' + deleteItemName + ' 入库吗？', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  postCancelPut(_ids,39).then(res => {
+                    this.$message({
+                      type: 'success',
+                      message: '已取消入库~'
+                    })
+                    this.fetchData()
+                  }).catch(err=>{
+                    this.$message({
+                      type: 'info',
+                      message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                    })
+                  })
+
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消入库'
+                  })
+                })
+              }else{
+                let bathStatusName = this.selected[0].bathStatusName
+                this.$message({
+                  message: '批次状态为：' + bathStatusName + '不允许取消入库~',
+                  type: 'warning'
+                })
+                return false
+              }
             }
+
             break;
           // 导出数据
           case 'export':
@@ -571,9 +577,27 @@ export default {
     },
     getDbClick(row, event){
       this.selectInfo = row
-      this.isModify = false
-      this.isDbClick = true
+      this.isModify = true
       this.openAddCustomer()
+
+      // let ids = this.selected.filter(el=>{
+      //   return el.bathStatusName === '已到车'
+      // }).map(el => {
+      //   return  el.id
+      // })
+      // if(!ids.length){
+      //   let bathStatusName = this.selected[0].bathStatusName
+      //   this.$message({
+      //     message: '批次状态为：' + bathStatusName + '不允许取消到车~',
+      //     type: 'warning'
+      //   })
+      //   return false
+      // }else {
+      //   this.selectInfo = row
+      //   this.isModify = true
+      //   this.openAddCustomer()
+      // }
+
     }
   }
 }
