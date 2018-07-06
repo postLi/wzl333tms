@@ -137,7 +137,7 @@ export default {
         orgid: '',
         driverName: '',
         truckIdNumber:'',//车牌号
-        batchTypeId: '',//批次状态
+        batchTypeId: 51,//批次状态
         batchNo:'',//发车批次
         loadTypeId:39,//配载类型
         endTime:'',//结束时间
@@ -186,7 +186,7 @@ export default {
       this.searchCreatTime = []
       this.searchEndTime = []
       this.searchForm.dirverName = ''
-      this.searchForm.orgid = ''
+      this.searchForm.orgid = this.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
     }

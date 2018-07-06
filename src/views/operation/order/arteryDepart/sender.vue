@@ -476,7 +476,7 @@ export default {
           //  取消配载发车(批量)
             case 'deselectCar':
               let ids = this.selected.filter(el=>{
-                return el.batchTypeName==='已装车'
+                return el.batchTypeName==='在途中'
               }).map(el => {
                 return  el.id
               })
@@ -491,7 +491,7 @@ export default {
                 //=>todo 删除多个
 
                 ids = ids.join(',')
-                this.$confirm('确定要取消装车？', '提示', {
+                this.$confirm('确定要取消发车？', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
@@ -519,15 +519,23 @@ export default {
                 break;
         //  取消装车(批量)
         case 'deleteStor':
-          let _delete = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
-          //=>todo 删除多个
-          if(this.selected[0].batchTypeName ==='已装车'){
-            let _ids = this.selected.map(item => {
-              return item.id
+          let _ids = this.selected.filter(el=>{
+            return el.batchTypeName==='已装车'
+          }).map(el => {
+            return  el.id
+          })
+          if(!_ids.length){
+            let batchTypeName = this.selected[0].batchTypeName
+            this.$message({
+              message: '批次状态为：' + batchTypeName + '不允许取消装车~',
+              type: 'warning'
             })
+            return false
+          }else{
+            //=>todo 删除多个
             _ids = _ids.join(',')
 
-            this.$confirm('确定要取消车牌号 ' + _delete + ' 到车吗？', '提示', {
+            this.$confirm('确定要取消装车？', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
@@ -535,7 +543,7 @@ export default {
               putCancelLoadTruck(_ids,39).then(res => {
                 this.$message({
                   type: 'success',
-                  message: '取消成功!'
+                  message: '取消装车成功!'
                 })
                 this.fetchData()
               }).catch(err=>{
@@ -551,14 +559,8 @@ export default {
                 message: '已取消'
               })
             })
-          }else {
-            let batchTypeName = this.selected[0].batchTypeName
-            this.$message({
-              message: '批次状态为：' + batchTypeName + '不允许取消装车~',
-              type: 'warning'
-            })
-            return false
           }
+
           break;
           // 导出数据
           case 'export':

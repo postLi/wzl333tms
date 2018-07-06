@@ -123,7 +123,7 @@ export default {
         orgId: '',
         dirverName: '',
         truckIdNumber:'',//车牌号
-        batchTypeId: '',//批次状态
+        batchTypeId: 51,//批次状态
         batchNo:'',//发车批次
         loadTypeId:39,//配载类型
         loadEndTime:'',//结束时间
@@ -164,7 +164,7 @@ export default {
       this.searchForm.loadEndTime = ''
       this.searchCreatTime = []
       this.searchForm.dirverName = ''
-      this.searchForm.orgId = ''
+      this.searchForm.orgId = this.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
 

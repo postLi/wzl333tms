@@ -379,14 +379,14 @@ export default {
         return false
       }
       // 判断是否有选中项
-      // if(!this.selected.length){
-      //     this.closeAddCustomer()
-      //     this.$message({
-      //         message: '请选择要操作的项~',
-      //         type: 'warning'
-      //     })
-      //     return false
-      // }
+        // if(!this.selected.length){
+        //     this.closeAddCustomer()
+        //     this.$message({
+        //         message: '请选择要操作的项~',
+        //         type: 'warning'
+        //     })
+        //     return false
+        // }
 
       switch (type) {
           // ruku
@@ -398,15 +398,17 @@ export default {
               })
               return false
 
-            }else if(this.selected.length === 1){
+            }else{
               this.selectInfo = this.selected[0]
               this.isModify = false
               this.openAddCustomer()
+              console.log(this.isModify);
             }
 
               break;
           //到车确定
           case 'sure':
+            this.closeAddCustomer()
               if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
@@ -445,7 +447,7 @@ export default {
 
           // deselectCar取消到车
           case 'deselectCar':
-
+            this.closeAddCustomer()
 
             let ids = this.selected.filter(el=>{
               return el.bathStatusName === '已到车'
@@ -491,6 +493,7 @@ export default {
               break;
           // 取消入库
           case 'deleteStor':
+            this.closeAddCustomer()
             if(this.selected.length > 1){
               this.$message({
                 message: '每次只能修改单条数据~',

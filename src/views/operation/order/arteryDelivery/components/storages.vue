@@ -589,15 +589,14 @@ export default {
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
     },
-    // isModify(newVal) {
-    //   if (this.isModify) {
-    //     this.popTitle = '到车确定'
-    //
-    //   }
-    //   else {
-    //     this.popTitle = '到车入库'
-    //   }
-    // },
+    isModify(newVal) {
+      if (this.isModify) {
+        this.popTitle = '到车确定'
+      }
+      else {
+        this.popTitle = '到车入库'
+      }
+    },
     popVisible(newVal, oldVal) {
       if (!this.inited) {
         this.inited = true
