@@ -314,10 +314,6 @@ export default {
   mounted () {
     //this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
-    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
-    //   console.log(res)
-    //   this.loading = false
-    // })
   },
   data () {
     return {

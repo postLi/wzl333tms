@@ -47,7 +47,7 @@
     </el-form-item>
     <el-form-item label="司机姓名:" class="art_marginTop" prop="dirverName">
       <el-input
-        v-model="searchForm.driverName"
+        v-model="searchForm.dirverName"
         maxlength="15"
         clearable>
       </el-input>
@@ -135,8 +135,8 @@ export default {
         }
       },
       searchForm: {
-        // orgId: '',
-        driverName: '',
+        orgId: '',
+        dirverName: '',
         truckIdNumber:'',//车牌号
         batchTypeId: 51,//批次状态
         batchNo:'',//发车批次
@@ -151,7 +151,7 @@ export default {
           //validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }],
-        driverName: [{
+        dirverName: [{
           //validator: validateFormMobile, trigger: 'blur'
           validator: validateDriverName, trigger: 'change'
         }]
@@ -159,23 +159,23 @@ export default {
     }
   },
   watch: {
-    orgid(newVal){
-      this.searchForm.orgId = this.otherinfo.orgid
-      // return this.orgid
+    orgId (newVal){
+      this.searchForm.orgId = newVal
     }
   },
   mounted () {
-    // this.searchForm.orgId = this.orgid
+    this.searchForm.orgId = this.id
   },
   methods: {
     getOrgid (id){
-      // this.searchForm.orgid = id
+
     },
     onSubmit () {
-      this.searchForm.beginTime = this.searchCreatTime[0] ? +this.searchCreatTime[0] : ''
-      this.searchForm.endTime = this.searchCreatTime[1] ? +this.searchCreatTime[1] : ''
-      this.searchForm.arrivedbeginDate = this.searchEndTime[0] ? +this.searchEndTime[0] : ''
-      this.searchForm.arrivedEndDate = this.searchEndTime[1] ? +this.searchEndTime[1] : ''
+      this.searchForm.beginTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
+      this.searchForm.endTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
+      this.searchForm.arrivedbeginDate = this.searchEndTime ? +this.searchEndTime[0] : ''
+      this.searchForm.arrivedEndDate = this.searchEndTime ? +this.searchEndTime[1] : ''
+      this.searchForm.batchTypeId = this.searchForm.batchTypeId === 51 ? '' : this.searchForm.batchTypeId
       this.$emit('change', this.searchForm)
     },
     clearForm () {

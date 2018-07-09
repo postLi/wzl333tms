@@ -303,17 +303,11 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+
       }
   },
   mounted () {
-    // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllCustomer()
-    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
-    //   console.log(res)
-    //   this.loading = false
-    // })
   },
   data () {
     return {
@@ -334,10 +328,10 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          // "orgid": 1,
+          "orgId": '',
           dirverName: '',
           truckIdNumber:'',//车牌号
-          batchTypeId: '',//批次状态
+          batchTypeId: 51,//批次状态
           batchNo:'',//发车批次
           loadTypeId:54,//配载类型
           endTime:'',//结束时间
@@ -351,7 +345,7 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
+      // this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
       return postArtList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
@@ -364,8 +358,6 @@ export default {
     handlePageChange (obj) {
       Object.assign(this.searchQuery, obj)
       this.fetchData()
-      // this.searchQuery.currentPage = obj.pageNum
-      // this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
@@ -394,15 +386,25 @@ export default {
           case 'storage':
             if(this.selected.length > 1){
               this.$message({
-                message: '只能选择一条数据进行跟踪设置~',
+                message: '每次只能修改单条数据~',
                 type: 'warning'
               })
               return false
 
             }else{
-              this.selectInfo = this.selected[0]
-              this.isModify = false
-              this.openAddCustomer()
+              if(this.selected[0].bathStatusName === '已到车'){
+                this.selectInfo = this.selected[0]
+                this.isModify = false
+                this.openAddCustomer()
+              }else{
+                // let bathStatusName = this.selected[0].bathStatusName
+                this.$message({
+                  message: '已到车的批次才可以做到货入库~',
+                  type: 'warning'
+                })
+                return false
+              }
+
             }
 
               break;

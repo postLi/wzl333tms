@@ -148,11 +148,9 @@ export default {
   },
   mounted () {
     this.searchForm.orgId = this.orgid
+    this.onSubmit()
   },
   methods: {
-    getOrgid (id){
-      // this.searchForm.orgid = id
-    },
     onSubmit () {
       this.searchForm.loadStartTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
       this.searchForm.loadEndTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''

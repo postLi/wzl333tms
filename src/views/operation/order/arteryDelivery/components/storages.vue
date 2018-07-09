@@ -133,7 +133,8 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">{{popTitle}}</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-else>{{popTitle}}</el-button >
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -763,8 +764,6 @@ export default {
           let data
           if (this.popTitle === '到车确定') {
             data = 54
-            console.log(typeof this.formModel.id)
-            console.log(typeof data)
             postConfirmToCar(this.formModel.id, data).then(res => {
               this.$message({
                 type: 'success',
@@ -773,8 +772,6 @@ export default {
               this.closeMe()
             })
           } else {
-            // data.tmsOrderLoad.id = this.formModel.id
-            // data.tmsOrderLoadFee.loadFeeId = this.formModel.loadFeeId
             this.sendModel.tmsOrderLoad.id = this.formModel.id
             this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
             this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveHandlingFee
