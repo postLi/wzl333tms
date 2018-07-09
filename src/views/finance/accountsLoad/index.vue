@@ -1,4 +1,5 @@
 <template>
+  <!-- 回扣结算页面 -->
   <div class="accountsLoad_table">
     <transferTable style="height: calc(100% - 40px);padding:10px">
     	<div>
@@ -123,7 +124,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
+import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
@@ -149,7 +150,33 @@ export default {
       orgData: {
         left: [],
         right: []
-      }
+      },
+      feeType: 8,
+      searchQuery: {
+        currentPage: 1,
+        pageSize: 10000,
+        vo: {
+          // feeType: 8,
+          // endTime: '',
+          // id: 0,
+          incomePayType: 'PAYABLE',
+          // incomePayTypeValue: '',
+          // orgAllId: '',
+          // senderCompanyName: '',
+          // senderName: '',
+          // shipFromCityCode: '',
+          // shipFromOrgid: 0,
+          // shipLoadId: 0,
+          // shipLoadIdType: 0,
+          // shipSn: '',
+          // shipToCityCode: '',
+          // startTime: '',
+          status: 'NOSETTLEMENT',
+          // totalFee: 0,
+          // totalStatus: '',
+          // totalStatusValue: ''
+        }
+      },
     }
   },
   computed: {
@@ -251,7 +278,8 @@ export default {
         this.rightTable = this.orgData.right
         this.$emit('loadTable', this.rightTable)
       } else {
-        getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+        this.$set(this.searchQuery.vo, 'feeType', this.feeType)
+        postFindListByFeeType(this.searchQuery).then(data => {
           this.leftTable = data.data
           this.$emit('loadTable', this.rightTable)
         })

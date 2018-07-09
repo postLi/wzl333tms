@@ -2,7 +2,7 @@
   <div class="handAccount-manager tab-wrapper">
     <div class="eltab clearfix">
       <span @click="component = 'Short'" class="tab-label" :class="{'active-tab': component.indexOf('Short')!==-1}">短驳费</span>
-      <span @click="component = 'Line'" class="tab-label" :class="{'active-tab': component.indexOf('Line')!==-1}">干线费</span>
+     <!--  <span @click="component = 'Artery'" class="tab-label" :class="{'active-tab': component.indexOf('Artery')!==-1}">干线费</span> -->
       <span @click="component = 'Deliver'" class="tab-label" :class="{'active-tab': component.indexOf('Deliver')!==-1}">送货费</span>
       <span @click="component = 'Insurance'" class="tab-label" :class="{'active-tab': component.indexOf('Insurance')!==-1}">整车保险费</span>
       <span @click="component = 'StationLoad'" class="tab-label" :class="{'active-tab': component.indexOf('StationLoad')!==-1}">发站装卸费</span>
@@ -18,7 +18,7 @@
 
 <script>
 import Short from './short'
-import Line from './line'
+// import Artery from './artery'
 import Deliver from './deliver'
 import Insurance from './insurance'
 import StationLoad from './stationLoad'
@@ -29,7 +29,7 @@ import ArriveOther from './arriveOther'
 export default {
   components: {
     Short,
-    Line,
+    // Artery,
     Deliver,
     Insurance,
     StationLoad,

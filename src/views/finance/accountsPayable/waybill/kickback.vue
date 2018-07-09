@@ -55,11 +55,12 @@ export default {
   data() {
     return {
       btnsize: 'mini',
+      feeType: 8,
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          feeType: 8,
+          // feeType: 8,
           // endTime: '',
           // id: 0,
           incomePayType: 'PAYABLE',
@@ -110,6 +111,12 @@ export default {
           fixed: false
         },
         {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '150',
+          fixed: false
+        },
+        {
           label: '出发城市',
           prop: 'shipFromCityName',
           width: '150',
@@ -122,12 +129,6 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
-          prop: 'status',
-          width: '150',
-          fixed: false
-        },
-        {
           label: '回扣',
           prop: 'brokerageFee',
           width: '150',
@@ -136,7 +137,7 @@ export default {
         {
           label: '开单日期',
           prop: 'createTime',
-          width: '150',
+          width: '180',
           slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
@@ -264,7 +265,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
-      this.searchQuery = objectMerge2({}, obj)
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType) // 8-应付回扣 10-实际提货费 13-其他费用支出
+      this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
     handlePageChange(obj) {
@@ -272,6 +274,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     fetchList() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
       })

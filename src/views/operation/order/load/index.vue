@@ -327,7 +327,7 @@ export default {
     },
     orgid() {},
     loadTruckInfo() {
-      let data = objectMerge2({}, this.formModel)
+      let data = Object.assign({}, this.formModel)
       if (!data.truckLoad) {
         this.$set(data, 'truckLoad', 0)
       }
@@ -337,7 +337,7 @@ export default {
       return data
     },
     loadInfoPercent() {
-      let data = objectMerge2([], this.loadInfoPercentOrg)
+      let data = Object.assign([], this.loadInfoPercentOrg)
       return data
     },
     loadTimeFormName() {
@@ -378,7 +378,7 @@ export default {
       }
     },
     getTableChange(obj) {
-      this.loadInfoPercentOrg = objectMerge2([], obj)
+      this.loadInfoPercentOrg = Object.assign([], obj)
       this.loadTableInfo = obj
     },
     initIsEdit() {
@@ -408,7 +408,7 @@ export default {
         data.requireArrivedTime = this.orgData.requireArrivedTime
         data.remark = this.orgData.remark
         data.deliveryFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
-        this.formModel = objectMerge2({}, data)
+        this.formModel = Object.assign({}, data)
         // formFee 数据
         let dataFee = {}
         dataFee.nowpayCarriage = this.orgData.nowpayCarriage
@@ -422,7 +422,7 @@ export default {
         dataFee.leaveOtherFee = this.orgData.leaveOtherFee
         dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
         dataFee.arriveOtherFee = this.orgData.arriveOtherFee
-        this.formFee = objectMerge2({}, dataFee)
+        this.formFee = Object.assign({}, dataFee)
 
       } else {
         this.orgData = JSON.parse(JSON.stringify(this.$data.orgData))
@@ -578,13 +578,13 @@ export default {
       }
     },
     getLoadTable(obj) { // 获取穿梭框表格数据列表
-      this.loadInfoPercentOrg = objectMerge2([], obj)
+      this.loadInfoPercentOrg = Object.assign([], obj)
       this.loadTableInfo = obj
     },
     resetFieldsForm() { // resetFields表单验证
       const formName = ['formModel', 'formFee']
       const loadtypeid = this.$route.query.loadTypeId
-      objectMerge2(this.$data, this.$options.data())
+      Object.assign(this.$data, this.$options.data())
       this.$nextTick(() => {
         if (loadtypeid === 39) { // 只有39-干线有表单formFee，38-短驳费 40-送货费
           formName.forEach(e => {
@@ -654,9 +654,9 @@ export default {
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId)
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish)
-      this.loadInfo.tmsOrderLoadFee = objectMerge2(this.loadInfo.tmsOrderLoadFee, this.formFee)
-      this.loadInfo.tmsOrderLoad = objectMerge2(this.loadInfo.tmsOrderLoad, this.formModel)
-      this.loadInfo.tmsOrderLoadDetailsList = objectMerge2(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
+      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
+      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
       if (this.loadTypeId === 40) {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
       } else {
@@ -672,9 +672,9 @@ export default {
       this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinishTruck) // 批次状态： 干线(52已装车,53在途中)
-      this.loadInfo.tmsOrderLoadFee = objectMerge2(this.loadInfo.tmsOrderLoadFee, this.formFee)
-      this.loadInfo.tmsOrderLoad = objectMerge2(this.loadInfo.tmsOrderLoad, this.formModel)
-      this.loadInfo.tmsOrderLoadDetailsList = objectMerge2(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
+      this.loadInfo.tmsOrderLoadFee = Object.assign(this.loadInfo.tmsOrderLoadFee, this.formFee)
+      this.loadInfo.tmsOrderLoad = Object.assign(this.loadInfo.tmsOrderLoad, this.formModel)
+      this.loadInfo.tmsOrderLoadDetailsList = Object.assign(this.loadInfo.tmsOrderLoadDetailsList, this.loadTableInfo)
       if (this.loadTypeId === 40) {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
       } else {

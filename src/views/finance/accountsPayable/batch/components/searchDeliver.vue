@@ -1,31 +1,32 @@
 <template>
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd hh:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker>
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="100px" class="staff_searchinfo clearfix">
+    <el-form-item label="送货时间">
+      <el-date-picker
+            v-model="searchTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions"
+            end-placeholder="结束日期">
+          </el-date-picker>
     </el-form-item>
-    <el-form-item label="到达网点" prop="arriveOrgid">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable>
+    <el-form-item label="送货网点" prop="orgid">
+      <SelectTree v-model="searchForm.orgid" clearable>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="运单号" prop="shipSn">
-      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
+    <el-form-item label="所属结算网点" prop="ascriptionOrgid">
+      <SelectTree v-model="searchForm.ascriptionOrgid" clearable>
+      </SelectTree>
     </el-form-item>
-    <el-form-item label="发货方" prop="customerName">
-      <querySelect v-model="searchForm.customerNames" valuekey="customerName" search="customerName" type="sender" label="customerName" :remote="true" />
+    <el-form-item label="送货批次" prop="batchNo">
+      <el-input placeholder="请输入送货批次" v-model="searchForm.batchNo"></el-input>
     </el-form-item>
-    <el-form-item label="收货人" prop="customerName">
-      <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
-        <template slot-scope="{item}">
-          {{ item.customerName }} : {{ item.customerMobile }}
-        </template>
-      </querySelect>
+    <el-form-item label="车牌号" prop="truckIdNumber">
+      <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
     </el-form-item>
-    <el-form-item label="出发城市">
-      <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
-    </el-form-item>
-    <el-form-item label="到达城市">
-      <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
+    <el-form-item label="司机">
+      <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" />
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -37,7 +38,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -65,31 +66,22 @@ export default {
     }
     return {
       searchForm: {
-        // feeType: 8, // 8-应付回扣 10-实际提货费 13-其他费用支出
-        // endTime: '',
-        // id: 0,
-        incomePayType: 'PAYABLE',
-        // incomePayTypeValue: '',
-        // orgAllId: '',
-        // senderCompanyName: '',
-        // senderName: '',
-        // shipFromCityCode: '',
-        // shipFromOrgid: 0,
-        // shipLoadId: 0,
-        // shipLoadIdType: 0,
-        // shipSn: '',
-        // shipToCityCode: '',
-        // startTime: '',
-        // status: '',
-        // totalFee: 0,
-        // totalStatus: '',
-        // totalStatusValue: ''
+        // sign: 2,
+        orgid: 1,
+        ascriptionOrgid: 1,
+        status: 'NOSETTLEMENT',
+        // loadStartTime: '',
+        // loadEndTime: '',
+        // departureStartTime: '',
+        // departureEndTime: '',
+        // batchNo: '',
+        // truckIdNumber: '',
+        // dirverName: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
-      searchTime: [],
-      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -123,8 +115,8 @@ export default {
     onSubmit() {
       let searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'startTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
+        this.$set(searchObj, 'loadStartTime', this.searchTime[0])
+        this.$set(searchObj, 'loadEndTime', this.searchTime[1])
       }
       this.$emit('change', searchObj)
       this.searchForm = Object.assign({}, this.$options.data().searchForm)

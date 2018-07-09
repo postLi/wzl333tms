@@ -16,86 +16,75 @@
         </div>
       </div>
       <div class="receiptDialog_table">
-	   <el-table
-	    :data="tableData"
-	    style="width: 100%; height:100%;"
-	    height="100%"
-	    stripe
-	    show-summary
-	    >
-	    <el-table-column
-	      prop="date"
-	      label="序号"
-	      width="120">
-	      <template solt-scope="props">
-	      	<span>{{props.$index}}</span>
-	      </template>
-	    </el-table-column>
-	    <el-table-column
-	      prop="date"
-	      label="费用项">
-	    </el-table-column>
-	    <el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="千"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="百"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="十"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="万"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="千"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="百"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="十"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="元"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="角"
-	        width="40">
-	      </el-table-column>
-	      <el-table-column
-	        prop="name"
-	        label="分"
-	        width="40">
-	      </el-table-column>
-	    </el-table-column>
-	  </el-table>
+        <el-table :data="tableData" style="width: 100%; height:100%;" height="100%" stripe show-summary>
+          <el-table-column prop="date" label="序号" type="index" width="70">
+          </el-table-column>
+          <el-table-column prop="dataName" label="费用项">
+          </el-table-column>
+          <el-table-column>
+            <el-table-column prop="name" label="千" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="百" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="十" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="万" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="千" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="百" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="十" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="元" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="角" width="40">
+            </el-table-column>
+            <el-table-column prop="name" label="分" width="40">
+            </el-table-column>
+          </el-table-column>
+        </el-table>
       </div>
-     
+      <div class="receiptDialog_todo">
+        <el-button icon="el-icon-plus" type="primary" plain class="tableAllBtn" size="mini" @click="plusItem"></el-button>
+        <el-table :data="tableData" border style="width: 100%;" height="100%" stripe>
+          <el-table-column fixed width="50">
+            <template slot-scope="scope">
+              <el-button icon="el-icon-minus" type="danger" plain class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+            </template>
+          </el-table-column>
+          <el-table-column prop="date" label="收支方式" width="100">
+          </el-table-column>
+          <el-table-column prop="date" label="收支方式" width="100">
+          </el-table-column>
+          <el-table-column prop="dataName" label="银行名称">
+          </el-table-column>
+          <el-table-column prop="name" label="银行卡号">
+          </el-table-column>
+          <el-table-column prop="name" label="开户人">
+          </el-table-column>
+          <el-table-column prop="name" label="支票号码">
+          </el-table-column>
+          <el-table-column prop="name" label="汇款号码">
+          </el-table-column>
+          <el-table-column prop="name" label="微信号">
+          </el-table-column>
+          <el-table-column prop="name" label="支付宝号">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="receiptDialog_remark">
+        <label>备注</label>
+        <el-input placeholder="最多可输入300个字符" :size="btnsize"></el-input>
+      </div>
     </el-form>
     <div slot="footer">
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="
-el-icon-tickets">保存</el-button>
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
-      <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">取 消</el-button>
+      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" 
+      icon="el-icon-document">保存</el-button>
+      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" 
+      icon="el-icon-printer" disabled>保存并打印</el-button>
+      <el-button type="danger" @click="closeMe" :size="btnsize" 
+      icon="el-icon-circle-close-outline">取 消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -117,23 +106,46 @@ export default {
       rules: {},
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
-      tableData: [
-      {
-      	data: '回扣',
-      	name: '9'
-      },
-      {
-      	data: '回扣',
-      	name: '9'
-      },
-      {
-      	data: '回扣',
-      	name: '9'
-      },
-      {
-      	data: '回扣',
-      	name: '9'
-      }
+      tableData: [{
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        },
+        {
+          dataName: '回扣',
+          name: '9'
+        }
       ]
     }
   },
@@ -194,7 +206,9 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {}
       })
-    }
+    },
+    minusItem(row, index) {},
+    plusItem() {}
   }
 }
 
@@ -214,8 +228,8 @@ $borderColor: #999;
         border-bottom: 2px solid $borderColor;
       }
     }
-    .el-dialog__body{
-    	padding: 10px;
+    .el-dialog__body {
+      padding: 10px;
     }
   }
   .receiptDialog_head {
@@ -228,26 +242,79 @@ $borderColor: #999;
       label {
         padding: 10px 10px 0 0;
         width: 120px;
-      text-align: right;
-
+        text-align: right;
       }
       .el-input__inner {
-      	border-radius: 0;
-        border:none;
-        border-bottom:1px solid $borderColor;
-        padding:0 10px;
-        width:auto;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid $borderColor;
+        padding: 0 10px;
+        width: auto;
       }
     }
   }
-  .receiptDialog_table{
-  	margin-top: 10px;
-  	width:100%;
-  	padding:0 30px;
-  	height:200px;
-  	.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed, .el-table--border, .el-table--group, .el-table td, .el-table th.is-leaf{
-  		border-color:$borderColor;
-  	}
+  .receiptDialog_table {
+    margin-top: 10px;
+    width: 100%;
+    padding: 0 30px;
+    height: 200px;
+    .el-table--border td,
+    .el-table--border th,
+    .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,
+    .el-table--border,
+    .el-table--group,
+    .el-table td,
+    .el-table th.is-leaf {
+      border-color: $borderColor;
+    }
+  }
+
+  .receiptDialog_todo {
+    margin-top: 20px;
+    width: 100%;
+    height:231px;
+    padding: 0 30px; // height: 100px;
+    position: relative;
+    .el-table--border td,
+    .el-table--border th,
+    .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,
+    .el-table--border,
+    .el-table--group,
+    .el-table td,
+    .el-table th.is-leaf {
+      border-color: $borderColor;
+    }
+    .tableItemBtn {
+      width: 30px;
+      padding-left: 8px;
+    }
+    .tableAllBtn {
+      width: 30px;
+      padding-left: 8px;
+      position: absolute;
+      z-index: 33;
+      top: 4px;
+      left: 41px;
+    }
+  }
+  .receiptDialog_remark{
+    width:100%;
+    margin:20px 20px 0 0;
+    padding-right:30px;
+     display: flex;
+      flex-direction: row;
+      label {
+        padding: 10px 10px 0 0;
+        width: 80px;
+        text-align: right;
+      }
+      .el-input__inner {
+        width:100%;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid $borderColor;
+        padding: 0 10px;
+      }
   }
 }
 
