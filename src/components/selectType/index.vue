@@ -140,6 +140,7 @@ export default {
     fetchData() {
       var cb = (data) => {
         this.types = data
+        // debugger
         CACHE.set(this.type, data)
       }
       if (this.dataCache[this.type]) {

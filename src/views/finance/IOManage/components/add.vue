@@ -6,10 +6,11 @@
 
         <div class="iommanage-bottom">
           <el-form-item label="所属网点">
-            <el-input v-model="form.orgId"  auto-complete="off" :disabled="isDbclick"></el-input>
+            <SelectTree v-model="form.orgId" />
+            <!--<el-input v-model="form.orgId"  auto-complete="off" :disabled="isDbclick"></el-input>-->
           </el-form-item>
           <el-form-item label="收支方式" prop="financialWay">
-            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择" />
+            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择"  @click="financialWayClick(form.financialWay)"/>
             <!--<el-input v-model="form.financialWay" auto-complete="off" :disabled="isDbclick"></el-input>-->
 
           </el-form-item>
@@ -51,9 +52,10 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { fetchGetPickUp , putUpdatePickup , postAddPickup} from '@/api/operation/pickup'
+import { fetchGetPickUp , postAdd , putUpdate} from '@/api/operation/pickup'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
+import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
@@ -65,6 +67,7 @@ export default {
     Upload,
     querySelect,
     SelectType,
+    SelectTree,
     SelectCity
   },
   props: {
@@ -134,6 +137,7 @@ export default {
     }
 
     this.fetchGetPickUp()
+
   },
   watch: {
     popVisible (newVal, oldVal) {
@@ -143,6 +147,7 @@ export default {
       }
     },
     orgid (newVal) {
+      console.log(this.form.financialWay)
     },
     info () {
       if (this.isModify) {
@@ -186,6 +191,9 @@ export default {
     }
   },
   methods: {
+    financialWayClick(item){
+      console.log(item);
+    },
     getTrunkName(trunk){
       if(trunk){
         // this.form.tmsDriver.driverName = trunk.driverName
@@ -257,19 +265,18 @@ export default {
     submit(){
       console.log('保存并打印')
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
           let data = this.form
 
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
-            // promiseObj = putUpdatePickup(data)
+            promiseObj = putUpdate(data)
           } else {
-            // promiseObj = postAddPickup(data)
+            promiseObj = postAdd(data)
           }
 
           promiseObj.then(res => {
@@ -312,7 +319,7 @@ export default {
     bottom: auto;
     min-width: 600px;
     max-width:  600px;
-    z-index: 9999 !important;
+    z-index: 999 !important;//1000左右
     .popRight-content{
       padding: 20px 0px 0;
       box-sizing: border-box;

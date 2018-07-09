@@ -4,11 +4,6 @@
           <SelectTree v-model="searchForm.orgId" />
       </el-form-item>
       <el-form-item label="收支方式:">
-          <!--<el-input-->
-              <!--v-model="searchForm.financialWay"-->
-              <!--maxlength="15"-->
-              <!--clearable>-->
-          <!--</el-input>-->
         <SelectType v-model="searchForm.financialWay" type="financial_way_type" placeholder="请选择" class="pickup-way" />
       </el-form-item>
     <el-form-item label="状态:">
@@ -55,7 +50,7 @@ export default {
       searchForm: {
         orgId: '',
         financialWay:'',
-        status: ''
+        status: 0
       },
       rules: {
 
