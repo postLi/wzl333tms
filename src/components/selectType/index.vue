@@ -60,6 +60,7 @@ ship_other	其他
 type	备注
 department_type	部门类型
 order_status 订单状态
+fee_status 交账状态
  */
 
 export default {
@@ -87,14 +88,26 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ])
+    ...mapGetters([
+      'otherinfo'
+    ])
   },
-  data () {
+  data() {
     return {
       val: '',
-      types: []
+      types: [],
+      dataCache: {
+        'fee_status': [{
+          id: 'NOSETTLEMENT',
+          dictName: '未交账'
+        }, {
+          id: 'PARTSETTLEMENT',
+          dictName: '部分交账'
+        }, {
+          id: 'ALLSETTLEMENT',
+          dictName: '已交账'
+        }]
+      }
     }
   },
   watch: {
@@ -105,14 +118,14 @@ export default {
       immediate: true
     }
   },
-  mounted () {
+  mounted() {
     // 因为字典的数据修改频率极其小，
     // 尝试缓存以减少网络请求
-    if(this.remote){
+    if (this.remote) {
       this.fetchData()
     } else {
-      let data = CACHE.get(this.type)
-      if(data === ''){
+      const data = CACHE.get(this.type)
+      if (data === '') {
         this.fetchData()
       } else {
         this.types = data
@@ -125,12 +138,17 @@ export default {
   },
   methods: {
     fetchData() {
-      return getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(data => {
+      var cb = (data) => {
         this.types = data
         CACHE.set(this.type, data)
-      })
+      }
+      if (this.dataCache[this.type]) {
+        cb(this.dataCache[this.type])
+      } else {
+        getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(cb)
+      }
     },
-    change (item) {
+    change(item) {
       this.$emit('change', item)
       this.$emit('input', this.val)
     }

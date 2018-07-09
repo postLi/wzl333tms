@@ -29,10 +29,10 @@
       <!-- 网点信息 -->
       <el-row class="firstline-order">
         <el-col :span="4">
-          <div class="order-form-item">
+          <div class="order-form-item showFormInfo">
             <span class="order-form-label">开单网点</span>
             <el-form-item prop="tmsOrderShip.shipFromOrgid">
-              <SelectTree :disabled="true" :filterable="false" size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
+              <SelectTree disabled :filterable="false" size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
             </el-form-item>
           </div>
         </el-col>
@@ -69,7 +69,7 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="order-form-item">
+          <div class="order-form-item showFormInfo">
             <span class="order-form-label">货号</span>
             <el-form-item prop="tmsOrderShip.shipGoodsSn">
               <el-input size="mini" maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
@@ -146,7 +146,7 @@
               <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
             </template>
           </el-table-column>
-          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" class="addButtonTh" :fixed="item.isfixed !== 0" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :label="item.fieldName">
+          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 80" class="addButtonTh" :fixed="item.isfixed !== 0" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :label="item.fieldName">
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.cargoName'" required :rules="{ validator: validateIsEmpty('货品名不能为空！'), trigger: 'blur' }">
@@ -2022,6 +2022,12 @@ $backgroundcolor: #cbe1f7;
     .el-select__caret::before{
       content:"\E60C";
     }
+    
+    .showFormInfo{
+      .el-input.is-disabled .el-input__inner{
+        color: #000;
+      }
+    }
 
     .order-form-label{
       color: #666;
@@ -2141,6 +2147,15 @@ $backgroundcolor: #cbe1f7;
         border-left: 1px solid #88bef3;
         text-align: center;
         font-weight: normal;
+      }
+      .el-table .cell{
+        padding: 0;
+      }
+      .el-table td{
+        padding: 0;
+      }
+      .el-form-item,.el-form-item__content,.autocomplete-input,.el-autocomplete{
+        width: 100%;
       }
 
       /* table, td{
@@ -2277,6 +2292,7 @@ $backgroundcolor: #cbe1f7;
       }
       .el-collapse-item__content{
         overflow-x: auto;
+        padding-bottom: 0;
       }
       th{
         height: 30px;
