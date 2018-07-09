@@ -194,7 +194,7 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import { PostGetAbnormalList } from '@/api/operation/dashboard'
+import { getAbnormalUnusual } from '@/api/finance/unusual'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
@@ -259,7 +259,7 @@ export default {
         // },
     fetchAllreceipt() {
       this.loading = true
-      return PostGetAbnormalList(this.searchQuery).then(data => {
+      return getAbnormalUnusual(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
         this.loading = false

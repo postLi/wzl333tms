@@ -17,7 +17,11 @@
         </el-form-item> -->
         
         <el-form-item :label="title+'状态'"  prop="recStatus">
-          <selectType v-model="thestatus" :type="type" />
+          <!-- <el-option slot="head" label="全部" value=""></el-option>
+          <selectType v-model="thestatus" :type="type" /> -->
+          <selectType v-model="thestatus"  :type="type">
+            <el-option slot="head" label="全部" value=""></el-option>
+          </selectType>
         </el-form-item>
         <el-form-item label="运单号">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
@@ -47,7 +51,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
-// import { parseTime } from '@/utils/index'
+import { parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -140,10 +144,10 @@ export default {
       this.searchForm.shipToCityCode = city.id.toString()
     },
     onSubmit() {
-      // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
-      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
-      this.searchForm.startTime = this.searchCreatTime[0]
-      this.searchForm.endTime = this.searchCreatTime[1]
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      // this.searchForm.startTime = this.searchCreatTime[0]
+      // this.searchForm.endTime = this.searchCreatTime[1]
       this.searchForm[this.status] = this.thestatus
       this.$emit('change', this.searchForm)
     },

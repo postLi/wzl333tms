@@ -14,8 +14,8 @@
       </el-form-item>
         <!-- <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.shipFromOrgid" />
-        </el-form-item> -->
-        
+        </el-form-item>
+         -->
         <el-form-item :label="title+'状态'"  prop="fundsRecStatus">
           <selectType v-model="thestatus" :type="type" />
         </el-form-item>
@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
-import { parseTime }  from '@/utils/index'
+import { parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -62,9 +62,9 @@ export default {
     orgid: {
       type: Number
     },
-    type:String,
-    title:String,
-    status:String,
+    type: String,
+    title: String,
+    status: String,
     issender: {
       type: Boolean,
       dafault: false
@@ -72,14 +72,14 @@ export default {
   },
   computed: {
   },
-  data () {
-    let _this = this
+  data() {
+    // const _this = this
     const validateshipSn = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入运单号'))
-      }else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('只能输字母和数字'))
       }
     }
@@ -88,69 +88,68 @@ export default {
       searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       thestatus: '',
       searchForm: {
-        shipFromOrgid:'',
+        // shipFromOrgid: '',
         // number:'',
-        shipSn:'',
-        shipFromCityCode:'',
-        shipToCityCode:'',
-        shipSenderId:'',
-        shipReceiverId:''
+        shipSn: '',
+        shipFromCityCode: '',
+        shipToCityCode: '',
+        shipSenderId: '',
+        shipReceiverId: ''
       },
       rules: {
         shipSn: [
-          { required: true, trigger: 'blur', validator: validateshipSn}
+          { required: true, trigger: 'blur', validator: validateshipSn }
         ]
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     },
     type: {
-      handler(status){
+      handler(status) {
         console.log(status)
-        if(status === 'funds_rec_status'){
-          this.thestatus = 254 //回收状态
+        if (status === 'funds_rec_status') {
+          this.thestatus = 254 // 回收状态
         }
-        if(status === 'funds_remittance_status'){
-            this.thestatus = 257 //汇款状态
+        if (status === 'funds_remittance_status') {
+          this.thestatus = 257 // 汇款状态
         }
-        if(status === 'funds_account_status'){
-            this.thestatus = 260 //到账状态
+        if (status === 'funds_account_status') {
+          this.thestatus = 260 // 到账状态
         }
-        if(status === 'funds_giveout_status'){
-            this.thestatus = 263 //发放状态
+        if (status === 'funds_giveout_status') {
+          this.thestatus = 263 // 发放状态
         }
       },
       immediate: true
     }
   },
-  mounted () {
+  mounted() {
     // this.searchForm.orgid = this.orgid
   },
   methods: {
-    getOrgid (id){
+    getOrgid(id) {
       this.searchForm.orgid = id
     },
-    getFromCity(city){
-     
-      this.searchForm.shipFromCityCode = city.id.toString() 
+    getFromCity(city) {
+      this.searchForm.shipFromCityCode = city.id.toString()
     },
-    getToCity(city){
-      this.searchForm.shipToCityCode =  city.id.toString() 
+    getToCity(city) {
+      this.searchForm.shipToCityCode = city.id.toString()
     },
-    onSubmit () {
-      // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ""
-      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ""
-      this.searchForm.startTime = this.searchCreatTime[0]
-      this.searchForm.endTime = this.searchCreatTime[1]
+    onSubmit() {
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      // this.searchForm.startTime = this.searchCreatTime[0]
+      // this.searchForm.endTime = this.searchCreatTime[1]
       this.searchForm[this.status] = this.thestatus
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
-      this.searchForm.shipFromOrgid = ''
-      this.searchForm.orgid = this.orgid
+    clearForm() {
+      // this.searchForm.shipFromOrgid = ''
+      // this.searchForm.orgid = this.orgid
       this.searchForm.shipSn = ''
       this.searchForm.shipReceiverId = ''
       this.searchForm.shipSenderId = ''

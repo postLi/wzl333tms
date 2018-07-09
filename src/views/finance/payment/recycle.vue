@@ -34,7 +34,7 @@
                 sortable
                 prop="shipId"
                 label="序号"
-                width="80">
+                width="200">
               </el-table-column>
               <el-table-column
                 fixed
@@ -46,7 +46,7 @@
               <el-table-column
                 prop=""
                 sortable
-                width="120"
+                width="200"
                 label="开单日期">
                 <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
               </el-table-column>
@@ -88,7 +88,7 @@
               <el-table-column
                 sortable
                 prop=""
-                width="120"
+                width="200"
                 label="回收日期">
                 <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
               </el-table-column>
@@ -317,7 +317,7 @@ export default {
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.featchAllpayment(this.otherinfo.orgid).then(res => {
-                // this.loading = false
+      this.loading = false
     })
   },
   data() {
@@ -331,14 +331,14 @@ export default {
       isModify: false,
       popVisible: false,
       isAccept: false,
-                // rec_status:113,
-                // loading:false,
+      // rec_status:113,
+      loading: false,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
         'vo': {
           'pageType': 1,
-          'goodsFundsIds': []
+          'fundsRecStatus': '254'
         }
       },
       total: 0
@@ -362,6 +362,7 @@ export default {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
+    // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
             // this.searchQuery.vo.orgid = obj.orgid
             // this.searchQuery.vo.customerMobile = obj.mobile
@@ -400,7 +401,7 @@ export default {
             this.$message.warning('请选择未回收项~')
           }
           break
-              // 取消
+            // 取消
         case 'cancel':
 
           const _ids = this.selected.filter(el => {

@@ -258,9 +258,9 @@ export default {
     // console.log(this.$refs.batch_show);
     // this.$refs.batch_show.className = 'batch_main'
     },
-    submitForm(formName) {
+    submitForm(ruleForm) {
       this.form.signTime = this.searchCreatTime
-      this.$refs[formName].validate((valid) => {
+      this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
           const data = objectMerge2({}, this.form)

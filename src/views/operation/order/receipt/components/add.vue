@@ -149,16 +149,6 @@ export default {
       type: ''
     }
   },
-  computed: {
-    isShow: {
-      get() {
-        return this.popVisible
-      },
-      set() {
-
-      }
-    }
-  },
   mounted() {
 
   },

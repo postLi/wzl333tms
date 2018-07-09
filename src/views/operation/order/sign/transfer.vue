@@ -593,7 +593,8 @@ export default {
         'pageSize': 10000,
         'vo': {
           'shipId': '',
-          'signId': ''
+          'signId': '',
+          'signStatus': '226'
         }
       },
       total: 0,

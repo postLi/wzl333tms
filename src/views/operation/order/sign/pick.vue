@@ -596,7 +596,8 @@ export default {
         'pageSize': 10000,
         'vo': {
           'repertoryId': '',
-          'signId': ''
+          'signId': '',
+          'signStatus': '226'
         }
       },
       total: 0,

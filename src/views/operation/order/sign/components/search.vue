@@ -18,7 +18,7 @@
         
         <el-form-item label="签收状态"  prop="signStatus">
           <selectType v-model="searchForm.signStatus"  type="sign_status">
-            <!-- <el-option slot="head" label="已签收" value=""></el-option> -->
+            <el-option slot="head" label="全部" value=""></el-option>
           </selectType>
         </el-form-item>
         <el-form-item label="凭证状态"  prop="signCertificate">
@@ -92,7 +92,7 @@ export default {
         shipFromCityCode: '',
         shipToCityCode: '',
         signCertificate: 230,
-        signStatus: 227,
+        signStatus: 226,
         startTime: '',
         endTime: ''
       },
