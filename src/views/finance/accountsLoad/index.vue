@@ -1,10 +1,17 @@
 <template>
-  <!-- <div> -->
-
+  <div class="accountsLoad_table">
     <transferTable style="height: calc(100% - 40px);padding:10px">
     	<div>
   		<el-button>结算</el-button>
   	</div>
+    <!-- 搜索框 -->
+    <div slot="search">
+      <querySelect search="shipSn" type="order" size="mini" @change="searchShip"  />
+    </div>
+    <!-- 左上角按钮区 -->
+    <div slot="btnsBox">
+      <el-button type="success" size="mini" icon="el-icon-sort" @click="goReceipt">结算</el-button>
+    </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
         <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
@@ -110,13 +117,17 @@
         </el-table>
       </div>
     </transferTable>
-  <!-- </div> -->
+    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+  </div>
+
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
+import querySelect from '@/components/querySelect/'
+import Receipt from './components/receipt'
 export default {
   data() {
     return {
@@ -126,7 +137,11 @@ export default {
       formModel: {},
       loadTruck: 'loadTruckOne',
       loading: false,
+      popVisibleDialog: false,
       btnsize: 'mini',
+      tableReceiptInfo: {
+        name: 'tableReceiptInfo'
+      },
       selectedRight: [],
       selectedLeft: [],
       leftTable: [],
@@ -137,42 +152,16 @@ export default {
       }
     }
   },
-  // props: {
-  //   setLoadTable: {
-  //     type: Object,
-  //     default: () => {}
-  //   },
-  //   isModify: {
-  //     type: Boolean,
-  //     default: false
-  //   }
-  // },
   computed: {
     ...mapGetters([
       'otherinfo'
     ])
   },
   components: {
-    transferTable
+    transferTable,
+    querySelect,
+    Receipt
   },
-  // watch: {
-  //   isModify: {
-  //     handler(cval, oval) { // 深度监听
-  //       this.getList()
-  //     },
-  //     deep: true
-  //   },
-  //   setLoadTable: { // 深度监听数组变换
-  //     handler(cval, oval) {
-  //       if (cval) {
-  //         this.orgData = Object.assign({}, cval)
-  //         this.getList()
-  //         console.log('cval', cval)
-  //       }
-  //     },
-  //     deep: true
-  //   }
-  // },
   mounted() {
     this.getList()
   },
@@ -308,9 +297,7 @@ export default {
             this.leftTable.splice(item, 1)
           }
         })
-        // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
-        // this.$emit('loadTable', this.rightTable)
       }
     },
     goRight() { // 数据从右边穿梭到左边
@@ -325,9 +312,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
-        // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
-        // this.$emit('loadTable', this.rightTable)
       }
     },
     addItem(row, index) { // 添加单行
@@ -347,6 +332,21 @@ export default {
     minusAllList() { // 减去全部
       this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
+    },
+    searchShip (obj) {
+      console.log('searchShip', obj)
+    },
+    closeDialog () {
+      this.popVisibleDialog = false
+    },
+    openDialog () {
+      this.popVisibleDialog = true
+    },
+    goReceipt () {
+      this.openDialog()
+      this.$nextTick(() => {
+      console.log('goReceipt', this.popVisibleDialog)
+      })
     }
   }
 }
@@ -369,5 +369,13 @@ export default {
     left: 61px;
   }
 }
+.accountsLoad_table {
+  display:flex;
+  flex-direction: column;
+  flex:1;
+  width:100;
+  overflow: hidden;
+  height:100%;
+  }
 
 </style>

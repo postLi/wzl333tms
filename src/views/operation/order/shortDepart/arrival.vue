@@ -48,7 +48,7 @@ import { mapGetters } from 'vuex'
 import SearchForm from './components/searchArrival'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 export default {
   components: {
@@ -122,7 +122,10 @@ export default {
           label: "短驳时间",
           prop: "loadTime",
           width: "180",
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
         },
         {
           label: "目的网点",
@@ -134,7 +137,10 @@ export default {
           label: "接收时间",
           prop: "receivingTime",
           width: "180",
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
         },
         {
           label: "短驳费",

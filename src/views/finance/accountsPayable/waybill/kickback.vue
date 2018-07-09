@@ -288,7 +288,10 @@ export default {
           break
       }
     },
-    count () {},
+    count () {
+      this.$router.push({path: '../accountsLoad'})
+      console.log('router',this.$router)
+    },
     clickDetails(row) {},
     getSelection(list) {},
     showDetail (order) {
