@@ -157,7 +157,7 @@ export default {
           prop: "departureTime",
           width: "150",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -165,7 +165,7 @@ export default {
           prop: "receivingTime",
           width: "150",
           slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

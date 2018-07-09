@@ -45,7 +45,7 @@
                     <el-input :value="formModel.loadTime | parseTime('{y}/{m}/{d}')" maxlength="15" clearable disabled>
                     </el-input>
                     <!--<template slot-scope="scope">-->
-                    <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+                    <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
                     <!--</template>-->
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
@@ -216,7 +216,7 @@
                           </template>
                         </el-col>
                         <el-col :span="4" class="textcenter">
-                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
+                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p>
                         </el-col>
                         <el-col :span="3" class="textcenter">
                           <p>{{item.orgName}}</p>
@@ -264,7 +264,7 @@
                           <el-button size="mini" v-else>{{item.loadStatus}}</el-button>
                         </el-col>
                         <el-col :span="5">
-                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p>
+                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p>
                         </el-col>
                         <el-col :span="3">
                           <p>{{item.orgName}}</p>

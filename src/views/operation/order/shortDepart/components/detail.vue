@@ -42,7 +42,7 @@
             </td>
             <th>短驳日期</th>
             <td>
-              <!-- <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input> -->
+              <!-- <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input> -->
               <el-input :value="info.loadTime" :size="btnsize" disabled></el-input>
             </td>
             <th>要求到达时间</th>

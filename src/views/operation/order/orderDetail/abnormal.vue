@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column
         label="登记时间">
-        <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+        <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
       </el-table-column>
       <el-table-column
         prop="disposeOrgName"

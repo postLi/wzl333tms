@@ -104,7 +104,7 @@ export default {
           prop: "departureTime",
           width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -122,7 +122,7 @@ export default {
           prop: "departureTime",
           width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -234,7 +234,7 @@ export default {
           prop: "loadTime",
           width: "120",
           slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

@@ -10,7 +10,7 @@
               <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  placeholder="请输入运单号" v-model="form.shipSn"/>
           </el-form-item>
           <el-form-item label="开单时间" prop="createTime">
-            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="出发城市" prop="shipFromCityCode">
             <el-input v-model="form.shipFromCityCode"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
@@ -61,7 +61,7 @@
           </el-form-item>
   
           <el-form-item label="异动时间" prop="createTime">
-            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  ></el-input>
+            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  ></el-input>
           </el-form-item>
           <el-form-item class="driverRemarks ms" label="异动备注" prop="disposeOpinion" >
             <el-input type="textarea" maxlength="200" v-model="form.disposeOpinion" placeholder="注：最多可输入200个字符"></el-input>

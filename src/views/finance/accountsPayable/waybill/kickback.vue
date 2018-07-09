@@ -138,7 +138,7 @@ export default {
           prop: 'createTime',
           width: '150',
           slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
           fixed: false
         },

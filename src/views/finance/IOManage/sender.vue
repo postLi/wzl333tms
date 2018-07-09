@@ -113,7 +113,7 @@
             sortable
           >
             <template slot-scope="scope">
-              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </template>
           </el-table-column>
 

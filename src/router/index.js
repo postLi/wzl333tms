@@ -19,7 +19,7 @@ import Operation from './module/operation'
 import Report from './module/report'
 
 // components DEMO
-import  Components from './module/componentsDemo'
+import Components from './module/componentsDemo'
 
 Vue.use(Router)
 

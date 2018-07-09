@@ -78,7 +78,7 @@
             sortable
             >
             <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
             <!--</template>-->
             <template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>
           </el-table-column>
@@ -249,7 +249,7 @@
             sortable
           >
             <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+              <!--{{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
             <!--</template>-->
             <template slot-scope="scope">{{ new Date(scope.row.requireArrivedTime).toLocaleDateString() }}</template>
           </el-table-column>

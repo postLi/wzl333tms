@@ -16,7 +16,7 @@
           </el-form-item>
   
           <el-form-item label="开单时间" prop="createTime">
-            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="货品名" prop="cargoName">
             <el-input v-model="form.cargoName" maxlength="18" auto-complete="off" :disabled="true" ></el-input>
@@ -35,7 +35,7 @@
           <el-input maxlength="20" v-model="form.abnormalNo" auto-complete="off"  :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="登记时间" prop="registerTime">
-            <el-input :value="form.registerTime|parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
+            <el-input :value="form.registerTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
             <!-- <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}{m}{d}') }}</template> -->
           </el-form-item>
           <el-form-item label="登记网点" prop="orgId"  >
@@ -89,7 +89,7 @@
               </el-form-item>
           </div>
           <el-form-item label="处理时间" prop="disposeTime">
-            <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="处理网点" prop="orgName" >
             <SelectTree v-model="form.orgName" :disabled=" true"/>

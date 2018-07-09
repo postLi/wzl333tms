@@ -53,7 +53,7 @@
             sortable
             width="120"
             label="开单时间">
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
           <el-table-column
             sortable
@@ -524,7 +524,7 @@
             sortable
             width="120"
             label="签收时间">
-            <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+            <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
         </el-table>
       </div>

@@ -53,7 +53,7 @@
             sortable
             width="120"
             label="开单日期">
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -86,7 +86,7 @@
             prop=""
             width="120"
             label="回收日期">
-            <template slot-scope="scope">{{ scope.row.acceptTypeId | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.acceptTypeId | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop="receiptId"
@@ -214,7 +214,7 @@
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.transferTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.transferTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
@@ -279,7 +279,7 @@
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop=""
@@ -287,7 +287,7 @@
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop=""
@@ -295,7 +295,7 @@
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
           <el-table-column
             prop="recRemark"

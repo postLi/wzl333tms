@@ -38,11 +38,11 @@
             </td>
             <th>短驳日期</th>
             <td>
-              <el-input :value="info.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.departureTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
             <th>要求到达时间</th>
             <td>
-              <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>

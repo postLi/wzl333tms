@@ -55,6 +55,16 @@ const user = {
       })
     },
 
+    // 前端设置token信息
+    FeLogin({ commit }, token) {
+      return new Promise((resolve, reject) => {
+        console.log('feLogin:', token)
+        commit('SET_TOKEN', token)
+        setToken(token)
+        resolve()
+      })
+    },
+
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
@@ -64,6 +74,7 @@ const user = {
           commit('SET_ROLES', data.rolesIdList)
           commit('SET_NAME', data.username)
           commit('SET_USERNAME', data.username)
+          setUsername(data.username)
           commit('SET_COMPANY', data.orgName)
           setOrgId(data.orgid)
           commit('SET_AVATAR', require('../../assets/role.png'))

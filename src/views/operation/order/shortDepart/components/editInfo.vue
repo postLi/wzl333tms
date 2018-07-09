@@ -32,7 +32,7 @@
                           </template>
                         </el-col>
                         <el-col :span="4" class="textcenter">
-                          <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</p> -->
+                          <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p> -->
                           <p>{{item.operatorTime}}</p>
                         </el-col>
                         <el-col :span="3" class="textcenter">

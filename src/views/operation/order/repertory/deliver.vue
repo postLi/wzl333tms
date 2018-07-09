@@ -94,7 +94,7 @@ export default {
           prop: "repertoryCreateTime",
           width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -112,7 +112,7 @@ export default {
           prop: "createTime",
           width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

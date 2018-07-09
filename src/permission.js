@@ -2,13 +2,22 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken, removeToken } from '@/utils/auth' // 验权
+import { getToken, removeToken, setToken } from '@/utils/auth' // 验权
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
   /* must call `next` */
   NProgress.start()
-  if (getToken()) {
+  // 如果链接带有token信息，则将其保存
+  // 会覆盖原有的token
+  if (to.query.tmstoken) {
+    store.dispatch('FeLogin', to.query.tmstoken).then(() => {
+      next({
+        path: to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1').replace(/\?$/, '')
+      })
+      console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1').replace(/\?$/, ''))
+    })
+  } else if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
@@ -20,10 +29,11 @@ router.beforeEach((to, from, next) => {
             router.addRoutes(store.getters.addRouters)
             next({ ...to, replace: true })
           })
-        }).catch(err => {
+        }).catch(() => {
           removeToken()
           next({ path: '/login', query: {
-            tourl: to.fullPath
+            // 删除tmstoken，避免重复循环
+            tourl: to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1')
           }})
         })
       } else {

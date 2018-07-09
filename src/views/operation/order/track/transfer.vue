@@ -133,7 +133,7 @@ export default {
           prop: "createTime",
           width: "120",
           slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -141,7 +141,7 @@ export default {
           prop: "transferTime",
           width: "120",
           slot: (scope) => {
-            return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+            return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

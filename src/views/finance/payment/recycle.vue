@@ -48,7 +48,7 @@
                 sortable
                 width="120"
                 label="开单日期">
-                <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}</template>
+                <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
               </el-table-column>
               <el-table-column
                 prop="shipSn"
@@ -90,7 +90,7 @@
                 prop=""
                 width="120"
                 label="回收日期">
-                <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+                <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
               </el-table-column>
               
               <el-table-column
@@ -265,7 +265,7 @@
                 width="120"
                 sortable
                 >
-                <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+                <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
               </el-table-column>
               <el-table-column
                 prop="accountTime"
@@ -273,7 +273,7 @@
                 width="120"
                 sortable
                 >
-                <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+                <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
               </el-table-column>
               <el-table-column
                 prop="giveoutTime"
@@ -281,7 +281,7 @@
                 width="120"
                 sortable
                 >
-                <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+                <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
               </el-table-column> -->
           
             </el-table>
