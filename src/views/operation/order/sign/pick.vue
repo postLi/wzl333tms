@@ -664,7 +664,7 @@ export default {
               // console.log(ids.length)
           if (ids.length > 1) {
             this.dotInfo = ids
-                // console.log(ids);
+            // console.log(this.dotInfo)
             this.isModify = true
             this.openAddBatch()
             this.isPick = false

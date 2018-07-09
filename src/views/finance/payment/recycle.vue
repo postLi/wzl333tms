@@ -288,163 +288,158 @@
         </div>  
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept"/>
+      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
     </div>
 </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import { postGoodsfundsList,putUpdateCancelReceipt } from '@/api/finance/payment'
+import { postGoodsfundsList, putUpdateCancelReceipt } from '@/api/finance/payment'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import AddPayment from './components/add'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
-    components: {
-        SearchForm,
-        Pager,
-        AddPayment
-    },
-    computed: {
-        ...mapGetters([
-            'otherinfo'
-        ]),
-        orgid () {
+  components: {
+    SearchForm,
+    Pager,
+    AddPayment
+  },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
             // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
             // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-        }
-    },
-    mounted () {
+    }
+  },
+  mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-            this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+    this.featchAllpayment(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-            })
-        },
-        data() {
-            return {
-                btnsize: 'mini',
-                component: 'Send',
-                selectInfo: {},
-                dataset:[],
-                selected:[],
-                dotInfo: [],
-                isModify: false,
-                popVisible:false,
-                isAccept:false,
+    })
+  },
+  data() {
+    return {
+      btnsize: 'mini',
+      component: 'Send',
+      selectInfo: {},
+      dataset: [],
+      selected: [],
+      dotInfo: {},
+      isModify: false,
+      popVisible: false,
+      isAccept: false,
                 // rec_status:113,
                 // loading:false,
-                searchQuery: {
-                    "currentPage":1,
-                    "pageSize":10,
-                    "vo":{
-                        "pageType":1,
-                        "goodsFundsIds":[]
-                    }
-                },
-                total: 0
-                
-            }
-        },
-        methods: {
-        fetchAllreceipt() {
+      searchQuery: {
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+          'pageType': 1,
+          'goodsFundsIds': []
+        }
+      },
+      total: 0
+
+    }
+  },
+  methods: {
+    featchAllpayment() {
             // this.loading = true
-            return postGoodsfundsList(this.searchQuery).then(data => {
-                this.dataset = data.list
-                this.total = data.total
+      return postGoodsfundsList(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
                 // this.loading = false
                 // console.log(data);
-            })
-        },
-        fetchData () {
-          this.fetchAllreceipt()
-        },
-        handlePageChange (obj) {
-            this.searchQuery.currentPage = obj.pageNum
-            this.searchQuery.pageSize = obj.pageSize
-        },
-        getSearchParam (searchParam) {
+      })
+    },
+    fetchData() {
+      this.featchAllpayment()
+    },
+    handlePageChange(obj) {
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+    },
+    getSearchParam(searchParam) {
             // this.searchQuery.vo.orgid = obj.orgid
             // this.searchQuery.vo.customerMobile = obj.mobile
             // this.searchQuery.vo.customerName = obj.name
-            Object.objectMerge2(this.searchQuery.vo, searchParam)
-            this.fetchAllreceipt()
-        },
-        getSelection(selection) {
-          this.selected = selection
+      objectMerge2(this.searchQuery.vo, searchParam)
+      this.featchAllpayment()
+    },
+    getSelection(selection) {
+      this.selected = selection
           // console.log(this.selection)
-        },
-        doAction(type){
+    },
+    doAction(type) {
           // 判断是否有选中项
-          console.log(this.selected)
-          if(!this.selected.length){
-            this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-            })
-            return false
-          }
-          switch (type) {
-              //回收
-            case 'recycle': 
-              let ids = this.selected.filter(el=>{
-                  return el.fundsRecStatus === 254
-                }).map(el => {
-                  return  el.receiptId
-                })
-                console.log(ids);
-                if(ids.length){
-                  this.searchQuery.vo.goodsFundsIds = ids
-                  this.dotInfo = ids
-                  this.popVisible = true
+      // console.log(this.selected)
+      if (!this.selected.length) {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
+      switch (type) {
+              // 回收
+        case 'recycle':
+          const ids = this.selected.filter(el => {
+            return el.fundsRecStatus === 254
+          })
+
+          if (ids.length) {
+            // this.searchQuery.vo.goodsFundsIds = ids
+            this.dotInfo = ids
+            this.popVisible = true
                   // this.isAccept = true
-                  this.isModify = true
-                }else{
-                  this.$message.warning('请选择未回收项~')
-                }
-              break;
-              //取消
-           case 'cancel':
-            
-              let _ids = this.selected.filter(el=>{
-                  return el.fundsRecStatus === 255  && el.fundsRemittanceStatus === 257
-                }).map(el => {
-                return  el.receiptId
+            this.isModify = true
+          } else {
+            this.$message.warning('请选择未回收项~')
+          }
+          break
+              // 取消
+        case 'cancel':
+
+          const _ids = this.selected.filter(el => {
+            return el.fundsRecStatus === 255 && el.fundsRemittanceStatus === 257
+          }).map(el => {
+            return el.id
+          })
+
+          if (_ids.length) {
+            this.searchQuery.vo.goodsFundsIds = _ids
+            putUpdateCancelReceipt(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '取消回收成功~',
+                type: 'success'
               })
+              this.featchAllpayment()
+              return false
+            }).catch(res => {
+              this.$message.error(res.text)
+              this.closeAddDot()
+            })
+          } else {
+            this.$message.warning('不可重复取消~')
+          }
 
-              console.log(this.selected)
-
-              if(_ids.length){
-                  this.searchQuery.vo.goodsFundsIds = _ids
-                  putUpdateCancelReceipt(this.searchQuery.vo).then(res=>{
-                    this.$message({
-                      message: '取消回收成功~',
-                      type: 'success'
-                    })
-                    this.fetchAllreceipt()
-                    return false
-                  }).catch(err => {
-                    this.$message.error(status.text)
-                    this.closeAddDot()
-                  })
-                }else{
-                  this.$message.warning('不可重复取消~')
-                }
-              
-              break;
-            }
+          break
+      }
           // 清除选中状态，避免影响下个操作
-          this.$refs.multipleTable.clearSelection()
-        },
-        closeAddDot(){
-          this.popVisible = false;
+      this.$refs.multipleTable.clearSelection()
+    },
+    closeAddDot() {
+      this.popVisible = false
             // this.addDoTotVisible = false
-          },
-        clickDetails(row, event, column){
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        setTable(){}
-       
-       
-    }
+    },
+    clickDetails(row, event, column) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    setTable() {}
+
+  }
 }
 </script>

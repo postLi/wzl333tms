@@ -186,22 +186,9 @@ export default {
       tooltip: false,
       disabled: false,
       rules: {
-
-      },
-      rules: {
         documentNum: [
           { required: true, trigger: 'blur', validator: validateNum }
         ]
-      }
-    }
-  },
-  computed: {
-    isShow: {
-      get() {
-        return this.popVisible
-      },
-      set() {
-
       }
     }
   },
@@ -214,7 +201,7 @@ export default {
     },
     dotInfo(newVal) {
       // this.form = this.dotInfo
-      // console.log(this.dotInfo);
+      console.log(this.dotInfo + '00o0')
       // this.form = this.dotInfo
       this.form.num = this.dotInfo.length
       let total = 0
@@ -277,7 +264,7 @@ export default {
         if (valid) {
           this.loading = true
           const data = objectMerge2({}, this.form)
-          console.log(this.dotInfo)
+          // console.log(this.dotInfo)
           data.repertoryIds = this.dotInfo.map(el => {
             return el.repertoryId
           })

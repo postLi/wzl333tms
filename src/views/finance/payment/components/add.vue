@@ -14,11 +14,11 @@
 import PopFrame from '@/components/PopFrame/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import { putUpdateReceipt,putUpdateCancelReceipt } from '@/api/operation/receipt'
-import { REGEX }  from '@/utils/validate'
-import { mapGetters } from 'vuex'
-import { exportWithIframe } from '@/utils';
-import {objectMerge2} from '@/utils/index'
+import { putUpdateGoodsFunds } from '@/api/operation/receipt'
+// import { REGEX } from '@/utils/validate'
+// import { mapGetters } from 'vuex'
+// import { exportWithIframe } from '@/utils'
+import { objectMerge2 } from '@/utils/index'
 export default {
   // computed: {
   // ...mapGetters([
@@ -27,10 +27,10 @@ export default {
   // },
   computed: {
     isShow: {
-      get(){
+      get() {
         return this.popVisible
       },
-      set(){
+      set() {
 
       }
     }
@@ -45,14 +45,14 @@ export default {
       type: Boolean,
       default: false
     },
-    dotInfo: [Object,Array],
-    searchQuery:[Object,Array],
-    isDepMain:{
-      type:Boolean,
-      default:false
+    dotInfo: [Object, Array],
+    searchQuery: [Object, Array],
+    isDepMain: {
+      type: Boolean,
+      default: false
     },
-    createrId: [Number,String],
-      isModify: {
+    createrId: [Number, String],
+    isModify: {
       type: Boolean,
       default: false
     },
@@ -61,110 +61,104 @@ export default {
       default: false
     }
   },
-  
+
   data() {
     return {
-      form:{
-        "pageType":'',
-        "recTypeId":113,
-        "recRemark":'',
-        "acceptTypeId":115,
-        "acceptRemark":''
+      form: {
+        'id': '',
+        'pageType': '',
+        'goodsFundsIds': []
+        // 'pageType': '',
+        // 'recTypeId': 113,
+        // 'recRemark': '',
+        // 'acceptTypeId': 115,
+        // 'acceptRemark': ''
       },
       formLabelWidth: '75px',
       tooltip: false,
       rules: {
-       
+
       },
       checked1: true,
       popTitle: '操作确认',
-      loading:false,
-      type:''
+      loading: false,
+      type: ''
     }
   },
-  computed: {
-    isShow: {
-      get(){
-        return this.popVisible
-      },
-      set(){
 
-      }
-    }
-  },
   mounted() {
-   
+
   },
   watch: {
-    isDepMain(){
-      
+    isDepMain() {
+
     },
-    dotInfo (newVal) {
-      this.getMentInfo = this.dotInfo
+    dotInfo(newVal) {
+      // this.getMentInfo = this.dotInfo
+      console.log(this.dotInfo)
     },
-    searchQuery(newVal){
-       this.form.pageType = this.searchQuery.vo.pageType
-      //  console.log(this.form.pageType);
-    },
-    orgid (newVal) {
+    // searchQuery(newVal) {
+    //   this.form.pageType = this.searchQuery.vo.pageType
+    //   console.log(this.form.pageType);
+    // },
+    orgid(newVal) {
       this.form.orgid = newVal
     },
     isModify: {
       handler(newVal) {
-        if(this.isModify){
+        if (this.isModify) {
           // this.popTitle = '回单回收'
           this.form.pageType = this.searchQuery.vo.pageType
-          console.log(888);
+          // console.log(888)
         }
       },
       immediate: true
     },
     isAccept: {
       handler(newVal) {
-        if(this.isAccept){
+        if (this.isAccept) {
           // this.popTitle = '回单接收'
-          this.form.pageType = this.searchQuery.vo.pageType
-          console.log(888);
+          // this.form.pageType = this.searchQuery.vo.pageType
+          // console.log(888)
         }
       },
       immediate: true
     },
-    createrId(newVal){
+    createrId(newVal) {
     }
-    
+
   },
   methods: {
-  reset () {
-    this.$refs['ruleForm'].resetFields()
-  },
-  closeMe(done){
-    this.$emit('close')
-    this.reset()
-    if(typeof done === 'function'){
-      done()
-    }
-  },
-  submitForm(formName){
+    reset() {
+      this.$refs['ruleForm'].resetFields()
+    },
+    closeMe(done) {
+      this.$emit('close')
+      this.reset()
+      if (typeof done === 'function') {
+        done()
+      }
+    },
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        if(valid){
+        if (valid) {
           this.loading = true
-          let data = objectMerge2({},this.form)
-          data.receiptIds = this.dotInfo
-          let promiseObj
-          promiseObj = putUpdateReceipt(data)
-          promiseObj.then(res=>{
+          const data = objectMerge2({}, this.form)
+          data.id = this.dotInfo
+          const promiseObj = putUpdateGoodsFunds(data)
+          promiseObj.then(res => {
             this.$message({
-                message: '保存成功~',
-                type: 'success'
-                
-              })
-              this.closeMe()
-              this.$emit('success')
+              // showClose: true,
+              message: '贷款回收成功~',
+              type: 'success'
+            })
+            this.closeMe()
+            this.$emit('success')
           }).catch(res => {
             this.$message.warning(res.text)
             this.closeMe()
           })
-        }else{
+        } else {
           return false
         }
       })
@@ -176,9 +170,7 @@ export default {
 <style lang="scss">
 .setupTablePop{
   margin-top: 25vh;
- 
-}
-.el-dialog{
+  .el-dialog{
    max-width: 445px;
    border:1px solid #cbcbcb;
 
@@ -219,4 +211,6 @@ export default {
     font-weight: bold;
   }
 }
+}
+
 </style>
