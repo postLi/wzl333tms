@@ -1,30 +1,36 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
-    <template class="addCustomerPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addIOManagePop" v-loading="loading">
+    <template class="addIOManagePop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="pickup_lrl">
 
 
         <div class="iommanage-bottom">
-          <el-form-item label="所属网点" prop="tmsOrderPickup.truckFee">
-            <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" :disabled="isDbclick"></el-input>
+          <el-form-item label="所属网点">
+            <el-input v-model="form.orgId"  auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
-          <el-form-item label="收支方式" prop="tmsOrderPickup.collectionFee">
-            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick" placeholder="如：银行卡、支付宝"></el-input>
+          <el-form-item label="收支方式" prop="financialWay">
+            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择" />
+            <!--<el-input v-model="form.financialWay" auto-complete="off" :disabled="isDbclick"></el-input>-->
+
           </el-form-item>
-          <el-form-item label="银行名称" prop="tmsDriver.driverMobile">
-            <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" :disabled="isDbclick"></el-input>
+
+          <el-form-item label="银行名称" prop="bankName">
+            <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick" maxlength="20"></el-input>
           </el-form-item>
-          <el-form-item label="开户人" prop="tmsTruck.truckUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"></el-input>
+          <el-form-item label="银行卡号">
+            <el-input v-model="form.bankAccount" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
-          <el-form-item label="支付宝号" prop="tmsTruck.truckUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"></el-input>
+          <el-form-item label="开户人">
+            <el-input v-model="form.bankAccountName" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
-          <el-form-item label="微信号" prop="tmsTruck.truckUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"></el-input>
+          <el-form-item label="支付宝号" >
+            <el-input v-model="form.alipayAccount" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
-          <el-form-item label="备注" prop="tmsTruck.truckUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
+          <el-form-item label="微信号" >
+            <el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>
+          </el-form-item>
+          <el-form-item label="备注" >
+            <el-input v-model="form.remark" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
           </el-form-item>
 
         </div>
@@ -94,135 +100,23 @@ export default {
 
   },
   data () {
-    const _this = this
-    const validatePickupNum = function (rule, value, callback) {
-      if(REGEX.ONLY_NUMBER.test(value) || !value){
-        callback()
-      }
-      else {
-        callback(new Error('只能输入数字'))
-      }
-    }
-    const validateMobile = (rule, value, callback) => {
-      if(REGEX.MOBILE.test(value) || !value){
-        callback()
-      }
-      else if(this.isDbclick){
-        callback()
-      }
-      else {
-        callback(new Error('请输入正确的手机号码~'))
-      }
-    }
 
     return {
       rules: {
-        'tmsOrderPickup.pickupName':[
-          {required: true,validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur'},
-          //{max: 8, message: '货品名最多可输入8个字符', trigger:'blur'}
-        ],
-        'tmsOrderPickup.pickupAmount': [
-          { validator:validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
-          // { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
-        ],
-        'tmsOrderPickup.pickupVolume':[
-          { validator:validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '体积最多可输入8个字符', trigger: 'blur' }
-        ],
-        'tmsOrderPickup.pickupWeight':[
-          { validator:validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '重量最多可输入8个字符', trigger: 'blur' }
-        ],
-        'tmsOrderPickup.carriage': [
-          { validator:validatePickupNum,mtrigger: 'blur' },
-          { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
-        ],
-        'tmsOrderPickup.remark':[
-          { max: 300, message: '备注最多可输入300个字符', trigger: 'blur' }
-        ],
-        'tmsOrderPickup.truckFee': [
-          { validator:validatePickupNum, trigger: 'blur' },
-        ],
-        'tmsOrderPickup.collectionFee': [
-          { validator:validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
-        ],
-        'tmsDriver.truckIdNumber':[
-          { max: 8, message: '车牌号最多可输入8个字符'},
-         // {validator: this.validateIsEmpty('车牌号不能为空')},
-        ],
-        'tmsDriver.driverName':[
-          { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
-          {required: true,validator: this.validateIsEmpty('司机姓名不能为空'), trigger: ['change','blur']},
-        ],
-        'tmsDriver.driverMobile': [
-          { validator: validateMobile, trigger: 'change' }
-        ],
-        'tmsTruck.truckUnit':[
-          { max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur' }
-        ],
-        "tmsOrderPickup.arriveTime": [
-          {required: true,validator: this.validateIsEmpty('要求到达时间不能为空'), trigger: ['blur']}
-        ],
-        "tmsCustomer.customerMobile": [
-          {required: true,validator: this.validateIsEmpty('发货人手机号不能为空'), trigger: ['blur']}
-        ],
-        "tmsCustomer.detailedAddress": [
-          {required: true,validator: this.validateIsEmpty('提货地址不能为空'), trigger: ['blur']}
-        ],
-      },
-      pickOption: {
-        firstDayOfWeek:1,
-        disabledDate(time) {
-          // 小于终止日
-          return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
-        }
-      },
-      pickOption2: {
-        firstDayOfWeek:1,
-        disabledDate(time) {
-          // 大于起始日
-          return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
-        }
+        'financialWay':[
+          {required: true,validator: this.validateIsEmpty('收支方式不能为空'), trigger: 'blur'},
+        ]
       },
       form: {
-        tmsCustomer:{
-          customerName:'',
-          customerMobile:'',
-          detailedAddress:'',
-          customerId:''
-        },
-        tmsDriver:{
-          driverName:'',//司机姓名
-          driverMobile:'',//司机手机 /
-          driverId:''
-          //  发送短信给司机
-        },
-        tmsTruck:{
-          truckIdNumber:'', //车牌号 /
-          truckType:'',//车辆类型
-          truckUnit:'',//车辆单位
-          truckId:''
-        },
-        // tmsOrderCargoList: {},
-        tmsOrderPickup:{
-          pickupBatchNumber:'',//提货批次
-          pickupName:'',//货品名
-          pickupAmount:'',//件数
-          pickupVolume:'',// 体积
-          pickupWeight:'',// 重量
-          carriage:'',// 运费
-          payMethod:76,// 付款方式
-          toCityCode:'',// 到达城市
-          toCityName:'',// 到达城市
-          remark:'',
-          truckFee:'',//车费
-          pickupStatus:236,//提货状态
-          collectionFee:'',// 代收费用
-          outTime:'',//出车时间
-          arriveTime:''//
-        }
+        orgId:'',
+        financialWay:'',//收支方式
+        bankName:'',//银行名称
+        bankAccount:'',//银行卡号
+        bankAccountName:'',//开户人
+        alipayAccount:'',//支付宝号
+        wechatAccount:'',//微信号
+        remark:'',//
+        agent:'',//
       },
       checked: true,
       formLabelWidth: '80px',
@@ -253,84 +147,60 @@ export default {
     info () {
       if (this.isModify) {
         this.popTitle = '修改收支方式'
-        this.infoData(this.info)
+        // this.infoData(this.info)
       }
       else if(this.isDbclick) {
         this.popTitle = '查看收支方式'
-        this.infoData(this.info)
+        // this.infoData(this.info)
       }
       else {
         this.popTitle = '新增收支方式'
-        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-        this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-        this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
-        this.form.tmsTruck.truckUnit = ''
-        this.form.tmsOrderPickup.payMethod = 76
-        this.form.tmsOrderPickup.pickupStatus = 236
+        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+        // this.form.tmsTruck = this.setObject(this.form.tmsTruck)
+        // this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+        // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
+        // this.form.tmsTruck.truckUnit = ''
+        // this.form.tmsOrderPickup.payMethod = 76
+        // this.form.tmsOrderPickup.pickupStatus = 236
       }
     },
     isModify () {
       if (this.isModify) {
         this.popTitle = '修改收支方式'
-        this.infoData(this.info)
+        // this.infoData(this.info)
       }
       else if(this.isDbclick) {
         this.popTitle = '查看收支方式'
-        this.infoData(this.info)
+        // this.infoData(this.info)
       }
       else {
         this.popTitle = '新增收支方式'
-        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-        this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-        this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
-        this.form.tmsTruck.truckUnit = ''
-        this.form.tmsOrderPickup.payMethod = 76
-        this.form.tmsOrderPickup.pickupStatus = 236
+        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+        // this.form.tmsTruck = this.setObject(this.form.tmsTruck)
+        // this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+        // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
+        // this.form.tmsTruck.truckUnit = ''
+        // this.form.tmsOrderPickup.payMethod = 76
+        // this.form.tmsOrderPickup.pickupStatus = 236
       }
     }
   },
   methods: {
     getTrunkName(trunk){
       if(trunk){
-        this.form.tmsDriver.driverName = trunk.driverName
-        this.form.tmsDriver.driverMobile = trunk.dirverMobile
-        this.form.tmsDriver.driverId = trunk.driverId
-        this.form.tmsTruck.truckId = trunk.truckId
-        this.form.tmsTruck.truckType = trunk.truckType
-        this.form.tmsTruck.truckUnit = trunk.truckUnit
-        this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
+        // this.form.tmsDriver.driverName = trunk.driverName
+        // this.form.tmsDriver.driverMobile = trunk.dirverMobile
+        // this.form.tmsDriver.driverId = trunk.driverId
+        // this.form.tmsTruck.truckId = trunk.truckId
+        // this.form.tmsTruck.truckType = trunk.truckType
+        // this.form.tmsTruck.truckUnit = trunk.truckUnit
+        // this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
 
       }
 
     },
     infoData(item){
-      this.form.tmsOrderPickup.pickupName = item.pickupName
-      this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
-      this.form.tmsOrderPickup.pickupWeight = item.pickupWeight
-      this.form.tmsOrderPickup.carriage = item.carriage
-      this.form.tmsOrderPickup.collectionFee = item.collectionFee
-      this.form.tmsOrderPickup.payMethod = item.payMethod
-      this.form.tmsOrderPickup.pickupStatus = item.pickupStatus
-      this.form.tmsOrderPickup.remark = item.remark
-      this.form.tmsOrderPickup.arriveTime = item.arriveTime
-      this.form.tmsOrderPickup.outTime = item.outTime
-      this.form.tmsOrderPickup.toCityName = item.toCityName
-      this.form.tmsOrderPickup.id = item.id
 
-      this.form.tmsTruck.truckIdNumber = item.truckIdNumber
-      this.form.tmsTruck.truckType = item.truckType
-      this.form.tmsTruck.truckUnit = item.truckUnit
-
-      this.form.tmsDriver.driverName = item.driverName
-      this.form.tmsDriver.driverMobile = item.driverMobile
-
-      this.form.tmsCustomer.customerName = item.customerName
-      this.form.tmsCustomer.customerMobile = item.customerMobile
-      this.form.tmsCustomer.detailedAddress = item.detailedAddress
-
-      this.pickupBatchNumber = item.pickupBatchNumber
     },
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -397,9 +267,9 @@ export default {
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
-            promiseObj = putUpdatePickup(data)
+            // promiseObj = putUpdatePickup(data)
           } else {
-            promiseObj = postAddPickup(data)
+            // promiseObj = postAddPickup(data)
           }
 
           promiseObj.then(res => {
@@ -436,12 +306,13 @@ export default {
 }
 </script>
 <style lang="scss">
-  .addCustomerPop{
+  .addIOManagePop{
     left: auto;
     top: 50px;
     bottom: auto;
     min-width: 600px;
     max-width:  600px;
+    z-index: 9999 !important;
     .popRight-content{
       padding: 20px 0px 0;
       box-sizing: border-box;

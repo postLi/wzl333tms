@@ -391,6 +391,7 @@ export default {
       }
 
       switch (type) {
+        //新增配载
         case 'add':
         this.$router.push({path: '././load', query:{loadTypeId: 39}}) // 38-短驳 39-干线 40-送货
         break
@@ -411,7 +412,7 @@ export default {
           }
 
           break;
-        //到车确定
+        //修改
             case 'sure':
 
               if (this.selected.length > 1) {

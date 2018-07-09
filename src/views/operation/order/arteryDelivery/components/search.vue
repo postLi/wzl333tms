@@ -26,7 +26,6 @@
     </el-form-item>
     <el-form-item label="批次状态:">
       <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" />
-      <!--<SelectTree v-model="searchForm.orgid" />-->
     </el-form-item>
       <el-form-item label="发站:">
           <SelectTree v-model="searchForm.orgId" />
@@ -164,7 +163,7 @@ export default {
     }
   },
   mounted () {
-    this.searchForm.orgId = this.id
+    this.searchForm.orgId = this.otherinfo.orgid
   },
   methods: {
     getOrgid (id){

@@ -35,57 +35,51 @@
           <el-table-column
             fixed
             sortable
-            prop="id"
             label="序号"
             width="160">
+            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="batchNo"
+            prop="orgId"
             width="120"
             label="所属网点">
           </el-table-column>
           <el-table-column
-            prop="truckIdNumber"
+            prop="financialWay"
             width="110"
             sortable
             label="收支方式">
           </el-table-column>
           <el-table-column
-            prop="orgName"
+            prop="bankName"
             sortable
             width="140"
             label="银行名称">
           </el-table-column>
           <el-table-column
-            prop="endOrgName"
+            prop="bankAccount"
             sortable
             width="180"
             label="银行卡号">
           </el-table-column>
-          <el-table-column
-            sortable
-            prop="bathStatusName"
-            width="110"
-            label="批次状态">
-          </el-table-column>
 
           <el-table-column
             sortable
-            prop="dirverName"
+            prop="bankAccountName"
             width="130"
             label="开户人">
           </el-table-column>
           <el-table-column
-            prop="dirverMobile"
+            prop="alipayAccount"
             label="支付宝账号"
             width="150"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="actualAmount"
+            prop="wechatAccount"
             label="微信号"
             width="150"
             sortable
@@ -93,14 +87,14 @@
           </el-table-column>
 
           <el-table-column
-            prop="truckLoad"
+            prop="statusStr"
             label="状态"
             width="110"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="truckVolume"
+            prop="createBy"
             label="创建人"
             width="110"
             sortable
@@ -108,12 +102,12 @@
           </el-table-column>
 
           <el-table-column
-            label="创建时间"
+            label="createTime"
             width="160"
             sortable
           >
             <template slot-scope="scope">
-              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
+              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </template>
           </el-table-column>
 
@@ -135,6 +129,7 @@
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
 import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
+import {postTmsFfinancialwayList} from '../../../api/finance/financefinancialway'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -159,7 +154,7 @@ export default {
       }
   },
   mounted () {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
     // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
@@ -186,16 +181,9 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgid": 1,
-          dirverName: '',
-          truckIdNumber:'',//车牌号
-          batchTypeId: '',//批次状态
-          batchNo:'',//发车批次
-          loadTypeId:39,//配载类型
-          endTime:'',//结束时间
-          beginTime:'',//
-          arrivedbeginDate:'',//到达时间(起始时间)
-          arrivedEndDate:''//到达时间(结束时间)
+          "orgId":'',
+          financialWay: '',//收支方式名称
+          status:''
         }
       }
     }
@@ -203,7 +191,7 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      return postArtList(this.searchQuery).then(data => {
+      return postTmsFfinancialwayList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false

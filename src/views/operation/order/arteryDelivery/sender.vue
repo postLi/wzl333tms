@@ -307,6 +307,7 @@ export default {
       }
   },
   mounted () {
+    this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
   },
   data () {
