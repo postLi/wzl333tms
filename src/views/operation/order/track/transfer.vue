@@ -431,7 +431,7 @@ export default {
     },
     getSelection(list) {
       if (this.$route.query.transfer) {
-        this.transferId = this.this.$route.query.transfer
+        this.transferId = Number(this.this.$route.query.transfer)
       } else {
         if (list.length === 1) {
           this.selectInfo = Object.assign([], list)

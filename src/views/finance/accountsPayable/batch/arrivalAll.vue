@@ -1,5 +1,5 @@
 <template>
-  <!-- 到站装卸费 -->
+  <!-- 到车汇总 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -45,7 +45,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchArtery'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postPayListByOne } from '@/api/finance/accountsPayable'
+import { postPayListBySummary } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
 export default {
   components: {
@@ -61,15 +61,15 @@ export default {
   data() {
     return {
       btnsize: 'mini',
-      feeTypeId: 28, // 到站装卸费
+      sign: 2, // 1-到车汇总
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          // sign: 2,
+          // sign: 1,
           // orgid: 1,
           // ascriptionOrgid: 1,
-          status: 'NOSETTLEMENT',
+          status: 'NOSETTLEMENT', // 未结算
           // loadStartTime: '',
           // loadEndTime: '',
           // departureStartTime: '',
@@ -134,20 +134,74 @@ export default {
           }
         },
         {
+          label: '到付运费',
+          prop: 'nowpayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到付运费',
+          prop: 'paidNowpayCarriage',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到付运费',
+          prop: 'unpaidNowpayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '到付油卡',
+          prop: 'nowpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到付油卡',
+          prop: 'paidNowpayOilCard',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到付油卡',
+          prop: 'unpaidNowpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
           label: '到站装卸费',
-          prop: 'fee',
+          prop: 'backpayCarriage',
           width: '150',
           fixed: false
         },
         {
           label: '已结到站装卸费',
-          prop: 'paidFee',
+          prop: 'paidBackpayCarriage',
           width: '180',
           fixed: false
         },
         {
           label: '未结到站装卸费',
-          prop: 'unpaidFee',
+          prop: 'unpaidBackpayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '到站其他费',
+          prop: 'backpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到站其他费',
+          prop: 'paidBackpayOilCard',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到站其他运费',
+          prop: 'unpaidBackpayOilCard',
           width: '150',
           fixed: false
         },
@@ -201,7 +255,7 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
-      this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
+      this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -210,10 +264,10 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     fetchList() {
+      this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
-      this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
-      return postPayListByOne(this.searchQuery).then(data => {
+      return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
       })
     },

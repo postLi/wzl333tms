@@ -351,6 +351,7 @@ export default {
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
+        console.log('rightTable', this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },
@@ -368,6 +369,7 @@ export default {
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
+        console.log('rightTable', this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },

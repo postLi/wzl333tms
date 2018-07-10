@@ -1,5 +1,5 @@
 <template>
-  <!-- 到站装卸费 -->
+  <!-- 发车汇总 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -45,7 +45,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchArtery'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postPayListByOne } from '@/api/finance/accountsPayable'
+import { postPayListBySummary } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
 export default {
   components: {
@@ -61,15 +61,15 @@ export default {
   data() {
     return {
       btnsize: 'mini',
-      feeTypeId: 28, // 到站装卸费
+      sign: 1, // 1-发车汇总
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          // sign: 2,
+          // sign: 1,
           // orgid: 1,
           // ascriptionOrgid: 1,
-          status: 'NOSETTLEMENT',
+          status: 'NOSETTLEMENT', // 未结算
           // loadStartTime: '',
           // loadEndTime: '',
           // departureStartTime: '',
@@ -134,20 +134,128 @@ export default {
           }
         },
         {
-          label: '到站装卸费',
-          prop: 'fee',
+          label: '现付运费',
+          prop: 'nowpayCarriage',
           width: '150',
           fixed: false
         },
         {
-          label: '已结到站装卸费',
-          prop: 'paidFee',
+          label: '已结现付运费',
+          prop: 'paidNowpayCarriage',
           width: '180',
           fixed: false
         },
         {
-          label: '未结到站装卸费',
-          prop: 'unpaidFee',
+          label: '未结现付运费',
+          prop: 'unpaidNowpayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '现付油卡',
+          prop: 'nowpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结现付油卡',
+          prop: 'paidNowpayOilCard',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结现付油卡',
+          prop: 'unpaidNowpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '回付运费',
+          prop: 'backpayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结回付运费',
+          prop: 'paidBackpayCarriage',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结回付运费',
+          prop: 'unpaidBackpayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '回付油卡',
+          prop: 'backpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结回付油卡',
+          prop: 'paidBackpayOilCard',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结回付油卡',
+          prop: 'unpaidBackpayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '整车保险费',
+          prop: 'carloadInsuranceFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结整车保险费',
+          prop: 'paidCarloadInsuranceFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结整车保险费',
+          prop: 'unpaidCarloadInsuranceFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '发站装卸费',
+          prop: 'leaveHandlingFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结发站装卸费',
+          prop: 'paidLeaveHandlingFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结发站装卸费',
+          prop: 'unpaidLeaveHandlingFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '发站其他费',
+          prop: 'leaveOtherFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结发站其他费',
+          prop: 'paidLeaveOtherFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结发站其他费',
+          prop: 'unpaidLeaveOtherFee',
           width: '150',
           fixed: false
         },
@@ -201,7 +309,7 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
-      this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
+      this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -210,10 +318,10 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     fetchList() {
+      this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
-      this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
-      return postPayListByOne(this.searchQuery).then(data => {
+      return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
       })
     },

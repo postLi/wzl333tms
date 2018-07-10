@@ -64,11 +64,11 @@ export default {
       feeTypeId: 25, // 整车保险费
       searchQuery: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 100,
         vo: {
-          sign: 2,
+          // sign: 2,
           // orgid: 1,
-          ascriptionOrgid: 1,
+          // ascriptionOrgid: 1,
           status: 'NOSETTLEMENT',
           // loadStartTime: '',
           // loadEndTime: '',
@@ -211,6 +211,7 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
+      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
