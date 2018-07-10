@@ -69,7 +69,7 @@ export default {
           // sign: 2,
           // orgid: 1,
           // ascriptionOrgid: 1,
-          status: 'NOSETTLEMENT',
+          status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT',
           // loadStartTime: '',
           // loadEndTime: '',
           // departureStartTime: '',
@@ -99,7 +99,7 @@ export default {
         },
         {
           label: '结算状态',
-          prop: 'status',
+          prop: 'statusName',
           width: '150',
           fixed: false
         },
@@ -230,7 +230,7 @@ export default {
       }
     },
     count() {
-      this.$router.push({ path: '../accountsLoad' })
+      this.$router.push({ path: '../accountsLoad', query: {currentPage: 'batchDeliver'} })
       console.log('router', this.$router)
     },
     clickDetails(row) {},

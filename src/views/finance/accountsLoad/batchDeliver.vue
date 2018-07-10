@@ -1,7 +1,7 @@
 <template>
-  <!-- 短驳费结算页面 -->
+  <!-- 送货费结算页面 -->
   <div class="accountsLoad_table">
-    <transferTable style="height: calc(100% - 80px);padding:10px">
+    <transferTable style="height: calc(100% - 40px);padding:10px">
       <div>
         <el-button>结算</el-button>
       </div>
@@ -11,7 +11,7 @@
       </div>
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">短驳费结算</el-button>
+        <el-button type="success" size="mini" icon="el-icon-sort" @click="goReceipt">送货费结算</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -24,7 +24,7 @@
               <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <template v-for="column in tableColumnLeft">
+         <template v-for="column in tableColumnLeft">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -33,14 +33,8 @@
                 <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
-          </template>
+          </template> 
         </el-table>
-        <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalLeft }}</b>
-          <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
-          </div>
-        </div>
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
@@ -64,12 +58,6 @@
             </el-table-column>
           </template>
         </el-table>
-        <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalRight }}</b>
-          <!--  <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
-          </div> -->
-        </div>
       </div>
     </transferTable>
     <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
@@ -77,12 +65,11 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { postPayListByOne } from '@/api/finance/accountsPayable'
+import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 import Receipt from './components/receipt'
-import Pager from '@/components/Pagination/index'
 export default {
   data() {
     return {
@@ -94,233 +81,239 @@ export default {
       loading: false,
       popVisibleDialog: false,
       btnsize: 'mini',
-      totalLeft: 0,
-      totalRight: 0,
-      tableReceiptInfo: [],
+      tableReceiptInfo: {
+        name: 'tableReceiptInfo'
+      },
       selectedRight: [],
       selectedLeft: [],
-      isGoReceipt: true,
       leftTable: [],
       rightTable: [],
       orgData: {
         left: [],
         right: []
       },
-      isFresh: false,
       feeType: 8,
       searchQuery: {
         currentPage: 1,
-        pageSize: 100,
-        vo: {}
+        pageSize: 10000,
+        vo: {
+          // feeType: 8,
+          // endTime: '',
+          // id: 0,
+          incomePayType: 'PAYABLE',
+          // incomePayTypeValue: '',
+          // orgAllId: '',
+          // senderCompanyName: '',
+          // senderName: '',
+          // shipFromCityCode: '',
+          // shipFromOrgid: 0,
+          // shipLoadId: 0,
+          // shipLoadIdType: 0,
+          // shipSn: '',
+          // shipToCityCode: '',
+          // startTime: '',
+          status: 'NOSETTLEMENT',
+          // totalFee: 0,
+          // totalStatus: '',
+          // totalStatusValue: ''
+        }
       },
       tableColumnLeft: [{
           label: '短驳批次',
-          prop: 'batchNo',
+          prop: 'shipSn',
           width: '120',
           fixed: true
         },
         {
           label: '开单网点',
-          prop: 'orgName',
+          prop: 'shipFromOrgName',
           width: '120',
           fixed: false
         },
         {
           label: '短驳时间',
-          prop: 'departureTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          prop: 'shipSenderName',
+          width: '120',
+          fixed: false
         },
         {
           label: '短驳费',
-          prop: 'fee',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '结算状态',
-          prop: 'statusName',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '未结短驳费',
-          prop: 'unpaidFee',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '已结短驳费',
-          prop: 'paidFee',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '司机电话',
-          prop: 'dirverMobile',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '车牌号',
-          prop: 'truckIdNumber',
+          prop: 'shipReceiverMobile',
           width: '120',
           fixed: false
         },
         {
           label: '司机姓名',
-          prop: 'dirverName',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '目的网点',
-          prop: 'arriveOrgName',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '接收时间',
-          prop: 'receivingTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
         },
         {
           label: '短驳件数',
-          prop: 'loadAmountall',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '短驳重量',
-          prop: 'loadWeightall',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '短驳体积',
-          prop: 'loadVolumeall',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '备注',
-          prop: 'remark',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         }
       ],
       tableColumnRight: [{
           label: '短驳批次',
-          prop: 'batchNo',
+          prop: 'shipSn',
           width: '120',
           fixed: true
         },
         {
-          label: '结算状态',
-          prop: 'statusName',
-          width: '120',
-          fixed: false
-        },
-        {
           label: '发车网点',
-          prop: 'orgName',
+          prop: 'shipFromOrgName',
           width: '120',
           fixed: false
         },
         {
           label: '短驳时间',
-          prop: 'departureTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          prop: 'shipSenderName',
+          width: '120',
+          fixed: false
         },
         {
           label: '短驳费',
-          prop: 'fee',
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '结算状态',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '未结短驳费',
-          prop: 'unpaidFee',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '已结短驳费',
-          prop: 'paidFee',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '实结短驳费',
-          prop: 'unpaidFee',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '司机电话',
-          prop: 'dirverMobile',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '车牌号',
-          prop: 'truckIdNumber',
+          prop: 'shipReceiverMobile',
           width: '120',
           fixed: false
         },
         {
           label: '司机姓名',
-          prop: 'dirverName',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '目的网点',
-          prop: 'arriveOrgName',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '接收时间',
-          prop: 'receivingTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
         },
         {
           label: '短驳件数',
-          prop: 'loadAmountall',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '短驳重量',
-          prop: 'loadWeightall',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '短驳体积',
-          prop: 'loadVolumeall',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         },
         {
           label: '备注',
-          prop: 'remark',
+          prop: 'shipSn',
           width: '120',
           fixed: false
         }
@@ -330,38 +323,17 @@ export default {
   computed: {
     ...mapGetters([
       'otherinfo'
-    ]),
-    getRouteInfo() {
-      return this.$route.query.searchQuery
-    }
+    ])
   },
   components: {
     transferTable,
     querySelect,
-    Receipt,
-    Pager
+    Receipt
   },
   mounted() {
-    this.getList()
+    // this.getList()
   },
   methods: {
-    handlePageChangeLeft(obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
-    },
-    initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.$router.push({ path: './accountsPayable/batch' })
-        this.isFresh = true
-      } else {
-        this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-        this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-        this.isFresh = false
-      }
-
-    },
     getSumRight(param) { // 右边表格合计-自定义显示
       const { columns, data } = param
       const sums = []
@@ -447,13 +419,11 @@ export default {
         this.rightTable = this.orgData.right
         this.$emit('loadTable', this.rightTable)
       } else {
-        this.initLeftParams()
-        if (!this.isFresh) {
-          postPayListByOne(this.searchQuery).then(data => {
-            this.leftTable = data.list
-            this.$emit('loadTable', this.rightTable)
-          })
-        }
+        this.$set(this.searchQuery.vo, 'feeType', this.feeType)
+        postFindListByFeeType(this.searchQuery).then(data => {
+          this.leftTable = data.data
+          this.$emit('loadTable', this.rightTable)
+        })
       }
     },
     clickDetailsRight(row) {
@@ -498,13 +468,6 @@ export default {
         })
         this.selectedRight = [] // 清空选择列表
       }
-      this.tableReceiptInfo = Object.assign([], this.rightTable)
-       console.log(this.tableReceiptInfo.length)
-        if (this.tableReceiptInfo.length < 1) {
-          this.isGoReceipt = true
-        } else {
-          this.isGoReceipt = false
-        }
     },
     goRight() { // 数据从右边穿梭到左边
       if (this.selectedLeft.length === 0) {
@@ -520,14 +483,6 @@ export default {
         })
         this.selectedLeft = [] // 清空选择列表
       }
-      this.tableReceiptInfo = Object.assign([], this.rightTable)
-      console.log(this.tableReceiptInfo.length)
-      if (this.tableReceiptInfo.length < 1) {
-        this.isGoReceipt = true
-      } else {
-        this.isGoReceipt = false
-      }
-
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []
@@ -557,12 +512,10 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      if (!this.isGoReceipt) {
-        this.openDialog()
-        this.$nextTick(() => {
-          console.log('goReceipt', this.popVisibleDialog)
-        })
-      }
+      this.openDialog()
+      this.$nextTick(() => {
+        console.log('goReceipt', this.popVisibleDialog)
+      })
     }
   }
 }
@@ -593,19 +546,6 @@ export default {
   width: 100;
   overflow: hidden;
   height: 100%;
-  .accountsLoad_table_pager {
-    display: flex;
-    flex-direction: columns;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    background-color: #eee;
-    padding: 5px 5px 10px 10px;
-    b {
-      font-weight: 400;
-      color: #333; // font-size:14px;
-      line-height: 36px;
-    }
-  }
 }
 
 </style>

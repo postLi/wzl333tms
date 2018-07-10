@@ -67,9 +67,9 @@ export default {
     return {
       searchForm: {
         // sign: 2,
-        orgid: 1,
-        ascriptionOrgid: 1,
-        status: 'NOSETTLEMENT',
+        orgid: 0,
+        ascriptionOrgid: 0,
+        status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
         // loadStartTime: '',
         // loadEndTime: '',
         // departureStartTime: '',
@@ -111,6 +111,11 @@ export default {
       }
     }
   },
+  mounted () {
+    this.searchForm.orgid = this.otherinfo.orgid
+    this.searchForm.ascriptionOrgid = this.otherinfo.orgid
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
       let searchObj = Object.assign({}, this.searchForm)
@@ -119,8 +124,6 @@ export default {
         this.$set(searchObj, 'loadEndTime', this.searchTime[1])
       }
       this.$emit('change', searchObj)
-      this.searchForm = Object.assign({}, this.$options.data().searchForm)
-      this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {

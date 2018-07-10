@@ -1,17 +1,8 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="100px" class="staff_searchinfo clearfix">
     <el-form-item label="短驳时间">
-      <!-- <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd hh:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker> -->
-      <el-date-picker
-            v-model="searchTime"
-            type="daterange"
-            align="right"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions"
-            end-placeholder="结束日期">
-          </el-date-picker>
+      <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="短驳网点" prop="orgid">
       <SelectTree v-model="searchForm.orgid" clearable>
@@ -69,9 +60,9 @@ export default {
     return {
       searchForm: {
         // sign: 2,
-        orgid: 1,
-        ascriptionOrgid: 1,
-        status: 'NOSETTLEMENT',
+        orgid: 0,
+        ascriptionOrgid: 0,
+        status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
         // loadStartTime: '',
         // loadEndTime: '',
         // departureStartTime: '',
@@ -113,6 +104,11 @@ export default {
       }
     }
   },
+  mounted() {
+    this.searchForm.orgid = this.otherinfo.orgid
+    this.searchForm.ascriptionOrgid = this.otherinfo.orgid
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
       let searchObj = Object.assign({}, this.searchForm)
@@ -121,8 +117,6 @@ export default {
         this.$set(searchObj, 'departureEndTime', this.searchTime[1])
       }
       this.$emit('change', searchObj)
-      this.searchForm = Object.assign({}, this.$options.data().searchForm)
-      this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {

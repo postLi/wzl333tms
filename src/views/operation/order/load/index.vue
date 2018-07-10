@@ -274,7 +274,7 @@ export default {
         left: [],
         right: []
       },
-      orgData: {},
+      // orgData: {},
       isEdit: false,
       isModify: false,
       addTruckVisible: false,
@@ -346,8 +346,15 @@ export default {
     typeid() {
       return Number(this.$route.query.loadTypeId)
     },
-    loadTypeId () {
+    loadTypeId() {
       return Number(this.$route.query.loadTypeId)
+    },
+    orgData: {
+      get() {
+        console.log(this.$route)
+        return this.$route.query.info
+      },
+      set() {}
     }
   },
   components: {
@@ -375,7 +382,6 @@ export default {
       this.$refs['formModel'].resetFields()
       this.setLoadTypeId()
       this.initIsEdit()
-      console.log(this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
 
       this.formModel.orgid = this.orgid
       this.DriverList = this.Drivers
@@ -390,32 +396,32 @@ export default {
       this.loadInfoPercentOrg = objectMerge2([], obj)
       this.loadTableInfo = obj
     },
-     /**
+    /**
      * load_type_id：配载类型（字典表38-40）
      * batch_type_id：批次状态（字典表46-58，短驳和干线配载完就是已装车，短驳发车是短驳中，干线发车是在途中，送货为送货中）
      */
     setLoadTypeId() {
       let typeid = Number(this.$route.query.loadTypeId)
       if (typeid) {
-      // this.loadTypeId = typeid
-      switch (typeid) {
-        case 38: // 短驳
-          this.batchTypeIdFinish = 47 // 完成配载
-          this.batchTypeIdFinishTruck = 48 // 配载并发车
-          console.log('短驳38', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
-          break
-        case 39: // 干线
-          this.batchTypeIdFinish = 52
-          this.batchTypeIdFinishTruck = 53
-          console.log('干线39', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
-          break
-        case 40: // 送货
-          this.batchTypeIdFinish = 57
-          this.batchTypeIdFinishTruck = 57
-          console.log('送货40', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
-          break
-      }
-    }else {
+        // this.loadTypeId = typeid
+        switch (typeid) {
+          case 38: // 短驳
+            this.batchTypeIdFinish = 47 // 完成配载
+            this.batchTypeIdFinishTruck = 48 // 配载并发车
+            console.log('短驳38', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
+            break
+          case 39: // 干线
+            this.batchTypeIdFinish = 52
+            this.batchTypeIdFinishTruck = 53
+            console.log('干线39', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
+            break
+          case 40: // 送货
+            this.batchTypeIdFinish = 57
+            this.batchTypeIdFinishTruck = 57
+            console.log('送货40', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
+            break
+        }
+      } else {
         this.loadTypeId = 38 // 默认是新增短驳
         this.batchTypeIdFinish = 47 // 完成配载
         this.batchTypeIdFinishTruck = 48 // 配载并发车
@@ -481,12 +487,15 @@ export default {
       })
     },
     getSystemTime() { // 获取系统时间
-      return getSystemTime().then(data => {
-        this.$nextTick(() => {
-          this.formModel.requireArrivedTime = new Date(data.trim())
-          this.formModel.loadTime = new Date(data.trim())
+      if (!this.isEdit) {
+        return getSystemTime().then(data => {
+          console.log('systemTime', data)
+          this.$nextTick(() => {
+            this.formModel.requireArrivedTime = new Date(data.trim())
+            this.formModel.loadTime = new Date(data.trim())
+          })
         })
-      })
+      }
     },
     getSelectAddLoadRepertoryList() {
       if (this.isEdit) {
@@ -624,7 +633,6 @@ export default {
     getLoadTable(obj) { // 获取穿梭框表格数据列表
       this.loadInfoPercentOrg = objectMerge2([], obj)
       this.loadTableInfo = obj
-      console.log('loadTableInfo', this.loadTableInfo, obj)
     },
     resetFieldsForm() { // resetFields表单验证
       const formName = ['formModel', 'formFee']

@@ -78,3 +78,9 @@ export function postPayListByOne(data) {
     return res.data || { list: [], totalCount: 0 }
   })
 }
+/**
+ *  获得结算单号
+ */
+export function GetFeeInfo(orgId, paymentsType) {
+  return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getFeeInfo/?orgId=' + orgId + '&paymentsType=' + paymentsType)
+}

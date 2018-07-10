@@ -69,7 +69,7 @@ export default {
           // sign: 2,
           // orgid: 1,
           // ascriptionOrgid: 1,
-          status: 'NOSETTLEMENT',
+          status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
           // loadStartTime: '',
           // loadEndTime: '',
           // departureStartTime: '',
@@ -85,12 +85,12 @@ export default {
       loading: false,
       setupTableVisible: false,
       tableColumn: [
-      // {
-      //     label: '序号',
-      //     prop: 'id',
-      //     width: '110',
-      //     fixed: true
-      //   },
+        // {
+        //     label: '序号',
+        //     prop: 'id',
+        //     width: '110',
+        //     fixed: true
+        //   },
         {
           label: '短驳批次',
           prop: 'batchNo',
@@ -99,7 +99,7 @@ export default {
         },
         {
           label: '结算状态',
-          prop: 'status',
+          prop: 'statusName',
           width: '150',
           fixed: false
         },
@@ -196,9 +196,6 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.fetchList()
-  },
   methods: {
     getSearchParam(obj) {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
@@ -210,9 +207,8 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     fetchList() {
-      this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
-      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
+      console.log(this.searchQuery)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
       })
@@ -230,8 +226,13 @@ export default {
       }
     },
     count() {
-      this.$router.push({ path: '../accountsLoad' })
-      console.log('router', this.$router)
+      this.$router.push({
+        path: '../accountsLoad',
+        query: {
+          currentPage: 'batchShort',
+          searchQuery: this.searchQuery
+        }
+      })
     },
     clickDetails(row) {},
     getSelection(list) {},

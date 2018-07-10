@@ -4,19 +4,25 @@
       <div class="receiptDialog_head">
         <div class="receiptDialog_head_item">
           <label>单据号</label>
-          <el-input placeholder="请输入" :size="btnsize"></el-input>
+          <el-input v-model="formModel.settlementSn" placeholder="请输入" :size="btnsize" disabled></el-input>
         </div>
         <div class="receiptDialog_head_item">
           <label>发生时间</label>
-          <el-input placeholder="请输入" :size="btnsize"></el-input>
+          <el-date-picker
+          :size="btnsize"
+            v-model="formModel.settlementTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime">
+          </el-date-picker>
+          <!-- <el-input placeholder="请输入" v-model="formModel.settlementTime" :size="btnsize"></el-input> -->
         </div>
         <div class="receiptDialog_head_item">
           <label>经办人</label>
-          <el-input placeholder="请输入" :size="btnsize"></el-input>
+          <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input>
         </div>
       </div>
       <div class="receiptDialog_table">
-        <el-table :data="tableData" style="width: 100%; height:100%;" height="100%" stripe show-summary>
+        <el-table :data="formModel.detailDtoList" style="width: 100%; height:100%;" height="100%" stripe show-summary>
           <el-table-column prop="date" label="序号" type="index" width="70">
           </el-table-column>
           <el-table-column prop="dataName" label="费用项">
@@ -47,29 +53,30 @@
       </div>
       <div class="receiptDialog_todo">
         <el-button icon="el-icon-plus" type="primary" plain class="tableAllBtn" size="mini" @click="plusItem"></el-button>
-        <el-table :data="tableData" border style="width: 100%;" height="100%" stripe>
+        <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
               <el-button icon="el-icon-minus" type="danger" plain class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="date" label="收支方式" width="100">
+          <el-table-column prop="financialWay" label="收支方式" width="100">
+            <template slot-scope="props">
+              <el-input v-model="props.row.financialWay"></el-input>
+            </template>
           </el-table-column>
-          <el-table-column prop="date" label="收支方式" width="100">
+          <el-table-column prop="bankName" label="银行名称">
           </el-table-column>
-          <el-table-column prop="dataName" label="银行名称">
+          <el-table-column prop="bankAccount" label="银行卡号">
           </el-table-column>
-          <el-table-column prop="name" label="银行卡号">
+          <el-table-column prop="bankAccountName" label="开户人">
           </el-table-column>
-          <el-table-column prop="name" label="开户人">
+          <el-table-column prop="chequeNumber" label="支票号码">
           </el-table-column>
-          <el-table-column prop="name" label="支票号码">
+          <el-table-column prop="receivableNumber" label="汇款号码">
           </el-table-column>
-          <el-table-column prop="name" label="汇款号码">
+          <el-table-column prop="wechatAccount" label="微信号">
           </el-table-column>
-          <el-table-column prop="name" label="微信号">
-          </el-table-column>
-          <el-table-column prop="name" label="支付宝号">
+          <el-table-column prop="alipayAccount" label="支付宝号">
           </el-table-column>
         </el-table>
       </div>
@@ -91,6 +98,9 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
+import { GetFeeInfo } from '@/api/finance/accountsPayable'
+import { getSystemTime } from '@/api/common'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   data() {
     const pretimeIdentifier = (rule, value, callback) => {
@@ -105,48 +115,7 @@ export default {
       loading: true,
       rules: {},
       btnsize: 'mini',
-      dialogTitle: '结 算 收 款 单',
-      tableData: [{
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        },
-        {
-          dataName: '回扣',
-          name: '9'
-        }
-      ]
+      dialogTitle: '结 算 收 款 单'
     }
   },
   computed: {
@@ -166,22 +135,21 @@ export default {
       default: false
     },
     info: {
-      type: Object,
-      default: {}
+      type: Array,
+      default: []
     }
   },
   watch: {
     popVisible() {
       if (this.popVisible) {
-        console.log(this.popVisible)
         this.isShow = true
+        this.getFeeInfo()
       } else {
         this.isShow = false
       }
     },
     info(newVal) {
       if (newVal) {
-        console.log(this.info)
         return this.info
       }
     }
@@ -194,7 +162,23 @@ export default {
   methods: {
     init() {
       this.loading = false
-      console.log('info', this.info)
+    },
+    getFeeInfo () {
+      // console.log(this.info)
+      let orgId = this.otherinfo.orgid
+      let paymentsType = 1 // 收支类型, 0 收入, 1 支出
+      return GetFeeInfo(orgId, paymentsType).then(data => {
+        this.formModel = data.data
+        this.formModel.settlementTime = parseTime(new Date())
+        // this.getSystemTime()
+        console.log(this.formModel)
+
+      })
+    },
+    getSystemTime () {
+      getSystemTime().then(data => {
+        this.formModel.settlementTime = new Date(data.trim())
+      })
     },
     closeMe(done) {
       this.$emit('close')
@@ -248,8 +232,12 @@ $borderColor: #999;
         border-radius: 0;
         border: none;
         border-bottom: 1px solid $borderColor;
-        padding: 0 10px;
+        // padding: 0 10px;
         width: auto;
+      }
+      .el-input.is-disabled .el-input__inner{
+        color:$borderColor;
+        background-color:rgba(0,0,0,0);
       }
     }
   }
