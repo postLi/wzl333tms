@@ -158,8 +158,9 @@ export default {
     onSubmit () {
       // this.searchForm.loadStartTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
       // this.searchForm.loadEndTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
-      this.searchForm.loadStartTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
-      this.searchForm.loadEndTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      //parseTime初始化为字符串
+      this.searchForm.loadStartTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+      this.searchForm.loadEndTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
       this.$emit('change', this.searchForm)
 
     },
