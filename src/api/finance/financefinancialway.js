@@ -18,7 +18,7 @@ export function postTmsFfinancialwayList(params) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postAdd(params) {
-  return fetch.post('/api-finance/tmsfinancefinancialway/tmsfinancefinancialway/v1/add', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancefinancialway/v1/add', params).then(res => {
     return res.data || {}
   })
 }
@@ -29,9 +29,18 @@ export function postAdd(params) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function putUpdate(params) {
-  return fetch.put('/api-finance/tmsfinancefinancialway/tmsfinancefinancialway/v1/update', params).then(res => {
+  return fetch.put('/api-finance/finance/tmsfinancefinancialway/v1/update', params).then(res => {
     return res.data || {}
   })
 }
 
+/**
+ * ///finance/tmsfinancefinancialway/v1/stop/{id}
+ // 根据ID停用收支方式管理
+ * @param id
+ * @returns {*}
+ */
+export function putStop(id) {
+  return fetch.put('/api-finance/finance/tmsfinancefinancialway/v1/stop/' + id )
+}
 

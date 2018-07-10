@@ -9,6 +9,9 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+
+        value-format="timestamp"
+
         >
       </el-date-picker>
     </el-form-item>
@@ -104,7 +107,8 @@ export default {
     }
 
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      // searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       pickOption: {
         firstDayOfWeek:1,
         disabledDate(time) {
@@ -152,8 +156,10 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.searchForm.loadStartTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
-      this.searchForm.loadEndTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
+      // this.searchForm.loadStartTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
+      // this.searchForm.loadEndTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
+      this.searchForm.loadStartTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      this.searchForm.loadEndTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
       this.$emit('change', this.searchForm)
 
     },

@@ -7,7 +7,7 @@
 
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">新增</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>停用</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('stop')" plain>停用</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deleteStor')" plain>取消入库</el-button>-->
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
 
@@ -42,7 +42,7 @@
           <el-table-column
             fixed
             sortable
-            prop="orgId"
+            prop="orgName"
             width="120"
             label="所属网点">
           </el-table-column>
@@ -107,7 +107,7 @@
             sortable
           >
             <template slot-scope="scope">
-              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
+              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
             </template>
           </el-table-column>
 
@@ -129,7 +129,7 @@
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
 import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
-import {postTmsFfinancialwayList} from '@/api/finance/financefinancialway'
+import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -219,8 +219,9 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length|| type !== "storage"){
-          this.closeAddCustomer()
+
+      if(!this.selected.length && type !== "storage"){
+          // this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
               type: 'warning'
@@ -229,115 +230,59 @@ export default {
       }
 
       switch (type) {
-          // ruku
+        // 新增
           case 'storage':
-            // if(this.selected.length > 1){
-            //   this.$message({
-            //     message: '只能选择一条数据进行跟踪设置~',
-            //     type: 'warning'
-            //   })
-            //   return false
-            //
-            // }else if(this.selected.length === 1){
-            //
-              this.selectInfo = this.selected[0]
-              this.isModify = false
-              this.openAddCustomer()
-            // }
-              break;
-          case 'modify':
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.openAddCustomer()
+            this.isModify = false
+            this.openAddCustomer()
             break;
-        // sure 到车确定   deselectCar取消到车  deleteStor取消入库
-
-          // deselectCar取消到车
-          case 'deselectCar':
-                  let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
-                  //=>todo 删除多个
-                  let ids = this.selected.map(item => {
-                      return item.id
-                  })
-                  ids = ids.join(',')
-                if(this.selected[0].bathStatusName === '已到车'){
-                  this.$confirm('确定要取消车牌号 ' + deleteItem + ' 到车吗？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                  }).then(() => {
-                    postCancelLoad(ids,39).then(res => {
-                      this.$message({
-                        type: 'success',
-                        message: '取消到车成功~'
-                      })
-                      this.fetchData()
-                    }).catch(err=>{
-                      this.$message({
-                        type: 'info',
-                        message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
-                      })
-                    })
-
-                  }).catch(() => {
-                    this.$message({
-                      type: 'info',
-                      message: '已取消'
-                    })
-                  })
-                }else{
-                  let bathStatusName = this.selected[0].bathStatusName
-                  this.$message({
-                    message: '批次状态为：' + bathStatusName + '不允许取消到车~',
-                    type: 'warning'
-                  })
-                  return false
-                }
-
-              break;
-          // 取消入库
-          case 'deleteStor':
-            let deleteItemName = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
-            //=>todo 删除多个
-            let _ids = this.selected.map(item => {
-              return item.id
+          //  修改
+          case 'modify':
+            this.closeAddCustomer()
+          if(this.selected.length > 1){
+            this.$message({
+              message: '只能选择单条数据进行跟踪设置~',
+              type: 'warning'
             })
-            _ids = _ids.join(',')
+            return false
 
-            if(this.selected[0].bathStatusName === '已入库'){
-              this.$confirm('确定要取消车牌号 ' + deleteItemName + ' 入库吗？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                postCancelPut(_ids,39).then(res => {
-                  this.$message({
-                    type: 'success',
-                    message: '到货入库成功~'
-                  })
-                  this.fetchData()
-                }).catch(err=>{
-                  this.$message({
-                    type: 'info',
-                    message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
-                  })
-                })
+          }else{
+            this.selectInfo = this.selected[0]
+            this.isModify = true
+            this.openAddCustomer()
+          }
 
-              }).catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '已取消删除'
-                })
-              })
-            }else{
-              let bathStatusName = this.selected[0].bathStatusName
+            break;
+          // 停用
+          case 'stop':
+            if(this.selected.length > 1){
               this.$message({
-                message: '批次状态为：' + bathStatusName + '不允许取消入库~',
+                message: '只能选择一条数据进行跟踪设置~',
                 type: 'warning'
               })
               return false
+
+            }else{
+              if(this.selected[0].statusStr === '启用'){
+                let id = this.selected[0].id
+                putStop(id).then(res => {
+                  this.loading = false
+                  this.$message({
+                    type: 'success',
+                    message: '操作成功~'
+                  })
+                      this.fetchData()
+                }).catch(err => {
+                  this.loading = false
+                })
+              }else{
+                this.$message({
+                 type: 'info',
+                 message: '当前收支方式已经在停用状态~'
+                })
+              }
             }
-            break;
+
+              break;
           // 导出数据
           case 'export':
               let ids2 = this.selected.map(el => {

@@ -77,10 +77,10 @@
             width="160"
             sortable
             >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-            <!--</template>-->
-            <template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
+
           </el-table-column>
           <!--<el-table-column-->
             <!--prop="vipNum"-->
@@ -148,14 +148,14 @@
           <el-table-column
             prop="weightRate"
             label="重量装载率"
-            width="120"
+            width="160"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="volumeRate"
             label="体积装载率"
-            width="120"
+            width="160"
             sortable
           >
           </el-table-column>
@@ -248,10 +248,9 @@
             width="160"
             sortable
           >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-            <!--</template>-->
-            <template slot-scope="scope">{{ new Date(scope.row.requireArrivedTime).toLocaleDateString() }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="username"
@@ -398,7 +397,7 @@ export default {
                 this.isModify = false
                 this.openAddCustomer()
               }else{
-                // let bathStatusName = this.selected[0].bathStatusName
+                this.closeAddCustomer()
                 this.$message({
                   message: '已到车的批次才可以做到货入库~',
                   type: 'warning'
@@ -437,6 +436,7 @@ export default {
                   })
 
                 }else{
+                  this.closeAddCustomer()
                   let bathStatusName = this.selected[0].bathStatusName
                   this.$message({
                     message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
@@ -537,6 +537,7 @@ export default {
                   })
                 })
               }else{
+                this.closeAddCustomer()
                 let bathStatusName = this.selected[0].bathStatusName
                 this.$message({
                   message: '批次状态为：' + bathStatusName + '不允许取消入库~',
@@ -585,26 +586,20 @@ export default {
       // this.selectInfo = row
       // this.isModify = true
       // this.openAddCustomer()
-      this.selected = row
-      console.log(this.selected);
-      let ids = this.selected.filter(el=>{
-        return el.bathStatusName === '已到车'
-      }).map(el => {
-        return  el.id
-      })
-      if(!ids.length){
-        let bathStatusName = this.selected[0].bathStatusName
-        this.$message({
-          message: '批次状态为：' + bathStatusName + '不允许取消到车~',
-          type: 'warning'
-        })
-        return false
-      }else {
+      console.log(row.bathStatusName);
+      if(row.bathStatusName === '在途中'){
         this.selectInfo = row
         this.isModify = true
         this.openAddCustomer()
+      }else {
+        let bathStatusName = row.bathStatusName
+        this.$message({
+          message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
+          type: 'warning'
+        })
+        this.closeAddCustomer()
+        return false
       }
-
     }
   }
 }

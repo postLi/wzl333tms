@@ -80,8 +80,8 @@ export default {
       this.searchForm.orgid = id
     },
     onSubmit () {
-      this.searchForm.createTime = this.searchCreatTime[0] ? +this.searchCreatTime[0] : ''
-      this.searchForm.endTime = this.searchCreatTime[1] ? +this.searchCreatTime[1] : ''
+      this.searchForm.createTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
+      this.searchForm.endTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
       this.$emit('change', this.searchForm)
       // console.log(this.searchForm);
     },

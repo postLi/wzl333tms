@@ -303,7 +303,7 @@ export default {
       dataLoad.truckVolume = this.info.truckVolume
       dataLoad.updateTime = this.info.updateTime
       dataLoad.userId = this.info.userId
-      // 实到体积/重量/件数 
+      // 实到体积/重量/件数
       // this.detailList.forEach((e, index) => {
       //   e.actualWeight = e.loadWeight
       //   e.actualVolume = e.loadVolume
@@ -320,7 +320,7 @@ export default {
       //     }
       //   }
       // })
-      
+
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
       this.newData.tmsOrderLoadDetailsList = Object.assign([], this.selectDetailList)

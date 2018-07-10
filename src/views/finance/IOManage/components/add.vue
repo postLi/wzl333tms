@@ -190,6 +190,7 @@ export default {
     isModify () {
       if (this.isModify) {
         this.popTitle = '修改收支方式'
+        console.log(this.info);
         // this.infoData(this.info)
       }
       else if(this.isDbclick) {

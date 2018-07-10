@@ -42,14 +42,11 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
-                    <el-input :value="formModel.loadTime | parseTime('{y}/{m}/{d}')" maxlength="15" clearable disabled>
+                    <el-input :value="formModel.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="15" clearable disabled>
                     </el-input>
-                    <!--<template slot-scope="scope">-->
-                    <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-                    <!--</template>-->
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
-                    <el-input maxlength="15" clearable disabled :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')">
+                    <el-input maxlength="15" clearable disabled :value="formModel.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')">
                     </el-input>
                   </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
@@ -133,15 +130,18 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-else>{{popTitle}}</el-button >
+                  <div v-if="isHiddenBtn===true">
+                    <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
+                  </div>
+                    <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-else="!isModify">{{popTitle}}</el-button >
+
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="height: 100%">
-                    <el-table-column fixed sortable type="selection" width="50">
+                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="height: 80%">
+                    <el-table-column fixed sortable type="selection" width="40">
                     </el-table-column>
                     <!--<el-table-column-->
                     <!--fixed-->
@@ -156,15 +156,32 @@
                     </el-table-column>
                     <el-table-column prop="childShipSn" sortable width="120" label="子运单号">
                     </el-table-column>
-                    <!--actualAmount-->
-                    <el-table-column prop="loadAmount" sortable width="120" label="实到件数">
-                    </el-table-column>
-                    <!--actualWeight-->
-                    <el-table-column sortable prop="loadWeight" width="120" label="实到重量">
-                    </el-table-column>
-                    <!--actualVolume-->
-                    <el-table-column label="实到体积" width="120" prop="loadVolume" sortable>
-                    </el-table-column>
+                    <div v-if="isModify">
+                      <!--actualAmount-->
+                      <el-table-column prop="loadAmount" sortable width="120" label="实到件数">
+                      </el-table-column>
+                      <!--actualWeight-->
+                      <el-table-column sortable prop="loadWeight" width="120" label="实到重量">
+                      </el-table-column>
+                      <!--actualVolume-->
+                      <el-table-column label="实到体积" width="120" prop="loadVolume" sortable>
+                      </el-table-column>
+                    </div>
+                    <div v-else="!isModify">
+                      <!--actualAmount-->
+                      <el-table-column prop="loadAmount" sortable width="120" label="实到件数">
+                      </el-table-column>
+                      <!--actualWeight-->
+                      <el-table-column prop="loadAmount"  width="120" label="实到件数">
+                      </el-table-column>
+                      <el-table-column sortable prop="loadWeight" width="120" label="实到重量">
+                      </el-table-column>
+                      <el-table-column sortable prop="loadVolume" width="120" label="实到体积">
+                      </el-table-column>
+                      <!--actualVolume-->
+                      <!--<el-table-column label="实到体积" prop="loadVolume" width="120" sortable>-->
+                      <!--</el-table-column>-->
+                    </div>
                     <el-table-column prop="loadAmount" label="配载件数" width="120" sortable>
                     </el-table-column>
                     <el-table-column sortable prop="loadWeight" width="110" label="配载重量">
@@ -177,7 +194,7 @@
                     </el-table-column>
                     <el-table-column prop="shipSenderName" label="发货人" width="100" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipSenderMobile" label="发货人电话" width="100" sortable>
+                    <el-table-column prop="shipSenderMobile" label="发货人电话" width="120" sortable>
                     </el-table-column>
                     <el-table-column prop="shipSenderName" label="收货人电话" width="120" sortable>
                     </el-table-column>
@@ -185,7 +202,7 @@
                     </el-table-column>
                     <el-table-column prop="cargoName" label="货品名" width="100" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipGoodsSn" label="货号" width="100" sortable>
+                    <el-table-column prop="shipGoodsSn" label="货号" width="130" sortable>
                     </el-table-column>
                     <el-table-column prop="shipRemarks" label="运单备注" width="120" sortable>
                     </el-table-column>
@@ -342,8 +359,8 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}/{m}/{d}')"></el-input>，到达时间为
-                      <el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}/{m}/{d}')"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为
+                      <el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
                   </div>
@@ -463,6 +480,7 @@ export default {
       isFootSecond: false,
       isFootOther: false,
       isCancelFootEdit: false,
+      isHiddenBtn:false,
       propsId: '',
       formModel: {},
       // formModel: {
@@ -608,14 +626,12 @@ export default {
   mounted() {
 
     this.propsId = this.info.id
-
-
-    // this.fetchSelectLoadList()
+    this.fetchBatchNo()
     if (this.popVisible) {
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
-      this.fetchBatchNo()
+
     }
   },
   methods: {
@@ -634,7 +650,6 @@ export default {
       this.searchQuery.vo.loadId = selectMainId
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.formModel = data.list[0]
-        // console.log(this.formModel);
         this.loading = false
       })
 
@@ -770,6 +785,7 @@ export default {
                 message: '到车确定成功'
               })
               this.closeMe()
+              this.isHiddenBtn = true
             })
           } else {
             this.sendModel.tmsOrderLoad.id = this.formModel.id
@@ -875,7 +891,7 @@ export default {
         margin-right: 0;
       }
       .table_export {
-        margin-left: 510px;
+        margin-left: 576px;
       }
       /*.table_ixport{*/
       /*margin-left: 400px;*/
@@ -932,10 +948,25 @@ export default {
         margin-right: 0;
         margin-bottom: 15px;
       }
+      .art_remk{
+        width: 100%;
+        .el-form-item__content{
+          width: 81%;
+          .el-textarea.is-disabled {
+            .el-textarea__inner{
+              background-color: #fff;
+              color: #606266;
+            }
+          }
+        }
+      }
+    }
+    .el-input.is-disabled .el-input__inner{
+      color: #606266
     }
   }
   .infos_table {
-    padding: 0 10px 10px 10px;
+    padding: 0 40px 10px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
     ul {
@@ -969,6 +1000,9 @@ export default {
         margin-bottom: 0;
         margin-right: 0;
       }
+    }
+    .el-input.is-disabled .el-input__inner{
+      color: #606266;
     }
   }
 }

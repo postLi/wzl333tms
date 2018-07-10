@@ -80,10 +80,10 @@
 
             sortable
             >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-            <!--</template>-->
-            <template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
+            </template>
+            <!--<template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>-->
           </el-table-column>
           <!--<el-table-column-->
             <!--prop="vipNum"-->
@@ -251,10 +251,10 @@
             width="160"
             sortable
           >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-            <!--</template>-->
-            <template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
+            </template>
+            <!--<template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>-->
           </el-table-column>
           <el-table-column
             prop="userName"
