@@ -1,7 +1,7 @@
 <template>
-   <el-dialog :title='popTitle' @close="closeMe" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="setupTablePop">
+   <el-dialog :title='popTitle' @close="closeMe" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="paymentStap">
     <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-          <div class="title"><i class="el-icon-info"></i>请您确认是否进行<a>贷款回收</a>，总金额：<span>{{form.agencyFund}}</span>元？</div>
+          <div class="title"><i class="el-icon-info"></i>请您确认是否进行<a>{{proptitle}}</a>，总金额：<span>{{form.agencyFund}}</span>元？</div>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <!-- <el-button :plain="true" @click="openHTML">使用 HTML 片段</el-button>  -->
@@ -59,7 +59,8 @@ export default {
     isAccept: {
       type: Boolean,
       default: false
-    }
+    },
+    proptitle: String
   },
 
   data() {
@@ -189,7 +190,7 @@ export default {
 //   color: #90dfa8;
 //   font-weight: bold;
 // }
-.setupTablePop{
+.paymentStap{
   margin-top: 25vh;
 
   .el-dialog{

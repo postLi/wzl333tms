@@ -50,6 +50,7 @@
                 label="开单日期">
                 <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
               </el-table-column>
+              
               <el-table-column
                 prop="shipSn"
                 sortable
@@ -59,10 +60,30 @@
               <el-table-column
                 prop="shipGoodsSn"
                 sortable
-                width="120"
+                width="200"
                 label="货号">
               </el-table-column>
-              
+              <el-table-column
+                prop="fundsRecStatusName"
+                label="回收状态"
+                width="120"
+                sortable
+                >
+              </el-table-column>
+              <el-table-column
+                prop="fundsGoodsStatusName"
+                label="货款状态"
+                width="120"
+                sortable
+                >
+              </el-table-column>
+              <el-table-column
+                sortable
+                prop=""
+                width="200"
+                label="回收日期">
+                <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
+              </el-table-column>
               
               <el-table-column
                 sortable
@@ -77,29 +98,7 @@
                 sortable
                 >
               </el-table-column>
-              <el-table-column
-                prop="fundsRecStatusName"
-                label="回收状态"
-                width="120"
-                sortable
-                >
-              </el-table-column>
               
-              <el-table-column
-                sortable
-                prop=""
-                width="200"
-                label="回收日期">
-                <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-              </el-table-column>
-              
-              <el-table-column
-                prop="fundsGoodsStatusName"
-                label="贷款状态"
-                width="120"
-                sortable
-                >
-              </el-table-column>
               <el-table-column
                 prop="agencyFund"
                 label="代收货款"
@@ -288,7 +287,7 @@
         </div>  
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
+      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款回收" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
     </div>
 </div>
 </template>
@@ -424,7 +423,7 @@ export default {
               this.closeAddDot()
             })
           } else {
-            this.$message.warning('不可重复取消~')
+            this.$message.warning('不可取消~')
           }
 
           break

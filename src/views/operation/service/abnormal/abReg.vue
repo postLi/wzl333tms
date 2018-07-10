@@ -35,7 +35,7 @@
             sortable
             prop="id"
             label="序号"
-            width="80">
+            width="200">
           </el-table-column>
           <el-table-column
             fixed
@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column
             sortable
-            width="120"
+            width="200"
             label="开单时间">
             <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
@@ -92,7 +92,7 @@
           <el-table-column
             prop="registerTime"
             sortable
-            width="120"
+            width="200"
             label="登记时间">
             <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
@@ -148,7 +148,7 @@
           <el-table-column
             prop="disposeTime"
             label="处理时间"
-            width="120"
+            width="200"
             sortable
             >
             <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>

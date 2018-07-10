@@ -34,7 +34,7 @@
             sortable
             prop="shipId"
             label="序号"
-            width="80">
+            width="200">
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -46,12 +46,12 @@
             fixed
             sortable
             prop="fromOrgName"
-            width="120"
+            width="160"
             label="开单网点">
           </el-table-column>
           <el-table-column
             sortable
-            width="120"
+            width="200"
             label="开单时间">
             <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
@@ -119,7 +119,7 @@
           <el-table-column
             prop="sender_detailed_address"
             label="发货人地址"
-            width="120"
+            width="200"
             sortable
             >
           </el-table-column>
@@ -140,7 +140,7 @@
           <el-table-column
             prop="receiver_detailed_address"
             label="收货地址"
-            width="120"
+            width="200"
             sortable
             >
           </el-table-column>
@@ -522,7 +522,7 @@
           <el-table-column
             prop="signTime"
             sortable
-            width="120"
+            width="200"
             label="签收时间">
             <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>

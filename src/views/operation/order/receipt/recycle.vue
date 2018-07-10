@@ -28,12 +28,12 @@
                 type="selection"
                 width="50">
               </el-table-column>
-              <el-table-column
+               <el-table-column
                 fixed
                 sortable
                 prop="shipId"
                 label="序号"
-                width="80">
+                width="200">
               </el-table-column>
               <el-table-column
                 fixed
@@ -51,7 +51,7 @@
               <el-table-column
                 prop=""
                 sortable
-                width="120"
+                width="200"
                 label="开单日期">
                 <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
               </el-table-column>
@@ -81,17 +81,17 @@
                 sortable
                 >
               </el-table-column>
-              <el-table-column
+              <!-- <el-table-column
                 prop="sendStatusName"
                 label="寄出状态"
                 width="120"
                 sortable
                 >
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column
                 sortable
                 prop=""
-                width="120"
+                width="200"
                 label="回收日期">
                 <template slot-scope="scope">{{ scope.row.recTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
               </el-table-column>
@@ -103,7 +103,7 @@
                 >
               </el-table-column>
               <el-table-column
-                prop="shipReceiptRequire"
+                prop="shipReceiptRequireName"
                 label="回单类型"
                 width="120"
                 sortable
@@ -232,22 +232,22 @@
               </el-table-column>
               <!-- 这里没有找到对应的字段 -->
               <el-table-column
-                  label="到达省"
-                  width="120"
-                  sortable
-                  >
-                  <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
+                label="到达省"
+                width="200"
+                sortable
+                >
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
               </el-table-column>
               <el-table-column
                 label="到达市"
-                width="120"
+                width="200"
                 sortable
                 >
                 <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
               </el-table-column>
               <el-table-column
                 label="到达区"
-                width="120"
+                width="200"
                 sortable
                 >
                 <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
@@ -262,7 +262,7 @@
               <el-table-column
                 prop="sendAddress"
                 label="发货地址"
-                width="120"
+                width="200"
                 sortable
                 >
               </el-table-column>
@@ -276,34 +276,34 @@
               <el-table-column
                 prop="recAddress"
                 label="收货地址"
-                width="120"
+                width="200"
                 sortable
                 >
               </el-table-column>
-              <el-table-column
+              <!-- <el-table-column
                 prop="sendTime"
                 label="寄出日期"
                 width="120"
                 sortable
                 >
                 <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-              </el-table-column>
-              <el-table-column
+              </el-table-column> -->
+              <!-- <el-table-column
                 prop="acceptTime"
                 label="接收日期"
-                width="120"
+                width="200"
                 sortable
                 >
                 <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-              </el-table-column>
-              <el-table-column
+              </el-table-column> -->
+              <!-- <el-table-column
                 prop="giveoutTime"
                 label="发放日期"
-                width="120"
+                width="200"
                 sortable
                 >
                 <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column
                 prop="recRemark"
                 label="回收备注"
@@ -311,13 +311,13 @@
                 sortable
                 >
               </el-table-column>
-              <el-table-column
+              <!-- <el-table-column
                 prop="acceptRemark"
                 label="接收备注"
                 width="120"
                 sortable
                 >
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
         </div>  
       </div>

@@ -4,11 +4,11 @@
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize"  plain @click="doAction('reg')">异动登记</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('xiugai')" plain>修改</el-button>
+          <el-button type="primary" :size="btnsize" class="el-icon-circle-plus"  plain @click="doAction('reg')">异动登记</el-button>
+          <el-button type="primary" :size="btnsize" class="el-icon-edit" @click="doAction('xiugai')" plain>修改</el-button>
           <!-- <el-button type="primary" :size="btnsize"  @click="doAction('check')" plain>查看明细</el-button> -->
           <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize"  @click="doAction('export')" plain>导出</el-button>
+          <el-button type="primary" :size="btnsize" class="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
           
           <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -38,12 +38,19 @@
             label="序号"
             width="80">
           </el-table-column>
+          <!-- 没有返回字段名 -->
           <el-table-column
-            fixed
+            label="开单网点"
+            width="180"
+            prop="shipFromOrgid"
             sortable
-            prop="abnormalNo"
-            width="120"
-            label="异常编号">
+            >
+          </el-table-column>
+           <el-table-column
+            sortable
+            width="200"
+            label="开单日期">
+            <template slot-scope="scope">{{ scope.row.shipCreateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -51,62 +58,97 @@
             sortable
             label="运单号">
           </el-table-column>
+         
           <el-table-column
+            prop="shipGoodsSn"
             sortable
             width="120"
-            label="开单时间">
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
+            label="货号">
           </el-table-column>
           <el-table-column
-            prop="cargoName"
-            sortable
-            width="120"
-            label="货品名">
-          </el-table-column>
-          <el-table-column
-            prop="abnormalStatusName"
-            label="异常状态"
+            prop="shipFromCityCode"
+            label="出发城市"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
             sortable
-            prop="abnormalTypeName"
+            prop="shipToCityCode"
             width="120"
-            label="异常类型">
+            label="到达城市">
           </el-table-column>
+           <!-- 没有返回字段名 -->
           <el-table-column
-            label="登记网点"
-            width="120"
-            prop="orgName"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="dutyOrgName"
-            label="责任网点"
+            prop="status"
+            label="结算状态"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="registerTime"
-            sortable
+            prop="changeFee"
+            label="异动费用"
             width="120"
-            label="登记时间">
-            <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
+            sortable
+            >
           </el-table-column>
+           <!-- 没有返回字段名 -->
           <el-table-column
-            prop="registerName"
-            label="登记人"
+            prop="feeTypeId"
+            label="费用类型"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+
+           <el-table-column
+            prop="createTime"
+            label="异动时间"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
+          </el-table-column>
+   
+          <el-table-column
+            prop="remark"
+            label="异动备注"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="registerFee"
-            label="登记金额"
+            prop="shipStatusName"
+            label="运单状态"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="senderCustomerName"
+            label="发货人"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="senderCustomerMobile"
+            label="发货人电话"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="receiverCustomerName"
+            label="收货人"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="receiverCustomerMobile"
+            label="收货人电话"
             width="120"
             sortable
             >
@@ -119,20 +161,13 @@
             >
           </el-table-column>
           <el-table-column
-            prop="shipGoodsSn"
-            label="货号"
+            prop="cargoName"
+            label="货品名"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="cargoPack"
-            label="包装"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-           <el-table-column
             prop="cargoAmount"
             label="件数"
             width="120"
@@ -140,45 +175,100 @@
             >
           </el-table-column>
           <el-table-column
-            prop="abnormalDescribe"
-            label="异常描述"
-            width="120"
-            sortables
-            >
-          </el-table-column>
-          <el-table-column
-            prop="disposeTime"
-            label="处理时间"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
-          </el-table-column>
-          <el-table-column
-            prop="disposeResultName"
-            label="处理结果"
-            width="120"
-            sortable
-            type="dispose_result"
-            >
-          </el-table-column>
-           <el-table-column
-            prop="disposeOrgName"
-            label="处理网点"
+            prop="cargoWeight"
+            label="重量"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="disposeName"
-            label="处理人"
+            prop="cargoVolume"
+            label="体积"
             width="120"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="disposeOpinion"
-            label="处理意见"
+            prop="shipRemarks"
+            label="运单备注"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="shipPayWay"
+            label="付款方式"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="nowPayFee"
+            label="现付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="arrivePayFee"
+            label="到付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="receiptPayFee"
+            label="回单付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="monthPayFee"
+            label="月结"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="多笔付"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            label="到达省"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
+          </el-table-column>
+          <el-table-column
+            label="到达市"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
+          </el-table-column>
+          <el-table-column
+            label="到达区"
+            width="120"
+            sortable
+            >
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
+          </el-table-column>
+     
+          <el-table-column
+            prop="senderDetailedAddress"
+            label="发货地址"
+            width="120"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            prop="receiverDetailedAddress"
+            label="收货地址"
             width="120"
             sortable
             >
@@ -187,10 +277,10 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
-        <Addunusual :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
-        <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
+      <Addunusual :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+      <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
-</div>
+</div> 
 </template>
 <script>
 import SearchForm from './components/search'
