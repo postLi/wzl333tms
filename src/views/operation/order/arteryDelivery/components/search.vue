@@ -115,8 +115,6 @@ export default {
     }
 
     return {
-      // searchCreatTime:[],
-      // searchEndTime:[],
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchEndTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickOption: {
@@ -147,11 +145,9 @@ export default {
       },
       rules: {
         mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }],
         dirverName: [{
-          //validator: validateFormMobile, trigger: 'blur'
           validator: validateDriverName, trigger: 'change'
         }]
       }

@@ -104,7 +104,7 @@
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
         if(this.reference){
-          
+
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }

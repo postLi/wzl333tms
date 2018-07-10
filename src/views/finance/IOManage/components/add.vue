@@ -52,7 +52,7 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { fetchGetPickUp , postAdd , putUpdate} from '@/api/finance/financefinancialway'
+import {  postAdd , putUpdate} from '@/api/finance/financefinancialway'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -324,7 +324,12 @@ export default {
       padding: 20px 0px 0;
       box-sizing: border-box;
     }
-
+    .el-form-item:last-of-type{
+      width: 96%;
+      .el-form-item__content{
+        width: 80%;
+      }
+    }
   }
   .senderName_lrl{
     .el-autocomplete{
@@ -358,11 +363,7 @@ export default {
   .pickup_lrl{
     padding-left: 10px;
   }
-.el-form-item:last-of-type{
-  width: 96%;
-  .el-form-item__content{
-    width: 80%;
-  }
-}
+
+
 </style>
 
