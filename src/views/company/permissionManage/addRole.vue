@@ -7,9 +7,9 @@
               <div class="add-role-top">
                 <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName">
                   <el-form-item label="角色名称：" prop="roleName">
-                    <el-input v-model="formInline.roleName" placeholder="" clearable></el-input>
+                    <el-input v-model="formInline.roleName"  clearable></el-input>
                   </el-form-item>
-                  <el-form-item label="备注："  prop="remark">
+                  <el-form-item label="备注：" prop="remark">
                     <el-input
                       type="textarea"
                       v-model="formInline.remark"
@@ -69,7 +69,8 @@
   }
 
   import popRight from '@/components/PopRight/index'
-  import { postRoleInfo,putRoleInfo} from '../../../api/company/permissionManage'
+  import { postRoleInfo,putRoleInfo} from '@/api/company/permissionManage'
+  import {objectMerge2} from '@/utils/index'
   export default {
     components: {
       popRight
@@ -92,19 +93,29 @@
       createrId: [Number,String]
     },
     watch: {
-
       dotInfo (newVal) {
         this.treeData = this.dotInfo
         this.$refs.tree.setCheckedKeys(expandGroups(this.treeData))
       },
       theUser (newVal) {
         if(this.isModify) {
-          this.formInline = this.theUser
+          this.popTitle = '修改角色'
+          this.formInline = objectMerge2(this.theUser)
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
         if(this.reference){
+          
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
+        }
+        else{
+          this.popTitle = '新增角色'
+          this.formInline = {
+            roleName: '',
+            remark: '',
+            menusId: '',
+            createrId : this.createrId
+          }
         }
       },
       reference(){

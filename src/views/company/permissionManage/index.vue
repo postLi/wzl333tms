@@ -22,21 +22,8 @@
             <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain>参照</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain>关联员工</el-button>
-            <!--<el-col class="org-name"> <p>{{// form.orgName}}</p></el-col>-->
             <!--表格功能-->
           </div>
-          <!--<div class="btns_box_left">-->
-            <!--<img src="../../../assets/icom/xinzeng.png" alt="">-->
-            <!--<el-button type="primary" plain @click="doAction('addRole')">新增角色</el-button>-->
-            <!--<img src="../../../assets/icom/shanchu.png" alt="">-->
-            <!--<el-button type="primary" plain @click="doAction('roleNot')">修改</el-button>-->
-            <!--<img src="../../../assets/icom/shanchu.png" alt="">-->
-            <!--<el-button type="primary" plain @click="doAction('deletePeople')">删除</el-button>-->
-            <!--<img src="../../../assets/icom/shanchu.png" alt="">-->
-            <!--<el-button type="primary" plain @click="doAction('reference')">参照</el-button>-->
-            <!--<img src="../../../assets/icom/shanchu.png" alt="">-->
-            <!--<el-button type="primary" plain @click="doAction('relationPer')">关联员工 </el-button>-->
-          <!--</div>-->
         </div>
         <!--表格功能-->
         <!--表格内容-->
@@ -253,6 +240,8 @@
             break;
           //    删除员工
           case 'deletePeople':
+            this.addDoRoleVisible = false
+            this.addRelatVisible = false
             let deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].roleName
             //=>todo 删除多个
             let ids = ''
