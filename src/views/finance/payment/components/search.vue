@@ -12,12 +12,12 @@
         </div>
           <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
-        <!-- <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.shipFromOrgid" />
-        </el-form-item>
-         -->
-        <el-form-item :label="title+'状态'"  prop="fundsRecStatus">
+        <!-- <el-form-item :label="title+'状态'"  prop="fundsRecStatus">
           <selectType v-model="thestatus" :type="type" />
+        </el-form-item> -->
+        <el-form-item :label="title+'状态'"  prop="thestatus">
+          <selectType v-model="thestatus"  :type="type">
+          </selectType>
         </el-form-item>
         <el-form-item label="运单号">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>

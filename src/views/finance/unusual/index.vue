@@ -228,7 +228,6 @@ export default {
       btnsize: 'mini',
       component: 'Send',
       selectInfo: {},
-      loading: true,
       dataset: [],
       isModify: false,
       isCheck: false,
@@ -237,8 +236,7 @@ export default {
       isDbclick: false,
       licenseTypes: [],
       selected: [],
-
-                // loading:false,
+      loading: false,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
@@ -258,12 +256,12 @@ export default {
         //   return info[0] ? info[0].dictName : id
         // },
     fetchAllreceipt() {
-      this.loading = true
-      return getAbnormalUnusual(this.searchQuery).then(data => {
-        this.dataset = data.list
-        this.total = data.total
-        this.loading = false
-      })
+      // this.loading = true
+      // return getAbnormalUnusual(this.searchQuery).then(data => {
+      this.dataset = data.list
+      this.total = data.total
+      this.loading = false
+      // })
     },
 
     handlePageChange(obj) {
