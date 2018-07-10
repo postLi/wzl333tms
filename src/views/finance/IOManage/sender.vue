@@ -129,7 +129,7 @@
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
 import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
-import {postTmsFfinancialwayList} from '../../../api/finance/financefinancialway'
+import {postTmsFfinancialwayList} from '@/api/finance/financefinancialway'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'

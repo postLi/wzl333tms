@@ -52,7 +52,7 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { fetchGetPickUp , postAdd , putUpdate} from '@/api/operation/pickup'
+import { fetchGetPickUp , postAdd , putUpdate} from '@/api/finance/financefinancialway'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -136,7 +136,7 @@ export default {
       this.initInfo()
     }
 
-    this.fetchGetPickUp()
+    // this.fetchGetPickUp()
 
   },
   watch: {
