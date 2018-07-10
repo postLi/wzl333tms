@@ -307,7 +307,7 @@ export default {
       }
   },
   mounted () {
-    this.searchQuery.vo.orgId = this.otherinfo.orgid
+    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
     this.fetchAllCustomer()
   },
   data () {
@@ -329,12 +329,12 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgId": '',
+          "arriveOrgid": '',
           dirverName: '',
           truckIdNumber:'',//车牌号
-          batchTypeId: 51,//批次状态
+          batchTypeId: '',//批次状态
           batchNo:'',//发车批次
-          loadTypeId:54,//配载类型
+          loadTypeId:39,//配载类型
           endTime:'',//结束时间
           beginTime:'',//
           arrivedbeginDate:'',//到达时间(起始时间)
@@ -585,7 +585,8 @@ export default {
       // this.selectInfo = row
       // this.isModify = true
       // this.openAddCustomer()
-
+      this.selected = row
+      console.log(this.selected);
       let ids = this.selected.filter(el=>{
         return el.bathStatusName === '已到车'
       }).map(el => {

@@ -7,30 +7,42 @@
         <div class="iommanage-bottom">
           <el-form-item label="所属网点">
             <SelectTree v-model="form.orgId" />
-            <!--<el-input v-model="form.orgId"  auto-complete="off" :disabled="isDbclick"></el-input>-->
           </el-form-item>
           <el-form-item label="收支方式" prop="financialWay">
-            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择"  @click="financialWayClick(form.financialWay)"/>
-            <!--<el-input v-model="form.financialWay" auto-complete="off" :disabled="isDbclick"></el-input>-->
+            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择"  @change="financialWayClick"/>
 
           </el-form-item>
 
-          <el-form-item label="银行名称" prop="bankName">
-            <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick" maxlength="20"></el-input>
-          </el-form-item>
-          <el-form-item label="银行卡号">
-            <el-input v-model="form.bankAccount" auto-complete="off" :disabled="isDbclick"></el-input>
-          </el-form-item>
-          <el-form-item label="开户人">
-            <el-input v-model="form.bankAccountName" auto-complete="off" :disabled="isDbclick"></el-input>
-          </el-form-item>
-          <el-form-item label="支付宝号" >
-            <el-input v-model="form.alipayAccount" auto-complete="off" :disabled="isDbclick"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号" >
-            <el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>
-          </el-form-item>
-          <el-form-item label="备注" >
+          <div v-if="bankPay===true">
+            <el-form-item label="银行名称" prop="bankName">
+              <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick" maxlength="20"></el-input>
+            </el-form-item>
+            <el-form-item label="银行卡号">
+              <el-input v-model="form.bankAccount" auto-complete="off" :disabled="isDbclick"></el-input>
+            </el-form-item>
+            <el-form-item label="开户人">
+              <el-input v-model="form.bankAccountName" auto-complete="off" :disabled="isDbclick"></el-input>
+            </el-form-item>
+          </div>
+          <div v-if="aliPay===true">
+            <el-form-item label="支付宝号" >
+              <el-input v-model="form.alipayAccount" auto-complete="off" :disabled="isDbclick"></el-input>
+            </el-form-item>
+          </div>
+          <div v-if="wPay===true">
+            <el-form-item label="微信号" >
+              <el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>
+            </el-form-item>
+          </div>
+          <div v-if="casyPay===true">
+            <el-form-item label="经手人" >
+              <el-input v-model="form.agent" auto-complete="off" :disabled="isDbclick"></el-input>
+            </el-form-item>
+          </div>
+          <!--<el-form-item label="微信号" >-->
+            <!--<el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>-->
+          <!--</el-form-item>-->
+          <el-form-item label="备注" class="iom_textarea">
             <el-input v-model="form.remark" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
           </el-form-item>
 
@@ -52,7 +64,7 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import {  postAdd , putUpdate} from '@/api/finance/financefinancialway'
+import { postAdd , putUpdate} from '@/api/finance/financefinancialway'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -126,7 +138,11 @@ export default {
       popTitle: '新增收支方式',
       loading: false,
       inited: false,
-      pickupBatchNumber:'',
+      bankPay: false,//银行
+      aliPay: false,//支付宝
+      wPay: false,//微信
+      casyPay: false,//现金
+      chePay: false,//支票
 
     }
   },
@@ -134,6 +150,7 @@ export default {
     if(!this.inited){
       this.inited = true
       this.initInfo()
+      this.form.orgId = this.otherinfo.orgid
     }
 
     // this.fetchGetPickUp()
@@ -147,6 +164,7 @@ export default {
       }
     },
     orgid (newVal) {
+      this.form.orgId = newVal
       console.log(this.form.financialWay)
     },
     info () {
@@ -192,7 +210,41 @@ export default {
   },
   methods: {
     financialWayClick(item){
-      console.log(item);
+      if(item === 280){
+        this.bankPay = true
+        this.aliPay = false
+        this.wPay = false
+        this.casyPay = false
+        this.chePay = false
+      }else if(item === 281){
+        this.aliPay = true
+        this.bankPay = false
+        this.wPay = false
+        this.casyPay = false
+        this.chePay = false
+      }
+      else if(item === 282){
+        this.wPay = true
+        this.aliPay = false
+        this.bankPay = false
+        this.casyPay = false
+        this.chePay = false
+      }
+      else if(item === 283){
+        this.casyPay = true
+        this.wPay = false
+        this.aliPay = false
+        this.bankPay = false
+        this.chePay = false
+      }
+      else{
+        this.chePay = true
+        this.casyPay = false
+        this.wPay = false
+        this.aliPay = false
+        this.bankPay = false
+      }
+
     },
     getTrunkName(trunk){
       if(trunk){
@@ -225,13 +277,13 @@ export default {
       }
       return obj1
     },
-    fetchGetPickUp(){
-      this.loading = true
-      return fetchGetPickUp().then(data => {
-        this.pickupBatchNumber = data.data
-        this.loading = false
-      })
-    },
+    // fetchGetPickUp(){
+    //   this.loading = true
+    //   return fetchGetPickUp().then(data => {
+    //     this.pickupBatchNumber = data.data
+    //     this.loading = false
+    //   })
+    // },
     /** 收货人/发货人  tmsCustomer*/
     setSender(item, type){
       type = type ? 'customRece' : 'tmsCustomer'
@@ -298,10 +350,8 @@ export default {
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
-      this.form.tmsCustomer = ''
-      this.form.tmsDriver = ''
-      this.form.tmsTruck = ''
-      this.form.tmsOrderPickup = ''
+      this.form = ''
+      this.form.orgId = this.otherinfo.orgid
     },
     closeMe (done) {
       this.$emit('update:popVisible', false);
@@ -324,11 +374,17 @@ export default {
       padding: 20px 0px 0;
       box-sizing: border-box;
     }
-    .el-form-item:last-of-type{
-      width: 96%;
+    .el-form-item{
       .el-form-item__content{
-        width: 80%;
+        width: 69%;
       }
+    }
+    .el-form-item.iom_textarea{
+      width: 98%;
+      .el-form-item__content{
+        width:83%;
+      }
+
     }
   }
   .senderName_lrl{
