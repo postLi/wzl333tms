@@ -48,7 +48,6 @@
       <el-table-column
         label="异常图片"
         width="300"
-        sortable
         >
         <template slot-scope="scope">
            <div class="clickimglist">
@@ -68,26 +67,26 @@ export default {
   props: {
     orderid: [String, Number]
   },
-  data () {
+  data() {
     return {
       loading: false,
       usersArr: []
     }
   },
   watch: {
-    orderid (newVal) {
-      if(newVal !== '') {
+    orderid(newVal) {
+      if (newVal !== '') {
         this.fetchData()
       } else {
         this.usersArr = []
       }
     }
   },
-  mounted () {
+  mounted() {
     this.fetchData()
   },
   methods: {
-    fetchData(){
+    fetchData() {
       return orderManage.getShipAbnormal(this.orderid).then(res => {
         this.usersArr = res
       })

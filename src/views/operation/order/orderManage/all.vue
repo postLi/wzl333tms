@@ -66,7 +66,7 @@ import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { parseTime } from '@/filters/'
+import { parseTime } from '@/utils/index'
 
 export default {
   components: {
@@ -137,7 +137,7 @@ export default {
       }, {
         'label': '开单时间',
         'prop': 'createTime',
-        'width': '200',
+        'width': '180',
         'slot': function(scope) {
           return `${parseTime(scope.row.createTime)}`
         }

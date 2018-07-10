@@ -15,6 +15,9 @@ export default {
       path: '/finance/handAccount', icon: 'QQ', name: '员工交账', component: _import('finance/handAccount/index'), meta: { role: ['admin'], title: '员工交账', noCache: false }
     },
     {
+      path: '/finance/handAccount/detail', icon: 'QQ', name: '交账明细', component: _import('finance/handAccount/detail'), meta: { role: ['admin'], title: '交账明细', noCache: false }
+    },
+    {
       path: '/finance/accountsReceivable', icon: 'QQ', name: '应收账款', component: _import('finance/accountsReceivable/index'), meta: { role: ['admin'], title: '应收账款', noCache: false }
     },
     {

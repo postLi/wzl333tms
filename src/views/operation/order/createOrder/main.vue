@@ -140,13 +140,13 @@
       </div>
       <!-- 货物费用 -->
       <div class="order-cargo-form">
-        <el-table ref="cargoListTable" :data="form.cargoList" border tooltip-effect="dark" triped width="100%">
+        <el-table ref="cargoListTable" :data="form.cargoList" border tooltip-effect="dark" triped width="100%" style="width: 100%">
           <el-table-column class="addButtonTh" fixed :render-header="setHeader" width="50">
             <template slot-scope="scope">
               <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
             </template>
           </el-table-column>
-          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 80" class="addButtonTh" :fixed="item.isfixed !== 0" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :label="item.fieldName">
+          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 'auto'" class="addButtonTh" :fixed="item.isfixed !== 0" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :label="item.fieldName">
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.cargoName'" required :rules="{ validator: validateIsEmpty('货品名不能为空！'), trigger: 'blur' }">
@@ -1080,6 +1080,7 @@ export default {
     },
     // 选择出发城市
     selectFromCity(item, city) {
+      console.log('selectFromCity:', item, city)
       if (item) {
         this.form.tmsOrderShip.shipFromCityName = item.longAddr
       } else {
@@ -1750,11 +1751,14 @@ export default {
             } else {
               data.tmsOrderShip.shipSenderId = data.customerList[0].customerId
             }
+            data.customerList[0].customerType = 1
+
             if (changeReceiver) {
               data.customerList[1].customerId = ''
             } else {
               data.tmsOrderShip.shipReceiverId = data.customerList[1].customerId
             }
+            data.customerList[1].customerType = 2
             data.tmsOrderCargoList = this.form.cargoList.map(el => {
               const b = {}
               for (const i in el) {

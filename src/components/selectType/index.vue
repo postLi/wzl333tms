@@ -113,7 +113,12 @@ export default {
   watch: {
     value: {
       handler(newVal) {
-        this.val = parseInt(newVal, 10) || ''
+        // 针对以id为value值的，将传过来的值做一次统一的转换为数值
+        if (/\d+/.test(newVal)) {
+          this.val = parseInt(newVal, 10) || ''
+        } else {
+          this.val = newVal || ''
+        }
       },
       immediate: true
     }

@@ -13,7 +13,7 @@
       </el-form-item>
     <el-form-item label="交账状态：">
       <select-type v-model="searchForm.status" type="fee_status" >
-        <el-option slot="head" label="全部" value="1111"></el-option>
+        <el-option slot="head" label="全部" value=""></el-option>
       </select-type>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
@@ -46,7 +46,7 @@ export default {
     return {
       searchForm: {
         orgid: '',
-        status: '1111',
+        status: '',
         userName: ''
       }
     }
@@ -64,11 +64,11 @@ export default {
   methods: {
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
-      searchObj.status = searchObj.status === '1111' ? null : searchObj.status
+      searchObj.status = searchObj.status === '' ? null : searchObj.status
       this.$emit('change', searchObj)
     },
     clearForm() {
-      this.searchForm.status = '1111'
+      this.searchForm.status = ''
       this.searchForm.username = ''
       this.searchForm.orgid = this.otherinfo.orgid
     }

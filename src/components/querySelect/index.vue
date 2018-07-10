@@ -2,7 +2,7 @@
 <span class="autocomplete-input">
 <el-autocomplete
   v-if="show === 'input'"
-  :popper-class="'query-input-autocomplete ' + ((type == 'sender' || type == 'receiver') ? 'query-input-customer' : '')"
+  :popper-class="'query-input-autocomplete ' + customCss"
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
@@ -10,16 +10,22 @@
   :placeholder="place"
   ref="myautocomplete"
   @select="handleSelect"
+  select-when-unmatched
   v-bind="$attrs"
   >
   <template slot-scope="{ item }">
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
-      <template v-if="type !== 'sender' && type !== 'receiver'">
-        {{ item[showkey] }}
+      <template v-if="type === 'sender' || type === 'receiver'">
+        <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+      </template>
+      <template v-else-if="type === 'city'">
+        <div class="query-input-city-info">
+          <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
+        </div>
       </template>
       <template v-else>
-        <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+        {{ item[showkey] }}
       </template>
 
     </slot>
@@ -82,27 +88,27 @@ import { eventBus } from '@/eventBus'
 // 获取城市信息
 import { getCityInfo } from '@/api/common'
 // 获取承运商信息
-import { getAllCarrier } from "@/api/company/carrierManage"
+import { getAllCarrier } from '@/api/company/carrierManage'
 // 获取客户信息
-import { getAllCustomer } from "@/api/company/customerManage"
+import { getAllCustomer } from '@/api/company/customerManage'
 // 获取司机信息
-import { getAllDriver } from "@/api/company/driverManage"
+import { getAllDriver } from '@/api/company/driverManage'
 // 获取员工信息
-import { getAllUser } from "@/api/company/employeeManage"
+import { getAllUser } from '@/api/company/employeeManage'
 // 获取车辆信息
-import { getAllTrunk } from "@/api/company/trunkManage"
+import { getAllTrunk } from '@/api/company/trunkManage'
 // 获取异常列表、控货列表信息
-import { PostGetAbnormalList, PostControlgoods } from "@/api/operation/dashboard"
+import { PostGetAbnormalList, PostControlgoods } from '@/api/operation/dashboard'
 // 获取订单列表
-import { getPostlist } from "@/api/operation/manage"
+import { getPostlist } from '@/api/operation/manage'
 // 获取运单列表
-import orderManageApi from "@/api/operation/orderManage"
+import orderManageApi from '@/api/operation/orderManage'
 // 获取提货单列表
-import { fetchPostlist } from "@/api/operation/pickup"
+import { fetchPostlist } from '@/api/operation/pickup'
 // 获取回单列表
-import { postReceipt } from "@/api/operation/receipt"
+import { postReceipt } from '@/api/operation/receipt'
 // 获取库存列表
-import { postAllOrderRepertory } from "@/api/operation/repertory"
+import { postAllOrderRepertory } from '@/api/operation/repertory'
 
 export default {
   props: {
@@ -183,9 +189,9 @@ export default {
   },
   watch: {
     name: {
-      handler (newVal) {
+      handler(newVal) {
         // 转成字符串格式
-        if(newVal){
+        if (newVal) {
           this.handlevalue = newVal + ''
         } else {
           this.handlevalue = ''
@@ -194,21 +200,21 @@ export default {
       immediate: true
     },
     value: {
-      handler (newVal) {
+      handler(newVal) {
         // 当绑定值跟搜索字段一致时，响应绑定值的变化
         // 当被清空时
         // 转成字符串格式
-        newVal = newVal ? newVal+'' : ''
-        if(this.search === this.valuekey || !newVal){
+        newVal = newVal ? newVal + '' : ''
+        if (this.search === this.valuekey || !newVal) {
           this.handlevalue = newVal
           console.log('handkler: value')
         }
       },
       immediate: true
     },
-    handlevalue (newVal) {
-      if(this.search === this.valuekey){
-        this.$emit("input", this.handlevalue )
+    handlevalue(newVal) {
+      if (this.search === this.valuekey) {
+        this.$emit('input', this.handlevalue)
       }
       this.$emit('change', '', this.handlevalue)
     }
@@ -217,15 +223,15 @@ export default {
     place() {
       return this.show === 'select' ? '请选择' : this.placeholder
     },
-    getOrgid () {
+    getOrgid() {
       return this.orgid || this.otherinfo.orgid
     },
-    showkey () {
-      return this.label || this.search
+    showkey() {
+      return this.showlabel || this.label || this.search
     },
-    queryFn () {
+    queryFn() {
       let fn
-      switch(this.type){
+      switch (this.type) {
         case 'user':
           this.queryParam.vo.orgid = this.getOrgid
           this.queryParam.vo.mobilephone = ''
@@ -236,6 +242,8 @@ export default {
         case 'city':
           this.queryParam = ''
           fn = getCityInfo
+          this.customCss = 'query-input-city'
+          this.showlabel = this.label || 'last'
           break
         case 'carrier':
           fn = getAllCarrier
@@ -244,11 +252,13 @@ export default {
           this.queryParam.vo.customerType = 1
           this.queryParam.vo.orgid = this.getOrgid
           fn = getAllCustomer
+          this.customCss = 'query-input-customer'
           break
         case 'receiver':
           this.queryParam.vo.customerType = 2
           this.queryParam.vo.orgid = this.getOrgid
           fn = getAllCustomer
+          this.customCss = 'query-input-customer'
           break
         case 'driver':
           this.queryParam.vo.orgid = this.getOrgid
@@ -306,38 +316,31 @@ export default {
           break
       }
       // 设定pageSize参数
-      if(typeof this.queryParam === 'object') {
+      if (typeof this.queryParam === 'object') {
         this.queryParam.pageSize = this.count
         // 处理传过来的额外参数
-        if(typeof this.queryParam.vo === 'object') {
+        if (typeof this.queryParam.vo === 'object') {
           this.queryParam.vo = Object.assign(this.queryParam.vo, this.param)
           // 当有传入组织id时，表示需要控制获取指定组织id的数据
-          if(this.orgid !== ''){
+          if (this.orgid !== '') {
             this.queryParam.vo.orgid = this.orgid
           }
         } else {
           this.queryParam = Object.assign(this.queryParam, this.param)
-          if(this.orgid !== ''){
+          if (this.orgid !== '') {
             this.queryParam.orgid = this.orgid
           }
         }
       }
 
       return fn
-    },
-    shouldremote () {
-      // 智障侦测。。？要不要
-      // 通过判断返回的总数跟设置的总数对比，如果返回的总数小于设置的总数则表示不用每次都请求
-      if(this.remote){
-        return true
-      } else {
-        return false
-      }
     }
   },
-  data () {
+  data() {
     return {
-      handlevalue: "",
+      showlabel: '',
+      customCss: '',
+      handlevalue: '',
       allData: [],
       searchData: [],
       loading: false,
@@ -354,25 +357,25 @@ export default {
       lastRequest: []
     }
   },
-  mounted () {
+  mounted() {
     // 初始化请求、请求参数等
     this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
-    
+
     this.initEvent()
   },
   methods: {
-    initEvent () {
+    initEvent() {
       eventBus.$on('closepopbox', () => {
         console.log('closepopbox querySelect:')
         this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
       })
     },
-    initData(){
-      if(!this.inited){
+    initData() {
+      if (!this.inited) {
         this.inited = true
         // 判断是否需要每次都请求
-        if(!this.remote){
+        if (!this.remote) {
           this.fetchFn().then(data => {
             this.allData = data
             this.searchData = data
@@ -380,56 +383,75 @@ export default {
         }
       }
     },
-    highLight (item, key) {
-      if(key === this.search && this.lastQuery !== ''){
-        return item[key].replace(new RegExp(this.lastQuery, 'igm'), '<i class="highlight">' + this.lastQuery + '</i>')
+    // 高亮城市选择项
+    highLightCity(item, ishightlight) {
+      if (item.area) {
+        return ishightlight ? this.setHightLight(item.longAddr.split(',')[2], this.lastQuery) : (item.province + item.city)
+      } else if (item.city) {
+        return ishightlight ? this.setHightLight(item.city, this.lastQuery) : item.province
+      } else {
+        return ishightlight ? this.setHightLight(item.province, this.lastQuery) : ''
+      }
+    },
+    setHightLight(str, key) {
+      return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
+    },
+    highLight(item, key) {
+      if (key === this.search && this.lastQuery !== '') {
+        return this.setHightLight(item[key], this.lastQuery)
       } else {
         return item[key]
       }
     },
-    fetchFn () {
+    formatList(arr) {
+      if (this.type === 'city') {
+        arr = arr.map(el => {
+          const addr = el.longAddr.split(',')
+          el.last = addr[2] || addr[1] || addr[0]
+          return el
+        })
+      }
+      return arr
+    },
+    fetchFn() {
       return this.remoteFn(this.queryParam).then(res => {
-        let data = res.data ? res.data : res
-        if(data.list){
-          return data.list || []
-        } else {
-          return data || []
-        }
+        const data = res.data ? res.data : res
+        const list = (data.list ? data.list : data) || []
+        return this.formatList(list)
       })
     },
-    querySearch (queryString = '', cb = ()=>{}) {
-    
+    querySearch(queryString = '', cb = () => {}) {
       // 缓存最近一次请求数据
       // 如果设定了不修改参数，则不缓存记录
-      if(queryString === this.lastQuery && this.canchangeparam){
+      if (queryString === this.lastQuery && this.canchangeparam) {
         cb(this.lastRequest)
-      }else{
-        if(this.canchangeparam){
-          if(this.queryParam.vo){
+      } else {
+        if (this.canchangeparam) {
+          if (this.queryParam.vo) {
             this.queryParam.vo[this.search] = queryString
-          } else if(typeof this.queryParam === 'object') {
+          } else if (typeof this.queryParam === 'object') {
             this.queryParam[this.search] = queryString
           } else {
             this.queryParam = queryString
           }
         }
 
-        let searchFunction = (el) => {
+        const searchFunction = (el) => {
             // 如果有自定义的搜索函数，则调用其进行判断
-            if(typeof this.searchFn === 'function'){
-              return this.searchFn(el, queryString)
-            }
+          if (typeof this.searchFn === 'function') {
+            return this.searchFn(el, queryString)
+          }
             // 字符串  布尔值 空值 数值
             // 模糊匹配 全等于
             // console.log('el[this.search]:', el[this.search], this.search, el[this.search].toString().indexOf(queryString), queryString)
-            return el[this.search] ? el[this.search].toString().indexOf(queryString) !== -1 : false
-          }
-        
-        if(this.remote){
-          this.fetchFn().then( data => {
+          return el[this.search] ? el[this.search].toString().indexOf(queryString) !== -1 : false
+        }
+
+        if (this.remote) {
+          this.fetchFn().then(data => {
             this.lastQuery = queryString
             this.lastRequest = data
-            if(!this.canchangeparam && data.length){
+            if (!this.canchangeparam && data.length) {
               data = data.filter(searchFunction)
             }
             this.searchData = data
@@ -438,39 +460,36 @@ export default {
           })
         } else {
           this.lastQuery = queryString
-          if(!this.canchangeparam){
+          if (!this.canchangeparam) {
             this.lastRequest = this.allData
           } else {
             this.lastRequest = this.allData.filter(searchFunction)
           }
-          
+
           console.log('this.allData, this.lastRequest:', this.allData, this.lastRequest)
           cb(this.lastRequest)
         }
-        
       }
-      
     },
-    handleSelect (info) {
-      let old = info
+    handleSelect(info) {
+      const old = info
       // select 只传值过来，不符合需求
-      if(this.show === 'select'){
+      if (this.show === 'select') {
         info = this.allData.filter(el => {
           return el[this.valuekey] === info
         })
         info = info[0] || old
       }
-      
 
-      this.$emit("input", info[this.valuekey] ? info[this.valuekey]: info ? info : '')
-      
+      this.$emit('input', info[this.valuekey] || info || '')
+
       this.$emit('change', info)
     }
   }
 }
 </script>
 <style lang="scss">
-.query-input-customer{
+.query-input-customer, .query-input-city{
   min-width: 400px !important;
   li{
     padding: 0 10px;
@@ -506,6 +525,23 @@ export default {
   .query-input-customer-addr{
     min-width: 137px;
     padding-left: 5px;
+  }
+}
+.query-input-city{
+  min-width: 300px !important;
+
+  .query-input-city-info{
+    display: flex;
+    .query-input-city-query{
+      min-width: 100px;
+      max-width: 200px;
+      text-align: left;
+    }
+    .query-input-city-name{
+      flex: 1;
+      color: #999;
+      text-align: right;
+    }
   }
 }
 </style>

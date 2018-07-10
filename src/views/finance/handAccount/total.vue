@@ -64,7 +64,6 @@ import * as handAccountApi from '@/api/finance/handAccount'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
-import { parseTime } from '@/utils/'
 
 export default {
   components: {
@@ -72,17 +71,8 @@ export default {
     Pager,
     TableSetup
   },
-  computed: {
-    orgid() {
-      console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
-      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-    }
-  },
   mounted() {
-    /* this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllOrder(this.otherinfo.orgid).then(res => {
-      this.loading = false
-    }) */
+
   },
   data() {
     return {
@@ -139,7 +129,7 @@ export default {
   methods: {
     viewDetails(row) {
       this.$router.push({
-        path: '/operation/order/createOrder',
+        path: '/finance/handAccount/detail',
         query: {
           orderid: row.id,
           type: 'view',
@@ -148,7 +138,7 @@ export default {
       })
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      this.viewDetails(order)
     },
     fetchAllOrder() {
       this.loading = true
@@ -218,10 +208,11 @@ export default {
     getSelection(selection) {
       this.selected = selection
     },
+    // 计算总数
     getSummaries(param) {
       const { columns, data } = param
       const sums = []
-      console.log(columns, data)
+      // console.log(columns, data)
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '总计'
