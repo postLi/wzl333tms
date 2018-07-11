@@ -226,17 +226,24 @@
           </el-table-column>
           <el-table-column
             label="出车时间"
-            width="130"
+            width="160"
             sortable
           >
-            <template slot-scope="scope">{{ new Date(scope.row.outTime).toLocaleDateString() }}</template>
+            <!--<template slot-scope="scope">{{ new Date(scope.row.outTime).toLocaleDateString() }}</template>-->
+            <template slot-scope="scope">
+              {{ scope.row.outTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
           </el-table-column>
           <el-table-column
             label="要求到达司机"
-            width="150"
+            width="160"
             sortable
           >
-            <template slot-scope="scope">{{ new Date(scope.row.arriveTime).toLocaleDateString() }}</template>
+
+            <template slot-scope="scope">
+              {{ scope.row.arriveTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
+            <!--<template slot-scope="scope">{{ new Date(scope.row.arriveTime).toLocaleDateString() }}</template>-->
           </el-table-column>
         </el-table>
       </div>

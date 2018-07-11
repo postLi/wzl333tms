@@ -130,58 +130,61 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="btns_box">
-                  <div v-if="isHiddenBtn===true">
+                  <!--<div v-if="isHiddenBtn===true">-->
                     <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
-                  </div>
-                    <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-else="!isModify">{{popTitle}}</el-button >
+                  <!--</div>-->
+                  <!--<div v-if="isHiddenBtn===false">-->
+                    <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isModify">{{popTitle}}</el-button >
+                  <!--</div>-->
+
 
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="height: 80%">
+                  <el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">
                     <el-table-column fixed sortable type="selection" width="40">
                     </el-table-column>
-                    <!--<el-table-column-->
-                    <!--fixed-->
-                    <!--sortable-->
-                    <!--prop=""-->
-                    <!--label="序号"-->
-                    <!--width="80">-->
-                    <!--</el-table-column>-->
+                    <el-table-column
+                    fixed
+                    sortable
+                    label="序号"
+                    width="80">
+                      <template slot-scope="scope">{{  scope.$index + 1 }}</template>
+                    </el-table-column>
                     <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点">
                     </el-table-column>
-                    <el-table-column prop="shipSn" width="160" sortable label="运单号">
+                    <el-table-column prop="shipSn" width="150" sortable label="运单号">
                     </el-table-column>
                     <el-table-column prop="childShipSn" sortable width="120" label="子运单号">
                     </el-table-column>
-                    <div v-if="isModify">
-                      <!--actualAmount-->
-                      <el-table-column prop="loadAmount" sortable width="120" label="实到件数">
+                      <!--actualAmount  loadAmount-->
+                      <el-table-column prop="actualAmount" sortable width="120" label="实到件数" v-if="isModify">
                       </el-table-column>
-                      <!--actualWeight-->
-                      <el-table-column sortable prop="loadWeight" width="120" label="实到重量">
+                      <!--actualWeight   loadWeight-->
+                      <el-table-column sortable prop="actualWeight" width="120" label="实到重量" v-if="isModify">
                       </el-table-column>
-                      <!--actualVolume-->
-                      <el-table-column label="实到体积" width="120" prop="loadVolume" sortable>
+                      <!--actualVolume   loadVolume-->
+                      <el-table-column label="实到体积" width="120" prop="actualVolume" sortable v-if="isModify">
                       </el-table-column>
-                    </div>
-                    <div v-else="!isModify">
-                      <!--actualAmount-->
-                      <el-table-column prop="loadAmount" sortable width="120" label="实到件数">
+
+
+                      <el-table-column prop="actualAmount" sortable width="120" label="实到件数" v-if="!isModify">
+                        <template slot-scope="scope">
+                          <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+                        </template>
                       </el-table-column>
-                      <!--actualWeight-->
-                      <el-table-column prop="loadAmount"  width="120" label="实到件数">
+                      <el-table-column sortable prop="actualWeight" width="120" label="实到重量" v-if="!isModify">
+                        <template slot-scope="scope">
+                          <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
+                        </template>
                       </el-table-column>
-                      <el-table-column sortable prop="loadWeight" width="120" label="实到重量">
+                      <el-table-column sortable prop="actualVolume" width="120" label="实到体积" v-if="!isModify">
+                        <template slot-scope="scope">
+                          <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
+                        </template>
                       </el-table-column>
-                      <el-table-column sortable prop="loadVolume" width="120" label="实到体积">
-                      </el-table-column>
-                      <!--actualVolume-->
-                      <!--<el-table-column label="实到体积" prop="loadVolume" width="120" sortable>-->
-                      <!--</el-table-column>-->
-                    </div>
                     <el-table-column prop="loadAmount" label="配载件数" width="120" sortable>
                     </el-table-column>
                     <el-table-column sortable prop="loadWeight" width="110" label="配载重量">
@@ -460,7 +463,7 @@ import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import selectType from '@/components/selectType/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
-import { getBatchNoId, postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
+import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
 import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
@@ -468,6 +471,7 @@ import { objectMerge2, parseTime, closest } from '@/utils/'
 export default {
   data() {
     return {
+      tablekey: '1',
       // titleIcon:"到车确定",
       // titleIcon:"到车入库",
       getBatchNo: '',
@@ -480,7 +484,8 @@ export default {
       isFootSecond: false,
       isFootOther: false,
       isCancelFootEdit: false,
-      isHiddenBtn:false,
+      isHiddenBtn: false,
+      isEditActual: false,
       propsId: '',
       formModel: {},
       // formModel: {
@@ -494,7 +499,8 @@ export default {
       //   operatorUserid: 0
       // },
       btnsize: 'mini',
-      usersArr: [],
+      detailList: [],
+      selectDetailList: [],
       selected: [],
       //加载状态
       loading: true,
@@ -603,12 +609,14 @@ export default {
       else {
         this.popTitle = '到车入库'
       }
+      this.getBatchNo = this.info.batchNo
       this.propsId = this.info.id
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
     },
     isModify(newVal) {
+      this.tablekey = +new Date()
       if (this.isModify) {
         this.popTitle = '到车确定'
       }
@@ -626,7 +634,6 @@ export default {
   mounted() {
 
     this.propsId = this.info.id
-    this.fetchBatchNo()
     if (this.popVisible) {
       this.getDetail()
       this.fetchAllCustomer()
@@ -635,14 +642,63 @@ export default {
     }
   },
   methods: {
-    //批次id
-    fetchBatchNo() {
-      this.loading = true
-      return getBatchNoId(this.otherinfo.orgid, 39).then(data => {
-        this.getBatchNo = data.data
-        this.loading = false
-      })
-
+    changeData(newVal) { // 判断当行
+      let curAmount = this.detailList[newVal].actualAmount // 实到件数
+      let curWeight = this.detailList[newVal].actualWeight // 实到重量
+      let curVolume = this.detailList[newVal].actualVolume // 实到体积
+      let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
+      let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
+      let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      if (this.selectDetailList.length === 1 && curAmount === 0) {
+        console.log(this.selectDetailList.length, this.detailList.length)
+        this.detailList[newVal].actualAmount = curloadAmount
+        this.detailList[newVal].actualWeight = curloadWeight
+        this.detailList[newVal].actualVolume = curloadVolume
+        this.$notify({
+          title: '提示',
+          message: '实到件数不能为0',
+          type: 'warning'
+        })
+      }
+      if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
+        console.log(this.selectDetailList.length, this.detailList.length)
+        this.detailList[newVal].actualAmount = curloadAmount
+        this.detailList[newVal].actualWeight = curloadWeight
+        this.detailList[newVal].actualVolume = curloadVolume
+        this.$notify({
+          title: '提示',
+          message: '实到重量和实到体积不能同时为0',
+          type: 'warning'
+        })
+      }
+      if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
+        console.log(this.selectDetailList.length)
+        if (this.selectDetailList.length === 0) {
+          this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+          this.detailList[newVal].actualAmount = curloadAmount
+          this.detailList[newVal].actualWeight = curloadWeight
+          this.detailList[newVal].actualVolume = curloadVolume
+        }
+        this.$notify({
+          title: '提示',
+          message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
+          type: 'warning'
+        })
+      } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+        this.$notify({
+          title: '提示',
+          message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+          type: 'warning'
+        })
+        this.detailList[newVal].actualAmount = curloadAmount
+        this.detailList[newVal].actualWeight = curloadWeight
+        this.detailList[newVal].actualVolume = curloadVolume
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+      } else {
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+      }
+      return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
     },
     fetchSelectLoadMainInfoList() {
       this.loading = true
@@ -659,9 +715,16 @@ export default {
       let _id = this.propsId
       // console.log(_id);
       return getSelectLoadList(_id).then(data => {
-        this.usersArr = data
-        // console.log(this.usersArr);
+        this.detailList = data
+        this.toggleAllRows()
         this.loading = false
+        this.$nextTick(() => { // 默认设置实到数量为配载数量
+          this.detailList.forEach(e => {
+            e.actualAmount = e.loadAmount
+            e.actualWeight = e.loadWeight
+            e.actualVolume = e.loadVolume
+          })
+        })
       })
 
     },
@@ -669,6 +732,17 @@ export default {
       let id = this.propsId
       return getLoadDetail(id).then(data => {
         this.trackDetail = Object.assign([], data)
+      })
+    },
+    toggleAllRows() {
+      this.$nextTick(() => {
+        this.detailList.forEach((e, index) => {
+          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+            this.$refs.multipleTable.toggleRowSelection(e, false)
+          } else {
+            this.$refs.multipleTable.toggleRowSelection(e, true)
+          }
+        })
       })
     },
     handleClick(tab, event) {
@@ -746,16 +820,6 @@ export default {
     fetchData() {
       this.fetchAllCustomer()
     },
-    handlePageChange(obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
-    },
-    getSearchParam(obj) {
-      this.searchQuery.vo.orgid = obj.orgid
-      this.searchQuery.vo.customerMobile = obj.mobile
-      this.searchQuery.vo.customerName = obj.name
-      this.fetchAllCustomer()
-    },
     showImport() {
       // 显示导入窗口
     },
@@ -784,9 +848,12 @@ export default {
                 type: 'success',
                 message: '到车确定成功'
               })
-              this.closeMe()
-              this.isHiddenBtn = true
+              this.$emit("update:isModify", false)
+              this.$emit('success')
+              this.loading = false
+              // this.isHiddenBtn = false
             })
+            // this.closeMe()
           } else {
             this.sendModel.tmsOrderLoad.id = this.formModel.id
             this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
@@ -802,17 +869,22 @@ export default {
               })
             })
             data = this.sendModel
-            postAddRepertory(55, data).then(res => {
-              this.$message({
-                type: 'success',
-                message: '到车入库成功'
+            if(this.info.bathStatusName === "已到车"){
+              postAddRepertory(55, data).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '到车入库成功'
+                })
+                this.$emit('success')
               })
-            })
-            this.closeMe()
+              this.closeMe()
+            }else{
+              this.$message({
+                message: '已到车的批次才可以做到货入库~',
+                type: 'warning'
+              })
+            }
           }
-          // this.isModify = false
-          // this.selectInfo = {}
-          // this.openAddCustomer()
           break;
           // 导出数据
         case 'export':
@@ -948,7 +1020,7 @@ export default {
         margin-right: 0;
         margin-bottom: 15px;
       }
-      .art_remk{
+      .el-form-item.art_remk{
         width: 100%;
         .el-form-item__content{
           width: 81%;
@@ -959,6 +1031,10 @@ export default {
             }
           }
         }
+
+      }
+      .el-form-item--mini{
+
       }
     }
     .el-input.is-disabled .el-input__inner{
@@ -1164,6 +1240,7 @@ export default {
   bottom: auto;
   min-width: 1000px;
   max-width: 1000px;
+  z-index: 1001 !important;
 }
 
 .batchTypeNo {
@@ -1437,7 +1514,7 @@ export default {
           }
         }
         .el-form-item:last-of-type {
-          margin-bottom: 60px;
+          margin-bottom: 30px;
         }
       }
       .p_table:last-of-type {
@@ -1447,7 +1524,7 @@ export default {
         padding-left: 0;
         /*padding-left: 300px;*/
         .el-form-item:last-of-type {
-          margin-bottom: 100px;
+          margin-bottom: 50px;
         }
         span {
           margin-bottom: 100px;

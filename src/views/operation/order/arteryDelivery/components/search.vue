@@ -172,6 +172,11 @@ export default {
       this.searchForm.arrivedbeginDate = this.searchEndTime ? +this.searchEndTime[0] : ''
       this.searchForm.arrivedEndDate = this.searchEndTime ? +this.searchEndTime[1] : ''
       // this.searchForm.batchTypeId = this.searchForm.batchTypeId === 51 ? '' : this.searchForm.batchTypeId
+
+      // this.searchForm.beginTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0],'{y}-{m}-{d} ') + '00:00:00' : ''
+      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
+      // this.searchForm.arrivedbeginDate = this.searchEndTime ? parseTime(this.searchEndTime[0],'{y}-{m}-{d} ') + '00:00:00' : ''
+      // this.searchForm.arrivedEndDate = this.searchEndTime ? parseTime(this.searchEndTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
       this.$emit('change', this.searchForm)
     },
     clearForm () {

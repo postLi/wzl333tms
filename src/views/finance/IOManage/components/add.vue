@@ -6,16 +6,16 @@
 
         <div class="iommanage-bottom">
           <el-form-item label="所属网点">
-            <SelectTree v-model="form.orgId" />
+            <SelectTree v-model="form.orgId" :disabled="isDbclick" />
           </el-form-item>
           <el-form-item label="收支方式" prop="financialWay">
-            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择"  @change="financialWayClick"/>
+            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择"  @change="financialWayClick" :disabled="isDbclick ? isDbclick : isModify"/>
 
           </el-form-item>
 
           <div v-if="bankPay===true">
             <el-form-item label="银行名称" prop="bankName">
-              <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick" maxlength="20"></el-input>
+              <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick" ></el-input>
             </el-form-item>
             <el-form-item label="银行卡号">
               <el-input v-model="form.bankAccount" auto-complete="off" :disabled="isDbclick"></el-input>
@@ -51,7 +51,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer" v-if="isDbclick">
-      <el-button @click="closeMe">取 消</el-button>
+      <el-button @click="closeMe">关 闭</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
@@ -115,11 +115,22 @@ export default {
 
   },
   data () {
-
+    const validatebankName = function (rule, value, callback) {
+      if(REGEX.ONLY_CHINESE.test(value) || !value){
+        callback()
+      }
+      else {
+        callback(new Error('只能输入中文'))
+      }
+    }
     return {
       rules: {
         'financialWay':[
           {required: true,validator: this.validateIsEmpty('收支方式不能为空'), trigger: 'blur'},
+        ],
+        bankName:[
+          {max:20,message:'最多可以输入20个字符~', trigger: 'blur'},
+          {validator: validatebankName, trigger: 'blur'}
         ]
       },
       form: {
@@ -165,85 +176,86 @@ export default {
     },
     orgid (newVal) {
       this.form.orgId = newVal
-      console.log(this.form.financialWay)
     },
     info () {
       if (this.isModify) {
         this.popTitle = '修改收支方式'
         // this.infoData(this.info)
+        this.changeInfo(this.info)
       }
       else if(this.isDbclick) {
         this.popTitle = '查看收支方式'
-        // this.infoData(this.info)
+        this.changeInfo(this.info)
       }
       else {
         this.popTitle = '新增收支方式'
-        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-        // this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-        // this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-        // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
-        // this.form.tmsTruck.truckUnit = ''
-        // this.form.tmsOrderPickup.payMethod = 76
-        // this.form.tmsOrderPickup.pickupStatus = 236
+        this.newInfo(this.otherinfo)
       }
     },
-    isModify () {
-      if (this.isModify) {
-        this.popTitle = '修改收支方式'
-        console.log(this.info);
-        // this.infoData(this.info)
-      }
-      else if(this.isDbclick) {
-        this.popTitle = '查看收支方式'
-        // this.infoData(this.info)
-      }
-      else {
-        this.popTitle = '新增收支方式'
-        // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-        // this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-        // this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-        // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
-        // this.form.tmsTruck.truckUnit = ''
-        // this.form.tmsOrderPickup.payMethod = 76
-        // this.form.tmsOrderPickup.pickupStatus = 236
-      }
+    isModify:{
+      handler () {
+        if (this.isModify) {
+          this.popTitle = '修改收支方式'
+          this.changeInfo(this.info)
+        }
+        else if(this.isDbclick) {
+          this.popTitle = '查看收支方式'
+          this.changeInfo(this.info)
+        }
+        else {
+          this.popTitle = '新增收支方式'
+          this.newInfo(this.otherinfo)
+        }
+      },
+      immediate: true
     }
   },
   methods: {
+    changeInfo(item){
+      this.form.orgId = item.orgId
+      this.form.financialWay = item.financialWay
+      // console.log(item.financialWay);
+      this.form.remark = item.remark
+      this.form.bankAccount = item.bankAccount
+      this.form.bankAccountName = item.bankAccountName
+      this.form.alipayAccount = item.alipayAccount
+      this.form.wechatAccount = item.wechatAccount
+      this.financialWayClick(this.form.financialWay)
+    },
+    newInfo(item){
+      this.form.orgId = item.orgId
+
+      this.form.remark = ''
+      this.form.bankAccount = ''
+      this.form.bankAccountName = ''
+      this.form.alipayAccount = ''
+      this.form.wechatAccount = ''
+      this.form.financialWay = 280
+
+      this.financialWayClick(this.form.financialWay)
+
+    },
     financialWayClick(item){
-      if(item === 280){
+      this.bankPay = false
+      this.aliPay = false
+      this.wPay = false
+      this.casyPay = false
+      this.chePay = false
+
+      if(item === 280 || item === '银行卡'){
         this.bankPay = true
-        this.aliPay = false
-        this.wPay = false
-        this.casyPay = false
-        this.chePay = false
-      }else if(item === 281){
+
+      }else if(item === 281 || item === '支付宝'){
         this.aliPay = true
-        this.bankPay = false
-        this.wPay = false
-        this.casyPay = false
-        this.chePay = false
       }
-      else if(item === 282){
+      else if(item === 282 || item === '微信'){
         this.wPay = true
-        this.aliPay = false
-        this.bankPay = false
-        this.casyPay = false
-        this.chePay = false
       }
-      else if(item === 283){
+      else if(item === 283 || item === '现金'){
         this.casyPay = true
-        this.wPay = false
-        this.aliPay = false
-        this.bankPay = false
-        this.chePay = false
       }
       else{
         this.chePay = true
-        this.casyPay = false
-        this.wPay = false
-        this.aliPay = false
-        this.bankPay = false
       }
 
     },
@@ -327,6 +339,7 @@ export default {
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
+            data.id = this.info.id
             promiseObj = putUpdate(data)
           } else {
             promiseObj = postAdd(data)

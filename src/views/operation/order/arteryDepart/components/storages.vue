@@ -134,21 +134,21 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="height: 100%">
+                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" >
                     <el-table-column fixed sortable type="selection" width="50">
                     </el-table-column>
-                    <!--<el-table-column-->
-                    <!--fixed-->
-                    <!--sortable-->
-                    <!--prop=""-->
-                    <!--label="序号"-->
-                    <!--width="80">-->
-                    <!--</el-table-column>-->
+                    <el-table-column
+                    fixed
+                    sortable
+                    label="序号"
+                    width="100">
+                      <template slot-scope="scope">{{  scope.$index + 1 }}</template>
+                    </el-table-column>
                     <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点" >
                     </el-table-column>
                     <el-table-column prop="shipId" width="180" sortable label="运单号">
                     </el-table-column>
-                    <el-table-column prop="childShipId" sortable width="120" label="子运单号">
+                    <el-table-column prop="childShipId" sortable width="180" label="子运单号">
                     </el-table-column>
                     <el-table-column prop="loadAmount" label="配载件数" width="120" sortable>
                     </el-table-column>
@@ -179,7 +179,7 @@
                     </el-table-column>
                     <el-table-column prop="shipSenderName" label="发货人" width="100" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipSenderMobile" label="发货人电话" width="100" sortable>
+                    <el-table-column prop="shipSenderMobile" label="发货人电话" width="110" sortable>
                     </el-table-column>
                     <el-table-column prop="shipReceiverName" label="收货人" width="120" sortable>
                     </el-table-column>
@@ -187,7 +187,7 @@
                     </el-table-column>
                     <el-table-column prop="cargoName" label="货品名" width="100" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipGoodsSn" label="货号" width="100" sortable>
+                    <el-table-column prop="shipGoodsSn" label="货号" width="130" sortable>
                     </el-table-column>
                     <el-table-column prop="shipRemarks" label="运单备注" width="120" sortable>
                     </el-table-column>
@@ -445,7 +445,7 @@ import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import selectType from '@/components/selectType/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
-import { getBatchNoId, postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
+import {postSelectLoadMainInfoList } from '@/api/operation/arteryDelivery'
 import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
@@ -547,11 +547,6 @@ export default {
     ...mapGetters([
       'otherinfo'
     ]),
-    // orgid () {
-    // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-
-    // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-    // }
   },
   props: {
     popVisible: {
@@ -579,27 +574,15 @@ export default {
     }
   },
   watch: {
-    id(newVal) {
-      // this.propsId = this.id
-      // console.log(this.id)
-    },
-    info(newVal) {
-      if (this.isModify) {} else {
 
-      }
+    info(newVal) {
       this.propsId = this.info.id
-      // this.formModel = this.info
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
+      this.getBatchNo = this.info.batchNo
     },
     isModify(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-
-      } else {
-        this.popTitle = '到车入库'
-      }
     },
     popVisible(newVal, oldVal) {
       if (!this.inited) {
@@ -609,11 +592,7 @@ export default {
     },
   },
   mounted() {
-
     this.propsId = this.info.id
-
-    this.fetchBatchNo()
-    // this.fetchSelectLoadList()
     if (this.popVisible) {
       this.getDetail()
       this.fetchAllCustomer()
@@ -621,22 +600,12 @@ export default {
     }
   },
   methods: {
-    //批次id
-    fetchBatchNo() {
-      this.loading = true
-      return getBatchNoId(this.otherinfo.orgid, 39).then(data => {
-        this.getBatchNo = data.data
-        this.loading = false
-      })
-
-    },
     fetchSelectLoadMainInfoList() {
       this.loading = true
       let selectMainId = this.propsId
       this.searchQuery.vo.loadId = selectMainId
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.formModel = data.list[0]
-        // console.log(this.formModel);
         this.loading = false
       })
 
@@ -644,10 +613,8 @@ export default {
     fetchAllCustomer() {
       this.loading = true
       let _id = this.propsId
-      // console.log(_id);
       return getSelectLoadList(_id).then(data => {
         this.usersArr = data
-        // console.log(this.usersArr);
         this.loading = false
       })
 
@@ -667,9 +634,6 @@ export default {
     },
     initInfo() {
       this.loading = false
-    },
-    getOrgid(id) {
-      // this.form.orgid = id
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -728,16 +692,6 @@ export default {
     fetchData() {
       this.fetchAllCustomer()
     },
-    handlePageChange(obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
-    },
-    getSearchParam(obj) {
-      this.searchQuery.vo.orgid = obj.orgid
-      this.searchQuery.vo.customerMobile = obj.mobile
-      this.searchQuery.vo.customerName = obj.name
-      this.fetchAllCustomer()
-    },
     showImport() {
       // 显示导入窗口
     },
@@ -756,49 +710,6 @@ export default {
         return false
       }
       switch (type) {
-        // 添加客户
-        case 'sure':
-          let data
-          if (this.popTitle === '到车确定') {
-            data = 54
-            console.log(typeof this.formModel.id)
-            console.log(typeof data)
-            postConfirmToCar(this.formModel.id, data).then(res => {
-              this.$message({
-                type: 'success',
-                message: '到车确定成功'
-              })
-              this.closeMe()
-            })
-          } else {
-            // data.tmsOrderLoad.id = this.formModel.id
-            // data.tmsOrderLoadFee.loadFeeId = this.formModel.loadFeeId
-            this.sendModel.tmsOrderLoad.id = this.formModel.id
-            this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
-            this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveHandlingFee
-            this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
-            this.sendModel.tmsOrderLoadDetailsList = []
-            this.selected.forEach((value, index, array) => {
-              this.sendModel.tmsOrderLoadDetailsList.push({
-                id: value.id,
-                actualAmount: value.actualAmount,
-                actualWeight: value.actualWeight,
-                actualVolume: value.actualVolume
-              })
-            })
-            data = this.sendModel
-            postAddRepertory(55, data).then(res => {
-              this.$message({
-                type: 'success',
-                message: '到车入库成功'
-              })
-            })
-            this.closeMe()
-          }
-          // this.isModify = false
-          // this.selectInfo = {}
-          // this.openAddCustomer()
-          break;
           // 导出数据
         case 'export':
           let ids2 = this.selected.map(el => {
@@ -876,7 +787,7 @@ export default {
         margin-right: 0;
       }
       .table_export {
-        margin-left: 620px;
+        margin-left: 650px;
       }
     }
     .infos_tab {
@@ -932,6 +843,15 @@ export default {
       }
       .el-form-item.art_remk{
         width: 100%;
+        .el-form-item__content{
+          width: 82%;
+          .el-textarea.is-disabled {
+            .el-textarea__inner{
+              background-color: #fff;
+              color: #606266;
+            }
+          }
+        }
       }
     }
   }
@@ -1273,25 +1193,27 @@ export default {
         }
         p.p_about {
           padding-left: 25px;
-          margin: 10px 0 10px 0;
+          margin: 5px 0 5px 0;
         }
         p {
-          margin-bottom: 5px;
+          margin-bottom: 2px;
         }
       }
       p.p_salf {
         color: #606266;
         font-size: 14px;
         padding-left: 25px;
-        margin: 10px 0 10px 0;
+        margin: 5px 0 10px 0;
       }
       .p_input {
         .el-form-item {
           margin-bottom: 0;
           .el-form-item__label {
-            padding: 0
+            padding: 0;
+            line-height: 28px
           }
           .el-form-item__content {
+            line-height: 30px;
             .el-input.el-input--mini.is-disabled {
               width: 13%;
               .el-input__inner {
@@ -1309,10 +1231,14 @@ export default {
         .el-form-item {
           margin-bottom: 0;
           .el-form-item__content {
+            line-height: 30px;
             .el-input.el-input--mini.is-disabled {
               width: 59%;
+
               .el-input__inner {
                 width: 200px;
+                background-color: #fff;
+                color:#000 ;
               }
             }
             .el-input.el-input--mini {
@@ -1328,7 +1254,7 @@ export default {
           }
         }
         .el-form-item:last-of-type {
-          margin-bottom: 60px;
+          margin-bottom: 20px;
         }
       }
       .p_table:last-of-type {
@@ -1338,7 +1264,7 @@ export default {
         padding-left: 0;
         /*padding-left: 300px;*/
         .el-form-item:last-of-type {
-          margin-bottom: 100px;
+          margin-bottom: 50px;
         }
         span {
           margin-bottom: 100px;

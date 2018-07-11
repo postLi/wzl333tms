@@ -135,10 +135,13 @@
           <!--创建时间-->
           <el-table-column
             label="创建时间"
-            width="110"
+            width="160"
             sortable
           >
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
+            </template>
+            <!--<template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>-->
           </el-table-column>
           <el-table-column
             prop="senderName"
