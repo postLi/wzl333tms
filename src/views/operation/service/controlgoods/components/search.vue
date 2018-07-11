@@ -22,11 +22,11 @@
         </el-form-item>
        
         <el-form-item label="出发城市">
-            <SelectCity @change="getFromCity" />
+            <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName" />
         </el-form-item>
         <el-form-item label="到达城市">
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
-            <SelectCity @change="getToCity" />
+            <SelectCity @change="getToCity" v-model="searchForm.shipToCityName"/>
         </el-form-item>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -87,7 +87,9 @@ export default {
         shipFromOrgid: '',
         shipSn: '',
         shipFromCityCode: '',
-        shipToCityCode: ''
+        shipFromCityName: '',
+        shipToCityCode: '',
+        shipToCityName: ''
       },
       rules: {
         shipSn: [{
@@ -108,9 +110,11 @@ export default {
   methods: {
     getFromCity(city) {
       this.searchForm.shipFromCityCode = city.id.toString()
+      this.searchForm.shipFromCityName = city.longAddr
     },
     getToCity(city) {
       this.searchForm.shipToCityCode = city.id.toString()
+      this.searchForm.shipToCityName = city.longAddr
     },
     // getOrgid (id){
     //   this.searchForm.orgid = id
@@ -131,11 +135,12 @@ export default {
     },
     clearForm() {
     //   this.searchForm.name = ''
-      this.searchForm.orgid = this.orgid
+      // this.searchForm.orgid = this.orgid
       this.searchForm.shipSn = ''
-      this.searchForm.shipFromCityCode = ''
-      this.searchForm.shipToCityCode = ''
+      this.searchForm.shipFromCityName = ''
+      this.searchForm.shipToCityName = ''
       this.searchForm.shipFromOrgid = ''
+      this.searchCreatTime = []
     }
   }
 }

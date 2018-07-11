@@ -11,23 +11,27 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </div>
-      </el-form-item>
+        </el-form-item>
         <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.shipFromOrgid" type="org_id"/>
         </el-form-item>
-
-        <el-form-item label="结算状态">
-          <selectType v-model="searchForm.status" type="abnormal_status" />
+        <el-form-item label="结算状态:">
+          <el-select v-model="searchForm.status">
+            <el-option label="全部" :value="0"></el-option>
+            <el-option label="已结算" :value="1"></el-option>
+            <el-option label="未结算" :value="2"></el-option>
+          </el-select>
         </el-form-item>
+     
         <el-form-item label="运单号">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
-            <SelectCity @change="getFromCity" />
+            <SelectCity @change="getFromCity"  v-model="searchForm.shipFromCityName"/>
         </el-form-item>
         <el-form-item label="到达城市">
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
-            <SelectCity @change="getToCity" />
+            <SelectCity @change="getToCity" v-model="searchForm.shipToCityName" />
         </el-form-item>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -76,13 +80,13 @@ export default {
       searchForm: {
         shipFromOrgid: '', // 网点
         shipSn: '', //  运单号
-        abnormalStatus: 117, // 异常状态
-        // name: '',
-        // mobile: '',
+        status: 0, // 结算状态
         searchCreatTime: '', // 登记时间
-        statu: '',
+
         shipFromCityCode: '',
-        shipToCityCode: ''
+        shipFromCityName: '',
+        shipToCityCode: '',
+        shipToCityName: ''
       },
       rules: {
         mobile: [{
@@ -119,14 +123,12 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
-      this.searchForm.searchCreatTime = []
-      this.searchForm.startTime = ''
-      this.searchForm.endTime = ''
+      this.searchCreatTime = []
+      this.searchForm.shipFromOrgid = ''
       this.searchForm.shipSn = ''
       this.searchForm.status = ''
-      this.searchForm.shipFromOrgid = this.orgid
-      this.searchForm.shipFromCityCode = this.getFromCity
-      this.searchForm.shipToCityCode = this.getToCity
+      this.searchForm.shipFromCityName = ''
+      this.searchForm.shipToCityName = ''
     }
   }
 }
@@ -138,9 +140,5 @@ export default {
 .el-range-editor--mini.el-input__inner{
   width: 200px;
 }
-// .tab-wrapper .tab-content .tab_info .btns_box .table_setup{
-//   float: right;
-//   margin-right: 0;
-//   margin-left: 5px;
-// }
+
 </style>

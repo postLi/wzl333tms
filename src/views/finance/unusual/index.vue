@@ -103,12 +103,12 @@
           </el-table-column>
 
            <el-table-column
-            prop="createTime"
+            prop=""
             label="异动时间"
             width="120"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
+            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
           </el-table-column>
    
           <el-table-column

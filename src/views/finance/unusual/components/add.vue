@@ -1,13 +1,14 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addAbnormalPop" v-loading="loading">
-    <template class="addAbnormalPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="Addunusual" v-loading="loading">
+    <template class="Addunusual-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
             <!-- <el-select v-model="form.shipSn" filterable multiple  placeholder="请输入关键词">
             </el-select> -->
           <el-form-item label="运单号" prop="shipSn">
-              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  placeholder="请输入运单号" v-model="form.shipSn"/>
+              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  placeholder="请输入运单号" v-model="form.shipSn">
+              </querySelect>
           </el-form-item>
           <el-form-item label="开单时间" prop="createTime">
             <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
@@ -54,17 +55,37 @@
         <div class="box1">
           <div class="titles">异动费用</div>
           <el-form-item label="异动费用" v-number-only:point prop="changeFee" >
-            <el-input v-model="form.changeFee" maxlength="6" auto-complete="off" ></el-input>
+            <el-input v-model="form.changeFee" maxlength="6" auto-complete="off" placeholder="请输入异动费用"></el-input>
           </el-form-item>
-          <el-form-item label="费用类型" prop="feeTypeId">
-            <SelectType v-model="form.feeTypeId" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
+          <!-- <el-form-item label="费用类型" prop="value">
+            <el-select v-model="form.feeTypeId" placeholder="请选择费用类型">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item> -->
+          <el-form-item label="费用类型:">
+            <el-select v-model="form.feeStatus">
+              <el-option label="异动增款" :value="0"></el-option>
+              <el-option label="异动减款" :value="1"></el-option>
+            </el-select>
           </el-form-item>
-  
-          <el-form-item label="异动时间" prop="createTime">
-            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  ></el-input>
-          </el-form-item>
-          <el-form-item class="driverRemarks ms" label="异动备注" prop="disposeOpinion" >
-            <el-input type="textarea" maxlength="200" v-model="form.disposeOpinion" placeholder="注：最多可输入200个字符"></el-input>
+          <el-form-item label="异动时间:" prop="createTime">
+          <el-date-picker
+            v-model="searchCreatTime"
+            align="right"
+            type="date"
+            :picker-options="pickOption2"
+            placeholder="选择日期"
+            value-format="timestamp"
+            >
+          </el-date-picker>
+          </el-form-item> 
+          <el-form-item class="driverRemarks ms" label="异动备注" prop="remark" >
+            <el-input type="textarea" maxlength="200" v-model="form.remark" placeholder="注：最多可输入200个字符"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -76,7 +97,7 @@
   </pop-right>
 </template>
 <script>
-import { REGEX } from '@/utils/validate'
+// import { REGEX } from '@/utils/validate'
 import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
 import { getAllUser } from '@/api/company/employeeManage'
 import orderManage from '@/api/operation/orderManage'
@@ -140,84 +161,42 @@ export default {
     ])
   },
   data() {
-    const validateNameSn = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('请输入异常件数'))
-      } else if (value.length > 5) {
-        callback(new Error('最多可输入5位'))
-      } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
-        callback()
-      } else {
-        callback(new Error('只能输入数字从1开始'))
-      }
-    }
-    const validatereg = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback()
-      } else if (REGEX.ONLY_NUMBER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('只能输入数字'))
-      }
-    }
-    // const validateshipSn = function(rule, value, callback) {
-    //   if (value === '' || value === null || !value || value === undefined) {
-    //     callback(new Error('请输入运单号'))
-    //   }else {
-    //     callback()
-    //   }
-    // }
     return {
+      searchCreatTime: +new Date(),
+
       form: {
-        'abnormalAmount': '',
-        'abnormalDescribe': '',
-        'abnormalNo': '',
-        'abnormalPicture': '',
-        'disposePicture': '',
-        'abnormalStatus': '',
-        'abnormalType': '',
-        'childShipId': '',
-        'createTime': '',
-        'disposeOpinion': '',
-        'orgName': '',
-        'disposeResult': '228',
-        'disposeTime': '',
-        'disposeName': '',
-        'dutyOrgName': '',
-        'orgId': '',
-        'registerFee': '',
-        'registerName': '',
-        'shipId': '',
+        // 异动费用
+        feeStatus: 0,
+        fee: 400,
+        shipLoadId: 1016875003519434752,
+        incomePayType: '',
+        remark: '',
+        changeFee: '',
+        // 运单信息
         shipSn: '',
-        shipGoodsSn: '',
+        createTime: '',
+        shipFromCityCode: '',
+        shipToCityCode: '',
         cargoName: '',
-        cargoPack: '',
-        cargoAmount: ''
+        cargoAmount: '',
+        cargoWeight: '',
+        cargoVolume: '',
+        shipGoodsSn: '',
+        shipPayWay: '',
+        nowPayFee: '',
+        arrivePayFee: '',
+        monthPayFee: '',
+        receiptPayFee: ''
       },
 
       formLabelWidth: '80px',
       tooltip: false,
       rules: {
-        abnormalAmount: [
-          { required: true, trigger: 'blur', validator: validateNameSn }
+        changeFee: [
+          { required: true, message: '必填只能输入数字', trigger: 'change' }
         ],
-        abnormalType: [
-          { required: true, message: '必选', trigger: 'blur' }
-        ],
-        registerFee: [
-          { required: true, trigger: 'blur', validator: validatereg }
-        ],
-        abnormalDescribe: [
-          { required: true, message: '必填', trigger: 'blur' }
-        ],
-        dutyOrgName: [
-          { required: true, message: '请选择责任网点', trigger: 'blur' }
-        ],
-        orgName: [
-          { required: true, message: '请选择处理网点', trigger: 'blur' }
-        ],
-        disposeOpinion: [
-          { required: true, message: '必填', trigger: 'blur' }
+        remark: [
+          { required: true, message: '请输入异动备注', trigger: 'change' }
         ],
         shipSn: [
           // { required: true, trigger: 'blur', validator: validateshipSn}
@@ -315,38 +294,34 @@ export default {
     // handlePreview(file) {
     //   console.log(file);
     // },
+    showDate(val) {
+      val = val + ''
+      if (val.indexOf(this.form.shipSn) !== -1 && this.form.shipSn !== '') {
+        return val.replace(this.form.shipSn, '<font color="#409EFF">' + this.form.shipSn + '</font>')
+      } else {
+        return val
+      }
+    },
     setTitle() {
-      if (this.isDeal) {
-        this.popTitle = '异常处理'
-        GetLook(this.id).then(res => {
-          this.form = res
-          this.form.disposeTime = new Date()
-        })
-      } else if (this.isModify) {
-        this.popTitle = '异常修改'
-        GetLook(this.id).then(res => {
-          this.form = res
-        })
-      } else if (this.isCheck) {
-        console.log(this.isDeal + '异常查看')
-        this.popTitle = '查看明细'
+      if (this.isModify) {
+        this.popTitle = '异动修改'
         GetLook(this.id).then(res => {
           this.form = res
         })
       } else {
-        this.popTitle = '异常登记'
+        this.popTitle = '异动登记'
         this.form.orgId = this.orgid
-        this.form.registerTime = new Date()
-        this.dengji()
+        // this.form.createTime = new Date()
+        // this.dengji()
       }
     },
-    dengji() {
-      return GetAbnormalNo().then(res => {
-          // this.form = res;
-        this.form.abnormalNo = res
-        console.log(res, 'this.form.abnormalNo: ', this.form)
-      })
-    },
+    // dengji() {
+    //   return GetAbnormalNo().then(res => {
+    //       // this.form = res;
+    //     this.form.abnormalNo = res
+    //     console.log(res, 'this.form.abnormalNo: ', this.form)
+    //   })
+    // },
     querySearch(queryString, cb) {
       var restaurants = this.resInfo
       var results = queryString ? restaurants.filter(item => {
@@ -396,6 +371,7 @@ export default {
         [type]: this.form[type]
       }).then(res => {
         const data = res.data
+        console.log(res.data)
         if (data) {
           this.form.shipSn = data.shipSn
           this.form.shipGoodsSn = data.shipGoodsSn
@@ -468,27 +444,27 @@ export default {
 }
 </script>
 <style lang="scss">
-.uploadlist{
+  .uploadlist{
   width: 100%;
   margin-left:80px;
   li{
-    float: left;
-    width: 100px;
-    margin-right: 10px;
+      float: left;
+      width: 100px;
+      margin-right: 10px;
+    }
   }
-}
-.disabledUpload{
-  .el-upload{
-    display: none;
+  .disabledUpload{
+    .el-upload{
+      display: none;
+    }
   }
-}
-.addAbnormalPop{
+.Addunusual{
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 880px;
   max-width:  880px;
-   
+
   .box1{
     border:1px solid #C6E2FF;
     border-top:none;
