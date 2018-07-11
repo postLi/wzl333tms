@@ -99,7 +99,6 @@
                 >
               </el-table-column>
               
-              
               <el-table-column
                 prop="agencyFund"
                 label="代收货款"
