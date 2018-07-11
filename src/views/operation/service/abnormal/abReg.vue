@@ -332,7 +332,7 @@ export default {
             this.openAddAbnormal()
           }
           break
-                // 删除
+        // 删除
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
                     // =>todo 删除多个

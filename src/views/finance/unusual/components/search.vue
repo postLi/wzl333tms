@@ -74,19 +74,15 @@ export default {
     return {
       searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
-        orgId: '', // 网点
+        shipFromOrgid: '', // 网点
         shipSn: '', //  运单号
         abnormalStatus: 117, // 异常状态
         // name: '',
         // mobile: '',
-        registerTime: '', // 登记时间
+        searchCreatTime: '', // 登记时间
         statu: '',
-        number: '',
-        startcity: '',
-        endcity: '',
-        sendpepole: '',
-        recivepepole: ''
-
+        shipFromCityCode: '',
+        shipToCityCode: ''
       },
       rules: {
         mobile: [{
@@ -98,11 +94,12 @@ export default {
   },
   watch: {
     orgid(newVal) {
-      this.searchForm.orgId = newVal
+      this.searchForm.shipFromOrgid = newVal
     }
   },
   mounted() {
-    this.searchForm.orgId = this.orgid
+    // 默认进来的网点
+    this.searchForm.shipFromOrgid = this.orgid
   },
   methods: {
     getOrgid(id) {
@@ -122,10 +119,14 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
-      this.searchForm.shipId = ''
-      this.searchForm.orgId = ''
-      // this.searchForm.orgId = this.orgid
-      this.searchForm.abnormalStatus = ''
+      this.searchForm.searchCreatTime = []
+      this.searchForm.startTime = ''
+      this.searchForm.endTime = ''
+      this.searchForm.shipSn = ''
+      this.searchForm.status = ''
+      this.searchForm.shipFromOrgid = this.orgid
+      this.searchForm.shipFromCityCode = this.getFromCity
+      this.searchForm.shipToCityCode = this.getToCity
     }
   }
 }

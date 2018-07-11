@@ -18,7 +18,7 @@
         
         <el-form-item label="签收状态"  prop="signStatus">
           <selectType v-model="searchForm.signStatus"  type="sign_status">
-            <el-option slot="head" label="全部" value=""></el-option>
+            <el-option slot="head" label="全部" value="" ></el-option>
           </selectType>
         </el-form-item>
         <el-form-item label="凭证状态"  prop="signCertificate">
@@ -30,11 +30,11 @@
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
-            <SelectCity @change="getFromCity" />
+            <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName"/>
         </el-form-item>
         <el-form-item label="到达城市">
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
-            <SelectCity @change="getToCity" />
+            <SelectCity @change="getToCity" v-model="searchForm.shipToCityName"/>
         </el-form-item>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -90,7 +90,9 @@ export default {
         // number:'',
         shipSn: '',
         shipFromCityCode: '',
+        shipFromCityName: '',
         shipToCityCode: '',
+        shipToCityName: '',
         signCertificate: 230,
         signStatus: 226,
         startTime: '',
@@ -118,9 +120,11 @@ export default {
     // },
     getFromCity(city) {
       this.searchForm.shipFromCityCode = city.id.toString()
+      this.searchForm.shipFromCityName = city.longAddr
     },
     getToCity(city) {
       this.searchForm.shipToCityCode = city.id.toString()
+      this.searchForm.shipToCityName = city.longAddr
     },
     onSubmit() {
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
@@ -135,8 +139,9 @@ export default {
       this.searchForm.signStatus = ''
       this.searchForm.signCertificate = ''
       this.searchForm.shipSn = ''
-      this.searchForm.getFromCity = ''
-      this.searchForm.getToCity = ''
+      this.searchForm.shipFromCityName = ''
+      this.searchForm.shipToCityName = ''
+      this.searchCreatTime = []
     }
   }
 }

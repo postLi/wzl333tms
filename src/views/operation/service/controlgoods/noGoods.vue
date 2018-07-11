@@ -503,16 +503,6 @@ export default {
             // this.licenseTypes = resArr[1]
     })
   },
-            // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
-                // this.loading = false
-            // })
-            //  this.searchQuery.vo.orgid = this.otherinfo.orgid
-            // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
-                // this.loading = false
-                // console.log(res);
-            // })
-            // this.fetchAllPutFh(this.otherinfo.orgid)
-        // },
   data() {
     return {
       btnsize: 'mini',
@@ -594,6 +584,7 @@ export default {
 
                 // }
             const id = this.selected[0].id
+            // console.log(id)
                 // console.log(id)
                 // let id = this.selected.map(el => {
                 //   return el.shipId

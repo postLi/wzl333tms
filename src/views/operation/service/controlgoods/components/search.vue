@@ -72,10 +72,10 @@ export default {
       if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
-         callback(new Error('请输入最多20位数字'))
-       } else {
-         callback()
-       }
+        callback(new Error('请输入最多20位数字'))
+      } else {
+        callback()
+      }
     }
 
     return {

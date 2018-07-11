@@ -407,20 +407,38 @@ export default {
             this.openAddAbnormal()
           }
           break
-                // 查看明细
-        case 'check':
-          if (this.selected.length > 1) {
-            this.$message({
-              message: '每次自能查看单条数据',
-              type: 'warning'
+        // 删除
+        case 'delete':
+          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+                    // =>todo 删除多个
+          let ids = this.selected.map(item => {
+            return item.id
+          })
+          ids = ids.join(',')
+
+          this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            delAbnormal(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
             })
-          } else {
-                    // this.isDbclick = false
-            this.isModify = false
-            this.isCheck = true
-            this.id = this.selected[0].id
-            this.openAddAbnormal()
-          }
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
           break
       }
           // 清除选中状态，避免影响下个操作

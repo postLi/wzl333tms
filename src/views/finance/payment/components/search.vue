@@ -23,11 +23,11 @@
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
-            <SelectCity @change="getFromCity" />
+            <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName"/>
         </el-form-item>
         <el-form-item label="到达城市">
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
-            <SelectCity @change="getToCity" />
+            <SelectCity @change="getToCity" v-model="searchForm.shipToCityName" />
         </el-form-item>
         <el-form-item label="发货人">
             <el-input v-model="searchForm.shipSenderId" maxlength="15" auto-complete="off"></el-input>
@@ -92,9 +92,14 @@ export default {
         // number:'',
         shipSn: '',
         shipFromCityCode: '',
+        shipFromCityName: '',
         shipToCityCode: '',
+        shipToCityName: '',
         shipSenderId: '',
-        shipReceiverId: ''
+        shipReceiverId: '',
+        startTime: '',
+        endTime: ''
+
       },
       rules: {
         shipSn: [
@@ -128,17 +133,20 @@ export default {
   },
   mounted() {
     console.log('title:', this.title, this.status)
-    // this.searchForm.orgid = this.orgid
+    // this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
     getOrgid(id) {
       this.searchForm.orgid = id
     },
     getFromCity(city) {
+      console.log(city)
       this.searchForm.shipFromCityCode = city.id.toString()
+      this.searchForm.shipFromCityName = city.longAddr
     },
     getToCity(city) {
       this.searchForm.shipToCityCode = city.id.toString()
+      this.searchForm.shipToCityName = city.longAddr
     },
     onSubmit() {
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
@@ -149,17 +157,13 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
-      // this.searchForm.shipFromOrgid = ''
-      // this.searchForm.orgid = this.orgid
       this.searchForm.shipSn = ''
       this.searchForm.shipReceiverId = ''
       this.searchForm.shipSenderId = ''
-      this.searchForm.searchCreatTime = ''
-      this.searchForm.shipFromCityCode = ''
-      this.searchForm.shipToCityCode = ''
-      this.searchForm.thestatus = ''
-      this.searchForm.startTime = ''
-      this.searchForm.endTime = ''
+      this.searchForm.shipFromCityName = ''
+      this.searchForm.shipToCityName = ''
+      this.thestatus = ''
+      this.searchCreatTime = []
     }
   }
 }
