@@ -138,7 +138,7 @@ export default {
         loadStatus: '',
         operatorInfo: '',
         operatorOrgid: 1,
-        operatorTime: +new Date(),
+        operatorTime: '',
         operatorUserid: 0
       }
     }
@@ -149,6 +149,7 @@ export default {
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()
+        this.getSystemTime()
       }
     }
   },
@@ -159,14 +160,14 @@ export default {
   },
   methods: {
     getSystemTime() { // 获取系统时间
-      // if (!this.formModel.id) {
-      //   getSystemTime().then(data => {
-      //       this.formModel.operatorTime = Date.parse(new Date(data.trim()))
-      //     })
-      //     .catch(error => {
-      //       this.$message({ type: 'error', message: '获取系统时间失败' })
-      //     })
-      // }
+      if (!this.formModel.id) {
+        getSystemTime().then(data => {
+            this.formModel.operatorTime = new Date(data.trim())
+          })
+          .catch(error => {
+            this.$message({ type: 'error', message: '获取系统时间失败' })
+          })
+      }
     },
     submitForm(formName) { // 底部表单提交
       this.$refs[formName].validate((valid) => {

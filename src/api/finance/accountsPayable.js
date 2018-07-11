@@ -84,3 +84,13 @@ export function postPayListByOne(data) {
 export function GetFeeInfo(orgId, paymentsType) {
   return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getFeeInfo/?orgId=' + orgId + '&paymentsType=' + paymentsType)
 }
+/**
+ * 结算保存
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+export function postLoadSettlement(data) {
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/loadSettlement/', data).then(res => {
+    return res.data
+  })
+}

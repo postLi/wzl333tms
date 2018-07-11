@@ -82,6 +82,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
+      selectListBatchNos: [],
       loading: false,
       setupTableVisible: false,
       tableColumn: [
@@ -208,7 +209,6 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
-      console.log(this.searchQuery)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
       })
@@ -229,13 +229,22 @@ export default {
       this.$router.push({
         path: '../accountsLoad',
         query: {
-          currentPage: 'batchShort',
-          searchQuery: this.searchQuery
+          currentPage: 'batchShort', // 本页面标识符
+          searchQuery: this.searchQuery, // 搜索项
+          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
         }
       })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListBatchNos = []
+      list.forEach((e, index) => {
+        this.selectListBatchNos.push(e.batchNo)
+      })
+      console.log(this.selectListBatchNos)
+    },
     showDetail(order) {
       this.eventBus.$emit('showOrderDetail', order.id)
     },

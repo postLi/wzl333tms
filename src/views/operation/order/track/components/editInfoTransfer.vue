@@ -53,7 +53,7 @@
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
@@ -126,7 +126,7 @@ export default {
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()
-        // this.getSystemTime()
+        this.getSystemTime()
       }
     }
   },
@@ -162,6 +162,7 @@ export default {
     },
     getDetail() {
       let transferId = this.id
+      console.log('id',this.id)
       return getTransferTrack(transferId).then(data => {
         this.trackDetail = objectMerge2([], data)
         this.$nextTick(() => {
@@ -209,18 +210,18 @@ export default {
         this.resetForm()
       })
     },
-    // getSystemTime() { // 获取系统时间
-    //   if (!this.formModel.id) {
-    //     getSystemTime().then(data => {
-    //         // this.formModel.operatorTime = Date.parse(new Date(data.trim()))
-    //         this.formModel.operatorTime= ( new Date(data.trim())).valueOf();
-    //         console.log('系统：',this.formModel.operatorTime)
-    //       })
-    //       .catch(error => {
-    //         this.$message({ type: 'error', message: '获取系统时间失败' })
-    //       })
-    //   }
-    // },
+    getSystemTime() { // 获取系统时间
+      if (!this.formModel.id) {
+        getSystemTime().then(data => {
+            // this.formModel.operatorTime = Date.parse(new Date(data.trim()))
+            this.formModel.operatorTime= new Date(data.trim())
+            console.log('系统：',this.formModel.operatorTime)
+          })
+          .catch(error => {
+            this.$message({ type: 'error', message: '获取系统时间失败' })
+          })
+      }
+    },
     resetForm() {
       this.$nextTick(() => {
         this.isModify = false

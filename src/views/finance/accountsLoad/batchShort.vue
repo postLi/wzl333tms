@@ -1,10 +1,10 @@
 <template>
   <!-- 短驳费结算页面 -->
   <div class="accountsLoad_table">
-    <transferTable style="height: calc(100% - 80px);padding:10px">
-      <div>
+    <transferTable style="height: calc(100% - 40px);padding:10px">
+      <!-- <div>
         <el-button>结算</el-button>
-      </div>
+      </div> -->
       <!-- 搜索框 -->
       <div slot="search">
         <querySelect search="shipSn" type="order" size="mini" @change="searchShip" />
@@ -35,12 +35,12 @@
             </el-table-column>
           </template>
         </el-table>
-        <div class="accountsLoad_table_pager">
+        <!-- <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
             <Pager :total="totalLeft" @change="handlePageChangeLeft" />
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
@@ -56,20 +56,22 @@
           <template v-for="column in tableColumnRight">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
+                <div v-if="column.expand">
+                  <el-input type="number" v-model.number="scope.row.amount" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                </div>
+                <div v-else>
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </div>
               </template>
             </el-table-column>
           </template>
         </el-table>
-        <div class="accountsLoad_table_pager">
+        <!-- <div class="accountsLoad_table_pager">
           <b>共计:{{ totalRight }}</b>
-          <!--  <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
-          </div> -->
-        </div>
+        </div> -->
       </div>
     </transferTable>
     <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
@@ -94,8 +96,8 @@ export default {
       loading: false,
       popVisibleDialog: false,
       btnsize: 'mini',
-      totalLeft: 0,
-      totalRight: 0,
+      // totalLeft: 0,
+      // totalRight: 0,
       tableReceiptInfo: [],
       selectedRight: [],
       selectedLeft: [],
@@ -263,9 +265,13 @@ export default {
         },
         {
           label: '实结短驳费',
-          prop: 'unpaidFee',
+          prop: 'amount',
           width: '120',
-          fixed: false
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.amount
+          }
         },
         {
           label: '司机电话',
@@ -333,6 +339,12 @@ export default {
     ]),
     getRouteInfo() {
       return this.$route.query.searchQuery
+    },
+    totalLeft() {
+      return this.leftTable.length
+    },
+    totalRight() {
+      return this.rightTable.length
     }
   },
   components: {
@@ -360,7 +372,172 @@ export default {
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false
       }
+    },
+    getList() {
+      let selectListBatchNos = objectMerge2([], this.$route.query.selectListBatchNos)
+      if (this.$route.query.selectListBatchNos) {
+        this.isModify = true
+      } else {
+        this.isModify = false
+      }
+      this.leftTable = this.$options.data().leftTable
+      this.rightTable = this.$options.data().rightTable
+      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
 
+      this.initLeftParams() // 设置searchQuery
+      if (!this.isFresh) {
+        postPayListByOne(this.searchQuery).then(data => {
+          this.leftTable = Object.assign([], data.list)
+          selectListBatchNos.forEach(e => {
+            this.leftTable.forEach(item => {
+              if (e === item.batchNo) {
+                this.rightTable.push(item)
+              }
+            })
+          })
+          if (this.rightTable.length < 1) {
+            this.isGoReceipt = true
+          } else {
+            this.isGoReceipt = false
+          }
+          this.rightTable.forEach(e => { // 左边表格减去右边的数据
+            let item = this.leftTable.indexOf(e)
+            if (item !== -1) {
+              this.leftTable.splice(item, 1)
+            }
+            e.amount = e.unpaidFee
+          })
+        })
+
+      }
+    },
+    changLoadData(newVal) {
+      let unpay = this.rightTable[newVal].unpaidFee
+      let curpay = this.rightTable[newVal].amount
+      if (curpay > unpay || curpay < 0) {
+        this.$notify({
+          title: '提示',
+          message: '不能大于未结小于0',
+          type: 'warning'
+        })
+        this.rightTable[newVal].amount = unpay
+      }
+    },
+    clickDetailsRight(row) {
+      this.$refs.multipleTableRight.toggleRowSelection(row)
+    },
+    clickDetailsLeft(row) {
+      this.$refs.multipleTableLeft.toggleRowSelection(row)
+    },
+    getSelectionRight(list) { // 获取右边表格打勾的数据列表
+      this.selectedRight = list
+    },
+    getSelectionLeft(list) { // 获取左边表格打勾的数据列表
+      this.selectedLeft = list
+    },
+    changeTableKey() { // 刷新表格
+      this.tablekey = Math.random()
+    },
+    doAction(type) {
+      switch (type) {
+        case 'goLeft': // 右边数据勾选到左边
+          this.goLeft()
+          break
+        case 'goRight': // 左边数据勾选到右边
+          this.goRight()
+          break
+      }
+    },
+    goLeft() { // 数据从左边穿梭到右边
+      if (this.selectedRight.length === 0) {
+        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
+      } else {
+        this.selectedRight.forEach((e, index) => {
+          // 默认设置实结数量
+          e.amount = e.unpaidFee
+          this.rightTable.push(e)
+          let item = this.leftTable.indexOf(e)
+          if (item !== -1) { // 源数据减去被穿梭的数据
+            this.leftTable.splice(item, 1)
+          }
+        })
+        this.selectedRight = [] // 清空选择列表
+      }
+      if (this.rightTable.length < 1) {
+        this.isGoReceipt = true
+      } else {
+        this.isGoReceipt = false
+      }
+    },
+    goRight() { // 数据从右边穿梭到左边
+      if (this.selectedLeft.length === 0) {
+        this.$message({ type: 'warning', message: '请在右边表格选择数据' })
+      } else {
+        this.selectedLeft.forEach((e, index) => {
+          this.leftTable.push(e)
+          let item = this.rightTable.indexOf(e)
+          if (item !== -1) {
+            // 源数据减去被穿梭的数据
+            this.rightTable.splice(item, 1)
+          }
+        })
+        this.selectedLeft = [] // 清空选择列表
+      }
+      if (this.rightTable.length < 1) {
+        this.isGoReceipt = true
+      } else {
+        this.isGoReceipt = false
+      }
+
+    },
+    addItem(row, index) { // 添加单行
+      this.selectedRight = []
+      this.selectedRight[index] = row
+      this.doAction('goLeft')
+    },
+    minusItem(row, index) { // 减去单行
+      this.selectedLeft = []
+      this.selectedLeft[index] = row
+      this.doAction('goRight')
+    },
+    addALLList() { // 添加全部
+      this.selectedRight = Object.assign([], this.leftTable)
+      this.doAction('goLeft')
+    },
+    minusAllList() { // 减去全部
+      this.selectedLeft = Object.assign([], this.rightTable)
+      this.doAction('goRight')
+    },
+    searchShip(obj) {
+      console.log('searchShip', obj)
+    },
+    closeDialog() {
+      this.popVisibleDialog = false
+    },
+    openDialog() {
+      this.popVisibleDialog = true
+    },
+    goReceipt() {
+      this.tableReceiptInfo = []
+      if (!this.isGoReceipt) {
+        let data = []
+
+        console.log('rightTable', this.rightTable)
+        this.rightTable.forEach((e, index) => {
+          let item = {
+            id: '',
+            amount: 0,
+            feeTypeId: ''
+          }
+          item.id = e.id
+          item.feeTypeId = e.feeTypeId
+          item.amount = e.amount
+          this.tableReceiptInfo.push(item)
+          item = {}
+        })
+        this.openDialog()
+        data = []
+      }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
       const { columns, data } = param
@@ -437,132 +614,6 @@ export default {
         }
       })
       return sums
-    },
-    getList() {
-      console.log('isModify', this.isModify)
-      this.leftTable = this.$options.data().leftTable
-      this.rightTable = this.$options.data().rightTable
-      if (this.isModify) {
-        this.leftTable = this.orgData.left
-        this.rightTable = this.orgData.right
-        this.$emit('loadTable', this.rightTable)
-      } else {
-        this.initLeftParams()
-        if (!this.isFresh) {
-          postPayListByOne(this.searchQuery).then(data => {
-            this.leftTable = data.list
-            this.$emit('loadTable', this.rightTable)
-          })
-        }
-      }
-    },
-    clickDetailsRight(row) {
-      this.$refs.multipleTableRight.toggleRowSelection(row)
-    },
-    clickDetailsLeft(row) {
-      this.$refs.multipleTableLeft.toggleRowSelection(row)
-    },
-    getSelectionRight(list) { // 获取右边表格打勾的数据列表
-      this.selectedRight = list
-    },
-    getSelectionLeft(list) { // 获取左边表格打勾的数据列表
-      this.selectedLeft = list
-    },
-    changeTableKey() { // 刷新表格
-      this.tablekey = Math.random()
-    },
-    doAction(type) {
-      switch (type) {
-        case 'goLeft': // 右边数据勾选到左边
-          this.goLeft()
-          break
-        case 'goRight': // 左边数据勾选到右边
-          this.goRight()
-          break
-      }
-    },
-    goLeft() { // 数据从左边穿梭到右边
-      if (this.selectedRight.length === 0) {
-        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
-      } else {
-        this.selectedRight.forEach((e, index) => {
-          // 默认设置配载重量,配载体积,配载数量
-          e.loadAmount = e.repertoryAmount
-          e.loadWeight = e.repertoryWeight
-          e.loadVolume = e.repertoryVolume
-          this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-          }
-        })
-        this.selectedRight = [] // 清空选择列表
-      }
-      this.tableReceiptInfo = Object.assign([], this.rightTable)
-       console.log(this.tableReceiptInfo.length)
-        if (this.tableReceiptInfo.length < 1) {
-          this.isGoReceipt = true
-        } else {
-          this.isGoReceipt = false
-        }
-    },
-    goRight() { // 数据从右边穿梭到左边
-      if (this.selectedLeft.length === 0) {
-        this.$message({ type: 'warning', message: '请在右边表格选择数据' })
-      } else {
-        this.selectedLeft.forEach((e, index) => {
-          this.leftTable.push(e)
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
-        })
-        this.selectedLeft = [] // 清空选择列表
-      }
-      this.tableReceiptInfo = Object.assign([], this.rightTable)
-      console.log(this.tableReceiptInfo.length)
-      if (this.tableReceiptInfo.length < 1) {
-        this.isGoReceipt = true
-      } else {
-        this.isGoReceipt = false
-      }
-
-    },
-    addItem(row, index) { // 添加单行
-      this.selectedRight = []
-      this.selectedRight[index] = row
-      this.doAction('goLeft')
-    },
-    minusItem(row, index) { // 减去单行
-      this.selectedLeft = []
-      this.selectedLeft[index] = row
-      this.doAction('goRight')
-    },
-    addALLList() { // 添加全部
-      this.selectedRight = Object.assign([], this.leftTable)
-      this.doAction('goLeft')
-    },
-    minusAllList() { // 减去全部
-      this.selectedLeft = Object.assign([], this.rightTable)
-      this.doAction('goRight')
-    },
-    searchShip(obj) {
-      console.log('searchShip', obj)
-    },
-    closeDialog() {
-      this.popVisibleDialog = false
-    },
-    openDialog() {
-      this.popVisibleDialog = true
-    },
-    goReceipt() {
-      if (!this.isGoReceipt) {
-        this.openDialog()
-        this.$nextTick(() => {
-          console.log('goReceipt', this.popVisibleDialog)
-        })
-      }
     }
   }
 }

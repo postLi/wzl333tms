@@ -4,8 +4,8 @@
       <el-date-picker
             v-model="searchTime"
             type="daterange"
-            align="right"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            align="right"value-format="yyyy-MM-dd HH:mm:ss"
+            
             start-placeholder="开始日期"
             :picker-options="pickerOptions"
             end-placeholder="结束日期">
