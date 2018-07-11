@@ -280,19 +280,20 @@ export default {
 </script>
 <style lang="scss">
 .transferload-steup {
-  height: calc(100%);
-  display: flex;
-  flex-direction: column;
+  height: 100%;
   position: relative;
 
   .transferTable{
     flex:1;
     display: flex;
     flex-direction: column;
+    height: auto;
+    margin-top: 0;
   }
 
   .transferTable .transferTable_content{
-
+    height: auto;
+    flex: 1;
   }
 
   .el-collapse{
@@ -307,9 +308,7 @@ export default {
     }
 
   .transferload-steup-form {
-    flex-grow: 1;
     overflow-x: hidden;
-    overflow-y: auto;
     padding: 10px 10px 0 10px;
     height: 100%;
     position: relative;

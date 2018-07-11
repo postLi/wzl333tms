@@ -1486,7 +1486,7 @@ export default {
     },
     // 回填运单信息
     setOrderData(data) {
-      data.tmsOrderShip = data.tmsOrderShip || {}
+      data.tmsOrderShip = data.tmsOrderShipInfo || data.tmsOrderShip || {}
       // 设置运单信息
       for (const i in this.form.tmsOrderShip) {
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
