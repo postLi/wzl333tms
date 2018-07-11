@@ -157,9 +157,15 @@
                   <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
-                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" required :rules="{ validator: validateIsEmpty('货品件数不能为空！'), trigger: 'blur' }">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: validateIsEmpty('货品件数不能为空！'), trigger: 'blur' }">
                   <el-input size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
+                  </el-form-item>
+                </template>
+                <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.'+item.fieldProperty" :rules="{ validator: validateWeightAndVolume(item.fieldProperty, scope.$index), trigger: 'blur' }">
+                  <el-input size="mini" maxlength="20"
+                  v-model="form.cargoList[scope.$index][item.fieldProperty]" />
                   </el-form-item>
                 </template>
                 <template v-else>
@@ -544,6 +550,8 @@ export default {
           { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] }
         ]
       },
+      // 用来判断是否有填体积或者重量
+      inputWOrV: {},
       // 付款方式禁用
       shipNowpayFeeDisabled: false,
       shipArrivepayFeeDisabled: false,
@@ -873,6 +881,17 @@ export default {
           callback(new Error())
         } else {
           callback()
+        }
+      }
+    },
+    validateWeightAndVolume(prop, index) {
+      return (rule, value, callback) => {
+        if (this.form.cargoList[index].cargoWeight || this.form.cargoList[index].cargoVolume) {
+          callback()
+        } else {
+          console.log('index：', this.form.cargoList[index].cargoWeight, this.form.cargoList[index].cargoVolume)
+          this.$message.error('体积跟重量必填其一')
+          callback(new Error())
         }
       }
     },
