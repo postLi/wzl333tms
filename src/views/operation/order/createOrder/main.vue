@@ -383,7 +383,7 @@
                   </td>
                   <td>
                     <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier"
-                    :filterable="false" show="select" v-model="form.tmsOrderTransfer.carrierId" />
+                    :filterable="true" show="select" v-model="form.tmsOrderTransfer.carrierId" />
                   </td>
                   <td>
                     <el-input size="mini" maxlength="20"  v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
