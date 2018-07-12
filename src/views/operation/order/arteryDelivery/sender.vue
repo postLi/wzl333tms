@@ -353,8 +353,10 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      Object.assign(this.searchQuery, obj)
-      this.fetchData()
+      // Object.assign(this.searchQuery, obj)
+      // this.fetchData()
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
