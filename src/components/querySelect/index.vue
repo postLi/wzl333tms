@@ -25,7 +25,7 @@
         </div>
       </template>
       <template v-else>
-        {{ item[showkey] }}
+        <span v-html="highLight(item, showkey)"></span>
       </template>
 
     </slot>
@@ -489,6 +489,12 @@ export default {
 }
 </script>
 <style lang="scss">
+.query-input-autocomplete{
+  .highlight{
+    font-style: normal;
+    color: #f00;
+  }
+}
 .query-input-customer, .query-input-city{
   min-width: 400px !important;
   li{
@@ -503,10 +509,7 @@ export default {
       text-overflow: ellipsis;
       min-height: 28px;
     }
-    .highlight{
-      font-style: normal;
-      color: #f00;
-    }
+    
   }
   .query-input-customer-org{
     width: 60px;
