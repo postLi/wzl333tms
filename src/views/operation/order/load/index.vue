@@ -37,26 +37,44 @@
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
+                        <span class="addr">{{ item.driverName }}</span><br>
+                        <span class="addr">{{ item.dirverMobile}}</span>
                       </template>
                     </el-autocomplete>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="司机名称" prop="dirverName">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect">
+                    <!-- <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.driverName }}</div>
                         <span class="addr">{{ item.driverMobile? item.driverMobile : '无手机号码' }}</span>
+                      </template>
+                    </el-autocomplete> -->
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck">
+                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
+                      <template slot-scope="{ item }">
+                        <div class="name">{{ item.truckIdNumber }}</div>
+                        <span class="addr">{{ item.driverName }}</span><br>
+                        <span class="addr">{{ item.dirverMobile}}</span>
                       </template>
                     </el-autocomplete>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="司机电话" prop="dirverMobile">
-                    <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话">
+                    <!-- <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话">
                       <i slot="suffix" class="el-input__icon el-icon-plus" @click="doAction('addDriver')"></i>
-                    </el-input>
+                    </el-input> -->
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverMobile" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck">
+                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
+                      <template slot-scope="{ item }">
+                        <div class="name">{{ item.truckIdNumber }}</div>
+                        <span class="addr">{{ item.driverName }}</span><br>
+                        <span class="addr">{{ item.dirverMobile}}</span>
+                      </template>
+                    </el-autocomplete>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -792,7 +810,8 @@ export default {
     },
     handleSelectTruck(item) {
       this.formModel.truckIdNumber = item.truckIdNumber
-
+      this.formModel.dirverMobile = item.dirverMobile
+      this.formModel.dirverName = item.driverName
     },
     querySearch(queryString, cb) {
       let driverList = this.Drivers
