@@ -179,7 +179,7 @@ export default {
         },
         {
           label: "发货人",
-          prop: "shipShippingTypeName",
+          prop: "senderCustomerName",
           width: "120",
           fixed: false
         },
@@ -191,13 +191,13 @@ export default {
         },
         {
           label: "收货人",
-          prop: "shipReceiverId",
+          prop: "receiverCustomerName",
           width: "120",
           fixed: false
         },
         {
           label: "收货人电话",
-          prop: "senderCustomerMobile",
+          prop: "receiverCustomerMobile",
           width: "120",
           fixed: false
         },
@@ -313,7 +313,7 @@ export default {
         // },
         {
           label: "发货方",
-          prop: "shipSenderId",
+          prop: "senderCustomerUnit",
           width: "120",
           fixed: false
         },
@@ -324,14 +324,8 @@ export default {
           fixed: false
         },
         {
-          label: "发货方",
-          prop: "shipSenderId",
-          width: "120",
-          fixed: false
-        },
-        {
           label: "收货方",
-          prop: "shipReceiverId",
+          prop: "receiverCustomerUnit",
           width: "120",
           fixed: false
         },
@@ -390,16 +384,22 @@ export default {
           fixed: false
         },
         {
+          label: "代收货款",
+          prop: "agencyFund",
+          width: "120",
+          fixed: false
+        },
+        {
           label: "代收款手续费",
           prop: "commissionFee",
           width: "120",
           fixed: false
         },
-        // {
-        //   label: "制单人",
-        //   prop: "userName",
-        //   width: "120"
-        // },
+        {
+          label: "制单人",
+          prop: "userName",
+          width: "120"
+        },
         {
           label: "客户单号",
           prop: "shipCustomerNumber",
@@ -500,17 +500,28 @@ export default {
       console.log('-----------------')
     },
     tableRowColor({ row, rowIndex }) {
-      let orgTime = new Date().getTime() - row.repertoryCreateTime
-      let timeOne = this.selectionColorSetting.sectionOne * 3600
-      let timeTwo = this.selectionColorSetting.sectionTwo * 3600
-      let timeThree = this.selectionColorSetting.sectionThree * 3600
-      if (orgTime < timeOne || orgTime === timeOne) {
+      console.log(row.hashours, this.selectionColorSetting)
+      if (this.selectionColorSetting.sectionOne < row.hashours && row.hashours < this.selectionColorSetting.sectionTwo || this.selectionColorSetting.sectionOne === row.hashours) {
         return { "color": this.selectionColorSetting.sectionOneColour }
-      } else if (orgTime > timeThree) {
+      } else if (this.selectionColorSetting.sectionTwo < row.hashours && row.hashours < this.selectionColorSetting.sectionThree || this.selectionColorSetting.sectionTwo === row.hashours) {
         return { "color": this.selectionColorSetting.sectionThreeColour }
-      } else {
+      } else if (this.selectionColorSetting.sectionThree < row.hashours || this.selectionColorSetting.sectionThree === row.hashours) {
         return { "color": this.selectionColorSetting.sectionTwoColour }
+      } else {
+        return { "color": '#333' }
       }
+
+      // let orgTime = new Date().getTime() - row.repertoryCreateTime
+      // let timeOne = this.selectionColorSetting.sectionOne * 3600
+      // let timeTwo = this.selectionColorSetting.sectionTwo * 3600
+      // let timeThree = this.selectionColorSetting.sectionThree * 3600
+      // if (orgTime < timeOne || orgTime === timeOne) {
+      //   return { "color": this.selectionColorSetting.sectionOneColour }
+      // } else if (orgTime > timeThree) {
+      //   return { "color": this.selectionColorSetting.sectionThreeColour }
+      // } else {
+      //   return { "color": this.selectionColorSetting.sectionTwoColour }
+      // }
     },
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)

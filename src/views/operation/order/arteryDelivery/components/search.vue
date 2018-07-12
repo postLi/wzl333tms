@@ -161,6 +161,7 @@ export default {
   },
   mounted () {
     this.searchForm.arriveOrgid = this.otherinfo.orgid
+    this.onSubmit()
   },
   methods: {
     getOrgid (id){

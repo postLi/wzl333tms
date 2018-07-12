@@ -101,7 +101,7 @@
 </template>
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
-import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
+//postCustomerdetailList
 import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'

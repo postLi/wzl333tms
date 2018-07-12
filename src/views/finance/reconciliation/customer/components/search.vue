@@ -1,5 +1,20 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+      <el-form-item label="发车时间:">
+        <el-date-picker
+          v-model="searchCreatTime"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+
+          value-format="timestamp"
+
+        >
+        </el-date-picker>
+      </el-form-item>
       <el-form-item label="所属网点:">
           <SelectTree v-model="searchForm.orgId" />
       </el-form-item>
@@ -22,6 +37,8 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
+import { REGEX }  from '@/utils/validate'
+import { parseTime } from '@/utils/'
 export default {
   components: {
     SelectTree,
@@ -46,7 +63,23 @@ export default {
     }
   },
   data () {
+    let _this = this
     return {
+      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
+      pickOption: {
+        firstDayOfWeek:1,
+        disabledDate(time) {
+          // 小于终止日
+          return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
+        }
+      },
+      pickOption2: {
+        firstDayOfWeek:1,
+        disabledDate(time) {
+          // 大于起始日
+          return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
+        }
+      },
       searchForm: {
         orgId: '',
         financialWayTypeId:'',
@@ -68,6 +101,8 @@ export default {
   },
   methods: {
     onSubmit () {
+      this.searchForm.loadStartTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+      this.searchForm.loadEndTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
       this.$emit('change', this.searchForm)
     },
     clearForm () {
