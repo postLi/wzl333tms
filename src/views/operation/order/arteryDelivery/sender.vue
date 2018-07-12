@@ -288,7 +288,7 @@ import TableSetup from './components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -306,7 +306,7 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-    this.fetchAllCustomer()
+    //this.fetchAllCustomer()
   },
   data () {
     return {
@@ -359,8 +359,10 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
-      this.fetchAllCustomer()
+      // this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
+      this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
+      // this.fetchAllCustomer()
+      this.fetchData()
     },
     showImport () {
       // 显示导入窗口
