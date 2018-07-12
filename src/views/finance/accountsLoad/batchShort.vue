@@ -2,9 +2,6 @@
   <!-- 短驳费结算页面 -->
   <div class="accountsLoad_table">
     <transferTable style="height: calc(100% - 40px);padding:10px">
-      <!-- <div>
-        <el-button>结算</el-button>
-      </div> -->
       <!-- 搜索框 -->
       <div slot="search">
         <querySelect search="shipSn" type="order" size="mini" @change="searchShip" />

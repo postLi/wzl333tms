@@ -69,7 +69,7 @@ export default {
           // sign: 2,
           // orgid: 1,
           // ascriptionOrgid: 1,
-          status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT',
+          status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
           // loadStartTime: '',
           // loadEndTime: '',
           // departureStartTime: '',
@@ -82,6 +82,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
+      selectListBatchNos: [],
       loading: false,
       setupTableVisible: false,
       tableColumn: [
@@ -110,7 +111,7 @@ export default {
           fixed: false
         },
         {
-          label: '到达网点',
+          label: '目的网点',
           prop: 'arriveOrgName',
           width: '150',
           fixed: false
@@ -122,15 +123,6 @@ export default {
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '接收时间',
-          prop: 'receivingTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -210,8 +202,6 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     fetchList() {
-      this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
-      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
@@ -230,11 +220,25 @@ export default {
       }
     },
     count() {
-      this.$router.push({ path: '../accountsLoad', query: {currentPage: 'batchDeliver'} })
-      console.log('router', this.$router)
+      this.$router.push({
+        path: '../accountsLoad',
+        query: {
+          currentPage: 'batchDeliver', // 本页面标识符
+          searchQuery: this.searchQuery, // 搜索项
+          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
+        }
+      })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListBatchNos = []
+      list.forEach((e, index) => {
+        this.selectListBatchNos.push(e.batchNo)
+      })
+      console.log(this.selectListBatchNos)
+    },
     showDetail(order) {
       this.eventBus.$emit('showOrderDetail', order.id)
     },

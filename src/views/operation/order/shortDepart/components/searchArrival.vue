@@ -121,8 +121,8 @@ export default {
         this.searchForm.batchTypeId = undefined
       }
       if (this.searchTime) {
-        this.$set(this.searchForm, 'beginTime', this.searchTime[0])
-        this.$set(this.searchForm, 'endTime', this.searchTime[1])
+        this.$set(this.searchForm, 'beginTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(this.searchForm, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', this.searchForm)
       this.searchForm = this.$options.data().searchForm

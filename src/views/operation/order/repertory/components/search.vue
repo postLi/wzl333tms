@@ -93,8 +93,8 @@ export default {
     onSubmit() {
       let searchObj = objectMerge2({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'createTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
+        this.$set(searchObj, 'createTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
       this.searchForm = objectMerge2({}, this.$options.data().searchForm)

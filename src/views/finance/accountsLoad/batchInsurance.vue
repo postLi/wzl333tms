@@ -1,5 +1,5 @@
 <template>
-  <!-- 送货费结算页面 -->
+  <!-- 整车保险费结算页面 -->
   <div class="accountsLoad_table">
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 搜索框 -->
@@ -8,7 +8,7 @@
       </div>
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">送货费结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">整车保险费结算</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -113,7 +113,7 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '送货批次',
+          label: '发车批次',
           prop: 'batchNo',
           width: '120',
           fixed: true
@@ -131,7 +131,7 @@ export default {
           fixed: false
         },
         {
-          label: '送货时间',
+          label: '发车时间',
           prop: 'departureTime',
           width: '180',
           fixed: false,
@@ -140,19 +140,28 @@ export default {
           }
         },
         {
-          label: '送货费',
+          label: '到达时间',
+          prop: 'receivingTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '整车保险费',
           prop: 'fee',
           width: '120',
           fixed: false
         },
         {
-          label: '未结送货费',
+          label: '未结整车保险费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结送货费',
+          label: '已结整车保险费',
           prop: 'paidFee',
           width: '120',
           fixed: false
@@ -176,25 +185,25 @@ export default {
           fixed: false
         },
         {
-          label: '目的网点',
+          label: '达到网点',
           prop: 'arriveOrgName',
           width: '120',
           fixed: false
         },
         {
-          label: '送货件数',
+          label: '配载件数',
           prop: 'loadAmountall',
           width: '120',
           fixed: false
         },
         {
-          label: '送货重量',
+          label: '配载重量',
           prop: 'loadWeightall',
           width: '120',
           fixed: false
         },
         {
-          label: '送货体积',
+          label: '配载体积',
           prop: 'loadVolumeall',
           width: '120',
           fixed: false
@@ -207,7 +216,7 @@ export default {
         }
       ],
       tableColumnRight: [{
-          label: '送货批次',
+          label: '发车批次',
           prop: 'batchNo',
           width: '120',
           fixed: true
@@ -225,7 +234,13 @@ export default {
           fixed: false
         },
         {
-          label: '送货时间',
+          label: '达到网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车时间',
           prop: 'departureTime',
           width: '180',
           fixed: false,
@@ -234,19 +249,19 @@ export default {
           }
         },
         {
-          label: '送货费',
+          label: '整车保险费',
           prop: 'fee',
           width: '120',
           fixed: false
         },
         {
-          label: '未结送货费',
+          label: '未结整车保险费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结送货费',
+          label: '已结整车保险费',
           prop: 'paidFee',
           width: '120',
           fixed: false
@@ -280,19 +295,19 @@ export default {
           fixed: false
         },
         {
-          label: '送货件数',
+          label: '配载件数',
           prop: 'loadAmountall',
           width: '120',
           fixed: false
         },
         {
-          label: '送货重量',
+          label: '配载重量',
           prop: 'loadWeightall',
           width: '120',
           fixed: false
         },
         {
-          label: '送货体积',
+          label: '配载体积',
           prop: 'loadVolumeall',
           width: '120',
           fixed: false

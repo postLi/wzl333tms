@@ -251,6 +251,8 @@ export default {
       truckMessage: '',
       contractNo: '',
       formModel: {
+        loadTime: parseTime(new Date()),
+        requireArrivedTime: parseTime(new Date()),
         orgid: ''
       },
       isDirectDelivery: false,
@@ -377,12 +379,10 @@ export default {
   },
   methods: {
     init() {
-
-      this.formModel = {}
+      this.formModel = this.$options.data().formModel
       this.$refs['formModel'].resetFields()
       this.setLoadTypeId()
       this.initIsEdit()
-
       this.formModel.orgid = this.orgid
       this.DriverList = this.Drivers
       this.TruckList = this.Trucks
@@ -488,12 +488,11 @@ export default {
     },
     getSystemTime() { // 获取系统时间
       if (!this.isEdit) {
-        return getSystemTime().then(data => {
-          console.log('systemTime', data)
-          this.$nextTick(() => {
-            this.formModel.requireArrivedTime = new Date(data.trim())
-            this.formModel.loadTime = new Date(data.trim())
-          })
+        getSystemTime().then(data => {
+          // this.formModel.requireArrivedTime = parseTime(data, '{y}-{m}-{d} ') + '23:59:59'
+          this.formModel.requireArrivedTime = data.trim()
+          // this.formModel.loadTime = parseTime(new Date(data))
+          this.formModel.loadTime = data.trim()
         })
       }
     },
@@ -674,6 +673,7 @@ export default {
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId)
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish)
+      
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
@@ -684,8 +684,10 @@ export default {
       }
 
       // 时间处理
-      this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
-      this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
+      // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
+      // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
+      this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
+      this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
       this.$set(this.formModel, 'batchNo', this.truckMessage)
@@ -702,8 +704,10 @@ export default {
       }
       // console.log('短驳完成发车', this.loadInfo)
       // 时间处理
-      this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
-      this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
+      // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
+      // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
+      this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
+      this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
       console.log('left', this.orgData.orgid)

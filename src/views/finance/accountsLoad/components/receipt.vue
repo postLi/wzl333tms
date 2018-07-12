@@ -58,7 +58,7 @@
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="100">
             <template slot-scope="props">
-              <el-input v-model="props.row.financialWay" :size="btnsize"></el-input>
+              <el-input v-model="props.row.financialWay" :size="btnsize" disabled></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
@@ -144,7 +144,7 @@ export default {
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
-      settlementTypeId: 180, // 180：短驳批次结算
+      // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
   },
@@ -160,6 +160,44 @@ export default {
     },
     getRouteInfo() {
       return this.$route.query.searchQuery
+    },
+    settlementTypeId () {
+      let currentPage = this.$route.query.currentPage
+      switch(currentPage) {
+        case 'batchShort':
+        return 180
+        case 'batchDeliver':
+        return 181
+        case 'batchInsurance':
+        return 179
+        case 'batchStationLoad':
+        return 179
+        case 'batchStationOther':
+        return 179
+        case 'batchArrivalLoad':
+        return 179
+        case 'batchArrivalOther':
+        return 179
+      }
+    },
+    dataName () {
+      let currentPage = this.$route.query.currentPage
+      switch(currentPage) {
+        case 'batchShort':
+        return '短驳费'
+        case 'batchDeliver':
+        return '送货费'
+        case 'batchInsurance':
+        return '整车保险费'
+        case 'batchStationLoad':
+        return '发站装卸费'
+        case 'batchStationOther':
+        return '发站其他费'
+        case 'batchArrivalLoad':
+        return '到站装卸费'
+        case 'batchArrivalOther':
+        return '到站其他费'
+      }
     }
   },
   props: {
@@ -210,7 +248,7 @@ export default {
       this.formModel.amount = 0
       this.formModel.detailDtoList = Object.assign([],this.info)
       this.formModel.detailDtoList.forEach((e, index) => {
-        e.dataName = '短驳费'
+        e.dataName = this.dataName
         this.formModel.amount += e.amount
         let data = e.amount.toFixed(2).toString().split('').reverse()
         let item = data.indexOf('.')
@@ -309,7 +347,7 @@ export default {
         }
         for(let i = 13; i > -1; i--) {
           if (index === i) {
-            sums[index] = this.amount[i-3]
+            sums[index] = this.amount[i-6]
             return
           }
         }
