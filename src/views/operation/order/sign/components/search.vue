@@ -72,15 +72,15 @@ export default {
   },
   data() {
     // const _this = this
-    const validateshipSn = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('请输入运单号'))
-      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('只能输字母和数字'))
-      }
-    }
+    // const validateshipSn = function(rule, value, callback) {
+    //   if (value === '' || value === null || !value || value === undefined) {
+    //     callback(new Error('请输入运单号'))
+    //   } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('只能输字母和数字'))
+    //   }
+    // }
 
     return {
       searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
@@ -99,10 +99,10 @@ export default {
         endTime: ''
       },
       rules: {
-        shipSn: [
+        // shipSn: [
 
-          { required: true, trigger: 'blur', validator: validateshipSn }
-        ]
+        //   { required: true, trigger: 'blur', validator: validateshipSn }
+        // ]
       }
     }
   },

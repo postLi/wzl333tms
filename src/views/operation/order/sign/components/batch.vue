@@ -179,6 +179,7 @@ export default {
         'remark': '',
         'signPic': '',
 
+        'loadIds': [],
         'shipIds': [],
         'childShipIds': []
       },
@@ -280,6 +281,9 @@ export default {
             })
             data.childShipIds = this.dotInfo.map(el => {
               return el.childShipId
+            })
+            data.loadIds = this.dotInfo.map(el => {
+              return el.loadId
             })
             promiseObj = postBatchSign(data)// 送货批量
           }

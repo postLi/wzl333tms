@@ -697,7 +697,6 @@ export default {
           if (id.length) {
             const shipId = this.selected[0].shipId
             const signId = this.selected[0].signId
-
             this.searchQuery.vo.shipId = shipId
             this.searchQuery.vo.signId = signId
                 // console.log(repertoryId);
