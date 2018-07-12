@@ -496,7 +496,7 @@ export default {
         })
       }
     },
-    getSelectAddLoadRepertoryList() {
+    getSelectAddLoadRepertoryList() { // 获取列表
       if (this.isEdit) {
         this.getUpdateRepertoryLeft()
         this.getUpdateRepertoryRight()
