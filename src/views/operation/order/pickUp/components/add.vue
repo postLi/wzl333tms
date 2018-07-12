@@ -2,7 +2,7 @@
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="pickup_lrl">
-        <div class="info_date">提货信息</div>
+        <div class="info_date" style="margin-top: 10px;">提货信息</div>
         <div class="pickUp-top">
           <el-form-item label="提货批次" prop="customerUnit">
             <el-input v-model="pickupBatchNumber" auto-complete="off" disabled></el-input>
@@ -13,11 +13,12 @@
           <el-form-item label="手机号" prop="tmsCustomer.customerMobile" class="senderName_lrl">
             <querySelect search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.tmsCustomer.customerMobile" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
-          <el-form-item label="提货地址" prop="tmsCustomer.detailedAddress" class="senderName_lrl">
+          <el-form-item label="提货地址" prop="tmsCustomer.detailedAddress" class="senderAddr_lrl">
 
             <querySelect search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.tmsCustomer.detailedAddress" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
         </div>
+        <div class="info_date">货物信息</div>
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
             <querySelect search="value" valuekey="value" :maxlength="8" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
@@ -45,6 +46,7 @@
             <el-input v-model="form.tmsOrderPickup.remark" type="textarea" auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
         </div>
+        <div class="info_date">其他信息</div>
         <div class="pickUp-bottom">
           <el-form-item label="车费" prop="tmsOrderPickup.truckFee">
             <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" :disabled="isDbclick"></el-input>
@@ -501,8 +503,8 @@ export default {
     left: auto;
     top: 50px;
     bottom: auto;
-    min-width: 700px;
-    max-width: 700px;
+    min-width: 750px;
+    max-width: 750px;
     .popRight-content{
       /*padding: 20px 0px 0;*/
       box-sizing: border-box;
@@ -511,7 +513,12 @@ export default {
   }
   .senderName_lrl{
     .el-autocomplete{
-      width: 430px;
+      width: 150px;
+    }
+  }
+  .senderAddr_lrl{
+    .el-autocomplete{
+      width:640px;
     }
   }
     .selectListOption_lrl{
@@ -557,6 +564,9 @@ export default {
   .pickUp-bottom .arrive-time .el-form-item__label{
     width: 108px !important;
   }
+  .pickUp-top{
+    margin-top: 10px;
+  }
   .pickUp-top .el-input.is-disabled .el-input__inner{
     background-color: transparent;
   }
@@ -571,9 +581,10 @@ export default {
     padding-left: 10px;
     .info_date{
       background: #e9f3fa;
-      padding: 8px 0;
+      padding: 8px 5px;
       font-size: 14px;
       color: #666;
+
     }
   }
 

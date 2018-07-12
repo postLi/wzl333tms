@@ -324,7 +324,7 @@ export default {
     }
   },
   mounted(){
-    this.eventBus.on('putAcceptOrder', (_ids) => {
+    this.eventBus.$on('putAcceptOrder', (_ids) => {
       putAccept(_ids).then(res => {
         this.$message({
           type: 'success',

@@ -84,7 +84,7 @@
             </ul>
         </div>
 
-        <div class="info_order" style="margin-top: 12px">订单信息</div>
+        <div class="info_order" style="margin-top: 18px">订单信息</div>
         <table class="manage-add-table-foot">
           <tbody>
           <tr>
@@ -255,6 +255,9 @@ export default {
       }
       if(!value && !hasOne){
         callback(new Error('体积或重量必填其中一项'))
+      }
+      if(!REGEX.ONLY_NUMBER.test(value)){
+        callback(new Error('只能输入数字'))
       }else{
         hasOne = true
         callback()
@@ -263,7 +266,7 @@ export default {
     return {
       rules:{
         "tmsOrderPre.orderToCityName": [
-          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change']}
+          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur']}
         ],
         "customSend.customerName": [
           {required: true,validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur'}
@@ -767,6 +770,19 @@ export default {
         }
       }
 
+      .el-input__inner {
+        border-color: transparent;
+        border-radius: 0;
+      }
+      .el-form-item.is-error {
+        .el-input__inner{
+          border-color: transparent;
+          border-radius: 0;
+        }
+      }
+      .el-form-item__error{
+        top: 150%;
+      }
       .el-form-item{
         margin-bottom: 0;
         margin-right: 0;
