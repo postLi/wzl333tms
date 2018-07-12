@@ -504,6 +504,7 @@ export default {
       this.isModify = false
       this.isDbclick = true
       this.openAddCustomer()
+      this.$refs.multipleTable.clearSelection()
     }
   }
 }

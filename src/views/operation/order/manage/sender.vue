@@ -265,7 +265,7 @@
 </template>
 <script>
 import { getExportExcel } from '@/api/company/customerManage'
-import { getPostlist,putRefuse,deletebatchDelete,putCancel } from '../../../../api/operation/manage'
+import { getPostlist,putRefuse,deletebatchDelete,putCancel,putAccept } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -322,6 +322,22 @@ export default {
         }
       }
     }
+  },
+  mounted(){
+    this.eventBus.on('putAcceptOrder', (_ids) => {
+      putAccept(_ids).then(res => {
+        this.$message({
+          type: 'success',
+          message: '操作成功!'
+        })
+        this.fetchData()
+      }).catch(err=>{
+        this.$message({
+          type: 'info',
+          message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+        })
+      })
+    })
   },
   methods: {
     fetchAllList() {
@@ -396,6 +412,18 @@ export default {
               this.eventBus.$emit('showCreateOrder',{
                 preid: this.selected[0].id
               })
+              // putAccept(_ids).then(res => {
+              //   this.$message({
+              //     type: 'success',
+              //     message: '操作成功!'
+              //   })
+              //   this.fetchData()
+              // }).catch(err=>{
+              //   this.$message({
+              //     type: 'info',
+              //     message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+              //   })
+              // })
 
             //  订单至少需要一个预订单，点击受理跳转到开单页面
             }else if(this.selected[0].orerStatusName === "已受理" ) {
@@ -611,6 +639,7 @@ export default {
       this.isModify = false
       this.isDbclick = true
       this.openAddCustomer()
+      this.$refs.multipleTable.clearSelection()
     }
   }
 }

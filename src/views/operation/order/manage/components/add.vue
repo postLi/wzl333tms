@@ -263,7 +263,7 @@ export default {
     return {
       rules:{
         "tmsOrderPre.orderToCityName": [
-          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur']}
+          {validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change']}
         ],
         "customSend.customerName": [
           {required: true,validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur'}
@@ -678,9 +678,10 @@ export default {
 .manage-add-table-foot{
   height: 100%;
   width: 100%;
-}
-.manage-add-table-foot{
   margin-top: 10px;
+  .el-input__inner{
+    color: #3e9ff1;
+  }
 }
 .manage-add-table-foot th{
   width: 50%;
@@ -758,7 +759,7 @@ export default {
           font-size: 14px;
           text-align: center;
           line-height: 34px;
-          background: #e8e8e8;
+          background: #eaf0ff;
           margin-bottom: 5px;
           i{
             color: red;

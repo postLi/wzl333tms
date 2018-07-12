@@ -15,7 +15,7 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="所属网点:">
+      <el-form-item label="所属网点11:">
           <SelectTree v-model="searchForm.orgId" />
       </el-form-item>
       <el-form-item label="收支方式:">
@@ -37,7 +37,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import { parseTime } from '@/utils/'
 export default {
   components: {

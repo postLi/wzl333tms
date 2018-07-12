@@ -7,7 +7,7 @@
       <div class="storagesInfoPop_content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-card">
           <el-tab-pane label="批次详情" name="first">
-            <div class="tabs-content" v-loading="loading">
+            <div class="tabs-cont" v-loading="loading">
               <div class="info_form">
                 <!--<el-form-item label="网点">-->
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
@@ -56,7 +56,7 @@
                 </el-form>
               </div>
               <div class="infos_table">
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">
+                <el-form :inline="true"  :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix" :model="formModel" :rules="ruleData">
                   <ul>
                     <li>
                       <p>现付运费</p>
@@ -113,15 +113,15 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到站装卸费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee" disabled></el-input>
+                      <p><i>*</i> 到站装卸费</p>
+                      <el-form-item prop="arriveHandlingFee">
+                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify" ></el-input>
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到站其他费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveOtherFee" disabled></el-input>
+                      <p><i>*</i> 到站其他费</p>
+                      <el-form-item prop="arriveOtherFee">
+                        <el-input maxlength="10" v-model="formModel.arriveOtherFee" :disabled="isModify" v-numberOnly></el-input>
                       </el-form-item>
                     </li>
                   </ul>
@@ -470,7 +470,26 @@ import SelectTree from '@/components/selectTree/index'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 export default {
   data() {
+    const validateNum = function (rule,value,callback) {
+      if(!REGEX.ONLY_NUMBER.test(value)){
+        callback(new Error('请输入数字~'))
+      }else if(REGEX.KONGE.test(value)){
+        // this.$message.error('不能输入空格~')
+        callback(new Error('不能输入空格~'))
+      }else{
+        callback()
+      }
+    }
+
     return {
+      ruleData:{
+        arriveHandlingFee:[
+          {validator: validateNum, trigger: 'blur'},
+        ],//
+        arriveOtherFee:[
+          {validator: validateNum, trigger: 'blur'}
+        ],
+      },
       tablekey: '1',
       // titleIcon:"到车确定",
       // titleIcon:"到车入库",
@@ -599,6 +618,15 @@ export default {
     }
   },
   watch: {
+    validateIsEmpty (msg = '不能为空！') {
+      return (rule, value, callback) => {
+        if(!value){
+          callback(new Error(msg))
+        }else{
+          callback()
+        }
+      }
+    },
     id(newVal) {
     },
     info(newVal) {
@@ -857,7 +885,7 @@ export default {
           } else {
             this.sendModel.tmsOrderLoad.id = this.formModel.id
             this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
-            this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveHandlingFee
+            this.sendModel.tmsOrderLoadFee.arriveHandlingFee = this.formModel.arriveHandlingFee
             this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
             this.sendModel.tmsOrderLoadDetailsList = []
             this.selected.forEach((value, index, array) => {
@@ -940,7 +968,7 @@ export default {
 
 </script>
 <style lang="scss">
-.tabs-content {
+.tabs-cont {
   // height: calc(100% - 33px);
   display: flex;
   flex-direction: column;
@@ -1070,6 +1098,9 @@ export default {
           font-size: 14px;
           text-align: center;
           line-height: 34px;
+          i{
+            color: red;
+          }
         }
       }
       .el-form-item {
@@ -1218,7 +1249,7 @@ export default {
   }
 }
 
-.tabs-content {
+.tabs-cont {
   .info_form,
   .infos_table {
     .el-input.is-disabled .el-input__inner {

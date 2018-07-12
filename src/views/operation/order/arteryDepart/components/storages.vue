@@ -1,5 +1,5 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPop" v-loading="loading">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="_storagesPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
       <div class="batchTypeNo">
         批次：{{getBatchNo}}
@@ -7,7 +7,7 @@
       <div class="storagesInfoPop_content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-card">
           <el-tab-pane label="批次详情" name="first">
-            <div class="tabs-content" v-loading="loading">
+            <div class="_tabs-cont" v-loading="loading">
               <div class="info_form">
                 <!--<el-form-item label="网点">-->
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
@@ -73,7 +73,7 @@
                     <li>
                       <p>回付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
+                        <el-input maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
@@ -764,7 +764,7 @@ export default {
 
 </script>
 <style lang="scss">
-.tabs-content {
+._tabs-cont {
   // height: calc(100%);
   display: flex;
   flex-direction: column;
@@ -906,7 +906,7 @@ export default {
 
 /*批次详情*/
 
-.storagesPop {
+._storagesPop {
   left: auto;
   top: 50px;
   bottom: auto;
