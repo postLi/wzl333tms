@@ -41,7 +41,21 @@ export default {
       path: '/finance/IOManage', icon: 'QQ', name: '收支方式管理', component: _import('finance/IOManage/index'), meta: { role: ['admin'], title: '收支方式管理', noCache: false }
     },
     {
-      path: '/finance/reconciliation', icon: 'QQ', name: '财务对账', component: _import('finance/reconciliation/index'), meta: { role: ['admin'], title: '财务对账', noCache: false }
+      path: '/finance/reconciliation', icon: 'QQ', redirect: '/finance/reconciliation/carrier', name: '财务对账', component: _import('finance/reconciliation/index'), meta: { role: ['admin'], title: '财务对账', noCache: false, istab: true },
+      children: [
+        {
+          path: '/finance/reconciliation/carrier', icon: 'QQ', name: '承运商对账', component: _import('finance/reconciliation/carrier/index'), meta: { role: ['admin'], title: '承运商对账', noCache: false }
+        },
+        {
+          path: '/finance/reconciliation/group', icon: 'QQ', name: '网点对账', component: _import('finance/reconciliation/group/index'), meta: { role: ['admin'], title: '网点对账', noCache: false }
+        },
+        {
+          path: '/finance/reconciliation/customer', icon: 'QQ', name: '客户对账', component: _import('finance/reconciliation/customer/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
+        },
+        {
+          path: '/finance/reconciliation/carfee', icon: 'QQ', name: '车费对账', component: _import('finance/reconciliation/carfee/index'), meta: { role: ['admin'], title: '车费对账', noCache: false }
+        }
+      ]
     },
     {
       path: '/finance/unusual', icon: 'QQ', name: '异动费用', component: _import('finance/unusual/index'), meta: { role: ['admin'], title: '异动费用', noCache: false }
