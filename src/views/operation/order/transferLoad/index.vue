@@ -264,7 +264,9 @@ export default {
     },
     // 获取选中的承运商
     getCarrier(item) {
-      this.formModel.carrierMobile = item.carrierMobile
+      if (item) {
+        this.formModel.carrierMobile = item.carrierMobile
+      }
     },
     // 显示新增承运商
     addCarrier() {

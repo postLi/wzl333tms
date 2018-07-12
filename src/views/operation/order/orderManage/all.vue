@@ -360,7 +360,7 @@ export default {
         'width': '150'
       }, {
         'label': '实际提货费',
-        'prop': 'shipSn',
+        'prop': 'realityhandlingFee',
         'width': '150'
       }, {
         'label': '叉车费',

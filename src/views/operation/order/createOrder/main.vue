@@ -1291,7 +1291,7 @@ export default {
         }
         this.loading = false
       }).catch(err => {
-        errFn()
+        errFn(err)
       })
     },
     // 从提货创建运单
@@ -1843,6 +1843,9 @@ export default {
                 data.tmsOrderShip.id = res.data
                 // 当为批次列表过来的，不作处理
                 if (!this.output.isbatch) {
+                  if (this.output.isPreOrder) {
+                    this.eventBus.$emit('putAcceptOrder', this.output.preId)
+                  }
                   if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$on('showOrderDetail', res.data)
