@@ -82,7 +82,7 @@
           <el-table-column sortable width="120" prop="shipReceiverName" label="收货人"></el-table-column>
           <el-table-column sortable width="120" prop="shipReceiverMobile" label="收货人电话"></el-table-column>
           <el-table-column sortable width="200" prop="cargoName" label="货品名"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="货号"></el-table-column>
+          <el-table-column sortable width="120" prop="shipGoodsSn" label="货号"></el-table-column>
           <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
         </el-table>
       </div>
