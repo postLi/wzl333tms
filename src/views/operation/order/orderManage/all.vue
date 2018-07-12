@@ -454,13 +454,22 @@ export default {
           // 修改运单信息
         case 'modify':
           this.isModify = true
-          if (this.selected.length > 1) {
+          var thelist = this.selected.filter(el => {
+            return el.shipStatus !== 67
+          })
+          if (thelist.length > 1) {
             this.$message({
               message: '每次只能修改单条数据~',
               type: 'warning'
             })
+          } else if (thelist.length < 1) {
+            this.$message({
+              message: '已签收项不能被修改~',
+              type: 'warning'
+            })
+            return
           }
-          this.selectInfo = this.selected[0]
+          this.selectInfo = thelist[0]
           this.$router.push({
             path: '/operation/order/createOrder',
             query: {

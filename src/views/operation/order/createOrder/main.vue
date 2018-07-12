@@ -474,14 +474,18 @@ export default {
   data() {
     const _this = this
     const validateOrderNum = (rule, value, callback) => {
-      _this.detectOrderNum().then(isDulip => {
-        if (isDulip) {
-          this.$message.error('重复的订单号')
-          callback(new Error())
-        } else {
-          callback()
-        }
-      })
+      if (this.output.ismodify) {
+        callback()
+      } else {
+        _this.detectOrderNum().then(isDulip => {
+          if (isDulip) {
+            this.$message.error('重复的订单号')
+            callback(new Error())
+          } else {
+            callback()
+          }
+        })
+      }
     }
 
     const validateMobile = (rule, value, callback) => {
@@ -1005,6 +1009,7 @@ export default {
       }
     },
     // 绑定左右按键
+    // todo: 增加enter移到下一个
     bindTabWithArrow() {
       this.isbindtab = true
       // closest(ele, '.order-main')
@@ -1509,6 +1514,9 @@ export default {
           this.form.receiver[i] = data.customerList[1][i]
         }
       }
+      // 回显控货
+      this.shipOther = this.form.tmsOrderShip.shipOther.split(',') || []
+      console.log('回显控货:', this.shipOther)
 
       this.form.customerList = data.customerList || []
       console.log('setOrderInfo:', data, this.form)
