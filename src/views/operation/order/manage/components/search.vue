@@ -36,6 +36,7 @@
 
 <script>
 import SelectType from '@/components/selectType/index'
+import { parseTime } from '@/utils/'
 export default {
   components: {
     SelectType
@@ -82,6 +83,8 @@ export default {
     onSubmit () {
       this.searchForm.createTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
       this.searchForm.endTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
+      // this.searchForm.createTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00') : ''
+      // this.searchForm.endTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
       this.$emit('change', this.searchForm)
       // console.log(this.searchForm);
     },
