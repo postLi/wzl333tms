@@ -143,7 +143,7 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">
+                  <el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">
                     <el-table-column fixed sortable type="selection" width="40">
                     </el-table-column>
                     <el-table-column
@@ -999,7 +999,7 @@ export default {
     }
     .infos_tab {
       width: 100%;
-      height: calc(100vh - 570px);
+      height: calc(100vh - 610px);
       flex-grow: 1;
 
       .el-table {
@@ -1070,7 +1070,7 @@ export default {
     }
   }
   .infos_table {
-    padding: 0 40px 10px 10px;
+    padding: 0 10px 0px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
     ul {

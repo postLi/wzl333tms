@@ -1,6 +1,6 @@
 <template>
-  <div class="detailTable">
-    <el-form inline v-model="info" label-width="100" class="detailTable_info">
+  <div class="detailTablePop">
+    <el-form inline v-model="info" label-width="100" class="detailTablePop_info">
       <table>
         <tbody>
           <tr>
@@ -220,7 +220,7 @@ export default {
 
 </script>
 <style lang="scss">
-.detailTable {
+.detailTablePop {
   margin-top: 75px;
   display: flex;
   flex-direction: column;
@@ -228,7 +228,7 @@ export default {
   padding: 0 10px;
   position: relative;
 
-  .detailTable_info {
+  .detailTablePop_info {
     border-bottom: 2px dotted #eee;
     background-color: #fff;
     table {

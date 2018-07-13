@@ -1,6 +1,6 @@
 <template>
-  <div class="detailTable">
-    <el-form inline v-model="info" label-width="100" class="detailTable_info">
+  <div class="detailTables">
+    <el-form inline v-model="info" label-width="100" class="detailTables_info">
       <table>
         <tbody>
           <tr>
@@ -164,14 +164,14 @@ export default {
 
 </script>
 <style lang="scss">
-.detailTable {
+.detailTables {
   margin-top: 75px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 240px);
   padding: 0 10px;
   position: relative;
-  .detailTable_info {
+  .detailTables_info {
     border-bottom: 2px dotted #eee;
     background-color: #fff;
     table {
