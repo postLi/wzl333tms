@@ -66,7 +66,7 @@
           <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker v-model.trim="formModel.operatorTime" value-format="yyyy-MM-dd hh:mm:ss" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
@@ -162,7 +162,7 @@ export default {
     getSystemTime() { // 获取系统时间
       if (!this.formModel.id) {
         getSystemTime().then(data => {
-          this.formModel.operatorTime = new Date(data.trim())
+          this.formModel.operatorTime = parseTime(data.trim())
         })
           .catch(error => {
             this.$message({ type: 'error', message: '获取系统时间失败' })
