@@ -507,7 +507,7 @@ export default {
   }
   .senderName_lrl{
     .el-autocomplete{
-      width: 150px;
+      width: 140px;
     }
   }
   .senderAddr_lrl{
