@@ -77,7 +77,7 @@
   width: 100% !important;
 
 }
-.permManage .el-table th,td{
+.permManage .el-table th, .permManage-top td{
   text-align:center;
 }
 /*表格功能*/

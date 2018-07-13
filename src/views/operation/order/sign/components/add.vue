@@ -608,7 +608,15 @@ export default {
 }
 </script>
 <style lang="scss">
-.content_top{
+
+.addSignPop{
+  left: auto;
+  top: 50px;
+  bottom: auto;
+  min-width: 1200px;
+  max-width:  1325px;
+
+  .content_top{
   padding:33px 0 0 0;
 }
 .content_bot{
@@ -711,12 +719,6 @@ export default {
     border:1px dashed #ccc;
     padding:0 0px 3px 0px;
   }
-.addSignPop{
-  left: auto;
-  top: 50px;
-  bottom: auto;
-  min-width: 1200px;
-  max-width:  1325px;
   // .table{
   //   border-collapse :collapse ;
   //   color: #333333;

@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px"      class="staff_searchinfo clearfix">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px"      class="staff_searchinfo unusual_search clearfix">
         <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
@@ -134,11 +134,14 @@ export default {
 }
 </script> 
 <style lang="scss">
-.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-  margin:10px 0px;
+.unusual_search{
+  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+    margin:10px 0px;
+  }
+  .el-range-editor--mini.el-input__inner{
+    width: 200px;
+  }
 }
-.el-range-editor--mini.el-input__inner{
-  width: 200px;
-}
+
 
 </style>

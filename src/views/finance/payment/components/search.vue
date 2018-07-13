@@ -197,8 +197,10 @@ export default {
       }
   }
 }
-.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
-  width:200px;
+.payment_searchinfo{
+  .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+    width:200px;
+  }
 }
 </style>
 

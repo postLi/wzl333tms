@@ -196,8 +196,10 @@ export default {
       }
   }
 }
-.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
-  width:200px;
+.receipt_searchinfo{
+  .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+    width:200px;
+  }
 }
 </style>
 
