@@ -771,11 +771,13 @@ export default {
       .el-input__inner {
         border-color: transparent;
         border-radius: 0;
+        text-align: center;
       }
       .el-form-item.is-error {
         .el-input__inner{
           border-color: transparent;
           border-radius: 0;
+          text-align: center;
         }
       }
       .el-form-item__error{
@@ -785,6 +787,13 @@ export default {
         margin-bottom: 0;
         margin-right: 0;
 
+      }
+      .el-input.is-disabled{
+        .el-input__inner{
+          border-color: transparent;
+          border-radius: 0;
+          text-align: center;
+        }
       }
     }
 
