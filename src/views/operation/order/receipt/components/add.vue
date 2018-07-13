@@ -196,7 +196,6 @@ export default {
     min-width: 300px;
     margin-top: 29vh !important;
   }
-
   .el-dialog__body{
     text-align: center;
   }

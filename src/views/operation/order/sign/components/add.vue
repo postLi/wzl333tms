@@ -492,20 +492,18 @@ export default {
 }
 </script>
 <style lang="scss">
-
 .wzl_addSignPop{
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 1200px;
   max-width:  1325px;
-
   .content_top{
     padding:33px 0 0 0;
   }
   .content_bot{
-    border-top: 1px dashed #ccc;
-    border-bottom: 1px dashed #ccc;
+    border-top: 1px dashed #3e9ff1;
+    border-bottom: 1px dashed #3e9ff1;
     margin:0 35px;
     padding-top: 20px;
   }
@@ -515,9 +513,6 @@ export default {
   .el-input--suffix .el-input__inner{
     padding-right: 15px;
   }
-//  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-//    width:278px;
-//  }
   .bz{
     height: 35px;
     line-height: 35px;
@@ -557,7 +552,7 @@ export default {
         overflow: hidden;
         z-index: 0;
         background-color: #fff;
-        border: 1px solid #c0ccda;
+        border: 1px solid #3e9ff1;
         border-radius: 6px;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -566,6 +561,7 @@ export default {
         height: 92px;
         width: 100px;
         float: left;
+        margin:5px 10px;
     }
   
   }
@@ -614,6 +610,9 @@ export default {
   }
   .el-input--mini .el-input__inner{
     color: #3e9ff1;
+  }
+  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+    margin-bottom: 25px;
   }
 }
 
