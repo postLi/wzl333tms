@@ -129,7 +129,7 @@
                 </el-form>
               </div>
               <div class="tab_info">
-                <div class="btns_box">
+                <div class="btns_box_send">
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -791,9 +791,10 @@ export default {
     display: flex;
     flex-direction: column;
 
-    .btns_box {
+    .btns_box_send {
       border-top: 2px dotted #dcdfe6;
       padding-top: 10px;
+      margin-bottom: 10px;
       .el-button {
         margin-right: 0;
       }
@@ -925,22 +926,24 @@ export default {
   bottom: auto;
   min-width: 1000px;
   max-width: 1000px;
-  .el-input.is-disabled {
-    .el-input__inner{
-      /*color: #3e9ff1;*/
-      background-color: transparent;
-      border-top-color: transparent;
-      border-left-color: transparent;
-      border-right-color: transparent;
-      /*text-align: center;*/
+  .sta_searchinfo{
+    .el-input.is-disabled {
+      .el-input__inner{
+        color: #3e9ff1;
+        background-color: transparent;
+
+        /*text-align: center;*/
+      }
+    }
+    .el-textarea.is-disabled{
+      .el-textarea__inner {
+        color: #3e9ff1;
+        background-color: transparent;
+      }
     }
   }
-  .el-textarea.is-disabled{
-    .el-textarea__inner {
-      color: #3e9ff1;
-      background-color: transparent;
-    }
-  }
+
+
   .infos_table{
     .el-input.is-disabled{
       .el-input__inner{
@@ -1255,6 +1258,9 @@ export default {
               width: 13%;
               .el-input__inner {
                 background: #fff;
+                border-top-color: transparent;
+                border-left-color: transparent;
+                border-right-color: transparent;
               }
             }
           }
@@ -1276,6 +1282,9 @@ export default {
                 width: 200px;
                 background-color: #fff;
                 color:#000 ;
+                border-top-color: transparent;
+                border-left-color: transparent;
+                border-right-color: transparent;
               }
             }
             .el-input.el-input--mini {

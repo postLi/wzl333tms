@@ -129,7 +129,7 @@
               </div>
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
-                <div class="btns_box">
+                <div class="_btns_box">
                   <!--<div v-if="isHiddenBtn===true">-->
                     <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
                   <!--</div>-->
@@ -898,7 +898,6 @@ export default {
               })
             })
             data = this.sendModel
-            if(this.info.bathStatusName === "已到车"){
               postAddRepertory(55, data).then(res => {
                 this.$message({
                   type: 'success',
@@ -907,12 +906,6 @@ export default {
                 this.$emit('success')
               })
               this.closeMe()
-            }else{
-              this.$message({
-                message: '已到车的批次才可以做到货入库~',
-                type: 'warning'
-              })
-            }
           }
           break;
           // 导出数据
@@ -983,8 +976,9 @@ export default {
     display: flex;
     flex-direction: column;
 
-    .btns_box {
+    ._btns_box {
       padding-top: 17px ;
+      margin-bottom: 10px;
       border-top: 2px dotted #c8c8c8;
       .el-button {
         margin-right: 0;
@@ -1507,9 +1501,10 @@ export default {
       }
       .p_cont,
       .p_input {
-        color: #606266;
+
         font-size: 14px;
         .el-input__inner{
+          color: #606266;
           border-top-color: transparent;
           border-left-color: transparent;
           border-right-color: transparent;
@@ -1544,6 +1539,7 @@ export default {
           .el-form-item__content {
             .el-input.el-input--mini.is-disabled {
               width: 13%;
+              color: #606266;
               .el-input__inner {
                 background: #fff;
               }
@@ -1563,12 +1559,14 @@ export default {
               width: 59%;
               .el-input__inner {
                 width: 200px;
+                color: #606266;
               }
             }
             .el-input.el-input--mini {
               width: 59%;
               input.el-input__inner {
                 width: 200px;
+                color: #606266;
               }
             }
 
