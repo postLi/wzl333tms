@@ -120,10 +120,11 @@ export default {
     //   this.searchForm.orgid = id
     // },
     onSubmit() {
-      // this.$set(this.searchForm, 'startTime', this.searchCreatTime[0])
-      // this.$set(this.searchForm, 'endTime', this.searchCreatTime[1])
-      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
-      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
+
       const data = objectMerge2({}, this.searchForm)
       if (this.searchForm.shipFromOrgid) {
         data.shipFromOrgid = [this.searchForm.shipFromOrgid]

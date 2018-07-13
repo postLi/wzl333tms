@@ -127,11 +127,10 @@ export default {
       this.searchForm.shipToCityName = city.longAddr
     },
     onSubmit() {
-      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
-      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
-      // this.searchForm.startTime = this.searchCreatTime[0]
-      // this.searchForm.endTime = this.searchCreatTime[1]
-      // console.log(this.searchCreatTime[0],this.searchCreatTime[1]);
+      // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
+      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
       this.$emit('change', this.searchForm)
     },
     clearForm() {

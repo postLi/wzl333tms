@@ -56,6 +56,13 @@
             <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
           <el-table-column
+            prop="signTime"
+            sortable
+            width="200"
+            label="签收时间">
+            <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
+          </el-table-column>
+          <el-table-column
             sortable
             prop="shipFromCityName"
             width="120"
@@ -519,13 +526,7 @@
             sortable
             >
           </el-table-column> -->
-          <el-table-column
-            prop="signTime"
-            sortable
-            width="200"
-            label="签收时间">
-            <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-          </el-table-column>
+          
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>

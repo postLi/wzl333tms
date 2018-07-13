@@ -34,6 +34,42 @@
         <el-tooltip content="异动费用" placement="top">
           <el-button>异动费用</el-button>
         </el-tooltip>
+        <el-tooltip content="其他支出" placement="top">
+          <el-button>其他支出</el-button>
+        </el-tooltip>
+        <el-tooltip content="送货费" placement="top">
+          <el-button>送货费</el-button>
+        </el-tooltip>
+        <el-tooltip content="短驳费" placement="top">
+          <el-button>短驳费</el-button>
+        </el-tooltip>
+        <el-tooltip content="干线费" placement="top">
+          <el-button>干线费</el-button>
+        </el-tooltip>
+        <el-tooltip content="异常理赔" placement="top">
+          <el-button>异常理赔</el-button>
+        </el-tooltip>
+        <el-tooltip content="整车保险费" placement="top">
+          <el-button>整车保险费</el-button>
+        </el-tooltip>
+        <el-tooltip content="发车汇总" placement="top">
+          <el-button>发车汇总</el-button>
+        </el-tooltip>
+        <el-tooltip content="到车汇总" placement="top">
+          <el-button>到车汇总</el-button>
+        </el-tooltip>
+        <el-tooltip content="发站装卸费" placement="top">
+          <el-button>发站装卸费</el-button>
+        </el-tooltip>
+        <el-tooltip content="发站其他费" placement="top">
+          <el-button>发站其他费</el-button>
+        </el-tooltip>
+        <el-tooltip content="到站装卸费" placement="top">
+          <el-button>到站装卸费</el-button>
+        </el-tooltip>
+        <el-tooltip content="到站其他费" placement="top">
+          <el-button>到站其他费</el-button>
+        </el-tooltip>
       </div>
     </div>
   </div>
@@ -63,7 +99,7 @@
       top:5px;
       left:347px;
       .el-button{
-        width: 88px;
+        width: 110px;
         // height: 32px;
         background-color: #cbebff;
         border-radius: 2px;
@@ -74,13 +110,25 @@
     .fin2-content{
       width: 681px;
       height: 223px;
-      padding-top: 20px;
-      background: red;
+      padding-top: 10px;
+      // background: red;
       position: absolute;
       top: 110px;
       right: 195px;
       border-radius: 10px;
-      text-align: center;
+      padding-left:33px;
+      // text-align: center;
+      .el-button{
+        display: inline-block;
+        width: 110px;
+        margin:5px;
+        padding: none;
+        text-align: center;
+        background-color: #cbebff;
+        border-radius: 2px;
+        border: solid 1px #2ca3f1;
+        font-weight: bold;
+      }
     }
   }
   

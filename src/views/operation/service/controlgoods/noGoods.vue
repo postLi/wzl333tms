@@ -48,13 +48,13 @@
                 {{ scope.row.status === 1 ? "未放货" : "已放货" }}
               </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               prop=""
               sortable
               width="200"
               label="放货时间">
               <template slot-scope="scope">{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               prop="shipStatusName"
               label="运单状态"
@@ -86,7 +86,7 @@
               sortable
               width="200"
               label="开单时间">
-              <template slot-scope="scope">{{ scope.row.startTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
+              <template slot-scope="scope">{{ scope.row.orderCreateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
             </el-table-column>
             <el-table-column
               prop="senderCustomerName"
