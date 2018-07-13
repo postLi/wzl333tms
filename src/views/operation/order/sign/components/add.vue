@@ -523,6 +523,8 @@ export default {
     border:1px solid #ccc;
     border-radius: 5px;
     color:#999;
+    background:rgb(244,246,249);
+    // background-color:#f5f7fa;;
   }
   .mark .pz{
     width:100px;

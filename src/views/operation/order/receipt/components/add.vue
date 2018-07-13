@@ -192,7 +192,7 @@ export default {
 
 .wzl_addReceiptPop{
   .el-dialog{
-    max-width: 425px;
+    max-width: 385px;
     min-width: 300px;
     margin-top: 29vh !important;
   }

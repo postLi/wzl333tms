@@ -1,6 +1,6 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addAbnormalPop" v-loading="loading">
-    <template class="addAbnormalPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="wzl_addAbnormalPop" v-loading="loading">
+    <template class="wzl_addAbnormalPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
@@ -521,21 +521,8 @@ export default {
 }
 </script>
 <style lang="scss">
-.uploadlist{
-  width: 100%;
-  margin-left:80px;
-  li{
-    float: left;
-    width: 100px;
-    margin-right: 10px;
-  }
-}
-.disabledUpload{
-  .el-upload{
-    display: none;
-  }
-}
-.addAbnormalPop{
+
+.wzl_addAbnormalPop{
   left: auto;
   top: 50px;
   bottom: auto;
@@ -671,9 +658,23 @@ export default {
     }
     
   }
-  // .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-  //   margin-bottom: 6px;
-  // }
+  .uploadlist{
+    width: 100%;
+    margin-left:80px;
+    li{
+      float: left;
+      width: 100px;
+      margin-right: 10px;
+    }
+  }
+  .disabledUpload{
+    .el-upload{
+      display: none;
+    }
+  }
+  .el-input--mini .el-input__inner{
+    color: #3e9ff1;
+  }
 }
 </style>
 
