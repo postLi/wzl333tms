@@ -250,21 +250,21 @@ export default {
         'prop': 'shipToCityName',
         'width': '150',
         slot: function(scope) {
-          return scope.row.shipToCityName.split(',')[0]
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
         }
       }, {
         'label': '到达市',
         'prop': 'shipToCityName',
         'width': '150',
         slot: function(scope) {
-          return scope.row.shipToCityName.split(',')[1]
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
         }
       }, {
         'label': '到达县区',
         'prop': 'shipToCityName',
         'width': '150',
         slot: function(scope) {
-          return scope.row.shipToCityName.split(',')[2]
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
         }
       }, {
         'label': '发货方',
