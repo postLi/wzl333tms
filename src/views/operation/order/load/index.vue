@@ -8,7 +8,7 @@
             车辆信息&nbsp; <b>{{loadTypeId===40?'送货':'发车'}}批次：{{truckMessage}} <span v-if="loadTypeId===39">合同编号：{{contractNo}}</span></b>
           </template>
           <div class=" loadFrom clearfix">
-            <el-form :model="formModel" :size="mini" ref="formModel" class="demo-form-inline" label-width="110px" :rules="formModelRules">
+            <el-form :model="formModel" :size="mini" ref="formModel" label-width="110px" :rules="formModelRules">
               <div class="loadFrom-type">
                 <el-checkbox v-if="loadTypeId === 39" v-model="isDirectDelivery" @change="changeDirect">直送</el-checkbox>
               </div>
@@ -101,12 +101,12 @@
                 </el-col>
                 <el-col :span="18" v-if="loadTypeId !== 38">
                   <el-form-item label="备注">
-                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
+                    <el-input size="mini" type="textarea" :rows="1" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" v-else>
                   <el-form-item label="备注">
-                    <el-input size="mini" type="textarea" :rows="2" v-model="formModel.remark"></el-input>
+                    <el-input size="mini" type="textarea" :rows="1" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -205,9 +205,9 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo } from '@/api/operation/load'
-import { getAllDriver } from '@/api/company/driverManage'
-import { getAllTrunk } from '@/api/company/trunkManage'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK } from '@/api/operation/load'
+// import { getAllDriver } from '@/api/company/driverManage'
+// import { getAllTrunk } from '@/api/company/trunkManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable'
 import SelectTree from '@/components/selectTree/index'
@@ -387,9 +387,6 @@ export default {
   },
   created() {
     this.setLoadTypeId()
-  },
-  mounted() {
-
   },
   activated() {
     this.init()
@@ -670,6 +667,7 @@ export default {
       this.init()
     },
     changeDirect(newVal) { // true-直送 false-不直送
+      console.log('orgid', this.otherinfo.orgid)
       if (newVal) { // 如果直送就不用选择网点
         this.formModel.arriveOrgid = ''
       } else { // 不直送要判断网点
@@ -765,60 +763,58 @@ export default {
     },
     initInfo() {
       this.loading = false
-      this.getTreeOrgid(this.otherinfo.orgid)
-    },
-    getTreeOrgid(orgid) {
       // 切换组织了列表时更新司机列表信息
-      this.getDrivers(orgid)
-      this.getTrucks(orgid)
+      // this.getDrivers(this.otherinfo.orgid)
+      this.getTrucks(this.otherinfo.orgid)
     },
-    getDrivers(orgid) {
-      if (this.cacheDriverList[orgid]) {
-        this.Drivers = this.cacheDriverList[orgid]
-      } else {
-        getAllDriver({
-          "currentPage": 1,
-          "pageSize": 200,
-          "vo": {
-            "orgid": orgid
-          }
-        }).then(data => {
-          this.Drivers = data.list
-          this.cacheDriverList[orgid] = data.list
-        })
-      }
-    },
+    // getDrivers(orgid) {
+    //   if (this.cacheDriverList[orgid]) {
+    //     this.Drivers = this.cacheDriverList[orgid]
+    //   } else {
+    //     getAllDriver({
+    //       "currentPage": 1,
+    //       "pageSize": 200,
+    //       "vo": {
+    //         "orgid": orgid
+    //       }
+    //     }).then(data => {
+    //       this.Drivers = data.list
+    //       this.cacheDriverList[orgid] = data.list
+    //     })
+    //   }
+    // },
     getTrucks(orgid) {
       if (this.cacheTruckList[orgid]) {
         this.Trucks = this.cacheTruckList[orgid]
       } else {
-        getAllTrunk({
-          "currentPage": 1,
-          "pageSize": 200,
-          "vo": {
-            "orgid": orgid
-          }
-        }).then(data => {
-          this.Trucks = data.list
-          this.cacheTruckList[orgid] = data.list
+        // getAllTrunk({
+        //   "currentPage": 1,
+        //   "pageSize": 200,
+        //   "vo": {
+        //     "orgid": orgid
+        //   }
+        // })
+        getTrucK().then(data => {
+          this.Trucks = data.data
+          this.cacheTruckList[orgid] = data.data
         })
       }
     },
-    handleSelect(item) {
-      this.formModel.dirverMobile = item.driverMobile
-      this.formModel.dirverName = item.driverName
-    },
+    // handleSelect(item) {
+    //   this.formModel.dirverMobile = item.driverMobile
+    //   this.formModel.dirverName = item.driverName
+    // },
     handleSelectTruck(item) {
       this.formModel.truckIdNumber = item.truckIdNumber
       this.formModel.dirverMobile = item.dirverMobile
       this.formModel.dirverName = item.driverName
     },
-    querySearch(queryString, cb) {
-      let driverList = this.Drivers
-      let results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
-      // 调用 callback 返回司机列表的数据
-      cb(results)
-    },
+    // querySearch(queryString, cb) {
+    //   let driverList = this.Drivers
+    //   let results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
+    //   // 调用 callback 返回司机列表的数据
+    //   cb(results)
+    // },
     querySearchTruck(queryString, cb) {
       let truckList = this.Trucks
       let results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
@@ -827,7 +823,8 @@ export default {
     },
     createFilter(queryString) {
       return (data) => {
-        return this.DriverList
+        // return this.DriverList
+        return this.TruckList
       }
     }
   }
@@ -866,6 +863,9 @@ export default {
       padding: 0 10px 5px 0;
       .el-form-item {
         margin-bottom: 0px;
+        .el-date-editor.el-input, .el-date-editor.el-input__inner{
+          width:100%;
+        }
       }
       .loadFrom-type {
         position: absolute;
@@ -896,7 +896,10 @@ export default {
     .el-collapse-item__content {
       padding-bottom: 0;
       .el-form-item__content>.el-input {
-        width: 99%;
+       max-width: 195px;
+      }
+      .el-textarea{
+        max-width:1060px;
       }
     }
     .el-form-item--mini.el-form-item {
