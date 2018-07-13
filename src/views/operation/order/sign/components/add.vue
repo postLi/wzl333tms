@@ -1,6 +1,6 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addSignPop" v-loading="loading">
-    <template class="addSignPop-content" slot="content" :label-width="formLabelWidth">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="wzl_addSignPop" v-loading="loading">
+    <template class="wzl_addSignPop-content" slot="content" :label-width="formLabelWidth">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="manage-add">
       <div class="content_top">
         <el-form-item label="运单号:" prop="shipSn">
@@ -493,7 +493,7 @@ export default {
 </script>
 <style lang="scss">
 
-.addSignPop{
+.wzl_addSignPop{
   left: auto;
   top: 50px;
   bottom: auto;

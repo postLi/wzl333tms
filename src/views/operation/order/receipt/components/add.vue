@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :title='popTitle' @close="closeMe" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="addReceiptPop">
+   <el-dialog :title='popTitle' @close="closeMe" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="wzl_addReceiptPop">
      <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
             <div class="addMark" v-if="isModify">
               <el-form-item label="回收情况" prop="recTypeId" :cols="45">
@@ -190,7 +190,7 @@ export default {
 
 <style lang="scss">
 
- .addReceiptPop{
+.wzl_addReceiptPop{
   .el-dialog{
     max-width: 425px;
     min-width: 300px;

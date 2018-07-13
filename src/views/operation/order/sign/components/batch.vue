@@ -1,5 +1,5 @@
 <template> 
-   <el-dialog :title='popTitle' :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="BatchSignPop" @close="closeMe">
+   <el-dialog :title='popTitle' :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="wzl_addBatchPop" @close="closeMe">
     <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
       <div class="batch">
         <el-form-item label="签收单数:" prop="num">
@@ -271,7 +271,7 @@ export default {
 </script>
 
 <style lang="scss">
-.BatchSignPop{
+.wzl_addBatchPop{
 
   .el-dialog{
     max-width: 385px;
