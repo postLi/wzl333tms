@@ -127,7 +127,7 @@
                   </ul>
                 </el-form>
               </div>
-              <div class="tab_info">
+              <div class="detailPopTab_info">
                 <div class="btns_box">
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出清单</el-button>
@@ -770,7 +770,7 @@ export default {
   flex-direction: column;
   position: relative;
 
-  .tab_info {
+  .detailPopTab_info {
     padding: 0 10px;
     height: 100%;
     flex-grow: 1;
@@ -779,6 +779,7 @@ export default {
 
     .btns_box {
       margin-bottom: 10px;
+      margin-top:10px;
       .el-button {
         margin-right: 0;
       }
@@ -792,7 +793,7 @@ export default {
     }
     .infos_tab {
       width: 100%;
-      height: calc(100vh - 610px);
+      height: calc(100vh - 590px);
       flex-grow: 1;
 
       .el-table {

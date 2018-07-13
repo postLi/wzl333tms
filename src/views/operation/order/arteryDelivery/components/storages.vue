@@ -128,7 +128,7 @@
                 </el-form>
               </div>
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
-              <div class="tab_info">
+              <div class="detailPopTab_info">
                 <div class="btns_box">
                   <!--<div v-if="isHiddenBtn===true">-->
                     <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
@@ -974,7 +974,7 @@ export default {
   flex-direction: column;
   position: relative;
 
-  .tab_info {
+  .detailPopTab_info {
     padding:0 10px;
     height: 100%;
     flex-grow: 1;
@@ -983,6 +983,7 @@ export default {
 
     .btns_box {
       margin-bottom: 10px;
+      margin-top:10px;
       .el-button {
         margin-right: 0;
       }
@@ -999,7 +1000,7 @@ export default {
     }
     .infos_tab {
       width: 100%;
-      height: calc(100vh - 610px);
+      height: calc(100vh - 590px);
       flex-grow: 1;
 
       .el-table {

@@ -37,7 +37,8 @@
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
-                        <span class="addr">{{ item.driverName }}</span><br>
+                        <span class="addr">{{ item.driverName }}</span>
+                        <br>
                         <span class="addr">{{ item.dirverMobile}}</span>
                       </template>
                     </el-autocomplete>
@@ -56,7 +57,8 @@
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
-                        <span class="addr">{{ item.driverName }}</span><br>
+                        <span class="addr">{{ item.driverName }}</span>
+                        <br>
                         <span class="addr">{{ item.dirverMobile}}</span>
                       </template>
                     </el-autocomplete>
@@ -71,7 +73,8 @@
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
-                        <span class="addr">{{ item.driverName }}</span><br>
+                        <span class="addr">{{ item.driverName }}</span>
+                        <br>
                         <span class="addr">{{ item.dirverMobile}}</span>
                       </template>
                     </el-autocomplete>
@@ -191,10 +194,12 @@
         <el-button size="mini" icon="el-icon-edit-outline" plain type="primary" @click="doAction('finish')">完成配载</el-button>
         <el-button size="mini" icon="el-icon-circle-check-outline" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '>完成并发车</el-button>
       </div>
+      <div class="load_btn_transferTable">
+        <!-- 穿梭框 -->
+        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
+      </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
-      <!-- 穿梭框 -->
-      <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
       <!-- 添加车辆信息 -->
       <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
@@ -689,7 +694,7 @@ export default {
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId)
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish)
-      
+
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
@@ -833,14 +838,16 @@ export default {
 </script>
 <style lang="scss">
 .load-steup {
-  height: calc(100%);
+  height: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
   position: relative;
-  .transferTable {
-    flex: 1;
-    display: flex;
+  .load_btn_transferTable{
+    display:flex;
     flex-direction: column;
+    flex: 1;
+    height:100%;
   }
   .load_btn_boxs {
     position: relative;
@@ -863,8 +870,9 @@ export default {
       padding: 0 10px 5px 0;
       .el-form-item {
         margin-bottom: 0px;
-        .el-date-editor.el-input, .el-date-editor.el-input__inner{
-          width:100%;
+        .el-date-editor.el-input,
+        .el-date-editor.el-input__inner {
+          width: 100%;
         }
       }
       .loadFrom-type {
@@ -896,10 +904,10 @@ export default {
     .el-collapse-item__content {
       padding-bottom: 0;
       .el-form-item__content>.el-input {
-       max-width: 195px;
+        max-width: 195px;
       }
-      .el-textarea{
-        max-width:1060px;
+      .el-textarea {
+        max-width: 1060px;
       }
     }
     .el-form-item--mini.el-form-item {

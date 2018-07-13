@@ -80,7 +80,7 @@ export default {
   width: 100%;
   margin-top: -10px;
   padding: 5px 0 0 0;
-  height: calc(100% - 400px);
+  height: calc(100% - 50px);
   .transferTable_header {
     margin: 10px 0 10px -5px;
     width: 100%;
