@@ -78,18 +78,24 @@ export default {
 <style lang="scss" scope>
 .transferTable {
   width: 100%;
-  margin-top: -10px;
-  padding: 5px 0 0 0;
-  height: calc(100% - 50px);
+  height: calc(100% - 60px);
   .transferTable_header {
-    margin: 10px 0 10px -5px;
+    margin-top:10px;
     width: 100%;
+    height:42px;
+    padding:6px 0;
     text-align: center;
     position: relative;
+    border:2px solid #cdf;
+    border-bottom:none;
+    .transferTable_header_btn_direction{
+      text-align:center;
+      margin-left: -7px;
+    }
     .transferTable_fresh {
       position: absolute;
       left: 10px;
-      top: 0px;
+      top: 7px;
     }
     .transferTable_header_btn_box {
       position: absolute;
