@@ -1,5 +1,5 @@
 <template>
-  <pop-right :title="popTitle +  orderSn" :isShow="popVisible" @close="closeMe" class="addPreOrderPop" v-loading="loading">
+  <pop-right :title="popTitle +  orderSn" :isShow="popVisible" @close="closeMe" class="addPreOrderPop_lll" v-loading="loading">
     <template class="addPreOrderPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add manage-add_lrl" label-width="100px">
         <div class="info_order clearfloat">发货人信息</div>
@@ -589,13 +589,18 @@ export default {
       font-size: 12px;
     }
   }
-.addPreOrderPop{
+.addPreOrderPop_lll{
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 900px;
   max-width:  900px;
-
+  .el-input__inner{
+    color: #3e9ff1;
+  }
+  .el-textarea__inner{
+    color: #3e9ff1;
+  }
   .el-autocomplete{
     width: 100%;
   }
@@ -764,6 +769,11 @@ export default {
           margin-bottom: 5px;
           i{
             color: red;
+          }
+        }
+        .el-form-item.is-success {
+          .el-input__inner{
+            border-color: transparent;
           }
         }
       }

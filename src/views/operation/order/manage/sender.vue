@@ -427,8 +427,7 @@ export default {
             break;
           // 修改
           case 'modify':
-// alert("00")
-          console.log(this.selected);
+
           if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
@@ -444,10 +443,12 @@ export default {
               this.selectInfo = this.selected[0]
             }else{
               this.$message({
-                message: '已受理不能修改~',
+                message: '未受理才能修改~',
                 type: 'warning'
               })
+              this.closeAddCustomer()
             }
+
           }
 
               break;
@@ -487,6 +488,11 @@ export default {
           }else if(this.selected[0].orderStatus === 214){
             this.$message({
               message: '已受理的订单不可以作废~',
+              type: 'warning'
+            })
+          }else{
+            this.$message({
+              message: '已作废的订单不可以作废~',
               type: 'warning'
             })
           }
