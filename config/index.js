@@ -50,6 +50,11 @@ module.exports = {
         pathRewrite: {'^/wukunzhi': ''},
         changeOrigin: true
       },
+      '/lingzhiying': {
+        target: "http://192.168.1.41:7010",
+        pathRewrite: {'^/lingzhiying': ''},
+        changeOrigin: true
+      },
       '/huangyuwen': {
         target: "http://192.168.1.23:7010",
         pathRewrite: {'^/huangyuwen': ''},

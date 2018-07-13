@@ -98,7 +98,8 @@
 </template>
 <script>
 // import { REGEX } from '@/utils/validate'
-import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
+// import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
+import { postAbnormalUnusual } from '@/api/finance/unusual'
 import { getAllUser } from '@/api/company/employeeManage'
 import orderManage from '@/api/operation/orderManage'
 import popRight from '@/components/PopRight/index'
@@ -312,7 +313,7 @@ export default {
         this.popTitle = '异动登记'
         this.form.orgId = this.orgid
         // this.form.createTime = new Date()
-        // this.dengji()
+        this.dengji()
       }
     },
     // dengji() {
@@ -367,7 +368,7 @@ export default {
       // },
     fetchShipInfo(type) {
       const oldVal = this.form[type]
-      orderManage.getFindByShipSnOrGoodSn({
+      orderManage.postAbnormalUnusual({
         [type]: this.form[type]
       }).then(res => {
         const data = res.data

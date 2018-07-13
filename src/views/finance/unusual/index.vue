@@ -36,7 +36,7 @@
             sortable
             prop="id"
             label="序号"
-            width="80">
+            width="200">
           </el-table-column>
           <!-- 没有返回字段名 -->
           <el-table-column
@@ -284,7 +284,7 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import { getAbnormalUnusual } from '@/api/finance/unusual'
+import { postAbnormalUnusual } from '@/api/finance/unusual'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
@@ -307,11 +307,12 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.orgId = this.otherinfo.orgid
-    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
+    // this.searchQuery.vo.orgId = this.otherinfo.orgid
+    this.fetchAllreceipt()
+    // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+      // this.loading = false
             // this.licenseTypes = resArr[1]
-    })
+    // })
   },
   data() {
     return {
@@ -331,6 +332,7 @@ export default {
         'currentPage': 1,
         'pageSize': 10,
         'vo': {
+          // 'shipSn': ''
         }
       },
       total: 0,
@@ -347,11 +349,12 @@ export default {
         // },
     fetchAllreceipt() {
       // this.loading = true
-      // return getAbnormalUnusual(this.searchQuery).then(data => {
-      this.dataset = data.list
-      this.total = data.total
-      this.loading = false
-      // })
+      return postAbnormalUnusual(this.searchQuery).then(data => {
+        this.dataset = data.list
+        this.total = data.total
+        this.loading = false
+        console.log(data.list)
+      })
     },
 
     handlePageChange(obj) {
@@ -408,38 +411,38 @@ export default {
           }
           break
         // 删除
-        case 'delete':
-          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
-                    // =>todo 删除多个
-          let ids = this.selected.map(item => {
-            return item.id
-          })
-          ids = ids.join(',')
+      //   case 'delete':
+      //     const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+      //               // =>todo 删除多个
+      //     let ids = this.selected.map(item => {
+      //       return item.id
+      //     })
+      //     ids = ids.join(',')
 
-          this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
-            confirmButtonText: '删除',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            delAbnormal(ids).then(res => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.fetchData()
-            }).catch(err => {
-              this.$message({
-                type: 'info',
-                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-              })
-            })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
-          })
-          break
+      //     this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+      //       confirmButtonText: '删除',
+      //       cancelButtonText: '取消',
+      //       type: 'warning'
+      //     }).then(() => {
+      //       delAbnormal(ids).then(res => {
+      //         this.$message({
+      //           type: 'success',
+      //           message: '删除成功!'
+      //         })
+      //         this.fetchData()
+      //       }).catch(err => {
+      //         this.$message({
+      //           type: 'info',
+      //           message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+      //         })
+      //       })
+      //     }).catch(() => {
+      //       this.$message({
+      //         type: 'info',
+      //         message: '已取消删除'
+      //       })
+      //     })
+      //     break
       }
           // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()

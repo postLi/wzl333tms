@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { REGEX } from '@/utils/validate'
+// import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
@@ -145,3 +145,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.el-range-editor--mini.el-input__inner{
+  height: 28px;
+  width: 200px;
+}
+</style>

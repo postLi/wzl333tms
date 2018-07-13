@@ -11,6 +11,13 @@ import fetch from '../../utils/fetch'
 	}
 }
  */
-export function getAbnormalUnusual(params) {
-  return fetch.get('/lingchiwing/finance/tmsfinancefeedetail/v1/abnormal/' + params)
+export function postAbnormalUnusual(params) {
+  return fetch.post('/lingchiwing/finance/tmsfinancefeedetail/v1/abnormal/', params).then(res => {
+    return res.data || { list: [], total: 0 }
+  })
 }
+// export function postAbnormalUnusual(params) {
+//   return fetch.post('/lingchiwing/finance/tmsfinancefeedetail/v1/abnormal/' + params).then(res => {
+//     return res.data || { list: [], total: 0 }
+//   })
+// }
