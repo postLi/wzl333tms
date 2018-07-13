@@ -515,6 +515,9 @@ export default {
   .el-input--suffix .el-input__inner{
     padding-right: 15px;
   }
+//  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+//    width:278px;
+//  }
   .bz{
     height: 35px;
     line-height: 35px;
