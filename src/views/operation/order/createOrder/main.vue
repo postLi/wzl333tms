@@ -1506,11 +1506,13 @@ export default {
       // 设置收发货人信息
       if (data.customerList[0]) {
         for (const i in this.form.sender) {
+          this.sender[i] = data.customerList[0][i]
           this.form.sender[i] = data.customerList[0][i]
         }
       }
       if (data.customerList[1]) {
         for (const i in this.form.receiver) {
+          this.receiver[i] = data.customerList[1][i]
           this.form.receiver[i] = data.customerList[1][i]
         }
       }
