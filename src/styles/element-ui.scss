@@ -45,11 +45,13 @@ $bodercolor: #d0d7e5;
 .el-table td, .el-table th{
   padding: 3px 0;
 }
+.el-table{
+  color: #222;
+}
 .el-table .cell{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #222;
 }
 .el-table th .cell{
   color: #333;

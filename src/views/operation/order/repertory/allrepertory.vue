@@ -507,7 +507,7 @@ export default {
       } else if (Number(this.selectionColorSetting.sectionThree) < Number(row.hashours)) {
         return { "color": this.selectionColorSetting.sectionThreeColour }
       } else {
-        return { "color": '#333' }
+        return { "color": '#222' }
       }
     },
     getSearchParam(obj) {
