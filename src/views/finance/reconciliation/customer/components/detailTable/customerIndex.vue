@@ -206,7 +206,7 @@ export default {
       }
 
       switch (type) {
-        // 明细
+        // 新增
           case 'storage':
             this.closeAddCustomer()
             if(this.selected.length > 1){
