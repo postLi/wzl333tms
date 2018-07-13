@@ -412,18 +412,6 @@ export default {
               this.eventBus.$emit('showCreateOrder',{
                 preid: this.selected[0].id
               })
-              // putAccept(_ids).then(res => {
-              //   this.$message({
-              //     type: 'success',
-              //     message: '操作成功!'
-              //   })
-              //   this.fetchData()
-              // }).catch(err=>{
-              //   this.$message({
-              //     type: 'info',
-              //     message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
-              //   })
-              // })
 
             //  订单至少需要一个预订单，点击受理跳转到开单页面
             }else if(this.selected[0].orerStatusName === "已受理" ) {
@@ -436,22 +424,31 @@ export default {
               return false
             }
             break;
-          // 修改客户信息
+          // 修改
           case 'modify':
-
-              if(this.selected.length > 1){
+// alert("00")
+          console.log(this.selected);
+          if(this.selected.length > 1){
                   this.$message({
                       message: '每次只能修改单条数据~',
                       type: 'warning'
                   })
               }
-            else if(this.selected[0].orderStatus === 213){
+            else {
+            if(this.selected[0].orderStatus === 213){
               this.openAddCustomer()
 
               this.isModify = true
               this.isDbclick = false
-            }
               this.selectInfo = this.selected[0]
+            }else{
+              this.$message({
+                message: '已受理不能修改~',
+                type: 'warning'
+              })
+            }
+          }
+
               break;
         // 作废
         case 'cancel':
