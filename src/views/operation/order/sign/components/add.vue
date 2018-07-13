@@ -1,6 +1,6 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addCustomerPop" v-loading="loading">
-    <template class="addCustomerPop-content" slot="content" :label-width="formLabelWidth">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addSignPop" v-loading="loading">
+    <template class="addSignPop-content" slot="content" :label-width="formLabelWidth">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="manage-add">
       <!-- <table class="table">
         <tr>
@@ -711,7 +711,7 @@ export default {
     border:1px dashed #ccc;
     padding:0 0px 3px 0px;
   }
-.addCustomerPop{
+.addSignPop{
   left: auto;
   top: 50px;
   bottom: auto;

@@ -113,7 +113,7 @@ export default {
   width: 1178px;
   height: 752px;
   margin: 53px auto 0;
-  background-image: url("../../assets/flow/operation.jpg");
+  background-image: url("../../assets/flow/operation.png");
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
