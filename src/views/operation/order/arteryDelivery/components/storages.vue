@@ -1293,7 +1293,11 @@ export default {
   /*z-index: 1001 !important;*/
   .el-input.is-disabled {
     .el-input__inner{
-      color:#3e9ff1;
+      /*color:#3e9ff1;*/
+      background-color: transparent;
+      /*border-top-color: transparent;*/
+      /*border-left-color: transparent;*/
+      /*border-right-color: transparent;*/
     }
   }
 }
@@ -1505,6 +1509,11 @@ export default {
       .p_input {
         color: #606266;
         font-size: 14px;
+        .el-input__inner{
+          border-top-color: transparent;
+          border-left-color: transparent;
+          border-right-color: transparent;
+        }
       }
       .p_cont {
         .p_textarea.el-form-item {
@@ -1566,6 +1575,11 @@ export default {
             /*.el-input.el-input--mini.is-disabled{*/
             /*width: 20%*/
             /*}*/
+          }
+          .el-input__inner{
+             border-top-color: transparent;
+             border-left-color: transparent;
+             border-right-color: transparent;
           }
         }
         .el-form-item:last-of-type {

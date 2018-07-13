@@ -128,14 +128,14 @@
                   </ul>
                 </el-form>
               </div>
-              <div class="detailPopTab_info">
+              <div class="tab_info">
                 <div class="btns_box">
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" >
+                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" >
                     <el-table-column fixed sortable type="selection" width="50">
                     </el-table-column>
                     <el-table-column
@@ -617,6 +617,7 @@ export default {
       return getSelectLoadList(_id).then(data => {
         this.usersArr = data
         this.loading = false
+        this.toggleAllRows()
       })
 
     },
@@ -624,6 +625,17 @@ export default {
       let id = this.propsId
       return getLoadDetail(id).then(data => {
         this.trackDetail = Object.assign([], data)
+      })
+    },
+    toggleAllRows() {
+      this.$nextTick(() => {
+        this.usersArr.forEach((e, index) => {
+          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+            this.$refs.multipleTable.toggleRowSelection(e, false)
+          } else {
+            this.$refs.multipleTable.toggleRowSelection(e, true)
+          }
+        })
       })
     },
     handleClick(tab, event) {
@@ -771,7 +783,8 @@ export default {
   flex-direction: column;
   position: relative;
 
-  .detailPopTab_info {
+  .tab_info {
+
     padding: 0 10px;
     height: 100%;
     flex-grow: 1;
@@ -779,8 +792,8 @@ export default {
     flex-direction: column;
 
     .btns_box {
-      margin-bottom: 10px;
-      margin-top:10px;
+      border-top: 2px dotted #dcdfe6;
+      padding-top: 10px;
       .el-button {
         margin-right: 0;
       }
@@ -794,7 +807,7 @@ export default {
     }
     .infos_tab {
       width: 100%;
-      height: calc(100vh - 590px);
+      height: calc(100vh - 570px);
       flex-grow: 1;
 
       .el-table {
@@ -837,7 +850,6 @@ export default {
   .info_form {
     margin-top: 85px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #dcdfe6;
     .sta_searchinfo {
       .el-form-item {
         margin-right: 0;
@@ -852,7 +864,7 @@ export default {
     }
   }
   .infos_table {
-    padding: 0 10px 0px 10px;
+    padding: 0 10px 10px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
     .sta_searchinfo{
@@ -915,8 +927,12 @@ export default {
   max-width: 1000px;
   .el-input.is-disabled {
     .el-input__inner{
-      color: #3e9ff1;
+      /*color: #3e9ff1;*/
       background-color: transparent;
+      border-top-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      /*text-align: center;*/
     }
   }
   .el-textarea.is-disabled{
