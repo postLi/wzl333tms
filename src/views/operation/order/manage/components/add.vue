@@ -442,8 +442,8 @@ export default {
       this.form.tmsOrderCargoList.cargoPack = item.cargoPack
       this.form.tmsOrderCargoList.description = item.description
       this.form.tmsOrderCargoList.agencyFund = item.agencyFund
-      this.form.tmsOrderCargoList.commissionFee = item.orderProcedureFee
-      this.form.tmsOrderCargoList.shipFee = item.deliveryFee
+      this.form.tmsOrderCargoList.commissionFee = item.commissionFee
+      this.form.tmsOrderCargoList.shipFee = item.shipFee
       this.form.tmsOrderCargoList.productPrice = item.productPrice
       this.form.tmsOrderCargoList.cargoId = item.id
       // 发

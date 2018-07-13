@@ -42,11 +42,12 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
-                    <el-input :value="formModel.loadTime | parseTime('{y}/{m}/{d}')" maxlength="15" clearable disabled>
+                    <el-input :value="formModel.loadTime " maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
-                    <el-input :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')" maxlength="15" clearable disabled>
+                    <!--<el-input :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')" maxlength="15" clearable disabled>-->
+                    <el-input :value="formModel.requireArrivedTime " maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
@@ -146,7 +147,7 @@
                     </el-table-column>
                     <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点" >
                     </el-table-column>
-                    <el-table-column prop="shipId" width="180" sortable label="运单号">
+                    <el-table-column prop="shipSn" width="150" sortable label="运单号">
                     </el-table-column>
                     <el-table-column prop="childShipId" sortable width="180" label="子运单号">
                     </el-table-column>
@@ -336,7 +337,7 @@
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>元，到付运费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>元，回付运费
-                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，回付油卡
+                      <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>元，回付油卡
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
                     </el-form-item>
@@ -846,12 +847,6 @@ export default {
         width: 100%;
         .el-form-item__content{
           width: 82%;
-          .el-textarea.is-disabled {
-            .el-textarea__inner{
-              background-color: #fff;
-              color: #606266;
-            }
-          }
         }
       }
     }
@@ -860,38 +855,43 @@ export default {
     padding: 0 10px 0px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
-    ul {
-      /*border-top: 2px dotted #bbbbbb;
-        margin: 10px -10px -10px 0;
-        padding: 5px 10px 10px 10px;
-        /*background-color: #fbfbfb;*/
-      width: 100%;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-direction: row;
-      flex-direction: row;
-      li:nth-of-type(1) {
-        padding-left: 0;
-      }
-      li:last-of-type {
-        border-right: none;
-      }
-      li {
-        border: 1px solid #eee;
-        width: 10%;
-        border-bottom: none;
-        border-left: none;
-        p {
-          font-size: 14px;
-          text-align: center;
-          line-height: 34px;
+    .sta_searchinfo{
+      border-left: 1px solid #d4d4d4;
+      border-right: 1px solid #d4d4d4;
+      ul {
+        /*border-top: 2px dotted #bbbbbb;
+          margin: 10px -10px -10px 0;
+          padding: 5px 10px 10px 10px;
+          /*background-color: #fbfbfb;*/
+        width: 100%;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        li:nth-of-type(1) {
+          padding-left: 0;
+        }
+        li:last-of-type {
+          border-right: none;
+        }
+        li {
+          border: 1px solid #eee;
+          width: 10%;
+          border-bottom: none;
+          border-left: none;
+          p {
+            font-size: 14px;
+            text-align: center;
+            line-height: 34px;
+          }
+        }
+        .el-form-item {
+          margin-bottom: 0;
+          margin-right: 0;
         }
       }
-      .el-form-item {
-        margin-bottom: 0;
-        margin-right: 0;
-      }
     }
+
   }
 }
 
@@ -913,6 +913,26 @@ export default {
   bottom: auto;
   min-width: 1000px;
   max-width: 1000px;
+  .el-input.is-disabled {
+    .el-input__inner{
+      color: #3e9ff1;
+      background-color: transparent;
+    }
+  }
+  .el-textarea.is-disabled{
+    .el-textarea__inner {
+      color: #3e9ff1;
+      background-color: transparent;
+    }
+  }
+  .infos_table{
+    .el-input.is-disabled{
+      .el-input__inner{
+        border-radius: 0;
+        text-align: center;
+      }
+    }
+  }
 }
 
 .batchTypeNo {

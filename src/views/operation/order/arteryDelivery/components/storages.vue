@@ -55,7 +55,7 @@
                   </el-form-item>
                 </el-form>
               </div>
-              <div class="infos_table">
+              <div class="infos_table_">
                 <el-form :inline="true"  :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix" :model="formModel" :rules="ruleData">
                   <ul>
                     <li>
@@ -73,7 +73,7 @@
                     <li>
                       <p>回付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
+                        <el-input maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
@@ -128,7 +128,7 @@
                 </el-form>
               </div>
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
-              <div class="detailPopTab_info">
+              <div class="tab_info">
                 <div class="btns_box">
                   <!--<div v-if="isHiddenBtn===true">-->
                     <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
@@ -143,7 +143,7 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">
+                  <el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">
                     <el-table-column fixed sortable type="selection" width="40">
                     </el-table-column>
                     <el-table-column
@@ -354,7 +354,7 @@
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>元，到付运费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>元，回付运费
-                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，回付油卡
+                      <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>元，回付油卡
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
                     </el-form-item>
@@ -362,8 +362,9 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为
-                      <el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime"></el-input>，到达时间为
+                      <!--<el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为-->
+                      <el-input size="mini" disabled :value="formModel.planArrivedTime "></el-input>。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
                   </div>
@@ -536,7 +537,7 @@ export default {
         // DateTimeFormat:'',//配载日期
         // requireArrivedTime:'',//要求到达日期：
         // remark:'',
-        //  nowpayCarriage:'',//现付运费
+        //  backpayCarriage:'',//现付运费
         //  nowpayOilCard:'',//现付油卡
         //  backpayCarriage:'',//回付运费
         //  backpayOilCard:'',//回付油卡
@@ -968,13 +969,14 @@ export default {
 
 </script>
 <style lang="scss">
+
 .tabs-cont {
   // height: calc(100% - 33px);
   display: flex;
   flex-direction: column;
   position: relative;
 
-  .detailPopTab_info {
+  .tab_info {
     padding:0 10px;
     height: 100%;
     flex-grow: 1;
@@ -982,8 +984,8 @@ export default {
     flex-direction: column;
 
     .btns_box {
-      margin-bottom: 10px;
-      margin-top:10px;
+      padding-top: 17px ;
+      border-top: 2px dotted #c8c8c8;
       .el-button {
         margin-right: 0;
       }
@@ -1000,7 +1002,7 @@ export default {
     }
     .infos_tab {
       width: 100%;
-      height: calc(100vh - 590px);
+      height: calc(100vh - 570px);
       flex-grow: 1;
 
       .el-table {
@@ -1043,8 +1045,9 @@ export default {
   .info_form {
     margin-top: 85px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #dcdfe6;
+
     .sta_searchinfo {
+      border-left: #d4d4d4;
       .el-form-item {
         margin-right: 0;
         margin-bottom: 15px;
@@ -1056,7 +1059,7 @@ export default {
           .el-textarea.is-disabled {
             .el-textarea__inner{
               background-color: #fff;
-              color: #606266;
+              color: #3e9ff1;
             }
           }
         }
@@ -1067,50 +1070,65 @@ export default {
       }
     }
     .el-input.is-disabled .el-input__inner{
-      color: #606266
+      color: #3e9ff1
     }
   }
-  .infos_table {
-    padding: 0 10px 0px 10px;
+  .infos_table_ {
+    padding: 0 40px 10px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
-    ul {
-      /*border-top: 2px dotted #bbbbbb;
-        margin: 10px -10px -10px 0;
-        padding: 5px 10px 10px 10px;
-        /*background-color: #fbfbfb;*/
-      width: 100%;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-direction: row;
-      flex-direction: row;
-      li:nth-of-type(1) {
-        padding-left: 0;
-      }
-      li:last-of-type {
-        border-right: none;
-      }
-      li {
-        border: 1px solid #eee;
-        width: 10%;
-        border-bottom: none;
-        border-left: none;
-        p {
-          font-size: 14px;
-          text-align: center;
-          line-height: 34px;
-          i{
-            color: red;
+    .sta_searchinfo{
+      border-left: 1px solid #d4d4d4;
+      border-right: 1px solid #d4d4d4;
+      ul {
+        /*border-top: 2px dotted #bbbbbb;
+          margin: 10px -10px -10px 0;
+          padding: 5px 10px 10px 10px;
+          /*background-color: #fbfbfb;*/
+        width: 100%;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        li:nth-of-type(1) {
+          padding-left: 0;
+        }
+        li:last-of-type {
+          border-right: none;
+        }
+        li {
+          border: 1px solid #eee;
+          width: 10%;
+          border-bottom: none;
+          border-left: none;
+          p {
+            font-size: 14px;
+            text-align: center;
+            line-height: 34px;
+            border-right-color:transparent ;
+
+            i{
+              color: red;
+            }
+          }
+          p:last-of-type{
+
           }
         }
-      }
-      .el-form-item {
-        margin-bottom: 0;
-        margin-right: 0;
+        .el-form-item {
+          margin-bottom: 0;
+          margin-right: 0;
+        }
       }
     }
+
     .el-input.is-disabled .el-input__inner{
-      color: #606266;
+      color: #3e9ff1;
+      text-align: center;
+      border-radius: 0;
+      border-left-color:transparent ;
+      background: transparent;
+      border-radius: 0;
     }
   }
 }
@@ -1272,7 +1290,12 @@ export default {
   bottom: auto;
   min-width: 1000px;
   max-width: 1000px;
-  z-index: 1001 !important;
+  /*z-index: 1001 !important;*/
+  .el-input.is-disabled {
+    .el-input__inner{
+      color:#3e9ff1;
+    }
+  }
 }
 
 .batchTypeNo {

@@ -119,7 +119,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="deliveryFee"
+            prop="shipFee"
             label="运费"
             width="80"
             sortable
@@ -135,12 +135,13 @@
           <!--创建时间-->
           <el-table-column
             label="创建时间"
+            prop="createTime"
             width="160"
             sortable
           >
-            <template slot-scope="scope">
-              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
             <!--<template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}{m}{d}') }}</template>-->
           </el-table-column>
           <el-table-column
@@ -228,7 +229,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="pickupWeight"
+            prop="commissionFee"
             label="代收款手续费"
             width="130"
             sortable

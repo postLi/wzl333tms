@@ -503,6 +503,12 @@ export default {
       /*padding: 20px 0px 0;*/
       box-sizing: border-box;
     }
+    .el-input__inner{
+      color:#3e9ff1
+    }
+    .el-textarea__inner{
+      color:#3e9ff1
+    }
 
   }
   .senderName_lrl{
@@ -569,7 +575,7 @@ export default {
 }
   .pickup_lrl .el-input.is-disabled .el-input__inner,.pickup_lrl .el-textarea.is-disabled .el-textarea__inner{
     background-color: #fff;
-    color: #666;
+    color: #3e9ff1;
   }
   .pickup_lrl{
     padding-left: 10px;

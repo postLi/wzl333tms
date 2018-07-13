@@ -73,12 +73,13 @@
           </el-table-column>
           <el-table-column
             label="发车时间"
+            prop="loadTime"
             width="160"
             sortable
             >
-            <template slot-scope="scope">
-              {{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
 
           </el-table-column>
           <!--<el-table-column-->
@@ -244,12 +245,13 @@
           </el-table-column>
           <el-table-column
             label="配载时间"
+            prop="requireArrivedTime"
             width="160"
             sortable
           >
-            <template slot-scope="scope">
-              {{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column
             prop="username"
