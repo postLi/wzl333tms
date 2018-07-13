@@ -208,19 +208,17 @@ export default {
       switch (type) {
         // 明细
           case 'storage':
-            this.closeAddCustomer()
-            if(this.selected.length > 1){
+            this.selectInfo = this.selected[0]
 
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.isDbclick = false
-              this.openAddCustomer()
-            }else{
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.isDbclick = false
-              this.openAddCustomer()
-            }
+            this.$router.push({
+              path: '/finance/reconciliation/customer/detailTable',
+              query: {
+                tab: '对账明细',
+                //id: this.selectInfo.id
+                id: this.selectInfo.shipSenderId
+
+              }
+            })
 
             break;
           // 停用
