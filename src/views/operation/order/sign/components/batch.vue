@@ -50,17 +50,20 @@
         </div>
       </PopFrame>
   </div> -->
-   <el-dialog :title='popTitle' :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="setupTablePop" @close="closeMe">
+   <el-dialog :title='popTitle' :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="addSign" @close="closeMe">
     <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
       <div class="batch">
         <el-form-item label="签收单数:" prop="num">
-          <p class="tp">{{this.form.num}}单</p>
+          <!-- <p class="tp">{{this.form.num}}单</p> -->
+          <el-input maxlength="20" :placeholder=" form.num +'单'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="到付合计:" prop="shipArrivepayFee">
-          <p class="tp">{{this.form.shipArrivepayFee}}元</p>
+          <!-- <p class="tp">{{this.form.shipArrivepayFee}}元</p> -->
+          <el-input maxlength="20" :placeholder=" form.shipArrivepayFee +'元'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="代收款合计:" prop="agencyFund">
-          <p class="tp">{{this.form.agencyFund}}元</p>
+          <!-- <p class="tp">{{this.form.agencyFund}}元</p> -->
+          <el-input maxlength="20" :placeholder=" form.agencyFund +'元'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="签收时间:" prop="signTime">
           <el-date-picker
@@ -393,7 +396,7 @@ export default {
   //   }
   // }
  
-.setupTablePop{
+.addSign{
   .el-dialog{
     max-width: 452px;
     min-width: 300px;
@@ -402,19 +405,44 @@ export default {
     line-height: 20px;
     color: #666;
     font-size: 12px;
+    padding: 10px 20px 8px;
   }
   .el-dialog__header{
-    text-align: center;
+    padding: 5px 20px 6px;
+    font-size:14px;
+    // text-align: center;
     background: #ddd;
+  }
+  .el-dialog__title{
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .el-button{
+    padding: 4px 12px;
+    // float:right;
+  }
+  .el-dialog__headerbtn{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    padding: 0;
+    background: 0 0;
+    border: none;
+    outline: 0;
+    cursor: pointer;
+    font-size: 18px;
+    
   }
  .el-dialog__body{
    padding:8px 20px;
  }
   .el-dialog__footer{
-    text-align: center;
+    // text-align: center;
+    border-top:1px solid #3e9ff1;
   }
+  
   .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-    // margin-bottom: 15px;
+    margin-bottom: 12px;
     .el-form-item__label{
       padding:0;
       text-align: center;
@@ -429,7 +457,11 @@ export default {
     .el-input__inner{
       padding:0 30px;
     }
+    .el-input--mini .el-input__inner{
+      color: #3e9ff1;
+    }
   }
+  
 }
   
 </style>

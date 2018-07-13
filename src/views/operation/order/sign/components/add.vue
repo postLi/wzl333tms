@@ -617,92 +617,92 @@ export default {
   max-width:  1325px;
 
   .content_top{
-  padding:33px 0 0 0;
-}
-.content_bot{
-  border-top: 1px dashed #ccc;
-  border-bottom: 1px dashed #ccc;
-  margin:0 35px;
-  padding-top: 20px;
-}
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
-  width: 178px;
-}
-.el-input--suffix .el-input__inner{
-  padding-right: 15px;
-}
-.bz{
-  height: 35px;
-  line-height: 35px;
-  width:1055px;
-  padding-left:20px;
-  border:1px solid #ccc;
-  border-radius: 5px;
-  color:#999;
-}
-.mark .pz{
-  width:100px;
-  height: 167px;
-  // margin-top:30px;
-  // line-height: 167px;
-    // border-right:1px solid #ccc;
-  float:left;
-  text-align: center;
-  // background: #f2f2f2;
-  div{
-    font-size:14px;
-    margin-top:30px;
-    // color:#999;
+    padding:33px 0 0 0;
+  }
+  .content_bot{
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+    margin:0 35px;
+    padding-top: 20px;
+  }
+  .el-date-editor.el-input, .el-date-editor.el-input__inner{
+    width: 178px;
+  }
+  .el-input--suffix .el-input__inner{
+    padding-right: 15px;
+  }
+  .bz{
+    height: 35px;
+    line-height: 35px;
+    width:1055px;
+    padding-left:20px;
+    border:1px solid #ccc;
+    border-radius: 5px;
+    color:#999;
+  }
+  .mark .pz{
+    width:100px;
+    height: 167px;
+    // margin-top:30px;
+    // line-height: 167px;
+      // border-right:1px solid #ccc;
+    float:left;
+    text-align: center;
+    // background: #f2f2f2;
+    div{
+      font-size:14px;
+      margin-top:30px;
+      // color:#999;
 
-    .ts{
-      display: block;
-      color:#999999;
-      font-size:13px;
-      margin-top:3px;
+      .ts{
+        display: block;
+        color:#999999;
+        font-size:13px;
+        margin-top:3px;
+      }
     }
+          
   }
-        
-}
-.imgshow{
-  .el-upload-list--picture .el-upload-list__item{
-      overflow: hidden;
-      z-index: 0;
-      background-color: #fff;
-      border: 1px solid #c0ccda;
-      border-radius: 6px;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      margin-top: 10px;
-      padding: 10px 10px 10px 90px;
-      height: 92px;
-      width: 100px;
-      float: left;
+  .imgshow{
+    .el-upload-list--picture .el-upload-list__item{
+        overflow: hidden;
+        z-index: 0;
+        background-color: #fff;
+        border: 1px solid #c0ccda;
+        border-radius: 6px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin-top: 10px;
+        padding: 10px 10px 10px 90px;
+        height: 92px;
+        width: 100px;
+        float: left;
+    }
+  
   }
-  
-}
-.uploadlist{
-  margin-left: 20px;
-}
-.el-upload-list{
-  float:left;
-  margin-left: 136px;
-}
-.upload-container .el-upload{
-  height:104px;
-  // margin-top: 20px;
-}
-.upload-container .uploadlist{
-  
-  position:relative;
-  
-}
-.upload-container .el-upload{
-  // background:red;
-  border:1px dashed #ccc;
-  position:absolute;
-  left:0px;
-  top:0px;
-}
+  .uploadlist{
+    margin-left: 20px;
+  }
+  .el-upload-list{
+    float:left;
+    margin-left: 136px;
+  }
+  .upload-container .el-upload{
+    height:104px;
+    // margin-top: 20px;
+  }
+  .upload-container .uploadlist{
+    
+    position:relative;
+    
+  }
+  .upload-container .el-upload{
+    // background:red;
+    border:1px dashed #ccc;
+    position:absolute;
+    left:0px;
+    top:0px;
+  }
   .selectListOption_lrl{
     clear:both;
     span{
@@ -718,6 +718,13 @@ export default {
   .el-upload-list{
     border:1px dashed #ccc;
     padding:0 0px 3px 0px;
+  }
+  .el-input.is-disabled .el-input__inner{
+    color: #3e9ff1;
+    // font-weight: bold;
+  }
+  .el-input--mini .el-input__inner{
+    color: #3e9ff1;
   }
   // .table{
   //   border-collapse :collapse ;
