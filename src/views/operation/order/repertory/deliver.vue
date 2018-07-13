@@ -416,16 +416,14 @@ export default {
       console.log(order.shipId)
     },
     tableRowColor({ row, rowIndex }) {
-      let orgTime = new Date().getTime() - row.repertoryCreateTime
-      let timeOne = this.selectionColorSetting.sectionOne * 3600
-      let timeTwo = this.selectionColorSetting.sectionTwo * 3600
-      let timeThree = this.selectionColorSetting.sectionThree * 3600
-      if (orgTime < timeOne || orgTime === timeOne) {
+      if (Number(this.selectionColorSetting.sectionOne) < Number(row.hashours) && Number(row.hashours)  < Number(this.selectionColorSetting.sectionTwo) + 1 ) {
         return { "color": this.selectionColorSetting.sectionOneColour }
-      } else if (orgTime > timeThree) {
+      } else if (Number(this.selectionColorSetting.sectionTwo)  < Number(row.hashours)  && Number(row.hashours)  < Number(this.selectionColorSetting.sectionThree) + 1  ) {
+        return { "color": this.selectionColorSetting.sectionTwoColour }
+      } else if (Number(this.selectionColorSetting.sectionThree) < Number(row.hashours)) {
         return { "color": this.selectionColorSetting.sectionThreeColour }
       } else {
-        return { "color": this.selectionColorSetting.sectionTwoColour }
+        return { "color": '#333' }
       }
     },
     getSearchParam(obj) {

@@ -500,28 +500,15 @@ export default {
       console.log('-----------------')
     },
     tableRowColor({ row, rowIndex }) {
-      console.log(row.hashours, this.selectionColorSetting)
-      if (this.selectionColorSetting.sectionOne < row.hashours && row.hashours < this.selectionColorSetting.sectionTwo || this.selectionColorSetting.sectionOne === row.hashours) {
+      if (Number(this.selectionColorSetting.sectionOne) < Number(row.hashours) && Number(row.hashours)  < Number(this.selectionColorSetting.sectionTwo) + 1 ) {
         return { "color": this.selectionColorSetting.sectionOneColour }
-      } else if (this.selectionColorSetting.sectionTwo < row.hashours && row.hashours < this.selectionColorSetting.sectionThree || this.selectionColorSetting.sectionTwo === row.hashours) {
-        return { "color": this.selectionColorSetting.sectionThreeColour }
-      } else if (this.selectionColorSetting.sectionThree < row.hashours || this.selectionColorSetting.sectionThree === row.hashours) {
+      } else if (Number(this.selectionColorSetting.sectionTwo)  < Number(row.hashours)  && Number(row.hashours)  < Number(this.selectionColorSetting.sectionThree) + 1  ) {
         return { "color": this.selectionColorSetting.sectionTwoColour }
+      } else if (Number(this.selectionColorSetting.sectionThree) < Number(row.hashours)) {
+        return { "color": this.selectionColorSetting.sectionThreeColour }
       } else {
         return { "color": '#333' }
       }
-
-      // let orgTime = new Date().getTime() - row.repertoryCreateTime
-      // let timeOne = this.selectionColorSetting.sectionOne * 3600
-      // let timeTwo = this.selectionColorSetting.sectionTwo * 3600
-      // let timeThree = this.selectionColorSetting.sectionThree * 3600
-      // if (orgTime < timeOne || orgTime === timeOne) {
-      //   return { "color": this.selectionColorSetting.sectionOneColour }
-      // } else if (orgTime > timeThree) {
-      //   return { "color": this.selectionColorSetting.sectionThreeColour }
-      // } else {
-      //   return { "color": this.selectionColorSetting.sectionTwoColour }
-      // }
     },
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
