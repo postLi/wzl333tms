@@ -59,14 +59,14 @@
               </li>
               <li>
                 <p>重量</p>
-                <el-form-item prop="tmsOrderCargoList.weightFee">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.weightFee" :disabled="isDbclick"></el-input>
+                <el-form-item prop="tmsOrderCargoList.cargoWeight">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>体积</p>
-                <el-form-item prop="tmsOrderCargoList.volumeFee">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.volumeFee" :disabled="isDbclick"></el-input>
+                <el-form-item prop="tmsOrderCargoList.cargoVolume">
+                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
@@ -250,7 +250,7 @@ export default {
     }
     let hasOne = false
     const validateVolumnWeight = (rule, value, callback) => {
-      if (this.form.tmsOrderCargoList.volumeFee === '' && this.form.tmsOrderCargoList.weightFee === '') {
+      if (this.form.tmsOrderCargoList.cargoVolume === '' && this.form.tmsOrderCargoList.cargoWeight === '') {
         hasOne = false
       }
       if (!value && !hasOne) {
@@ -273,7 +273,7 @@ export default {
         ],
         'customSend.customerMobile': [
           { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'blur' },
-          { validator: validateMobile, trigger: 'change' }
+          { validator: validateMobile, trigger: 'blur' }
         ],
         'customRece.customerName': [
           { required: true, validator: this.validateIsEmpty('收货人不能为空'), trigger: 'blur' }
@@ -290,10 +290,10 @@ export default {
           { validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur' },
           { validator: validatePickupNum, trigger: 'blur' }
         ],
-        'tmsOrderCargoList.volumeFee': [{
+        'tmsOrderCargoList.cargoVolume': [{
           validator: validateVolumnWeight, trigger: 'blur'
         }],
-        'tmsOrderCargoList.weightFee': [{
+        'tmsOrderCargoList.cargoWeight': [{
           validator: validateVolumnWeight, trigger: 'blur'
         }],
         'tmsOrderCargoList.description': [
@@ -304,8 +304,8 @@ export default {
       carObj: {
         cargoName: '',  // 货品名
         cargoAmount: '',  // 件数
-        weightFee: '',  // 重量
-        volumeFee: '',  // 体积
+        cargoWeight: '',  // 重量
+        cargoVolume: '',  // 体积
         cargoPack: ''  // 包装
         // description:''  // 品种规格
       },
@@ -333,8 +333,8 @@ export default {
           {
             cargoName: '',  // 货品名
             cargoAmount: '',  // 件数
-            weightFee: '',  // 重量
-            volumeFee: '',  // 体积
+            cargoWeight: '',  // 重量
+            cargoVolume: '',  // 体积
             cargoPack: '',  // 包装
             description: '', // 品种规格
             commissionFee: '', // 代收款手续费
@@ -437,8 +437,8 @@ export default {
     infoData(item) {
       this.form.tmsOrderCargoList.cargoName = item.cargoName
       this.form.tmsOrderCargoList.cargoAmount = item.cargoAmount
-      this.form.tmsOrderCargoList.weightFee = item.cargoWeight
-      this.form.tmsOrderCargoList.volumeFee = item.cargoVolume
+      this.form.tmsOrderCargoList.cargoWeight = item.cargoWeight
+      this.form.tmsOrderCargoList.cargoVolume = item.cargoVolume
       this.form.tmsOrderCargoList.cargoPack = item.cargoPack
       this.form.tmsOrderCargoList.description = item.description
       this.form.tmsOrderCargoList.agencyFund = item.agencyFund
