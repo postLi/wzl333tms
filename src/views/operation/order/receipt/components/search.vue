@@ -171,7 +171,7 @@ export default {
 <style lang="scss">
 .tab-content{
     .receipt_searchinfo{
-        padding:15px 20px;
+        padding:10px 0;
         border-bottom:1px dashed #999;
         .el-form-item{
             margin-bottom: 0;

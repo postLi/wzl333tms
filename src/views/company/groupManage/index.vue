@@ -77,11 +77,7 @@
         <div class="side_right_bottom clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addPeople')">新增员工</el-button>
-            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除员工</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain>修改网点</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain>新增网点</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain>部门维护</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addPeople')">新增员工</el-button><el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除员工</el-button><el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain>修改网点</el-button><el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain>新增网点</el-button><el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain>部门维护</el-button>
             <el-col class="org-name"> <p>{{form.orgName}}</p></el-col>
             <!--表格功能-->
           </div>
