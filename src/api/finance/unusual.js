@@ -12,12 +12,15 @@ import fetch from '../../utils/fetch'
 }
  */
 export function postAbnormalUnusual(params) {
-  return fetch.post('/lingchiwing/finance/tmsfinancefeedetail/v1/abnormal/', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancefeedetail/v1/abnormal/', params).then(res => {
     return res.data || { list: [], total: 0 }
   })
 }
-// export function postAbnormalUnusual(params) {
-//   return fetch.post('/lingchiwing/finance/tmsfinancefeedetail/v1/abnormal/' + params).then(res => {
-//     return res.data || { list: [], total: 0 }
-//   })
-// }
+/**
+ * 异动登记
+ */
+export function postInsertAbnormal(params) {
+  return fetch.post('/api-finance/finance/tmsfinancefeedetail/v1/insertAbnormal/', params).then(res => {
+    return res.data || { list: [], total: 0 }
+  })
+}

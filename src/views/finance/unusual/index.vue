@@ -66,7 +66,7 @@
             label="货号">
           </el-table-column>
           <el-table-column
-            prop="shipFromCityCode"
+            prop="shipFromCityName"
             label="出发城市"
             width="120"
             sortable
@@ -74,7 +74,7 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="shipToCityCode"
+            prop="shipToCityName"
             width="120"
             label="到达城市">
           </el-table-column>
@@ -105,7 +105,7 @@
            <el-table-column
             prop=""
             label="异动时间"
-            width="120"
+            width="200"
             sortable
             >
             <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
@@ -231,13 +231,6 @@
             >
           </el-table-column>
           <el-table-column
-            prop=""
-            label="多笔付"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
             label="到达省"
             width="120"
             sortable
@@ -348,7 +341,7 @@ export default {
         //   return info[0] ? info[0].dictName : id
         // },
     fetchAllreceipt() {
-      // this.loading = true
+      this.loading = true
       return postAbnormalUnusual(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
@@ -402,11 +395,12 @@ export default {
               type: 'warning'
             })
           } else {
-            this.isModify = true
             this.isCheck = false
                   //  this.isDbclick = false
             this.id = this.selected[0].id
-            console.log(this.id)
+            this.selectInfo = this.selected[0]
+            this.isModify = true
+            console.log('this.selectInfo:', this.selected)
             this.openAddAbnormal()
           }
           break
@@ -452,6 +446,8 @@ export default {
     },
     closeAddAbnormal() {
       this.AddAbnormalVisible = false
+      this.isModify = false
+      this.selectInfo = {}
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

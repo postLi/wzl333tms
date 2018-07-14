@@ -68,10 +68,10 @@ export default {
   computed: {
   },
   data() {
-    const _this = this
+    // const _this = this
 
     const validateFormNumber = function(rule, value, callback) {
-      _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
+      // _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
 

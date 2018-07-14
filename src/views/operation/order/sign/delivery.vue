@@ -705,6 +705,7 @@ export default {
                 message: '取消签收成功~',
                 type: 'success'
               })
+              // this.$emit('success')
               this.fetchAllreceipt()
               return false
             }).catch(res => {
