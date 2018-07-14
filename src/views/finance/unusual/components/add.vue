@@ -517,6 +517,8 @@ export default {
         margin-right: -17px;
       }
     }
+
+    
     .ms{
       width:100%;
       min-width:703px;
