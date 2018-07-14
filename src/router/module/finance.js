@@ -15,7 +15,7 @@ export default {
       path: '/finance/handAccount', icon: 'caiwugl4_yuangongjz', name: '员工交账', component: _import('finance/handAccount/index'), meta: { role: ['admin'], title: '员工交账', noCache: false }
     },
     {
-      path: '/finance/handAccount/detail', icon: 'QQ', name: '交账明细', component: _import('finance/handAccount/detail'), meta: { role: ['admin'], title: '交账明细', noCache: false }
+      path: '/finance/handAccount/detail', hidden: true, icon: 'QQ', name: '交账明细', component: _import('finance/handAccount/detail'), meta: { role: ['admin'], title: '交账明细', noCache: false }
     },
     {
       path: '/finance/accountsReceivable', icon: 'caiwugl1_yingshou', name: '应收账款', component: _import('finance/accountsReceivable/index'), meta: { role: ['admin'], title: '应收账款', noCache: false }
@@ -41,7 +41,7 @@ export default {
       path: '/finance/IOManage', icon: 'caiwugl3_shouzhifs', name: '收支方式管理', component: _import('finance/IOManage/index'), meta: { role: ['admin'], title: '收支方式管理', noCache: false }
     },
     {
-      path: '/finance/reconciliation/customer/detailTable', icon: 'QQ', hidden:true, name: '对账明细', component: _import('finance/reconciliation/customer/components/detailTable/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
+      path: '/finance/reconciliation/customer/detailTable', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/customer/components/detailTable/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
     },
     {
       path: '/finance/reconciliation', icon: 'caiwugl6_caiwudz', redirect: '/finance/reconciliation/carrier', name: '财务对账', component: _import('finance/reconciliation/index'), meta: { role: ['admin'], title: '财务对账', noCache: false, istab: true },
