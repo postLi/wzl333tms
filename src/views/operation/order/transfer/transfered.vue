@@ -502,7 +502,7 @@ export default {
             })
                   // 获取运单号
             const shipSns = avaiableItem.map(el => {
-              return el.id
+              return el.shipId
             })
 
             this.$confirm('确定要取消 ' + avaiableItem.length + ' 条运单吗？', '提示', {
@@ -511,7 +511,8 @@ export default {
               type: 'warning'
             }).then(() => {
                       // 提交前先进行去重
-              transferManageApi.deleteTransfer(this.otherinfo.orgid, uniqArray(transferBatchNos).join(','), uniqArray(shipSns).join(',')).then(res => {
+              // transferManageApi.deleteTransfer(this.otherinfo.orgid, uniqArray(transferBatchNos).join(','), uniqArray(shipSns).join(',')).then(res => {
+              transferManageApi.deleteTransfer(this.otherinfo.orgid, transferBatchNos.join(','), shipSns.join(',')).then(res => {
                 this.$message({
                   type: 'success',
                   message: '取消成功!'
