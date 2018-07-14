@@ -1,6 +1,6 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="90px" class="staff_searchinfo clearfix">
-      <el-form-item label="发车时间:">
+      <el-form-item label="创建时间:">
         <el-date-picker
           v-model="searchCreatTime"
           type="daterange"
@@ -12,26 +12,16 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="开单网点:">
+      <el-form-item label="对账网点:">
           <SelectTree v-model="searchForm.orgId" />
       </el-form-item>
-      <el-form-item label="发货人:">
-        <el-input
-          placeholder="发货方或发货人"
-          maxlength="15"
-          v-model="searchForm.customerName"
-          clearable>
-        </el-input>
+      <el-form-item label="对账状态
+:">
+        <el-select v-model="searchForm.checkStatus">
+          <el-option label="未对账" :value="0"></el-option>
+          <el-option label="已对账" :value="1"></el-option>
+        </el-select>
       </el-form-item>
-    <el-form-item label="发货人电话:">
-      <el-input
-        v-numberOnly
-        placeholder="请输入手机号码"
-        maxlength="11"
-        v-model="searchForm.customerMobile"
-        clearable>
-      </el-input>
-    </el-form-item>
       <el-form-item class="staff_searchinfo_tn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -87,8 +77,7 @@ export default {
       },
       searchForm: {
         orgId: '',
-        customerName: '',//
-        customerMobile: '',//
+        checkStatus: 0,
         startTime: '',//
         endTime:''
       },
@@ -105,7 +94,6 @@ export default {
   mounted () {
     this.searchForm.orgId = this.orgid
     this.onSubmit()
-    // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
     onSubmit () {
@@ -115,8 +103,7 @@ export default {
     },
     clearForm () {
       this.searchForm.orgId = this.orgid
-      this.searchForm.customerName = ''
-      this.searchForm.customerMobile = ''
+      this.searchForm.checkStatus = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
       this.searchForm.searchCreatTime = []

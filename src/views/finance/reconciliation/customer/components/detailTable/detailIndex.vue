@@ -5,7 +5,11 @@
     <div class="tab_info">
       <div class="btns_box">
 
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">对账明细</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">创建对账单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('completion')">对账完成</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('cancelCom')">取消完成</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')">修改查看</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('detele')">删除</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印</el-button>
 
@@ -34,63 +38,181 @@
             fixed
             sortable
             label="序号"
-            width="120">
+            width="100">
             <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="orgName"
-            width="200"
-            label="网点">
-          </el-table-column>
-          <el-table-column
-            prop="customerUnit"
-            width="200"
-            sortable
+            prop="memberName"
+            width="130"
             label="发货方">
           </el-table-column>
           <el-table-column
-            prop="customerName"
+            prop="memberPerson"
+            width="130"
             sortable
-            width="200"
             label="发货人">
           </el-table-column>
           <el-table-column
-            prop="customerMobile"
+            prop="createTime"
             sortable
-            width="200"
-            label="客户电话">
+            width="160"
+            label="创建时间">
+          </el-table-column>
+          <el-table-column
+            prop="checkBillName"
+            sortable
+            width="280"
+            label="对账单名">
           </el-table-column>
 
           <el-table-column
             sortable
-            prop="totalFee"
-            width="190"
-            label="对账合计">
+            prop="checkBillCode"
+            width="170"
+            label="对账编号">
           </el-table-column>
           <el-table-column
-            prop="receivableFee"
-            label="应收账款"
-            width="190"
+            prop="checkStartTime"
+            label="对账开始时间"
+            width="160"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="payableFee"
-            label="应付账款"
-            width="200"
+            prop="checkEndTime"
+            label="对账结束时间"
+            width="160"
             sortable
             >
           </el-table-column>
 
           <el-table-column
-            prop="totalCount"
-            label="总单数"
+            prop="totalCountFee"
+            label="应收应付对账合计"
             width="180"
             sortable
             >
           </el-table-column>
+          <el-table-column
+            prop="ReceivableFee"
+            label="应收账款"
+            width="150"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="PayableFee"
+            label="应付账款"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="ReceivedFee"
+            label="已收账款"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="PaidFee"
+            label="已付账款"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="checkStatus"
+            label="对账状态"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="createBy"
+            label="创建人"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="totalCount"
+            label="总单数"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orgBusinessOfficer"
+            label="财务负责人"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orgBusinessOfficerPhone"
+            label="业务负责人电话"
+            width="140"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="settlementType"
+            label="结算方式"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="bankAccount"
+            label="账户账号"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="bankName"
+            label="账户开户行"
+            width="150"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orgFinancialOfficer"
+            label="财务负责人"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="orgFinancialOfficerPhone"
+            label="财务负责人电话"
+            width="130"
+            sortable
+          >
+          </el-table-column><el-table-column
+          prop="alipayAccount"
+          label="支付宝"
+          width="130"
+          sortable
+        >
+        </el-table-column><el-table-column
+          prop="wechatAccount"
+          label="微信"
+          width="130"
+          sortable
+        >
+        </el-table-column>
+
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
@@ -101,9 +223,8 @@
 </template>
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
-//postCustomerdetailList
-import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
-import {postCustomerdetailList} from '@/api/finance/fin_customer'
+
+import {postCFinancebillcheckList,deleteCustomer,postCompletion} from '@/api/finance/fin_customer'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -128,11 +249,7 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    // this.fetchAllCustomer()
-    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
-    //   console.log(res)
-    //   this.loading = false
-    // })
+    // this.searchQuery.vo.memberId = this.$route.query.id
   },
   data () {
     return {
@@ -156,8 +273,9 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgId":'',
-          customerName: '',//
-          customerMobile: '',//
+          memberId: 633,//
+          memberIdType: 2,//
+          checkStatus: '',// 0未 1已
           startTime: '',//
           endTime:''
         }
@@ -167,7 +285,7 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      return postCustomerdetailList(this.searchQuery).then(data => {
+      return postCFinancebillcheckList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
@@ -223,8 +341,80 @@ export default {
             }
 
             break;
-          // 停用
-          case 'stop':
+        // 对账完成 cancelCom
+        case 'completion':
+          this.closeAddCustomer()
+          if(this.selected.length > 1){
+            this.$message({
+              message: '只能选择一条数据进行跟踪设置~',
+              type: 'warning'
+            })
+            return false
+
+          }else{
+            if(this.selected[0].checkStatus === '未对账'){
+              let data = {
+                id:'',
+                checkStatus:0
+              }
+              data.id = this.selected[0].id
+              postCompletion(data).then(res => {
+                this.loading = false
+                this.$message({
+                  type: 'success',
+                  message: '操作成功~'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this.loading = false
+              })
+            }else{
+              this.$message({
+                type: 'info',
+                message: '该对账单已经完成对账~'
+              })
+            }
+          }
+
+          break;
+        // 取消对账
+        case 'cancelCom':
+          this.closeAddCustomer()
+          if(this.selected.length > 1){
+            this.$message({
+              message: '只能选择一条数据进行跟踪设置~',
+              type: 'warning'
+            })
+            return false
+
+          }else{
+            if(this.selected[0].checkStatus === '已对账'){
+              let _data = {
+                id:'',
+                checkStatus:1
+              }
+              _data.id = this.selected[0].id
+              postCompletion(_data).then(res => {
+                this.loading = false
+                this.$message({
+                  type: 'success',
+                  message: '操作成功~'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this.loading = false
+              })
+            }else{
+              this.$message({
+                type: 'info',
+                message: '该对账单还没对账~'
+              })
+            }
+          }
+
+          break;
+          // 删除
+          case 'detele':
             this.closeAddCustomer()
             if(this.selected.length > 1){
               this.$message({
@@ -234,9 +424,9 @@ export default {
               return false
 
             }else{
-              if(this.selected[0].statusStr === '启用'){
+              if(this.selected[0].statusStr === '未对账'){
                 let id = this.selected[0].id
-                putStop(id).then(res => {
+                deleteCustomer(id).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',
@@ -249,7 +439,7 @@ export default {
               }else{
                 this.$message({
                  type: 'info',
-                 message: '当前收支方式已经在停用状态~'
+                 message: '该对账单已完成对账不可以删除~'
                 })
               }
             }

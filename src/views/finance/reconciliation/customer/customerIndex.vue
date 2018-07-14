@@ -109,7 +109,6 @@ import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-
 export default {
   components: {
     SearchForm,
@@ -213,10 +212,8 @@ export default {
             this.$router.push({
               path: '/finance/reconciliation/customer/detailTable',
               query: {
-                tab: '对账明细',
-                //id: this.selectInfo.id
+                tab: '客户对账',
                 id: this.selectInfo.shipSenderId
-
               }
             })
 

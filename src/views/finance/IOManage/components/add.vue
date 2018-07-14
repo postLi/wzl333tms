@@ -72,6 +72,7 @@ import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
 import { mapGetters } from 'vuex'
+import { objectMerge2, parseTime, closest } from '@/utils/'
 
 export default {
   components: {
@@ -220,6 +221,7 @@ export default {
       this.form.bankAccountName = item.bankAccountName
       this.form.alipayAccount = item.alipayAccount
       this.form.wechatAccount = item.wechatAccount
+      this.form.bankName = item.bankName
       this.financialWayClick(this.form.financialWay)
     },
     newInfo(item){
@@ -235,22 +237,6 @@ export default {
       this.financialWayClick(this.form.financialWay)
 
     },
-    getTrunkName(trunk){
-      if(trunk){
-        // this.form.tmsDriver.driverName = trunk.driverName
-        // this.form.tmsDriver.driverMobile = trunk.dirverMobile
-        // this.form.tmsDriver.driverId = trunk.driverId
-        // this.form.tmsTruck.truckId = trunk.truckId
-        // this.form.tmsTruck.truckType = trunk.truckType
-        // this.form.tmsTruck.truckUnit = trunk.truckUnit
-        // this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
-
-      }
-
-    },
-    infoData(item){
-
-    },
     validateIsEmpty (msg = '不能为空！') {
       return (rule, value, callback) => {
         if(!value){
@@ -258,46 +244,6 @@ export default {
         }else{
           callback()
         }
-      }
-    },
-    setObject(obj1, obj2) {
-      for (var i in obj1) {
-        obj1[i] = obj2 ? obj2[i] : ''
-      }
-      return obj1
-    },
-    // fetchGetPickUp(){
-    //   this.loading = true
-    //   return fetchGetPickUp().then(data => {
-    //     this.pickupBatchNumber = data.data
-    //     this.loading = false
-    //   })
-    // },
-    /** 收货人/发货人  tmsCustomer*/
-    setSender(item, type){
-      type = type ? 'customRece' : 'tmsCustomer'
-      if(item){
-        this.form[type].customerType = type === 'tmsCustomer' ? 1 : 2
-        this.form[type].customerName = item.customerName
-        this.form[type].customerMobile = item.customerMobile
-        this.form[type].detailedAddress = item.detailedAddress
-        this.form[type].customerId = item.customerId
-      }
-    },
-    selectToCity (item, city) {
-      if(item){
-        this.form.tmsOrderPickup.toCityCode = item.id
-        this.form.tmsOrderPickup.toCityName = item.longAddr
-      } else {
-      }
-    },
-    //司机姓名
-    getdriverName (item, city) {
-      if(item){
-        this.form.tmsDriver.driverName = item.driverName
-        this.form.tmsDriver.driverMobile = item.driverMobile
-        this.form.tmsDriver.driverId = item.id
-      } else {
       }
     },
     financialWayClick(item){
@@ -308,18 +254,23 @@ export default {
       this.chePay = false
 
       if(item === 280 || item === '银行卡'){
+        this.form.financialWay = 280
         this.bankPay = true
 
       }else if(item === 281 || item === '支付宝'){
+        this.form.financialWay = 281
         this.aliPay = true
       }
       else if(item === 282 || item === '微信'){
+        this.form.financialWay = 282
         this.wPay = true
       }
       else if(item === 283 || item === '现金'){
+        this.form.financialWay = 283
         this.casyPay = true
       }
       else{
+        this.form.financialWay = 284
         this.chePay = true
       }
 
@@ -334,8 +285,7 @@ export default {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = this.form
-
+          let data = objectMerge2({},this.form)
           let promiseObj
           // 判断操作，调用对应的函数
           if(this.isModify){
