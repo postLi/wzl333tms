@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd hh:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="到达网点" prop="arriveOrgid">
@@ -37,7 +37,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -68,7 +68,7 @@ export default {
         // feeType: 8, // 8-应付回扣 10-实际提货费 13-其他费用支出
         // endTime: '',
         // id: 0,
-        incomePayType: 'PAYABLE',
+        // incomePayType: 'PAYABLE',
         // incomePayTypeValue: '',
         // orgAllId: '',
         // senderCompanyName: '',
@@ -88,7 +88,7 @@ export default {
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
-      searchTime: [],
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: [{
@@ -119,16 +119,19 @@ export default {
       }
     }
   },
+  mounted () {
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
       let searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'startTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
+        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
-      this.searchForm = Object.assign({}, this.$options.data().searchForm)
-      this.clearForm('searchForm')
+      // this.searchForm = Object.assign({}, this.$options.data().searchForm)
+      // this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {

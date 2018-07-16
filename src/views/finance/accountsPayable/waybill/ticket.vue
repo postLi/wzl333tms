@@ -1,5 +1,5 @@
 <template>
-  <!-- 实际提货费 -->
+  <!-- 单票提货费 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -55,14 +55,16 @@ export default {
   data() {
     return {
       btnsize: 'mini',
+      feeType: 10,
+      selectListShipSns: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          feeType: 10,
+          // feeType: 8,
           // endTime: '',
           // id: 0,
-          incomePayType: 'PAYABLE',
+          // incomePayType: 'PAYABLE',
           // incomePayTypeValue: '',
           // orgAllId: '',
           // senderCompanyName: '',
@@ -265,22 +267,22 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.fetchList()
-  },
   methods: {
     getSearchParam(obj) {
-      this.$set(this.searchQuery.vo, 'feeType', 10) // 8-应付回扣 10-实际提货费 13-其他费用支出
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType) // 8-应付回扣 10-实际提货费 13-其他费用支出
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchList()
     },
     fetchList() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
+        console.log(this.dataList)
       })
     },
     setTable() {},
@@ -296,11 +298,24 @@ export default {
       }
     },
     count () {
-      this.$router.push({path: '../accountsLoad'})
-      console.log('router',this.$router)
+     this.$router.push({
+        path: '../accountsLoad',
+        query: {
+          currentPage: 'waybillTicket', // 本页面标识符
+          searchQuery: this.searchQuery, // 搜索项
+          selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
+        }
+      })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListShipSns = []
+      list.forEach((e, index) => {
+        this.selectListShipSns.push(e.shipSn)
+      })
+    },
     showDetail (order) {
       this.eventBus.$emit('showOrderDetail', order.id)
     },

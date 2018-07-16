@@ -11,7 +11,6 @@
           <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
           </el-date-picker>
         </div>
-
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
@@ -118,7 +117,7 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { GetFeeInfo, postLoadSettlement } from '@/api/finance/accountsPayable'
+import { GetFeeInfo, postCreateloadSettlement } from '@/api/finance/accountsPayable'
 import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
@@ -161,46 +160,22 @@ export default {
     getRouteInfo() {
       return this.$route.query.searchQuery
     },
-    settlementTypeId () {
+    settlementTypeId() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
-        case 'batchShort':
-        return 180
-        case 'batchDeliver':
-        return 181
-        case 'batchInsurance':
-        return 179
-        case 'batchStationLoad':
-        return 179
-        case 'batchStationOther':
-        return 179
-        case 'batchArrivalLoad':
-        return 179
-        case 'batchArrivalOther':
-        return 179
+      switch (currentPage) {
         case 'batchArrivalAll':
-        return 179
+          return 179
       }
     },
-    dataName () {
+    dataName() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
-        case 'batchShort':
-        return '短驳费'
-        case 'batchDeliver':
-        return '送货费'
-        case 'batchInsurance':
-        return '整车保险费'
-        case 'batchStationLoad':
-        return '发站装卸费'
-        case 'batchStationOther':
-        return '发站其他费'
-        case 'batchArrivalLoad':
-        return '到站装卸费'
-        case 'batchArrivalOther':
-        return '到站其他费'
+      switch (currentPage) {
         case 'waybillKickback':
-        return '回扣'
+          return '回扣'
+        case 'waybillTicket':
+          return '单票提货费'
+        case 'waybillOther':
+         return '其他费用支出'
       }
     }
   },
@@ -232,6 +207,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.init()
+      console.log('inforeceipt', this.info)
     })
   },
   methods: {
@@ -242,7 +218,7 @@ export default {
       let orgId = this.otherinfo.orgid
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
-        this.formModel.settlementTime = parseTime(new Date()) 
+        this.formModel.settlementTime = parseTime(new Date())
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
@@ -250,11 +226,11 @@ export default {
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([],this.info)
+      this.formModel.detailDtoList = Object.assign([], this.info)
       this.formModel.detailDtoList.forEach((e, index) => {
-        e.dataName = this.dataName
+        // e.dataName = this.dataName
         this.formModel.amount += e.amount
-        let data = e.amount.toFixed(2).toString().split('').reverse()
+        let data = Number(e.amount).toFixed(2).toString().split('').reverse()
         let item = data.indexOf('.')
         if (item !== -1) {
           data.splice(item, 1)
@@ -274,7 +250,7 @@ export default {
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
       let apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
-         this.amount.splice(apoint, 1)
+        this.amount.splice(apoint, 1)
       }
     },
     getSystemTime() {
@@ -289,23 +265,35 @@ export default {
       }
     },
     setData() {
-      this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
-      this.$set(this.submitData, 'settlementSn', this.formModel.settlementSn)
-      this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
-      this.$set(this.submitData, 'settlementTime', this.formModel.settlementTime)
-      this.$set(this.submitData, 'remark', this.formModel.remark)
-      this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
-      this.$set(this.submitData, 'tmsFinanceFinancialWayLogList', this.formModel.szDtoList)
+      let capitalFlow = {}
+      let financialWayLogs = []
+      let shipPayableFeeDtos = []
+      // this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      // this.$set(this.submitData, 'settlementId', this.settlementId)
+      this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.orgid)
+      this.$set(capitalFlow, 'settlementSn', this.formModel.settlementSn)
+      this.$set(capitalFlow, 'settlementBy', this.formModel.settlementBy)
+      this.$set(capitalFlow, 'settlementTime', this.formModel.settlementTime)
+      this.$set(capitalFlow, 'remark', this.formModel.remark)
+      this.$set(capitalFlow, 'detailDtoList', this.formModel.detailDtoList)
+      this.$set(capitalFlow, 'szDtoList', this.formModel.szDtoList)
+      financialWayLogs = Object.assign([], this.formModel.szDtoList)
+      shipPayableFeeDtos = Object.assign([], this.formModel.detailDtoList)
+      this.$set(this.submitData, 'capitalFlow', capitalFlow)
+      this.$set(this.submitData, 'financialWayLogs', financialWayLogs)
+      this.$set(this.submitData, 'shipPayableFeeDtos', shipPayableFeeDtos)
+      capitalFlow = {}
+      financialWayLogs = []
+      shipPayableFeeDtos = []
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          postLoadSettlement(this.submitData).then(data => {
+          postCreateloadSettlement(this.submitData).then(data => {
               this.$message({ type: 'success', message: '操作成功' })
               this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch' })
+              this.$router.push({ path: './accountsPayable/waybill' })
             })
             .catch(error => {
               this.$message({ type: 'error', message: '操作失败' })
@@ -338,8 +326,7 @@ export default {
     getSum(param) { // 表格合计-自定义显示
       const { columns, data } = param
       const sums = []
-      this.$nextTick(() => {
-      })
+      this.$nextTick(() => {})
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '合计'
@@ -356,7 +343,7 @@ export default {
         //   }
         // }
         let count = -2 // 从第3列开始显示
-        for(let i = 12; i > 2; i--) {
+        for (let i = 12; i > 2; i--) {
           count++
           if (index === i) {
             sums[index] = this.amount[count]

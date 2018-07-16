@@ -15,7 +15,9 @@ import batchArrivalLoad from './batchArrivalLoad' // 到站装卸费
 import batchArrivalOther from './batchArrivalOther' // 到站其他费
 import batchTruckAll from './batchTruckAll' // 到车汇总
 import batchArrivalAll from './batchArrivalAll' // 发车汇总
-
+import waybillKickback from './waybillKickback' // 回扣
+import waybillTicket from './waybillTicket' // 单票提货费
+import waybillOther from './waybillOther' // 其他费用支出
 export default {
   components: {
     batchShort,
@@ -26,7 +28,10 @@ export default {
     batchArrivalLoad,
     batchArrivalOther,
     batchArrivalAll,
-    batchTruckAll
+    batchTruckAll,
+    waybillKickback,
+    waybillTicket,
+    waybillOther
   },
   props: {
     isShow: {
@@ -64,6 +69,12 @@ export default {
           return 'batchArrivalAll'
         case 'batchTruckAll':
           return 'batchTruckAll'
+        case 'waybillKickback':
+          return 'waybillKickback'
+        case 'waybillTicket':
+          return 'waybillTicket'
+        case 'waybillOther':
+          return 'waybillOther'
       }
     },
     pageName() {
@@ -96,6 +107,15 @@ export default {
           break
         case 'batchTruckAll':
           name = '到车汇总'
+          break
+        case 'waybillKickback':
+          name = '回扣'
+          break
+        case 'waybillTicket':
+          name = '单票提货费'
+          break
+        case 'waybillOther':
+          name = '其他费用支出'
           break
       }
       return name

@@ -12,13 +12,13 @@
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-        <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
+        <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnLeft">
@@ -41,13 +41,13 @@
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
-        <el-button icon="el-icon-minus" class="tableAllBtn" size="mini" @click="minusAllList"></el-button>
+        <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnRight">
@@ -607,44 +607,3 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
-.tableHeadItemBtn {
-  height: 100%;
-  position: relative;
-  .tableItemBtn {
-    width: 30px;
-    padding-left: 8px;
-  }
-  .tableAllBtn {
-    width: 30px;
-    padding-left: 8px;
-    position: absolute;
-    z-index: 33;
-    top: 8px;
-    left: 61px;
-  }
-}
-
-.accountsLoad_table {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100;
-  overflow: hidden;
-  height: 100%;
-  .accountsLoad_table_pager {
-    display: flex;
-    flex-direction: columns;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    background-color: #eee;
-    padding: 5px 5px 10px 10px;
-    b {
-      font-weight: 400;
-      color: #333; // font-size:14px;
-      line-height: 36px;
-    }
-  }
-}
-
-</style>

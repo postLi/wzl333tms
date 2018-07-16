@@ -12,13 +12,13 @@
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-        <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
+        <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnLeft">
@@ -41,13 +41,13 @@
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
-        <el-button icon="el-icon-minus" class="tableAllBtn" size="mini" @click="minusAllList"></el-button>
+        <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnRight">
@@ -56,7 +56,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="scope.row.amount" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -76,11 +76,11 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { postPayListByOne } from '@/api/finance/accountsPayable'
+import { postPayListBySummary } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receipt'
+import Receipt from './components/receiptAll'
 import Pager from '@/components/Pagination/index'
 export default {
   data() {
@@ -120,14 +120,20 @@ export default {
           fixed: true
         },
         {
+          label: '批次状态',
+          prop: 'batchTypeName',
+          width: '120',
+          fixed: false
+        },
+        {
           label: '发车网点',
           prop: 'orgName',
           width: '120',
           fixed: false
         },
         {
-          label: '结算状态',
-          prop: 'statusName',
+          label: '达到网点',
+          prop: 'arriveOrgName',
           width: '120',
           fixed: false
         },
@@ -150,21 +156,75 @@ export default {
           }
         },
         {
-          label: '发站其他费',
-          prop: 'fee',
-          width: '120',
+          label: '到付运费',
+          prop: 'arrivepayCarriage',
+          width: '150',
           fixed: false
         },
         {
-          label: '未结发站其他费',
-          prop: 'unpaidFee',
-          width: '120',
+          label: '已结到付运费',
+          prop: 'paidArrivepayCarriage',
+          width: '180',
           fixed: false
         },
         {
-          label: '已结发站其他费',
-          prop: 'paidFee',
-          width: '120',
+          label: '未结到付运费',
+          prop: 'unpaidArrivepayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '到付油卡',
+          prop: 'arrivepayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到付油卡',
+          prop: 'paidArrivepayOilCard',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到付油卡',
+          prop: 'unpaidArrivepayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '到站装卸费',
+          prop: 'arriveHandlingFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到站装卸费',
+          prop: 'paidArriveHandlingFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到站装卸费',
+          prop: 'unpaidArriveHandlingFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '到站其他费',
+          prop: 'arriveOtherFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到站其他费',
+          prop: 'paidArriveOtherFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到站其他运费',
+          prop: 'unpaidArriveOtherFee',
+          width: '150',
           fixed: false
         },
         {
@@ -185,12 +245,7 @@ export default {
           width: '120',
           fixed: false
         },
-        {
-          label: '达到网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
+
         {
           label: '配载件数',
           prop: 'loadAmountall',
@@ -223,8 +278,8 @@ export default {
           fixed: true
         },
         {
-          label: '结算状态',
-          prop: 'statusName',
+          label: '批次状态',
+          prop: 'batchTypeName',
           width: '120',
           fixed: false
         },
@@ -250,31 +305,124 @@ export default {
           }
         },
         {
-          label: '发站其他费',
-          prop: 'fee',
-          width: '120',
+          label: '到达时间',
+          prop: 'receivingTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '到付运费',
+          prop: 'arrivepayCarriage',
+          width: '150',
           fixed: false
         },
         {
-          label: '未结发站其他费',
-          prop: 'unpaidFee',
-          width: '120',
+          label: '已结到付运费',
+          prop: 'paidArrivepayCarriage',
+          width: '180',
           fixed: false
         },
         {
-          label: '已结发站其他费',
-          prop: 'paidFee',
-          width: '120',
+          label: '未结到付运费',
+          prop: 'unpaidArrivepayCarriage',
+          width: '150',
           fixed: false
         },
         {
-          label: '实结发站其他费',
-          prop: 'amount',
+          label: '实结到付运费',
+          prop: 'amountArrivepayCarriage',
           width: '120',
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.amount
+            return scope.row.amountArrivepayCarriage
+          }
+        },
+        {
+          label: '到付油卡',
+          prop: 'arrivepayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到付油卡',
+          prop: 'paidArrivepayOilCard',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到付油卡',
+          prop: 'unpaidArrivepayOilCard',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '实结到付油卡',
+          prop: 'amountArrivepayOilCard',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.amountArrivepayOilCard
+          }
+        },
+        {
+          label: '到站装卸费',
+          prop: 'arriveHandlingFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到站装卸费',
+          prop: 'paidArriveHandlingFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到站装卸费',
+          prop: 'unpaidArriveHandlingFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '实结到站装卸费',
+          prop: 'amountArriveHandlingFee',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.amountArriveHandlingFee
+          }
+        },
+        {
+          label: '到站其他费',
+          prop: 'arriveOtherFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结到站其他费',
+          prop: 'paidArriveOtherFee',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到站其他运费',
+          prop: 'unpaidArriveOtherFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '实结到站其他费',
+          prop: 'amountArriveOtherFee',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.amountArriveOtherFee
           }
         },
         {
@@ -295,6 +443,7 @@ export default {
           width: '120',
           fixed: false
         },
+
         {
           label: '配载件数',
           prop: 'loadAmountall',
@@ -357,7 +506,7 @@ export default {
       } else {
         this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-        // this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+        this.$set(this.searchQuery.vo, 'sign', this.sign)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false
       }
@@ -375,7 +524,7 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       if (!this.isFresh) {
-        postPayListByOne(this.searchQuery).then(data => {
+        postPayListBySummary(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListBatchNos.forEach(e => {
             this.leftTable.forEach(item => {
@@ -394,22 +543,27 @@ export default {
             if (item !== -1) {
               this.leftTable.splice(item, 1)
             }
-            e.amount = e.unpaidFee
+            // 默认设置实结数量
+            e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
+            e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
+            e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
+            e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
           })
         })
 
       }
     },
     changLoadData(newVal) {
-      let unpay = this.rightTable[newVal].unpaidFee
-      let curpay = this.rightTable[newVal].amount
-      if (curpay > unpay || curpay < 0) {
+      if (this.rightTable[newVal].amountArrivepayCarriage > this.rightTable[newVal].unpaidArrivepayCarriage || this.rightTable[newVal].amountArrivepayCarriage < 0 || this.rightTable[newVal].amountArrivepayOilCard > this.rightTable[newVal].unpaidArrivepayOilCard || this.rightTable[newVal].amountArrivepayOilCard < 0 || this.rightTable[newVal].amountArriveHandlingFee > this.rightTable[newVal].unpaidArriveHandlingFee || this.rightTable[newVal].amountArriveHandlingFee < 0 || this.rightTable[newVal].amountArriveOtherFee > this.rightTable[newVal].unpaidArriveOtherFee || this.rightTable[newVal].amountArriveOtherFee < 0) {
         this.$notify({
           title: '提示',
           message: '不能大于未结小于0',
           type: 'warning'
         })
-        this.rightTable[newVal].amount = unpay
+        this.rightTable[newVal].amountArrivepayCarriage = this.rightTable[newVal].unpaidArrivepayCarriage // 实结到付运费
+        this.rightTable[newVal].amountArrivepayOilCard = this.rightTable[newVal].unpaidArrivepayOilCard // 实结到付油卡
+        this.rightTable[newVal].amountArriveHandlingFee = this.rightTable[newVal].unpaidArriveHandlingFee // 实结到站装卸费
+        this.rightTable[newVal].amountArriveOtherFee = this.rightTable[newVal].unpaidArriveOtherFee // 实结到站其他费
       }
     },
     clickDetailsRight(row) {
@@ -443,7 +597,11 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
-          e.amount = e.unpaidFee
+            e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
+            e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
+            e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
+            e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
+
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 源数据减去被穿梭的数据
@@ -507,25 +665,35 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       if (!this.isGoReceipt) {
-        let data = []
-
-        console.log('rightTable', this.rightTable)
         this.rightTable.forEach((e, index) => {
-          let item = {
-            id: '',
-            amount: 0,
-            feeTypeId: ''
+          let itemArrivepayCarriage = { id: e.id, amount: e.amountArrivepayCarriage, feeTypeId: 23, dataName: '到付运费' } // 实结到付运费
+          let itemArrivepayOilCard = { id: e.id, amount: e.amountArrivepayOilCard, feeTypeId: 24, dataName: '到付油卡' } // 实结到付油卡
+          let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实结到站装卸费
+          let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实结到站其他费
+          
+
+          if (itemArrivepayCarriage.amount !== 0) {
+            this.tableReceiptInfo.push(itemArrivepayCarriage)
           }
-          item.id = e.id
-          item.feeTypeId = e.feeTypeId
-          item.amount = e.amount
-          this.tableReceiptInfo.push(item)
-          item = {}
+          if (itemArrivepayOilCard.amount !== 0) {
+            this.tableReceiptInfo.push(itemArrivepayOilCard)
+          }
+          if (itemArriveHandlingFee.amount !== 0) {
+            this.tableReceiptInfo.push(itemArriveHandlingFee)
+          }
+          if (itemArriveOtherFee.amount !== 0) {
+            this.tableReceiptInfo.push(itemArriveOtherFee)
+          }
+          
+          itemArrivepayCarriage = {}
+          itemArrivepayOilCard = {}
+          itemArriveHandlingFee = {}
+          itemArriveOtherFee = {}
+          
         })
         this.openDialog()
-        data = []
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
@@ -608,44 +776,3 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
-.tableHeadItemBtn {
-  height: 100%;
-  position: relative;
-  .tableItemBtn {
-    width: 30px;
-    padding-left: 8px;
-  }
-  .tableAllBtn {
-    width: 30px;
-    padding-left: 8px;
-    position: absolute;
-    z-index: 33;
-    top: 8px;
-    left: 61px;
-  }
-}
-
-.accountsLoad_table {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100;
-  overflow: hidden;
-  height: 100%;
-  .accountsLoad_table_pager {
-    display: flex;
-    flex-direction: columns;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    background-color: #eee;
-    padding: 5px 5px 10px 10px;
-    b {
-      font-weight: 400;
-      color: #333; // font-size:14px;
-      line-height: 36px;
-    }
-  }
-}
-
-</style>

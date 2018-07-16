@@ -45,6 +45,17 @@ export function postFindChangeList(data) {
     return res.data || { list: [], totalCount: 0 }
   })
 }
+/**
+ * 结算保存
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+export function postCreateloadSettlement(data) {
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/create/', data).then(res => {
+    return res.data
+  })
+}
+
 
 /**************************************
  *             批次结算

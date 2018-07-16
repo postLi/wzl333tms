@@ -1,5 +1,5 @@
 <template>
-  <!-- 其他费用支出 -->
+  <!-- 回扣 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -56,6 +56,7 @@ export default {
     return {
       btnsize: 'mini',
       feeType: 13,
+      selectListShipSns: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
@@ -63,7 +64,7 @@ export default {
           // feeType: 8,
           // endTime: '',
           // id: 0,
-          incomePayType: 'PAYABLE',
+          // incomePayType: 'PAYABLE',
           // incomePayTypeValue: '',
           // orgAllId: '',
           // senderCompanyName: '',
@@ -94,7 +95,7 @@ export default {
         },
         {
           label: '运单号',
-          prop: 'shipId',
+          prop: 'shipSn',
           width: "120",
           fixed: false
         },
@@ -129,8 +130,20 @@ export default {
           fixed: false
         },
         {
-          label: '其他费用',
-          prop: 'otherfeeOut',
+          label: '回扣',
+          prop: 'brokerageFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结回扣',
+          prop: 'closeFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '未结回扣',
+          prop: 'unpaidFee',
           width: '150',
           fixed: false
         },
@@ -260,9 +273,6 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.fetchList()
-  },
   methods: {
     getSearchParam(obj) {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType) // 8-应付回扣 10-实际提货费 13-其他费用支出
@@ -272,11 +282,13 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchList()
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
+        console.log(this.dataList)
       })
     },
     setTable() {},
@@ -292,11 +304,24 @@ export default {
       }
     },
     count () {
-      this.$router.push({path: '../accountsLoad'})
-      console.log('router',this.$router)
+     this.$router.push({
+        path: '../accountsLoad',
+        query: {
+          currentPage: 'waybillOther', // 本页面标识符
+          searchQuery: this.searchQuery, // 搜索项
+          selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
+        }
+      })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListShipSns = []
+      list.forEach((e, index) => {
+        this.selectListShipSns.push(e.shipSn)
+      })
+    },
     showDetail (order) {
       this.eventBus.$emit('showOrderDetail', order.id)
     },

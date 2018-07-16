@@ -95,12 +95,12 @@ export default {
     .transferTable_fresh {
       position: absolute;
       left: 10px;
-      top: 7px;
+      top: 6px;
     }
     .transferTable_header_btn_box {
       position: absolute;
       right: 10px;
-      top: 0px;
+      top: 6px;
     }
   }
   .transferTable_content {

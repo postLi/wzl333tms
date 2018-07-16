@@ -206,6 +206,7 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchList()
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)

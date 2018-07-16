@@ -14,7 +14,6 @@
 
         <div class="receiptDialog_head_item">
           <label>经办人</label>
-          <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
           <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
         </div>
       </div>
@@ -164,43 +163,10 @@ export default {
     settlementTypeId () {
       let currentPage = this.$route.query.currentPage
       switch(currentPage) {
-        case 'batchShort':
-        return 180
-        case 'batchDeliver':
-        return 181
-        case 'batchInsurance':
-        return 179
-        case 'batchStationLoad':
-        return 179
-        case 'batchStationOther':
-        return 179
-        case 'batchArrivalLoad':
-        return 179
-        case 'batchArrivalOther':
-        return 179
         case 'batchArrivalAll':
         return 179
-      }
-    },
-    dataName () {
-      let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
-        case 'batchShort':
-        return '短驳费'
-        case 'batchDeliver':
-        return '送货费'
-        case 'batchInsurance':
-        return '整车保险费'
-        case 'batchStationLoad':
-        return '发站装卸费'
-        case 'batchStationOther':
-        return '发站其他费'
-        case 'batchArrivalLoad':
-        return '到站装卸费'
-        case 'batchArrivalOther':
-        return '到站其他费'
-        case 'waybillKickback':
-        return '回扣'
+        case 'batchTruckAll':
+        return 179
       }
     }
   },
@@ -237,6 +203,7 @@ export default {
   methods: {
     init() {
       this.loading = false
+      console.log(this.info)
     },
     getFeeInfo() {
       let orgId = this.otherinfo.orgid
@@ -252,7 +219,6 @@ export default {
       this.formModel.amount = 0
       this.formModel.detailDtoList = Object.assign([],this.info)
       this.formModel.detailDtoList.forEach((e, index) => {
-        e.dataName = this.dataName
         this.formModel.amount += e.amount
         let data = e.amount.toFixed(2).toString().split('').reverse()
         let item = data.indexOf('.')
@@ -349,12 +315,6 @@ export default {
           sums[index] = this.amountMessage
           return
         }
-        // for(let i = 13; i > -1; i--) {
-        //   if (index === i) {
-        //     sums[index] = this.amount[i-6]
-        //     return
-        //   }
-        // }
         let count = -2 // 从第3列开始显示
         for(let i = 12; i > 2; i--) {
           count++
