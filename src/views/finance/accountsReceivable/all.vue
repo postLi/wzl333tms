@@ -97,9 +97,10 @@ export default {
           senderCompanyName: '',
           shipFromCityCode: '',
           shipToCityCode: '',
+          orgAllId: '',
           shipSn: '',
           'status': 'NOSETTLEMENT',
-          'feeType': 0
+          'feeType': ''
         }
       },
       // 默认sort值为true
@@ -111,25 +112,118 @@ export default {
           return scope.$index + 1
         }
       }, {
-        'label': '网点',
-        'prop': 'orgName',
+        'label': '开单网点',
+        'prop': 'shipFromOrgName',
         'fixed': true
       }, {
-        'label': '员工姓名',
-        'prop': 'name'
+        'label': '运单号',
+        'prop': 'shipSn'
       }, {
-        'label': '交账合计',
-        'prop': 'shipNowpayFee'
-      }, {
-        'label': '交账状态',
-        'prop': 'feeStatus',
+        'label': '货号',
+        'prop': 'shipGoodsSn',
         'width': '150'
       }, {
-        'label': '已交账合计',
-        'prop': 'finishAccount'
+        'label': '出发城市',
+        'prop': 'shipFromCityName'
       }, {
-        'label': '未交账合记',
-        'prop': 'noSettlementFee'
+        'label': '到达城市',
+        'prop': 'shipToCityName'
+      }, {
+        'label': '结算状态',
+        'prop': 'totalStatus'
+      }, {
+        'label': '现付',
+        'prop': 'nowPayFee'
+      }, {
+        'label': '已结现付',
+        'prop': 'finishNowPayFee'
+      }, {
+        'label': '未结现付',
+        'prop': 'notNowPayFee'
+      }, {
+        'label': '到付',
+        'prop': 'arrivepayFee'
+      }, {
+        'label': '已结到付',
+        'prop': 'finishArrivepayFee'
+      }, {
+        'label': '未结到付',
+        'prop': 'notArrivepayFee'
+      }, {
+        'label': '回单付',
+        'prop': 'receiptpayFee'
+      }, {
+        'label': '已结回单付',
+        'prop': 'finishReceiptpayFee'
+      }, {
+        'label': '未结回单付',
+        'prop': 'notReceiptpayFee'
+      }, {
+        'label': '月结',
+        'prop': 'monthpayFee'
+      }, {
+        'label': '已结月结',
+        'prop': 'finishMonthpayFee'
+      }, {
+        'label': '未结月结',
+        'prop': 'notMonthpayFee'
+      }, {
+        'label': '开单日期',
+        'prop': 'createTime'
+      }, {
+        'label': '发货方',
+        'prop': 'senderCustomerUnit'
+      }, {
+        'label': '发货人',
+        'prop': 'shipSenderName'
+      }, {
+        'label': '收货方',
+        'prop': 'receiverCustomerUnit'
+      }, {
+        'label': '收货人',
+        'prop': 'shipReceiverName'
+      }, {
+        'label': '货品名',
+        'prop': 'cargoName'
+      }, {
+        'label': '件数',
+        'prop': 'cargoAmount'
+      }, {
+        'label': '重量(kg)',
+        'prop': 'cargoWeight'
+      }, {
+        'label': '体积(方)',
+        'prop': 'cargoVolume'
+      }, {
+        'label': '运单标识',
+        'prop': 'shipIdentifying'
+      }, {
+        'label': '付款方式',
+        'prop': 'shipPayWay'
+      }, {
+        'label': '制单人',
+        'prop': 'userName'
+      }, {
+        'label': '发货人电话',
+        'prop': 'senderMobile'
+      }, {
+        'label': '发货人地址',
+        'prop': 'senderAddr'
+      }, {
+        'label': '收货人电话',
+        'prop': 'receiverMoblie'
+      }, {
+        'label': '收货地址',
+        'prop': 'receiverAddr'
+      }, {
+        'label': '交接方式',
+        'prop': ''
+      }, {
+        'label': '时效',
+        'prop': ''
+      }, {
+        'label': '运单备注',
+        'prop': 'shipRemarks'
       }]
     }
   },

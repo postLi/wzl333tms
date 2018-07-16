@@ -4,6 +4,10 @@ import fetch from '@/utils/fetch'
  * ================================》应收《================
  */
 
+export function getExportExcel(params) {
+  return Promise.reslove('')
+}
+
 /**
  * 插入运单相关的应收应付表信息
  {

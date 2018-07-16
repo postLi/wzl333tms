@@ -88,7 +88,8 @@ export default {
         senderCompanyName: '',
         shipFromCityCode: '',
         shipToCityCode: '',
-        shipSn: ''
+        shipSn: '',
+        orgAllId: ''
       }
     }
   },
@@ -99,6 +100,7 @@ export default {
   },
   mounted() {
     this.searchCreatTime = this.defaultTime
+    this.searchForm.orgAllId = this.otherinfo.orgid
     // this.searchForm.status = 'NOSETTLEMENT'
     this.onSubmit()
   },

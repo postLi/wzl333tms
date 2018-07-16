@@ -1071,7 +1071,7 @@ export default {
               "cargoAmount": 4
             }
           ] */
-        if (!this.output.isOrder) {
+        if (!this.output.isOrder &&　this.form.tmsOrderShip.shipSn) {
           orderManage.postGenerateGoodsSn({
             'tmsOrderShip': {
               'shipSn': this.form.tmsOrderShip.shipSn
