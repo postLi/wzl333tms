@@ -496,6 +496,7 @@ export default {
     .el-upload{
       display: none;
     }
+    
   }
 .Addunusual{
   left: auto;
