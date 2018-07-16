@@ -12,7 +12,9 @@
         <el-tooltip effect="dark" content="向右侧拉伸" placement="top-start">
           <el-button icon="el-icon-arrow-left" type="primary" circle :disabled="isShowRight" size="mini" @click="doAction('showAllRight')" plain></el-button>
         </el-tooltip>
-        
+        <transition name="el-zoom-in-bottom">
+          <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')" plain ></el-button>
+        </transition>
         <div class="transferTable_header_btn_box clearfix">
           <slot name="btnsBox"></slot>
         </div>
@@ -80,16 +82,16 @@ export default {
   width: 100%;
   height: calc(100% - 60px);
   .transferTable_header {
-    margin-top:10px;
+    margin-top: 10px;
     width: 100%;
-    height:42px;
-    padding:6px 0;
+    height: 42px;
+    padding: 6px 0;
     text-align: center;
     position: relative;
-    border:2px solid #cdf;
-    border-bottom:none;
-    .transferTable_header_btn_direction{
-      text-align:center;
+    border: 2px solid #cdf;
+    border-bottom: none;
+    .transferTable_header_btn_direction {
+      text-align: center;
       margin-left: -7px;
     }
     .transferTable_fresh {
@@ -134,7 +136,7 @@ export default {
         position: absolute;
         top: -38px;
         left: 100px;
-        z-index:2;
+        z-index: 2;
       }
     }
     .showTableLeft {

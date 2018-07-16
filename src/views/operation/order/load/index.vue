@@ -38,7 +38,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearchTruck" placeholder="司机名称" size="mini" @select="handleSelectTruck">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -51,7 +51,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机电话" prop="dirverMobile" class="formItemTextDanger">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverMobile" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverMobile" :fetch-suggestions="querySearchTruck" placeholder="司机电话" size="mini" @select="handleSelectTruck">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -1054,6 +1054,13 @@ ul.feeList {
       margin-top:-5px;
       height:33px;
       border: none;
+    }
+    .el-input__inner:focus {
+      background-color:#d0d7e5;
+      border-radius: 0px;
+    }
+    .el-form-item__error{
+      margin-top:-6px;
     }
   }
 

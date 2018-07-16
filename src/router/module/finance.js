@@ -30,12 +30,15 @@ export default {
           path: '/finance/accountsPayable/batch', icon: 'QQ', name: '批次结算', component: _import('finance/accountsPayable/batch/index'), meta: { role: ['admin'], title: '批次结算', noCache: false }
         },
         {
-          path: '/finance/accountsLoad', icon: 'QQ', hidden: true, name: '账款结算', component: _import('finance/accountsLoad/index'), meta: { role: ['admin'], title: '账款结算', noCache: false }
+          path: '/finance/accountsLoad', icon: 'QQ', hidden: true, name: '结算', component: _import('finance/accountsLoad/index'), meta: { role: ['admin'], title: '账款结算', noCache: false }
         }
       ]
     },
     {
       path: '/finance/settleLog', icon: 'caiwugl5_zijinls', name: '资金流水汇总', component: _import('finance/settleLog/index'), meta: { role: ['admin'], title: '资金流水汇总', noCache: false }
+    },
+    {
+      path: '/finance/settleLogIncome', icon: 'caiwugl5_zijinls', hidden: true, name: '记收入', component: _import('finance/settleLogIncome/index'), meta: { role: ['admin'], title: '记收入', noCache: false }
     },
     {
       path: '/finance/IOManage', icon: 'caiwugl3_shouzhifs', name: '收支方式管理', component: _import('finance/IOManage/index'), meta: { role: ['admin'], title: '收支方式管理', noCache: false }

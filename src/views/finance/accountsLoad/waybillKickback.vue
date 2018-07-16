@@ -393,7 +393,8 @@ export default {
     },
     initLeftParams() {
       if (!this.$route.query.searchQuery.vo) {
-        this.$router.push({ path: './accountsPayable/waybill' })
+        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
+        // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true
       } else {
         this.$set(this.searchQuery.vo, 'feeType', this.feeType)

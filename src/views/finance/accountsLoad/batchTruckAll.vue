@@ -639,7 +639,8 @@ export default {
     },
     initLeftParams() {
       if (!this.$route.query.searchQuery.vo) {
-        this.$router.push({ path: './accountsPayable/batch' })
+        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
+        // this.$router.push({ path: './accountsPayable/batch' })
         this.isFresh = true
       } else {
         this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)

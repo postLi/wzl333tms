@@ -1,5 +1,5 @@
 <template>
-  <!-- 发站其他费结算页面 -->
+  <!-- 异常理赔结算页面 -->
   <div class="accountsLoad_table">
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 搜索框 -->
@@ -8,7 +8,7 @@
       </div>
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">发站其他费结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">异常理赔结算</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -24,10 +24,15 @@
           <template v-for="column in tableColumnLeft">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
+                <div v-if="column.expand">
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                </div>
+                <div v-else>
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </div>
               </template>
             </el-table-column>
           </template>
@@ -76,20 +81,18 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { postPayListByOne } from '@/api/finance/accountsPayable'
+import { postFindAbnormalList } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receipt'
+import Receipt from './components/receiptWaybill'
 import Pager from '@/components/Pagination/index'
 export default {
   data() {
     return {
       tablekey: '',
-      loadTruck: '',
       truckMessage: '',
       formModel: {},
-      loadTruck: 'loadTruckOne',
       loading: false,
       popVisibleDialog: false,
       btnsize: 'mini',
@@ -106,21 +109,20 @@ export default {
         right: []
       },
       isFresh: false,
-      feeType: 8,
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
         vo: {}
       },
       tableColumnLeft: [{
-          label: '发车批次',
-          prop: 'batchNo',
+          label: '运单号',
+          prop: 'shipSn',
           width: '120',
           fixed: true
         },
         {
-          label: '发车网点',
-          prop: 'orgName',
+          label: '开单网点',
+          prop: 'shipFromOrgName',
           width: '120',
           fixed: false
         },
@@ -131,95 +133,116 @@ export default {
           fixed: false
         },
         {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '到达时间',
-          prop: 'receivingTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '发站其他费',
-          prop: 'fee',
+          label: '发货人',
+          prop: 'senderCustomerName',
           width: '120',
           fixed: false
         },
         {
-          label: '未结发站其他费',
+          label: '收货人',
+          prop: 'receiverCustomerName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '异常理赔',
+          prop: 'totalCost',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结异常理赔',
           prop: 'unpaidFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '未结异常理赔',
+          prop: 'closeFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '发货方',
+          prop: 'senderCompanyName',
           width: '120',
           fixed: false
         },
         {
-          label: '已结发站其他费',
-          prop: 'paidFee',
+          label: '收货方',
+          prop: 'receiverCompanyName',
           width: '120',
           fixed: false
         },
         {
-          label: '司机电话',
-          prop: 'dirverMobile',
+          label: '货号',
+          prop: 'shipGoodsSn',
           width: '120',
           fixed: false
         },
         {
-          label: '车牌号',
-          prop: 'truckIdNumber',
+          label: '货品名',
+          prop: 'cargoName',
           width: '120',
           fixed: false
         },
         {
-          label: '司机姓名',
-          prop: 'dirverName',
+          label: '开单时间',
+          prop: 'createTime',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '达到网点',
-          prop: 'arriveOrgName',
+          label: '到达城市',
+          prop: 'shipToCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '配载件数',
-          prop: 'loadAmountall',
+          label: '件数',
+          prop: 'cargoAmount',
           width: '120',
           fixed: false
         },
         {
-          label: '配载重量',
-          prop: 'loadWeightall',
+          label: '重量',
+          prop: 'cargoWeight',
           width: '120',
           fixed: false
         },
         {
-          label: '配载体积',
-          prop: 'loadVolumeall',
+          label: '体积',
+          prop: 'cargoVolume',
           width: '120',
           fixed: false
         },
         {
-          label: '备注',
-          prop: 'remark',
+          label: '运单备注',
+          prop: 'shipRemarks',
           width: '120',
           fixed: false
         }
       ],
       tableColumnRight: [{
-          label: '发车批次',
-          prop: 'batchNo',
+          label: '运单号',
+          prop: 'shipSn',
           width: '120',
           fixed: true
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
         },
         {
           label: '结算状态',
@@ -228,93 +251,111 @@ export default {
           fixed: false
         },
         {
-          label: '发车网点',
-          prop: 'orgName',
+          label: '发货人',
+          prop: 'senderCustomerName',
           width: '120',
           fixed: false
         },
         {
-          label: '达到网点',
-          prop: 'arriveOrgName',
+          label: '收货人',
+          prop: 'receiverCustomerName',
           width: '120',
           fixed: false
         },
         {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '发站其他费',
-          prop: 'fee',
-          width: '120',
+          label: '异常理赔',
+          prop: 'totalCost',
+          width: '150',
           fixed: false
         },
         {
-          label: '未结发站其他费',
+          label: '已结异常理赔',
           prop: 'unpaidFee',
-          width: '120',
+          width: '150',
           fixed: false
         },
         {
-          label: '已结发站其他费',
-          prop: 'paidFee',
-          width: '120',
+          label: '未结异常理赔',
+          prop: 'closeFee',
+          width: '150',
           fixed: false
         },
         {
-          label: '实结发站其他费',
-          prop: 'amount',
+          label: '实结异常理赔',
+          prop: 'inputAbnormalFee',
           width: '120',
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.amount
+            return scope.row.inputAbnormalFee
           }
         },
         {
-          label: '司机电话',
-          prop: 'dirverMobile',
+          label: '发货方',
+          prop: 'senderCompanyName',
           width: '120',
           fixed: false
         },
         {
-          label: '车牌号',
-          prop: 'truckIdNumber',
+          label: '收货方',
+          prop: 'receiverCompanyName',
           width: '120',
           fixed: false
         },
         {
-          label: '司机姓名',
-          prop: 'dirverName',
+          label: '货号',
+          prop: 'shipGoodsSn',
           width: '120',
           fixed: false
         },
         {
-          label: '配载件数',
-          prop: 'loadAmountall',
+          label: '货品名',
+          prop: 'cargoName',
           width: '120',
           fixed: false
         },
         {
-          label: '配载重量',
-          prop: 'loadWeightall',
+          label: '开单时间',
+          prop: 'createTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '配载体积',
-          prop: 'loadVolumeall',
+          label: '到达城市',
+          prop: 'shipToCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '备注',
-          prop: 'remark',
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '重量',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '体积',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
           width: '120',
           fixed: false
         }
@@ -351,20 +392,17 @@ export default {
     },
     initLeftParams() {
       if (!this.$route.query.searchQuery.vo) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
-        // this.$router.push({ path: './accountsPayable/batch' })
+        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
+        // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true
       } else {
-        this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-        this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false
       }
     },
     getList() {
-      let selectListBatchNos = objectMerge2([], this.$route.query.selectListBatchNos)
-      if (this.$route.query.selectListBatchNos) {
+      let selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
+      if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
         this.isModify = false
@@ -375,11 +413,11 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       if (!this.isFresh) {
-        postPayListByOne(this.searchQuery).then(data => {
+        postFindAbnormalList(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
-          selectListBatchNos.forEach(e => {
+          selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
-              if (e === item.batchNo) {
+              if (e === item.shipSn) {
                 this.rightTable.push(item)
               }
             })
@@ -394,7 +432,7 @@ export default {
             if (item !== -1) {
               this.leftTable.splice(item, 1)
             }
-            e.amount = e.unpaidFee
+            e.inputAbnormalFee = e.unpaidFee
           })
         })
 
@@ -402,14 +440,14 @@ export default {
     },
     changLoadData(newVal) {
       let unpay = this.rightTable[newVal].unpaidFee
-      let curpay = this.rightTable[newVal].amount
+      let curpay = this.rightTable[newVal].inputAbnormalFee
       if (curpay > unpay || curpay < 0) {
         this.$notify({
           title: '提示',
           message: '不能大于未结小于0',
           type: 'warning'
         })
-        this.rightTable[newVal].amount = unpay
+        this.rightTable[newVal].inputAbnormalFee = unpay
       }
     },
     clickDetailsRight(row) {
@@ -443,7 +481,7 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
-          e.amount = e.unpaidFee
+          e.inputAbnormalFee = e.unpaidFee
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 源数据减去被穿梭的数据
@@ -509,23 +547,19 @@ export default {
     goReceipt() {
       this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
-        let data = []
-
-        console.log('rightTable', this.rightTable)
         this.rightTable.forEach((e, index) => {
           let item = {
-            id: '',
-            amount: 0,
-            feeTypeId: ''
+            shipId: e.shipId,
+            amount: e.inputAbnormalFee,
+            inputAbnormalFee: e.inputAbnormalFee,
+            shipSn: e.shipSn,
+            dataName: '异常理赔'
           }
-          item.id = e.id
-          item.feeTypeId = e.feeTypeId
-          item.amount = e.amount
           this.tableReceiptInfo.push(item)
           item = {}
         })
+        console.log('tableReceiptInfo', this.tableReceiptInfo)
         this.openDialog()
-        data = []
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
@@ -608,4 +642,3 @@ export default {
 }
 
 </script>
-

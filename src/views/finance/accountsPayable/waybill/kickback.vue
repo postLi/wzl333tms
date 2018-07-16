@@ -180,12 +180,12 @@ export default {
           width: '150',
           fixed: false
         },
-        {
-          label: '结算操作人',
-          prop: 'settlementBy',
-          width: '150',
-          fixed: false
-        },
+        // {
+        //   label: '结算操作人',
+        //   prop: 'settlementBy',
+        //   width: '150',
+        //   fixed: false
+        // },
         {
           label: '货品名',
           prop: 'cargoName',
@@ -323,7 +323,7 @@ export default {
       })
     },
     showDetail (order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {
       this.setupTableVisible = true

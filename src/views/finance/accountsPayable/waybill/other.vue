@@ -60,27 +60,7 @@ export default {
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
-        vo: {
-          // feeType: 8,
-          // endTime: '',
-          // id: 0,
-          // incomePayType: 'PAYABLE',
-          // incomePayTypeValue: '',
-          // orgAllId: '',
-          // senderCompanyName: '',
-          // senderName: '',
-          // shipFromCityCode: '',
-          // shipFromOrgid: 0,
-          // shipLoadId: 0,
-          // shipLoadIdType: 0,
-          // shipSn: '',
-          // shipToCityCode: '',
-          // startTime: '',
-          // status: '',
-          // totalFee: 0,
-          // totalStatus: '',
-          // totalStatusValue: ''
-        }
+        vo: {}
       },
       tablekey: 0,
       total: 0,
@@ -130,19 +110,19 @@ export default {
           fixed: false
         },
         {
-          label: '回扣',
-          prop: 'brokerageFee',
+          label: '其他费用支出',
+          prop: 'otherfeeOut',
           width: '150',
           fixed: false
         },
         {
-          label: '已结回扣',
+          label: '已结其他费用支出',
           prop: 'closeFee',
           width: '150',
           fixed: false
         },
         {
-          label: '未结回扣',
+          label: '未结其他费用支出',
           prop: 'unpaidFee',
           width: '150',
           fixed: false
@@ -180,12 +160,12 @@ export default {
           width: '150',
           fixed: false
         },
-        {
-          label: '结算操作人',
-          prop: 'settlementBy',
-          width: '150',
-          fixed: false
-        },
+        // {
+        //   label: '结算操作人',
+        //   prop: 'settlementBy',
+        //   width: '150',
+        //   fixed: false
+        // },
         {
           label: '货品名',
           prop: 'cargoName',
@@ -286,6 +266,7 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
+      console.log('fetchListsearchQuery', this.searchQuery)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
         console.log(this.dataList)
@@ -323,7 +304,7 @@ export default {
       })
     },
     showDetail (order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {
       this.setupTableVisible = true

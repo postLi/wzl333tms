@@ -1,5 +1,5 @@
 <template>
-  <!-- 单票提货费结算页面 -->
+  <!-- 其他费用支出结算页面 -->
   <div class="accountsLoad_table">
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 搜索框 -->
@@ -8,7 +8,7 @@
       </div>
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">单票提货费结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">其他费用支出结算</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -146,19 +146,19 @@ export default {
           fixed: false
         },
         {
-          label: '回扣',
-          prop: 'brokerageFee',
+          label: '其他费用',
+          prop: 'otherfeeOut',
           width: '120',
           fixed: false
         },
         {
-          label: '未结回扣',
+          label: '未结其他费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结回扣',
+          label: '已结其他费用',
           prop: 'closeFee',
           width: '120',
           fixed: false
@@ -264,31 +264,31 @@ export default {
           fixed: false
         },
         {
-          label: '回扣',
-          prop: 'brokerageFee',
+          label: '其他费用',
+          prop: 'otherfeeOut',
           width: '120',
           fixed: false
         },
         {
-          label: '未结回扣',
+          label: '未结其他费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结回扣',
+          label: '已结其他费用',
           prop: 'closeFee',
           width: '120',
           fixed: false
         },
         {
-          label: '实结回扣',
-          prop: 'inputBrokerageFee',
+          label: '实结其他费用',
+          prop: 'inputOtherFee',
           width: '120',
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.inputBrokerageFee
+            return scope.row.inputOtherFee
           }
         },
         {
@@ -393,7 +393,7 @@ export default {
     },
     initLeftParams() {
       if (!this.$route.query.searchQuery.vo) {
-        this.$router.push({ path: './accountsPayable/waybill' })
+        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
         this.isFresh = true
       } else {
         this.$set(this.searchQuery.vo, 'feeType', this.feeType)
@@ -433,7 +433,7 @@ export default {
             if (item !== -1) {
               this.leftTable.splice(item, 1)
             }
-            e.inputBrokerageFee = e.unpaidFee
+            e.inputOtherFee = e.unpaidFee
           })
         })
 
@@ -441,14 +441,14 @@ export default {
     },
     changLoadData(newVal) {
       let unpay = this.rightTable[newVal].unpaidFee
-      let curpay = this.rightTable[newVal].inputBrokerageFee
+      let curpay = this.rightTable[newVal].inputOtherFee
       if (curpay > unpay || curpay < 0) {
         this.$notify({
           title: '提示',
           message: '不能大于未结小于0',
           type: 'warning'
         })
-        this.rightTable[newVal].inputBrokerageFee = unpay
+        this.rightTable[newVal].inputOtherFee = unpay
       }
     },
     clickDetailsRight(row) {
@@ -482,7 +482,7 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
-          e.inputBrokerageFee = e.unpaidFee
+          e.inputOtherFee = e.unpaidFee
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 源数据减去被穿梭的数据
@@ -551,11 +551,11 @@ export default {
         this.rightTable.forEach((e, index) => {
           let item = {
             shipId: e.shipId,
-            amount: e.inputBrokerageFee,
-            inputBrokerageFee: e.inputBrokerageFee,
+            amount: e.inputOtherFee,
+            inputOtherFee: e.inputOtherFee,
             shipSn: e.shipSn,
             // feeTypeId: e.feeTypeId,
-            dataName: '单票提货费'
+            dataName: '其他费用支出'
           }
           this.tableReceiptInfo.push(item)
           item = {}

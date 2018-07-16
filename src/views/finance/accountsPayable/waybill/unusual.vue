@@ -128,8 +128,20 @@ export default {
           fixed: false
         },
         {
-          label: '中转费合计',
+          label: '异动费用',
           prop: 'totalCost',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结异动费用',
+          prop: 'closeFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '未结异动费用',
+          prop: 'unpaidFee',
           width: '150',
           fixed: false
         },
@@ -166,12 +178,12 @@ export default {
           width: '150',
           fixed: false
         },
-        {
-          label: '结算操作人',
-          prop: 'settlementBy',
-          width: '150',
-          fixed: false
-        },
+        // {
+        //   label: '结算操作人',
+        //   prop: 'settlementBy',
+        //   width: '150',
+        //   fixed: false
+        // },
         {
           label: '货品名',
           prop: 'cargoName',
@@ -277,9 +289,9 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.fetchList()
-  },
+  // mounted () {
+  //   this.fetchList()
+  // },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj)
@@ -307,11 +319,24 @@ export default {
       }
     },
     count () {
-      this.$router.push({path: '../accountsLoad'})
-      console.log('router',this.$router)
+      this.$router.push({
+        path: '../accountsLoad',
+        query: {
+          currentPage: 'waybillUnusual', // 本页面标识符
+          searchQuery: this.searchQuery, // 搜索项
+          selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
+        }
+      })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListShipSns = []
+      list.forEach((e, index) => {
+        this.selectListShipSns.push(e.shipSn)
+      })
+    },
     showDetail (order) {
       this.eventBus.$emit('showOrderDetail', order.id)
     },

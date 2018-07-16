@@ -18,16 +18,16 @@
         <!--</div>-->
 
 
-        <el-form-item prop="accNum">
+        <!-- <el-form-item prop="accNum"> -->
 
           <!--<span class="svg-container svg-container_login">-->
           <!--<icon-svg icon-class="yonghuming" />-->
           <!--</span>-->
 
-         <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="off" :placeholder="holder.accNum" @focus='accNum()'   clearable >
+         <!-- <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="off" :placeholder="holder.accNum" @focus='accNum()'   clearable >
           <template slot="prepend">公司ID</template>
          </el-input>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item prop="username">
           <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="off"

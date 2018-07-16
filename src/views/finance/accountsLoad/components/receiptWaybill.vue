@@ -175,7 +175,13 @@ export default {
         case 'waybillTicket':
           return '单票提货费'
         case 'waybillOther':
-         return '其他费用支出'
+          return '其他费用支出'
+        case 'waybillTransfer':
+          return '中转费'
+        case 'waybillAbnormal':
+          return '异常理赔'
+        case 'waybillUnusual':
+          return '异动费用结算'
       }
     }
   },
@@ -207,7 +213,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.init()
-      console.log('inforeceipt', this.info)
     })
   },
   methods: {

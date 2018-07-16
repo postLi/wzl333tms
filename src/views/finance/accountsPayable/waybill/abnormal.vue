@@ -128,8 +128,20 @@ export default {
           fixed: false
         },
         {
-          label: '中转费合计',
+          label: '异常理赔',
           prop: 'totalCost',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '已结异常理赔',
+          prop: 'closeFee',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '未结异常理赔',
+          prop: 'unpaidFee',
           width: '150',
           fixed: false
         },
@@ -166,12 +178,12 @@ export default {
           width: '150',
           fixed: false
         },
-        {
-          label: '结算操作人',
-          prop: 'settlementBy',
-          width: '150',
-          fixed: false
-        },
+        // {
+        //   label: '结算操作人',
+        //   prop: 'settlementBy',
+        //   width: '150',
+        //   fixed: false
+        // },
         {
           label: '货品名',
           prop: 'cargoName',
@@ -277,9 +289,6 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.fetchList()
-  },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj)
@@ -288,8 +297,10 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchList()
     },
     fetchList() {
+      this.selectListShipSns = []
       return postFindAbnormalList(this.searchQuery).then(data => {
         this.dataList = data.list
       })
@@ -307,13 +318,26 @@ export default {
       }
     },
     count () {
-      this.$router.push({path: '../accountsLoad'})
-      console.log('router',this.$router)
+      this.$router.push({
+        path: '../accountsLoad',
+        query: {
+          currentPage: 'waybillAbnormal', // 本页面标识符
+          searchQuery: this.searchQuery, // 搜索项
+          selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
+        }
+      })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListShipSns = []
+      list.forEach((e, index) => {
+        this.selectListShipSns.push(e.shipSn)
+      })
+    },
     showDetail (order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {
       this.setupTableVisible = true
