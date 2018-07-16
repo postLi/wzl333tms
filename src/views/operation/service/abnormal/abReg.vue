@@ -145,14 +145,14 @@
             sortables
             >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="disposeTime"
             label="处理时间"
             width="200"
             sortable
             >
             <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="disposeResultName"
             label="处理结果"

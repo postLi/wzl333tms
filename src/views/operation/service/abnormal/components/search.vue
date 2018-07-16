@@ -135,3 +135,9 @@ export default {
   }
 }
 </script> 
+<style lang="scss">
+.el-range-editor--mini.el-input__inner{
+  height: 28px;
+  width: 200px;
+}
+</style>

@@ -115,7 +115,7 @@
           </el-tooltip>
         </router-link>
       </div>
-    </div>
+    </div>	
   </div>
 </template>
 <style lang="scss">
@@ -134,14 +134,16 @@
     background: url("../../assets/flow/cw1.png") no-repeat;
     .el-button{
       display: inline-block;
+      // width: 88px;
       width: 110px;
       margin:5px;
       padding: none;
       text-align: center;
       background-color: #cbebff;
       border-radius: 2px;
-      border: solid 1px #2ca3f1;
+      border: solid 1px #39bbff;
       font-weight: bold;
+      font-size: 13px;
     }
     .fin1-content{
       width:680px;
@@ -153,6 +155,13 @@
       position: absolute;
       top:5px;
       left:347px;
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
+      }
+      :hover span{
+        color:#fff;
+      }
     }
     .fin2-content{
       width: 681px;
@@ -165,6 +174,15 @@
       border-radius: 10px;
       padding-left:33px;
       // text-align: center;
+      :hover.el-button{
+        background-color: #39bbff;
+        // transform: translate(8px,5px)
+        transform:scale(1.1,1.1)
+      
+      }
+      :hover span{
+        color:#fff;
+      }
       
     }
     .fin3-content{
@@ -177,6 +195,13 @@
       left: 413px;
       top: 388px;
       text-align: center;
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
+      }
+      :hover span{
+        color:#fff;
+      }
     }
     .fin4-content{
       // background:yellow;
@@ -188,6 +213,13 @@
       left: 693px;
       top: 388px;
       text-align: center;
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
+      }
+      :hover span{
+        color:#fff;
+      }
     }
     .fin5-content{
       // background: red;
@@ -207,6 +239,13 @@
         border-radius: 2px;
         border: solid 1px #2ca3f1;
         font-weight: bold;
+      }
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
+      }
+      :hover span{
+        color:#fff;
       }
     }
     .fin6-content{
@@ -228,6 +267,13 @@
         border: solid 1px #2ca3f1;
         font-weight: bold;
       }
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
+      }
+      :hover span{
+        color:#fff;
+      }
     }
     .fin7-content{
       // background: yellow;
@@ -236,6 +282,13 @@
       position: absolute;
       bottom: 3px;
       left: 338px;
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
+      }
+      :hover span{
+        color:#fff;
+      }
     }
   }  
 }

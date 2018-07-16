@@ -24,3 +24,12 @@ export function postInsertAbnormal(params) {
     return res.data || { list: [], total: 0 }
   })
 }
+/**
+ * 异动修改
+ * {
+	"fee" : 10
+}
+ */
+export function putXiugai(id, params) {
+  return fetch.put('/api-finance/finance/tmsfinancefeedetail/v1/?id=' + id, params)
+}

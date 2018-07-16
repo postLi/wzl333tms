@@ -13,10 +13,11 @@
           </el-form-item> -->
           <el-form-item label="运单号" prop="shipSn">
               <!--<el-input v-model="formInline.shipSn"></el-input>-->
-              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo('shipSn')"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false"/>
+              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="getShipSn"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false"/>
             </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
-            <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" type="order"  @change="getShipSn"  v-model="form.shipGoodsSn" :disabled="isCheck || isDeal ? true : false"/>
+            <!-- <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input> -->
           </el-form-item>
   
           <el-form-item label="开单时间" prop="createTime">
@@ -57,22 +58,26 @@
             </el-autocomplete>
           </el-form-item> -->
            <el-form-item label="登记人" prop="registerName"  >
-            <SelectTree v-model="form.registerName" :disabled="true"/>
+            
+             <el-input maxlength="10" v-if="isModify" v-model="form.registerName"></el-input>
+           
+            <querySelect search="name" label="name"  v-else v-model="form.registerName" />
+            
           </el-form-item>
           <el-form-item label="异常类型" prop="abnormalType" class="label">
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
-          <el-form-item label="异常件数" v-numberOnly prop="abnormalAmount" >
-            <el-input v-model="form.abnormalAmount" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+          <el-form-item label="异常件数"  prop="abnormalAmount" >
+            <el-input v-model="form.abnormalAmount" v-numberOnly maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="处理网点" prop="orgName" class="label">
-            <SelectTree v-model="form.orgName" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="处理网点" prop="disposeOrgId" class="label">
+            <SelectTree v-model="form.disposeOrgId" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
-          <el-form-item label="异常金额" v-number-only:point prop="registerFee" >
-            <el-input v-model="form.registerFee" maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+          <el-form-item label="异常金额" prop="registerFee" >
+            <el-input v-model="form.registerFee"  v-number-only:point maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="责任网点" prop="dutyOrgName" >
-            <SelectTree v-model="form.dutyOrgName" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="责任网点" prop="dutyOrgId" >
+            <SelectTree v-model="form.dutyOrgId" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item class="driverRemarks label ms" label="异常描述" prop="abnormalDescribe" >
             <el-input type="textarea" maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
@@ -95,8 +100,8 @@
           <el-form-item label="处理时间" prop="disposeTime">
             <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
-          <el-form-item label="处理网点" prop="orgName" >
-            <SelectTree v-model="form.orgName" :disabled=" true"/>
+          <el-form-item label="处理网点" prop="disposeOrgId" >
+            <SelectTree v-model="form.disposeOrgId" :disabled=" true"/>
           </el-form-item>
           <el-form-item label="处理人" prop="disposeName" >
             <el-autocomplete
@@ -138,6 +143,7 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 import { objectMerge2 } from '@/utils/index'
+import { parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/index'
 export default {
   components: {
@@ -221,31 +227,32 @@ export default {
     //   }
     // }
     return {
+      searchCreatTime: parseTime(new Date()),
       form: {
         'abnormalAmount': '',
         'abnormalDescribe': '',
         'abnormalNo': '',
         'abnormalPicture': '',
         'disposePicture': '',
-        'abnormalStatus': '',
+        // 'abnormalStatus': '',
         'abnormalType': '',
         'childShipId': '',
         'createTime': '',
         'disposeOpinion': '',
-        'orgName': '',
+        'disposeOrgId': '',
         'disposeResult': '228',
         'disposeTime': '',
         'disposeName': '',
-        'dutyOrgName': '',
+        'dutyOrgId': '',
         'orgId': '',
         'registerFee': '',
         'registerName': '',
         'shipId': '',
-        shipSn: '',
-        shipGoodsSn: '',
-        cargoName: '',
-        cargoPack: '',
-        cargoAmount: ''
+        'shipSn': '',
+        'shipGoodsSn': '',
+        'cargoName': '',
+        'cargoPack': '',
+        'cargoAmount': ''
       },
 
       formLabelWidth: '80px',
@@ -263,10 +270,10 @@ export default {
         abnormalDescribe: [
           { required: true, message: '必填', trigger: 'blur' }
         ],
-        dutyOrgName: [
+        dutyOrgId: [
           { required: true, message: '请选择责任网点', trigger: 'blur' }
         ],
-        orgName: [
+        disposeOrgId: [
           { required: true, message: '请选择处理网点', trigger: 'blur' }
         ],
         disposeOpinion: [
@@ -389,7 +396,7 @@ export default {
       } else {
         this.popTitle = '异常登记'
         this.form.orgId = this.orgid
-        this.form.registerTime = new Date()
+        this.form.registerTime = this.searchCreatTime
         this.dengji()
       }
     },
@@ -425,24 +432,40 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    // getShipSn(data){
-        // if(data){
-          // this.formInline.shipGoodsSn = order.shipGoodsSn
-          // this.sendId.pickupId = order.id
+    getShipSn(data) {
+      if (data) {
+        console.log('data:', data)
+        // this.formInline.shipGoodsSn = data.shipGoodsSn
+        // this.sendId.pickupId = data.id
 
-        //   this.form.shipSn = data.shipSn
-        //   this.form.shipGoodsSn = data.shipGoodsSn
-        //   this.form.createTime = data.createTime
-        //   this.form.cargoName = data.cargoName
-        //   this.form.cargoPack = data.cargoPack
-        //   this.form.cargoAmount = data.cargoAmount
-        // }else{
-        //   this.$message({
-        //       message: '查无此信息~',
-        //       type: 'warning'
-        //     })
-        // }
-      // },
+        // this.form.shipSn = data.shipSn
+        // this.form.shipGoodsSn = data.shipGoodsSn
+        // this.form.createTime = data.createTime
+        // this.form.cargoName = data.cargoName
+        // this.form.cargoPack = data.cargoPack
+        // this.form.cargoAmount = data.cargoAmount
+
+        this.form.shipSn = data.shipSn
+        // this.form.shipGoodsSn = data.shipGoodsSn
+        this.form.shipId = data.id
+        this.form.createTime = data.createTime
+        this.form.abnormalDescribe = data.abnormalDescribe
+        this.form.abnormalAmount = data.abnormalAmount
+        this.form.disposeOrgId = data.disposeOrgId
+        this.form.registerFee = data.registerFee
+        this.form.dutyOrgId = data.dutyOrgId
+        this.form.abnormalStatus = data.abnormalStatus
+        this.form.disposeUserId = data.disposeUserId
+        this.form.disposeOpinion = data.disposeOpinion
+        this.form.disposeOrgId = data.disposeOrgId
+        this.form.registerTime = this.searchCreatTime ? parseTime(this.searchCreatTime) : ''
+      }/* else {
+          this.$message({
+            message: '查无此信息~',
+            type: 'warning'
+          })
+        } */
+    },
     fetchShipInfo(type) {
       const oldVal = this.form[type]
       orderManage.getFindByShipSnOrGoodSn({
@@ -451,11 +474,24 @@ export default {
         const data = res.data
         if (data) {
           this.form.shipSn = data.shipSn
-          this.form.shipGoodsSn = data.shipGoodsSn
+          // this.form.shipGoodsSn = data.shipGoodsSn
+          this.form.shipId = data.id
           this.form.createTime = data.createTime
-          this.form.cargoName = data.cargoName
-          this.form.cargoPack = data.cargoPack
-          this.form.cargoAmount = data.cargoAmount
+          // this.form.cargoName = data.cargoName
+          // this.form.cargoPack = data.cargoPack
+          // this.form.cargoAmount = data.cargoAmount
+          this.form.abnormalDescribe = data.abnormalDescribe
+          this.form.abnormalAmount = data.abnormalAmount
+          this.form.disposeOrgId = data.disposeOrgId
+          this.form.registerFee = data.registerFee
+          this.form.dutyOrgId = data.dutyOrgId
+          this.form.abnormalStatus = data.abnormalStatus
+          this.form.disposeUserId = data.disposeUserId
+          this.form.disposeOpinion = data.disposeOpinion
+          this.form.disposeOrgId = data.disposeOrgId
+          // this.form.registerTime = data.registerTime
+          // this.form.createTime = this.searchCreatTime ? parseTime(this.searchCreatTime) : ''
+          this.form.registerTime = this.searchCreatTime ? parseTime(this.searchCreatTime) : ''
         } else {
           // this.$message({
           //     message: '查无此信息~',
@@ -475,6 +511,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
+          // this.form.registerTime = this.searchCreatTime ? parseTime(this.searchCreatTime) : ''
           const data = objectMerge2({}, this.form)
           // data.fixPhone = this.fixPhone
           let promiseObj
@@ -513,6 +550,7 @@ export default {
     closeMe(done) {
       this.reset()
       this.$emit('update:popVisible', false)
+      this.$emit('close')
       if (typeof done === 'function') {
         done()
       }

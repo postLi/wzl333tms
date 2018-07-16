@@ -357,11 +357,11 @@ export default {
     fetchData() {
       this.fetchAllreceipt()
     },
-         // 获取组件返回的搜索参数
+    // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
-            // 根据搜索参数请求后台获取数据
+      // 根据搜索参数请求后台获取数据
       objectMerge2(this.searchQuery.vo, searchParam)
-            // this.searchQuery.vo.orgId = searchParam.orgid
+      // this.searchQuery.vo.orgId = searchParam.orgid
       this.fetchData()
     },
     doAction(type) {
@@ -369,7 +369,7 @@ export default {
         this.showImport()
         return false
       }
-          // 判断是否有选中项
+      // 判断是否有选中项
       if (!this.selected.length && type !== 'reg') {
         this.$message({
           message: '请选择要操作的项~',
@@ -378,16 +378,16 @@ export default {
         return false
       }
       switch (type) {
-              // 登记
+        // 登记
         case 'reg':
           this.isModify = false
           this.isCheck = false
-                // this.isDbclick = false
+          // this.isDbclick = false
           console.log(this.isModify)
           this.selectInfo = {}
           this.openAddAbnormal()
           break
-              // 修改
+        // 修改
         case 'xiugai':
           if (this.selected.length > 1) {
             this.$message({

@@ -92,7 +92,8 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">保 存</el-button>
+      <el-button type="primary" v-if="isModify" @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">修改</el-button>
+      <el-button type="primary" v-else @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
@@ -100,7 +101,7 @@
 <script>
 // import { REGEX } from '@/utils/validate'
 // import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
-import { postInsertAbnormal } from '@/api/finance/unusual'
+import { postInsertAbnormal, PutXiuGai } from '@/api/finance/unusual'
 import { getAllUser } from '@/api/company/employeeManage'
 // import orderManage from '@/api/operation/orderManage'
 import popRight from '@/components/PopRight/index'
@@ -496,7 +497,7 @@ export default {
     .el-upload{
       display: none;
     }
-    
+
   }
 .Addunusual{
   left: auto;

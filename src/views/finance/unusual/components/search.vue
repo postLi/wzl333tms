@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { REGEX } from '@/utils/validate'
+// import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { parseTime } from '@/utils/index'
