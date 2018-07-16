@@ -28,7 +28,7 @@
             <div class="image-preview-wrapper">
                 <img :src="imageUrl">
                 <div class="image-preview-action">
-                    <i @click="rmImage" class="el-icon-delete"></i>
+                    <i @click="rmImage(imageUrl)" class="el-icon-delete"></i>
                 </div>
             </div>
         </div>
@@ -130,7 +130,10 @@ export default {
       }).catch(() => {
       })
     },
-    rmImage() {
+    rmImage(url) {
+      this.filelist = this.filelist.filter(el => {
+        return el.url !== url
+      })
       this.emitInput('')
     },
     // 超出上传数量
@@ -175,6 +178,7 @@ export default {
       // this.imageUrl = url
     },
     handleError(err) {
+      this.$message.error('上传错误：' + JSON.stringify(err))
       this.$emit('error', err)
     },
     beforeUpload(file) {
