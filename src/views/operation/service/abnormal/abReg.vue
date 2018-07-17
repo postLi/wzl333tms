@@ -235,16 +235,14 @@ export default {
       isDbclick: false,
       licenseTypes: [],
       selected: [],
-
-                // loading:false,
+      total: 0,
+      id: '',
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
         'vo': {
         }
-      },
-      total: 0,
-      id: ''
+      }
     }
   },
   methods: {

@@ -80,7 +80,7 @@
           </el-table-column>
            <!-- 没有返回字段名 -->
           <el-table-column
-            prop="status"
+            prop="statusValue"
             label="结算状态"
             width="120"
             sortable
@@ -95,7 +95,7 @@
           </el-table-column>
            <!-- 没有返回字段名 -->
           <el-table-column
-            prop="feeTypeId"
+            prop="incomePayTypeValue"
             label="费用类型"
             width="120"
             sortable
@@ -153,13 +153,13 @@
             sortable
             >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="abnormalAmount"
             label="异常件数"
             width="120"
             sortable
             >
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="cargoName"
             label="货品名"
@@ -277,7 +277,7 @@
 </template>
 <script>
 import SearchForm from './components/search'
-import { postAbnormalUnusual } from '@/api/finance/unusual'
+import { postAbnormalUnusual, Delete } from '@/api/finance/unusual'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
@@ -400,43 +400,43 @@ export default {
             this.id = this.selected[0].id
             this.selectInfo = this.selected[0]
             this.isModify = true
-            console.log('this.selectInfo:', this.selected)
+            // console.log('this.selectInfo:', this.selected)
             this.openAddAbnormal()
           }
           break
         // 删除
-      //   case 'delete':
-      //     const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
-      //               // =>todo 删除多个
-      //     let ids = this.selected.map(item => {
-      //       return item.id
-      //     })
-      //     ids = ids.join(',')
-
-      //     this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
-      //       confirmButtonText: '删除',
-      //       cancelButtonText: '取消',
-      //       type: 'warning'
-      //     }).then(() => {
-      //       delAbnormal(ids).then(res => {
-      //         this.$message({
-      //           type: 'success',
-      //           message: '删除成功!'
-      //         })
-      //         this.fetchData()
-      //       }).catch(err => {
-      //         this.$message({
-      //           type: 'info',
-      //           message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-      //         })
-      //       })
-      //     }).catch(() => {
-      //       this.$message({
-      //         type: 'info',
-      //         message: '已取消删除'
-      //       })
-      //     })
-      //     break
+        case 'delete':
+          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+                    // =>todo 删除多个
+          let ids = this.selected.map(item => {
+            return item.id
+          })
+          ids = ids.join(',')
+          console.log(ids + 'wzl')
+          this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            Delete(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
+          break
       }
           // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()

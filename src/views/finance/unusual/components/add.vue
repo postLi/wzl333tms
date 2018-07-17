@@ -100,8 +100,8 @@
 </template>
 <script>
 // import { REGEX } from '@/utils/validate'
-// import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
-import { postInsertAbnormal, PutXiuGai } from '@/api/finance/unusual'
+// import { GetAbnormalNo, PostNewAbnormal, putXiugai, GetLook } from '@/api/operation/dashboard'
+import { postInsertAbnormal, putXiugai } from '@/api/finance/unusual'
 import { getAllUser } from '@/api/company/employeeManage'
 // import orderManage from '@/api/operation/orderManage'
 import popRight from '@/components/PopRight/index'
@@ -309,6 +309,7 @@ export default {
       if (this.isModify) {
         this.popTitle = '异动修改'
         this.fetchShipInfo(this.info)
+        console.log(this.id + 'ppp')
       } else {
         this.popTitle = '异动登记'
         this.form.orgId = this.orgid
@@ -430,19 +431,22 @@ export default {
     submitForm(ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          this.loading = true
+          // this.loading = true
           this.obj.shipSn = this.form.shipSn
           this.obj.fee = this.form.fee
           this.obj.incomePayType = this.form.incomePayType
           this.obj.remark = this.form.remark
           this.obj.shipLoadId = this.form.shipLoadId
-          console.log(this.obj)
+          this.obj.createTime = new Date(this.form.createTime).getTime()
+          // this.obj.createTime = new Date(data.createTime).getTime()
           const data = objectMerge2({}, this.obj)
+          // console.log(this.obj, this.form.createTime)
+
           // data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
-            promiseObj = PutXiuGai(data) // 修改
+            promiseObj = putXiugai(this.id, data) // 修改
           } else {
             promiseObj = postInsertAbnormal(data) // 登记
           }

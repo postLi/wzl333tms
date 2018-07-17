@@ -12,7 +12,7 @@ import fetch from '../../utils/fetch'
 }
  */
 export function postAbnormalUnusual(params) {
-  return fetch.post('/api-finance/finance/tmsfinancefeedetail/v1/abnormal/', params).then(res => {
+  return fetch.post('/lingchiwing/finance/tmsfinancefeedetail/v1/abnormal/', params).then(res => {
     return res.data || { list: [], total: 0 }
   })
 }
@@ -20,7 +20,7 @@ export function postAbnormalUnusual(params) {
  * 异动登记
  */
 export function postInsertAbnormal(params) {
-  return fetch.post('/api-finance/finance/tmsfinancefeedetail/v1/insertAbnormal/', params).then(res => {
+  return fetch.post('/lingchiwing/finance/tmsfinancefeedetail/v1/insertAbnormal/', params).then(res => {
     return res.data || { list: [], total: 0 }
   })
 }
@@ -31,5 +31,11 @@ export function postInsertAbnormal(params) {
 }
  */
 export function putXiugai(id, params) {
-  return fetch.put('/api-finance/finance/tmsfinancefeedetail/v1/?id=' + id, params)
+  return fetch.put('/lingchiwing/finance/tmsfinancefeedetail/v1/' + id, params)
+}
+/**
+ * 异动删除
+ */
+export function Delete(id) {
+  return fetch.delete('/lingchiwing/finance/tmsfinancefeedetail/v1/' + id)
 }

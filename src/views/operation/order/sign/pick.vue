@@ -264,7 +264,7 @@
             <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
           </el-table-column>
           <el-table-column
-            prop="shipPayWay"
+            prop="shipPayWayName"
             label="付款方式"
             width="120"
             sortable
