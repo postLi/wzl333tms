@@ -55,9 +55,9 @@ export default {
         {
           path: '/finance/reconciliation/carrier', icon: 'QQ', name: '承运商对账', component: _import('finance/reconciliation/carrier/index'), meta: { role: ['admin'], title: '承运商对账', noCache: false }
         },
-        {
-          path: '/finance/reconciliation/group', icon: 'QQ', name: '网点对账', component: _import('finance/reconciliation/group/index'), meta: { role: ['admin'], title: '网点对账', noCache: false }
-        },
+        // {
+        //   path: '/finance/reconciliation/group', icon: 'QQ', name: '网点对账', component: _import('finance/reconciliation/group/index'), meta: { role: ['admin'], title: '网点对账', noCache: false }
+        // },
         {
           path: '/finance/reconciliation/customer', icon: 'QQ', name: '客户对账', component: _import('finance/reconciliation/customer/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
         },

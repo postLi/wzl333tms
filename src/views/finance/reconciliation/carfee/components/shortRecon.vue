@@ -189,7 +189,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已付账款</p>
+        <p>已付账款(本结算期内)</p>
       </div>
       <div class="info_tab">
         <el-table
@@ -296,6 +296,35 @@
 
 
         </el-table>
+      </div>
+
+    </div>
+    <div class="sBottom">
+      <div class="sMessageCont_info">
+        <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
+      </div>
+      <div class="sMessageBut">
+        <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="searchForm" label-width="90px" class="sButtom_searchinfo clearfix">
+
+          <el-form-item label="公司名称">
+            <el-input v-model="searchForm.memberName" auto-complete="off" maxlength="8"></el-input>
+          </el-form-item>
+          <el-form-item label="业务负责人">
+            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          </el-form-item>
+          <el-form-item label="联系方式">
+            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          </el-form-item>
+          <el-form-item label="财务负责人">
+            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          </el-form-item>
+          <el-form-item label="联系方式">
+            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          </el-form-item>
+          <el-form-item label="时间">
+            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
@@ -471,6 +500,50 @@
         color: #668cf0;
         padding: 4px 0 5px 0;
         font-weight: 600;
+      }
+    }
+  }
+  .sBottom{
+    border-right: 1px solid #b4b4b4;
+    border-left: 1px solid #b4b4b4;
+    .sMessageCont_info{
+      background-color: #e2eaff;
+      p{
+        text-align: left;
+        font-size: 14px;
+        color: #668cf0;
+        padding: 4px 0 5px 0;
+        font-weight: 600;
+      }
+    }
+    .sMessageBut{
+
+      /*padding: 16px 0 10px 0;*/
+        .sButtom_searchinfo{
+          .el-form-item{
+            border: 1px solid #b4b4b4;
+            margin-right:-5px;
+            margin-bottom: 0;
+            .el-input__inner{
+              width: 197px;
+              border-radius: 0;
+              border-top-color: transparent;
+              border-right-color: transparent;
+              border-bottom-color: transparent;
+            }
+            .el-input__inner:nth-of-type(2n){
+              border-right-color: transparent;
+            }
+          }
+          .el-form-item:nth-of-type(1){
+            border-left-color: transparent;
+          }
+          .el-form-item:nth-of-type(2n){
+            border-right-color: transparent;
+          }
+        }
+      .el-input__inner:focus {
+        border-color: #b4b4b4;
       }
     }
   }

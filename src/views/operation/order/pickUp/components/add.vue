@@ -226,7 +226,7 @@ export default {
         ],
         'tmsDriver.driverName': [
           { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
-          { required: true, validator: this.validateIsEmpty('司机姓名不能为空'), trigger: ['change', 'blur'] }
+          { required: true, validator: this.validateIsEmpty('司机姓名不能为空'), trigger: 'blur' }
         ],
         'tmsDriver.driverMobile': [
           { validator: validateMobile, trigger: 'change' }
@@ -324,10 +324,10 @@ export default {
       if (this.isModify) {
         this.popTitle = '修改派车单'
         this.infoData(this.info)
-      }      else if (this.isDbclick) {
+      } else if (this.isDbclick) {
         this.popTitle = '查看派车单'
         this.infoData(this.info)
-      }      else {
+      } else {
         this.popTitle = '提货派车单'
         this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
         this.form.tmsTruck = this.setObject(this.form.tmsTruck)
@@ -336,6 +336,7 @@ export default {
         this.form.tmsTruck.truckUnit = ''
         this.form.tmsOrderPickup.payMethod = 76
         this.form.tmsOrderPickup.pickupStatus = 236
+        this.form.tmsOrderPickup.outTime = new Date()
       }
     }
   },
@@ -349,6 +350,7 @@ export default {
         this.form.tmsTruck.truckType = trunk.truckType
         this.form.tmsTruck.truckUnit = trunk.truckUnit
         this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
+
       }
     },
     infoData(item) {
@@ -456,6 +458,8 @@ export default {
             } else {
               data.tmsCustomer.customerId = this.form.tmsCustomer.customerId
             }
+            data.tmsOrderPickup.outTime= +new Date(this.form.tmsOrderPickup.outTime)
+            // this.form.tmsOrderPickup.outTime = new Date()
             promiseObj = postAddPickup(data)
           }
 
