@@ -4,7 +4,7 @@
       <el-collapse v-model="feeInfo">
         <el-collapse-item name="feeInfoOne">
           <template slot="title">
-            车辆信息
+            费用信息
           </template>
           <div class="feeFrom clearfix">
             <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
@@ -66,7 +66,7 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
-import { getFeeInfo, getOrderShipList } from '@/api/finance/settleLog'
+import { getFeeInfo } from '@/api/finance/settleLog'
 export default {
   components: {
     SelectTree,

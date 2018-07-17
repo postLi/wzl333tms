@@ -107,6 +107,7 @@ export default {
       formModel: {},
       loadTruck: 'loadTruckOne',
       incomePayType: 'PAYABLE',
+      paymentsType: 0, // 收支类型, 0 收入, 1 支出
       loading: false,
       btnsize: 'mini',
       selectedRight: [],
@@ -166,9 +167,8 @@ export default {
         this.rightTable = this.orgData.right
         this.$emit('loadTable', this.rightTable)
       } else {
-        getOrderShipList(this.otherinfo.orgid, this.incomePayType).then(data => {
+        getOrderShipList(this.otherinfo.orgid, this.incomePayType, this.paymentsType).then(data => {
           this.leftTable = data.data
-          console.log('incomePayType', data.data)
           this.$emit('loadTable', this.rightTable)
         })
       }

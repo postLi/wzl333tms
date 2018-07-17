@@ -23,8 +23,18 @@ export function getFeeInfo(orgId, paymentsType) {
 /**
  * 记收入运单信息
  */
-export function getOrderShipList(orgId, incomePayType) {
-  return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList?orgId=' + orgId + '&incomePayType =' + incomePayType)
+export function getOrderShipList(orgId, incomePayType, paymentsType) {
+  // return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList?orgId=' + orgId + '&paymentsType=' + paymentsType + '&incomePayType=' + incomePayType)
+  //   .then(res => {
+  //     return res.data
+  //   })
+   return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
+   	params: {
+   		orgId: orgId,
+   	paymentsType: paymentsType,
+   	incomePayType: incomePayType
+   	}
+   })
     .then(res => {
       return res.data
     })
@@ -33,7 +43,7 @@ export function getOrderShipList(orgId, incomePayType) {
  * 取消结算
  */
 export function postCancelSettlement(data) {
-  return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement?flowId=' + data.flowId + '&detailFlowId=' + data.detailFlowId)
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement?flowId=' + data.flowId + '&detailFlowId=' + data.detailFlowId)
 }
 /**************************************
  *             资金流水明细
@@ -45,4 +55,10 @@ export function postDetailList (data) {
 	return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
 		return res.data
 	})
+}
+/**
+ * 取消结算
+ */
+export function postDetailCancel (data) {
+	return fetch.delete('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/'+ data)
 }

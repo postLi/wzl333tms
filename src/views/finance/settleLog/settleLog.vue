@@ -17,7 +17,7 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable"  @row-dblclick="selectedItem" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
+        <el-table ref="multipleTable" @row-dblclick="selectedItem" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -219,7 +219,7 @@ export default {
           break
         case 'cancelCount': // 取消结算
           if (isShow) {
-            this.$confirm('此操作将取消结算, 是否继续?', '提示', {
+            this.$confirm('确定要取消【 ' + this.selectedList[0].flowId + ' 】吗？', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
@@ -234,10 +234,10 @@ export default {
           }
           break
         case 'showDetail':
-        if (isShow){
-          this.showDetail()
-        }
-        break
+          if (isShow) {
+            this.showDetail()
+          }
+          break
         case 'export':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待！' })
           break
@@ -258,7 +258,7 @@ export default {
     },
     cancelCount() {
       let data = {}
-      data = Object.assign({}, this.selectedList[0])
+      this.$set(data, 'flowId', this.selectedList[0].flowId)
       postCancelSettlement(data).then(data => {
           this.$message({ type: 'success', message: '取消结算操作成功' })
         })
@@ -286,8 +286,15 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
       this.showDetail()
     },
-    showDetail () {
-      this.$router.push({path: './settleLogDetail', query:{flowId: this.selectedList[0].flowId}})
+    showDetail() {
+      if (this.selectedList.length > 0) {
+        this.$router.push({
+          path: './settleLogDetail',
+          query: {
+            flowId: this.selectedList[0].flowId
+          }
+        })
+      }
     },
     setTable() {
       this.setupTableVisible = true

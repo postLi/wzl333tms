@@ -4,7 +4,7 @@
       <el-collapse v-model="feeInfo">
         <el-collapse-item name="feeInfoOne">
           <template slot="title">
-            车辆信息
+            费用信息
           </template>
           <div class="feeFrom clearfix">
             <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
@@ -45,14 +45,36 @@
         </el-collapse-item>
       </el-collapse>
       <!-- 操作按钮区 -->
-      <div class="fee_btn_boxs">
+      <!-- <div class="fee_btn_boxs">
         <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
         <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
         <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
-      </div>
+      </div> -->
       <!-- 穿梭框 -->
       <div class="fee_btn_transferTable">
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
+        <!-- <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable> -->
+        <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
+          <el-tab-pane label="批次支出" name="first">
+            <div class="animated fadeInRight tableItem">
+              <div class="fee_btn_boxs">
+                <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
+                <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
+                <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
+              </div>
+              <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="运单支出" name="second">
+            <div class="animated fadeInRight tableItem">
+              <div class="fee_btn_boxs">
+                <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
+                <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
+                <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
+              </div>
+              <dataTableOrder @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTableOrder>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </div>
   </div>
@@ -66,13 +88,15 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
-import { getFeeInfo, getOrderShipList } from '@/api/finance/settleLog'
+import dataTableOrder from './components/dataTableOrder'
+import { getFeeInfo } from '@/api/finance/settleLog'
 export default {
   components: {
     SelectTree,
     selectType,
     querySelect,
-    dataTable
+    dataTable,
+    dataTableOrder
   },
   data() {
     return {
@@ -85,7 +109,8 @@ export default {
       },
       formModelRules: {},
       setLoadTableList: {},
-      isEdit: false
+      isEdit: false,
+      activeName: 'first'
     }
   },
   computed: {
@@ -115,6 +140,7 @@ export default {
     },
     save() {},
     cancel() {},
+    handleClick() {},
     getLoadTable(obj) {
       console.log(obj)
     },
@@ -133,10 +159,28 @@ export default {
   flex: 1;
   position: relative;
   .fee_btn_transferTable {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    height: 100%;
+    height: calc(100% - 120px); 
+    .el-tabs.el-tabs--top.el-tabs--border-card {
+      height: calc(100% - 30px); 
+    }
+    .el-tabs__header {
+      margin-bottom: -11px;
+    }
+    .el-tabs--border-card>.el-tabs__content {
+      padding: 0;
+    }
+    .el-tabs__content {
+      display: flex;
+      flex-direction: column;
+      height: 100%; 
+      .el-tab-pane {
+        height: calc(100% - 20px);
+        .tableItem {
+          height: 100%;
+        }
+      }
+    }
   }
   .fee_btn_boxs {
     position: relative;

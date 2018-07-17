@@ -63,7 +63,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postDetailList, postCancelSettlement } from '@/api/finance/settleLog'
+import { postDetailList, postDetailCancel } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
 export default {
@@ -459,7 +459,7 @@ export default {
       this.fetchList()
     },
     fetchList() {
-      console.log('query',this.$route.query)
+      console.log('query', this.$route.query)
       if (this.$route.query) {
         this.$set(this.searchQuery.vo, 'flowId', this.flowId)
         console.log(this.searchQuery)
@@ -507,30 +507,15 @@ export default {
           break
       }
     },
-    income() {
-      this.$router.push({
-        path: './settleLogIncome',
-      })
-    },
-    expandtiure() {
-      this.$router.push({
-        path: './settleLogExpandtiure',
-      })
-    },
     cancelCount() {
-
-      let data = {}
-      this.$set(data, 'flowId', this.flowId)
-      this.$set(data, 'detailFlowId', this.selectedList[0].id)
-      console.log(data)
-
-      this.$confirm('确定要取消【 ' + data.flowId + ' 】吗？', '提示', {
+      this.$confirm('确定要取消【 ' + this.selectedList[0].flowId + ' 】吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        postCancelSettlement(data).then(data => {
+        postDetailCancel(this.selectedList[0].id).then(data => {
             this.$message({ type: 'success', message: '取消结算操作成功' })
+            this.fetchList()
           })
           .catch(error => {
             this.$message({ type: 'error', message: '取消结算操作失败' })
