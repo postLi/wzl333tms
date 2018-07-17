@@ -29,3 +29,20 @@ export function getOrderShipList(orgId, incomePayType) {
       return res.data
     })
 }
+/**
+ * 取消结算
+ */
+export function postCancelSettlement(data) {
+  return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement?flowId=' + data.flowId + '&detailFlowId=' + data.detailFlowId)
+}
+/**************************************
+ *             资金流水明细
+ **************************************/
+/**
+ * 资金流水明细
+ */
+export function postDetailList (data) {
+	return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
+		return res.data
+	})
+}

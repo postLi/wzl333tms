@@ -69,6 +69,11 @@ module.exports = {
         target: "http://192.168.1.78:7010",
         pathRewrite: {'^/ceshi': ''},
         changeOrigin: true
+      },
+      '/chenrongtao': {
+        target: "http://192.168.1.127:7010",
+        pathRewrite: {'^/chenrongtao': ''},
+        changeOrigin: true
       }
     },
     // vue-cli

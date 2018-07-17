@@ -673,7 +673,6 @@ export default {
           let itemArrivepayOilCard = { id: e.id, amount: e.amountArrivepayOilCard, feeTypeId: 24, dataName: '到付油卡' } // 实结到付油卡
           let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实结到站装卸费
           let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实结到站其他费
-          
 
           if (itemArrivepayCarriage.amount !== 0) {
             this.tableReceiptInfo.push(itemArrivepayCarriage)

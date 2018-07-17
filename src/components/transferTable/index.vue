@@ -2,9 +2,9 @@
   <div class="transferTable">
     <!-- 穿梭框 -->
     <div class="transferTable_header">
-      <transition name="el-zoom-in-bottom">
+     <!--  <transition name="el-zoom-in-bottom">
         <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')" plain class="transferTable_fresh clearfix"></el-button>
-      </transition>
+      </transition> -->
       <div class="transferTable_header_btn_direction">
         <el-tooltip effect="dark" content="向左侧拉伸" placement="top-end">
           <el-button icon="el-icon-arrow-right" type="primary" circle :disabled="isShowLeft" size="mini" @click="doAction('showAllLeft')" plain></el-button>

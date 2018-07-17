@@ -10,13 +10,14 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('expandtiure')" plain>记支出</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain>取消结算</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('showCount')" plain>查看结算单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('showDetail')" plain>查看明细</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
+        <el-table ref="multipleTable"  @row-dblclick="selectedItem" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -41,6 +42,8 @@
     </div>
     <!-- 表格设置弹出框 -->
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <!-- 结算单 -->
+    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
   </div>
 </template>
 <script>
@@ -48,13 +51,15 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postFindLowList } from '@/api/finance/settleLog'
+import { postFindLowList, postCancelSettlement } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
+import Receipt from './components/receipt'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    Receipt
   },
   computed: {
     ...mapGetters([
@@ -65,7 +70,9 @@ export default {
     return {
       btnsize: 'mini',
       feeType: 8,
+      selectedList: [],
       selectListShipSns: [],
+      tableReceiptInfo: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
@@ -74,6 +81,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
+      popVisibleDialog: false,
       loading: false,
       setupTableVisible: false,
       tableColumn: [{
@@ -115,7 +123,7 @@ export default {
         {
           label: '结算时间',
           prop: 'settlementTime',
-          width: '150',
+          width: '180',
           slot: (scope) => {
             return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
@@ -129,23 +137,20 @@ export default {
         },
         {
           label: '银行名称',
-          prop: 'closeFee',
+          prop: 'bankName',
           width: '150',
           fixed: false
         },
         {
           label: '银行卡号',
-          prop: 'unpaidFee',
+          prop: 'bankAccount',
           width: '150',
           fixed: false
         },
         {
           label: '开户人',
-          prop: 'createTime',
-          width: '180',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          prop: 'bankAccountName',
+          width: '150',
           fixed: false
         },
         {
@@ -156,19 +161,19 @@ export default {
         },
         {
           label: '汇款号码',
-          prop: 'senderCustomerName',
+          prop: 'receivableNumber',
           width: '150',
           fixed: false
         },
         {
           label: '微信号',
-          prop: 'receiverCompanyName',
+          prop: 'wechatAccount',
           width: '150',
           fixed: false
         },
         {
           label: '支付宝号',
-          prop: 'receiverCustomerName',
+          prop: 'alipayAccount',
           width: '150',
           fixed: false
         },
@@ -198,6 +203,13 @@ export default {
     },
     setTable() {},
     doAction(type) {
+      let isShow = false
+      if (this.selectedList.length !== 1 && type !== 'income' && type !== 'expandtiure') {
+        isShow = false
+        this.$message({ type: 'warning', message: '请选择一条数据' })
+      } else {
+        isShow = true
+      }
       switch (type) {
         case 'income': // 记收入
           this.income()
@@ -206,11 +218,26 @@ export default {
           this.expandtiure()
           break
         case 'cancelCount': // 取消结算
-          this.cancelCount()
+          if (isShow) {
+            this.$confirm('此操作将取消结算, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.cancelCount()
+            })
+          }
           break
         case 'showCount': // 查看结算单
-          this.showCount()
+          if (isShow) {
+            this.showCount()
+          }
           break
+        case 'showDetail':
+        if (isShow){
+          this.showDetail()
+        }
+        break
         case 'export':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待！' })
           break
@@ -220,35 +247,47 @@ export default {
       }
     },
     income() {
-       this.$router.push({
+      this.$router.push({
         path: './settleLogIncome',
       })
-       console.log(this.$router)
     },
-    expandtiure() {},
-    cancelCount () {},
-    showCount () {},
-    // count () {
-    //  this.$router.push({
-    //     path: '../accountsLoad',
-    //     query: {
-    //       currentPage: 'waybillKickback', // 本页面标识符
-    //       searchQuery: this.searchQuery, // 搜索项
-    //       selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
-    //     }
-    //   })
-    // },
+    expandtiure() {
+      this.$router.push({
+        path: './settleLogExpandtiure',
+      })
+    },
+    cancelCount() {
+      let data = {}
+      data = Object.assign({}, this.selectedList[0])
+      postCancelSettlement(data).then(data => {
+          this.$message({ type: 'success', message: '取消结算操作成功' })
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: '取消结算操作失败' })
+        })
+    },
+    showCount() {
+      this.popVisibleDialog = true
+    },
+    closeDialog() {
+      this.popVisibleDialog = false
+    },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
+      this.selectedList = list
       this.selectListShipSns = []
       list.forEach((e, index) => {
         this.selectListShipSns.push(e.shipSn)
       })
     },
-    showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.id)
+    selectedItem(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+      this.showDetail()
+    },
+    showDetail () {
+      this.$router.push({path: './settleLogDetail', query:{flowId: this.selectedList[0].flowId}})
     },
     setTable() {
       this.setupTableVisible = true

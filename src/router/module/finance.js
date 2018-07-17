@@ -38,7 +38,13 @@ export default {
       path: '/finance/settleLog', icon: 'caiwugl5_zijinls', name: '资金流水汇总', component: _import('finance/settleLog/index'), meta: { role: ['admin'], title: '资金流水汇总', noCache: false }
     },
     {
+      path: '/finance/settleLogDetail', icon: 'caiwugl5_zijinls', hidden: true, name: '资金流水明细', component: _import('finance/settleLog/index'), meta: { role: ['admin'], title: '资金流水明细', noCache: false }
+    },
+    {
       path: '/finance/settleLogIncome', icon: 'caiwugl5_zijinls', hidden: true, name: '记收入', component: _import('finance/settleLogIncome/index'), meta: { role: ['admin'], title: '记收入', noCache: false }
+    },
+    {
+      path: '/finance/settleLogExpandtiure', icon: 'caiwugl5_zijinls', hidden: true, name: '记支出', component: _import('finance/settleLogExpandtiure/index'), meta: { role: ['admin'], title: '记支出', noCache: false }
     },
     {
       path: '/finance/IOManage', icon: 'caiwugl3_shouzhifs', name: '收支方式管理', component: _import('finance/IOManage/index'), meta: { role: ['admin'], title: '收支方式管理', noCache: false }
@@ -67,10 +73,10 @@ export default {
       ]
     },
     {
-      path: '/finance/unusual', icon: 'QQ', name: '异动费用', component: _import('finance/unusual/index'), meta: { role: ['admin'], title: '异动费用', noCache: false }
+      path: '/finance/unusual', icon: 'cwgl_ydfy', name: '异动费用', component: _import('finance/unusual/index'), meta: { role: ['admin'], title: '异动费用', noCache: false }
     },
     {
-      path: '/finance/payment', icon: 'QQ', name: '货款管理', component: _import('finance/payment/index'), meta: { role: ['admin'], title: '货款管理', noCache: false }
+      path: '/finance/payment', icon: 'cwgl_hkgl', name: '货款管理', component: _import('finance/payment/index'), meta: { role: ['admin'], title: '货款管理', noCache: false }
     }
   ]
 }
