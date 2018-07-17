@@ -440,7 +440,7 @@ export default {
         if (valid) {
           this.loading = true
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
-          const data = this.form
+
 
           let promiseObj
           // 判断操作，调用对应的函数

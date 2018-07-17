@@ -1,11 +1,12 @@
 <template>
-  <div class="short_lll">
+  <!---->
+  <div class="short_lll" v-loading="loading" ref="formName">
     <div class="sTop">
-      <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="100px" class="short_searchinfo clearfix">
+      <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix">
 
       <div class="sTitle">
         <el-form-item label="">
-          <el-input v-model="searchForm.memberName" auto-complete="off" maxlength="8"></el-input><span>对账表</span>
+          <el-input v-model="checkBillName+messageInfo.startTime+messageInfo.endTime" auto-complete="off" ></el-input><span>对账表</span>
 
           <!--&nbsp;<p>对账表</p>-->
       </el-form-item>
@@ -14,19 +15,19 @@
       <div class="sDate">
 
           <el-form-item label="">
-            <el-select v-model="searchForm.status" placeholder="请选择批次">
-              <el-option label="未对账" :value="0"></el-option>
-              <el-option label="已对账" :value="1"></el-option>
+            <el-select v-model="searchTitle.memberName" placeholder="请选择车牌号">
+              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" />
             </el-select>
           </el-form-item>
-
         <el-date-picker
-          v-model="searchTime"
-          type="datetimerange"
-          :picker-options="pickerOptions2"
+          v-model="searchCreatTime"
+          :default-value="defaultTime"
+          type="daterange"
+          align="right"
+          value-format="yyyy-MM-dd"
           start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          align="right">
+          :picker-options="pickerOptions2"
+          end-placeholder="结束日期">
         </el-date-picker>
         <el-form-item class="">
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -35,62 +36,53 @@
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="searchForm" label-width="100px" class="staff_searchinfo clearfix">
+      <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix">
 
-        <el-form-item label="网点名称">
-          <el-input v-model="searchForm.memberName" auto-complete="off" maxlength="8"></el-input>
+        <el-form-item label="车牌号">
+          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="业务负责人">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+        <el-form-item label="司机">
+          <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
-        </el-form-item>
-        <el-form-item label="网点编号">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.startTime" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="结束时间">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
-        </el-form-item>
-        <el-form-item label="结算方式">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.endTime" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="账户账号">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="账户开户行">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
-        </el-form-item>
-        <el-form-item label="财务负责人">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.bankName" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="支付宝">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="微信" class="sWetPay">
-          <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" maxlength="30"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应收账款</p>
+        <p>应付账款</p>
       </div>
       <div class="info_tab">
+        <!--@selection-change="getSelection"-->
         <el-table
           ref="multipleTable"
-          :data="usersArr"
+          :data="dealPayInfo"
           stripe
           border
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
@@ -120,24 +112,24 @@
           <el-table-column
             fixed
             sortable
-            prop="orgName"
+            prop="departureTime"
             width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
-            prop="memberName"
+            prop="batchNo"
             width="160"
             sortable
             label="短驳批次号">
           </el-table-column>
           <el-table-column
-            prop="memberPerson"
+            prop="orgName"
             sortable
             width="160"
             label="发车网点">
           </el-table-column>
           <el-table-column
-            prop="createTime"
+            prop="arriveOrgName"
             sortable
             width="160"
             label="到达网点">
@@ -145,12 +137,12 @@
 
           <el-table-column
             sortable
-            prop="payAmount"
+            prop="loadAmount"
             width="140"
             label="配载件数">
           </el-table-column>
           <el-table-column
-            prop="hadPayAmount"
+            prop="loadWeight"
             label="配载重量"
             width="140"
             sortable
@@ -158,20 +150,20 @@
           </el-table-column>
 
           <el-table-column
-            prop="memberPersonPhone"
+            prop="loadVolume"
             sortable
             width="160"
             label="配载体积">
           </el-table-column>
           <el-table-column
-            prop="checkStartTime"
+            prop="driverName"
             label="司机"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="checkEndTime"
+            prop="shortPay"
             label="短驳费"
             width="130"
             sortable
@@ -189,9 +181,10 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已付账款(本结算期内)</p>
+        <p>已付清单(本结算期内)</p>
       </div>
       <div class="info_tab">
+        <!--@selection-change="getSelection"-->
         <el-table
           ref="multipleTable"
           :data="usersArr"
@@ -199,7 +192,6 @@
           border
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
@@ -300,84 +292,254 @@
 
     </div>
     <div class="sBottom">
-      <div class="sMessageCont_info">
+      <div class="sMessageBut">
+        <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix">
+          <el-form-item label="总计">
+            <el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
+          </el-form-item>
+            <div class="sMessageCont_info">
         <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
       </div>
-      <div class="sMessageBut">
-        <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="searchForm" label-width="90px" class="sButtom_searchinfo clearfix">
+
 
           <el-form-item label="公司名称">
-            <el-input v-model="searchForm.memberName" auto-complete="off" maxlength="8"></el-input>
+            <el-input v-model="messageButtonInfo.companyName" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="业务负责人">
-            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+            <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="联系方式">
-            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="财务负责人">
-            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item label="联系方式">
-            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="12" v-numberOnly></el-input>
           </el-form-item>
           <el-form-item label="时间">
-            <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+            <el-date-picker
+              v-model="messageButtonInfo.createTime"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+            <!--<el-input v-model="messageButtonInfo.createTime" auto-complete="off" maxlength="8"></el-input>-->
           </el-form-item>
         </el-form>
+      </div>
+    </div>
+    <div class="sBottomBut">
+      <div>
+        <el-button >打印</el-button>
+        <el-button >导出</el-button>
+        <el-button >取消</el-button>
+        <el-button @click="submit" type="primary">保存</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { pickerOptions2, parseTime } from '@/utils/'
+  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
+  import querySelect from '@/components/querySelect/index'
+  import { mapGetters } from 'vuex'
+
     export default {
+      components:{
+        querySelect
+      },
       data() {
           return {
             pickerOptions2: {
-              shortcuts: [
-                {
-                  text: '今天',
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    picker.$emit('pick', [start, end]);
-                  }
-                },
-                {
-                  text: '昨天',
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
-                    picker.$emit('pick', [start, end]);
-                  }
-                },
-                {
-                text: '过去7天',
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                  picker.$emit('pick', [start, end]);
-                }
-              }, {
-                text: '最近一个月',
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                  picker.$emit('pick', [start, end]);
-                }
-              }]
+              shortcuts: pickerOptions2
             },
 
-            searchTime:  [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-            searchForm:[],
+            searchCreatTime: [],
+            // changeCreateTime: [],
+            defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
+            searchForm:{},
             usersArr:[],
+            messageArr:[],
+            checkBillName:'',
+            messageInfo:{
+              memberName:'',
+              memberPerson:'',
+              memberPersonPhone:'',
+              checkBillCode:'',
+              startTime:'',
+              endTime:'',
+              bankAccount:'',
+              bankName:'',
+              alipayAccount:'',
+              wechatAccount:''
+            },
+            messageButtonInfo:{
+              companyName:'',
+              orgBusinessOfficer:'',//本网点业务负责人
+              orgBusinessOfficerPhone:'',//本网点业务负责人
+              orgFinancialOfficer:'',//本网点财务负责人
+              orgFinancialOfficerPhone:'',//本网点财务负责人
+              createTime:'',
+              remark:'',
+              totalCount:'',
+            },
+            dealPayInfo:[],
+            alreadyPayInfo:{},
+            loading:true,
+            btnsize: 'mini',
+            searchTitle:{
+              orgId:'',
+              memberName:'',
+              startTime:'',
+              endTime:'',
+            },
+            searchDealPay:{
+              orgId:'',
+              memberType:'',
+              loadTypeId:'',
+              payTypeStatus:'pay',
+              truckIdNumber:'',
+              startTime:'',
+              endTime:''
+            },
+            searchAlReadyPay:{
+              orgId:'',
+              memberType:'',
+              loadTypeId:'',
+              payTypeStatus:'hadPay',
+              truckIdNumber:'',
+              startTime:'',
+              endTime:''
+            },
+            rules:{
+
+            }
           };
+
+      },
+      computed: {
+        ...mapGetters([
+          'otherinfo'
+        ]),
+      },
+      mounted(){
+        this.searchCreatTime = this.defaultTime
+        this.searchTitle.orgId = this.otherinfo.orgid
+        this.searchDealPay.orgId = this.otherinfo.orgid
+        this.searchAlReadyPay.orgId = this.otherinfo.orgid
+        this.onSubmit()
+
       },
       methods:{
+        fetchList(){
+          this.loading = true
+          return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
+            this.messageArr = data
+            this.infoMessage(this.messageArr)
+            this.loading = false
+          })
+        },
+        fetchDealPay(){
+          this.loading = true
+          return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
+            this.dealPayInfo = data
+            // console.log(data);
+            this.loading = false
+          })
+        },
+        fetchReadyPay(){
+          this.loading = true
+          return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
+            this.alreadyPayInfo = data.list
+            this.loading = false
+          })
+        },
+        fetchData(){
+          this.fetchList()
+          this.fetchDealPay()
+          this.fetchReadyPay()
+        },
+        // fetchInfo(){
+        //   this.loading = true
+        //   Promise.all([postCarfBillCheckCarBaseInfo(this.searchTitle), postCarfBillCheckCarInitList(this.searchDealPay), postCarfBillCheckCarInitList(this.searchAlReadyPay)]).then(resArr => {
+        //     this.loading = false
+        //     // console.log(resArr)
+        //     this.dealPayInfo = resArr[1]
+        //     this.alreadyPayInfo = resArr[2]
+        //   })
+        // },
+
+        getTrunkName(trunk) {
+          if (trunk) {
+            console.log(trunk)
+
+          }
+        },
+        onSubmit(){
+          const searchObj = {}
+          searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
+          searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+          // this.infoSearchTime(searchObj.startTime,searchObj.endTime)
+          this.fetchData()
+        },
+        submit(formName){
+        //
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              let promiseObj
+              // const data = this.form
+              // promiseObj = postCreateBillCheckCarInfo(data)
+              // promiseObj.then(res => {
+              //   this.loading = false
+              //   this.$alert('操作成功', '提示', {
+              //     confirmButtonText: '确定',
+              //     callback: action => {
+              //       this.$emit('success')
+              //       this.closeMe()
+              //     }
+              //   })
+              // }).catch(err => {
+              //   this.loading = false
+              // })
+            } else {
+              return false
+            }
+          })
+
+        },
+        infoMessage(item){
+          this.messageInfo.memberName = item.memberName
+          this.messageInfo.memberPerson = item.memberName
+          this.messageInfo.memberPersonPhone = item.memberPersonPhone
+          this.messageInfo.checkBillCode = item.checkBillCode
+          this.messageInfo.bankAccount = item.bankAccount
+          this.messageInfo.bankName = item.bankName
+          this.messageInfo.alipayAccount = item.alipayAccount
+          this.messageInfo.wechatAccount = item.wechatAccount
+          this.messageInfo.startTime = item.startTime
+          this.messageInfo.endTime = item.endTime
+          this.messageButtonInfo.companyName = item.companyName
+          this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
+          this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
+          this.messageButtonInfo.orgFinancialOfficer = item.orgFinancialOfficer
+          this.messageButtonInfo.orgFinancialOfficerPhone = item.orgFinancialOfficerPhone
+          this.messageButtonInfo.createTime = item.createTime
+          this.messageButtonInfo.remark = item.remark
+          this.messageButtonInfo.totalCount = item.totalCount
+          this.checkBillName = item.checkBillName
+        },
+        infoSearchTime(startTime,endTime){
+          this.searchTitle.startTime = startTime
+          this.searchDealPay.startTime = startTime
+          this.searchAlReadyPay.startTime = startTime
+          this.searchTitle.endTime = endTime
+          this.searchDealPay.endTime = endTime
+          this.searchAlReadyPay.endTime = endTime
+        },
         clickDetails(row, event, column){
           this.$refs.multipleTable.toggleRowSelection(row)
         },
@@ -418,6 +580,9 @@
           color: #333333;
           font-weight: 600;
         }
+        .el-input__inner:focus{
+          border-bottom-color: #c0c4cc;
+        }
       }
       .el-form-item__content{
         line-height: 0;
@@ -426,12 +591,16 @@
     .el-form-item{
       margin-bottom:0;
     }
-
+    .el-form--inline .el-form-item {
+      vertical-align: middle;
+    }
   }
 
   .sMessageTop{
     border: 1px solid #b4b4b4;
-    padding: 16px 0 10px 0;
+    border-top: transparent;
+    border-bottom: transparent;
+    /*padding: 16px 0 10px 0;*/
 
     .el-form-item{
       /*width: 265px;*/
@@ -475,21 +644,24 @@
       border-right-color: transparent;
     }
     .sWetPay{
-      width: 100%;
+      width: 50%;
       border-top-color: transparent;
       border-right-color: transparent;
       .el-form-item__content{
-        width: 90%;
+        /*width: 90%;*/
         .el-input{
           .el-input__inner{
-            width: 100%;
+            /*width: 100%;*/
 
           }
 
         }
       }
     }
-
+    .el-input.is-disabled .el-input__inner{
+      background-color: transparent;
+      color: #666666;
+    }
   }
   .sMessageCont{
     .sMessageCont_info{
@@ -525,7 +697,7 @@
             margin-right:-5px;
             margin-bottom: 0;
             .el-input__inner{
-              width: 197px;
+              width: 193px;
               border-radius: 0;
               border-top-color: transparent;
               border-right-color: transparent;
@@ -536,6 +708,17 @@
             }
           }
           .el-form-item:nth-of-type(1){
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+          }
+          .el-form-item:nth-of-type(1) ,.el-form-item:nth-of-type(2){
+            border-left-color: transparent;
+            width: 100%;
+            .el-input__inner{
+              width: 1625px;
+            }
+          }
+          .el-form-item:nth-of-type(3){
             border-left-color: transparent;
           }
           .el-form-item:nth-of-type(2n){
@@ -546,6 +729,17 @@
         border-color: #b4b4b4;
       }
     }
+  }
+  .sBottomBut{
+    /*display: inline-block;*/
+    background: #eee;
+    div{
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      margin: 20px 0 15px 0;
+    }
+
   }
 }
 </style>
