@@ -254,7 +254,7 @@
         }
         // 判断是否有选中项
 
-        if(!this.selected.length && !type === 'storage'){
+        if(!this.selected.length && type !== 'storage'){
           // this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
@@ -264,13 +264,25 @@
         }
 
         switch (type) {
-          // 新增
+          // 新增modify
           case 'storage':
             this.$router.push({
               path: '/finance/reconciliation/carfee/components',
               query: {
+                tab: '车辆对账'
+              }
+            })
+
+            break;
+          // 修改
+          case 'modify':
+            // console.log(this.selected[0]);
+            // return false
+            this.$router.push({
+              path: '/finance/reconciliation/carfee/components',
+              query: {
                 tab: '车辆对账',
-                id: this.selectInfo.shipSenderId
+                id: this.selected[0].id
               }
             })
 

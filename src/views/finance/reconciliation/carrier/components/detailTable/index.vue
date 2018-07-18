@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Sender from './carrierIndex'
+import Sender from './detailIndex'
 
 export default {
   components: {

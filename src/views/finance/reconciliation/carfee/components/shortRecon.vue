@@ -1,8 +1,8 @@
 <template>
   <!---->
-  <div class="short_lll" v-loading="loading" ref="formName">
+  <div class="short_lll" v-loading="loading" >
     <div class="sTop">
-      <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix">
+      <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
       <div class="sTitle">
         <el-form-item label="">
@@ -14,10 +14,11 @@
       <!--<div class="sTitle"><p>广州网点2018年6月7日-2018年8月12日</p>&nbsp;<p>对账表</p></div>-->
       <div class="sDate">
 
-          <el-form-item label="">
-            <el-select v-model="searchTitle.memberName" placeholder="请选择车牌号">
-              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" />
-            </el-select>
+          <el-form-item label="" prop="truckIdNumber" placeholder="请选择车牌号">
+            <!--<el-select v-model="searchTitle.memberName" placeholder="请选择车牌号">-->
+              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName"/>
+              <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" />-->
+            <!--</el-select>-->
           </el-form-item>
         <el-date-picker
           v-model="searchCreatTime"
@@ -36,10 +37,10 @@
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix">
+      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName">
 
         <el-form-item label="车牌号">
-          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
+          <el-input v-model="messageInfo.truckIdNumber" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="司机">
           <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
@@ -87,12 +88,12 @@
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--type="selection"-->
+            <!--width="50">-->
+          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -106,7 +107,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <i icon="delete_lll"></i>
+              <icon-svg icon="delete_lll"></icon-svg>
             </template>
           </el-table-column>
           <el-table-column
@@ -187,7 +188,7 @@
         <!--@selection-change="getSelection"-->
         <el-table
           ref="multipleTable"
-          :data="usersArr"
+          :data="alreadyPayInfo"
           stripe
           border
           @row-dblclick="getDbClick"
@@ -196,12 +197,12 @@
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
+          <!--<el-table-column-->
+          <!--fixed-->
+          <!--sortable-->
+          <!--type="selection"-->
+          <!--width="50">-->
+          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -215,30 +216,30 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <i icon="delete_lll"></i>
+              <icon-svg icon="delete_lll"></icon-svg>
             </template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="orgName"
+            prop="departureTime"
             width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
-            prop="memberName"
+            prop="batchNo"
             width="160"
             sortable
             label="短驳批次号">
           </el-table-column>
           <el-table-column
-            prop="memberPerson"
+            prop="orgName"
             sortable
             width="160"
             label="发车网点">
           </el-table-column>
           <el-table-column
-            prop="createTime"
+            prop="arriveOrgName"
             sortable
             width="160"
             label="到达网点">
@@ -246,12 +247,12 @@
 
           <el-table-column
             sortable
-            prop="payAmount"
+            prop="loadAmount"
             width="140"
             label="配载件数">
           </el-table-column>
           <el-table-column
-            prop="hadPayAmount"
+            prop="loadWeight"
             label="配载重量"
             width="140"
             sortable
@@ -259,20 +260,20 @@
           </el-table-column>
 
           <el-table-column
-            prop="memberPersonPhone"
+            prop="loadVolume"
             sortable
             width="160"
             label="配载体积">
           </el-table-column>
           <el-table-column
-            prop="checkStartTime"
+            prop="driverName"
             label="司机"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="checkEndTime"
+            prop="shortPay"
             label="短驳费"
             width="130"
             sortable
@@ -293,10 +294,10 @@
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
-        <el-form :inline="true" :size="btnsize" label-position="center" :rules="rules" :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix">
-          <el-form-item label="总计">
-            <el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>
-          </el-form-item>
+        <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName">
+          <!--<el-form-item label="总计">-->
+            <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
+          <!--</el-form-item>-->
           <el-form-item label="备注">
             <el-input v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
           </el-form-item>
@@ -336,9 +337,10 @@
         <el-button >打印</el-button>
         <el-button >导出</el-button>
         <el-button >取消</el-button>
-        <el-button @click="submit" type="primary">保存</el-button>
+        <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" @success="fetchData" ></SaveDialog>
   </div>
 </template>
 
@@ -347,10 +349,13 @@
   import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
+  import {objectMerge2} from '@/utils/index'
+  import SaveDialog from './saveDialog'
 
     export default {
       components:{
-        querySelect
+        querySelect,
+        SaveDialog
       },
       data() {
           return {
@@ -366,7 +371,7 @@
             messageArr:[],
             checkBillName:'',
             messageInfo:{
-              memberName:'',
+              truckIdNumber:'',
               memberPerson:'',
               memberPersonPhone:'',
               checkBillCode:'',
@@ -388,19 +393,31 @@
               totalCount:'',
             },
             dealPayInfo:[],
-            alreadyPayInfo:{},
-            loading:true,
+            alreadyPayInfo:[],
+            form:[],
+            dialogInfo:[
+              {
+                toPay:10,
+                date:"应付账款"
+              },
+              {
+                toPay:20,
+                date:"已付账款"
+              }
+            ],
+            visibleDialog:false,
+            loading:false,
             btnsize: 'mini',
             searchTitle:{
               orgId:'',
-              memberName:'',
+              memberName:'',//
               startTime:'',
               endTime:'',
             },
             searchDealPay:{
               orgId:'',
-              memberType:'',
-              loadTypeId:'',
+              memberType:'3',
+              loadTypeId:38,
               payTypeStatus:'pay',
               truckIdNumber:'',
               startTime:'',
@@ -408,15 +425,17 @@
             },
             searchAlReadyPay:{
               orgId:'',
-              memberType:'',
-              loadTypeId:'',
+              memberType:'3',
+              loadTypeId:38,
               payTypeStatus:'hadPay',
               truckIdNumber:'',
               startTime:'',
               endTime:''
             },
             rules:{
-
+              truckIdNumber:[
+                { required: true, validator: this.validateIsEmpty('车牌号不能为空'), trigger: 'blur' }
+              ]
             }
           };
 
@@ -431,7 +450,7 @@
         this.searchTitle.orgId = this.otherinfo.orgid
         this.searchDealPay.orgId = this.otherinfo.orgid
         this.searchAlReadyPay.orgId = this.otherinfo.orgid
-        this.onSubmit()
+        // this.onSubmit()
 
       },
       methods:{
@@ -447,14 +466,16 @@
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
             this.dealPayInfo = data
-            // console.log(data);
+            // this.dealPayInfo.forEach(value,index) {
+            //   // this.  shortPay
+            // }
             this.loading = false
           })
         },
         fetchReadyPay(){
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
-            this.alreadyPayInfo = data.list
+            this.alreadyPayInfo = data
             this.loading = false
           })
         },
@@ -475,7 +496,10 @@
 
         getTrunkName(trunk) {
           if (trunk) {
-            console.log(trunk)
+            this.searchTitle.memberName = trunk.truckIdNumber
+            this.searchDealPay.truckIdNumber = trunk.truckIdNumber
+            this.searchAlReadyPay.truckIdNumber = trunk.truckIdNumber
+            // console.log(trunk)
 
           }
         },
@@ -483,14 +507,39 @@
           const searchObj = {}
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-          // this.infoSearchTime(searchObj.startTime,searchObj.endTime)
-          this.fetchData()
+          this.infoSearchTime(searchObj.startTime,searchObj.endTime)
+          // this.fetchData()
+          this.fetchList()
+          this.fetchDealPay()
+          this.fetchReadyPay()
         },
         submit(formName){
         //
+
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              let promiseObj
+
+              this.form = Object.assign(this.messageInfo,this.messageButtonInfo)
+
+              this.form.payDetailList = []
+              this.form.hadPayDetailList = []
+              this.dealPayInfo.forEach((value, index, array) => {
+                this.form.payDetailList.push({
+                  iarrSendPay:value.shortPay,
+                  shipOrderId:value.shipOrderId
+                })
+              })
+              this.alreadyPayInfo.forEach((value, index, array) => {
+                this.form.hadPayDetailList.push({
+                  iarrSendPay:value.shortPay,
+                  shipOrderId:value.shipOrderId
+                })
+              })
+              this.oopenVisibleDialog()
+              // let promiseObj
+              // let data
+              // data = this.form
+              // console.log(data)
               // const data = this.form
               // promiseObj = postCreateBillCheckCarInfo(data)
               // promiseObj.then(res => {
@@ -511,9 +560,31 @@
           })
 
         },
+        validateIsEmpty(msg = '不能为空！') {
+          return (rule, value, callback) => {
+            if (!value) {
+              callback(new Error(msg))
+            }else {
+              callback()
+            }
+          }
+        },
+        oopenVisibleDialog(){
+          this.visibleDialog = true
+        },
+        closeVisibleDialog(){
+          this.visibleDialog = false
+        },
+        dialogRest(){
+          this.visibleDialog = false
+          // this.$emit('update:popVisible', false)
+          // if (typeof done === 'function') {
+          //   done()
+          // }
+        },
         infoMessage(item){
-          this.messageInfo.memberName = item.memberName
-          this.messageInfo.memberPerson = item.memberName
+          this.messageInfo.truckIdNumber = item.memberName
+          this.messageInfo.memberPerson = item.memberPerson
           this.messageInfo.memberPersonPhone = item.memberPersonPhone
           this.messageInfo.checkBillCode = item.checkBillCode
           this.messageInfo.bankAccount = item.bankAccount
@@ -708,10 +779,10 @@
             }
           }
           .el-form-item:nth-of-type(1){
-            border-bottom-color: transparent;
+            /*border-bottom-color: transparent;*/
             border-right-color: transparent;
           }
-          .el-form-item:nth-of-type(1) ,.el-form-item:nth-of-type(2){
+          .el-form-item:nth-of-type(1){
             border-left-color: transparent;
             width: 100%;
             .el-input__inner{
@@ -740,6 +811,46 @@
       margin: 20px 0 15px 0;
     }
 
+  }
+  .sDialog{
+    width: 486px;
+    position: fixed;
+    left: 50%;
+    top: 27%;
+    height: calc( 30% - 50px);
+    z-index: 33;
+    /*padding-top: 30px;*/
+    /*padding-bottom: 76px;*/
+    background: #fff;
+    border-radius: 6px 0px 0px 6px;
+    box-shadow: -2px 0px 8px 0px rgba(169, 169, 169, 0.78);
+    transition: transform 0.6s ease;
+    transform: translate(-50%, 0);
+    .dialogTitle{
+      font-size: 14px;
+      color: #333333;
+      padding: 8px 0 8px 20px;
+      border-bottom: 1px solid #e6e6e6;
+      font-weight: 600;
+    }
+    .dialogMoney{
+      margin: 28px 0 13px 20px;
+      font-size: 14px;
+      color: #333333;
+      span{
+        color: #ff2f2f;
+        font-weight: 600;
+      }
+    }
+    .sDialogBtn{
+      position: fixed;
+      bottom: -32%;
+      right: 4%;
+      z-index: 33;
+      button:nth-of-type(1){
+        padding-right: 10px;
+      }
+    }
   }
 }
 </style>
