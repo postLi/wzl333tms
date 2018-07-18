@@ -164,8 +164,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ])
+      'otherinfo'
+    ])
 
   },
   data() {
@@ -173,16 +173,16 @@ export default {
     const validatePickupNum = function(rule, value, callback) {
       if (REGEX.ONLY_NUMBER.test(value) || !value) {
         callback()
-      }      else {
+      } else {
         callback(new Error('只能输入数字'))
       }
     }
     const validateMobile = (rule, value, callback) => {
       if (REGEX.MOBILE.test(value) || !value) {
         callback()
-      }      else if (this.isDbclick) {
+      } else if (this.isDbclick) {
         callback()
-      }      else {
+      } else {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
@@ -191,7 +191,7 @@ export default {
       rules: {
         'tmsOrderPickup.pickupName': [
           { required: true, validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur' }
-          //{max: 8, message: '货品名最多可输入8个字符', trigger:'blur'}
+          // {max: 8, message: '货品名最多可输入8个字符', trigger:'blur'}
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator: validatePickupNum, trigger: 'blur' },
@@ -350,7 +350,6 @@ export default {
         this.form.tmsTruck.truckType = trunk.truckType
         this.form.tmsTruck.truckUnit = trunk.truckUnit
         this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
-
       }
     },
     infoData(item) {
@@ -384,7 +383,7 @@ export default {
       return (rule, value, callback) => {
         if (!value) {
           callback(new Error(msg))
-        }else {
+        } else {
           callback()
         }
       }
@@ -441,7 +440,6 @@ export default {
           this.loading = true
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
 
-
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
@@ -458,7 +456,7 @@ export default {
             } else {
               data.tmsCustomer.customerId = this.form.tmsCustomer.customerId
             }
-            data.tmsOrderPickup.outTime= +new Date(this.form.tmsOrderPickup.outTime)
+            data.tmsOrderPickup.outTime = +new Date(this.form.tmsOrderPickup.outTime)
             // this.form.tmsOrderPickup.outTime = new Date()
             promiseObj = postAddPickup(data)
           }

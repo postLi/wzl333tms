@@ -386,9 +386,10 @@ export default {
       this.setupTableVisible = false
     },
     getDbClick(row, event) {
-      this.repertoryId = row
+      // this.repertoryId = row
       this.isCheck = true
       this.isModify = false
+      this.id = row.id
           // this.isDbclick = true
       this.openAddAbnormal()
     }

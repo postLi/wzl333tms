@@ -80,12 +80,16 @@
         </el-tooltip>
       </div>
       <div class="fin4-content">
-        <el-tooltip content="货款回收" placement="top">
-          <el-button>货款回收</el-button>
-        </el-tooltip>
-        <el-tooltip content="货款汇款" placement="top">
-          <el-button>货款汇款</el-button>
-        </el-tooltip>
+        <router-link to="./payment">
+          <el-tooltip content="货款回收" placement="top">
+            <el-button>货款回收</el-button>
+          </el-tooltip>
+        </router-link>
+        <router-link to="./payment">
+          <el-tooltip content="货款汇款" placement="top">
+            <el-button>货款汇款</el-button>
+          </el-tooltip>
+        </router-link>
       </div>
       <div class="fin5-content">
         <router-link to="./accountsReceivable">
@@ -112,6 +116,13 @@
         <router-link to="./order/pickUp">
           <el-tooltip content="记支出" placement="top">
             <el-button>记支出</el-button>
+          </el-tooltip>
+        </router-link>
+      </div>
+      <div class="fin8-content">
+        <router-link to="./settleLog">
+          <el-tooltip content="资金流水" placement="top">
+            <el-button>资金流水</el-button>
           </el-tooltip>
         </router-link>
       </div>
@@ -144,6 +155,7 @@
       border: solid 1px #39bbff;
       font-weight: bold;
       font-size: 13px;
+      user-select: none;//避免选中的时候有默认样式
     }
     .fin1-content{
       width:680px;
@@ -288,6 +300,25 @@
       }
       :hover span{
         color:#fff;
+      }
+    }
+    .fin8-content{
+      // background:red;
+      width: 121px;
+      height: 50px;
+      position:absolute;
+      right:-5px;
+      bottom: 257px;
+      cursor: pointer;
+      .el-button{
+        height: 42px;
+       background-color: #13a5f2;
+       border:none;
+       color:#fff;
+      }
+      :hover.el-button{
+        background-color: #39bbff;
+        transform:scale(1.1,1.1)
       }
     }
   }  

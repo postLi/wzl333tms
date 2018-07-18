@@ -394,6 +394,7 @@ export default {
         this.popTitle = '异常修改'
         GetLook(this.id).then(res => {
           this.form = res
+          console.log(res + 'wzlll')
         })
         // this.getShipSn(this.info)
       } else if (this.isCheck) {
@@ -566,7 +567,7 @@ export default {
     closeMe(done) {
       // this.reset()
       this.$emit('update:popVisible', false)
-      // this.$emit('close')
+      this.$emit('close')
       if (typeof done === 'function') {
         done()
       }
