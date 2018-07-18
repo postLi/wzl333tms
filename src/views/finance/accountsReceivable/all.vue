@@ -242,7 +242,7 @@ export default {
         path: '/finance/handAccount/detail',
         query: {
           id: row.userId,
-          tab: '查看' + row.name
+          tab: '查看' + row.userName
         }
       })
     },
