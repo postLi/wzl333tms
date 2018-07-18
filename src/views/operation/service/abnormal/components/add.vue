@@ -76,8 +76,8 @@
           <el-form-item label="异常金额" prop="registerFee" >
             <el-input v-model="form.registerFee"  v-number-only:point maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="责任网点" prop="dutyOrgId" >
-            <SelectTree v-model="form.dutyOrgId" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="责任网点" prop="dutyOrgName" >
+            <SelectTree v-model="form.dutyOrgName" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item class="driverRemarks label ms" label="异常描述" prop="abnormalDescribe" >
             <el-input type="textarea" maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
@@ -245,6 +245,7 @@ export default {
         'disposeTime': '',
         'disposeName': '',
         'dutyOrgId': '',
+        'dutyOrgName': '',
         'orgId': '',
         'registerFee': '',
         'registerName': '',
@@ -321,54 +322,85 @@ export default {
         this.inited = true
         this.initInfo()
       }
+      if (newVal) {
+        this.getShipSn()
+      }
     },
     orgid(newVal) {
       this.form.orgid = newVal
     },
-    isModify: {
-      handler(newVal) {
-        this.setTitle()
-      },
-      immediate: true
-    },
-    isCheck: {
-      handler(newVal) {
-        this.setTitle()
-      },
-      immediate: true
-    },
+    // isModify: {
+    //   handler(newVal)
+    //  {
+    //     this.setTitle()
+    //   },
+    //   immediate: true
+    // },
+    // isCheck: {
+    //   handler(newVal) {
+    //     this.setTitle()
+    //   },
+    //   immediate: true
+    // },
 
     isDeal: {
       handler(newVal) {
-        this.setTitle()
-        // if(this.isDeal){
-        //   this.popTitle = '异常处理'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //     this.form.disposeTime = new Date();
-        //   })
-        // }
+        // this.setTitle()
+        if (this.isDeal) {
+          this.popTitle = '异常处理'
+          GetLook(this.id).then(res => {
+            this.form = res
+            this.form.disposeTime = new Date()
+          })
+          console.log(this.id)
+          // const data = Object.assign({}, this.info)
+          // for (const i in this.form) {
+          //   this.form[i] = data[i]
+          // }
+        }
       },
       immediate: true
-    }
+    },
 
-    // info () {
-    //   if(this.isModify){
-    //     this.popTitle = '异常修改'
-    //     let data = Object.assign({},this.info)
-    //     for(let i in this.form){
-    //       this.form[i] = data[i]
-    //     }
-    //     this.form.id = data.id
-    //   } else {
-    //     this.popTitle = '异常登记'
-    //     for(let i in this.form){
-    //       this.form[i] = ''
-    //     }
-    //     delete this.form.id
-    //     this.form.orgid = this.orgid
-    //   }
-    // }
+    info() {
+      if (this.isModify) {
+        this.popTitle = '异常修改'
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
+          this.form[i] = data[i]
+        }
+        this.form.id = data.id
+        console.log(this.isModify + '异常修改')
+      } else if (this.isCheck) {
+        this.popTitle = '查看明细'
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
+          this.form[i] = data[i]
+        }
+        this.form.id = data.id
+        console.log(this.isCheck + '查看明细')
+      }
+      //  else if (this.isDeal) {
+      //   this.popTitle = '异常处理'
+      //   const data = Object.assign({}, this.info)
+      //   for (const i in this.form) {
+      //     this.form[i] = data[i]
+      //   }
+      //   GetLook(this.id).then(res => {
+      //     this.form = res
+      //     this.form.disposeTime = new Date()
+      //   })
+      // }
+      else {
+        this.dengji()
+        this.popTitle = '异常登记'
+        for (const i in this.form) {
+          this.form[i] = ''
+        }
+        delete this.form.id
+        this.form.orgid = this.orgid
+      }
+    }
   },
   methods: {
     // handleRemove(file, fileList) {
@@ -382,39 +414,43 @@ export default {
         this.form.registerUserId = item.id
       }
     },
-    setTitle() {
-      if (this.isDeal) {
-        this.popTitle = '异常处理'
-        GetLook(this.id).then(res => {
-          this.form = res
-          this.form.disposeTime = new Date()
-          this.form.disposeName = this.otherinfo.name
-        })
-      } else if (this.isModify) {
-        this.popTitle = '异常修改'
-        GetLook(this.id).then(res => {
-          this.form = res
-          console.log(res + 'wzlll')
-        })
-        // this.getShipSn(this.info)
-      } else if (this.isCheck) {
-        console.log(this.isDeal + '异常查看')
-        this.popTitle = '查看明细'
-        GetLook(this.id).then(res => {
-          this.form = res
-        })
-      } else {
-        this.popTitle = '异常登记'
-        this.form.orgId = this.orgid
-        this.form.registerName = this.otherinfo.name
-        this.form.registerTime = this.searchCreatTime
-        this.dengji()
-      }
-    },
+    // setTitle() {
+    //   if (this.isDeal) {
+    //     this.popTitle = '异常处理'
+    //     GetLook(this.id).then(res => {
+    //       this.form = res
+    //       this.form.disposeTime = new Date()
+    //       this.form.disposeName = this.otherinfo.name
+    //     })
+    //   } else if (this.isModify) {
+    //     this.popTitle = '异常修改'
+    //     // GetLook(this.id).then(res => {
+    //     //   this.form = res
+    //     // })
+    //     this.form = this.info
+    //     console.log(this.id + '修改')
+    //     console.log(this.info)
+    //   } else if (this.isCheck) {
+    //     console.log(this.isDeal + '异常查看')
+    //     this.popTitle = '查看明细'
+    //     GetLook(this.id).then(res => {
+    //       this.form = res
+    //     })
+    //   } else {
+    //     this.popTitle = '异常登记'
+    //     this.form.orgId = this.orgid
+    //     this.form.registerName = this.otherinfo.name
+    //     this.form.registerTime = this.searchCreatTime
+    //     this.dengji()
+    //   }
+    // },
     dengji() {
       return GetAbnormalNo().then(res => {
           // this.form = res;
         this.form.abnormalNo = res
+        this.form.registerName = this.otherinfo.name
+        this.form.registerTime = this.searchCreatTime
+        this.form.orgId = this.orgid
         console.log(res, 'this.form.abnormalNo: ', this.form)
       })
     },
@@ -550,7 +586,7 @@ export default {
           }).catch(res => {
             this.loading = false
             this.$message.warning(res.text)
-            this.closeMe()
+            // this.closeMe()
           })
         } else {
           return false
@@ -567,7 +603,7 @@ export default {
     closeMe(done) {
       // this.reset()
       this.$emit('update:popVisible', false)
-      this.$emit('close')
+      // this.$emit('close')
       if (typeof done === 'function') {
         done()
       }

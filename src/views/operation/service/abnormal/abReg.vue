@@ -307,10 +307,11 @@ export default {
               type: 'warning'
             })
           } else {
+            this.selectInfo = {}
             this.isModify = true
             this.isCheck = false
                   //  this.isDbclick = false
-            this.id = this.selected[0].id
+            this.selectInfo = Object.assign({}, this.selected[0])
             console.log(this.id)
             this.openAddAbnormal()
           }
@@ -326,7 +327,8 @@ export default {
                     // this.isDbclick = false
             this.isModify = false
             this.isCheck = true
-            this.id = this.selected[0].id
+            // this.id = this.selected[0].id
+            this.selectInfo = Object.assign({}, this.selected[0])
             this.openAddAbnormal()
           }
           break
@@ -386,10 +388,10 @@ export default {
       this.setupTableVisible = false
     },
     getDbClick(row, event) {
-      // this.repertoryId = row
+      this.selectInfo = row
       this.isCheck = true
       this.isModify = false
-      this.id = row.id
+      // this.id = row.id
           // this.isDbclick = true
       this.openAddAbnormal()
     }

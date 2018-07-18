@@ -15,11 +15,11 @@
         <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.shipFromOrgid" type="org_id"/>
         </el-form-item>
-        <el-form-item label="结算状态:">
+        <el-form-item label="结算状态:" prop="status">
           <el-select v-model="searchForm.status">
-            <el-option label="全部" :value="0"></el-option>
-            <el-option label="已结算" :value="1"></el-option>
-            <el-option label="未结算" :value="2"></el-option>
+            <el-option label="全部" value="ALLSETTLEMENT"></el-option>
+            <el-option label="已结算" value="PARTSETTLEMENT"></el-option>
+            <el-option label="未结算" value="NOSETTLEMENT"></el-option>
           </el-select>
         </el-form-item>
      
@@ -80,7 +80,7 @@ export default {
       searchForm: {
         shipFromOrgid: '', // 网点
         shipSn: '', //  运单号
-        status: 0, // 结算状态
+        status: 'NOSETTLEMENT', // 结算状态
         searchCreatTime: '', // 登记时间
 
         shipFromCityCode: '',
