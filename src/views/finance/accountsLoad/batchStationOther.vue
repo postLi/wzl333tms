@@ -411,6 +411,7 @@ export default {
         })
         this.rightTable[newVal].amount = unpay
       }
+      console.log(this.rightTable[newVal].amount)
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

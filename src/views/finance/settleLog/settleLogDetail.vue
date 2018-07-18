@@ -93,7 +93,8 @@ export default {
       popVisibleDialog: false,
       loading: false,
       setupTableVisible: false,
-      tableColumn: [{
+      tableColumn: [],
+      columnOrder: [{
           label: '结算网点',
           prop: 'orgId',
           width: "120",
@@ -107,7 +108,7 @@ export default {
         },
         {
           label: '结算类型',
-          prop: 'settlementId',
+          prop: 'settlementIdZh',
           width: '150',
           fixed: false
         },
@@ -247,7 +248,7 @@ export default {
           fixed: false
         }
       ],
-      tableColumnBottom: [{
+      columnLoad: [{
           label: '结算网点',
           prop: 'orgid',
           width: '150',
@@ -255,49 +256,49 @@ export default {
         },
         {
           label: '短驳批次',
-          prop: 'orgid',
+          prop: 'shortBatchNo',
           width: '150',
           fixed: false
         },
         {
           label: '送货批次',
-          prop: 'orgid',
+          prop: 'sendBatchNo',
           width: '150',
           fixed: false
         },
         {
           label: '干线批次',
-          prop: 'orgid',
+          prop: 'mainBatchNo',
           width: '150',
           fixed: false
         },
         {
           label: '结算单号',
-          prop: 'orgid',
+          prop: 'settlementSn',
           width: '150',
           fixed: false
         },
         {
           label: '结算类型',
-          prop: 'orgid',
+          prop: 'settlementIdZh',
           width: '150',
           fixed: false
         },
         {
           label: '结算人',
-          prop: 'orgid',
+          prop: 'settlementBy',
           width: '150',
           fixed: false
         },
         {
           label: '金额',
-          prop: 'orgid',
+          prop: 'amount',
           width: '150',
           fixed: false
         },
         {
           label: '结算时间',
-          prop: 'orgid',
+          prop: 'settlementTime',
           width: '150',
           fixed: false,
           slot: (scope) => {
@@ -306,86 +307,86 @@ export default {
         },
         {
           label: '收支类型',
-          prop: 'orgid',
+          prop: 'paymentsType',
           width: '150',
           fixed: false
         },
         {
           label: '备注',
-          prop: 'orgid',
+          prop: 'remark',
           width: '150',
           fixed: false
         },
         {
           label: '短驳费',
-          prop: 'orgid',
+          prop: 'shortPay',
           width: '150',
           fixed: false
         },
 
         {
           label: '送货费',
-          prop: 'orgid',
+          prop: 'sendPay',
           width: '150',
           fixed: false
         },
         {
           label: '现付运费',
-          prop: 'orgid',
+          prop: 'onSendPay',
           width: '150',
           fixed: false
         },
         {
           label: '现付油卡',
-          prop: 'orgid',
+          prop: 'onCardPay',
           width: '150',
           fixed: false
         },
         {
           label: '到付运费',
-          prop: 'orgid',
+          prop: 'arrSendPay',
           width: '150',
           fixed: false
         },
         {
           label: '到付油卡',
-          prop: 'orgid',
+          prop: 'arrCardPay',
           width: '150',
           fixed: false
         },
         {
           label: '回付运费',
-          prop: 'orgid',
+          prop: 'backSendPay',
           width: '150',
           fixed: false
         },
         {
           label: '回付油卡',
-          prop: 'orgid',
+          prop: 'backCardPay',
           width: '150',
           fixed: false
         },
         {
           label: '发站装卸费',
-          prop: 'orgid',
+          prop: 'startLoadPay',
           width: '150',
           fixed: false
         },
         {
           label: '发站其他费',
-          prop: 'orgid',
+          prop: 'startOtherPay',
           width: '150',
           fixed: false
         },
         {
           label: '到站装卸费',
-          prop: 'orgid',
+          prop: 'endLoadPay',
           width: '150',
           fixed: false
         },
         {
           label: '到站其他费',
-          prop: 'orgid',
+          prop: 'endOtherPay',
           width: '150',
           fixed: false
         },
@@ -446,6 +447,9 @@ export default {
     ]),
     flowId() {
       return this.$route.query.flowId
+    },
+    shipOrderType() {
+      return this.$route.query.shipOrderType
     }
   },
   methods: {
@@ -458,14 +462,29 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
       this.fetchList()
     },
+    setView() {
+      // 设置表格视图 
+      // 【shipOrderType关联类型（1-运单/2-配载单/3-中转单）】
+      if (this.$route.query.shipOrderType) {
+        switch (this.shipOrderType) {
+          case '1':
+          this.tableColumn = this.columnOrder
+            break
+          case '2':
+          this.tableColumn = this.columnLoad
+            break
+          case '3':
+            break
+        }
+      }
+    },
     fetchList() {
-      console.log('query', this.$route.query)
       if (this.$route.query) {
         this.$set(this.searchQuery.vo, 'flowId', this.flowId)
-        console.log(this.searchQuery)
         postDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
         })
+        this.setView() // 设置视图
       }
     },
     setTable() {},

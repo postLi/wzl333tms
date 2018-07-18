@@ -348,7 +348,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
@@ -359,6 +359,12 @@ export default {
     left:-10px;
     display:flex;
     flex-direction: row;
+    .el-input {
+      width: 125px;
+      .el-input__inner{
+        padding: 0 10px;
+      }
+    }
   }
   .el-button {
     border: none;

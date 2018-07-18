@@ -5,11 +5,13 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="结算网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" clearable>
+      <SelectTree v-model="searchForm.orgId">
       </SelectTree>
     </el-form-item>
     <el-form-item label="方向" prop="settlementId">
-      <querySelect v-model="searchForm.settlementId" search="settlementId" type="settlementId" valuekey="settlementId" clearable></querySelect>
+      <el-select size="small" v-model="searchForm.settlementId" placeholder="方向" :size="btnsize">
+        <el-option v-for=" qt in TYPE" :label="qt.zh" :value="qt.value" :key="qt.value"></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -21,7 +23,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -48,43 +50,40 @@ export default {
       }
     }
     return {
-      searchForm: {},
+      searchForm: {
+        orgId: '',
+        settlementId: ''
+      },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近两个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      }
+        shortcuts: pickerOptions2
+      },
+      TYPE: [{
+        value: '',
+        zh: '全部'
+      },
+      {
+        value: '0',
+        zh: '收入'
+      },
+      {
+        value: '1',
+        zh: '支出'
+      }]
+    }
+  },
+  watch: {
+    orgid(newVal) {
+      this.searchForm.orgId = newVal
     }
   },
   mounted() {
     this.searchForm.orgId = this.orgid
+    this.searchForm.settlementId = this.TYPE[0].value
     this.onSubmit()
   },
   methods: {
@@ -99,6 +98,8 @@ export default {
     clearForm(formName) {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
+        this.searchForm.orgId = this.orgid
+        this.searchForm.settlementId = this.TYPE[0].value
         this.$refs[formName].resetFields()
       })
     }

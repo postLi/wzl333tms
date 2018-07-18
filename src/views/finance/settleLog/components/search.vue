@@ -1,15 +1,16 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <!-- <el-form-item label="结算时间">
+    <el-form-item label="结算时间">
       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item label="结算网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" clearable>
-      </SelectTree>
+      <SelectTree v-model="searchForm.orgId"></SelectTree>
     </el-form-item>
     <el-form-item label="结算类型" prop="settlementId">
-      <querySelect v-model="searchForm.settlementId" search="settlementId" type="settlementId" valuekey="settlementId" clearable></querySelect>
+      <selectType v-model="searchForm.settlementId" type="settlement_type" clearable>
+        <el-option slot="head" label="全部" value=""></el-option>
+      </selectType>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -21,11 +22,13 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import SelectType from '@/components/selectType/index'
+import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    SelectType
   },
   props: {
     btnsize: {
@@ -59,7 +62,7 @@ export default {
         // createBy: 0,
         // financialWay: '',
         // id: 0,
-        // orgId: 0,
+        orgId: '',
         // paymentsType: 0,
         // receivableNumber: '',
         // remark: '',
@@ -72,35 +75,16 @@ export default {
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
-      // searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
-      // defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      // pickerOptions: {
-      //   shortcuts: [{
-      //     text: '最近一周',
-      //     onClick(picker) {
-      //       const end = new Date();
-      //       const start = new Date();
-      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-      //       picker.$emit('pick', [start, end]);
-      //     }
-      //   }, {
-      //     text: '最近一个月',
-      //     onClick(picker) {
-      //       const end = new Date();
-      //       const start = new Date();
-      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      //       picker.$emit('pick', [start, end]);
-      //     }
-      //   }, {
-      //     text: '最近两个月',
-      //     onClick(picker) {
-      //       const end = new Date();
-      //       const start = new Date();
-      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
-      //       picker.$emit('pick', [start, end]);
-      //     }
-      //   }]
-      // }
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      pickerOptions: {
+        shortcuts: pickerOptions2
+      }
+    }
+  },
+  watch: {
+    orgid(newVal) {
+      this.searchForm.orgId = newVal
     }
   },
   mounted() {
@@ -110,17 +94,16 @@ export default {
   methods: {
     onSubmit() {
       let searchObj = Object.assign({}, this.searchForm)
-      // if (this.searchTime) {
-      //   this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-      //   this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
-      // }
+      if (this.searchTime) {
+        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+      }
       this.$emit('change', searchObj)
-      // this.searchForm = Object.assign({}, this.$options.data().searchForm)
-      // this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
+        this.searchForm.orgId = this.orgid
         this.$refs[formName].resetFields()
       })
     }

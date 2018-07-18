@@ -2,15 +2,15 @@
   <transferTable>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-       <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
+      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
         <el-form-item label="批次">
           <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
         </el-form-item>
-         <el-form-item label="车牌号">
-          <querySelect v-model="searchForm.truckIdNumber"  :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
+        <el-form-item label="车牌号">
+          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
         </el-form-item>
         <el-form-item>
-           <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
+          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
         </el-form-item>
       </el-form>
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
@@ -152,7 +152,7 @@ export default {
   watch: {
     isModify: {
       handler(cval, oval) { // 深度监听
-        this.getList()
+        // this.getList()
       },
       deep: true
     },
@@ -160,14 +160,14 @@ export default {
       handler(cval, oval) {
         if (cval) {
           this.orgData = Object.assign({}, cval)
-          this.getList()
+          // this.getList()
         }
       },
       deep: true
     }
   },
   mounted() {
-    this.getList()
+    // this.getList()
   },
   methods: {
     getList() {
@@ -344,17 +344,23 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
-  .tableHeadItemForm{
-    position:absolute;
-    z-index:2;
-    top:-41px;
-    left:-10px;
-    display:flex;
+  .tableHeadItemForm {
+    position: absolute;
+    z-index: 2;
+    top: -41px;
+    left: -10px;
+    display: flex;
     flex-direction: row;
+    .el-input {
+      width: 125px;
+      .el-input__inner{
+        padding: 0 10px;
+      }
+    }
   }
   .el-button {
     border: none;

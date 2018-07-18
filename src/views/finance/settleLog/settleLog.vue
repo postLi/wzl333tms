@@ -92,7 +92,7 @@ export default {
         },
         {
           label: '结算网点',
-          prop: 'orgId',
+          prop: 'orgName',
           width: "120",
           fixed: false
         },
@@ -104,7 +104,7 @@ export default {
         },
         {
           label: '结算类型',
-          prop: 'settlementId',
+          prop: 'settlementIdZh',
           width: '150',
           fixed: false
         },
@@ -131,7 +131,7 @@ export default {
         },
         {
           label: '收支方式',
-          prop: 'paymentsType',
+          prop: 'financialWay',
           width: '150',
           fixed: false
         },
@@ -155,7 +155,7 @@ export default {
         },
         {
           label: '支票号码',
-          prop: 'senderCompanyName',
+          prop: 'chequeNumber',
           width: '150',
           fixed: false
         },
@@ -291,7 +291,8 @@ export default {
         this.$router.push({
           path: './settleLogDetail',
           query: {
-            flowId: this.selectedList[0].flowId
+            flowId: this.selectedList[0].flowId,
+            shipOrderType: this.selectedList[0].shipOrderType
           }
         })
       }

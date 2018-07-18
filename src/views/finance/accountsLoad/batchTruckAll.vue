@@ -56,7 +56,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -683,6 +683,13 @@ export default {
               this.leftTable.splice(item, 1)
             }
             // 默认设置实结数量
+            // this.$set(e, 'amountCarriage', e.unpaidNowpayCarriage)
+            // this.$set(e, 'amountOilCard', e.unpaidNowpayOilCard)
+            // this.$set(e, 'amountBackpayCarriage', e.unpaidBackpayCarriage)
+            // this.$set(e, 'amountBackpayOilCard', e.unpaidBackpayOilCard)
+            // this.$set(e, 'amountInsurance', e.unpaidCarloadInsuranceFee)
+            // this.$set(e, 'amountHandling', e.unpaidLeaveHandlingFee)
+            // this.$set(e, 'amountLeaveOtherFee', e.unpaidLeaveOtherFee)
             e.amountCarriage = e.unpaidNowpayCarriage // 实结现付运费
             e.amountOilCard = e.unpaidNowpayOilCard // 实结现付油卡
             e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实结回付运费
@@ -695,21 +702,9 @@ export default {
 
       }
     },
-    changLoadData(newVal) {
-      if (this.rightTable[newVal].amountCarriage > this.rightTable[newVal].unpaidNowpayCarriage || this.rightTable[newVal].amountCarriage < 0 || this.rightTable[newVal].amountOilCard > this.rightTable[newVal].unpaidNowpayOilCard || this.rightTable[newVal].amountOilCard < 0 || this.rightTable[newVal].amountBackpayCarriage > this.rightTable[newVal].unpaidBackpayCarriage || this.rightTable[newVal].amountBackpayCarriage < 0 || this.rightTable[newVal].amountBackpayOilCard > this.rightTable[newVal].unpaidBackpayOilCard || this.rightTable[newVal].amountBackpayOilCard < 0 || this.rightTable[newVal].amountInsurance > this.rightTable[newVal].unpaidCarloadInsuranceFee || this.rightTable[newVal].amountInsurance < 0 || this.rightTable[newVal].amountHandling > this.rightTable[newVal].unpaidLeaveHandlingFee || this.rightTable[newVal].amountHandling < 0 || this.rightTable[newVal].amountLeaveOtherFee > this.rightTable[newVal].unpaidLeaveOtherFee || this.rightTable[newVal].amountLeaveOtherFee < 0) {
-        this.$notify({
-          title: '提示',
-          message: '不能大于未结小于0',
-          type: 'warning'
-        })
-        this.rightTable[newVal].amountCarriage = this.rightTable[newVal].unpaidNowpayCarriage // 实结现付运费
-        this.rightTable[newVal].amountOilCard = this.rightTable[newVal].unpaidNowpayOilCard // 实结现付油卡
-        this.rightTable[newVal].amountBackpayCarriage = this.rightTable[newVal].unpaidBackpayCarriage // 实结回付运费
-        this.rightTable[newVal].amountBackpayOilCard = this.rightTable[newVal].unpaidBackpayOilCard // 实结回付油卡
-        this.rightTable[newVal].amountInsurance = this.rightTable[newVal].unpaidCarloadInsuranceFee // 实结整车保险费
-        this.rightTable[newVal].amountHandling = this.rightTable[newVal].unpaidLeaveHandlingFee // 实结发站装卸费
-        this.rightTable[newVal].amountLeaveOtherFee = this.rightTable[newVal].unpaidLeaveOtherFee // 实结发站其他费
-      }
+    changLoadData(index, prop, newVal) {
+      let amount = Number(newVal)
+      this.rightTable[index][prop] = Number(newVal)
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -813,9 +808,10 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
+      let data = Object.assign([], this.rightTable)
       this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       if (!this.isGoReceipt) {
-        this.rightTable.forEach((e, index) => {
+        data.forEach((e, index) => {
           let itemCarriage = { id: e.id, amount: e.amountCarriage, feeTypeId: 19, dataName: '现付运费' } // 实结现付运费
           let itemOilCard = { id: e.id, amount: e.amountOilCard, feeTypeId: 20, dataName: '现付油卡' } // 实结现付油卡
           let itemBackpayCarriage = { id: e.id, amount: e.amountBackpayCarriage, feeTypeId: 21, dataName: '回付运费' } // 实结回付运费

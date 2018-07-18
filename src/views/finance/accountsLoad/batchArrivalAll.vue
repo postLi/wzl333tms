@@ -56,7 +56,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -554,18 +554,9 @@ export default {
 
       }
     },
-    changLoadData(newVal) {
-      if (this.rightTable[newVal].amountArrivepayCarriage > this.rightTable[newVal].unpaidArrivepayCarriage || this.rightTable[newVal].amountArrivepayCarriage < 0 || this.rightTable[newVal].amountArrivepayOilCard > this.rightTable[newVal].unpaidArrivepayOilCard || this.rightTable[newVal].amountArrivepayOilCard < 0 || this.rightTable[newVal].amountArriveHandlingFee > this.rightTable[newVal].unpaidArriveHandlingFee || this.rightTable[newVal].amountArriveHandlingFee < 0 || this.rightTable[newVal].amountArriveOtherFee > this.rightTable[newVal].unpaidArriveOtherFee || this.rightTable[newVal].amountArriveOtherFee < 0) {
-        this.$notify({
-          title: '提示',
-          message: '不能大于未结小于0',
-          type: 'warning'
-        })
-        this.rightTable[newVal].amountArrivepayCarriage = this.rightTable[newVal].unpaidArrivepayCarriage // 实结到付运费
-        this.rightTable[newVal].amountArrivepayOilCard = this.rightTable[newVal].unpaidArrivepayOilCard // 实结到付油卡
-        this.rightTable[newVal].amountArriveHandlingFee = this.rightTable[newVal].unpaidArriveHandlingFee // 实结到站装卸费
-        this.rightTable[newVal].amountArriveOtherFee = this.rightTable[newVal].unpaidArriveOtherFee // 实结到站其他费
-      }
+    changLoadData(index, prop, newVal) {
+      let amount = Number(newVal)
+      this.rightTable[index][prop] = Number(newVal)
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

@@ -54,6 +54,8 @@ export function postAddIncome(){
  **************************************/
 /**
  * 资金流水明细
+ * shipOrderType 关联类型（1-运单/2-配载单/3-中转单）
+ * 根据shipOrderType来显示数据表格视图
  */
 export function postDetailList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {

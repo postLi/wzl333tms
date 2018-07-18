@@ -86,7 +86,11 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="要求到达日期">
+                  <el-form-item label="预计到达日期" v-if="loadTypeId===39">
+                    <el-date-picker size="mini" v-model="formModel.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达日期">
+                    </el-date-picker>
+                  </el-form-item>
+                  <el-form-item label="要求到达日期" v-else>
                     <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="要求到达日期">
                     </el-date-picker>
                   </el-form-item>
@@ -360,6 +364,7 @@ export default {
       formModel: {
         loadTime: parseTime(new Date()),
         requireArrivedTime: parseTime(new Date()),
+        planArrivedTime: parseTime(new Date()),
         orgid: ''
       },
       isDirectDelivery: false,
@@ -560,6 +565,7 @@ export default {
         data.loadTime = this.orgData.loadTime
         data.shortFee = this.orgData.shortFee
         data.requireArrivedTime = this.orgData.requireArrivedTime
+        data.planArrivedTime = this.orgData.planArrivedTime
         data.remark = this.orgData.remark
         data.deliveryFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
         this.formModel = objectMerge2({}, data)
@@ -595,6 +601,7 @@ export default {
         getSystemTime().then(data => {
           // this.formModel.requireArrivedTime = parseTime(data, '{y}-{m}-{d} ') + '23:59:59'
           this.formModel.requireArrivedTime = data.trim()
+          this.formModel.planArrivedTime = data.trim()
           // this.formModel.loadTime = parseTime(new Date(data))
           this.formModel.loadTime = data.trim()
         })
@@ -792,6 +799,7 @@ export default {
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
       this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
+      this.formModel.planArrivedTime = parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d}')+'23:59:59'
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
@@ -812,6 +820,7 @@ export default {
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
       this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
+       this.formModel.planArrivedTime = parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d}')+'23:59:59'
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
