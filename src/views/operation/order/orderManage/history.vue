@@ -45,7 +45,7 @@
               v-else
               :width="column.width">
               <template slot-scope="scope" v-html="true">
-                  {{ column.slot(scope) }}
+                  <div v-html="column.slot(scope)"></div>
               </template>
             </el-table-column>
           </template>
@@ -64,6 +64,7 @@ import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime } from '@/utils/index'
+import { parseShipStatus } from '@/utils/dict'
 
 export default {
   components: {
@@ -124,7 +125,10 @@ export default {
       }, {
         'label': '运单标识',
         'prop': 'shipIdentifying',
-        'width': '150'
+        'width': '150',
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
       }, {
         'label': '旧值',
         'prop': 'old_value',
@@ -318,9 +322,9 @@ export default {
           this.isModify = true
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能修改单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
           }
           this.selectInfo = this.selected[0]
           this.openAddOrder()
@@ -329,9 +333,9 @@ export default {
         case 'delete':
           if (this.selected.length > 1) {
             this.$message({
-                      message: '每次只能操作单条数据~',
-                      type: 'warning'
-                    })
+              message: '每次只能操作单条数据~',
+              type: 'warning'
+            })
           }
           const deleteItem = this.selected[0].shipSn
           const id = this.selected[0].id
@@ -341,32 +345,32 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-                    orderManageApi.deleteOrderInfoById(id).then(res => {
-                      this.$message({
-                          type: 'success',
-                          message: '删除成功!'
-                        })
-                      this.fetchData()
-                    }).catch(err => {
-                        this.$message({
-                          type: 'info',
-                          message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                        })
+            orderManageApi.deleteOrderInfoById(id).then(res => {
+              this.$message({
+                        type: 'success',
+                        message: '删除成功!'
                       })
-                  }).catch(() => {
-                    this.$message({
+              this.fetchData()
+            }).catch(err => {
+                      this.$message({
+                        type: 'info',
+                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                      })
+                    })
+          }).catch(() => {
+            this.$message({
                       type: 'info',
                       message: '已取消删除'
                     })
-                  })
+          })
           break
           // 作废运单
         case 'cancel':
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能操作单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能操作单条数据~',
+              type: 'warning'
+            })
           }
           const cancelItem = this.selected[0].shipSn
           const theid = this.selected[0].id
@@ -375,24 +379,24 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-                orderManageApi.deleteCancleOrderById(theid).then(res => {
-                      this.$message({
-                          type: 'success',
-                          message: '作废成功!'
-                        })
-                      this.fetchData()
-                    }).catch(err => {
-                        this.$message({
-                          type: 'info',
-                          message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
-                        })
-                      })
-              }).catch(() => {
-                    this.$message({
-                      type: 'info',
-                      message: '已取消作废'
-                    })
+            orderManageApi.deleteCancleOrderById(theid).then(res => {
+              this.$message({
+                    type: 'success',
+                    message: '作废成功!'
                   })
+              this.fetchData()
+            }).catch(err => {
+                  this.$message({
+                        type: 'info',
+                        message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                      })
+                })
+          }).catch(() => {
+            this.$message({
+                  type: 'info',
+                  message: '已取消作废'
+                })
+          })
           break
           // 导出数据
         case 'export':
@@ -401,9 +405,9 @@ export default {
           })
           orderManageApi.getExportExcel(ids2.join(',')).then(res => {
             this.$message({
-                  type: 'success',
-                  message: '即将自动下载!'
-                })
+              type: 'success',
+              message: '即将自动下载!'
+            })
           })
           break
       }

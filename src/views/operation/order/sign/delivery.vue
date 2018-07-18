@@ -164,6 +164,9 @@
             width="120"
             sortable
           >
+          <template slot-scope="scope">
+            <div v-html="parseShipStatus(scope.row.shipIdentifying)"></div>
+          </template>
           </el-table-column>
           <el-table-column
             prop="signStatusName"
@@ -544,6 +547,7 @@ import Pager from '@/components/Pagination/index'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
 import { objectMerge2 } from '@/utils/index'
+import { parseShipStatus } from '@/utils/dict'
 export default {
   components: {
     SearchForm,

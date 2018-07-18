@@ -125,7 +125,7 @@
               </el-form-item>
               <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox>
-                <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="value" placeholder="请选择">
+                <!-- <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="value" multiple placeholder="请选择">
                   <el-option
                     v-for="(item, index) in shipField"
                     :key="item.key"
@@ -138,6 +138,18 @@
                     <span style="float: right; color: #8492a6; font-size: 13px">
                       <el-checkbox true-label="1" false-label="0" v-model="shipField[index][item.key]"></el-checkbox>
                     </span>
+                  </el-option>
+                </el-select> -->
+                <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="fieldSetup" collapse-tags multiple placeholder="请选择">
+                  <el-option
+                    v-for="(item, index) in shipField"
+                    :key="item.key"
+                    :label="item.name"
+                    :class="{theSelectfirst: index === 0}"
+                    :value="item.key">
+                    <div class="selectHeader" @click.prevent.stop v-if="index === 0"><span style="float: left">字典名称</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">必填</span></div>
+                    <span style="float: left">{{ item.name }}</span>
                   </el-option>
                 </el-select>
                 <!-- shipField -->
@@ -221,6 +233,7 @@ export default {
       tooltip1: false,
       tooltip2: false,
       tooltip3: false,
+      fieldSetup: [],
       activeNames: ['setup1', 'setup2', 'setup3', 'setup4'],
       shipField: [
         {
@@ -426,6 +439,7 @@ export default {
     this.getInfo('order').then(() => {
       this.setShipNo()
       this.setCargoNo()
+      this.initField()
       // 加载好后才可以提交数据
       this.nochange = false
     })
@@ -485,9 +499,28 @@ export default {
           type: 'success'
         })
       })
+    },
+    initField() {
+      for (const i in this.form.shipPageFunc.shipFieldValue) {
+        if (this.form.shipPageFunc.shipFieldValue[i] === '1') {
+          this.fieldSetup.push(i)
+        }
+      }
+    },
+    setField() {
+      for (const i in this.form.shipPageFunc.shipFieldValue) {
+        if (this.fieldSetup.indexOf(i) !== -1) {
+          this.form.shipPageFunc.shipFieldValue[i] = '1'
+        } else {
+          this.form.shipPageFunc.shipFieldValue[i] = '0'
+        }
+      }
     }
   },
   watch: {
+    fieldSetup(newVal) {
+      this.setField()
+    },
     shipNo(newVal) {
       // 先重置
       this.resetShipNo()
@@ -608,5 +641,10 @@ export default {
   border-bottom: 1px solid #999;
   margin-bottom: 10px;
   height: 34px;
+}
+.el-select-dropdown__item.selected{
+  .selectHeader{
+    font-weight: normal;
+  }
 }
 </style>

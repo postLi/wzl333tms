@@ -48,8 +48,8 @@
               :label="column.label"
               v-else
               :width="column.width">
-              <template slot-scope="scope" v-html="true">
-                  {{ column.slot(scope) }}
+              <template slot-scope="scope">
+                  <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
             </el-table-column>
           </template>
@@ -64,6 +64,7 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
+import { parseDict, parseShipStatus } from '@/utils/dict'
 
 export default {
   components: {
@@ -117,11 +118,18 @@ export default {
         'fixed': true
       }, {
         'label': '运单号',
-        'prop': 'shipSn'
+        'prop': 'shipSn',
+        width: 120
       }, {
         'label': '货号',
         'prop': 'shipGoodsSn',
         'width': '150'
+      }, {
+        'label': '运单标识',
+        'prop': 'shipIdentifying',
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
       }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
@@ -130,7 +138,10 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'totalStatus'
+        'prop': 'totalStatus',
+        'slot': function(scope) {
+          return parseDict('pay_status', scope.row.totalStatus)
+        }
       }, {
         'label': '现付',
         'prop': 'nowPayFee'
@@ -169,7 +180,8 @@ export default {
         'prop': 'notMonthpayFee'
       }, {
         'label': '开单日期',
-        'prop': 'createTime'
+        'prop': 'createTime',
+        width: 180
       }, {
         'label': '发货方',
         'prop': 'senderCustomerUnit'
@@ -195,9 +207,6 @@ export default {
         'label': '体积(方)',
         'prop': 'cargoVolume'
       }, {
-        'label': '运单标识',
-        'prop': 'shipIdentifying'
-      }, {
         'label': '付款方式',
         'prop': 'shipPayWay'
       }, {
@@ -217,10 +226,10 @@ export default {
         'prop': 'receiverAddr'
       }, {
         'label': '交接方式',
-        'prop': ''
+        'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
-        'prop': ''
+        'prop': 'shipEffective'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks'

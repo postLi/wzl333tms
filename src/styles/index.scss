@@ -136,6 +136,28 @@ table{
   height: 16px;
   vertical-align: middle;
 }
+.ship-zhuan,.ship-chai,.ship-gai,.ship-kong,.ship-yi{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.ship-zhuan{
+  background: url("./assets/icom/shipStatus/zhuan.png") no-repeat;;
+}
+.ship-chai{
+  background: url("./assets/icom/shipStatus/chai.png") no-repeat;;
+}
+.ship-gai{
+  background: url("./assets/icom/shipStatus/gai.png") no-repeat;;
+}
+.ship-kong{
+  background: url("./assets/icom/shipStatus/kong.png") no-repeat;;
+}
+.ship-yi{
+  background: url("./assets/icom/shipStatus/yi.png") no-repeat;;
+}
 // 弹窗大图样式
 .showPictureWrapper{
   width: auto;

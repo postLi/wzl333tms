@@ -67,6 +67,9 @@
               width="120"
               sortable
               >
+              <template slot-scope="scope">
+                <div v-html="parseShipStatus(scope.row.shipIdentifying)"></div>
+              </template>
             </el-table-column>
             <el-table-column
               prop="fromOrgName"
@@ -484,6 +487,7 @@ import { PostControlgoods } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
+import { parseShipStatus } from '@/utils/dict'
 export default {
   components: {
     SearchForm,

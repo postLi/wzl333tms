@@ -48,8 +48,8 @@
               :label="column.label"
               v-else
               :width="column.width">
-              <template slot-scope="scope" v-html="true">
-                  {{ column.slot(scope) }}
+              <template slot-scope="scope">
+                  <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
             </el-table-column>
           </template>
@@ -67,6 +67,7 @@ import TableSetup from './components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime } from '@/utils/index'
+import { parseShipStatus } from '@/utils/dict'
 
 export default {
   components: {
@@ -125,7 +126,10 @@ export default {
       }, {
         'label': '运单标识',
         'prop': 'shipIdentifying',
-        'width': '150'
+        'width': '150',
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
       }, {
         'label': '开单网点',
         'prop': 'fromOrgName',
