@@ -2,6 +2,17 @@
   <transferTable>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+       <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
+        <el-form-item label="批次">
+          <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
+        </el-form-item>
+         <el-form-item label="车牌号">
+          <querySelect v-model="searchForm.truckIdNumber"  :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
+        </el-form-item>
+        <el-form-item>
+           <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
+        </el-form-item>
+      </el-form>
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
@@ -96,20 +107,19 @@
 import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
+import querySelect from '@/components/querySelect/index'
 import { objectMerge2 } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
 export default {
   data() {
     return {
       tablekey: '',
-      loadTruck: '',
       truckMessage: '',
-      formModel: {},
-      loadTruck: 'loadTruckOne',
       incomePayType: 'PAYABLE',
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
       loading: false,
       btnsize: 'mini',
+      searchForm: {},
       selectedRight: [],
       selectedLeft: [],
       leftTable: [],
@@ -136,7 +146,8 @@ export default {
     ])
   },
   components: {
-    transferTable
+    transferTable,
+    querySelect
   },
   watch: {
     isModify: {
@@ -155,7 +166,7 @@ export default {
       deep: true
     }
   },
-  activated() {
+  mounted() {
     this.getList()
   },
   methods: {
@@ -168,7 +179,7 @@ export default {
         this.$emit('loadTable', this.rightTable)
       } else {
         getOrderShipList(this.otherinfo.orgid, this.incomePayType, this.paymentsType).then(data => {
-          this.leftTable = data.data
+          this.leftTable = data
           this.$emit('loadTable', this.rightTable)
         })
       }
@@ -215,7 +226,6 @@ export default {
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
-        console.log('rightTable', this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },
@@ -233,7 +243,6 @@ export default {
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
-        console.log('rightTable', this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },
@@ -339,6 +348,14 @@ export default {
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
+  .tableHeadItemForm{
+    position:absolute;
+    z-index:2;
+    top:-41px;
+    left:-10px;
+    display:flex;
+    flex-direction: row;
+  }
   .el-button {
     border: none;
   }

@@ -27,7 +27,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import selectBatchType from '@/components/selectType/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -79,31 +79,7 @@ export default {
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近两个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 60);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
+        shortcuts: pickerOptions2
       }
     }
   },

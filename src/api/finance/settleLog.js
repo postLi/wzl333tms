@@ -12,7 +12,7 @@ export function postFindLowList(data) {
   })
 }
 /**
- * 查询记收入或支出费用信息
+ * 查询记收入或支出-费用信息
  */
 export function getFeeInfo(orgId, paymentsType) {
   return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getFeeInfo?orgId=' + orgId + '&paymentsType=' + paymentsType)
@@ -21,20 +21,16 @@ export function getFeeInfo(orgId, paymentsType) {
     })
 }
 /**
- * 记收入运单信息
+ * 记收入-运单信息
  */
 export function getOrderShipList(orgId, incomePayType, paymentsType) {
-  // return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList?orgId=' + orgId + '&paymentsType=' + paymentsType + '&incomePayType=' + incomePayType)
-  //   .then(res => {
-  //     return res.data
-  //   })
-   return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
-   	params: {
-   		orgId: orgId,
-   	paymentsType: paymentsType,
-   	incomePayType: incomePayType
-   	}
-   })
+  return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
+      params: {
+        orgId: orgId,
+        paymentsType: paymentsType,
+        incomePayType: incomePayType
+      }
+    })
     .then(res => {
       return res.data
     })
@@ -45,20 +41,28 @@ export function getOrderShipList(orgId, incomePayType, paymentsType) {
 export function postCancelSettlement(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement?flowId=' + data.flowId + '&detailFlowId=' + data.detailFlowId)
 }
+/**
+ * 记收入支出
+ */
+export function postAddIncome(){
+	return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/').then(res => {
+		return res.data
+	})
+}
 /**************************************
  *             资金流水明细
  **************************************/
 /**
  * 资金流水明细
  */
-export function postDetailList (data) {
-	return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
-		return res.data
-	})
+export function postDetailList(data) {
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
+    return res.data
+  })
 }
 /**
  * 取消结算
  */
-export function postDetailCancel (data) {
-	return fetch.delete('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/'+ data)
+export function postDetailCancel(data) {
+  return fetch.delete('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/' + data)
 }

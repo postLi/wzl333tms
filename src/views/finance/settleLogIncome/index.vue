@@ -1,4 +1,5 @@
 <template>
+  <!-- 记收入 -->
   <div class="fee-steup" v-loading="loading">
     <div class="fee-steup-form">
       <el-collapse v-model="feeInfo">
@@ -10,7 +11,7 @@
             <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="单据号" prop="settlementSn">
-                  <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
+                  <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></querySelect>
                 </el-form-item>
                 <el-form-item label="收入金额" prop="amount">
                   <el-input :size="btnsize" v-model="formModel.amount" clearable placeholder="收入金额"></el-input>
@@ -37,22 +38,22 @@
                   <el-input :size="btnsize" v-model="formModel.alipayAccount" placeholder="支付宝号" clearable></el-input>
                 </el-form-item>
               </div>
-              <el-form-item label="说明">
+              <el-form-item label="说明" prop="remark">
                 <el-input :size="btnsize" v-model="formModel.remark" placeholder="说明" clearable></el-input>
               </el-form-item>
             </el-form>
           </div>
         </el-collapse-item>
       </el-collapse>
-      <!-- 操作按钮区 -->
-      <div class="fee_btn_boxs">
-        <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
-        <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
-        <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
-      </div>
       <!-- 穿梭框 -->
-      <div class="fee_btn_transferTable">
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
+      <div class="fee_btn_transferTable tableItem">
+        <!-- 操作按钮区 -->
+        <div class="fee_btn_boxs">
+          <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
+          <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
+          <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
+        </div>
+        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit"></dataTable>
       </div>
     </div>
   </div>
@@ -66,7 +67,7 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
-import { getFeeInfo } from '@/api/finance/settleLog'
+import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
 export default {
   components: {
     SelectTree,
@@ -81,11 +82,13 @@ export default {
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
       formModel: {
-        settlementTime: new Date()
+        settlementTime: ''
       },
       formModelRules: {},
       setLoadTableList: {},
-      isEdit: false
+      isEdit: false,
+      loadTable: [],
+      addIncomeInfo: {}
     }
   },
   computed: {
@@ -95,12 +98,27 @@ export default {
   },
   mounted() {
     this.getFeeInfo()
+    // this.getSystemTime()
   },
   methods: {
+    getSystemTime() {
+      getSystemTime().then(data => {
+        this.formModel.settlementTime = parseTime(data)
+        console.log(this.formModel.settlementTime)
+      })
+    },
     getFeeInfo() {
       getFeeInfo(this.otherinfo.orgid, this.paymentsType).then(data => {
-        this.formModel = data.szDtoList[0]
-        console.log('getFeeInfo', data)
+        this.formModel.amount = data.amount
+        this.formModel.settlementSn = data.settlementSn
+        this.formModel.agent = data.settlementBy
+        this.formModel.financialWay = data.szDtoList[0].financialWay
+        this.formModel.bankAccount = data.szDtoList[0].bankAccou
+        this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
+        this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
+        this.formModel.remark = data.remark
+        this.getSystemTime()
+        console.log('getFeeInfo', data.szDtoList[0])
       })
     },
     doAction(type) {
@@ -111,15 +129,45 @@ export default {
         case 'cancel': // 取消
           this.cancel()
           break
+        case 'savePrint': // 保存并打印
+          break
       }
     },
-    save() {},
-    cancel() {},
-    getLoadTable(obj) {
-      console.log(obj)
+    setData() { // 设置传给后台的数据结构
+      this.addIncomeInfo = Object.assign({}, this.formModel)
+      this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
+      this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
+      this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
+      this.$set(this.addIncomeInfo, 'szDtoList', this.formModel)
     },
-    getTableChange(obj) {
-      console.log(obj)
+    save() {
+      if (this.loadTable.length < 1) {
+        this.$message({ type: 'warning', message: '右边表格不能为空！' })
+        return false
+      }
+      this.setData()
+      console.log(this.addIncomeInfo)
+      postAddIncome(this.addIncomeInfo).then(data => {
+          this.$message({ type: 'success', message: '保存成功！' })
+          this.$router.push({ path: './settleLog' })
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: '保存失败！' })
+        })
+    },
+    cancel() {
+      this.$confirm('确定要取消记收入操作吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$router.push({
+          path: './settleLog',
+        })
+      })
+    },
+    getLoadTable(obj) {
+      this.loadTable = Object.assign([], obj)
     }
   }
 }

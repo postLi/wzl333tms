@@ -1,4 +1,5 @@
 <template>
+  <!-- 记支出 -->
   <div class="fee-steup" v-loading="loading">
     <div class="fee-steup-form">
       <el-collapse v-model="feeInfo">
@@ -10,7 +11,7 @@
             <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="单据号" prop="settlementSn">
-                  <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
+                  <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" disabled></querySelect>
                 </el-form-item>
                 <el-form-item label="收入金额" prop="amount">
                   <el-input :size="btnsize" v-model="formModel.amount" clearable placeholder="收入金额"></el-input>
@@ -44,20 +45,13 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-      <!-- 操作按钮区 -->
-      <!-- <div class="fee_btn_boxs">
-        <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
-        <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
-        <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
-      </div> -->
       <!-- 穿梭框 -->
       <div class="fee_btn_transferTable">
-        <!-- <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable> -->
         <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
           <el-tab-pane label="批次支出" name="first">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
+                <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
@@ -67,7 +61,7 @@
           <el-tab-pane label="运单支出" name="second">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-printer">保存并打印</el-button>
+                <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
@@ -89,7 +83,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
 import dataTableOrder from './components/dataTableOrder'
-import { getFeeInfo } from '@/api/finance/settleLog'
+import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
 export default {
   components: {
     SelectTree,
@@ -110,7 +104,8 @@ export default {
       formModelRules: {},
       setLoadTableList: {},
       isEdit: false,
-      activeName: 'first'
+      activeName: 'first',
+      addIncomeInfo: {}
     }
   },
   computed: {
@@ -122,9 +117,23 @@ export default {
     this.getFeeInfo()
   },
   methods: {
+    getSystemTime() {
+      getSystemTime().then(data => {
+        this.formModel.settlementTime = parseTime(data)
+        console.log(this.formModel.settlementTime)
+      })
+    },
     getFeeInfo() {
       getFeeInfo(this.otherinfo.orgid, this.paymentsType).then(data => {
-        this.formModel = data.szDtoList[0]
+        this.formModel.amount = data.amount
+        this.formModel.settlementSn = data.settlementSn
+        this.formModel.agent = data.settlementBy
+        this.formModel.financialWay = data.szDtoList[0].financialWay
+        this.formModel.bankAccount = data.szDtoList[0].bankAccou
+        this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
+        this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
+        this.formModel.remark = data.remark
+        this.getSystemTime()
         console.log('getFeeInfo', data)
       })
     },
@@ -136,13 +145,44 @@ export default {
         case 'cancel': // 取消
           this.cancel()
           break
+        case 'savePrint': // 保存并打印
+          this.$confirm('暂无打印功能，确认保存吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.save()
+          })
+          break
       }
     },
-    save() {},
+    setData() {
+      this.addIncomeInfo = Object.assign({}, this.formModel)
+      this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
+      this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
+      this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
+      this.$set(this.addIncomeInfo, 'szDtoList', this.formModel)
+    },
+    save() {
+      if (this.loadTable.length < 1) {
+        this.$message({ type: 'warning', message: '右边表格不能为空！' })
+        return false
+      }
+      this.setData()
+      console.log(this.addIncomeInfo)
+      postAddIncome(this.addIncomeInfo).then(data => {
+          this.$message({ type: 'success', message: '保存成功！' })
+          this.$router.push({ path: './settleLog' })
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: '保存失败！' })
+        })
+    },
     cancel() {},
     handleClick() {},
     getLoadTable(obj) {
       console.log(obj)
+      this.loadTable = Object.assign([], obj)
     },
     getTableChange(obj) {
       console.log(obj)
@@ -160,9 +200,9 @@ export default {
   position: relative;
   .fee_btn_transferTable {
     flex: 1;
-    height: calc(100% - 120px); 
+    height: calc(100% - 120px);
     .el-tabs.el-tabs--top.el-tabs--border-card {
-      height: calc(100% - 30px); 
+      height: calc(100% - 30px);
     }
     .el-tabs__header {
       margin-bottom: -11px;
@@ -173,7 +213,7 @@ export default {
     .el-tabs__content {
       display: flex;
       flex-direction: column;
-      height: 100%; 
+      height: 100%;
       .el-tab-pane {
         height: calc(100% - 20px);
         .tableItem {

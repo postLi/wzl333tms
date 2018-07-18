@@ -6,11 +6,11 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('income')" plain>记收入</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('expandtiure')" plain>记支出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" @click="doAction('income')" plain>记收入</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort-up" @click="doAction('expandtiure')" plain>记支出</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain>取消结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('showCount')" plain>查看结算单</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('showDetail')" plain>查看明细</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain>查看结算单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain>查看明细</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -87,7 +87,7 @@ export default {
       tableColumn: [{
           label: '序号',
           prop: 'flowId',
-          width: '110',
+          width: '180',
           fixed: true
         },
         {
