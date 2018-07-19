@@ -7,7 +7,7 @@ import fetch from '../../utils/fetch'
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarrierdetailList(params) {
-  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/getCarrierDetailList', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }

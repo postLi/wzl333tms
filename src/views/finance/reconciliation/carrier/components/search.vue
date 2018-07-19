@@ -102,7 +102,6 @@ export default {
     onSubmit () {
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
       this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
-      console.log(this.searchForm);
       this.$emit('change', this.searchForm)
     },
     clearForm () {
@@ -114,7 +113,6 @@ export default {
       this.searchForm.searchCreatTime = []
     },
     carrierItem(item){
-      console.log(item);
       this.searchForm.orgid = item.orgid
     }
   }

@@ -9,7 +9,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('completion')">对账完成</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('cancelCom')">取消完成</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')">修改查看</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('detele')">删除</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')">删除</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印</el-button>
 
@@ -46,13 +46,20 @@
             sortable
             prop="memberName"
             width="130"
-            label="发货方">
+            label="网点">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="memberName"
+            width="130"
+            label="承运商">
           </el-table-column>
           <el-table-column
             prop="memberPerson"
             width="130"
             sortable
-            label="发货人">
+            label="对账单名">
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -67,12 +74,7 @@
             label="对账单名">
           </el-table-column>
 
-          <el-table-column
-            sortable
-            prop="checkBillCode"
-            width="170"
-            label="对账编号">
-          </el-table-column>
+
           <el-table-column
             prop="checkStartTime"
             label="对账开始时间"
@@ -153,7 +155,7 @@
           </el-table-column>
           <el-table-column
             prop="orgBusinessOfficer"
-            label="财务负责人"
+            label="业务负责人"
             width="120"
             sortable
           >
@@ -314,7 +316,7 @@ export default {
       }
       // 判断是否有选中项
 
-      if(!this.selected.length){
+      if(!this.selected.length && type !== 'storage'){
           // this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -326,19 +328,13 @@ export default {
       switch (type) {
         // 新增
           case 'storage':
-            this.closeAddCustomer()
-            if(this.selected.length > 1){
-
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.isDbclick = false
-              this.openAddCustomer()
-            }else{
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.isDbclick = false
-              this.openAddCustomer()
-            }
+            this.$router.push({
+              path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
+              query: {
+                tab: '承运商对账-创建对账',
+                // id: this.selectInfo.shipSenderId
+              }
+            })
 
             break;
         // 对账完成 cancelCom

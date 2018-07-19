@@ -6,7 +6,7 @@
         <div class="depmain-div" >
           <div class="dialogMoney">
 
-          对账总金额：<span>40元</span>
+          对账总金额：<span>40元</span>。
           </div>
           <el-table
             ref="multipleTable"
@@ -88,18 +88,22 @@
         formLabelWidth:'90',
         dialogInfo:[
           {
-            toPay:0,
+            toPay:10,
             date:"应付账款"
           },
           {
-            toPay:0,
+            toPay:20,
             date:"已付账款"
           }
         ],
-        dialogData:{},
         checked1: true,
         popTitle: '',
         loading:false,
+        formInline: {
+          shipSn: '',
+          shipGoodsSn: '',
+          pickupFee: ''
+        },
       }
     },
     computed: {
@@ -112,30 +116,12 @@
       }
     },
     watch: {
-      dotInfo :{
-        handler(newVal) {
-          this.dialogData =  this.dotInfo
-          this.dialogData.hadPayDetailList.map(el=>{
-            this.$set(this.dialogInfo, 0, {
-              date:"应付账款",
-              toPay: this.dialogInfo[0].toPay + (el.shortPay ? +el.shortPay : 0)
-            })
-            //this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-          })
-          this.dialogData.payDetailList.map(el=>{
-            this.$set(this.dialogInfo, 1, {
-              date:"已付账款",
-              toPay: this.dialogInfo[1].toPay + (el.shortPay ? +el.shortPay : 0)
-            })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-          })
-          if(this.sendId){
-            this.dotInfo.id = this.sendId
-          }else{
-            this.dotInfo
-          }
-        },
-        deep: true
+      dotInfo (newVal) {
+        if(this.sendId){
+          this.dotInfo.id = this.sendId
+        }else{
+          this.dotInfo
+        }
       },
       popVisible (newVal) {
         this.fetchData()
@@ -144,6 +130,7 @@
 
         if(this.sendId){
           this.dotInfo.id = this.sendId
+          console.log(this.dotInfo.id);
         }else{
           this.dotInfo
         }
@@ -151,7 +138,7 @@
     },
     mounted() {
       if(this.popVisible){
-        this.popTitle = this.dotInfo.checkBillName
+
       }
     },
     methods: {
@@ -188,12 +175,14 @@
             let promiseObj
             let data = []
             data = this.dotInfo
-            // delete data.payDetailList.shortPay
+        console.log("全部" + this.dotInfo);
             if(this.sendId){
               data.id = this.sendId
               promiseObj = postCreateBillCheckCarInfo(data)
+              console.log("修改" + data);
             }else{
               promiseObj = postCreateBillCheckCarInfo(data)
+              alert('lll')
             }
 
             promiseObj.then(res => {

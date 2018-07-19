@@ -56,6 +56,26 @@ export function postCreateBillCheckCarInfo(params) {
 }
 
 /**
+ 车费对账修改对账单 查询基本信息方法名
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function postCarfDtoById(id) {
+  return fetch.get('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/getDtoById/' + id)
+}
+
+/**
+ 车费对账修改对账单  应付 已付
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function postCarfBillCheckCarUpdateList(params) {
+  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheckcardetail/v1/getBillCheckCarUpdateList', params).then(res => {
+    return res.data
+  })
+}
+
+/**
  * /finance/tmsfinancebillcheckcardetail/v1/{id}
  根据ID删除财务车费对账信息
  * @param id

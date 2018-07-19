@@ -1,12 +1,12 @@
 <template>
   <!---->
-  <div class="short_lll" v-loading="loading" >
+  <div class="carrierCreat_lll" v-loading="loading" >
     <div class="sTop">
       <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
       <div class="sTitle">
         <el-form-item label="">
-          <el-input v-model="checkBillName" auto-complete="off" ></el-input><span>对账表</span>
+          <el-input v-model="checkBillName+messageInfo.startTime+messageInfo.endTime" auto-complete="off" ></el-input><span>对账表</span>
 
           <!--&nbsp;<p>对账表</p>-->
       </el-form-item>
@@ -14,12 +14,12 @@
       <!--<div class="sTitle"><p>广州网点2018年6月7日-2018年8月12日</p>&nbsp;<p>对账表</p></div>-->
       <div class="sDate">
 
-          <el-form-item label="" prop="truckIdNumber" placeholder="请选择车牌号">
-            <!--<el-select v-model="searchTitle.memberName" placeholder="请选择车牌号">-->
-              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName"/>
-              <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" />-->
-            <!--</el-select>-->
-          </el-form-item>
+          <!--<el-form-item label="" prop="truckIdNumber" placeholder="请选择车牌号">-->
+            <!--&lt;!&ndash;<el-select v-model="searchTitle.memberName" placeholder="请选择车牌号">&ndash;&gt;-->
+              <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName"/>-->
+              <!--&lt;!&ndash;<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" />&ndash;&gt;-->
+            <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
+          <!--</el-form-item>-->
         <el-date-picker
           v-model="searchCreatTime"
           :default-value="defaultTime"
@@ -39,29 +39,41 @@
     <div class="sMessageTop">
       <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName">
 
-        <el-form-item label="车牌号">
+        <el-form-item label="承运商名称">
           <el-input v-model="messageInfo.truckIdNumber" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="司机">
-          <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
+        <el-form-item label="业务负责人">
+          <el-input v-model="messageInfo.memberPerson" auto-complete="off" ></el-input>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off"  maxlength="12" v-numberOnly></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="客户编号">
+          <el-input v-model="messageInfo.checkBillCode" auto-complete="off" disabled></el-input>
+        </el-form-item>
         <el-form-item label="开始时间">
-          <el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.startTime" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="结束时间">
-          <el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.endTime" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="结算方式">
+          <el-input v-model="messageInfo.checkBillCode" auto-complete="off" maxlength="8"></el-input>
         </el-form-item>
         <el-form-item label="账户账号">
-          <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.bankAccount" auto-complete="off" maxlength="20" v-numberOnly></el-input>
         </el-form-item>
         <el-form-item label="账户开户行">
-          <el-input v-model="messageInfo.bankName" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.bankName" auto-complete="off" maxlength="15"></el-input>
+        </el-form-item>
+        <el-form-item label="财务负责人">
+          <el-input v-model="messageInfo.memberPerson" auto-complete="off" maxlength="10"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式">
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off"  maxlength="12" v-numberOnly></el-input>
         </el-form-item>
         <el-form-item label="支付宝">
           <el-input v-model="messageInfo.alipayAccount" auto-complete="off" maxlength="30"></el-input>
@@ -73,7 +85,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应付账款</p>
+        <p>应收清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -84,7 +96,7 @@
           border
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="200"
+          height="100%"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -107,7 +119,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <icon-svg icon="delete_lll"></icon-svg>
             </template>
           </el-table-column>
           <el-table-column
@@ -115,36 +127,36 @@
             sortable
             prop="departureTime"
             width="160"
-            label="发车时间">
+            label="中转时间">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             width="160"
             sortable
-            label="短驳批次号">
+            label="运单号">
           </el-table-column>
           <el-table-column
             prop="orgName"
             sortable
             width="160"
-            label="发车网点">
+            label="中转单号">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
             width="160"
-            label="到达网点">
+            label="出发城市">
           </el-table-column>
 
           <el-table-column
             sortable
             prop="loadAmount"
             width="140"
-            label="配载件数">
+            label="货品名">
           </el-table-column>
           <el-table-column
             prop="loadWeight"
-            label="配载重量"
+            label="件数"
             width="140"
             sortable
           >
@@ -154,18 +166,46 @@
             prop="loadVolume"
             sortable
             width="160"
-            label="配载体积">
+            label="交接方式">
           </el-table-column>
           <el-table-column
             prop="driverName"
-            label="司机"
+            label="异常类型"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shortPay"
-            label="短驳费"
+            label="异常件数"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="异常费用"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="到付款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="代收贷款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="小计"
             width="130"
             sortable
           >
@@ -182,7 +222,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>应付清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -191,11 +231,9 @@
           :data="alreadyPayInfo"
           stripe
           border
-          show-summary
-          :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="200"
+          height="100%"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -218,7 +256,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <icon-svg icon="delete_lll"></icon-svg>
             </template>
           </el-table-column>
           <el-table-column
@@ -226,36 +264,36 @@
             sortable
             prop="departureTime"
             width="160"
-            label="发车时间">
+            label="中转时间">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             width="160"
             sortable
-            label="短驳批次号">
+            label="运单号">
           </el-table-column>
           <el-table-column
             prop="orgName"
             sortable
             width="160"
-            label="发车网点">
+            label="中转单号">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
             width="160"
-            label="到达网点">
+            label="出发城市">
           </el-table-column>
 
           <el-table-column
             sortable
             prop="loadAmount"
             width="140"
-            label="配载件数">
+            label="货品名">
           </el-table-column>
           <el-table-column
             prop="loadWeight"
-            label="配载重量"
+            label="件数"
             width="140"
             sortable
           >
@@ -265,18 +303,183 @@
             prop="loadVolume"
             sortable
             width="160"
-            label="配载体积">
+            label="交接方式">
           </el-table-column>
           <el-table-column
             prop="driverName"
-            label="司机"
+            label="中转付款方式"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shortPay"
-            label="短驳费"
+            label="中转费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转送货费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转其他费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转费合计"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="小计"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            width="140"
+            sortable
+          >
+          </el-table-column>
+
+
+        </el-table>
+      </div>
+      <div class="sMessageCont_info">
+        <p>已收清单(本结算期内)</p>
+      </div>
+      <div class="info_tab">
+        <!--@selection-change="getSelection"-->
+        <el-table
+          ref="multipleTable"
+          :data="alreadyPayInfo"
+          stripe
+          border
+          @row-dblclick="getDbClick"
+          @row-click="clickDetails"
+          height="100%"
+          tooltip-effect="dark"
+          :default-sort = "{prop: 'id', order: 'ascending'}"
+          style="width: 100%">
+          <!--<el-table-column-->
+          <!--fixed-->
+          <!--sortable-->
+          <!--type="selection"-->
+          <!--width="50">-->
+          <!--</el-table-column>-->
+          <el-table-column
+            fixed
+            sortable
+            label="序号"
+            width="100">
+            <template slot-scope="scope">{{ scope.$index + 1 }}</template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            label=""
+            width="100">
+            <template slot-scope="scope">
+              <icon-svg icon="delete_lll"></icon-svg>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="departureTime"
+            width="160"
+            label="中转时间">
+          </el-table-column>
+          <el-table-column
+            prop="batchNo"
+            width="160"
+            sortable
+            label="运单号">
+          </el-table-column>
+          <el-table-column
+            prop="orgName"
+            sortable
+            width="160"
+            label="中转单号">
+          </el-table-column>
+          <el-table-column
+            prop="arriveOrgName"
+            sortable
+            width="160"
+            label="出发城市">
+          </el-table-column>
+
+          <el-table-column
+            sortable
+            prop="loadAmount"
+            width="140"
+            label="货品名">
+          </el-table-column>
+          <el-table-column
+            prop="loadWeight"
+            label="件数"
+            width="140"
+            sortable
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="loadVolume"
+            sortable
+            width="160"
+            label="交接方式">
+          </el-table-column>
+          <el-table-column
+            prop="driverName"
+            label="异常类型"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="异常件数"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="异常费用"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="到付款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="代收贷款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="小计"
             width="130"
             sortable
           >
@@ -293,6 +496,143 @@
         </el-table>
       </div>
 
+      <div class="sMessageCont_info">
+        <p>已付清单(本结算期内)</p>
+      </div>
+      <div class="info_tab">
+        <!--@selection-change="getSelection"-->
+        <el-table
+          ref="multipleTable"
+          :data="alreadyPayInfo"
+          stripe
+          border
+          @row-dblclick="getDbClick"
+          @row-click="clickDetails"
+          height="100%"
+          tooltip-effect="dark"
+          :default-sort = "{prop: 'id', order: 'ascending'}"
+          style="width: 100%">
+          <!--<el-table-column-->
+          <!--fixed-->
+          <!--sortable-->
+          <!--type="selection"-->
+          <!--width="50">-->
+          <!--</el-table-column>-->
+          <el-table-column
+            fixed
+            sortable
+            label="序号"
+            width="100">
+            <template slot-scope="scope">{{ scope.$index + 1 }}</template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            label=""
+            width="100">
+            <template slot-scope="scope">
+              <icon-svg icon="delete_lll"></icon-svg>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="departureTime"
+            width="160"
+            label="中转时间">
+          </el-table-column>
+          <el-table-column
+            prop="batchNo"
+            width="160"
+            sortable
+            label="运单号">
+          </el-table-column>
+          <el-table-column
+            prop="orgName"
+            sortable
+            width="160"
+            label="中转单号">
+          </el-table-column>
+          <el-table-column
+            prop="arriveOrgName"
+            sortable
+            width="160"
+            label="出发城市">
+          </el-table-column>
+
+          <el-table-column
+            sortable
+            prop="loadAmount"
+            width="140"
+            label="货品名">
+          </el-table-column>
+          <el-table-column
+            prop="loadWeight"
+            label="件数"
+            width="140"
+            sortable
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="loadVolume"
+            sortable
+            width="160"
+            label="交接方式">
+          </el-table-column>
+          <el-table-column
+            prop="driverName"
+            label="中转付款方式"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转送货费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转其他费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="中转费合计"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shortPay"
+            label="小计"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            width="140"
+            sortable
+          >
+          </el-table-column>
+
+
+        </el-table>
+      </div>
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
@@ -342,13 +682,13 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :sendId="sendId" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :sendId="sendId" @success="fetchData" ></SaveDialog>
   </div>
 </template>
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo,postCarfDtoById,postCarfBillCheckCarUpdateList} from '@/api/finance/fin_carfee'
+  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -377,8 +717,8 @@
               memberPerson:'',
               memberPersonPhone:'',
               checkBillCode:'',
-              checkStartTime:'',
-              checkEndTime:'',
+              startTime:'',
+              endTime:'',
               bankAccount:'',
               bankName:'',
               alipayAccount:'',
@@ -396,11 +736,7 @@
             },
             dealPayInfo:[],
             alreadyPayInfo:[],
-            form:{"orgId": '',
-              "checkBillCode": "",
-              "payDetailList":[],
-              "hadPayDetailList":[]
-            },
+            form:[],
             sendId:'',
             dialogInfo:[
               {
@@ -439,16 +775,6 @@
               startTime:'',
               endTime:''
             },
-            moiffyDealPay:{
-              orgId:'',
-              payTypeStatus:'pay',
-              checkId:'1'
-            },
-            moiffyAlReadyPay:{
-              orgId:'',
-              payTypeStatus:'hadPay',
-              checkId:'1'
-            },
             rules:{
               truckIdNumber:[
                 { required: true, validator: this.validateIsEmpty('车牌号不能为空'), trigger: 'blur' }
@@ -464,72 +790,23 @@
       },
       mounted(){
         this.searchCreatTime = this.defaultTime
-        this.changeOrgid(this.otherinfo)
-
-        // this.searchTitle.orgId = this.otherinfo.orgid
-        // this.searchDealPay.orgId = this.otherinfo.orgid
-        // this.searchAlReadyPay.orgId = this.otherinfo.orgid
+        this.searchTitle.orgId = this.otherinfo.orgid
+        this.searchDealPay.orgId = this.otherinfo.orgid
+        this.searchAlReadyPay.orgId = this.otherinfo.orgid
         //
         if(this.$route.query.id){
-          //
-          this.sendId = this.$route.query.id
-          this.changeId(this.$route.query.id)
           this.onSubmit()
+          this.sendId = this.$route.query.id
         }else{
-          // alert("lll")
+
         }
       },
       methods:{
-        getSummaries(param) {
-          const { columns, data } = param;
-          const sums = [];
-          columns.forEach((column, index) => {
-            if (index === 0) {
-              sums[index] = '总价';
-              return;
-            }
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += ' ';
-
-            } else {
-              sums[index] = '';
-            }
-
-          });
-
-          return sums;
-        },
-        iconDelete(scope){
-          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-            return el.id !== scope.row.id
-          })
-
-          // this.alreadyPayInfo.arrSendPay = this.alreadyPayInfo.map(el=>{
-          //   const tota = new Number()
-          //   // if(!isNaN(el.arrSendPay)){
-          //   //   return tota += el.arrSendPay
-          //   // }else{
-          //   //   return tota
-          //   // }
-          // })
-          // console.log(this.alreadyPayInfo.arrSendPay);
-        },
         fetchList(){
           this.loading = true
           return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
             this.messageArr = data
-
-            this.infoMessageData(this.messageArr)
-            // console.log(this.messageArr);
+            this.infoMessage(this.messageArr)
             this.loading = false
           })
         },
@@ -550,90 +827,42 @@
             this.loading = false
           })
         },
-        //修改
-        moodifyList(){
-          this.loading = true
-          this.sendId = this.$route.query.id
-          return postCarfDtoById(this.sendId).then(data => {
-            this.messageArr = data.data
-            this.infoMessageData(this.messageArr)
-            this.loading = false
-          })
+        fetchData(){
+          this.fetchList()
+          this.fetchDealPay()
+          this.fetchReadyPay()
         },
-        moodifyDealPay(){
-          this.loading = true
-          return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
-            this.dealPayInfo = data
-            this.loading = false
-          })
-        },
-        moodifyReadyPay(){
-          this.loading = true
-          return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
-            this.alreadyPayInfo = data
-            this.loading = false
-          })
-        },
-        changeOrgid(item){
-          this.searchTitle.orgId = item.orgid
-          this.searchDealPay.orgId = item.orgid
-          this.searchAlReadyPay.orgId = item.orgid
-        },
-        changeId(id){
-          this.searchTitle.id = id
-          this.searchDealPay.id = id
-          this.searchAlReadyPay.id = id
-        },
+        // fetchInfo(){
+        //   this.loading = true
+        //   Promise.all([postCarfBillCheckCarBaseInfo(this.searchTitle), postCarfBillCheckCarInitList(this.searchDealPay), postCarfBillCheckCarInitList(this.searchAlReadyPay)]).then(resArr => {
+        //     this.loading = false
+        //     // console.log(resArr)
+        //     this.dealPayInfo = resArr[1]
+        //     this.alreadyPayInfo = resArr[2]
+        //   })
+        // },
+
         getTrunkName(trunk) {
           if (trunk) {
             this.searchTitle.memberName = trunk.truckIdNumber
             this.searchDealPay.truckIdNumber = trunk.truckIdNumber
             this.searchAlReadyPay.truckIdNumber = trunk.truckIdNumber
+            // console.log(trunk)
+
           }
         },
-        //查询
         onSubmit(){
-          if(this.$route.query.id){
-            this.sendId = this.$route.query.id
-            this.moodifyList()
-            this.moodifyDealPay()
-            this.moodifyReadyPay()
-          }else{
-            this.fetchList()
-            this.fetchDealPay()
-            this.fetchReadyPay()
-          }
           const searchObj = {}
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime,searchObj.endTime)
+          // this.fetchData()
+          this.fetchList()
+          this.fetchDealPay()
+          this.fetchReadyPay()
         },
-        //保存
         submit(formName){
-          for(const i in this.messageInfo){
-            this.form[i] = this.messageInfo[i]
-          }
-          for(const i in this.messageButtonInfo){
-            this.form[i] = this.messageButtonInfo[i]
-          }
-          this.form.orgId = this.otherinfo.orgid
-          this.form.checkBillName = this.checkBillName
-            this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
-              const a = {}
-              a.shipOrderId = el.shipOrderId
-              a.arrSendPay = el.arrSendPay
-              a.shortPay = el.shortPay
-              return a
-            }) :[]
-            this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
-              const a = {}
-              a.shipOrderId = el.shipOrderId
-              a.arrSendPay = el.arrSendPay
-              a.shortPay = el.shortPay
-              return a
-            }) : []
-
-
+        //
 
           this.$refs[formName].validate((valid) => {
             if (valid) {
@@ -659,7 +888,14 @@
         closeVisibleDialog(){
           this.visibleDialog = false
         },
-        infoMessageData(item){
+        dialogRest(){
+          this.visibleDialog = false
+          // this.$emit('update:popVisible', false)
+          // if (typeof done === 'function') {
+          //   done()
+          // }
+        },
+        infoMessage(item){
           this.messageInfo.truckIdNumber = item.memberName
           this.messageInfo.memberPerson = item.memberPerson
           this.messageInfo.memberPersonPhone = item.memberPersonPhone
@@ -668,8 +904,8 @@
           this.messageInfo.bankName = item.bankName
           this.messageInfo.alipayAccount = item.alipayAccount
           this.messageInfo.wechatAccount = item.wechatAccount
-          this.messageInfo.checkStartTime = item.checkStartTime
-          this.messageInfo.checkEndTime = item.checkEndTime
+          this.messageInfo.startTime = item.startTime
+          this.messageInfo.endTime = item.endTime
           this.messageButtonInfo.companyName = item.companyName
           this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
           this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
@@ -697,14 +933,11 @@
       getSelection (selection) {
         this.selected = selection
       },
-      fetchData(){
-
-      }
     }
 </script>
 
 <style lang="scss">
-.short_lll{
+.carrierCreat_lll{
   margin: 0 9px;
   .sTop{
 
@@ -794,8 +1027,11 @@
       border-top-color: transparent;
       border-right-color: transparent;
     }
+    .el-form-item:nth-last-of-type(2){
+      border-top-color: transparent;
+    }
     .sWetPay{
-      width: 50%;
+      width: 83.4%;;
       border-top-color: transparent;
       border-right-color: transparent;
       .el-form-item__content{

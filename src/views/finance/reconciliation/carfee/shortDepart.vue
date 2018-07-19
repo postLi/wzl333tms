@@ -214,7 +214,7 @@
             "orgId":'',
             memberName: '',//
             memberPerson: '',//
-            status: '',// 0未 1已
+            checkStatus: '',// 0未 1已
             loadTypeId: 38,//
             startTime: '',//
             endTime:''
@@ -264,24 +264,22 @@
         }
 
         switch (type) {
-          // 新增modify
+          // 新增
           case 'storage':
             this.$router.push({
               path: '/finance/reconciliation/carfee/components',
               query: {
-                tab: '车辆对账'
+                tab: '车辆对账-创建对账'
               }
             })
 
             break;
           // 修改
           case 'modify':
-            // console.log(this.selected[0]);
-            // return false
             this.$router.push({
               path: '/finance/reconciliation/carfee/components',
               query: {
-                tab: '车辆对账',
+                tab: '车辆对账-修改查看',
                 id: this.selected[0].id
               }
             })

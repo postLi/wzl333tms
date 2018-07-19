@@ -23,9 +23,10 @@
     </el-form-item>
       <el-form-item label="对账状态
 :">
-        <el-select v-model="searchForm.status">
+        <el-select v-model="searchForm.checkStatus">
           <el-option label="未对账" :value="0"></el-option>
           <el-option label="已对账" :value="1"></el-option>
+          <el-option label="全部"  value=""></el-option>
         </el-select>
       </el-form-item>
       <el-form-item class="staff_searchinfo_tn art_marginTop" >
@@ -84,7 +85,7 @@ export default {
       },
       searchForm: {
         orgId: '',
-        status: 0,//
+        checkStatus: '',//
         memberName: '',//status
         memberPerson: '',//status
         startTime: '',//
@@ -112,7 +113,7 @@ export default {
     },
     clearForm () {
       this.searchForm.orgId = this.orgid
-      this.searchForm.status = ''
+      this.searchForm.checkStatus = ''
       this.searchForm.memberName = ''
       this.searchForm.memberPerson = ''
       this.searchForm.startTime = ''

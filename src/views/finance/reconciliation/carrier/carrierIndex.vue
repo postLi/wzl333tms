@@ -96,7 +96,7 @@
 import {  getExportExcel } from '@/api/company/customerManage'
 //postCustomerdetailList
 import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
-// import {postCustomerdetailList} from '@/api/finance/fin_customer'
+// import {postCustomerdetailList} from '@/api/finance/fin_customer' postCarrierdetailList
 import {postCarrierCarrierList} from '@/api/finance/fin_carrier'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
@@ -160,7 +160,6 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      console.log(this.searchQuery);
       return postCarrierCarrierList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
@@ -191,7 +190,7 @@ export default {
       }
       // 判断是否有选中项
 
-      if(!this.selected.length && type !== 'storage'){
+      if(!this.selected.length){
           // this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -206,44 +205,14 @@ export default {
             this.selectInfo = this.selected[0]
 
             this.$router.push({
-              path: '/finance/reconciliation/customer/detailTable',
+              path: '/finance/reconciliation/carrier/detailTable',
               query: {
-                tab: '客户对账',
-                id: this.selectInfo.shipSenderId
+                tab: '承运商对账-对账明细',
+                id: this.this.selected[0].id
               }
             })
 
             break;
-          // 停用
-          case 'stop':
-            this.closeAddCustomer()
-            if(this.selected.length > 1){
-              this.$message({
-                message: '只能选择一条数据进行跟踪设置~',
-                type: 'warning'
-              })
-              return false
-
-            }else{
-              if(this.selected[0].statusStr === '启用'){
-                let id = this.selected[0].id
-                putStop(id).then(res => {
-                  this.loading = false
-                  this.$message({
-                    type: 'success',
-                    message: '操作成功~'
-                  })
-                      this.fetchData()
-                }).catch(err => {
-                  this.loading = false
-                })
-              }else{
-                this.$message({
-                 type: 'info',
-                 message: '当前收支方式已经在停用状态~'
-                })
-              }
-            }
 
               break;
           // 导出数据
