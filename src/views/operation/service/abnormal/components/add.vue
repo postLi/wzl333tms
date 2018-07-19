@@ -76,8 +76,8 @@
           <el-form-item label="异常金额" prop="registerFee" >
             <el-input v-model="form.registerFee"  v-number-only:point maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
-          <el-form-item label="责任网点" prop="dutyOrgName" >
-            <SelectTree v-model="form.dutyOrgName" :disabled="isCheck || isDeal ? true : false"/>
+          <el-form-item label="责任网点" prop="dutyOrgId" >
+            <SelectTree v-model="form.dutyOrgId" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item class="driverRemarks label ms" label="异常描述" prop="abnormalDescribe" >
             <el-input type="textarea" maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
@@ -127,8 +127,11 @@
         </div>
       </el-form>
     </template>
+    <div slot="footer" class="dialog-footer" v-if="isCheck">
+      <el-button @click="closeMe">关 闭</el-button>
+    </div>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">保 存</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </pop-right>
@@ -235,7 +238,7 @@ export default {
         'abnormalNo': '',
         'abnormalPicture': '',
         'disposePicture': '',
-        'abnormalStatus': 119,
+        'abnormalStatus': '119',
         'abnormalType': '',
         'childShipId': '',
         'createTime': '',
@@ -245,7 +248,7 @@ export default {
         'disposeTime': '',
         'disposeName': '',
         'dutyOrgId': '',
-        'dutyOrgName': '',
+        // 'dutyOrgName': '',
         'orgId': '',
         'registerFee': '',
         'registerName': '',
@@ -343,24 +346,24 @@ export default {
     //   immediate: true
     // },
 
-    isDeal: {
-      handler(newVal) {
-        // this.setTitle()
-        if (this.isDeal) {
-          this.popTitle = '异常处理'
-          GetLook(this.id).then(res => {
-            this.form = res
-            this.form.disposeTime = new Date()
-          })
-          console.log(this.id)
-          // const data = Object.assign({}, this.info)
-          // for (const i in this.form) {
-          //   this.form[i] = data[i]
-          // }
-        }
-      },
-      immediate: true
-    },
+    // isDeal: {
+    //   handler(newVal) {
+    //     // this.setTitle()
+    //     if (this.isDeal) {
+    //       this.popTitle = '异常处理'
+    //       GetLook(this.id).then(res => {
+    //         this.form = res
+    //         this.form.disposeTime = new Date()
+    //       })
+    //       console.log(this.id)
+    //       // const data = Object.assign({}, this.info)
+    //       // for (const i in this.form) {
+    //       //   this.form[i] = data[i]
+    //       // }
+    //     }
+    //   },
+    //   immediate: true
+    // },
 
     info() {
       if (this.isModify) {
@@ -370,28 +373,23 @@ export default {
           this.form[i] = data[i]
         }
         this.form.id = data.id
-        console.log(this.isModify + '异常修改')
       } else if (this.isCheck) {
         this.popTitle = '查看明细'
-        const data = Object.assign({}, this.info)
-        for (const i in this.form) {
-          this.form[i] = data[i]
-        }
-        this.form.id = data.id
-        console.log(this.isCheck + '查看明细')
-      }
-      //  else if (this.isDeal) {
-      //   this.popTitle = '异常处理'
-      //   const data = Object.assign({}, this.info)
-      //   for (const i in this.form) {
-      //     this.form[i] = data[i]
-      //   }
-      //   GetLook(this.id).then(res => {
-      //     this.form = res
-      //     this.form.disposeTime = new Date()
-      //   })
-      // }
-      else {
+        GetLook(this.info.id).then(res => {
+          this.form = res
+          this.form.disposeTime = new Date()
+          this.form.disposeName = this.otherinfo.name
+          console.log(res + '查看明细')
+        })
+      } else if (this.isDeal) {
+        this.popTitle = '异常处理'
+        console.log(this.isDeal + '异常处理')
+        GetLook(this.info.id).then(res => {
+          this.form = res
+          this.form.disposeTime = new Date()
+          this.form.disposeName = this.otherinfo.name
+        })
+      } else {
         this.dengji()
         this.popTitle = '异常登记'
         for (const i in this.form) {
@@ -503,7 +501,7 @@ export default {
         this.form.abnormalStatus = data.abnormalStatus
         this.form.disposeUserId = data.disposeUserId
         this.form.disposeOpinion = data.disposeOpinion
-        this.form.disposeOrgId = data.disposeOrgId
+
         // this.form.registerUserId = data.registerUserId
         // this.form.registerTime = +this.form.registerTime
         // this.form.createTime = +this.form.createTime
@@ -569,9 +567,11 @@ export default {
 
           let promiseObj
           // 判断操作，调用对应的函数
-          if (this.isModify) {
-            promiseObj = PutXiuGai(data)
+          if (this.isModify || this.isDeal) {
+            data.abnormalStatus = 119
+            promiseObj = PutXiuGai(data) // 修改或处理异常
           } else {
+            data.abnormalStatus = 118
             promiseObj = PostNewAbnormal(data)
           }
 

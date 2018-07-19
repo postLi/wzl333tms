@@ -303,20 +303,23 @@ export default {
         case 'xiugai':
           if (this.selected.length > 1) {
             this.$message({
-              message: '每次只能寄出单条数据',
+              message: '每次只能修改单条数据',
               type: 'warning'
             })
-          } else {
+          } else if (this.selected[0].abnormalStatus === 118) {
             this.selectInfo = {}
             this.isModify = true
             this.isCheck = false
                   //  this.isDbclick = false
             this.selectInfo = Object.assign({}, this.selected[0])
-            console.log(this.id)
+            // console.log(this.id)
+
             this.openAddAbnormal()
+          } else if (this.selected[0].abnormalStatus === 119) {
+            this.$message.warning('异常已经处理，不允许删除~')
           }
           break
-                // 查看明细
+          // 查看明细
         case 'check':
           if (this.selected.length > 1) {
             this.$message({
@@ -330,40 +333,108 @@ export default {
             // this.id = this.selected[0].id
             this.selectInfo = Object.assign({}, this.selected[0])
             this.openAddAbnormal()
+            // console.log(this.selectInfo, this.id + 'xz')
           }
           break
         // 删除
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
                     // =>todo 删除多个
-          let ids = this.selected.map(item => {
+                    // ids = ids.join(',')
+          // const ids = this.selected.filter(el => {
+          //   return el.abnormalStatus === 118
+          // }).map(el => {
+          //   return el.id
+          // })
+
+          const ids = this.selected.map(item => {
             return item.id
           })
-          ids = ids.join(',')
 
-          this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
-            confirmButtonText: '删除',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            delAbnormal(ids).then(res => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
+          // console.log(ids)
+          if (this.selected[0].abnormalStatus === 118) {
+            this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              delAbnormal(ids).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this.$message({
+                  type: 'info',
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
               })
-              this.fetchData()
-            }).catch(err => {
+            }).catch(() => {
               this.$message({
                 type: 'info',
-                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                message: '已取消删除'
               })
             })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
-          })
+          } else if (this.selected[0].abnormalStatus === 119) {
+            this.$message.warning('异常已处理，不允许删除')
+          }
+
+          // this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+          //   confirmButtonText: '删除',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   delAbnormal(ids).then(res => {
+          //     this.$message({
+          //       type: 'success',
+          //       message: '删除成功!'
+          //     })
+          //     this.fetchData()
+          //   }).catch(err => {
+          //     this.$message({
+          //       type: 'info',
+          //       message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+          //     })
+          //   })
+          // }).catch(() => {
+          //   this.$message({
+          //     type: 'info',
+          //     message: '已取消删除'
+          //   })
+          // })
+
+          // const deleteItem = this.selected[0].id
+          // const ids = this.selected.map(item => {
+          //   return item.abnormalStatus !== 119
+          // })
+          // if (ids.length) {
+          //   this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+          //     confirmButtonText: '删除',
+          //     cancelButtonText: '取消',
+          //     type: 'warning'
+          //   }).then(() => {
+          //     delAbnormal(ids).then(res => {
+          //       this.$message({
+          //         type: 'success',
+          //         message: '删除成功!'
+          //       })
+          //       this.fetchData()
+          //     }).catch(err => {
+          //       this.$message({
+          //         type: 'info',
+          //         message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+          //       })
+          //     })
+          //   }).catch(() => {
+          //     this.$message({
+          //       type: 'info',
+          //       message: '已取消删除'
+          //     })
+          //   })
+          // } else {
+          //   this.$message.warning('异常已经处理，不允许删除~')
+          // }
           break
       }
           // 清除选中状态，避免影响下个操作
@@ -392,7 +463,6 @@ export default {
       this.isCheck = true
       this.isModify = false
       // this.id = row.id
-          // this.isDbclick = true
       this.openAddAbnormal()
     }
   }

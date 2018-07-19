@@ -292,7 +292,7 @@ export default {
             this.isModify = false
             this.isCheck = false
             this.isDeal = true
-            this.id = this.selected[0].id
+            // this.id = this.selected[0].id
             this.selectInfo = Object.assign({}, this.selected[0])
             this.openAddAbnormal()
           }
@@ -338,7 +338,7 @@ export default {
     },
     getDbClick(row, event) {
       this.selectInfo = row
-      this.id = row.id
+      // this.id = row.id
       this.isCheck = true
       this.isDeal = true
       this.isModify = false

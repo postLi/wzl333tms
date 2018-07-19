@@ -42,7 +42,7 @@
           <el-table-column
             label="开单网点"
             width="180"
-            prop="shipFromOrgid"
+            prop="orgidName"
             sortable
             >
           </el-table-column>
