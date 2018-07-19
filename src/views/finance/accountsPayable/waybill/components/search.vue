@@ -65,6 +65,7 @@ export default {
     }
     return {
       searchForm: {
+        arriveOrgid: ''
         // feeType: 8, // 8-应付回扣 10-实际提货费 13-其他费用支出
         // endTime: '',
         // id: 0,
@@ -96,6 +97,7 @@ export default {
     }
   },
   mounted () {
+    this.searchForm.arriveOrgid = this.orgid
     this.onSubmit()
   },
   methods: {
@@ -106,13 +108,12 @@ export default {
         this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
-      // this.searchForm = Object.assign({}, this.$options.data().searchForm)
-      // this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
+        this.searchForm.arriveOrgid = this.orgid
       })
     }
   }

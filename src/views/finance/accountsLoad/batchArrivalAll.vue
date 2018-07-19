@@ -1,11 +1,11 @@
 <template>
   <!-- 到车汇总结算页面 -->
   <div class="accountsLoad_table">
+    <!-- 搜索框 -->
+    <div class="transferTable_search clearfix">
+      <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
+    </div>
     <transferTable style="height: calc(100% - 40px);padding:10px">
-      <!-- 搜索框 -->
-      <div slot="search">
-        <querySelect search="shipSn" type="order" size="mini" @change="searchShip" />
-      </div>
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
         <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">到车汇总结算</el-button>
@@ -82,7 +82,15 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 import Receipt from './components/receiptAll'
 import Pager from '@/components/Pagination/index'
+import currentSearch from './components/currentSearch'
 export default {
+  components: {
+    transferTable,
+    querySelect,
+    Receipt,
+    Pager,
+    currentSearch
+  },
   data() {
     return {
       tablekey: '',
@@ -99,6 +107,7 @@ export default {
       selectedRight: [],
       selectedLeft: [],
       isGoReceipt: true,
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
@@ -485,12 +494,6 @@ export default {
       return this.rightTable.length
     }
   },
-  components: {
-    transferTable,
-    querySelect,
-    Receipt,
-    Pager
-  },
   mounted() {
     this.getList()
   },
@@ -522,6 +525,7 @@ export default {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
       if (!this.isFresh) {
@@ -550,13 +554,22 @@ export default {
             e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
             e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
           })
+          this.orgLeftTable = objectMerge2([], this.leftTable)
         })
 
       }
     },
     changLoadData(index, prop, newVal) {
-      let amount = Number(newVal)
       this.rightTable[index][prop] = Number(newVal)
+      let unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
+      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      let paidVal = this.rightTable[index][prop]
+      if (paidVal < 0 || paidVal > unpaidVal) {
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+      } else {
+        this.rightTable[index][prop] = Number(newVal)
+      }
+      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -589,15 +602,19 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
-            e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
-            e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
-            e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
-            e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
+          e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
+          e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
+          e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
+          e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
 
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
+          }
+          let orgItem = this.orgLeftTable.indexOf(e)
+          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+            this.orgLeftTable.splice(item, 1)
           }
         })
         this.selectedRight = [] // 清空选择列表
@@ -614,6 +631,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
@@ -627,7 +645,9 @@ export default {
       } else {
         this.isGoReceipt = false
       }
-
+    },
+    selectCurrent (obj) {
+      this.leftTable = Object.assign([], obj)
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []
@@ -665,26 +685,28 @@ export default {
           let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实结到站装卸费
           let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实结到站其他费
 
-          if (itemArrivepayCarriage.amount !== 0) {
+          if (itemArrivepayCarriage.amount > 0 && itemArrivepayCarriage.amount <= e.unpaidArrivepayCarriage) {
             this.tableReceiptInfo.push(itemArrivepayCarriage)
           }
-          if (itemArrivepayOilCard.amount !== 0) {
+          if (itemArrivepayOilCard.amount > 0 && itemArrivepayOilCard.amount <= e.unpaidArrivepayOilCard) {
             this.tableReceiptInfo.push(itemArrivepayOilCard)
           }
-          if (itemArriveHandlingFee.amount !== 0) {
+          if (itemArriveHandlingFee.amount > 0 && itemArriveHandlingFee.amount <= e.unpaidArriveHandlingFee) {
             this.tableReceiptInfo.push(itemArriveHandlingFee)
           }
-          if (itemArriveOtherFee.amount !== 0) {
+          if (itemArriveOtherFee.amount > 0 && itemArriveOtherFee.amount <= e.unpaidArriveOtherFee) {
             this.tableReceiptInfo.push(itemArriveOtherFee)
           }
-          
           itemArrivepayCarriage = {}
           itemArrivepayOilCard = {}
           itemArriveHandlingFee = {}
           itemArriveOtherFee = {}
-          
         })
-        this.openDialog()
+        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+          this.openDialog()
+        } else {
+          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        }
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示

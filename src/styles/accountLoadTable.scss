@@ -64,6 +64,18 @@
   width: 100;
   overflow: hidden;
   height: 100%;
+  position:relative;
+  .transferTable_search{
+    position:absolute;
+    display:flex;
+    text-align: center;
+    top:26px;
+    left:calc( 50% + 100px);
+    z-index:2;
+    .el-button{
+      margin-left: 10px;
+    }
+  }
   .accountsLoad_table_pager {
     display: flex;
     flex-direction: columns;

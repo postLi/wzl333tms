@@ -21,7 +21,8 @@
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="经办人" prop="agent">
-                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="id" search="name" label="name" placeholder="选择经办人" />
+                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="id" search="name" label="name" placeholder="选择经办人">
+                  </querySelect>
                 </el-form-item>
               </div>
               <div class="feeFrom-type-baseInfo">
@@ -29,7 +30,7 @@
                   <selectType :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" clearable placeholder="选择收支方式"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
-                  <el-input :size="btnsize" v-model="formModel.bankAccount" clearable></el-input>
+                  <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wechatAccount">
                   <el-input :size="btnsize" v-model="formModel.wechatAccount" placeholder="微信号" clearable></el-input>
@@ -99,7 +100,7 @@ export default {
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
       formModel: {
-        settlementTime: new Date()
+        settlementTime: ''
       },
       formModelRules: {},
       setLoadTableList: {},
@@ -157,11 +158,13 @@ export default {
       }
     },
     setData() {
+      let szDtoList = []
+      szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
       this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
-      this.$set(this.addIncomeInfo, 'szDtoList', this.formModel)
+      this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
     },
     save() {
       if (this.loadTable.length < 1) {
@@ -178,7 +181,17 @@ export default {
           this.$message({ type: 'error', message: '保存失败！' })
         })
     },
-    cancel() {},
+    cancel() {
+      this.$confirm('确定要取消记收入操作吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$router.push({
+          path: './settleLog',
+        })
+      })
+    },
     handleClick() {},
     getLoadTable(obj) {
       console.log(obj)

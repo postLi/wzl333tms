@@ -29,7 +29,7 @@
                   <selectType :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" clearable placeholder="选择收支方式"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
-                  <el-input :size="btnsize" v-model="formModel.bankAccount" clearable></el-input>
+                  <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wechatAccount">
                   <el-input :size="btnsize" v-model="formModel.wechatAccount" placeholder="微信号" clearable></el-input>
@@ -134,11 +134,13 @@ export default {
       }
     },
     setData() { // 设置传给后台的数据结构
+      let szDtoList = []
+      szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
       this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
-      this.$set(this.addIncomeInfo, 'szDtoList', this.formModel)
+      this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
     },
     save() {
       if (this.loadTable.length < 1) {

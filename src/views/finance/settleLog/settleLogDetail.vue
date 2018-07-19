@@ -28,22 +28,6 @@
           </template>
         </el-table>
       </div>
-      <!-- <div class="info_tab_row">
-        <el-table ref="multipleTable" :key="tablekeyBottom" :data="dataListBottom" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
-          </el-table-column>
-          <template v-for="column in tableColumnBottom">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-              <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
-              </template>
-            </el-table-column>
-          </template>
-        </el-table>
-      </div> -->
     </div>
     <!-- 分页 -->
     <div class="info_tab_footer">
@@ -89,7 +73,6 @@ export default {
       tablekeyBottom: 0,
       total: 0,
       dataListTop: [],
-      dataListBottom: [],
       popVisibleDialog: false,
       loading: false,
       setupTableVisible: false,
@@ -248,7 +231,7 @@ export default {
           fixed: false
         }
       ],
-      columnLoad: [{
+      columnBatch: [{
           label: '结算网点',
           prop: 'orgid',
           width: '150',
@@ -468,14 +451,16 @@ export default {
       if (this.$route.query.shipOrderType) {
         switch (this.shipOrderType) {
           case '1':
-          this.tableColumn = this.columnOrder
+          this.tableColumn = this.columnOrder // 运单视图
             break
           case '2':
-          this.tableColumn = this.columnLoad
+          this.tableColumn = this.columnBatch // 批次视图
             break
           case '3':
             break
         }
+      }else {
+        this.tableColumn = this.columnOrder // 没有数据上显示运单视图
       }
     },
     fetchList() {

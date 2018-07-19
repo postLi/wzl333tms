@@ -167,7 +167,7 @@ export default {
     }
   },
   mounted() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {

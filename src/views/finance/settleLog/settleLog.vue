@@ -84,12 +84,13 @@ export default {
       popVisibleDialog: false,
       loading: false,
       setupTableVisible: false,
-      tableColumn: [{
-          label: '序号',
-          prop: 'flowId',
-          width: '180',
-          fixed: true
-        },
+      tableColumn: [
+      // {
+      //     label: '序号',
+      //     prop: 'flowId',
+      //     width: '180',
+      //     fixed: true
+      //   },
         {
           label: '结算网点',
           prop: 'orgName',
@@ -106,7 +107,7 @@ export default {
           label: '结算类型',
           prop: 'settlementIdZh',
           width: '150',
-          fixed: false
+          fixed: true
         },
         {
           label: '结算人',

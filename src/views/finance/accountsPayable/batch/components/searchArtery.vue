@@ -67,8 +67,8 @@ export default {
     return {
       searchForm: {
         // sign: 2,
-        orgid: 1,
-        ascriptionOrgid: 1,
+        orgid: '',
+        ascriptionOrgid: '',
         status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
         // loadStartTime: '',
         // loadEndTime: '',
@@ -105,6 +105,8 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
+        this.searchForm.orgid = this.otherinfo.orgid
+        this.searchForm.ascriptionOrgid = this.otherinfo.orgid
       })
     }
   }

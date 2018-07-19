@@ -86,12 +86,7 @@ export default {
       dataList: [],
       loading: false,
       setupTableVisible: false,
-      tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '110',
-        fixed: true
-      },
+      tableColumn: [
       {
         label: '运单号',
         prop: 'shipSn',

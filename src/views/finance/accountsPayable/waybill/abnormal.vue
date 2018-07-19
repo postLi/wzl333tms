@@ -86,10 +86,11 @@ export default {
       dataList: [],
       loading: false,
       setupTableVisible: false,
-      tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '110',
+      tableColumn: [
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '150',
         fixed: true
       },
       {
@@ -97,12 +98,6 @@ export default {
         prop: 'shipId',
         width: '120',
         fixed: false
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '150',
-        fixed: true
       },
       {
         label: '货号',

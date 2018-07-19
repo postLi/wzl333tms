@@ -1,16 +1,8 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="100px" class="staff_searchinfo clearfix">
     <el-form-item label="送货时间">
-      <el-date-picker
-            v-model="searchTime"
-            type="daterange"
-            align="right"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions"
-            end-placeholder="结束日期">
-          </el-date-picker>
+      <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="送货网点" prop="orgid">
       <SelectTree v-model="searchForm.orgid" clearable>
@@ -68,8 +60,8 @@ export default {
     return {
       searchForm: {
         // sign: 2,
-        orgid: 0,
-        ascriptionOrgid: 0,
+        orgid: '',
+        ascriptionOrgid: '',
         status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
         // loadStartTime: '',
         // loadEndTime: '',
@@ -88,7 +80,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgid = this.otherinfo.orgid
     this.searchForm.ascriptionOrgid = this.otherinfo.orgid
     this.onSubmit()
@@ -106,6 +98,8 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
+        this.searchForm.orgid = this.otherinfo.orgid
+        this.searchForm.ascriptionOrgid = this.otherinfo.orgid
       })
     }
   }

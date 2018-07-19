@@ -44,8 +44,8 @@ export function postCancelSettlement(data) {
 /**
  * 记收入支出
  */
-export function postAddIncome(){
-	return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/').then(res => {
+export function postAddIncome(data){
+	return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/', data).then(res => {
 		return res.data
 	})
 }
