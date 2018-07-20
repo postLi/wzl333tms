@@ -310,10 +310,22 @@ export default {
           this.queryParam = '2'
           fn = orderManageApi.getRecently
           break
+        case 'fromcity':
+          this.canchangeparam = false
+          this.lastQuery = ''
+          this.queryParam = '4'
+          fn = orderManageApi.getRecently
+          break
+        case 'tocity':
+          this.canchangeparam = false
+          this.lastQuery = ''
+          this.queryParam = '5'
+          fn = orderManageApi.getRecently
+          break
         case 'remark':
           this.canchangeparam = false
           this.lastQuery = ''
-          this.queryParam = ''
+          this.queryParam = '3'
           fn = orderManageApi.getRemarkList
           break
         case 'payway':

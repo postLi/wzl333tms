@@ -153,9 +153,21 @@
     <querySelect search="value" keyvalue="value" type="cargoPack" @change="getcity" />
     <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
+    <h4>获取备注列表</h4>
+    <querySelect search="value" keyvalue="value" type="remark" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;remark&quot; @change=&quot;getcity&quot; /&gt;</pre>
+
     <h4>获取收支方式</h4>
     <querySelect search="financialWay" keyvalue="financialWay" type="payway" @change="getcity" />
     <pre class="code">&lt;querySelect search=&quot;financialWay&quot; keyvalue=&quot;financialWay&quot; type=&quot;payway&quot; @change=&quot;getcity&quot; /&gt;</pre>
+
+    <h4>获取最近出发城市</h4>
+    <querySelect search="value" :remote="true" keyvalue="value" type="fromcity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;fromcity&quot;  /&gt;</pre>
+
+    <h4>获取最近到达城市</h4>
+    <querySelect search="value" :remote="true" keyvalue="value" type="tocity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;tocity&quot;  /&gt;</pre>
 
 
     <h3>prop</h3>
@@ -202,6 +214,10 @@
       <li>batch 获取批次列表</li>
       <li>cargoName 获取货品名称</li>
       <li>cargoPack 获取货品包装</li>
+      <li>fromcity 获取最近出发城市</li>
+      <li>tocity 获取最近到达城市</li>
+      <li>remark 获取备注列表</li>
+      <li>payway 获取收支方式</li>
     </ul>
   </div>
 </template>
