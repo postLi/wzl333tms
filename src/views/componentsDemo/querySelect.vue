@@ -170,6 +170,18 @@
     <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;tocity&quot;  /&gt;</pre>
 
 
+    <hr>
+    <h2>带初始值的示例</h2>
+    <querySelect search="value" v-model="city2" :remote="true" valuekey="value" type="tocity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;tocity&quot;  /&gt;</pre>
+    <h4>valuekey跟显示字段不一致的回显</h4>
+    <querySelect search="driverName" type="driver" v-model="driver" @change="getdriver" :remote="true" />
+  <br>
+    <querySelect search="driverName" type="driver" name="张晓吉" v-model="driver2" @change="getdriver" :remote="true" />
+    <br>
+    <querySelect search="longAddr" @change="selectFromCity" :name="fromCityName" type="city" :getinput="true"  v-model="city3" :remote="true" />
+
+
     <h3>prop</h3>
     <hr>
     <ul>
@@ -231,12 +243,36 @@ export default {
   },
   data() {
     return {
-      city: '方',
+      city: '',
+      city2: '',
       val: '',
-      receiver: ''
+      receiver: '',
+      driver: 4,
+      driver2: '',
+      city3: '',
+      fromCityName: ''
     }
   },
+  watch: {
+    city3(ne) {
+      console.log('city3 change:', ne)
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      // this.city2 = '广州'
+      this.driver = 5
+    }, 5000)
+  },
   methods: {
+    selectFromCity(item, city) {
+      console.log('selectFromCity:', item, city)
+      console.log('this.city3:', this.city3)
+    },
+    getdriver(obj) {
+      console.log('driver:', obj)
+      console.log('driver2:', this.driver2)
+    },
     getcity(obj) {
       // {
       //   pageNum: 1,

@@ -40,7 +40,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
             <el-form-item prop="tmsOrderShip.shipFromCityCode">
-              <querySelect search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderShip.shipFromCityCode" :remote="true" />
+              <querySelect :getinput="true" search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderShip.shipFromCityCode" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -48,7 +48,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
             <el-form-item prop="tmsOrderShip.shipToCityCode">
-              <querySelect @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderShip.shipToCityCode" :remote="true" />
+              <querySelect :getinput="true" @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderShip.shipToCityCode" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -1108,6 +1108,7 @@ export default {
       if (item) {
         this.form.tmsOrderShip.shipFromCityName = item.longAddr
       } else {
+        this.form.tmsOrderShip.shipFromCityCode = city || ''
         this.form.tmsOrderShip.shipFromCityName = city || ''
       }
     },
@@ -1116,6 +1117,7 @@ export default {
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
       } else {
+        this.form.tmsOrderShip.shipToCityCode = city || ''
         this.form.tmsOrderShip.shipToCityName = city || ''
       }
     },
