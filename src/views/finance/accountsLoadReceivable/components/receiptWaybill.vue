@@ -48,11 +48,11 @@
         </el-table>
       </div>
       <div class="receiptDialog_todo">
-        <el-button icon="el-icon-plus" type="primary" plain class="tableAllBtn" size="mini" @click="plusItem"></el-button>
+         <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-minus" type="danger" plain class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+               <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="100">
@@ -233,9 +233,8 @@ export default {
       this.formModel.amount = 0
       this.formModel.detailDtoList = Object.assign([], this.info)
       this.formModel.detailDtoList.forEach((e, index) => {
-        // e.dataName = this.dataName
         this.formModel.amount += e.amount
-        let data = Number(e.amount).toFixed(2).toString().split('').reverse()
+        let data = Number(e.amount).toFixed(2).toString().split('').reverse() // 默认保留两位小数 toFixed(2)
         let item = data.indexOf('.')
         if (item !== -1) {
           data.splice(item, 1)
@@ -251,7 +250,7 @@ export default {
         e.million = data[8]
         e.tenMillion = data[9]
       })
-      this.amountMessage = smalltoBIG(this.formModel.amount)
+      this.amountMessage = smalltoBIG(this.formModel.amount) // 转换成中午大写数字
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
       let apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
@@ -275,7 +274,7 @@ export default {
       let shipPayableFeeDtos = []
       // this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       // this.$set(this.submitData, 'settlementId', this.settlementId)
-      this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.orgid)
+      this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.shipFromOrgid)
       this.$set(capitalFlow, 'settlementSn', this.formModel.settlementSn)
       this.$set(capitalFlow, 'settlementBy', this.formModel.settlementBy)
       this.$set(capitalFlow, 'settlementTime', this.formModel.settlementTime)
@@ -295,7 +294,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          postCreateloadSettlement(this.submitData).then(data => {
+          postCreateloadSettlement(this.getRouteInfo.vo.shipFromOrgid, this.submitData).then(data => {
               this.$message({ type: 'success', message: '操作成功' })
               this.closeMe()
               this.$router.push({ path: './accountsPayable/waybill' })

@@ -109,6 +109,8 @@ import { fetchPostlist } from '@/api/operation/pickup'
 import { postReceipt } from '@/api/operation/receipt'
 // 获取库存列表
 import { postAllOrderRepertory } from '@/api/operation/repertory'
+// 获取收支方式列表
+import { postTmsFfinancialwayList } from '@/api/finance/financefinancialway'
 
 export default {
   props: {
@@ -313,6 +315,11 @@ export default {
           this.lastQuery = ''
           this.queryParam = ''
           fn = orderManageApi.getRemarkList
+          break
+        case 'payway':
+          this.queryParam.vo.orgid = this.getOrgid
+          this.queryParam.vo.status = 0
+          fn = postTmsFfinancialwayList
           break
       }
       // 设定pageSize参数

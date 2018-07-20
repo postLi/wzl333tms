@@ -153,6 +153,10 @@
     <querySelect search="value" keyvalue="value" type="cargoPack" @change="getcity" />
     <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
+    <h4>获取收支方式</h4>
+    <querySelect search="financialWay" keyvalue="financialWay" type="payway" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;financialWay&quot; keyvalue=&quot;financialWay&quot; type=&quot;payway&quot; @change=&quot;getcity&quot; /&gt;</pre>
+
 
     <h3>prop</h3>
     <hr>
@@ -207,7 +211,7 @@ export default {
   components: {
     querySelect
   },
-  data () {
+  data() {
     return {
       city: '方',
       val: '',
@@ -215,7 +219,7 @@ export default {
     }
   },
   methods: {
-    getcity (obj) {
+    getcity(obj) {
       // {
       //   pageNum: 1,
       //   pageSize: 100
@@ -223,7 +227,7 @@ export default {
       console.log('pagenation', obj)
       this.city = obj.longAddr
     },
-    findId (el,query) {
+    findId(el, query) {
       return el.customerId.toString() === query
     }
   }
