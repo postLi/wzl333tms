@@ -739,7 +739,7 @@ export default {
           'shipToCityCode': '',
           'shipToCityName': '',
           'shipToOrgid': '',
-          'shipTotalFee': 0,
+          'shipTotalFee': '0.00',
           'shipTruckIdNumber': '',
           'shipUserid': ''
         },
@@ -843,7 +843,7 @@ export default {
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
         let num = 1
-        if (newVal === 80) {
+        if (newVal === 80 || newVal === '80') {
           num = 0
         }
         this.form.tmsOrderShip.shipReceiptNum = num
@@ -853,7 +853,7 @@ export default {
     'form.tmsOrderShip.shipTotalFee': {
       handler(newVal) {
         if (newVal === '') {
-          this.form.tmsOrderShip.shipTotalFee = 0
+          this.form.tmsOrderShip.shipTotalFee = '0.00'
         }
         this.setShipFee()
       },
@@ -1646,10 +1646,10 @@ export default {
       this.shipReceiptpayFeeDisabled = true
       this.shipMonthpayFeeDisabled = true
 
-      this.form.tmsOrderShip.shipNowpayFee = 0
-      this.form.tmsOrderShip.shipArrivepayFee = 0
-      this.form.tmsOrderShip.shipMonthpayFee = 0
-      this.form.tmsOrderShip.shipReceiptpayFee = 0
+      this.form.tmsOrderShip.shipNowpayFee = '0.00'
+      this.form.tmsOrderShip.shipArrivepayFee = '0.00'
+      this.form.tmsOrderShip.shipMonthpayFee = '0.00'
+      this.form.tmsOrderShip.shipReceiptpayFee = '0.00'
 
       switch (key) {
         // 现付
@@ -1674,7 +1674,7 @@ export default {
           break
         // 免费
         case 103:
-          this.form.tmsOrderShip.shipTotalFee = 0
+          this.form.tmsOrderShip.shipTotalFee = '0.00'
           break
         // 多笔付
         case 104:
@@ -1720,7 +1720,7 @@ export default {
       this.form.tmsOrderShip.shipIsSeparate = 0
       this.form.tmsOrderShip.shipIsTransfer = 0
       this.form.tmsOrderShip.shipIsUpdate = 0
-      this.form.tmsOrderShip.shipTotalFee = 0
+      this.form.tmsOrderShip.shipTotalFee = '0.00'
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
 
       this.currentBatch = 1
@@ -1788,7 +1788,10 @@ export default {
               data.tmsOrderShip.shipReceiverId = data.customerList[1].customerId
             }
             data.customerList[1].customerType = 2
-            data.tmsOrderCargoList = this.form.cargoList.map(el => {
+            // 处理货物
+            data.tmsOrderCargoList = this.form.cargoList.filter(el => {
+              return !!el.cargoName
+            }).map(el => {
               const b = {}
               for (const i in el) {
                 if (el[i] === '') {
@@ -1815,6 +1818,7 @@ export default {
                 }
                 return */
               data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
+              data.tmsOrderShip.shipStatus = this.orderData.tmsOrderShip.shipStatus
               console.log('change Order:', data)
               orderManage.putChangeOrder(data).then(res => {
                 this.$message.success('成功修改运单！')
