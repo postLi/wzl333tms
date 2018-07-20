@@ -619,6 +619,9 @@ export default {
         //   },
         // },
   methods: {
+     parseShipStatus(id){
+      return parseShipStatus(id)
+    },
     fetchAllreceipt() {
       this.loading = true
       return postPickuplist(this.searchQuery).then(data => {

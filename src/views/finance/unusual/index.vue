@@ -270,7 +270,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-      <Addunusual :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+      <Addunusual :issender="true" :isModify="isModify" :isDbClick="isDbClick" :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
       <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
 </div>
@@ -317,7 +317,7 @@ export default {
       isCheck: false,
       AddAbnormalVisible: false,
       setupTableVisible: false,
-      isDbclick: false,
+      isDbClick: false,
       licenseTypes: [],
       selected: [],
       loading: false,
@@ -397,8 +397,9 @@ export default {
           } else {
             this.isCheck = false
                   //  this.isDbclick = false
-            this.id = this.selected[0].id
-            this.selectInfo = this.selected[0]
+            // this.id = this.selected[0].id
+            // this.selectInfo = this.selected[0]
+            this.selectInfo = Object.assign({},this.selected[0])
             this.isModify = true
             // console.log('this.selectInfo:', this.selected)
             this.openAddAbnormal()
@@ -462,8 +463,9 @@ export default {
       this.setupTableVisible = false
     },
     getDbClick(row, event) {
-      this.repertoryId = row
-      this.isCheck = true
+      this.selectInfo = row
+      // this.isCheck = true
+      this.isDbClick = true
       this.isModify = false
           // this.isDbclick = true
       this.openAddAbnormal()

@@ -50,7 +50,7 @@
             <el-table-column
               prop=""
               sortable
-              width="120"
+              width="200"
               label="放货时间">
               <template slot-scope="scope">{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
             </el-table-column>
@@ -542,6 +542,9 @@ export default {
     }
   },
   methods: {
+    parseShipStatus(id){
+      return parseShipStatus(id)
+    },
           // PutFh
     fetchAllPutFh() {
             // this.loading = true

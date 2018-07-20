@@ -178,7 +178,7 @@ export default {
     //   }
     // }
     return {
-      id: '',
+     // id: '',
       senderList: [],
       receiverList: [],
       dataset: [],

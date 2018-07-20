@@ -606,6 +606,9 @@ export default {
     }
   },
   methods: {
+     parseShipStatus(id){
+      return parseShipStatus(id)
+    },
     fetchAllreceipt() {
       this.loading = true
       return postTransferList(this.searchQuery).then(data => {

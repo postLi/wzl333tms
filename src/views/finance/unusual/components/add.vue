@@ -7,7 +7,7 @@
             <!-- <el-select v-model="form.shipSn" filterable multiple  placeholder="请输入关键词">
             </el-select> -->
           <el-form-item label="运单号" prop="shipSn">
-              <querySelect valuekey="shipSn" v-if="!this.isModify" search="shipSn" type="order"  @change="fetchShipInfo"  placeholder="请输入运单号" v-model="form.shipSn">
+              <querySelect valuekey="shipSn" v-if="!this.isModify" search="shipSn" type="order"  @change="fetchShipInfo"  placeholder="请输入运单号" v-model="form.shipSn" >
               </querySelect>
               <el-input v-else :value="form.shipSn"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
@@ -36,7 +36,7 @@
             <el-input v-model="form.shipFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="付款方式" prop="shipPayWay">
-            <el-input v-model="form.shipPayWayName"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipPayWay"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="现付" prop="shipNowpayFee">
             <el-input v-model="form.shipNowpayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
@@ -91,6 +91,9 @@
         </div>
       </el-form>
     </template>
+    <!-- <div slot="footer" class="dialog-footer" v-if="isDbClick">
+      <el-button @click="closeMe">关 闭</el-button>
+    </div> -->
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" v-if="isModify" @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">修改</el-button>
       <el-button type="primary" v-else @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">保 存</el-button>
@@ -139,6 +142,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isDbClick: {
+      type: Boolean,
+      default: false
+    },
     id: {
       type: [Number, String]
     },
@@ -152,10 +159,6 @@ export default {
     licenseTypes: {
       type: Array,
       default: () => []
-    },
-    isDbclick: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {
@@ -183,7 +186,7 @@ export default {
         cargoWeight: '',
         cargoVolume: '',
         shipFee: '',
-        shipPayWayName: '',
+        shipPayWay: '',
         shipNowpayFee: '',
         shipArrivepayFee: '',
         shipMonthpayFee: '',
@@ -264,7 +267,12 @@ export default {
       },
       immediate: true
     },
-
+    isDbClick: {
+      handler(newVal) {
+        this.setTitle()
+      },
+      immediate: true
+    },
     isDeal: {
       handler(newVal) {
         this.setTitle()
@@ -310,7 +318,11 @@ export default {
         this.popTitle = '异动修改'
         this.fetchShipInfo(this.info)
         console.log(this.id + 'ppp')
-      } else {
+      } else if(this.isDbClick){
+        this.popTitle = '异动查看'
+        this.fetchShipInfo(this.info)
+      }
+      else {
         this.popTitle = '异动登记'
         this.form.orgId = this.orgid
         for (const i in this.form) {
@@ -372,7 +384,7 @@ export default {
           this.form.shipReceiptpayFee = data.receiptPayFee
           this.form.shipArrivepayFee = data.arrivePayFee
           this.form.shipNowpayFee = data.nowPayFee
-          this.form.shipPayWayName = data.shipPayWayName
+          this.form.shipPayWay = data.shipPayWay
           this.form.cargoWeight = data.cargoWeight
           this.form.cargoVolume = data.cargoVolume
 
@@ -462,7 +474,7 @@ export default {
           }).catch(res => {
             this.loading = false
             this.$message.warning(res.text)
-            this.closeMe()
+            // this.closeMe()
           })
         } else {
           return false
@@ -470,11 +482,11 @@ export default {
       })
     },
     reset() {
-      const oldVal = this.form.abnormalNo
+      // const oldVal = this.form.abnormalNo
       this.$refs['ruleForm'].resetFields()
-      if (!this.isModify) {
-        this.form.abnormalNo = oldVal
-      }
+      // if (!this.isModify) {
+      //   this.form.abnormalNo = oldVal
+      // }
     },
     closeMe(done) {
       this.reset()

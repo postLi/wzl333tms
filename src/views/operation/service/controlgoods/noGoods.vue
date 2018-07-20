@@ -529,6 +529,9 @@ export default {
     }
   },
   methods: {
+    parseShipStatus(id){
+      return parseShipStatus(id)
+    },
           // PutFh
     fetchAllPutFh() {
             // this.loading = true
