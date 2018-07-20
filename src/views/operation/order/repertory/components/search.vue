@@ -8,10 +8,12 @@
       <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
     </el-form-item>
     <el-form-item label="出发城市">
-      <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
+      <el-input v-model="searchForm.shipFromCityName"></el-input>
+      <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
     </el-form-item>
     <el-form-item label="到达城市">
-      <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
+      <el-input v-model="searchForm.shipToCityName"></el-input>
+      <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -65,20 +67,21 @@ export default {
       }
     }
   },
+  mounted () {
+
+  },
   methods: {
     onSubmit() {
-      let searchObj = objectMerge2({}, this.searchForm)
+      let searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'createTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
-      this.clearForm('searchForm')
     },
     clearForm(formName) {
       this.$nextTick(() => {
-        objectMerge2(this.$data, this.$options.data())
+        Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
         this.searchTime = this.$options.data().searchTime
       })

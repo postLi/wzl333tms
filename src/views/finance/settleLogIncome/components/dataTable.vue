@@ -1,9 +1,16 @@
 <template>
   <transferTable>
-   <!--  <div slot="tableSearch">
+   <!--  <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
         <el-form-item label="批次">
-          <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
+          <el-input placeholder="批次号搜索" v-model="searchForm.type">
+            <el-select v-model="searchForm.batchNo" slot="prepend" placeholder="请选择">
+              <el-option label="短驳" value="38"></el-option>
+              <el-option label="干线" value="39"></el-option>
+              <el-option label="送货" value="40"></el-option>
+            </el-select>
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
         </el-form-item>
         <el-form-item label="车牌号">
           <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
@@ -358,6 +365,22 @@ export default {
 
 </script>
 <style lang="scss">
+// .tableHeadItemForm {
+//     // position: absolute;
+//     // z-index: 2;
+//     // top: -41px;
+//     // left: -10px;
+
+//     margin-left:0px;
+//     display: flex;
+//     flex-direction: row;
+//     .el-input {
+//       width: 125px;
+//       .el-input__inner{
+//         padding: 0 10px;
+//       }
+//     }
+//   }
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
@@ -366,6 +389,8 @@ export default {
     z-index: 2;
     top: -41px;
     left: -10px;
+
+    margin-left:0px;
     display: flex;
     flex-direction: row;
     .el-input {

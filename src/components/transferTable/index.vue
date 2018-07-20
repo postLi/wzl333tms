@@ -98,7 +98,7 @@ export default {
       position:absolute;
       top: 0px;
       left:0px;
-      // background-color:blue;
+      background-color:gray;
       display:flex;
       flex-direction: row;
     }
