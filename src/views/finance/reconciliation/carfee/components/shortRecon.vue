@@ -14,11 +14,9 @@
       <!--<div class="sTitle"><p>广州网点2018年6月7日-2018年8月12日</p>&nbsp;<p>对账表</p></div>-->
       <div class="sDate">
 
-          <el-form-item label="" prop="truckIdNumber" placeholder="请选择车牌号">
-            <!--<el-select v-model="searchTitle.memberName" placeholder="请选择车牌号">-->
+          <el-form-item label="" prop="memberName" placeholder="请选择车牌号">
               <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName"/>
-              <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" />-->
-            <!--</el-select>-->
+
           </el-form-item>
         <el-date-picker
           v-model="searchCreatTime"
@@ -40,7 +38,7 @@
       <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName">
 
         <el-form-item label="车牌号">
-          <el-input v-model="messageInfo.truckIdNumber" auto-complete="off" disabled></el-input>
+          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="司机">
           <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
@@ -52,10 +50,30 @@
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>
+          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>-->
+          <el-date-picker
+            v-model="messageInfo.checkStartTime"
+            align="right"
+            type="date"
+            placeholder="选择日期"
+            value-format="timestamp"
+            :picker-options="pickOption"
+          >
+          </el-date-picker>
+
         </el-form-item>
         <el-form-item label="结束时间">
-          <el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>
+          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>-->
+          <el-date-picker
+            v-model="messageInfo.checkEndTime"
+            align="right"
+            type="date"
+            :picker-options="pickOption2"
+            placeholder="选择日期"
+            value-format="timestamp"
+
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="账户账号">
           <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
@@ -82,6 +100,8 @@
           :data="dealPayInfo"
           stripe
           border
+          show-summary
+          :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
           height="200"
@@ -342,7 +362,7 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :sendId="sendId" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" ></SaveDialog>
   </div>
 </template>
 
@@ -360,7 +380,22 @@
         SaveDialog
       },
       data() {
+        let _this = this
           return {
+            pickOption: {
+              firstDayOfWeek: 1,
+              disabledDate(time) {
+                // 小于终止日
+                return _this.messageInfo.checkEndTime ? time.getTime() > _this.messageInfo.checkEndTime : false
+              }
+            },
+            pickOption2: {
+              firstDayOfWeek: 1,
+              disabledDate(time) {
+                // 大于起始日
+                return _this.messageInfo.checkStartTime ? time.getTime() < _this.messageInfo.checkStartTime : false
+              }
+            },
             pickerOptions2: {
               shortcuts: pickerOptions2
             },
@@ -373,12 +408,14 @@
             messageArr:[],
             checkBillName:'',
             messageInfo:{
-              truckIdNumber:'',
+              checkStartTime:'',
+              checkEndTime:'',
+              orgName:'',
+              memberIdType:3,
+              memberName:'',
               memberPerson:'',
               memberPersonPhone:'',
               checkBillCode:'',
-              checkStartTime:'',
-              checkEndTime:'',
               bankAccount:'',
               bankName:'',
               alipayAccount:'',
@@ -401,17 +438,15 @@
               "payDetailList":[],
               "hadPayDetailList":[]
             },
+            //总计
+            tota:{
+              alreadyPaytota:[],
+              dealPaytota:[],
+            },
+            //保存总计数据
+            alreadyPaytota:[],
+            dealPaytota:[],
             sendId:'',
-            dialogInfo:[
-              {
-                toPay:10,
-                date:"应付账款"
-              },
-              {
-                toPay:20,
-                date:"已付账款"
-              }
-            ],
             visibleDialog:false,
             loading:false,
             btnsize: 'mini',
@@ -450,7 +485,7 @@
               checkId:'1'
             },
             rules:{
-              truckIdNumber:[
+              memberName:[
                 { required: true, validator: this.validateIsEmpty('车牌号不能为空'), trigger: 'blur' }
               ]
             }
@@ -464,19 +499,14 @@
       },
       mounted(){
         this.searchCreatTime = this.defaultTime
-        this.changeOrgid(this.otherinfo)
 
-        // this.searchTitle.orgId = this.otherinfo.orgid
-        // this.searchDealPay.orgId = this.otherinfo.orgid
-        // this.searchAlReadyPay.orgId = this.otherinfo.orgid
-        //
+        this.changeOrgid(this.otherinfo)
         if(this.$route.query.id){
-          //
           this.sendId = this.$route.query.id
           this.changeId(this.$route.query.id)
           this.onSubmit()
         }else{
-          // alert("lll")
+
         }
       },
       methods:{
@@ -512,16 +542,9 @@
           this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
             return el.id !== scope.row.id
           })
-
-          // this.alreadyPayInfo.arrSendPay = this.alreadyPayInfo.map(el=>{
-          //   const tota = new Number()
-          //   // if(!isNaN(el.arrSendPay)){
-          //   //   return tota += el.arrSendPay
-          //   // }else{
-          //   //   return tota
-          //   // }
-          // })
-          // console.log(this.alreadyPayInfo.arrSendPay);
+          this.dealPayInfo = this.dealPayInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
         },
         fetchList(){
           this.loading = true
@@ -529,7 +552,6 @@
             this.messageArr = data
 
             this.infoMessageData(this.messageArr)
-            // console.log(this.messageArr);
             this.loading = false
           })
         },
@@ -537,9 +559,7 @@
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
             this.dealPayInfo = data
-            // this.dealPayInfo.forEach(value,index) {
-            //   // this.  shortPay
-            // }
+            this.dealPaytota = data
             this.loading = false
           })
         },
@@ -547,6 +567,7 @@
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
             this.alreadyPayInfo = data
+            this.alreadyPaytota = data
             this.loading = false
           })
         },
@@ -599,6 +620,7 @@
             this.moodifyDealPay()
             this.moodifyReadyPay()
           }else{
+
             this.fetchList()
             this.fetchDealPay()
             this.fetchReadyPay()
@@ -610,6 +632,18 @@
         },
         //保存
         submit(formName){
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              this.oopenVisibleDialog()
+            } else {
+              return false
+            }
+          })
+          // messageInfo:{
+          //   checkStartTime:'',
+          //     checkEndTime:'',
+          // this.messageInfo.checkStartTime = parseTime(this.messageInfo.checkStartTime)
+          // console.log(this.messageInfo.checkStartTime);
           for(const i in this.messageInfo){
             this.form[i] = this.messageInfo[i]
           }
@@ -622,26 +656,27 @@
               const a = {}
               a.shipOrderId = el.shipOrderId
               a.arrSendPay = el.arrSendPay
-              a.shortPay = el.shortPay
               return a
             }) :[]
             this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
               a.arrSendPay = el.arrSendPay
-              a.shortPay = el.shortPay
               return a
             }) : []
+          //总计
+          this.tota.dealPaytota = this.dealPaytota ?  this.dealPaytota.map(el=>{
+            const a = {}
+            a.shortPay = el.shortPay
+            return a
+          }) :[]
+          this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el=>{
+            const a = {}
+            a.shortPay = el.shortPay
+            return a
+          }) : []
 
 
-
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              this.oopenVisibleDialog()
-            } else {
-              return false
-            }
-          })
 
         },
         validateIsEmpty(msg = '不能为空！') {
@@ -660,7 +695,11 @@
           this.visibleDialog = false
         },
         infoMessageData(item){
-          this.messageInfo.truckIdNumber = item.memberName
+
+          // this.messageInfo.checkStartTime = new Date()
+          // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
+          // this.messageButtonInfo.createTime = new Date()
+          this.messageInfo.memberName = item.memberName
           this.messageInfo.memberPerson = item.memberPerson
           this.messageInfo.memberPersonPhone = item.memberPersonPhone
           this.messageInfo.checkBillCode = item.checkBillCode
@@ -670,6 +709,7 @@
           this.messageInfo.wechatAccount = item.wechatAccount
           this.messageInfo.checkStartTime = item.checkStartTime
           this.messageInfo.checkEndTime = item.checkEndTime
+          this.messageInfo.orgName = item.orgName
           this.messageButtonInfo.companyName = item.companyName
           this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
           this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
@@ -763,7 +803,7 @@
         border-top-color: transparent;
         border-right-color: transparent;
         border-bottom-color: transparent;
-        width: 187px;
+        width: 171px;
         border-radius: 0;
       }
       .el-input__inner:focus{
@@ -829,6 +869,7 @@
   .sBottom{
     border-right: 1px solid #b4b4b4;
     border-left: 1px solid #b4b4b4;
+    margin-bottom: 70px;
     .sMessageCont_info{
       background-color: #e2eaff;
       p{
@@ -882,8 +923,15 @@
     }
   }
   .sBottomBut{
-    /*display: inline-block;*/
     background: #eee;
+    height: 70px;
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     div{
       position: fixed;
       bottom: 0;
@@ -891,46 +939,6 @@
       margin: 20px 0 15px 0;
     }
 
-  }
-  .sDialog{
-    width: 486px;
-    position: fixed;
-    left: 50%;
-    top: 27%;
-    height: calc( 30% - 50px);
-    z-index: 33;
-    /*padding-top: 30px;*/
-    /*padding-bottom: 76px;*/
-    background: #fff;
-    border-radius: 6px 0px 0px 6px;
-    box-shadow: -2px 0px 8px 0px rgba(169, 169, 169, 0.78);
-    transition: transform 0.6s ease;
-    transform: translate(-50%, 0);
-    .dialogTitle{
-      font-size: 14px;
-      color: #333333;
-      padding: 8px 0 8px 20px;
-      border-bottom: 1px solid #e6e6e6;
-      font-weight: 600;
-    }
-    .dialogMoney{
-      margin: 28px 0 13px 20px;
-      font-size: 14px;
-      color: #333333;
-      span{
-        color: #ff2f2f;
-        font-weight: 600;
-      }
-    }
-    .sDialogBtn{
-      position: fixed;
-      bottom: -32%;
-      right: 4%;
-      z-index: 33;
-      button:nth-of-type(1){
-        padding-right: 10px;
-      }
-    }
   }
 }
 </style>

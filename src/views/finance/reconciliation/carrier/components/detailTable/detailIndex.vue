@@ -51,12 +51,12 @@
           <el-table-column
             fixed
             sortable
-            prop="memberName"
+            prop="carrierName"
             width="130"
             label="承运商">
           </el-table-column>
           <el-table-column
-            prop="memberPerson"
+            prop="checkBillName"
             width="130"
             sortable
             label="对账单名">
@@ -68,10 +68,10 @@
             label="创建时间">
           </el-table-column>
           <el-table-column
-            prop="checkBillName"
+            prop="checkBillCode"
             sortable
             width="280"
-            label="对账单名">
+            label="对账编号">
           </el-table-column>
 
 
@@ -126,7 +126,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="checkStatus"
+            prop="checkStatusZh"
             label="对账状态"
             width="120"
             sortable
@@ -189,14 +189,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orgFinancialOfficer"
+            prop="financialOfficer"
             label="财务负责人"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="orgFinancialOfficerPhone"
+            prop="financialOfficerPhone"
             label="财务负责人电话"
             width="130"
             sortable
@@ -227,6 +227,7 @@
 import {  getExportExcel } from '@/api/company/customerManage'
 
 import {postCFinancebillcheckList,deleteCustomer,postCompletion} from '@/api/finance/fin_customer'
+import {postCarrierdetailList} from '@/api/finance/fin_carrier'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -250,7 +251,8 @@ export default {
       }
   },
   mounted () {
-    this.searchQuery.vo.orgId = this.otherinfo.orgid
+    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchQuery.vo.carrierId = this.$route.query.id
     // this.searchQuery.vo.memberId = this.$route.query.id
   },
   data () {
@@ -274,9 +276,8 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgId":'',
-          memberId: 633,//
-          memberIdType: 2,//
+          "orgid":'',
+          carrierId: 1,//
           checkStatus: '',// 0未 1已
           startTime: '',//
           endTime:''
@@ -287,7 +288,7 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      return postCFinancebillcheckList(this.searchQuery).then(data => {
+      return postCarrierdetailList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
@@ -332,7 +333,7 @@ export default {
               path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
               query: {
                 tab: '承运商对账-创建对账',
-                // id: this.selectInfo.shipSenderId
+                id: this.selectInfo.carrierId
               }
             })
 

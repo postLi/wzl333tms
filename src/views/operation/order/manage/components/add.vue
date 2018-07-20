@@ -85,83 +85,85 @@
         </div>
 
         <div class="info_order" style="margin-top: 18px">订单信息</div>
-        <table class="manage-add-table-foot">
-          <tbody>
-          <tr>
-            <td>
-              <el-form-item label="出发城市">
+        <div class="manage-add-table-foot">
+          <table >
+            <tbody>
+            <tr>
+              <td>
+                <el-form-item label="出发城市">
 
-                <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"/>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityName">
-                <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="开单网点">
-                <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled="disabled" :disabled="isDbclick"/>
-              </el-form-item>
-            </td>
+                  <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"/>
+                </el-form-item>
+              </td>
+              <td>
+                <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityName">
+                  <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
+                </el-form-item>
+              </td>
+              <td>
+                <el-form-item label="开单网点">
+                  <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled="disabled" :disabled="isDbclick"/>
+                </el-form-item>
+              </td>
 
-            <td>
-              <el-form-item label="目的网点" >
-                <SelectTree v-model="form.tmsOrderPre.orderToOrgid" :disabled="isDbclick"/>
-              </el-form-item>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <el-form-item label="提货方式">
-                <SelectType v-model="form.tmsOrderPre.orderPickupMethod" type="order_pickup_method"  :disabled="isDbclick"/>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="紧急度">
-                <SelectType v-model="form.tmsOrderPre.orderEffective" type="ship_effective" :disabled="isDbclick" />
-              </el-form-item>
-            </td>
+              <td>
+                <el-form-item label="目的网点" >
+                  <SelectTree v-model="form.tmsOrderPre.orderToOrgid" :disabled="isDbclick"/>
+                </el-form-item>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <el-form-item label="提货方式">
+                  <SelectType v-model="form.tmsOrderPre.orderPickupMethod" type="order_pickup_method"  :disabled="isDbclick"/>
+                </el-form-item>
+              </td>
+              <td>
+                <el-form-item label="紧急度">
+                  <SelectType v-model="form.tmsOrderPre.orderEffective" type="ship_effective" :disabled="isDbclick" />
+                </el-form-item>
+              </td>
 
-            <td>
-              <el-form-item label="代收款">
-                <el-input v-numberOnly v-model="form.tmsOrderCargoList.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="代收款手续费">
-                <el-input v-numberOnly v-model="form.tmsOrderCargoList.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
-              </el-form-item>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <el-form-item label="付款方式">
-                <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" :disabled="isDbclick" />
-              </el-form-item>
-            </td>
+              <td>
+                <el-form-item label="代收款">
+                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                </el-form-item>
+              </td>
+              <td>
+                <el-form-item label="代收款手续费">
+                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
+                </el-form-item>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <el-form-item label="付款方式">
+                  <SelectType v-model="form.tmsOrderPre.orderPayWay" type="ship_pay_way" :disabled="isDbclick" />
+                </el-form-item>
+              </td>
 
-            <td>
-              <el-form-item label="运费">
-                <el-input v-numberOnly v-model="form.tmsOrderCargoList.shipFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
-              </el-form-item>
-            </td>
-            <td>
-              <el-form-item label="声明价值">
-                <el-input v-numberOnly v-model="form.tmsOrderCargoList.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
-              </el-form-item>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <el-form-item label="备注">
-                <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea" placeholder="少于300字" :disabled="isDbclick"></el-input>
-              </el-form-item>
-            </td>
-          </tr>
-          </tbody>
+              <td>
+                <el-form-item label="运费">
+                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.shipFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                </el-form-item>
+              </td>
+              <td>
+                <el-form-item label="声明价值">
+                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                </el-form-item>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <el-form-item label="备注">
+                  <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea" placeholder="少于300字" :disabled="isDbclick"></el-input>
+                </el-form-item>
+              </td>
+            </tr>
+            </tbody>
 
-        </table>
+          </table>
+        </div>
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer" v-if="isDbclick">
@@ -593,23 +595,18 @@ export default {
   left: auto;
   top: 50px;
   bottom: auto;
-  min-width: 900px;
-  max-width:  900px;
+  min-width: 870px;
+  max-width:  870px;
   .el-input__inner{
     color: #3e9ff1;
   }
   .el-textarea__inner{
     color: #3e9ff1;
   }
-  .el-autocomplete{
-    width: 100%;
-  }
+
 
   .el-form--inline .el-form-item{
-    margin-right: -9px;
-    width: 90%;
-    display: flex;
-    margin-left: 7px
+
   }
 
   .el-form-item__content{
@@ -661,69 +658,98 @@ export default {
     margin-top: 10px;
     li{
       float: left;
-
-      .send_detailedAddress{
-
+      .el-form-item{
+        margin-right: -23px;
+        width: 90%;
+        display: flex;
+        margin-left: 7px
       }
     }
     li:last-of-type{
       width: 100%;
       .el-form-item--mini{
         .el-form-item__content{
-          width: 100%;
+          width: 146%;
           .el-autocomplete{
-            width: 100%;
+            width: 106%;
           }
         }
       }
 
     }
+    li:nth-of-type(1){
+      .el-input__inner{
+        width: 94%;
+      }
+    }
+    li:nth-of-type(2){
+      .el-input__inner{
+        width: 88%;
+      }
+    }
+    .el-autocomplete{
+      width: 146%;
+    }
   }
 }
+
+/*margin-right: -23px;
+ width: 90%;
+display: -ms-flexbox;
+ display: flex;
+ margin-left: 7px;*/
 
 .manage-add-table-foot{
-  height: 100%;
-  width: 100%;
-  margin-top: 10px;
-  .el-input__inner{
-    color: #3e9ff1;
-  }
-}
-.manage-add-table-foot th{
-  width: 50%;
-  height: 30px;
-  background: #eee;
-  margin-left: 10px;
-  font-size: 14px;
-  padding: 2px 2px 2px 5px !important;
-}
-  .manage-add-table-foot th{
-  background:transparent;
-  width: 0;
-}
-.manage-add-table-foot {
-  tbody{
-    tr{
-      td{
-        .el-form-item--mini{
-          .el-form-item__label{
-            width: 40%;
-          }
-        }
+  margin-right: 30px;
+  table{
+    height: 100%;
+    width: 100%;
+    margin-top: 10px;
+    .el-input__inner{
+      color: #3e9ff1;
+    }
 
+    th{
+      width: 50%;
+      height: 30px;
+      background: #eee;
+      margin-left: 10px;
+      font-size: 14px;
+      padding: 2px 2px 2px 5px !important;
+      background:transparent;
+      width: 0;
+    }
+    tbody{
+      tr{
+        td{
+          .el-form-item{
+            margin-right: -23px;
+            width: 101%;
+            display: flex;
+            margin-left:0
+          }
+
+        }
       }
     }
-  }
-  .add-textarea{
-    width: 630%;
+    .add-textarea{
+      width: 660%;
+    }
+    .el-form-item--mini {
+      margin-left: 12px;
+      /*margin: 0 8px;*/
+    }
   }
 }
 
-
+  .info_order:first-of-type{
+    margin-top: 20px;
+  }
 .info_order,.info_rece{
   height: 36px;
   line-height: 36px;
   /*margin-top: 12px;*/
+  margin: 0 20px;
   padding-left: 10px;
   font-size: 14px;
   color: #666;
@@ -732,16 +758,15 @@ export default {
   border-bottom: 1px solid #d4d4d4;
   background: #e9f3fa;
 }
-.manage-add-table-foot .el-form-item--mini {
-  margin-left: 12px;
-}
 
   .manage-add div.el-form-item{
     width: 40%;
   }
   .info_table{
     border-color: #dcdfe6;
-    margin: 22px 0 20px;
+    margin: 22px 30px 20px;
+    border-left: 2px solid #dcdfe6;
+    border-right: 2px solid #dcdfe6;
     ul{
       width: 100%;
       display: -ms-flexbox;
@@ -776,6 +801,12 @@ export default {
             border-color: transparent;
           }
         }
+        .el-input__inner{
+          width: 245%;
+        }
+        .el-form-item__error{
+
+        }
       }
 
       .el-input__inner {
@@ -792,6 +823,7 @@ export default {
       }
       .el-form-item__error{
         top: 150%;
+        width: 145px;
       }
       .el-form-item{
         margin-bottom: 0;

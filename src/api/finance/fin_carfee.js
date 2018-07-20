@@ -82,5 +82,5 @@ export function postCarfBillCheckCarUpdateList(params) {
  * @returns {*}
  */
 export function deleteCarShort(id) {
-  return fetch.delete('/api-finance/finance/tmsfinancebillcheckcardetail/v1/' + id )
+  return fetch.delete('/api-finance/finance/tmsfinancebillcheck/v1/' + id )
 }

@@ -202,13 +202,13 @@ export default {
       switch (type) {
         // 明细
           case 'storage':
-            this.selectInfo = this.selected[0]
+            // this.selectInfo = this.selected[0]
 
             this.$router.push({
               path: '/finance/reconciliation/carrier/detailTable',
               query: {
                 tab: '承运商对账-对账明细',
-                id: this.this.selected[0].id
+                id: this.selected[0].carrierId
               }
             })
 

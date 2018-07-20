@@ -6,7 +6,7 @@
         <div class="depmain-div" >
           <div class="dialogMoney">
 
-          对账总金额：<span>40元</span>
+          对账总金额：<span>{{totaMoney}}元</span>
           </div>
           <el-table
             ref="multipleTable"
@@ -59,6 +59,8 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import {postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
+  //parseTime
+  import {parseTime} from '@/utils'
   // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
 
   export default {
@@ -75,6 +77,10 @@
         type: Boolean,
         default: false
       },
+      tota: {
+        type: [Object,Array],
+        default: false
+        },
       dotInfo: {
         type: [Object,Array],
         default: false
@@ -99,6 +105,7 @@
         dialogData:{},
         checked1: true,
         popTitle: '',
+        totaMoney: '',
         loading:false,
       }
     },
@@ -112,23 +119,35 @@
       }
     },
     watch: {
-      dotInfo :{
-        handler(newVal) {
-          this.dialogData =  this.dotInfo
-          this.dialogData.hadPayDetailList.map(el=>{
+      tota:{
+        handler(newVal){
+          this.dialogData = this.tota
+          this.dialogData.dealPaytota.map(el=>{
             this.$set(this.dialogInfo, 0, {
               date:"应付账款",
               toPay: this.dialogInfo[0].toPay + (el.shortPay ? +el.shortPay : 0)
             })
             //this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
-          this.dialogData.payDetailList.map(el=>{
+          this.dialogData.alreadyPaytota.map(el=>{
             this.$set(this.dialogInfo, 1, {
               date:"已付账款",
               toPay: this.dialogInfo[1].toPay + (el.shortPay ? +el.shortPay : 0)
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
+          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay
+          if(this.sendId){
+            this.dotInfo.id = this.sendId
+          }else{
+            this.dotInfo
+          }
+        },
+        deep: true
+      },
+      dotInfo :{
+        handler(newVal) {
+          this.popTitle = this.dotInfo.checkBillName
           if(this.sendId){
             this.dotInfo.id = this.sendId
           }else{
@@ -189,8 +208,17 @@
             let data = []
             data = this.dotInfo
             // delete data.payDetailList.shortPay
+
+
+// this.messageInfo.checkStartTime = new Date()
+        // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
+        // this.messageButtonInfo.createTime = new Date()
+        data.checkStartTime = parseTime(data.checkStartTime) ? '' : new Date()
+        data.checkEndTime = parseTime(data.checkEndTime) ? '' : new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
+        data.createTime = parseTime(data.createTime) ? '' : new Date()
             if(this.sendId){
               data.id = this.sendId
+
               promiseObj = postCreateBillCheckCarInfo(data)
             }else{
               promiseObj = postCreateBillCheckCarInfo(data)

@@ -1,5 +1,21 @@
 import fetch from '../../utils/fetch'
 
+
+/**
+
+
+ /finance/carrierdetail/v1/carrierList
+ 查询承运商对账分页信息 首页
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function postCarrierCarrierList(params) {
+  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/carrierList', params).then(res => {
+    return res.data || { list: [], totalCount: 0 }
+  })
+}
+
+
 /**
  /finance/carrierdetail/v1/
  插入承运商对账信息
@@ -13,26 +29,13 @@ export function postCarrierdetailList(params) {
 }
 
 /**
-
-
- /finance/carrierdetail/v1/carrierList
- 查询承运商对账分页信息
- * @param params
- * @returns {*|PromiseLike<T>|Promise<T>}
- */
-export function postCarrierCarrierList(params) {
-  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/carrierList', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
-}
-/**
  /finance/carrierdetail/v1/initialize
  初始化创建客户对账明细页面
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCarrierCreatinitialize(params) {
-  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/initialize/', params).then(res => {
+export function postCarrierinitialize(params) {
+  return fetch.post('/api-finance/finance/carrierdetail/v1/initialize/', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }

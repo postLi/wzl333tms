@@ -13,13 +13,14 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="中转网点:">
-          <SelectTree v-model="searchForm.orgId" />
+          <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
       <el-form-item label="对账状态
 :">
         <el-select v-model="searchForm.checkStatus">
           <el-option label="未对账" :value="0"></el-option>
           <el-option label="已对账" :value="1"></el-option>
+          <el-option label="全部" value=""></el-option>
         </el-select>
       </el-form-item>
       <el-form-item class="staff_searchinfo_tn art_marginTop" >
@@ -76,8 +77,8 @@ export default {
         }
       },
       searchForm: {
-        orgId: '',
-        checkStatus: 0,
+        orgid: '',
+        checkStatus: '',
         startTime: '',//
         endTime:''
       },
@@ -92,7 +93,7 @@ export default {
     }
   },
   mounted () {
-    this.searchForm.orgId = this.orgid
+    this.searchForm.orgid = this.orgid
     this.onSubmit()
   },
   methods: {
@@ -102,7 +103,7 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
-      this.searchForm.orgId = this.orgid
+      this.searchForm.orgid = this.orgid
       this.searchForm.checkStatus = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''

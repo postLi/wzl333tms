@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addPickUpPop" v-loading="loading">
     <template class="addPickUpPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="pickup_lrl">
+      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="90px" :inline="true" label-position="right" size="mini" class="pickup_lrl">
         <div class="info_date" style="margin-top: 10px;">提货信息</div>
         <div class="pickUp-top">
           <el-form-item label="提货批次" prop="customerUnit">
@@ -85,7 +85,7 @@
               >
               </el-date-picker>
           </el-form-item>
-          <el-form-item label="要求到达时间" class="arrive-time" prop="tmsOrderPickup.arriveTime">
+          <el-form-item label="到达时间" class="arrive-time" prop="tmsOrderPickup.arriveTime">
             <el-date-picker
               v-model="form.tmsOrderPickup.arriveTime"
               align="right"
@@ -127,6 +127,7 @@ import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
 import { mapGetters } from 'vuex'
+import { objectMerge2 } from '@/utils/index'
 
 export default {
   components: {
@@ -441,6 +442,7 @@ export default {
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
 
           let promiseObj
+          const data = objectMerge2({}, this.form)
           // 判断操作，调用对应的函数
           if (this.isModify) {
             promiseObj = putUpdatePickup(data)
@@ -499,8 +501,8 @@ export default {
     left: auto;
     top: 50px;
     bottom: auto;
-    min-width: 750px;
-    max-width: 750px;
+    min-width: 900px;
+    max-width: 900px;
     .popRight-content{
       /*padding: 20px 0px 0;*/
       box-sizing: border-box;
@@ -515,12 +517,12 @@ export default {
   }
   .senderName_lrl{
     .el-autocomplete{
-      width: 140px;
+      width: 178px;
     }
   }
   .senderAddr_lrl{
     .el-autocomplete{
-      width:640px;
+      width:745px;
     }
   }
     .selectListOption_lrl{
@@ -539,16 +541,19 @@ export default {
      padding-top: 10px;
      border-top: 1px solid #e4e7ed;
      .order_toCityCode {
-       margin-right: 35px !important;
+       margin-right: 10px !important;
      }
      .order_remark {
+       .el-form-item__label{
+         /*text-align: center;*/
+       }
        .el-form-item__content{
-         width: 430px;
+         width: 460px;
        }
      }
      .el-form-item--mini{
        .el-input__inner{
-         width: 90%;
+         /*width: 90%;*/
        }
      }
      .customer-unit{
@@ -563,8 +568,48 @@ export default {
        }
      }
    }
-  .pickUp-bottom .arrive-time .el-form-item__label{
-    width: 108px !important;
+   .pickUp-order{
+     .pickup-way{
+       .el-input{
+         width: 91%;
+       }
+     }
+
+     .el-input:nth-of-type(5){
+       /*.el-input__inner{*/
+         width: 100%;
+       /*}*/
+     }
+   }
+  .pickUp-bottom .arrive-time .el-input__inner{
+    width: 80%;
+  }
+  .pickUp-bottom{
+    .el-form-item--mini:nth-of-type(5){
+      .el-input__inner{
+        width: 91%;
+      }
+    }
+    .el-form-item--mini:nth-of-type(6){
+      .el-input--mini{
+        width: 93%;
+      }
+    }
+    .el-form-item--mini:nth-of-type(8){
+      .el-input__inner{
+        width: 91%;
+      }
+    }
+    .el-form-item--mini:nth-of-type(9){
+      .el-input__inner{
+        width: 75%;
+      }
+      .el-date-editor.el-input{
+        width: 105% !important;
+      }
+    }
+
+
   }
   .pickUp-top{
     margin-top: 10px;
