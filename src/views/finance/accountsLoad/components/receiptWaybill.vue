@@ -57,30 +57,16 @@
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="120">
             <template slot-scope="props">
-              <!-- <el-input v-model="props.row.financialWay" :size="btnsize"></el-input> -->
-              <querySelect v-model="props.row.financialWay" popper-class="querySelectItem" search="financialWay" keyvalue="financialWay" type="payway"  :size="btnsize">
+              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
                 <template slot-scope="{item}">
-                  <!-- {{ item.financialWay }} <br> {{ item.bankName }} <br> {{ item.bankAccount }} -->
-                  <div >
-                    <b>{{ item.financialWay }}</b>
-                    <br>
-                    <span>{{ item.bankName }} </span>
-                    <br><span>{{ item.bankAccount }} </span>
-                    <span>{{ item.bankAccountName }}  </span>
-                    <br><span> {{ item.chequeNumber }} </span>
-                    <span>{{ item.receivableNumber }}  </span>
-                    <br><span> {{ item.wechatAccount }} </span>
-                    <span>{{ item.alipayAccount }}  </span>
-                    <br><span> {{ item.agent }} </span>
-                  </div>
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
                 </template>
               </querySelect>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
             <template slot-scope="props">
-              <!-- <el-input v-model="props.row.bankName" :size="btnsize"></el-input> -->
-              <querySelect v-model="props.row.bankName" search="bankName" keyvalue="bankName" type="payway" :size="btnsize" />
+              <el-input v-model="props.row.bankName" :size="btnsize" ></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankAccount" label="银行卡号">
@@ -161,6 +147,7 @@ export default {
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
+      BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
@@ -275,6 +262,9 @@ export default {
         this.amount.splice(apoint, 1)
       }
     },
+    sender (item, index) {
+      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
+    },
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = new Date(data.trim())
@@ -358,12 +348,6 @@ export default {
           sums[index] = this.amountMessage
           return
         }
-        // for(let i = 13; i > -1; i--) {
-        //   if (index === i) {
-        //     sums[index] = this.amount[i-6]
-        //     return
-        //   }
-        // }
         let count = -2 // 从第3列开始显示
         for (let i = 12; i > 2; i--) {
           count++

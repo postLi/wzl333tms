@@ -54,16 +54,6 @@ $borderColor: #222;
     .el-table th.is-leaf {
       border-color: $borderColor;
     }
-    .querySelectItem{
-      b{
-        font-size:14px;
-        line-height:14px;
-      }
-      span{
-        font-size:12px;
-        line-height:12px;
-      }
-    }
   }
 
   .receiptDialog_todo {
@@ -106,23 +96,21 @@ $borderColor: #222;
     .tableBtnMinus:hover {
       background-image: url('./assets/png/04shanqu.png');
     }
-    .el-table .cell{
+    .el-table .cell {
       padding-left: 0;
       padding-right: 0;
     }
     .el-input__inner,
-    .el-input.is-disabled .el-input__inner{
-        background-color: #FFF;
-        color: #222;
-        border: none;
-        // text-align:center;
-        padding:0 10px;
-      }
-      .el-input__inner:focus,
-      .el-input.is-disabled .el-input__inner:focus{
-        background-color:#f2f2f2;
-      }
-
+    .el-input.is-disabled .el-input__inner {
+      background-color: #FFF;
+      color: #222;
+      border: none; // text-align:center;
+      padding: 0 10px;
+    }
+    .el-input__inner:focus,
+    .el-input.is-disabled .el-input__inner:focus {
+      background-color: #f2f2f2;
+    }
   }
   .receiptDialog_remark {
     width: 100%;
@@ -142,11 +130,44 @@ $borderColor: #222;
       border-bottom: 1px solid $borderColor;
       padding: 0 10px;
     }
-    .el-input.is-disabled .el-input__inner{
-        background-color: #FFF;
-        color: $borderColor;
-        border: none;
-        border-bottom: 1px solid $borderColor;
+    .el-input.is-disabled .el-input__inner {
+      background-color: #FFF;
+      color: $borderColor;
+      border: none;
+      border-bottom: 1px solid $borderColor;
+    }
+  }
+}
+
+.querySelectItem {
+  min-width: 850px;
+  width:55% !important;
+  .el-scrollbar__wrap {
+    li {
+      display: flex;
+      flex-direction: row;
+      span {
+        color:#333;
+        flex-grow: 1;
+        width: 10%;
+        font-size: 14px;
+        padding-right: 10px;
+        position: relative;
+        padding-left: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
+      span:before {
+        content: '';
+        display: block;
+        width: 2px;
+        height: 8px;
+        background-color: #409eff;
+        top: 13px;
+        left: 0px;
+        position: absolute;
+      }
+    }
   }
 }

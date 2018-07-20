@@ -59,7 +59,12 @@
           <el-table-column prop="financialWay" label="收支方式" width="100">
             <template slot-scope="props">
               <!-- <el-input v-model="props.row.financialWay" :size="btnsize"></el-input> -->
-              <querySelect v-model="props.row.financialWay" search="financialWay" keyvalue="financialWay" type="payway" />
+              <!-- <querySelect v-model="props.row.financialWay" search="financialWay" keyvalue="financialWay" type="payway" /> -->
+              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
+                <template slot-scope="{item}">
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
+                </template>
+              </querySelect>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
@@ -145,6 +150,7 @@ export default {
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
+      BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
@@ -277,6 +283,9 @@ export default {
       if (apoint !== -1) {
          this.amount.splice(apoint, 1)
       }
+    },
+    sender (item, index) {
+      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
     },
     getSystemTime() {
       getSystemTime().then(data => {
