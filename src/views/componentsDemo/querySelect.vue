@@ -142,32 +142,32 @@
     <pre class="code">&lt;querySelect search=&quot;cargoName&quot; type=&quot;repertory&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取批次列表</h4>
-    <querySelect search="batchNumber" keyvalue="bathId" show="select" type="batch" :name="city" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;batchNumber&quot; keyvalue=&quot;bathId&quot; show=&quot;select&quot; type=&quot;batch&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="batchNumber" valuekey="bathId" show="select" type="batch" :name="city" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;batchNumber&quot; valuekey=&quot;bathId&quot; show=&quot;select&quot; type=&quot;batch&quot; :name=&quot;city&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取货品名称</h4>
-    <querySelect search="value" :remote="true" keyvalue="value" type="cargoName" />
-    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;cargoName&quot;  /&gt;</pre>
+    <querySelect search="value" :remote="true" valuekey="value" type="cargoName" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;cargoName&quot;  /&gt;</pre>
 
     <h4>获取货品包装</h4>
-    <querySelect search="value" keyvalue="value" type="cargoPack" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="value" valuekey="value" type="cargoPack" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;cargoPack&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取备注列表</h4>
-    <querySelect search="value" keyvalue="value" type="remark" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;remark&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="value" valuekey="value" type="remark" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;remark&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取收支方式</h4>
-    <querySelect search="financialWay" keyvalue="financialWay" type="payway" @change="getcity" />
-    <pre class="code">&lt;querySelect search=&quot;financialWay&quot; keyvalue=&quot;financialWay&quot; type=&quot;payway&quot; @change=&quot;getcity&quot; /&gt;</pre>
+    <querySelect search="financialWay" valuekey="financialWay" type="payway" @change="getcity" />
+    <pre class="code">&lt;querySelect search=&quot;financialWay&quot; valuekey=&quot;financialWay&quot; type=&quot;payway&quot; @change=&quot;getcity&quot; /&gt;</pre>
 
     <h4>获取最近出发城市</h4>
-    <querySelect search="value" :remote="true" keyvalue="value" type="fromcity" />
-    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;fromcity&quot;  /&gt;</pre>
+    <querySelect search="value" :remote="true" valuekey="value" type="fromcity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;fromcity&quot;  /&gt;</pre>
 
     <h4>获取最近到达城市</h4>
-    <querySelect search="value" :remote="true" keyvalue="value" type="tocity" />
-    <pre class="code">&lt;querySelect search=&quot;value&quot; keyvalue=&quot;value&quot; type=&quot;tocity&quot;  /&gt;</pre>
+    <querySelect search="value" :remote="true" valuekey="value" type="tocity" />
+    <pre class="code">&lt;querySelect search=&quot;value&quot; valuekey=&quot;value&quot; type=&quot;tocity&quot;  /&gt;</pre>
 
 
     <h3>prop</h3>
@@ -186,6 +186,8 @@
       <li>param<div class="type">  Object</div>额外的请求参数，用来合并到vo中</li>
       <li>searchFn<div class="type">  Function</div>自定义的搜索函数，传入的参数为当前项，函数执行需返回true/false</li>
       <li>nochangeparam<div class="type">  Boolean</div>是否需要处理参数，默认false</li>
+      <li>filterable<div class="type">  Boolean</div>select是否开启搜索，默认为true</li>
+      <li>popClass<div class="type">  String</div>弹窗的自定义样式类名，方便控制下拉框里的样式</li>
     </ul>
 
     <h3>event</h3>

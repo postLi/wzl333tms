@@ -2,7 +2,7 @@
 <span class="autocomplete-input">
 <el-autocomplete
   v-if="show === 'input'"
-  :popper-class="'query-input-autocomplete ' + customCss"
+  :popper-class="'query-input-autocomplete ' + setCustomCss"
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
@@ -187,6 +187,10 @@ export default {
     filterable: {
       type: Boolean,
       default: true
+    },
+    popClass: {
+      type: String,
+      default: ''
     }
   },
   watch: {
@@ -222,6 +226,9 @@ export default {
     }
   },
   computed: {
+    setCustomCss() {
+      return this.popClass + ' ' + this.customCss
+    },
     place() {
       return this.show === 'select' ? '请选择' : this.placeholder
     },
