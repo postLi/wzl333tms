@@ -48,21 +48,39 @@
         </el-table>
       </div>
       <div class="receiptDialog_todo">
-         <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
+        <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-               <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="financialWay" label="收支方式" width="100">
+          <el-table-column prop="financialWay" label="收支方式" width="120">
             <template slot-scope="props">
-              <el-input v-model="props.row.financialWay" :size="btnsize" disabled></el-input>
+              <!-- <el-input v-model="props.row.financialWay" :size="btnsize"></el-input> -->
+              <querySelect v-model="props.row.financialWay" popper-class="querySelectItem" search="financialWay" keyvalue="financialWay" type="payway"  :size="btnsize">
+                <template slot-scope="{item}">
+                  <!-- {{ item.financialWay }} <br> {{ item.bankName }} <br> {{ item.bankAccount }} -->
+                  <div >
+                    <b>{{ item.financialWay }}</b>
+                    <br>
+                    <span>{{ item.bankName }} </span>
+                    <br><span>{{ item.bankAccount }} </span>
+                    <span>{{ item.bankAccountName }}  </span>
+                    <br><span> {{ item.chequeNumber }} </span>
+                    <span>{{ item.receivableNumber }}  </span>
+                    <br><span> {{ item.wechatAccount }} </span>
+                    <span>{{ item.alipayAccount }}  </span>
+                    <br><span> {{ item.agent }} </span>
+                  </div>
+                </template>
+              </querySelect>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankName" :size="btnsize"></el-input>
+              <!-- <el-input v-model="props.row.bankName" :size="btnsize"></el-input> -->
+              <querySelect v-model="props.row.bankName" search="bankName" keyvalue="bankName" type="payway" :size="btnsize" />
             </template>
           </el-table-column>
           <el-table-column prop="bankAccount" label="银行卡号">

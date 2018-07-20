@@ -54,6 +54,16 @@ $borderColor: #222;
     .el-table th.is-leaf {
       border-color: $borderColor;
     }
+    .querySelectItem{
+      b{
+        font-size:14px;
+        line-height:14px;
+      }
+      span{
+        font-size:12px;
+        line-height:12px;
+      }
+    }
   }
 
   .receiptDialog_todo {
@@ -96,12 +106,23 @@ $borderColor: #222;
     .tableBtnMinus:hover {
       background-image: url('./assets/png/04shanqu.png');
     }
+    .el-table .cell{
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .el-input__inner,
     .el-input.is-disabled .el-input__inner{
         background-color: #FFF;
         color: #222;
         border: none;
-        text-align:center;
+        // text-align:center;
+        padding:0 10px;
       }
+      .el-input__inner:focus,
+      .el-input.is-disabled .el-input__inner:focus{
+        background-color:#f2f2f2;
+      }
+
   }
   .receiptDialog_remark {
     width: 100%;

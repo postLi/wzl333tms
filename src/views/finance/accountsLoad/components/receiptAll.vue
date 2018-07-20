@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="100">
             <template slot-scope="props">
-              <el-input v-model="props.row.financialWay" :size="btnsize" disabled></el-input>
+              <el-input v-model="props.row.financialWay" :size="btnsize"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
