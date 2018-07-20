@@ -239,7 +239,7 @@ export default {
   methods: {
     viewDetails(row) {
       this.$router.push({
-        path: '/finance/handAccount/detail',
+        path: '/finance/accountsLoadReceivable',
         query: {
           id: row.userId,
           tab: '查看' + row.userName

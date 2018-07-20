@@ -21,6 +21,9 @@ export default {
       path: '/finance/accountsReceivable', icon: 'caiwugl1_yingshou', name: '应收账款', component: _import('finance/accountsReceivable/index'), meta: { role: ['admin'], title: '应收账款', noCache: false }
     },
     {
+      path: '/finance/accountsLoadReceivable', icon: 'QQ', hidden: true, name: '结算', component: _import('finance/accountsLoadReceivable/index'), meta: { role: ['admin'], title: '账款结算', noCache: false }
+    },
+    {
       path: '/finance/accountsPayable', icon: 'caiwugl2_yingfu', name: '应付账款', component: _import('finance/accountsPayable/index'), redirect: '/finance/handAccount/waybill', meta: { role: ['admin'], title: '应付账款', istab: true, noCache: false },
       children: [
         {
@@ -55,7 +58,7 @@ export default {
     {
       path: '/finance/reconciliation/customer/detailTable', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/customer/components/detailTable/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
     },
-    //承运商对账-创建对账
+    // 承运商对账-创建对账
     {
       path: '/finance/reconciliation/carrier/detailTable/carrierRecon', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/carrier/components/detailTable/components/carrierRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
     },
