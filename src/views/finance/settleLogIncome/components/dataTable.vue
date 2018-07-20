@@ -1,5 +1,18 @@
 <template>
   <transferTable>
+   <!--  <div slot="tableSearch">
+      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
+        <el-form-item label="批次">
+          <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
+        </el-form-item>
+        <el-form-item label="车牌号">
+          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </div> -->
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">

@@ -4,18 +4,16 @@
       <div class="receiptDialog_head">
         <div class="receiptDialog_head_item">
           <label>单据号</label>
-          <el-input v-model="formModel.settlementSn" placeholder="请输入" :size="btnsize" disabled></el-input>
+          <el-input v-model="formModel.settlementSn" placeholder="单据号" :size="btnsize" :disabled="isEdit"></el-input>
         </div>
         <div class="receiptDialog_head_item">
           <label>发生时间</label>
-          <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
+          <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date" :disabled="isEdit" placeholder="发生时间">
           </el-date-picker>
         </div>
-
         <div class="receiptDialog_head_item">
           <label>经办人</label>
-          <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
-          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
+          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" :disabled="isEdit" placeholder="经办人" />
         </div>
       </div>
       <div class="receiptDialog_table">
@@ -49,69 +47,38 @@
         </el-table>
       </div>
       <div class="receiptDialog_todo">
-        <el-button icon="el-icon-plus" type="primary" plain class="tableAllBtn" size="mini" @click="plusItem"></el-button>
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
-          <el-table-column fixed width="50">
-            <template slot-scope="scope">
-              <el-button icon="el-icon-minus" type="danger" plain class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
-            </template>
-          </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="100">
-            <template slot-scope="props">
-              <el-input v-model="props.row.financialWay" :size="btnsize" disabled></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
-            <template slot-scope="props">
-              <el-input v-model="props.row.bankName" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="bankAccount" label="银行卡号">
-            <template slot-scope="props">
-              <el-input v-model="props.row.bankAccount" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="bankAccountName" label="开户人">
-            <template slot-scope="props">
-              <el-input v-model="props.row.bankAccountName" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="chequeNumber" label="支票号码">
-            <template slot-scope="props">
-              <el-input v-model="props.row.chequeNumber" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="receivableNumber" label="汇款号码">
-            <template slot-scope="props">
-              <el-input v-model="props.row.receivableNumber" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="wechatAccount" label="微信号">
-            <template slot-scope="props">
-              <el-input v-model="props.row.wechatAccount" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="alipayAccount" label="支付宝号">
-            <template slot-scope="props">
-              <el-input v-model="props.row.alipayAccount" :size="btnsize"></el-input>
-            </template>
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="110">
-            <template slot-scope="props">
-              <querySelect v-model="props.row.agent" search="driverName" type="driver" label="driverName" :remote="true" :size="btnsize" />
-            </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="receiptDialog_remark">
         <label>备注</label>
-        <el-input v-model="formModel.remark" placeholder="最多可输入300个字符" :size="btnsize"></el-input>
+        <el-input v-model="formModel.remark" placeholder="备注" :size="btnsize" :disabled="isEdit"></el-input>
       </div>
     </el-form>
     <div slot="footer">
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-document">保存</el-button>
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
-      <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">取 消</el-button>
+      <div v-if="!isEdit">
+        <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-document">保存</el-button>
+        <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
+      </div>
+      <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">{{isEdit?'关 闭':'取 消'}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -136,6 +103,7 @@ export default {
       }
     }
     return {
+      isEdit: true, // false-编辑状态 true-查看状态
       amount: 0,
       amountMessage: '',
       formModel: {},
@@ -161,46 +129,46 @@ export default {
     getRouteInfo() {
       return this.$route.query.searchQuery
     },
-    settlementTypeId () {
+    settlementTypeId() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchShort':
-        return 180
+          return 180
         case 'batchDeliver':
-        return 181
+          return 181
         case 'batchInsurance':
-        return 179
+          return 179
         case 'batchStationLoad':
-        return 179
+          return 179
         case 'batchStationOther':
-        return 179
+          return 179
         case 'batchArrivalLoad':
-        return 179
+          return 179
         case 'batchArrivalOther':
-        return 179
+          return 179
         case 'batchArrivalAll':
-        return 179
+          return 179
       }
     },
-    dataName () {
+    dataName() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchShort':
-        return '短驳费'
+          return '短驳费'
         case 'batchDeliver':
-        return '送货费'
+          return '送货费'
         case 'batchInsurance':
-        return '整车保险费'
+          return '整车保险费'
         case 'batchStationLoad':
-        return '发站装卸费'
+          return '发站装卸费'
         case 'batchStationOther':
-        return '发站其他费'
+          return '发站其他费'
         case 'batchArrivalLoad':
-        return '到站装卸费'
+          return '到站装卸费'
         case 'batchArrivalOther':
-        return '到站其他费'
+          return '到站其他费'
         case 'waybillKickback':
-        return '回扣'
+          return '回扣'
       }
     }
   },
@@ -240,17 +208,22 @@ export default {
     },
     getFeeInfo() {
       let orgId = this.otherinfo.orgid
-      return GetFeeInfo(orgId, this.paymentsType).then(data => {
-        this.formModel = data.data
-        this.formModel.settlementTime = parseTime(new Date()) 
-        this.formModel.settlementBy = this.otherinfo.name
-        // this.getSystemTime()
-        this.initDetailDtoList()
-      })
+      this.formModel = Object.assign({}, this.info[0])
+      console.log(this.formModel, this.info)
+      this.$set(this.formModel, 'szDtoList', [])
+      this.formModel.szDtoList = Object.assign([], this.info)
+      // this.initDetailDtoList()
+      // return GetFeeInfo(orgId, this.paymentsType).then(data => {
+      //   this.formModel = data.data
+      //   this.formModel.settlementTime = parseTime(new Date()) 
+      //   this.formModel.settlementBy = this.otherinfo.name
+      //   // this.getSystemTime()
+      //   this.initDetailDtoList()
+      // })
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([],this.info)
+      this.formModel.detailDtoList = Object.assign([], this.info)
       this.formModel.detailDtoList.forEach((e, index) => {
         e.dataName = this.dataName
         this.formModel.amount += e.amount
@@ -274,7 +247,7 @@ export default {
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
       let apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
-         this.amount.splice(apoint, 1)
+        this.amount.splice(apoint, 1)
       }
     },
     getSystemTime() {
@@ -338,8 +311,7 @@ export default {
     getSum(param) { // 表格合计-自定义显示
       const { columns, data } = param
       const sums = []
-      this.$nextTick(() => {
-      })
+      this.$nextTick(() => {})
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '合计'
@@ -356,7 +328,7 @@ export default {
         //   }
         // }
         let count = -2 // 从第3列开始显示
-        for(let i = 12; i > 2; i--) {
+        for (let i = 12; i > 2; i--) {
           count++
           if (index === i) {
             sums[index] = this.amount[count]

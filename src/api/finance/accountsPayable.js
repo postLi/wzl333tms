@@ -50,8 +50,8 @@ export function postFindChangeList(data) {
  * @param  {[type]} data [description]
  * @return {[type]}      [description]
  */
-export function postCreateloadSettlement(data) {
-  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/create/', data).then(res => {
+export function postCreateloadSettlement(orgId, data) {
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/create/'+ orgId, data).then(res => {
     return res.data
   })
 }

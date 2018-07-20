@@ -93,7 +93,7 @@ export default {
         label: '运单号',
         prop: 'shipSn',
         width: '120',
-        fixed: false
+        fixed: true
       },
       {
         label: '开单网点',
@@ -111,7 +111,7 @@ export default {
         label: '结算状态',
         prop: 'statusName',
         width: '150',
-        fixed: false
+        fixed: true
       },
       {
         label: '出发城市',

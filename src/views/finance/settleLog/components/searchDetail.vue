@@ -10,7 +10,7 @@
     </el-form-item>
     <el-form-item label="方向" prop="settlementId">
       <el-select size="small" v-model="searchForm.settlementId" placeholder="方向" :size="btnsize">
-        <el-option v-for=" qt in TYPE" :label="qt.zh" :value="qt.value" :key="qt.value"></el-option>
+       <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
@@ -61,19 +61,7 @@ export default {
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: pickerOptions2
-      },
-      TYPE: [{
-        value: '',
-        zh: '全部'
-      },
-      {
-        value: '0',
-        zh: '收入'
-      },
-      {
-        value: '1',
-        zh: '支出'
-      }]
+      }
     }
   },
   watch: {

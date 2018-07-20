@@ -268,6 +268,7 @@ export default {
         })
     },
     showCount() {
+      this.tableReceiptInfo = Object.assign([],this.selectedList)
       this.popVisibleDialog = true
     },
     closeDialog() {

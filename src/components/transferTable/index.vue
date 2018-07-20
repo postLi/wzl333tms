@@ -5,6 +5,9 @@
      <!--  <transition name="el-zoom-in-bottom">
         <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')" plain class="transferTable_fresh clearfix"></el-button>
       </transition> -->
+      <div class="transferTable_searchs">
+         <slot name="tableSearch"></slot>
+      </div>
       <div class="transferTable_header_btn_direction">
         <el-tooltip effect="dark" content="向左侧拉伸" placement="top-end">
           <el-button icon="el-icon-arrow-right" type="primary" circle :disabled="isShowLeft" size="mini" @click="doAction('showAllLeft')" plain></el-button>
@@ -25,9 +28,9 @@
         <slot name="tableLeft">左边表格区</slot>
       </div>
       <div class="transferTable_content_table" :class="[isShowRight ? 'showTableRight' : '']">
-        <div class="transferTable_search">
+        <!-- <div class="transferTable_search">
           <slot name="search"></slot>
-        </div>
+        </div> -->
         <slot name="tableRight">右边表格区</slot>
       </div>
     </div>
@@ -39,7 +42,8 @@ export default {
     return {
       isShowLeft: false,
       isShowRight: false,
-      isShowReback: false
+      isShowReback: false,
+      searchForm: ''
     }
   },
   methods: {
@@ -90,6 +94,15 @@ export default {
     position: relative;
     border: 2px solid #cdf;
     border-bottom: none;
+    .transferTable_searchs{
+      position:absolute;
+      top: 0px;
+      left:0px;
+      // background-color:blue;
+      display:flex;
+      flex-direction: row;
+    }
+
     .transferTable_header_btn_direction {
       text-align: center;
       margin-left: -7px;
@@ -131,13 +144,13 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
-      .transferTable_search {
-        background-color: #eee;
-        position: absolute;
-        top: -38px;
-        left: 100px;
-        z-index: 2;
-      }
+      // .transferTable_search {
+      //   background-color: #eee;
+      //   position: absolute;
+      //   top: -38px;
+      //   left: 100px;
+      //   z-index: 2;
+      // }
     }
     .showTableLeft {
       width: calc(100% - 90px);

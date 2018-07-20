@@ -33,3 +33,20 @@ export const REPERTORY_TYPE = {
   1: '发货库存',
   2: '到货库存'
 }
+/**
+ * 结算类型
+ */
+export const COUNT_STATUS = {
+  '': '全部',
+  NOSETTLEMENT: '未结算',
+  PARTSETTLEMENT: '部分结算',
+  ALLSETTLEMENT : '已结算'
+}
+/**
+ * 结算方向
+ */
+export const SETTLEMENT_ID = {
+  '': '全部',
+  0: '收入',
+  1: '支出'
+}

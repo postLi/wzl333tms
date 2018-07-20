@@ -1,4 +1,4 @@
-$borderColor: #999;
+$borderColor: #222;
 .receiptDialog {
   .el-dialog {
     width: 70%;
@@ -71,18 +71,37 @@ $borderColor: #999;
     .el-table th.is-leaf {
       border-color: $borderColor;
     }
-    .tableItemBtn {
-      width: 30px;
-      padding-left: 8px;
+    .tableBtnAdd,
+    .tableBtnMinus {
+      width: 18px;
+      height: 20px;
+      background-size: 18px;
+      background-repeat: no-repeat;
     }
-    .tableAllBtn {
-      width: 30px;
-      padding-left: 8px;
+    .tableBtnAdd {
+      padding-left: 3px;
       position: absolute;
       z-index: 33;
-      top: 4px;
-      left: 41px;
+      top: 5px;
+      left: 46px;
+      background-image: url('./assets/png/01zengjia-c.png');
     }
+    .tableBtnAdd:hover {
+      background-image: url('./assets/png/02zengjia.png');
+    }
+    .tableBtnMinus {
+      padding-left: 3px;
+      background-image: url('./assets/png/03shanqu-c.png');
+    }
+    .tableBtnMinus:hover {
+      background-image: url('./assets/png/04shanqu.png');
+    }
+    .el-input.is-disabled .el-input__inner{
+        background-color: #FFF;
+        color: #222;
+        border: none;
+        text-align:center;
+      }
   }
   .receiptDialog_remark {
     width: 100%;
@@ -102,5 +121,11 @@ $borderColor: #999;
       border-bottom: 1px solid $borderColor;
       padding: 0 10px;
     }
+    .el-input.is-disabled .el-input__inner{
+        background-color: #FFF;
+        color: $borderColor;
+        border: none;
+        border-bottom: 1px solid $borderColor;
+      }
   }
 }
