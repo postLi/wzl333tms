@@ -147,19 +147,19 @@ export default {
         }
       }, {
         'label': '发货人',
-        'prop': 'senderCustomerName',
+        'prop': 'shipSenderName',
         'width': '150'
       }, {
         'label': '发货人电话',
-        'prop': 'senderCustomerMobile',
+        'prop': 'shipSenderMobile',
         'width': '150'
       }, {
         'label': '收货人',
-        'prop': 'receiverCustomerName',
+        'prop': 'shipReceiverName',
         'width': '150'
       }, {
         'label': '收货人电话',
-        'prop': 'receiverCustomerMobile',
+        'prop': 'shipReceiverMobile',
         'width': '150'
       }, {
         'label': '交接方式',
@@ -280,19 +280,19 @@ export default {
         'width': '150'
       }, {
         'label': '发货方',
-        'prop': 'senderCustomerUnit',
+        'prop': 'shipSenderUnit',
         'width': '150'
       }, {
         'label': '收货方',
-        'prop': 'receiverCustomerUnit',
+        'prop': 'shipReceiverUnit',
         'width': '150'
       }, {
         'label': '发货人地址',
-        'prop': 'senderDetailedAddress',
+        'prop': 'shipSenderAddress',
         'width': '150'
       }, {
         'label': '收货人地址',
-        'prop': 'receiverDetailedAddress',
+        'prop': 'shipReceiverAddress',
         'width': '150'
       }, {
         'label': '回单号',

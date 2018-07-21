@@ -116,7 +116,7 @@ service.interceptors.response.use(
 )
 
 export function checkStatus(res) {
-  if (res.status !== 100 && res.status !== -1 && res.status !== 40001) {
+  if (res.status !== 100 && res.status !== -1 && res.status !== 40001 && res.status !== 0) {
     return res
   } else {
     return Promise.reject(res)

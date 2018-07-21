@@ -146,19 +146,19 @@ export default {
         }
       }, {
         'label': '发货人',
-        'prop': 'senderCustomerName',
+        'prop': 'shipSenderName',
         'width': '150'
       }, {
         'label': '发货人电话',
-        'prop': 'senderCustomerMobile',
+        'prop': 'shipSenderMobile',
         'width': '150'
       }, {
         'label': '收货人',
-        'prop': 'receiverCustomerName',
+        'prop': 'shipReceiverName',
         'width': '150'
       }, {
         'label': '收货人电话',
-        'prop': 'receiverCustomerMobile',
+        'prop': 'shipReceiverMobile',
         'width': '150'
       }, {
         'label': '交接方式',
@@ -258,19 +258,19 @@ export default {
         'width': '150'
       }, {
         'label': '发货方',
-        'prop': 'senderCustomerUnit',
+        'prop': 'shipSenderUnit',
         'width': '150'
       }, {
         'label': '收货方',
-        'prop': 'receiverCustomerUnit',
+        'prop': 'shipReceiverUnit',
         'width': '150'
       }, {
         'label': '发货人地址',
-        'prop': 'senderDetailedAddress',
+        'prop': 'shipSenderAddress',
         'width': '150'
       }, {
         'label': '收货人地址',
-        'prop': 'receiverDetailedAddress',
+        'prop': 'shipReceiverAddress',
         'width': '150'
       }, {
         'label': '回单号',
@@ -451,21 +451,21 @@ export default {
           }).then(() => {
             orderManageApi.deleteOrderInfoById(id).then(res => {
               this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                      })
+                type: 'success',
+                message: '删除成功!'
+              })
               this.fetchData()
             }).catch(err => {
-                      this.$message({
+              this.$message({
                         type: 'info',
                         message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
                       })
-                    })
+            })
           }).catch(() => {
             this.$message({
-                      type: 'info',
-                      message: '已取消删除'
-                    })
+              type: 'info',
+              message: '已取消删除'
+            })
           })
           break
           // 作废运单
@@ -485,21 +485,21 @@ export default {
           }).then(() => {
             orderManageApi.deleteCancleOrderById(theid).then(res => {
               this.$message({
-                    type: 'success',
-                    message: '作废成功!'
-                  })
+                type: 'success',
+                message: '作废成功!'
+              })
               this.fetchData()
             }).catch(err => {
-                  this.$message({
-                        type: 'info',
-                        message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
-                      })
-                })
+              this.$message({
+                    type: 'info',
+                    message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  })
+            })
           }).catch(() => {
             this.$message({
-                  type: 'info',
-                  message: '已取消作废'
-                })
+              type: 'info',
+              message: '已取消作废'
+            })
           })
           break
           // 导出数据
