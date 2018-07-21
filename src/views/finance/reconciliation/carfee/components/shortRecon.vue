@@ -15,7 +15,7 @@
       <div class="sDate">
 
           <el-form-item label="" prop="memberName" placeholder="请选择车牌号">
-              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName"/>
+              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable/>
 
           </el-form-item>
         <el-date-picker

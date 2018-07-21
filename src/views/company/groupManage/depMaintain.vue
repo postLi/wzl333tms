@@ -11,7 +11,7 @@
             </ul>
           </div>
 
-          <div class="depmain-add" v-if="hiddenAdd" v-model='resInfo'>
+          <div class="depmain-add" v-if="hiddenAdd" >
             <div class="add-fixed">
               <el-input
                 placeholder="请输入内容"
@@ -32,12 +32,11 @@
             </div>
           </div>
 
-          <div class="depmain-edit" v-model='resInfo' v-if="hiddenEdit">
-
-            <div class="depmain-list" v-model="getMentInfo">
+          <div class="depmain-edit"  v-if="hiddenEdit" v-loading="loading">
+            <div class="depmain-list" >
               <ul>
-                <li v-for="item in getMentInfo" >
-                  <span>{{item.dictName}}</span>
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index">
+                  <span :key="Math.random()" v-once>{{item.dictName}}</span>
                   <div class="edit-hidden">
                     <el-input
                       v-model="item.dictName"
@@ -88,6 +87,7 @@
       },
       data() {
         return {
+          currentIndex: 0,
           checked1: true,
           popTitle: '部门',
           loading:false,
@@ -145,17 +145,24 @@
           // this.getMentInfo = this.dotInfo
         },
         popVisible (newVal) {
-          // console.log('popVisible:', newVal)
+          if(this.popVisible){
+            this.getSelectDict()
+          }
         },
         createrId(newVal){
 
         }
       },
       mounted() {
-        this.getSelectDict(this.createrId)
+        //
       },
       methods: {
-        getSelectDict(orgId) {
+        resetValue(item, oldvalue){
+          return ()=>{
+            item.dictName = oldvalue
+          }
+        },
+        getSelectDict() {
 
           this.loading = true
           getSelectDictInfo(this.createrId).then(res => {
@@ -189,6 +196,7 @@
           this.hiddenAdd = false
           this.hiddenEdit = true
           this.showDate = false
+          this.currentIndex = 0
         },
         submitForm(ruleForm){
           this.popTitle = '添加'
@@ -216,33 +224,31 @@
           } else {
             let reqPromise = this.getAddDate()
             reqPromise.then(res=>{
-              this.$alert('添加成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
+              this.$message({
+                type: 'success',
+                message: '添加成功!'
+              })
                   this.loading = false
                   this.getSelectDict(this.createrId)
-                }
-              })
             })
           }
         },
         editDep(item){
-         let id = item.id
+          this.loading = true
+          let id = item.id
           this.dictName = item.dictName
           let reqPromise = putDict(this.createrId,this.dictName,id)
           reqPromise.then(res=>{
-            this.$alert('修改成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            })
                 this.loading = false
                 this.getSelectDict()
-              }
-            })
           })
         },
         delDep(item){
           let _id = item.id
-          console.log(_id)
           let deleteItem = item.dictName
           this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
             confirmButtonText: '删除',
@@ -288,7 +294,9 @@
   .dep-maintain .el-select .el-input__inner{
     padding-right: 15px;
   }
-
+.depmain-div{
+  margin: 10px 0 0 10px;
+}
   /*添加*/
 /*depmain-add*/
   .add-fixed{
@@ -326,16 +334,17 @@
     height: 35px;
     cursor: pointer;
   }
+
   .depmain-edit .depmain-list li .edit-hidden{
     display: none;
   }
-  .depmain-edit .depmain-list li:hover .edit-hidden{
+  .depmain-edit .depmain-list .showcurrent .edit-hidden{
     display: block;
   }
   .depmain-edit .depmain-list li span{
     display: block;
   }
-  .depmain-edit .depmain-list li:hover span{
+  .depmain-edit .depmain-list .showcurrent span{
     display: none
   }
   .depmain-edit .depmain-list .edit-hidden{

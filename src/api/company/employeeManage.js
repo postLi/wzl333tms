@@ -79,11 +79,11 @@ export function getAllOrgInfo(orgId, isRefresh) {
  * 获取指定网点的部门信息
  * @param {*} orgid 网点id
  */
-export function getDepartmentInfo(orgid) {
+export function getDepartmentInfo(orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: 'department_type',
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []

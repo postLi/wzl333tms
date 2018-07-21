@@ -213,9 +213,9 @@
 // this.messageInfo.checkStartTime = new Date()
         // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
         // this.messageButtonInfo.createTime = new Date()
-        data.checkStartTime = parseTime(data.checkStartTime) ? '' : new Date()
-        data.checkEndTime = parseTime(data.checkEndTime) ? '' : new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
-        data.createTime = parseTime(data.createTime) ? '' : new Date()
+        data.checkStartTime = parseTime(data.checkStartTime)
+        data.checkEndTime = parseTime(data.checkEndTime)
+        data.createTime = parseTime(data.createTime)
             if(this.sendId){
               data.id = this.sendId
 

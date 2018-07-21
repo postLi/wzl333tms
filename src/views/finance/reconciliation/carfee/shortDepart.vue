@@ -332,7 +332,7 @@
               return false
 
             }else{
-              if(this.selected[0].checkStatus === 0){
+              if(this.selected[0].checkStatus === 1){
                 let _data = {
                   id:'',
                   checkStatus:1
