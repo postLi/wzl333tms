@@ -13,7 +13,7 @@
           </el-form-item> -->
           <el-form-item label="运单号" prop="shipSn">
               <!--<el-input v-model="formInline.shipSn"></el-input>-->
-              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="getShipSn"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false"/>
+              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="getShipSn"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false" />
             </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
             <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" type="order"  @change="getShipSn"  v-model="form.shipGoodsSn" :disabled="isCheck || isDeal ? true : false"/>
@@ -87,6 +87,20 @@
             <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
           <div class="clearfix uploadcard"  >
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" :disabled="isCheck || isDeal ? true : false"/>
+
+
+            <!-- <el-upload
+              action="https://jsonplaceholder.typicode.com/posts/"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove">
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible" :show-file-list="true" listtype="picture">
+              <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog> -->
+
+
           </div>
         </div>
         <!--异常处理-->
@@ -231,6 +245,8 @@ export default {
     //   }
     // }
     return {
+      // dialogImageUrl: '',
+      // dialogVisible: false,
       searchCreatTime: +new Date(),
       form: {
         'abnormalAmount': '',
@@ -406,6 +422,13 @@ export default {
     // },
     // handlePreview(file) {
     //   console.log(file);
+    // },
+    // handleRemove(file, fileList) {
+    //   console.log(file, fileList)
+    // },
+    // handlePictureCardPreview(file) {
+    //   this.dialogImageUrl = file.url
+    //   this.dialogVisible = true
     // },
     getUser(item) {
       if (item) {

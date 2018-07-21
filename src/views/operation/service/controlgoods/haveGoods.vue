@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-      <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+      <SearchForm :orgid="otherinfo.orgid" :allId="allId"  @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
@@ -538,11 +538,12 @@ export default {
                     // }
         id: ''
       },
-      total: 0
+      total: 0,
+      allId: false
     }
   },
   methods: {
-    parseShipStatus(id){
+    parseShipStatus(id) {
       return parseShipStatus(id)
     },
           // PutFh

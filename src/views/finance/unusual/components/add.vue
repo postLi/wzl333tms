@@ -318,11 +318,10 @@ export default {
         this.popTitle = '异动修改'
         this.fetchShipInfo(this.info)
         console.log(this.id + 'ppp')
-      } else if(this.isDbClick){
+      } else if (this.isDbClick) {
         this.popTitle = '异动查看'
         this.fetchShipInfo(this.info)
-      }
-      else {
+      } else {
         this.popTitle = '异动登记'
         this.form.orgId = this.orgid
         for (const i in this.form) {
@@ -489,7 +488,7 @@ export default {
       // }
     },
     closeMe(done) {
-      this.reset()
+      // this.reset()
       this.$emit('update:popVisible', false)
       this.$emit('close')
       if (typeof done === 'function') {

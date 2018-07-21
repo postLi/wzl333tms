@@ -27,7 +27,7 @@
           </selectType>
         </el-form-item>
         <el-form-item label="运单号" prop="shipSn">
-            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" clearable></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
             <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName"/>

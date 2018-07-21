@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-      <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+      <SearchForm :orgid="otherinfo.orgid" :allId="allId" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
             <el-button type="primary" :size="btnsize" icon="el-icon-goods" plain @click="doAction('controlGoods')">控货</el-button>
@@ -484,7 +484,7 @@
 <script>
 import SearchForm from './components/search'
 // import { postReceipt } from '@/api/operation/receipt'
-import { GetControl, PostControlgoods } from '@/api/operation/dashboard'
+import { GetControl } from '@/api/operation/dashboard'
 import orderManageApi from '@/api/operation/orderManage'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -503,8 +503,9 @@ export default {
     ])
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
-    Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
+    // this.searchQuery.vo.orgid = this.otherinfo.orgid
+
+    Promise.all([this.fetchAllPutFh()]).then(resArr => {
       this.loading = false
             // this.licenseTypes = resArr[1]
     })
@@ -526,11 +527,12 @@ export default {
 
       },
       total: 0,
-      id: ''
+      id: '',
+      allId: true
     }
   },
   methods: {
-    parseShipStatus(id){
+    parseShipStatus(id) {
       return parseShipStatus(id)
     },
           // PutFh
@@ -581,17 +583,16 @@ export default {
         return false
       }
       switch (type) {
-        //控货
+        // 控货
         case 'controlGoods':
           if (this.selected.length > 1) {
             this.$message({
               message: '一次只能选择一条运单',
               type: 'warning'
             })
-          } else if(this.selected[0].shipIsControll == 1){
-             this.$message.warning('选择的订单已为控货！')
-          }
-          else {
+          } else if (this.selected[0].shipIsControll == 1) {
+            this.$message.warning('选择的订单已为控货！')
+          } else {
             const id = this.selected[0].id
             console.log(id)
             // console.log(id)
