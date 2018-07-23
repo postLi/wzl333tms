@@ -47,10 +47,10 @@
           <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="结束时间">
-          <el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="结算方式">
           <el-input v-model="messageInfo.settlementType" auto-complete="off" maxlength="8"></el-input>
@@ -688,14 +688,13 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :sendId="sendId" @success="fetchList" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" @success="fetchList" ></SaveDialog>
   </div>
 </template>
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
-  import {postCarrierinitialize} from '@/api/finance/fin_carrier'
+  import {postCarrierinitialize,postCreatesaveCarrierDetail} from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -745,15 +744,28 @@
               remark:'',
               totalCount:'',
             },
-            dealPayInfo:[],
+            dealPayInfo:[],//应付    1-应收 2-应付 3-已收 4-已付
             dealInfo:[],
             alreadyPayInfo:[],
             alreadyInfo:[],
-            form:[],
+            dealPayInfoData:[],//应付    1-应收 2-应付 3-已收 4-已付
+            dealInfoData:[],
+            alreadyPayInfoData:[],
+            alreadyInfoData:[],
+            form:{
+              tmsFinanceBillCheckDto:{},
+              carrierDetailDtoList:[]
+            },
+            //总计
+            tota:{
+              alreadyPaytota:[],
+              dealPaytota:[],
+            },
             sendId:'',
             visibleDialog:false,
             loading:false,
             btnsize: 'mini',
+            sendId: '',
             searchTitle:{
               carrierId:'',//
               startTime:'',
@@ -808,15 +820,33 @@
           return postCarrierinitialize(this.searchTitle).then(data => {
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
+            data.carrierDetailDtoList.forEach((el,val) => {
+              if(el.type === 1){
+                this.dealInfo.push(el)
+                // this.dealInfoData.push(el)
+              }
+              else if(el.type === 2){
+                this.dealPayInfo.push(el)
+                // this.dealPayInfoData.push(el)
+              }
+              else if(el.type === 3){
+                this.alreadyInfo.push(el)
+                // this.alreadyInfoData.push(el)
+              }
+              else{
+                this.alreadyPayInfo.push(el)
+                // this.alreadyPayInfoData.push(el)
+              }
+            })
             this.loading = false
           })
         },
 
         getTrunkName(trunk) {
           if (trunk) {
-            this.searchTitle.memberName = trunk.truckIdNumber
-            this.searchDealPay.truckIdNumber = trunk.truckIdNumber
-            this.searchAlReadyPay.truckIdNumber = trunk.truckIdNumber
+            // this.searchTitle.memberName = trunk.truckIdNumber
+            // this.searchDealPay.truckIdNumber = trunk.truckIdNumber
+            // this.searchAlReadyPay.truckIdNumber = trunk.truckIdNumber
             // console.log(trunk)
 
           }
@@ -829,16 +859,72 @@
           // searchObj.carrierId = this.$route.query.id
           this.fetchList()
         },
+        //保存 /////////////
         submit(formName){
-        //
-
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.oopenVisibleDialog()
+              this.loading = true
+              let promiseObj
+              let data = {}
+              for(const i in this.messageInfo){
+                this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
+              }
+              for(const i in this.messageButtonInfo){
+                this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
+              }
+              this.form.carrierDetailDtoList.push(
+                this.dealInfo,
+                this.dealPayInfo,
+                this.alreadyInfo,
+                this.alreadyPayInfo
+              )
+              data = this.form
+              // data.checkStartTime = parseTime(data.checkStartTime)
+              // data.checkEndTime = parseTime(data.checkEndTime)
+              // data.createTime = parseTime(data.createTime)
+              if(this.sendId){
+                data.id = this.sendId
+
+                promiseObj = postCreatesaveCarrierDetail(data)
+              }else{
+                promiseObj = postCreatesaveCarrierDetail(data)
+              }
+
+              promiseObj.then(res => {
+                this.loading = false
+                this.$message({
+                  message: '添加成功~',
+                  type: 'success'
+                })
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
+                this.closeMe()
+              }).catch(err => {
+                this.loading = false
+              })
             } else {
               return false
             }
           })
+          // for(const i in this.messageInfo){
+          //   this.form[i] = this.messageInfo[i]
+          // }
+          // for(const i in this.messageButtonInfo){
+          //   this.form[i] = this.messageButtonInfo[i]
+          // }
+          // this.form.orgId = this.otherinfo.orgid
+          // this.form.checkBillName = this.checkBillName
+          // this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
+          //   const a = {}
+          //   a.shipOrderId = el.shipOrderId
+          //   a.arrSendPay = el.arrSendPay
+          //   return a
+          // }) :[]
+          // this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
+          //   const a = {}
+          //   a.shipOrderId = el.shipOrderId
+          //   a.arrSendPay = el.arrSendPay
+          //   return a
+          // }) : []
 
         },
         validateIsEmpty(msg = '不能为空！') {
@@ -879,9 +965,22 @@
           return sums;
         },
         iconDelete(scope){
-          // this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-          //   return el.id !== scope.row.id
-          // })
+          this.dealInfo = this.dealInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
+          this.dealPayInfo = this.dealPayInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
+          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
+          this.alreadyInfo = this.alreadyInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
         },
         oopenVisibleDialog(){
           this.visibleDialog = true

@@ -1,6 +1,6 @@
 <template>
   <!--v-loading="loading"-->
-  <div class="tab-content" >
+  <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" title="
 送货" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">

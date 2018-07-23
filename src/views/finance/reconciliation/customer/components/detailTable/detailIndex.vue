@@ -329,9 +329,9 @@ export default {
             this.$router.push({
               path: '/finance/reconciliation/customer/detailTable/customerRecon',
               query: {
-                tab: '客户对账',
-                // id: this.selectInfo.shipSenderId
-                id: 805
+                tab: '客户对账-创建对账',
+                id: this.$route.query.id
+                // id: 805
               }
             })
 
@@ -341,9 +341,9 @@ export default {
           this.$router.push({
             path: '/finance/reconciliation/customer/detailTable/customerRecon',
             query: {
-              tab: '客户对账',
-              // id: this.selectInfo.shipSenderId
-              id: 805
+              tab: '客户对账-修改查看',
+              id: this.$route.query.id
+              // id: 805
             }
           })
 

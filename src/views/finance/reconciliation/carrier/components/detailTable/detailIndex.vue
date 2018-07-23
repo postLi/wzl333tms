@@ -219,7 +219,8 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <!--<AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />-->
+    <IndexDialog :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"></IndexDialog>
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -231,6 +232,7 @@ import {postCarrierdetailList} from '@/api/finance/fin_carrier'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
+import IndexDialog from './components/indexDialog'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
@@ -239,7 +241,8 @@ export default {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    IndexDialog
   },
   computed: {
       ...mapGetters([
@@ -317,7 +320,7 @@ export default {
       }
       // 判断是否有选中项
 
-      if(!this.selected.length && type !== 'storage'){
+      if(!this.selected.length && type !== 'storage' && type !== 'completion'){
           // this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -349,28 +352,29 @@ export default {
             return false
 
           }else{
-            if(this.selected[0].checkStatus === '未对账'){
-              let data = {
-                id:'',
-                checkStatus:0
-              }
-              data.id = this.selected[0].id
-              postCompletion(data).then(res => {
-                this.loading = false
-                this.$message({
-                  type: 'success',
-                  message: '操作成功~'
-                })
-                this.fetchData()
-              }).catch(err => {
-                this.loading = false
-              })
-            }else{
-              this.$message({
-                type: 'info',
-                message: '该对账单已经完成对账~'
-              })
-            }
+            this.openAddCustomer()
+            // if(this.selected[0].checkStatus === '未对账'){
+            //   let data = {
+            //     id:'',
+            //     checkStatus:0
+            //   }
+            //   data.id = this.selected[0].id
+            //   postCompletion(data).then(res => {
+            //     this.loading = false
+            //     this.$message({
+            //       type: 'success',
+            //       message: '操作成功~'
+            //     })
+            //     this.fetchData()
+            //   }).catch(err => {
+            //     this.loading = false
+            //   })
+            // }else{
+            //   this.$message({
+            //     type: 'info',
+            //     message: '该对账单已经完成对账~'
+            //   })
+            // }
           }
 
           break;

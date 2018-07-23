@@ -42,15 +42,14 @@ export function postCarrierinitialize(params) {
 
 
 /**
- /finance/carrierdetail/v1/saveCustomerDetail
- 保存或修改客户对账
+ /finance/carrierdetail/v1/saveCarrierDetail
+ 保存或修改对账
  {"orgId": 1, "checkBillCode": "DZ1805210004","payDetailList":[{"arrSendPay":100},{"arrSendPay":10}],"hadPayDetailList":[{"arrSendPay":101},{"arrSendPay":10}]}
- 车费创建对账单应付 已付
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCreatesaveCustomerDetail(params) {
-  return fetch.post('/api-finance/finance/carrierdetail/v1/saveCustomerDetail', params).then(res => {
+export function postCreatesaveCarrierDetail(params) {
+  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
     return res.data
   })
 }

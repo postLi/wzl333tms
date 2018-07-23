@@ -22,6 +22,18 @@ export function postCFinancebillcheckList(params) {
     return res.data || { list: [], totalCount: 0 }
   })
 }
+/**对账明细列表
+ *
+ /finance/customerdetail/v1/initialize
+ 初始化客户对账明细
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function postCFinanceinitialize(params) {
+  return fetch.post('/api-finance/finance/customerdetail/v1/initialize/', params).then(res => {
+    return res.data || { list: [], totalCount: 0 }
+  })
+}
 /**
  * /finance/customerdetail/v1/{id}
  根据ID删除客户对账表信息

@@ -29,7 +29,7 @@
           end-placeholder="结束日期">
         </el-date-picker>
         <el-form-item class="">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit(formName)">查询</el-button>
         </el-form-item>
       </div>
       </el-form>
@@ -50,30 +50,30 @@
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>-->
-          <el-date-picker
-            v-model="messageInfo.checkStartTime"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            value-format="timestamp"
-            :picker-options="pickOption"
-          >
-          </el-date-picker>
+          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+          <!--<el-date-picker-->
+            <!--v-model="messageInfo.checkStartTime"-->
+            <!--align="right"-->
+            <!--type="date"-->
+            <!--placeholder="选择日期"-->
+            <!--value-format="timestamp"-->
+            <!--:picker-options="pickOption"-->
+          <!--&gt;-->
+          <!--</el-date-picker>-->
 
         </el-form-item>
         <el-form-item label="结束时间">
-          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>-->
-          <el-date-picker
-            v-model="messageInfo.checkEndTime"
-            align="right"
-            type="date"
-            :picker-options="pickOption2"
-            placeholder="选择日期"
-            value-format="timestamp"
+          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
+          <!--<el-date-picker-->
+            <!--v-model="messageInfo.checkEndTime"-->
+            <!--align="right"-->
+            <!--type="date"-->
+            <!--:picker-options="pickOption2"-->
+            <!--placeholder="选择日期"-->
+            <!--value-format="timestamp"-->
 
-          >
-          </el-date-picker>
+          <!--&gt;-->
+          <!--</el-date-picker>-->
         </el-form-item>
         <el-form-item label="账户账号">
           <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
@@ -499,8 +499,8 @@
       },
       mounted(){
         this.searchCreatTime = this.defaultTime
-        this.messageInfo.checkStartTime = new Date()
-        this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
+        // this.messageInfo.checkStartTime = new Date()
+        // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
         this.messageButtonInfo.createTime = new Date()
         this.changeOrgid(this.otherinfo)
         if(this.$route.query.id){
@@ -541,11 +541,21 @@
           return sums;
         },
         iconDelete(scope){
-          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-            return el.id !== scope.row.id
-          })
-          this.dealPayInfo = this.dealPayInfo.filter(el => {
-            return el.id !== scope.row.id
+          if(this.alreadyPayInfo){
+            this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
+              return el.id !== scope.row.id
+
+            })
+          }
+
+          else{
+            this.dealPayInfo = this.dealPayInfo.filter(el => {
+              return el.id !== scope.row.id
+            })
+          }
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
           })
         },
         fetchList(){
@@ -616,21 +626,31 @@
         },
         //查询
         onSubmit(){
-          if(this.$route.query.id){
-            this.sendId = this.$route.query.id
-            this.moodifyList()
-            this.moodifyDealPay()
-            this.moodifyReadyPay()
-          }else{
+          // this.$refs[formName].validate((valid) => {
+          //   if (valid) {
+              if(this.$route.query.id){
+                this.sendId = this.$route.query.id
+                this.moodifyList()
+                this.moodifyDealPay()
+                this.moodifyReadyPay()
+              }else{
 
-            this.fetchList()
-            this.fetchDealPay()
-            this.fetchReadyPay()
-          }
-          const searchObj = {}
-          searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-          searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-          this.infoSearchTime(searchObj.startTime,searchObj.endTime)
+                this.fetchList()
+                this.fetchDealPay()
+                this.fetchReadyPay()
+              }
+              const searchObj = {}
+              searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
+              searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+              this.infoSearchTime(searchObj.startTime,searchObj.endTime)
+          //   }else{
+          //     this.$message({
+          //       type: 'warning',
+          //       message: '操作成功~'
+          //     })
+          //     return false
+          //   }
+          // })
         },
         closeMe(){
           // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
@@ -776,7 +796,7 @@
 
         span{
           position: relative;
-          top: -20px;
+          top: -11px;
           left: 200px;
           font-size: 18px;
           color: #333333;
@@ -822,7 +842,7 @@
         border-top-color: transparent;
         border-right-color: transparent;
         border-bottom-color: transparent;
-        width: 171px;
+        width: 187px;
         border-radius: 0;
       }
       .el-input__inner:focus{

@@ -1,6 +1,6 @@
 <template>
   <!---->
-  <div class="carrierCreat_lll" v-loading="loading" >
+  <div class="costomerCreat_lll" v-loading="loading" >
     <div class="sTop">
       <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
@@ -121,7 +121,7 @@
             sortable
             prop="createTime"
             width="160"
-            label="中转时间">
+            label="开单时间">
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -130,10 +130,10 @@
             label="运单号">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="shipGoodsSn"
             sortable
             width="160"
-            label="中转单号">
+            label="货号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -160,7 +160,18 @@
             sortable
           >
           </el-table-column>
-
+          <el-table-column
+            prop="cargoWeight"
+            sortable
+            width="160"
+            label="重量">
+          </el-table-column>
+          <el-table-column
+            prop="cargoVolume"
+            sortable
+            width="160"
+            label="体积">
+          </el-table-column>
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
@@ -168,36 +179,36 @@
             label="交接方式">
           </el-table-column>
           <el-table-column
-            prop="abnormalType"
-            label="异常类型"
+            prop="unusualRemark"
+            label="异动备注"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
+            prop="shipPayWay"
+            label="付款方式"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="registerFee"
-            label="异常费用"
+            prop="unusualFee"
+            label="异动增款"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="shipArrivepayFee"
-            label="到付款"
+            prop="shipReceiptpayFee"
+            label="回单付"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="agencyFund"
-            label="代收贷款"
+            prop="shipMonthpayFee"
+            label="月结"
             width="130"
             sortable
           >
@@ -265,7 +276,7 @@
             sortable
             prop="createTime"
             width="160"
-            label="中转时间">
+            label="开单时间">
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -274,10 +285,10 @@
             label="运单号">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="shipGoodsSn"
             sortable
             width="160"
-            label="中转单号">
+            label="货号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -304,44 +315,63 @@
             sortable
           >
           </el-table-column>
-
           <el-table-column
-            prop="shipDeliveryMethod"
+            prop="cargoWeight"
             sortable
             width="160"
-            label="交接方式">
+            label="重量">
           </el-table-column>
           <el-table-column
-            prop="paymentMethod"
-            label="中转付款方式"
+            prop="cargoVolume"
+            sortable
+            width="160"
+            label="体积">
+          </el-table-column>
+          <el-table-column
+            prop="unusualRemark"
+            label="异动备注"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="transferCharge"
-            label="中转费"
+            prop="abnormalType"
+            sortable
+            width="160"
+            label="异常类型">
+          </el-table-column>
+
+          <el-table-column
+            prop="abnormalAmount"
+            label="异常件数"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="deliveryExpense"
-            label="中转送货费"
+            prop="unusualFee"
+            label="异动减款"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="transferOtherFee"
-            label="中转其他费"
+            prop="registerFee"
+            label="异常金额"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="totalCost"
-            label="中转费合计"
+            prop="agencyFund"
+            label="代收贷款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="totalFee"
+            label="小计"
             width="130"
             sortable
           >
@@ -402,7 +432,7 @@
             sortable
             prop="createTime"
             width="160"
-            label="中转时间">
+            label="开单时间">
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -411,10 +441,10 @@
             label="运单号">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="shipGoodsSn"
             sortable
             width="160"
-            label="中转单号">
+            label="货号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -441,7 +471,18 @@
             sortable
           >
           </el-table-column>
-
+          <el-table-column
+            prop="cargoWeight"
+            sortable
+            width="160"
+            label="重量">
+          </el-table-column>
+          <el-table-column
+            prop="cargoVolume"
+            sortable
+            width="160"
+            label="体积">
+          </el-table-column>
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
@@ -449,36 +490,36 @@
             label="交接方式">
           </el-table-column>
           <el-table-column
-            prop="abnormalType"
-            label="异常类型"
+            prop="unusualRemark"
+            label="异动备注"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
+            prop="shipPayWay"
+            label="付款方式"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="registerFee"
-            label="异常费用"
+            prop="unusualFee"
+            label="异动增款"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="shipArrivepayFee"
-            label="到付款"
+            prop="shipReceiptpayFee"
+            label="回单付"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="agencyFund"
-            label="代收贷款"
+            prop="shipMonthpayFee"
+            label="月结"
             width="130"
             sortable
           >
@@ -696,6 +737,7 @@
   import { pickerOptions2, parseTime } from '@/utils/'
   import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
   import {postCarrierinitialize} from '@/api/finance/fin_carrier'
+  import {postCFinanceinitialize} from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -755,27 +797,9 @@
             loading:false,
             btnsize: 'mini',
             searchTitle:{
-              carrierId:'',//
+              shipSenderId:'',//
               startTime:'',
               endTime:'',
-            },
-            searchDealPay:{
-              orgId:'',
-              memberType:'3',
-              loadTypeId:38,
-              payTypeStatus:'pay',
-              truckIdNumber:'',
-              startTime:'',
-              endTime:''
-            },
-            searchAlReadyPay:{
-              orgId:'',
-              memberType:'3',
-              loadTypeId:38,
-              payTypeStatus:'hadPay',
-              truckIdNumber:'',
-              startTime:'',
-              endTime:''
             },
             rules:{
               truckIdNumber:[
@@ -793,7 +817,7 @@
       },
       mounted(){
         this.searchCreatTime = this.defaultTime
-        if(this.$route.query.tab === '承运商对账-创建对账'){
+        if(this.$route.query.tab === '客户对账-创建对账'){
           this.onSubmit()
           // this.sendId = this.$route.query.id
         }else{
@@ -804,8 +828,9 @@
       methods:{
         fetchList(){
           this.loading = true
-          this.searchTitle.carrierId = this.$route.query.id
-          return postCarrierinitialize(this.searchTitle).then(data => {
+          this.searchTitle.shipSenderId = this.$route.query.id
+          return postCFinanceinitialize(this.searchTitle).then(data => {
+            console.log(data);
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
             this.loading = false
@@ -917,11 +942,7 @@
         },
         infoSearchTime(startTime,endTime){
           this.searchTitle.startTime = startTime
-          this.searchDealPay.startTime = startTime
-          this.searchAlReadyPay.startTime = startTime
           this.searchTitle.endTime = endTime
-          this.searchDealPay.endTime = endTime
-          this.searchAlReadyPay.endTime = endTime
         },
         clickDetails(row, event, column){
           this.$refs.multipleTable.toggleRowSelection(row)
@@ -936,7 +957,7 @@
 </script>
 
 <style lang="scss">
-.carrierCreat_lll{
+.costomerCreat_lll{
   margin: 0 9px;
   .sTop{
 

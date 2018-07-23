@@ -5,8 +5,7 @@
         <!--isDepMain-->
         <div class="depmain-div" >
           <div class="dialogMoney">
-
-          对账总金额：<span>40元</span>。
+          对账总金额：<span>{{totaMoney}}元</span>
           </div>
           <el-table
             ref="multipleTable"
@@ -58,9 +57,9 @@
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import {postCreatesaveCustomerDetail} from '@/api/finance/fin_carrier'
-  // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
-
+  import {postCreatesaveCarrierDetail} from '@/api/finance/fin_carrier'
+  //parseTime
+  import {parseTime} from '@/utils'
   export default {
     components: {
       PopFrame,
@@ -75,6 +74,10 @@
         type: Boolean,
         default: false
       },
+      tota: {
+        type: [Object,Array],
+        default: false
+        },
       dotInfo: {
         type: [Object,Array],
         default: false
@@ -88,22 +91,19 @@
         formLabelWidth:'90',
         dialogInfo:[
           {
-            toPay:10,
+            toPay:0,
             date:"应付账款"
           },
           {
-            toPay:20,
+            toPay:0,
             date:"已付账款"
           }
         ],
+        dialogData:{},
         checked1: true,
         popTitle: '',
+        totaMoney: '',
         loading:false,
-        formInline: {
-          shipSn: '',
-          shipGoodsSn: '',
-          pickupFee: ''
-        },
       }
     },
     computed: {
@@ -116,12 +116,42 @@
       }
     },
     watch: {
-      dotInfo (newVal) {
-        if(this.sendId){
-          this.dotInfo.id = this.sendId
-        }else{
-          this.dotInfo
-        }
+      tota:{
+        handler(newVal){
+          this.dialogData = this.tota
+          this.dialogData.dealPaytota.map(el=>{
+            this.$set(this.dialogInfo, 0, {
+              date:"应付账款",
+              toPay: this.dialogInfo[0].toPay + (el.shortPay ? +el.shortPay : 0)
+            })
+            //this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+          })
+          this.dialogData.alreadyPaytota.map(el=>{
+            this.$set(this.dialogInfo, 1, {
+              date:"已付账款",
+              toPay: this.dialogInfo[1].toPay + (el.shortPay ? +el.shortPay : 0)
+            })
+            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+          })
+          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay
+          if(this.sendId){
+            this.dotInfo.id = this.sendId
+          }else{
+            this.dotInfo
+          }
+        },
+        deep: true
+      },
+      dotInfo :{
+        handler(newVal) {
+          this.popTitle = this.dotInfo.checkBillName
+          if(this.sendId){
+            this.dotInfo.id = this.sendId
+          }else{
+            this.dotInfo
+          }
+        },
+        deep: true
       },
       popVisible (newVal) {
         this.fetchData()
@@ -130,7 +160,6 @@
 
         if(this.sendId){
           this.dotInfo.id = this.sendId
-          console.log(this.dotInfo.id);
         }else{
           this.dotInfo
         }
@@ -138,7 +167,7 @@
     },
     mounted() {
       if(this.popVisible){
-
+        this.popTitle = this.dotInfo.checkBillName
       }
     },
     methods: {
@@ -163,9 +192,6 @@
         }
       },
       reset(){
-        // this.formInline.shipSn = ''
-        // this.formInline.shipGoodsSn = ''
-        // this.formInline.pickupFee = ''
       },
 
       submitForm(formName) {
@@ -175,14 +201,21 @@
             let promiseObj
             let data = []
             data = this.dotInfo
-        console.log("全部" + this.dotInfo);
+            // delete data.payDetailList.shortPay
+
+
+// this.messageInfo.checkStartTime = new Date()
+        // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
+        // this.messageButtonInfo.createTime = new Date()
+        data.checkStartTime = parseTime(data.checkStartTime)
+        data.checkEndTime = parseTime(data.checkEndTime)
+        data.createTime = parseTime(data.createTime)
             if(this.sendId){
               data.id = this.sendId
-              promiseObj = postCreatesaveCustomerDetail(data)
-              console.log("修改" + data);
+
+              promiseObj = postCreateBillCheckCarInfo(data)
             }else{
-              promiseObj = postCreatesaveCustomerDetail(data)
-              alert('lll')
+              promiseObj = postCreateBillCheckCarInfo(data)
             }
 
             promiseObj.then(res => {
