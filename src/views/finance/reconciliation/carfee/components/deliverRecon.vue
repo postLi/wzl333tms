@@ -185,7 +185,7 @@
           </el-table-column>
           <el-table-column
             prop="shortPay"
-            label="短驳费"
+            label="送货费"
             width="130"
             sortable
           >
@@ -296,7 +296,7 @@
           </el-table-column>
           <el-table-column
             prop="shortPay"
-            label="短驳费"
+            label="送货费"
             width="130"
             sortable
           >

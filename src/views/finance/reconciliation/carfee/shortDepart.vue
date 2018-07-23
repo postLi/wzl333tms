@@ -267,9 +267,9 @@
           // 新增
           case 'storage':
             this.$router.push({
-              path: '/finance/reconciliation/carfee/components',
+              path: '/finance/reconciliation/carfee/components/shortRecon',
               query: {
-                tab: '车辆对账-创建对账'
+                tab: '短驳对账-创建对账'
               }
             })
 
@@ -277,9 +277,9 @@
           // 修改
           case 'modify':
             this.$router.push({
-              path: '/finance/reconciliation/carfee/components',
+              path: '/finance/reconciliation/carfee/components/shortRecon',
               query: {
-                tab: '车辆对账-修改查看',
+                tab: '短驳对账-修改查看',
                 id: this.selected[0].id
               }
             })

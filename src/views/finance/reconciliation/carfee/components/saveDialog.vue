@@ -195,9 +195,6 @@
         }
       },
       reset(){
-        // this.formInline.shipSn = ''
-        // this.formInline.shipGoodsSn = ''
-        // this.formInline.pickupFee = ''
       },
 
       submitForm(formName) {
@@ -230,8 +227,6 @@
                 message: '添加成功~',
                 type: 'success'
               })
-              // delete this.sendId.shipId
-              // this.fetchData()
               this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
               this.closeMe()
             }).catch(err => {

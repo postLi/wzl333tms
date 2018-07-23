@@ -50,7 +50,6 @@
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>-->
           <el-date-picker
             v-model="messageInfo.checkStartTime"
             align="right"
@@ -141,7 +140,13 @@
             prop="batchNo"
             width="160"
             sortable
-            label="短驳批次号">
+            label="批次号">
+          </el-table-column>
+          <el-table-column
+            prop="batchNo"
+            width="160"
+            sortable
+            label="合同编号">
           </el-table-column>
           <el-table-column
             prop="orgName"
@@ -178,18 +183,37 @@
           </el-table-column>
           <el-table-column
             prop="driverName"
-            label="司机"
+            label="现付运费"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="shortPay"
-            label="短驳费"
+            prop="driverName"
+            label="现付油卡"
             width="130"
             sortable
           >
           </el-table-column>
+          <el-table-column
+            prop="driverName"
+            label="到付现金"
+            width="130"
+            sortable
+          >
+          </el-table-column><el-table-column
+          prop="driverName"
+          label="到付油卡"
+          width="130"
+          sortable
+        >
+        </el-table-column><el-table-column
+          prop="driverName"
+          label="运费合计"
+          width="130"
+          sortable
+        >
+        </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
@@ -252,7 +276,13 @@
             prop="batchNo"
             width="160"
             sortable
-            label="短驳批次号">
+            label="批次号">
+          </el-table-column>
+          <el-table-column
+            prop="batchNo"
+            width="160"
+            sortable
+            label="合同编号">
           </el-table-column>
           <el-table-column
             prop="orgName"
@@ -289,18 +319,37 @@
           </el-table-column>
           <el-table-column
             prop="driverName"
-            label="司机"
+            label="现付运费"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="shortPay"
-            label="短驳费"
+            prop="driverName"
+            label="现付油卡"
             width="130"
             sortable
           >
           </el-table-column>
+          <el-table-column
+            prop="driverName"
+            label="到付现金"
+            width="130"
+            sortable
+          >
+          </el-table-column><el-table-column
+          prop="driverName"
+          label="到付油卡"
+          width="130"
+          sortable
+        >
+        </el-table-column><el-table-column
+          prop="driverName"
+          label="运费合计"
+          width="130"
+          sortable
+        >
+        </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
@@ -358,7 +407,7 @@
       <div>
         <el-button >打印</el-button>
         <el-button >导出</el-button>
-        <el-button @click="closeMe">取消</el-button>
+        <el-button >取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
@@ -368,7 +417,7 @@
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo,postCarfDtoById,postCarfBillCheckCarUpdateList} from '@/api/finance/fin_carfee'
+  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCarfDtoById,postCarfBillCheckCarUpdateList} from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -499,9 +548,7 @@
       },
       mounted(){
         this.searchCreatTime = this.defaultTime
-        this.messageInfo.checkStartTime = new Date()
-        this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
-        this.messageButtonInfo.createTime = new Date()
+
         this.changeOrgid(this.otherinfo)
         if(this.$route.query.id){
           this.sendId = this.$route.query.id
@@ -632,27 +679,6 @@
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime,searchObj.endTime)
         },
-        closeMe(){
-          // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
-          // this.$confirm('确定要取消对账单吗？', '提示', {
-          //   confirmButtonText: '取消',
-          //   cancelButtonText: '确定',
-          //   type: 'warning'
-          // }).then(() => {
-          //   deletePerManage(_id).then(res => {
-          //     this.$message({
-          //       type: 'success',
-          //       message: '删除成功!'
-          //     })
-          //     this.getSelectDict()
-          //   }).catch(err => {
-          //     this.$message({
-          //       type: 'info',
-          //       message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-          //     })
-          //   })
-          // })
-        },
         //保存
         submit(formName){
           this.$refs[formName].validate((valid) => {
@@ -662,6 +688,11 @@
               return false
             }
           })
+          // messageInfo:{
+          //   checkStartTime:'',
+          //     checkEndTime:'',
+          // this.messageInfo.checkStartTime = parseTime(this.messageInfo.checkStartTime)
+          // console.log(this.messageInfo.checkStartTime);
           for(const i in this.messageInfo){
             this.form[i] = this.messageInfo[i]
           }

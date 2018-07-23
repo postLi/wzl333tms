@@ -333,7 +333,7 @@ export default {
               path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
               query: {
                 tab: '承运商对账-创建对账',
-                id: this.selectInfo.carrierId
+                id: this.$route.query.id
               }
             })
 

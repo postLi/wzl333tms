@@ -42,14 +42,15 @@ export function postCarrierinitialize(params) {
 
 
 /**
- http://localhost:7010/tmsfinanceservice/finance/tmsfinancebillcheck/v1/createBillCheckCarInfo?access_token={{access_token}}
+ /finance/carrierdetail/v1/saveCustomerDetail
+ 保存或修改客户对账
  {"orgId": 1, "checkBillCode": "DZ1805210004","payDetailList":[{"arrSendPay":100},{"arrSendPay":10}],"hadPayDetailList":[{"arrSendPay":101},{"arrSendPay":10}]}
  车费创建对账单应付 已付
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCreateBillCheckCarInfo(params) {
-  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/createBillCheckCarInfo', params).then(res => {
+export function postCreatesaveCustomerDetail(params) {
+  return fetch.post('/api-finance/finance/carrierdetail/v1/saveCustomerDetail', params).then(res => {
     return res.data
   })
 }
