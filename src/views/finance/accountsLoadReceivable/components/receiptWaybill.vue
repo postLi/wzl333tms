@@ -48,21 +48,25 @@
         </el-table>
       </div>
       <div class="receiptDialog_todo">
-         <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
+        <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-               <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="financialWay" label="收支方式" width="100">
+          <el-table-column prop="financialWay" label="收支方式" width="120">
             <template slot-scope="props">
-              <el-input v-model="props.row.financialWay" :size="btnsize" disabled></el-input>
+              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
+                <template slot-scope="{item}">
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
+                </template>
+              </querySelect>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankName" :size="btnsize"></el-input>
+              <el-input v-model="props.row.bankName" :size="btnsize" ></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankAccount" label="银行卡号">
@@ -143,6 +147,7 @@ export default {
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
+      BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
@@ -257,6 +262,9 @@ export default {
         this.amount.splice(apoint, 1)
       }
     },
+    sender (item, index) {
+      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
+    },
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = new Date(data.trim())
@@ -340,12 +348,6 @@ export default {
           sums[index] = this.amountMessage
           return
         }
-        // for(let i = 13; i > -1; i--) {
-        //   if (index === i) {
-        //     sums[index] = this.amount[i-6]
-        //     return
-        //   }
-        // }
         let count = -2 // 从第3列开始显示
         for (let i = 12; i > 2; i--) {
           count++
