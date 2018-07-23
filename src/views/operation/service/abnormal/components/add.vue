@@ -412,7 +412,7 @@ export default {
           this.form[i] = ''
         }
         delete this.form.id
-        this.form.orgid = this.orgid
+        // this.form.orgid = this.orgid
       }
     }
   },
@@ -513,7 +513,7 @@ export default {
         this.form.cargoPack = data.cargoPack
         this.form.cargoAmount = data.cargoAmount
 
-        this.form.shipSn = data.shipSn
+        // this.form.shipSn = data.shipSn
         // this.form.shipGoodsSn = data.shipGoodsSn
         this.form.shipId = data.id
         this.form.abnormalDescribe = data.abnormalDescribe
@@ -622,6 +622,8 @@ export default {
       if (!this.isModify) {
         this.form.abnormalNo = oldVal
       }
+      // this.form.shipSn = ''
+      // this.form.shipGoodsSn = ''
     },
     closeMe(done) {
       // this.reset()

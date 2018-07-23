@@ -382,6 +382,7 @@ export default {
         case 'reg':
           this.isModify = false
           this.isCheck = false
+          this.isDbClick = false
           // this.isDbclick = false
           console.log(this.isModify)
           this.selectInfo = {}
@@ -391,16 +392,18 @@ export default {
         case 'xiugai':
           if (this.selected.length > 1) {
             this.$message({
-              message: '每次只能寄出单条数据',
+              message: '每次只能修改一条数据',
               type: 'warning'
             })
           } else {
             this.isCheck = false
+            // this.selectInfo = {}
                   //  this.isDbclick = false
             // this.id = this.selected[0].id
             // this.selectInfo = this.selected[0]
-            this.selectInfo = Object.assign({},this.selected[0])
+            this.selectInfo = Object.assign({}, this.selected[0])
             this.isModify = true
+            this.isDbClick = false
             // console.log('this.selectInfo:', this.selected)
             this.openAddAbnormal()
           }
@@ -467,7 +470,7 @@ export default {
       // this.isCheck = true
       this.isDbClick = true
       this.isModify = false
-          // this.isDbclick = true
+      // this.isCheck = true
       this.openAddAbnormal()
     }
   }

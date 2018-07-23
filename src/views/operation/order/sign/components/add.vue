@@ -376,13 +376,13 @@ export default {
           // console.log(res, "this.form.abnormalNo: ", this.form);
       })
     },
-    handleSelectSender(res) {
-      this.customSend.senderName = res.customerName
-      this.customSend.companyName = res.companyName
-      this.customSend.senderMobile = res.customerMobile
-      this.customSend.detailedAddress = res.detailedAddress
-      this.customSend.customerType = res.customerType
-    },
+    // handleSelectSender(res) {
+    //   this.customSend.senderName = res.customerName
+    //   this.customSend.companyName = res.companyName
+    //   this.customSend.senderMobile = res.customerMobile
+    //   this.customSend.detailedAddress = res.detailedAddress
+    //   this.customSend.customerType = res.customerType
+    // },
     querySearchReceiver(name) {
       const _this = this
       return function(query, cb) {

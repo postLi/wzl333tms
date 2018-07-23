@@ -7,9 +7,10 @@
             <!-- <el-select v-model="form.shipSn" filterable multiple  placeholder="请输入关键词">
             </el-select> -->
           <el-form-item label="运单号" prop="shipSn">
-              <querySelect valuekey="shipSn" v-if="!this.isModify" search="shipSn" type="order"  @change="fetchShipInfo"  placeholder="请输入运单号" v-model="form.shipSn" >
+            <!-- <el-input v-if="this.isDbClick" v-model="form.shipSn"  maxlength="20" auto-complete="off" :disabled="true"></el-input> -->
+              <querySelect valuekey="shipSn" search="shipSn" :disabled="this.isDbClick"  type="order" :key="querykey"  @change="fetchShipInfo"  placeholder="请输入运单号" v-model="form.shipSn">
               </querySelect>
-              <el-input v-else :value="form.shipSn"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+              <!-- <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo"  v-model="form.shipSn" :disabled="isDbClick ? true : false" /> -->
           </el-form-item>
           <el-form-item label="开单时间" prop="createTime">
             <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
@@ -35,8 +36,8 @@
           <el-form-item label="运费合计" prop="shipFee">
             <el-input v-model="form.shipFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="付款方式" prop="shipPayWay">
-            <el-input v-model="form.shipPayWay"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+          <el-form-item label="付款方式" prop="shipPayWayName">
+            <el-input v-model="form.shipPayWayName"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="现付" prop="shipNowpayFee">
             <el-input v-model="form.shipNowpayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
@@ -91,14 +92,19 @@
         </div>
       </el-form>
     </template>
-    <!-- <div slot="footer" class="dialog-footer" v-if="isDbClick">
+    <div slot="footer" class="dialog-footer" v-if="isDbClick">
       <el-button @click="closeMe">关 闭</el-button>
-    </div> -->
-    <div slot="footer" class="dialog-footer">
+    </div>
+    <div slot="footer" class="dialog-footer" v-else>
+      <el-button type="primary" v-if="isModify" @click="submitForm('ruleForm')" >修改</el-button>
+      <el-button type="primary" v-else @click="submitForm('ruleForm')" >保 存</el-button>
+      <el-button @click="closeMe">取 消</el-button>
+    </div>
+    <!-- <div slot="footer" class="dialog-footer">
       <el-button type="primary" v-if="isModify" @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">修改</el-button>
       <el-button type="primary" v-else @click="submitForm('ruleForm')" :disabled="isCheck ? true : false">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
-    </div>
+    </div> -->
   </pop-right>
 </template>
 <script>
@@ -168,6 +174,7 @@ export default {
   },
   data() {
     return {
+      querykey: '11',
       searchCreatTime: +new Date(),
       incomePayType: 'RECEIVABLE',
       form: {
@@ -190,7 +197,8 @@ export default {
         shipNowpayFee: '',
         shipArrivepayFee: '',
         shipMonthpayFee: '',
-        shipReceiptpayFee: ''
+        shipReceiptpayFee: '',
+        shipPayWayName: ''
 
       },
       obj: {
@@ -203,10 +211,10 @@ export default {
       tooltip: false,
       rules: {
         fee: [
-          { required: true, message: '必填只能输入数字', trigger: 'change' }
+          { required: true, message: '必填只能输入数字', trigger: 'blur' }
         ],
         remark: [
-          { required: true, message: '请输入异动备注', trigger: 'change' }
+          { required: true, message: '请输入异动备注', trigger: 'blur' }
         ],
         shipSn: [
           // { required: true, trigger: 'blur', validator: validateshipSn}
@@ -255,55 +263,62 @@ export default {
     orgid(newVal) {
       this.form.orgid = newVal
     },
-    isModify: {
-      handler(newVal) {
-        this.setTitle()
-      },
-      immediate: true
-    },
-    isCheck: {
-      handler(newVal) {
-        this.setTitle()
-      },
-      immediate: true
-    },
-    isDbClick: {
-      handler(newVal) {
-        this.setTitle()
-      },
-      immediate: true
-    },
-    isDeal: {
-      handler(newVal) {
-        this.setTitle()
-        // if(this.isDeal){
-        //   this.popTitle = '异常处理'
-        //   GetLook(this.id).then(res => {
-        //     this.form = res;
-        //     this.form.disposeTime = new Date();
-        //   })
-        // }
-      },
-      immediate: true
-    }
+    // isModify: {
+    //   handler(newVal) {
+    //     this.setTitle()
+    //   },
+    //   immediate: true
+    // },
+    // isDbClick: {
+    //   handler(newVal) {
+    //     this.setTitle()
+    //   },
+    //   immediate: true
+    // },
 
-    // info () {
-    //   if(this.isModify){
-    //     this.popTitle = '异常修改'
-    //     let data = Object.assign({},this.info)
-    //     for(let i in this.form){
-    //       this.form[i] = data[i]
-    //     }
-    //     this.form.id = data.id
-    //   } else {
-    //     this.popTitle = '异常登记'
-    //     for(let i in this.form){
-    //       this.form[i] = ''
-    //     }
-    //     delete this.form.id
-    //     this.form.orgid = this.orgid
-    //   }
-    // }
+    info() {
+      // this.setTitle()
+
+      // if(this.isModify){
+      //   this.popTitle = '异常修改'
+      //   let data = Object.assign({},this.info)
+      //   for(let i in this.form){
+      //     this.form[i] = data[i]
+      //   }
+      //   this.form.id = data.id
+      // } else {
+      //   this.popTitle = '异常登记'
+      //   for(let i in this.form){
+      //     this.form[i] = ''
+      //   }
+      //   delete this.form.id
+      //   this.form.orgid = this.orgid
+      // }
+      for (const i in this.form) {
+        this.form[i] = ''
+      }
+      this.querykey = +new Date()
+
+      if (this.isModify) {
+        this.popTitle = '异动修改'
+        this.fetchShipInfo(this.info)
+        console.log(this.id + 'ppp')
+      } else if (this.isDbClick) {
+        this.popTitle = '异动查看'
+        this.fetchShipInfo(this.info)
+
+        // console.log(this.info.nowPayFee)
+      } else {
+        this.popTitle = '异动登记'
+        this.form.orgId = this.orgid
+
+        // this.fetchShipInfo(this.info)
+        this.form.incomePayType = this.incomePayType
+        this.form.shipSn = ''
+        // this.form.createTime = new Date()
+        // this.dengji()
+      }
+    }
   },
   methods: {
     // handleRemove(file, fileList) {
@@ -313,25 +328,25 @@ export default {
     //   console.log(file);
     // },
 
-    setTitle() {
-      if (this.isModify) {
-        this.popTitle = '异动修改'
-        this.fetchShipInfo(this.info)
-        console.log(this.id + 'ppp')
-      } else if (this.isDbClick) {
-        this.popTitle = '异动查看'
-        this.fetchShipInfo(this.info)
-      } else {
-        this.popTitle = '异动登记'
-        this.form.orgId = this.orgid
-        for (const i in this.form) {
-          this.form[i] = ''
-        }
-        this.form.incomePayType = this.incomePayType
-        // this.form.createTime = new Date()
-        // this.dengji()
-      }
-    },
+    // setTitle() {
+    //   if (this.isModify) {
+    //     this.popTitle = '异动修改'
+    //     this.fetchShipInfo(this.info)
+    //   } else if (this.isDbClick) {
+    //     this.popTitle = '异动查看'
+    //     this.fetchShipInfo(this.info)
+    //     console.log(this.isDbClick)
+    //   } else {
+    //     this.popTitle = '异动登记'
+    //     this.form.orgId = this.orgid
+    //     for (const i in this.form) {
+    //       this.form[i] = ''
+    //     }
+    //     this.form.incomePayType = this.incomePayType
+    //     // this.form.createTime = new Date()
+    //     // this.dengji()
+    //   }
+    // },
     // dengji() {
     //   return GetAbnormalNo().then(res => {
     //       // this.form = res;
@@ -340,7 +355,7 @@ export default {
     //   })
     // },
     querySearch(queryString, cb) {
-      var restaurants = this.resInfo
+      var restaurants = this.resInfo0
       var results = queryString ? restaurants.filter(item => {
         return item.name ? item.name.indexOf(queryString) !== -1 : false
       }) : restaurants
@@ -368,8 +383,8 @@ export default {
       // const oldVal = this.form[type]
 
       if (data) {
-        console.log('ship data:', data)
-        if (this.isModify) {
+        console.log('ship data:', JSON.stringify(data))
+        if (this.isModify || this.isDbClick) {
           this.form.shipSn = data.shipSn
           this.form.shipFee = data.shipFee
           this.form.createTime = data.createTime
@@ -382,21 +397,30 @@ export default {
           this.form.shipMonthpayFee = data.monthPayFee
           this.form.shipReceiptpayFee = data.receiptPayFee
           this.form.shipArrivepayFee = data.arrivePayFee
+
           this.form.shipNowpayFee = data.nowPayFee
-          this.form.shipPayWay = data.shipPayWay
+          this.form.shipPayWayName = data.shipPayWay
           this.form.cargoWeight = data.cargoWeight
           this.form.cargoVolume = data.cargoVolume
+          this.form.shipFee = data.shipFee
+          this.form.nowPayFee = data.nowPayFee
 
           this.form.fee = data.changeFee
           this.form.incomePayType = data.incomePayType
           this.form.shipCreateTime = data.shipCreateTime
           this.form.remark = data.remark
-          // this.form.shipPayWay = data.shipPayWay
+          this.form.shipLoadId = data.id
+          this.form.shipPayWayName = data.shipPayWay
+
+          this.form.shipPayWay = data.shipPayWay
         } else {
           this.form = Object.assign(this.form, data)
           this.form.shipLoadId = data.id
+          this.form.shipNowpayFee = data.shipNowpayFee
+          this.form.shipPayWayName = data.shipPayWayName
         }
-      } else {
+      }
+      //  else {
         // this.$message({
         //   message: '查无此信息~',
         //   type: 'warning'
@@ -409,7 +433,7 @@ export default {
         // this.form.cargoAmount = ''
         //   // this.form[type] = oldVal
         // this.form.shipLoadId = ''
-      }
+      // }
 
       // return
       /* orderManage.getFindByShipSnOrGoodSn({
@@ -486,9 +510,10 @@ export default {
       // if (!this.isModify) {
       //   this.form.abnormalNo = oldVal
       // }
+      // this.form.shipSn = ''
     },
     closeMe(done) {
-      // this.reset()
+      this.reset()
       this.$emit('update:popVisible', false)
       this.$emit('close')
       if (typeof done === 'function') {
