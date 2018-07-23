@@ -102,7 +102,7 @@
               </td>
               <td>
                 <el-form-item label="开单网点">
-                  <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled="disabled" :disabled="isDbclick"/>
+                  <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" :disabled="isDbclick"/>
                 </el-form-item>
               </td>
 
@@ -221,8 +221,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ])
+      'otherinfo'
+    ])
   },
   data() {
     const validateOnlyNumberAndLetter = (rule, value, callback) => {
@@ -230,7 +230,7 @@ export default {
         callback()
       } else if (value == '') {
         callback()
-      } else{
+      } else {
         callback(new Error('只能输入数字或者字母'))
       }
     }
@@ -260,7 +260,7 @@ export default {
       }
       if (!REGEX.ONLY_NUMBER.test(value)) {
         callback(new Error('只能输入数字'))
-      }else {
+      } else {
         hasOne = true
         callback()
       }
@@ -412,7 +412,7 @@ export default {
         this.popTitle = '查看订单'
         this.orderSn = this.info.orderSn
         this.infoData(this.info)
-      }      else {
+      } else {
         this.popTitle = '新增订单'
         this.orderSn = ''
         // cargoId
@@ -472,7 +472,7 @@ export default {
       return (rule, value, callback) => {
         if (!value) {
           callback(new Error(msg))
-        }else {
+        } else {
           callback()
         }
       }

@@ -9,7 +9,7 @@
       </SelectTree>
     </el-form-item>
     <el-form-item label="结算状态" prop="status">
-      <el-select size="small" v-model="searchForm.status" placeholder="结算状态" :size="btnsize">
+      <el-select size="small" v-model="searchForm.status" placeholder="结算状态">
        <el-option v-for="(value, key) in $const.COUNT_STATUS" :value="key" :key="key" :label="value"></el-option>
       </el-select>
     </el-form-item>
@@ -60,7 +60,7 @@ export default {
   },
   data() {
     const orgidIdentifier = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
+      const reg = REGEX.ONLY_NUMBER
       if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
@@ -101,13 +101,13 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()
   },
   methods: {
     onSubmit() {
-      let searchObj = Object.assign({}, this.searchForm)
+      const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
