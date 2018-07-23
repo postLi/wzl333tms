@@ -54,10 +54,10 @@ export default {
       let access_token = getToken()
       this.$set(this.query, 'access_token', access_token)
       let str = '?'
-      for (let item in this.query){
-        str += item +'=' + String(this.query[item]).trim()+ '&'
+      for (let item in this.query) {
+        str += item + '=' + this.query[item] + '&'
       }
-      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html'+str
+      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/operation.html' + str
       this.chartIframe = encodeURI(path)
       console.log(path, this.$refs.senderIframe.contentWindow)
 

@@ -22,7 +22,7 @@
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：把同个区域不同网点收的货物配置到分拨中心，进行干线配置
+            功能：把同个区域不同网点收的货物配载到分拨中心，进行干线配载
           </div>
           <router-link to="./order/shortDepart">
             <i class="flowicon duanbo"></i>
@@ -60,7 +60,7 @@
         </el-tooltip>
         <el-tooltip placement="top">
           <div slot="content">
-            功能：在公司网点走货运输
+            功能：在公司网点间走货运输
           </div>
           <router-link to="./order/arteryDepart">
             <i class="flowicon peizai"></i>
@@ -99,7 +99,7 @@
         <div class="operation_flow_foot_left">
           <el-tooltip placement="bottom">
             <div slot="content">
-              功能：对目的网点寄回的回单做签收
+              功能：对目的网点寄回的回单做接收
             </div>
             <router-link to="./order/receipt">
               <i class="flowicon jieshou"></i>

@@ -1,5 +1,5 @@
 <template>
-  <!-- 营业额日报表 -->
+  <!-- 运营统计分析 -->
   <div class="tab-wrapper tab-wrapper-100">
     <keep-alive v-bind:is="component"></keep-alive>
   </div>

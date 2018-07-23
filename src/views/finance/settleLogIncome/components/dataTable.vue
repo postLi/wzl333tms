@@ -1,38 +1,11 @@
 <template>
   <transferTable>
-   <!--  <div slot="tableSearch" class="tableHeadItemForm clearfix">
-      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
-        <el-form-item label="批次">
-          <el-input placeholder="批次号搜索" v-model="searchForm.type">
-            <el-select v-model="searchForm.batchNo" slot="prepend" placeholder="请选择">
-              <el-option label="短驳" value="38"></el-option>
-              <el-option label="干线" value="39"></el-option>
-              <el-option label="送货" value="40"></el-option>
-            </el-select>
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="车牌号">
-          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
-        </el-form-item>
-        <el-form-item>
-          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
+    <div slot="tableSearch" class="tableHeadItemForm clearfix">
+     <!-- 搜索左边表格 -->
+      <currentSearch :info="orgLeftTable" @search="getSearch"></currentSearch>
+    </div>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
-        <el-form-item label="批次">
-          <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
-        </el-form-item>
-        <el-form-item label="车牌号">
-          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
-        </el-form-item>
-        <el-form-item>
-          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
-        </el-form-item>
-      </el-form>
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
@@ -56,21 +29,21 @@
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="出发城市" width="120">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="到达城市" width="120">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="重量" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="发货方" width="120">
+        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
         <el-table-column prop="remark" sortable label="运单备注" width="120">
         </el-table-column>
@@ -101,21 +74,21 @@
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="出发城市" width="120">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="到达城市" width="120">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="重量" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="发货方" width="120">
+        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
         <el-table-column prop="remark" sortable label="运单备注" width="120">
         </el-table-column>
@@ -130,6 +103,7 @@ import transferTable from '@/components/transferTable'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2 } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
+import currentSearch from './currentSearch'
 export default {
   data() {
     return {
@@ -142,12 +116,14 @@ export default {
       searchForm: {},
       selectedRight: [],
       selectedLeft: [],
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
         left: [],
         right: []
-      }
+      },
+      senderSearch: ''
     }
   },
   props: {
@@ -167,7 +143,8 @@ export default {
   },
   components: {
     transferTable,
-    querySelect
+    querySelect,
+    currentSearch
   },
   watch: {
     isModify: {
@@ -193,16 +170,23 @@ export default {
     getList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
+      this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
         this.leftTable = this.orgData.left
+        this.orgLeftTable = this.orgData.left
         this.rightTable = this.orgData.right
         this.$emit('loadTable', this.rightTable)
       } else {
         getOrderShipList(this.otherinfo.orgid, this.incomePayType, this.paymentsType).then(data => {
           this.leftTable = data
+          this.orgLeftTable = data
           this.$emit('loadTable', this.rightTable)
         })
       }
+    },
+    getSearch (obj) { // 搜索
+     this.leftTable = obj
+     console.log(obj)
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -234,14 +218,14 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置配载重量,配载体积,配载数量
-          e.loadAmount = e.repertoryAmount
-          e.loadWeight = e.repertoryWeight
-          e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
+          }
+          let orgItem = this.orgLeftTable.indexOf(e)
+          if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+            this.orgLeftTable.splice(orgItem, 1)
           }
         })
         // this.changeTableKey() // 刷新表格视图
@@ -255,6 +239,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
@@ -365,41 +350,11 @@ export default {
 
 </script>
 <style lang="scss">
-// .tableHeadItemForm {
-//     // position: absolute;
-//     // z-index: 2;
-//     // top: -41px;
-//     // left: -10px;
 
-//     margin-left:0px;
-//     display: flex;
-//     flex-direction: row;
-//     .el-input {
-//       width: 125px;
-//       .el-input__inner{
-//         padding: 0 10px;
-//       }
-//     }
-//   }
+
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
-  .tableHeadItemForm {
-    position: absolute;
-    z-index: 2;
-    top: -41px;
-    left: -10px;
-
-    margin-left:0px;
-    display: flex;
-    flex-direction: row;
-    .el-input {
-      width: 125px;
-      .el-input__inner{
-        padding: 0 10px;
-      }
-    }
-  }
   .el-button {
     border: none;
   }
@@ -445,6 +400,7 @@ export default {
   .showAllTable {
     width: calc(100% - 100px);
   }
+  
 }
 
 </style>

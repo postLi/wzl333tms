@@ -28,9 +28,6 @@
         <slot name="tableLeft">左边表格区</slot>
       </div>
       <div class="transferTable_content_table" :class="[isShowRight ? 'showTableRight' : '']">
-        <!-- <div class="transferTable_search">
-          <slot name="search"></slot>
-        </div> -->
         <slot name="tableRight">右边表格区</slot>
       </div>
     </div>
@@ -98,7 +95,7 @@ export default {
       position:absolute;
       top: 0px;
       left:0px;
-      background-color:gray;
+      // background-color:gray;
       display:flex;
       flex-direction: row;
     }
@@ -144,13 +141,6 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
-      // .transferTable_search {
-      //   background-color: #eee;
-      //   position: absolute;
-      //   top: -38px;
-      //   left: 100px;
-      //   z-index: 2;
-      // }
     }
     .showTableLeft {
       width: calc(100% - 90px);
@@ -161,7 +151,7 @@ export default {
       transition: 0.5s;
     }
     .showTableRight {
-      width: calc(100%);
+      width: calc(100% - 112px);
       transition: 0.5s;
     }
   }

@@ -31,9 +31,8 @@ export default {
     return {
       chartIframe: '',
       query: {
-        typeIds: ''
-        // currentPage: 1,
-        // pageSize: 100
+        currentPage: 1,
+        pageSize: 100
         // senderCustomerName: '',
         // shipFromOrgid: '',
         // createTimeStart: '',
@@ -57,9 +56,10 @@ export default {
       for (let item in this.query){
         str += item +'=' + String(this.query[item]).trim()+ '&'
       }
-      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html'+str
-      this.chartIframe = encodeURI(path)
-      console.log(path, this.$refs.senderIframe.contentWindow)
+
+      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/turnoverDaily.html'+ str + '&'+Math.random()
+        this.chartIframe = encodeURI(path)
+      // this.chartIframe = encodeURI(path)
 
     },
     setTable() {}

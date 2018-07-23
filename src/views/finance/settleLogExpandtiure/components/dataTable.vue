@@ -1,8 +1,25 @@
 <template>
   <transferTable>
+    <div slot="tableSearch" class="tableHeadItemForm clearfix">
+      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
+        <el-form-item>
+          <el-select v-model="searchForm.batchNo" placeholder="请选择类型" :size="btnsize" clearable>
+            <el-option label="短驳" value="38"></el-option>
+            <el-option label="干线" value="39"></el-option>
+            <el-option label="送货" value="40"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" placeholder="请输入车牌号" clearable></querySelect>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <!-- 左边表格区 批次支出 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
+      <!-- <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
         <el-form-item label="批次">
           <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
         </el-form-item>
@@ -12,7 +29,7 @@
         <el-form-item>
            <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
         </el-form-item>
-      </el-form>
+      </el-form> -->
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
@@ -349,16 +366,16 @@ export default {
 
 </script>
 <style lang="scss">
-.tableHeadItemBtn {
-  height: 100%;
-  position: relative;
-  .tableHeadItemForm{
-    position:absolute;
-    z-index:2;
-    top:-41px;
-    left:-10px;
-    display:flex;
+.tableHeadItemForm {
+    margin-left:5px;
+    display: flex;
     flex-direction: row;
+    .el-select{
+      width:100px;
+      .el-input{
+        width:100px;
+      }
+    }
     .el-input {
       width: 125px;
       .el-input__inner{
@@ -366,6 +383,23 @@ export default {
       }
     }
   }
+.tableHeadItemBtn {
+  height: 100%;
+  position: relative;
+  // .tableHeadItemForm{
+  //   position:absolute;
+  //   z-index:2;
+  //   top:-41px;
+  //   left:-10px;
+  //   display:flex;
+  //   flex-direction: row;
+  //   .el-input {
+  //     width: 125px;
+  //     .el-input__inner{
+  //       padding: 0 10px;
+  //     }
+  //   }
+  // }
   .el-button {
     border: none;
   }
