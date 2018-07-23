@@ -683,11 +683,7 @@
           return (rule, value, callback) => {
             if (!value) {
               callback(new Error(msg))
-            }
-            if(this.$route.query.id && !value){
-              callback()
-            }
-            else {
+            }else {
               callback()
             }
           }

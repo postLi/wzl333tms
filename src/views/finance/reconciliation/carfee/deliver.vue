@@ -235,8 +235,7 @@
         this.fetchAllCustomer()
       },
       handlePageChange (obj) {
-        // Object.assign(this.searchQuery, obj)
-        // this.fetchData()
+
         this.searchQuery.currentPage = obj.pageNum
         this.searchQuery.pageSize = obj.pageSize
       },
@@ -254,7 +253,7 @@
         }
         // 判断是否有选中项
 
-        if(!this.selected.length){
+        if(!this.selected.length && type !== 'storage'){
           // this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
@@ -266,19 +265,23 @@
         switch (type) {
           // 新增
           case 'storage':
-            this.closeAddCustomer()
-            if(this.selected.length > 1){
+            this.$router.push({
+              path: '/finance/reconciliation/carfee/components',
+              query: {
+                tab: '车辆对账-创建对账'
+              }
+            })
 
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.isDbclick = false
-              this.openAddCustomer()
-            }else{
-              this.selectInfo = this.selected[0]
-              this.isModify = true
-              this.isDbclick = false
-              this.openAddCustomer()
-            }
+            break;
+          // 修改
+          case 'modify':
+            this.$router.push({
+              path: '/finance/reconciliation/carfee/components',
+              query: {
+                tab: '车辆对账-修改查看',
+                id: this.selected[0].id
+              }
+            })
 
             break;
           // 对账完成 cancelCom
