@@ -34,7 +34,7 @@
           </el-form-item>
         </div>
         <!--异常登记-->
-        <div class="box1" style="height:500px">
+        <div class="box1">
           <div class="titles">异常登记</div>
           <el-form-item label="异常编号" prop="abnormalNo">
           <el-input maxlength="20" v-model="form.abnormalNo" auto-complete="off"  :disabled="true" ></el-input>
@@ -87,20 +87,6 @@
             <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
           <div class="clearfix uploadcard"  >
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.abnormalPicture" :disabled="isCheck || isDeal ? true : false"/>
-
-
-            <!-- <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
-              list-type="picture-card"
-              :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible" :show-file-list="true" listtype="picture">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog> -->
-
-
           </div>
         </div>
         <!--异常处理-->
@@ -156,7 +142,7 @@ import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operat
 import { getAllUser } from '@/api/company/employeeManage'
 // import orderManage from '@/api/operation/orderManage'
 import popRight from '@/components/PopRight/index'
-import Upload from '@/components/Upload/singleImage'
+import Upload from '@/components/Upload/singleImage2'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
@@ -245,8 +231,6 @@ export default {
     //   }
     // }
     return {
-      // dialogImageUrl: '',
-      // dialogVisible: false,
       querykey: '11',
       searchCreatTime: +new Date(),
       form: {
@@ -422,16 +406,6 @@ export default {
     }
   },
   methods: {
-    // handleRemove(file, fileList) {
-    //   console.log(file, fileList)
-    // },
-    // handlePreview(file) {
-    //   console.log(file)
-    // },
-    // handlePictureCardPreview(file) {
-    //   this.dialogImageUrl = file.url
-    //   this.dialogVisible = true
-    // },
     getUser(item) {
       if (item) {
         this.form.registerUserId = item.id
@@ -693,9 +667,23 @@ export default {
     .select-tree{
       width: 100%;
     }
+    //上传图片
+    .el-upload-list--picture-card .el-upload-list__item{
+      width: 234px;
+      height: 136px;
+    }
+    .el-upload-dragger{
+      width: 234px;
+      height: 136px;
+    }
+    .el-upload--picture-card{
+      width:234px;
+      height:136px;
+    }
     .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
       margin-top:8px;
     }
+    //上传图片end
     .drviercard,.certcard,.idcard{
       float: left;
       width: 100%;
@@ -784,6 +772,10 @@ export default {
       width: 100px;
       margin-right: 10px;
     }
+  }
+  
+  .uploadcard{
+    padding:20px 20px 20px 90px;
   }
   .disabledUpload{
     .el-upload{

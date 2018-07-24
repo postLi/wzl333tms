@@ -1,6 +1,7 @@
 <template>
     <div >
       <el-upload
+        drag
         v-if="uploadUrl" 
         :data="upload" 
         :action="uploadUrl"
@@ -13,9 +14,10 @@
         :on-exceed="onexceed"
         :on-success="handleImageScucess"
         :on-remove="handleRemove">
-        <i v-if="filelist.length < limit" class="el-icon-plus"></i>
+        <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div>
+        <i class="el-icon-plus"></i>
       </el-upload>
-      <el-dialog :visible.sync="dialogVisible">
+      <el-dialog :visible.sync="dialogVisible" :append-to-body="true">
         <img width="100%" :src="dialogImageUrl" alt="">
       </el-dialog>
     </div>

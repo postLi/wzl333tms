@@ -89,7 +89,7 @@
 import { REGEX } from '@/utils/validate'
 import { postPickuplist, postPickupSign, putXiugai, postSign } from '@/api/operation/sign'
 import popRight from '@/components/PopRight/index'
-import Upload from '@/components/Upload/singleImage'
+import Upload from '@/components/Upload/singleImage2'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
@@ -578,28 +578,40 @@ export default {
     }
   
   }
-  .uploadlist{
-    margin-left: 20px;
-  }
-  .el-upload-list{
-    float:left;
-    margin-left: 136px;
-  }
-  .upload-container .el-upload{
-    height:104px;
-    // margin-top: 20px;
-  }
-  .upload-container .uploadlist{
+  // .uploadlist{
+  //   margin-left: 20px;
+  // }
+  // .el-upload-list{
+  //   float:left;
+  //   margin-left: 136px;
+  // }
+  // .upload-container .el-upload{
+  //   height:104px;
+  //   // margin-top: 20px;
+  // }
+  // .upload-container .uploadlist{
     
-    position:relative;
+  //   position:relative;
     
+  // }
+  // .upload-container .el-upload{
+  //   // background:red;
+  //   border:1px dashed #ccc;
+  //   position:absolute;
+  //   left:0px;
+  //   top:0px;
+  // }
+  .el-upload-list--picture-card .el-upload-list__item{
+    width: 234px;
+    height: 136px;
   }
-  .upload-container .el-upload{
-    // background:red;
-    border:1px dashed #ccc;
-    position:absolute;
-    left:0px;
-    top:0px;
+  .el-upload-dragger{
+    width: 234px;
+    height: 136px;
+  }
+  .el-upload--picture-card{
+    width:234px;
+    height:136px;
   }
   .selectListOption_lrl{
     clear:both;
@@ -613,10 +625,10 @@ export default {
       font-size: 12px;
     }
   }
-  .el-upload-list{
-    border:1px dashed #ccc;
-    padding:0 0px 3px 0px;
-  }
+  // .el-upload-list{
+  //   border:1px dashed #ccc;
+  //   padding:0 0px 3px 0px;
+  // }
   .el-input.is-disabled .el-input__inner{
     color: #3e9ff1;
     // font-weight: bold;
