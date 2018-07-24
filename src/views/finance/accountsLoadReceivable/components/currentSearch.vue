@@ -31,17 +31,17 @@ export default {
           this.$emit('change', objectMerge2([], this.info))
         }
       }
-      let leftTable = this.info
-      let results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
+      const leftTable = this.info
+      const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
     createFilter(queryString) {
       return (res) => {
         if (res.shipSn) {
-          return (res.shipSn.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+          return (res.shipSn.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
         } else if (res.batchNo) {
-          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
         }
       }
     },
@@ -51,7 +51,7 @@ export default {
       } else if (obj.batchNo) {
         this.currentSearch = obj.batchNo
       }
-      let array = []
+      const array = []
       array.push(obj)
       this.$emit('change', array)
     }

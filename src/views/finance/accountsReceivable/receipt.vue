@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain>结算</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
@@ -138,9 +138,9 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'totalStatus',
+        'prop': 'receiptpayState',
         'slot': function(scope) {
-          return parseDict('count_status', scope.row.totalStatus)
+          return parseDict('count_status', scope.row.receiptpayState)
         }
       }, {
         'label': '现付',
@@ -238,16 +238,20 @@ export default {
   },
   methods: {
     viewDetails(row) {
+      row = row || []
+      console.log('row:', row.map(el => { console.log('11') }).join(','))
       this.$router.push({
-        path: '/finance/handAccount/detail',
+        path: '/finance/accountsLoadReceivable',
         query: {
-          id: row.userId,
-          tab: '查看' + row.userName
+          searchQuery: this.searchQuery,
+          currentPage: 'receipt',
+         // id: row.map(el => el.shipId).join(','),
+          selectListShipSns: row.map(el => el.shipSn)
         }
       })
     },
     showDetail(order) {
-      this.viewDetails(order)
+      this.viewDetails([order])
     },
     fetchAllOrder() {
       this.loading = true

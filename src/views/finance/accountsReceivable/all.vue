@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain>结算</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
@@ -238,14 +238,15 @@ export default {
   },
   methods: {
     viewDetails(row) {
+      row = row || []
+      console.log('row:', row.map(el => { console.log('11') }).join(','))
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          searchQuery: '',
+          searchQuery: this.searchQuery,
           currentPage: 'all',
-          id: row.map(el => el.shipId).join(','),
-          selectListShipSns: '',
-          tab: '结算' + row[0].shipSn
+         // id: row.map(el => el.shipId).join(','),
+          selectListShipSns: row.map(el => el.shipSn)
         }
       })
     },
