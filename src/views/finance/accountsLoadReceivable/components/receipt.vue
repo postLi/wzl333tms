@@ -125,6 +125,7 @@
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
 import { GetFeeInfo, postLoadSettlement } from '@/api/finance/accountsPayable'
+import * as accountApi from '@/api/finance/accountsReceivable'
 import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
@@ -144,7 +145,7 @@ export default {
     return {
       amount: 0,
       amountMessage: '',
-      formModel: {},
+      formModel: { szDtoList: [] },
       loading: true,
       rules: {},
       btnsize: 'mini',
@@ -152,7 +153,7 @@ export default {
       submitData: {},
       BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
-      paymentsType: 1 // 收支类型, 0 收入, 1 支出,
+      paymentsType: 0 // 收支类型, 0 收入, 1 支出,
     }
   },
   computed: {
@@ -168,46 +169,28 @@ export default {
     getRouteInfo() {
       return this.$route.query.searchQuery
     },
-    settlementTypeId () {
-      let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
-        case 'batchShort':
-        return 180
-        case 'batchDeliver':
-        return 181
-        case 'batchInsurance':
-        return 179
-        case 'batchStationLoad':
-        return 179
-        case 'batchStationOther':
-        return 179
-        case 'batchArrivalLoad':
-        return 179
-        case 'batchArrivalOther':
-        return 179
-        case 'batchArrivalAll':
-        return 179
-      }
+    settlementTypeId() {
+      return 178
     },
-    dataName () {
-      let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+    dataName() {
+      const currentPage = this.$route.query.currentPage
+      switch (currentPage) {
         case 'batchShort':
-        return '短驳费'
+          return '短驳费'
         case 'batchDeliver':
-        return '送货费'
+          return '送货费'
         case 'batchInsurance':
-        return '整车保险费'
+          return '整车保险费'
         case 'batchStationLoad':
-        return '发站装卸费'
+          return '发站装卸费'
         case 'batchStationOther':
-        return '发站其他费'
+          return '发站其他费'
         case 'batchArrivalLoad':
-        return '到站装卸费'
+          return '到站装卸费'
         case 'batchArrivalOther':
-        return '到站其他费'
+          return '到站其他费'
         case 'waybillKickback':
-        return '回扣'
+          return '回扣'
       }
     }
   },
@@ -218,7 +201,7 @@ export default {
     },
     info: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   watch: {
@@ -246,10 +229,10 @@ export default {
       this.loading = false
     },
     getFeeInfo() {
-      let orgId = this.otherinfo.orgid
+      const orgId = this.otherinfo.orgid
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
-        this.formModel.settlementTime = parseTime(new Date()) 
+        this.formModel.settlementTime = parseTime(new Date())
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
@@ -257,12 +240,13 @@ export default {
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([],this.info)
+      this.formModel.detailDtoList = Object.assign([], this.info)
+      console.log('this.info', this.info)
       this.formModel.detailDtoList.forEach((e, index) => {
-        e.dataName = this.dataName
+        // e.dataName = this.dataName
         this.formModel.amount += e.amount
-        let data = e.amount.toFixed(2).toString().split('').reverse()
-        let item = data.indexOf('.')
+        const data = e.amount.toFixed(2).toString().split('').reverse()
+        const item = data.indexOf('.')
         if (item !== -1) {
           data.splice(item, 1)
         }
@@ -279,13 +263,13 @@ export default {
       })
       this.amountMessage = smalltoBIG(this.formModel.amount)
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
-      let apoint = this.amount.indexOf('.')
+      const apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
-         this.amount.splice(apoint, 1)
+        this.amount.splice(apoint, 1)
       }
     },
-    sender (item, index) {
-      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
+    sender(item, index) {
+      this.$set(this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index], item))
     },
     getSystemTime() {
       getSystemTime().then(data => {
@@ -299,24 +283,33 @@ export default {
       }
     },
     setData() {
-      this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      this.submitData.capitalFlow = {
+        'amount': this.formModel.amount,
+        'orgId': this.otherinfo.orgid,
+        'paymentsType': 1,
+        'settlementBy': this.formModel.settlementBy,
+        'settlementSn': this.formModel.settlementSn,
+        settlementTime: this.formModel.settlementTime,
+        remark: this.formModel.remark
+      }
+      /* this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
       this.$set(this.submitData, 'settlementSn', this.formModel.settlementSn)
       this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
       this.$set(this.submitData, 'settlementTime', this.formModel.settlementTime)
-      this.$set(this.submitData, 'remark', this.formModel.remark)
-      this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
-      this.$set(this.submitData, 'tmsFinanceFinancialWayLogList', this.formModel.szDtoList)
+      this.$set(this.submitData, 'remark', this.formModel.remark) */
+      this.$set(this.submitData, 'receivableFees', this.formModel.detailDtoList)
+      this.$set(this.submitData, 'financialWayLogs', this.formModel.szDtoList)
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          postLoadSettlement(this.submitData).then(data => {
-              this.$message({ type: 'success', message: '操作成功' })
-              this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch' })
-            })
+          accountApi.postCreateFee(this.otherinfo.orgid, this.submitData).then(data => {
+            this.$message({ type: 'success', message: '操作成功' })
+            this.closeMe()
+            this.$router.push({ path: '/finance/accountsReceivable' })
+          })
             .catch(error => {
               this.$message({ type: 'error', message: '操作失败' })
             })
@@ -324,13 +317,13 @@ export default {
       })
     },
     minusItem(row, index) {
-      let item = this.formModel.szDtoList.indexOf(row)
+      const item = this.formModel.szDtoList.indexOf(row)
       if (item !== -1) {
         this.formModel.szDtoList.splice(item, 1)
       }
     },
     plusItem() {
-      let data = {
+      const data = {
         agent: '',
         alipayAccount: '',
         bankAccount: '',
@@ -366,7 +359,7 @@ export default {
         //   }
         // }
         let count = -2 // 从第3列开始显示
-        for(let i = 12; i > 2; i--) {
+        for (let i = 12; i > 2; i--) {
           count++
           if (index === i) {
             sums[index] = this.amount[count]

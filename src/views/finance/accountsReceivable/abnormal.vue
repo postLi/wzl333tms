@@ -143,41 +143,14 @@ export default {
           return parseDict('count_status', scope.row.changeState)
         }
       }, {
-        'label': '现付',
-        'prop': 'nowPayFee'
+        'label': '异动',
+        'prop': 'changeFee'
       }, {
-        'label': '已结现付',
-        'prop': 'finishNowPayFee'
+        'label': '未结异动',
+        'prop': 'notChangeFee'
       }, {
-        'label': '未结现付',
-        'prop': 'notNowPayFee'
-      }, {
-        'label': '到付',
-        'prop': 'arrivepayFee'
-      }, {
-        'label': '已结到付',
-        'prop': 'finishArrivepayFee'
-      }, {
-        'label': '未结到付',
-        'prop': 'notArrivepayFee'
-      }, {
-        'label': '回单付',
-        'prop': 'receiptpayFee'
-      }, {
-        'label': '已结回单付',
-        'prop': 'finishReceiptpayFee'
-      }, {
-        'label': '未结回单付',
-        'prop': 'notReceiptpayFee'
-      }, {
-        'label': '月结',
-        'prop': 'monthpayFee'
-      }, {
-        'label': '已结月结',
-        'prop': 'finishMonthpayFee'
-      }, {
-        'label': '未结月结',
-        'prop': 'notMonthpayFee'
+        'label': '已结异动',
+        'prop': 'finishChangeFee'
       }, {
         'label': '开单日期',
         'prop': 'createTime',

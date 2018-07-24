@@ -21,7 +21,7 @@
               <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <template v-for="column in tableColumnLeft">
+          <template v-if="!column.expand" v-for="column in tableColumnLeft">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
@@ -54,13 +54,16 @@
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <template v-for="column in tableColumnRight">
+          <template v-for="column in tableColumnLeft">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <!-- <template v-if="scope.row[column.prop.replace(/^input/i,'').replace(/fee$/i,'').toLocaleLowerCase()+'State'] === 'ALLSETTLEMENT'">已结算</template> -->
+                  <el-checkbox checked @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-checkbox>
+                  
+                  <!-- <el-checkbox checked v-model="rightTable[scope.$index][column.prop]" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-checkbox> -->
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -86,7 +89,7 @@ import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptWaybill'
+import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 export default {
@@ -174,6 +177,14 @@ export default {
         'label': '已结现付',
         'prop': 'finishNowPayFee'
       }, {
+        label: '实结现付',
+        prop: 'inputNowPayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputNowPayFee
+        }
+      }, {
         'label': '到付',
         'prop': 'arrivepayFee'
       }, {
@@ -188,6 +199,14 @@ export default {
       }, {
         'label': '已结到付',
         'prop': 'finishArrivepayFee'
+      }, {
+        label: '实结到付',
+        prop: 'inputArrivepayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputArrivepayFee
+        }
       }, {
         'label': '回单付',
         'prop': 'receiptpayFee'
@@ -204,7 +223,15 @@ export default {
         'label': '已结回单付',
         'prop': 'finishReceiptpayFee'
       },
-
+      {
+        label: '实结回单付',
+        prop: 'inputReceiptpayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputReceiptpayFee
+        }
+      },
       {
         'label': '月结',
         'prop': 'monthpayFee'
@@ -220,6 +247,15 @@ export default {
       }, {
         'label': '已结月结',
         'prop': 'finishMonthpayFee'
+      },
+      {
+        label: '实结月付',
+        prop: 'inputMonthpayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputMonthpayFee
+        }
       },
 
       {
@@ -238,6 +274,14 @@ export default {
         'label': '已结异动',
         'prop': 'finishChangeFee'
       }, {
+        label: '实结异动付',
+        prop: 'inputChangeFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputChangeFee
+        }
+      }, {
         'label': '发货方',
         'prop': 'senderCustomerUnit'
       }, {
@@ -255,7 +299,7 @@ export default {
       {
         label: '开单时间',
         prop: 'createTime',
-        width: '120',
+        width: '150',
         fixed: false,
         slot: (scope) => {
           return `${parseTime(scope.row.createTime)}`
@@ -276,134 +320,6 @@ export default {
       {
         label: '货品名',
         prop: 'cargoName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '件数',
-        prop: 'cargoAmount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '重量',
-        prop: 'cargoWeight',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '体积',
-        prop: 'cargoVolume',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '120',
-        fixed: false
-      }
-      ],
-      tableColumnRight: [{
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发货人',
-        prop: 'senderCustomerName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '收货人',
-        prop: 'receiverCustomerName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '回扣',
-        prop: 'brokerageFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结回扣',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结回扣',
-        prop: 'closeFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '实结回扣',
-        prop: 'inputBrokerageFee',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.inputBrokerageFee
-        }
-      },
-      {
-        label: '发货方',
-        prop: 'senderCompanyName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '收货方',
-        prop: 'receiverCompanyName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单时间',
-        prop: 'createTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
-          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-        }
-      },
-      {
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到达城市',
-        prop: 'shipToCityName',
         width: '120',
         fixed: false
       },
@@ -465,6 +381,17 @@ export default {
         this.isFresh = false
       }
     },
+    setRight(item) {
+      item.inputNowPayFee = 1
+      item.inputArrivepayFee = 1
+      item.inputReceiptpayFee = 1
+      item.inputMonthpayFee = 1
+      item.inputChangeFee = 1
+
+      // this.rightTable.push(item)
+
+      this.$set(this.rightTable, this.rightTable.length, item)
+    },
     getList() {
       const selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
       if (this.$route.query.selectListShipSns) {
@@ -488,7 +415,7 @@ export default {
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
               if (e === item.shipSn) {
-                this.rightTable.push(item)
+                this.setRight(item)
               }
             })
           })
@@ -504,12 +431,15 @@ export default {
               this.leftTable.splice(item, 1)
             }
           })
+          // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
         })
       }
     },
     changLoadData(index, prop, newVal) {
-      this.rightTable[index][prop] = Number(newVal)
+      this.rightTable[index][prop] = newVal
+      return false
+      /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名
       const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
       const paidVal = this.rightTable[index][prop]
@@ -518,7 +448,7 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -552,7 +482,7 @@ export default {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
-          this.rightTable.push(e)
+          this.setRight(e)
           const item = this.leftTable.indexOf(e)
           if (item !== -1) { // 左边表格源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
@@ -619,22 +549,60 @@ export default {
     openDialog() {
       this.popVisibleDialog = true
     },
+    // 结算前整理数据
     goReceipt() {
       this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
         this.rightTable.forEach((e, index) => {
-          let item = {
+          const item = {
             shipId: e.shipId,
-            amount: e.inputBrokerageFee,
-            inputBrokerageFee: e.inputBrokerageFee,
-            shipSn: e.shipSn,
+            shipSn: e.shipSn
             // feeTypeId: e.feeTypeId,
-            dataName: '回扣'
+
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+          if (e.inputNowPayFee && e.notNowPayFee > 0) {
+            this.tableReceiptInfo.push(Object.assign({
+              dataName: '现付',
+              amount: e.notNowPayFee,
+              inputNowPayFee: e.notNowPayFee
+            }, item))
+            // item.inputNowPayFee = e.notNowPayFee
+          }
+          if (e.inputArrivepayFee && e.notArrivepayFee > 0) {
+            this.tableReceiptInfo.push(Object.assign({
+              dataName: '到付',
+              amount: e.notArrivepayFee,
+              inputArrivepayFee: e.notArrivepayFee
+            }, item))
+          }
+          if (e.inputReceiptpayFee && e.notReceiptpayFee > 0) {
+            this.tableReceiptInfo.push(Object.assign({
+              dataName: '回单付',
+              amount: e.notReceiptpayFee,
+              inputReceiptpayFee: e.notReceiptpayFee
+            }, item))
+          }
+          if (e.inputMonthpayFee && e.notMonthpayFee > 0) {
+            this.tableReceiptInfo.push(Object.assign({
+              dataName: '月结付',
+              amount: e.notMonthpayFee,
+              inputMonthpayFee: e.notMonthpayFee
+            }, item))
+          }
+          if (e.inputChangeFee && e.notChangeFee > 0) {
+            this.tableReceiptInfo.push(Object.assign({
+              dataName: '异动费用',
+              amount: e.notChangeFee,
+              inputChangeFee: e.notChangeFee
+            }, item))
+          }
+
+         /*  if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
             this.tableReceiptInfo.push(item)
-          }
-          item = {}
+          } */
+          /* if (ischeck) {
+            this.tableReceiptInfo.push(item)
+          } */
         })
         if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
           this.openDialog()

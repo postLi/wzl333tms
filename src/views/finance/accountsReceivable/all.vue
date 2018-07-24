@@ -179,6 +179,15 @@ export default {
         'label': '未结月结',
         'prop': 'notMonthpayFee'
       }, {
+        'label': '异动',
+        'prop': 'changeFee'
+      }, {
+        'label': '未结异动',
+        'prop': 'notChangeFee'
+      }, {
+        'label': '已结异动',
+        'prop': 'finishChangeFee'
+      }, {
         'label': '开单日期',
         'prop': 'createTime',
         width: 180

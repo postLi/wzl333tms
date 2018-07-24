@@ -9,6 +9,7 @@
       </div>
       <div class="info_tab">
         <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
+        <iframe src="about:blank" frameborder="0" style="left: 167px; top: 46px; width: 400px; height: 300px; position: absolute; z-index: 1004; background-color: rgb(153, 153, 153);" hidefocus="true"></iframe>
       </div>
     </div>
   </div>
@@ -51,16 +52,15 @@ export default {
     doAction(type) {},
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
-      let access_token = getToken()
+      const access_token = getToken()
       this.$set(this.query, 'access_token', access_token)
       let str = '?'
-      for (let item in this.query){
-        str += item +'=' + String(this.query[item]).trim()+ '&'
+      for (const item in this.query) {
+        str += item + '=' + String(this.query[item]).trim() + '&'
       }
-      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html'+str
+      const path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html' + str
       this.chartIframe = encodeURI(path)
       console.log(path, this.$refs.senderIframe.contentWindow)
-
     },
     setTable() {}
   }

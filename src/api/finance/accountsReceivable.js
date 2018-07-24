@@ -265,7 +265,7 @@ export function deleteFeeReceivable(id) {
 }
  */
 export function postCreateFee(orgid, data) {
-  return fetch.put('/api-finance/finance/feeReceivable/v1/create/' + orgid, data)
+  return fetch.post('/api-finance/finance/feeReceivable/v1/create/' + orgid, data)
 }
 /**
  * 判断到站装卸费和到站其他费是否有结算(typeId是28为到站装卸费，29是到站其他费，返回为true时才可修改)
