@@ -30,6 +30,9 @@ console.log('TMS_DICT_OBJECT:', TMS_DICT_OBJECT)
 export default TMS_DICT_OBJECT
 
 export function parseDict(type, name) {
+  if (name === '') {
+    return ''
+  }
   const find = TMS_DICT_OBJECT[type] ? TMS_DICT_OBJECT[type].filter(el => {
     return el.id === name
   }) : []
