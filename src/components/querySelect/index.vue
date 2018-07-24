@@ -216,9 +216,9 @@ export default {
           console.log('handkler: ', newVal)
         }
         console.log('handkler2: ', newVal) */
-        if (!this.inited) {
-          this.findValue(newVal)
-        }
+        // if (!this.inited) {
+        this.findValue(newVal)
+        // }
       },
       immediate: false
     },
@@ -555,7 +555,7 @@ export default {
         info = info[0] || old
       }
 
-      this.$emit('input', info[this.valuekey] || info.value || info || '')
+      this.$emit('input', info ? (info[this.valuekey] || info.value || info) : '')
 
       this.$emit('change', info)
     }

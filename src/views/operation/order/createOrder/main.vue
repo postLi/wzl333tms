@@ -299,7 +299,7 @@
             <div class="order-form-item">
               <span class="order-form-label">提货批次</span>
               <el-form-item prop="tmsOrderShip.shipBatchId">
-                <querySelect :filterable="false"  size="mini" search="batchNumber" placeholder="请选择" type="batch" show="select" valuekey="bathId" @change="getBatch" v-model="form.tmsOrderShip.shipBatchId" />
+                <querySelect key="batchid" :filterable="false"  size="mini" search="batchNumber" placeholder="请选择" type="batch" show="select" valuekey="bathId" @change="getBatch" v-model="form.tmsOrderShip.shipBatchId" />
               </el-form-item>
             </div>
           </el-col>
@@ -424,7 +424,7 @@
     <!-- 弹窗 -->
     <FeeDialog :dialogVisible.sync="dialogVisible" />
     <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
-    <ManageRemarks :popVisible.sync="popVisible" />
+    <ManageRemarks @success="setRemark" :popVisible.sync="popVisible" />
     </div>
   </div>
 </template>
@@ -1143,6 +1143,12 @@ export default {
         this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
         console.log('theFeeConfig:', this.cargoObject, this.cargoList)
       }
+    },
+    // 从弹窗设置备注
+    setRemark(remarks) {
+      console.log('remarks:', remarks)
+      const remark = this.form.tmsOrderShip.shipRemarks
+      this.form.tmsOrderShip.shipRemarks = remark ? remark + ', ' + remarks : remarks
     },
     // 设置中转表单
     setOrderTransfer() {
@@ -1943,7 +1949,7 @@ $backgroundcolor: #cbe1f7;
     padding-right: 26px;
     padding-bottom: 58px;
     font-size: 12px;
-    max-height: 100%;
+    // max-height: 100%;
     min-width: 1316px;
     display: flex;
     position: relative;

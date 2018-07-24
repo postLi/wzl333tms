@@ -47,6 +47,10 @@
           clearable>
       </el-input>
     </el-form-item>
+    <el-form-item label="结算状态：">
+      <select-type v-model="searchForm.status" type="count_status" >
+      </select-type>
+    </el-form-item>
     
     </div>
     <el-form-item class="staff_searchinfo--btn">
@@ -89,7 +93,8 @@ export default {
         shipFromCityCode: '',
         shipToCityCode: '',
         shipSn: '',
-        orgAllId: ''
+        orgAllId: '',
+        status: ''
       }
     }
   },

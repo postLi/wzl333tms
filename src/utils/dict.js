@@ -1,25 +1,9 @@
+import * as $const from '@/utils/constant'
+
 const TMS_DICT_OBJECT = {
-  'fee_status': [{
-    id: 'NOSETTLEMENT',
-    dictName: '未交账'
-  }, {
-    id: 'PARTSETTLEMENT',
-    dictName: '部分交账'
-  }, {
-    id: 'ALLSETTLEMENT',
-    dictName: '已交账'
-  }],
-  'pay_status': [{
-    id: 'NOSETTLEMENT',
-    dictName: '未结算'
-  }, {
-    id: 'PARTSETTLEMENT',
-    dictName: '部分结算'
-  }, {
-    id: 'ALLSETTLEMENT',
-    dictName: '已结算'
-  }],
-  'ship_status': {
+  'fee_status': [],
+  'ship_status': [],
+  'ship_shipIdentifying': {
     '转': '<i class="ship-zhuan"></i>',
     '拆': '<i class="ship-chai"></i>',
     '改': '<i class="ship-gai"></i>',
@@ -27,6 +11,22 @@ const TMS_DICT_OBJECT = {
     '异': '<i class="ship-yi"></i>'
   }
 }
+
+/**
+ * 赋值
+ */
+for (const i in $const) {
+  TMS_DICT_OBJECT[(i + '').toLocaleLowerCase()] = Object.entries($const[i]).map(el => {
+    let obj = {}
+    obj = {
+      id: el[0],
+      dictName: el[1]
+    }
+    return obj
+  })
+}
+console.log('TMS_DICT_OBJECT:', TMS_DICT_OBJECT)
+
 export default TMS_DICT_OBJECT
 
 export function parseDict(type, name) {
@@ -41,7 +41,7 @@ export function parseShipStatus(status = '') {
   const arr = status.trim().split(',')
   let res = ''
   arr.map(el => {
-    res += TMS_DICT_OBJECT['ship_status'][el.trim()] || ''
+    res += TMS_DICT_OBJECT['ship_shipIdentifying'][el.trim()] || el.trim()
   })
   return res
 }

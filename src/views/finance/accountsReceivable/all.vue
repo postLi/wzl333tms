@@ -3,10 +3,10 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-info" plain @click="doAction('detail')">结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
           
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" class="table_setup" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" class="table_setup" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -100,7 +100,7 @@ export default {
           shipToCityCode: '',
           orgAllId: '',
           shipSn: '',
-          'status': 'NOSETTLEMENT',
+          'status': '',
           'feeType': ''
         }
       },
@@ -140,7 +140,7 @@ export default {
         'label': '结算状态',
         'prop': 'totalStatus',
         'slot': function(scope) {
-          return parseDict('pay_status', scope.row.totalStatus)
+          return parseDict('count_status', scope.row.totalStatus)
         }
       }, {
         'label': '现付',
@@ -241,13 +241,16 @@ export default {
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          id: row.userId,
-          tab: '查看' + row.userName
+          searchQuery: '',
+          currentPage: 'all',
+          id: row.map(el => el.shipId).join(','),
+          selectListShipSns: '',
+          tab: '结算' + row[0].shipSn
         }
       })
     },
     showDetail(order) {
-      this.viewDetails(order)
+      this.viewDetails([order])
     },
     fetchAllOrder() {
       this.loading = true
