@@ -50,30 +50,30 @@
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>-->
-          <el-date-picker
-            v-model="messageInfo.checkStartTime"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            value-format="timestamp"
-            :picker-options="pickOption"
-          >
-          </el-date-picker>
+          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+          <!--<el-date-picker-->
+            <!--v-model="messageInfo.checkStartTime"-->
+            <!--align="right"-->
+            <!--type="date"-->
+            <!--placeholder="选择日期"-->
+            <!--value-format="timestamp"-->
+            <!--:picker-options="pickOption"-->
+          <!--&gt;-->
+          <!--</el-date-picker>-->
 
         </el-form-item>
         <el-form-item label="结束时间">
-          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>-->
-          <el-date-picker
-            v-model="messageInfo.checkEndTime"
-            align="right"
-            type="date"
-            :picker-options="pickOption2"
-            placeholder="选择日期"
-            value-format="timestamp"
+          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
+          <!--<el-date-picker-->
+            <!--v-model="messageInfo.checkEndTime"-->
+            <!--align="right"-->
+            <!--type="date"-->
+            <!--:picker-options="pickOption2"-->
+            <!--placeholder="选择日期"-->
+            <!--value-format="timestamp"-->
 
-          >
-          </el-date-picker>
+          <!--&gt;-->
+          <!--</el-date-picker>-->
         </el-form-item>
         <el-form-item label="账户账号">
           <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
@@ -135,25 +135,25 @@
             sortable
             prop="departureTime"
             width="160"
-            label="发车时间">
+            label="送货时间">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             width="160"
             sortable
-            label="短驳批次号">
+            label="送货批次号">
+          </el-table-column>
+          <el-table-column
+            prop="driverName"
+            sortable
+            width="160"
+            label="司机">
           </el-table-column>
           <el-table-column
             prop="orgName"
             sortable
             width="160"
             label="发车网点">
-          </el-table-column>
-          <el-table-column
-            prop="arriveOrgName"
-            sortable
-            width="160"
-            label="到达网点">
           </el-table-column>
 
           <el-table-column
@@ -177,16 +177,9 @@
             label="配载体积">
           </el-table-column>
           <el-table-column
-            prop="driverName"
-            label="司机"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="shortPay"
+            prop="sendPay"
             label="送货费"
-            width="130"
+            width="250"
             sortable
           >
           </el-table-column>
@@ -238,7 +231,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span @click="iconDeleteAl(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -246,25 +239,25 @@
             sortable
             prop="departureTime"
             width="160"
-            label="发车时间">
+            label="送货时间">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             width="160"
             sortable
-            label="短驳批次号">
+            label="送货批次号">
+          </el-table-column>
+          <el-table-column
+            prop="driverName"
+            sortable
+            width="160"
+            label="司机">
           </el-table-column>
           <el-table-column
             prop="orgName"
             sortable
             width="160"
             label="发车网点">
-          </el-table-column>
-          <el-table-column
-            prop="arriveOrgName"
-            sortable
-            width="160"
-            label="到达网点">
           </el-table-column>
 
           <el-table-column
@@ -288,16 +281,9 @@
             label="配载体积">
           </el-table-column>
           <el-table-column
-            prop="driverName"
-            label="司机"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="shortPay"
+            prop="sendPay"
             label="送货费"
-            width="130"
+            width="250"
             sortable
           >
           </el-table-column>
@@ -362,7 +348,7 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" :deliver="deliver"></SaveDialog>
   </div>
 </template>
 
@@ -449,6 +435,7 @@
             sendId:'',
             visibleDialog:false,
             loading:false,
+            deliver:false,
             btnsize: 'mini',
             searchTitle:{
               orgId:'',
@@ -539,11 +526,23 @@
           return sums;
         },
         iconDelete(scope){
-          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-            return el.id !== scope.row.id
-          })
           this.dealPayInfo = this.dealPayInfo.filter(el => {
             return el.id !== scope.row.id
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
+        },
+        //
+        iconDeleteAl(scope){
+          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
+            return el.id !== scope.row.id
+
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
           })
         },
         fetchList(){
@@ -803,7 +802,7 @@
         border-top-color: transparent;
         border-right-color: transparent;
         border-bottom-color: transparent;
-        width: 171px;
+        width: 187px;
         border-radius: 0;
       }
       .el-input__inner:focus{

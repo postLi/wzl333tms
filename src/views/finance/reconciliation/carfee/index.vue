@@ -9,7 +9,7 @@
         <component v-bind:is="component"></component>
     </keep-alive>
   </div>
-  
+
 </template>
 
 <script>
@@ -24,6 +24,7 @@ export default {
     deliver
   },
   mounted() {
+    this.component = this.$route.query.tabname
   },
   data() {
     return {

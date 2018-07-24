@@ -57,7 +57,7 @@
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import {postCreatesaveCarrierDetail} from '@/api/finance/fin_carrier'
+  import {postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
   //parseTime
   import {parseTime} from '@/utils'
   // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
@@ -73,6 +73,11 @@
         default: false
       },
       isDepMain: {
+        type: Boolean,
+        default: false
+      },
+      //
+      deliver: {
         type: Boolean,
         default: false
       },
@@ -118,6 +123,9 @@
       }
     },
     watch: {
+      deliver:{
+
+      },
       tota:{
         handler(newVal){
           this.dialogData = this.tota
@@ -215,10 +223,25 @@
         data.createTime = parseTime(data.createTime)
             if(this.sendId){
               data.id = this.sendId
+              if(this.deliver){
+                promiseObj = postCreateBillCheckCarInfo(data)
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=deliver')
+              }
+                else{
+                promiseObj = postCreateBillCheckCarInfo(data)
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
+              }
 
-              promiseObj = postCreatesaveCarrierDetail(data)
             }else{
-              promiseObj = postCreatesaveCarrierDetail(data)
+
+              if(this.deliver){
+                promiseObj = postCreateBillCheckCarInfo(data)
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=deliver')
+              }
+              else{
+                promiseObj = postCreateBillCheckCarInfo(data)
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
+              }
             }
 
             promiseObj.then(res => {
@@ -227,7 +250,7 @@
                 message: '添加成功~',
                 type: 'success'
               })
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
+
               this.closeMe()
             }).catch(err => {
               this.loading = false

@@ -238,7 +238,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span @click="iconDeleteAl(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -541,18 +541,20 @@
           return sums;
         },
         iconDelete(scope){
-          if(this.alreadyPayInfo){
-            this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-              return el.id !== scope.row.id
+          this.dealPayInfo = this.dealPayInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
+        },
+        //
+        iconDeleteAl(scope){
+          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
+            return el.id !== scope.row.id
 
-            })
-          }
-
-          else{
-            this.dealPayInfo = this.dealPayInfo.filter(el => {
-              return el.id !== scope.row.id
-            })
-          }
+          })
           this.$message({
             message: '删除成功~',
             type: 'success'
