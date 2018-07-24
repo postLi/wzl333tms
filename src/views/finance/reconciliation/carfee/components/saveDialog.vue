@@ -152,7 +152,7 @@
       tota:{
         handler(newVal){
           this.dialogData = this.tota
-          console.log(this.tota);
+
           this.dialogData.dealPaytota.map(el=>{
             this.$set(this.dialogInfo, 0, {
               date:"应付账款",
@@ -178,6 +178,7 @@
       },
       dotInfo :{
         handler(newVal) {
+          console.log(this.dotInfo);
           this.popTitle = this.dotInfo.checkBillName
           if(this.sendId){
             this.dotInfo.id = this.sendId
@@ -242,7 +243,7 @@
 // this.messageInfo.checkStartTime = new Date()
         // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
         // this.messageButtonInfo.createTime = new Date()
-        console.log(data.createTime);
+
         data.checkStartTime = parseTime(data.checkStartTime)
         data.checkEndTime = parseTime(data.checkEndTime)
         data.createTime = parseTime(data.createTime)
@@ -251,19 +252,22 @@
         if(this.sendId){
               data.id = this.sendId
               if(this.deliver){
+                data.loadTypeId = 40
                 promiseObj = postCreateBillCheckCarInfo(data)
                 this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=deliver')
               }
                 else if(this.isArtery){
+                data.loadTypeId = 39
                 promiseObj = postCreateBillCheckCarInfo(data)
                 this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=artery')
               }
                 else{
+                data.loadTypeId = 38
                 promiseObj = postCreateBillCheckCarInfo(data)
                 this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
               }
 
-            }else{
+        }else{
 
               if(this.deliver){
                 promiseObj = postCreateBillCheckCarInfo(data)
