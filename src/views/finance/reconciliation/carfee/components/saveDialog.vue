@@ -218,6 +218,7 @@
 // this.messageInfo.checkStartTime = new Date()
         // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
         // this.messageButtonInfo.createTime = new Date()
+        console.log(JSON.stringify(data))
         data.checkStartTime = parseTime(data.checkStartTime)
         data.checkEndTime = parseTime(data.checkEndTime)
         data.createTime = parseTime(data.createTime)

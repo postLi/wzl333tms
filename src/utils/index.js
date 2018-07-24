@@ -17,7 +17,7 @@ export function parseTime(time, cFormat) {
     // 判断时毫秒还是字符串
     time = typeof time === 'number' ? time : ('' + time).trim()
     // 如果是秒级单位则转成毫秒
-    if (('' + time).length === 10) {
+    if (/^\d{10}$/.test(time)) {
       time = parseInt(time) * 1000
     } else if (/(\d){4}-(\d){2}-(\d){2}\s+(\d){2}:(\d){2}:(\d){2}/.test(time)) {
       // IE需要标准格式
