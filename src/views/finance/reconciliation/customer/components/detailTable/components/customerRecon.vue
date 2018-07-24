@@ -47,10 +47,10 @@
           <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <el-input v-model="messageInfo.checkStartTime" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="结束时间">
-          <el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="结算方式">
           <el-input v-model="messageInfo.settlementType" auto-complete="off" maxlength="8"></el-input>
@@ -276,7 +276,7 @@
             sortable
             prop="createTime"
             width="160"
-            label="开单时间">
+            label="中转时间">
           </el-table-column>
           <el-table-column
             prop="shipSn"
@@ -285,10 +285,10 @@
             label="运单号">
           </el-table-column>
           <el-table-column
-            prop="shipGoodsSn"
+            prop="oddNumbers"
             sortable
             width="160"
-            label="货号">
+            label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -300,7 +300,7 @@
             prop="shipToCityName"
             sortable
             width="160"
-            label="到达城市">
+            label="出发城市">
           </el-table-column>
           <el-table-column
             sortable
@@ -315,6 +315,7 @@
             sortable
           >
           </el-table-column>
+
           <el-table-column
             prop="cargoWeight"
             sortable
@@ -323,9 +324,10 @@
           </el-table-column>
           <el-table-column
             prop="cargoVolume"
+            label="体积"
+            width="130"
             sortable
-            width="160"
-            label="体积">
+          >
           </el-table-column>
           <el-table-column
             prop="unusualRemark"
@@ -336,11 +338,11 @@
           </el-table-column>
           <el-table-column
             prop="abnormalType"
+            label="异常类型"
+            width="130"
             sortable
-            width="160"
-            label="异常类型">
+          >
           </el-table-column>
-
           <el-table-column
             prop="abnormalAmount"
             label="异常件数"
@@ -349,22 +351,15 @@
           >
           </el-table-column>
           <el-table-column
-            prop="unusualFee"
+            prop="registerFee"
             label="异动减款"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="registerFee"
-            label="异常金额"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
             prop="agencyFund"
-            label="代收贷款"
+            label="代收货款"
             width="130"
             sortable
           >
@@ -629,42 +624,56 @@
           </el-table-column>
 
           <el-table-column
-            prop="shipDeliveryMethod"
+            prop="cargoWeight"
             sortable
             width="160"
-            label="交接方式">
+            label="重量">
           </el-table-column>
           <el-table-column
-            prop="paymentMethod"
-            label="中转付款方式"
+            prop="cargoVolume"
+            label="体积"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="transferCharge"
-            label="中转费"
+            prop="unusualRemark"
+            label="异动备注"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="deliveryExpense"
-            label="中转送货费"
+            prop="abnormalType"
+            label="异常类型"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="transferOtherFee"
-            label="中转其他费"
+            prop="abnormalAmount"
+            label="异常件数"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="totalCost"
-            label="中转费合计"
+            prop="registerFee"
+            label="异动减款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="agencyFund"
+            label="代收货款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="totalFee"
+            label="小计"
             width="130"
             sortable
           >
@@ -735,8 +744,7 @@
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
-  import {postCarrierinitialize} from '@/api/finance/fin_carrier'
+  import {postCSaveCustomerDetail} from '@/api/finance/fin_customer'
   import {postCFinanceinitialize} from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
@@ -791,7 +799,10 @@
             dealInfo:[],
             alreadyPayInfo:[],
             alreadyInfo:[],
-            form:[],
+            form:{
+              tmsFinanceBillCheckDto:{},
+              customerDetailDtoList:[]
+            },
             sendId:'',
             visibleDialog:false,
             loading:false,
@@ -830,9 +841,27 @@
           this.loading = true
           this.searchTitle.shipSenderId = this.$route.query.id
           return postCFinanceinitialize(this.searchTitle).then(data => {
-            console.log(data);
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
+
+            data.customerDetailDtoList.forEach((el,val) => {
+              if(el.type === 1){
+                this.dealInfo.push(el)
+                // this.dealInfoData.push(el)
+              }
+              else if(el.type === 2){
+                this.dealPayInfo.push(el)
+                // this.dealPayInfoData.push(el)
+              }
+              else if(el.type === 3){
+                this.alreadyInfo.push(el)
+                // this.alreadyInfoData.push(el)
+              }
+              else{
+                this.alreadyPayInfo.push(el)
+                // this.alreadyPayInfoData.push(el)
+              }
+            })
             this.loading = false
           })
         },
@@ -859,7 +888,44 @@
 
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.oopenVisibleDialog()
+              this.loading = true
+              let promiseObj
+              let data = {}
+              for(const i in this.messageInfo){
+                this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
+              }
+              for(const i in this.messageButtonInfo){
+                this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
+              }
+              this.dealInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              this.dealPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              this.alreadyInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              this.alreadyPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              data = this.form
+              // data.checkStartTime = parseTime(data.checkStartTime)
+              // data.checkEndTime = parseTime(data.checkEndTime)
+              // data.createTime = parseTime(data.createTime)
+              if(this.$route.query.tab === '客户对账-修改查看'){
+                data.id = this.$route.query.id
+
+                promiseObj = postCSaveCustomerDetail(data)
+              }else{
+                promiseObj = postCSaveCustomerDetail(data)
+              }
+
+              promiseObj.then(res => {
+                this.loading = false
+                this.$message({
+                  message: '操作成功~',
+                  type: 'success'
+                })
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable')
+                this.closeMe()
+              }).catch(err => {
+                this.loading = false
+              })
+
+
             } else {
               return false
             }

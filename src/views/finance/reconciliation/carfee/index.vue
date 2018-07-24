@@ -23,8 +23,8 @@ export default {
     shortDepart,
     deliver
   },
-  mounted() {
-    this.component = this.$route.query.tabname
+  created() {
+    this.component = this.$route.query.tabname || 'shortDepart'
   },
   data() {
     return {

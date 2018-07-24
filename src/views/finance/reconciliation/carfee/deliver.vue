@@ -215,7 +215,7 @@
             memberName: '',//
             memberPerson: '',//
             status: '',// 0未 1已
-            loadTypeId: 39,//
+            loadTypeId: 40,//
             startTime: '',//
             endTime:''
           }

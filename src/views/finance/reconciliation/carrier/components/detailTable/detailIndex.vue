@@ -51,7 +51,7 @@
           <el-table-column
             fixed
             sortable
-            prop="carrierName"
+            prop="memberName"
             width="130"
             label="承运商">
           </el-table-column>
@@ -341,6 +341,17 @@ export default {
             })
 
             break;
+        // modify
+        case 'modify':
+          this.$router.push({
+            path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
+            query: {
+              tab: '承运商对账-修改查看',
+              id: this.$route.query.id
+            }
+          })
+
+          break;
         // 对账完成 cancelCom
         case 'completion':
           this.closeAddCustomer()

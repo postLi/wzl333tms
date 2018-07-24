@@ -872,19 +872,17 @@
               for(const i in this.messageButtonInfo){
                 this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
               }
-              this.form.carrierDetailDtoList.push(
-                this.dealInfo,
-                this.dealPayInfo,
-                this.alreadyInfo,
-                this.alreadyPayInfo
-              )
+              this.dealInfo.map(el=>this.form.carrierDetailDtoList.push(el))
+              this.dealPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
+              this.alreadyInfo.map(el=>this.form.carrierDetailDtoList.push(el))
+              this.alreadyPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
+
               data = this.form
               // data.checkStartTime = parseTime(data.checkStartTime)
               // data.checkEndTime = parseTime(data.checkEndTime)
               // data.createTime = parseTime(data.createTime)
-              if(this.sendId){
-                data.id = this.sendId
-
+              if(this.$route.query.tab === '承运商对账-修改查看'){
+                data.id = this.$route.query.id
                 promiseObj = postCreatesaveCarrierDetail(data)
               }else{
                 promiseObj = postCreatesaveCarrierDetail(data)
@@ -893,10 +891,10 @@
               promiseObj.then(res => {
                 this.loading = false
                 this.$message({
-                  message: '添加成功~',
+                  message: '操作成功~',
                   type: 'success'
                 })
-                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable')
                 this.closeMe()
               }).catch(err => {
                 this.loading = false

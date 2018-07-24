@@ -87,3 +87,9 @@ export function getCarriercarrierdetail(id) {
 export function putCarriercarrierdetail(id) {
   return fetch.put('/tmsfinanceservice/finance/carrierdetail/v1/' + id)
 }
+//备用
+export function postCreatesaveCustomerDetail(params) {
+  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
+    return res.data
+  })
+}

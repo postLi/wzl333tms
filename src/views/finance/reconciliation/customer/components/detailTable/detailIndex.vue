@@ -249,7 +249,7 @@ export default {
   },
   mounted () {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    // this.searchQuery.vo.memberId = this.$route.query.id
+    this.searchQuery.vo.memberId = this.$route.query.id
   },
   data () {
     return {
@@ -273,7 +273,7 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgId":'',
-          memberId: 633,//
+          memberId: '',//
           memberIdType: 2,//
           checkStatus: '',// 0未 1已
           startTime: '',//

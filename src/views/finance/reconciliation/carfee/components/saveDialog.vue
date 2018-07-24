@@ -81,6 +81,14 @@
         type: Boolean,
         default: false
       },
+      isShort: {
+        type: Boolean,
+        default: false
+      },
+      isArtery: {
+        type: Boolean,
+        default: false
+      },
       tota: {
         type: [Object,Array,Boolean],
         default: false
@@ -124,11 +132,27 @@
     },
     watch: {
       deliver:{
+        handler(newVal){
+
+        }
+
+      },
+      isShort:{
+        handler(newVal){
+
+        }
+
+      },
+      isArtery:{
+        handler(newVal){
+
+        }
 
       },
       tota:{
         handler(newVal){
           this.dialogData = this.tota
+          console.log(this.tota);
           this.dialogData.dealPaytota.map(el=>{
             this.$set(this.dialogInfo, 0, {
               date:"应付账款",
@@ -144,7 +168,6 @@
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
           this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay
-          console.log(this.totaMoney)
           if(this.sendId){
             this.dotInfo.id = this.sendId
           }else{
@@ -180,6 +203,7 @@
       if(this.popVisible){
         this.popTitle = this.dotInfo.checkBillName
       }
+
     },
     methods: {
       search (item) {
@@ -218,15 +242,21 @@
 // this.messageInfo.checkStartTime = new Date()
         // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
         // this.messageButtonInfo.createTime = new Date()
-        console.log(JSON.stringify(data))
+        console.log(data.createTime);
         data.checkStartTime = parseTime(data.checkStartTime)
         data.checkEndTime = parseTime(data.checkEndTime)
         data.createTime = parseTime(data.createTime)
-            if(this.sendId){
+
+
+        if(this.sendId){
               data.id = this.sendId
               if(this.deliver){
                 promiseObj = postCreateBillCheckCarInfo(data)
                 this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=deliver')
+              }
+                else if(this.isArtery){
+                promiseObj = postCreateBillCheckCarInfo(data)
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=artery')
               }
                 else{
                 promiseObj = postCreateBillCheckCarInfo(data)
@@ -239,6 +269,10 @@
                 promiseObj = postCreateBillCheckCarInfo(data)
                 this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=deliver')
               }
+              else if(this.isArtery){
+                promiseObj = postCreateBillCheckCarInfo(data)
+                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=artery')
+              }
               else{
                 promiseObj = postCreateBillCheckCarInfo(data)
                 this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
@@ -248,7 +282,7 @@
             promiseObj.then(res => {
               this.loading = false
               this.$message({
-                message: '添加成功~',
+                message: '操作成功~',
                 type: 'success'
               })
 

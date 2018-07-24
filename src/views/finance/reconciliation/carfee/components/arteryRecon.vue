@@ -1,6 +1,6 @@
 <template>
   <!---->
-  <div class="short_lll" v-loading="loading" >
+  <div class="ahort_lll" v-loading="loading" >
     <div class="sTop">
       <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
@@ -50,29 +50,30 @@
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开始时间">
-          <el-date-picker
-            v-model="messageInfo.checkStartTime"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            value-format="timestamp"
-            :picker-options="pickOption"
-          >
-          </el-date-picker>
+          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+          <!--<el-date-picker-->
+            <!--v-model="messageInfo.checkStartTime"-->
+            <!--align="right"-->
+            <!--type="date"-->
+            <!--placeholder="选择日期"-->
+            <!--value-format="timestamp"-->
+            <!--:picker-options="pickOption"-->
+          <!--&gt;-->
+          <!--</el-date-picker>-->
 
         </el-form-item>
         <el-form-item label="结束时间">
-          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off"></el-input>-->
-          <el-date-picker
-            v-model="messageInfo.checkEndTime"
-            align="right"
-            type="date"
-            :picker-options="pickOption2"
-            placeholder="选择日期"
-            value-format="timestamp"
+          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
+          <!--<el-date-picker-->
+            <!--v-model="messageInfo.checkEndTime"-->
+            <!--align="right"-->
+            <!--type="date"-->
+            <!--:picker-options="pickOption2"-->
+            <!--placeholder="选择日期"-->
+            <!--value-format="timestamp"-->
 
-          >
-          </el-date-picker>
+          <!--&gt;-->
+          <!--</el-date-picker>-->
         </el-form-item>
         <el-form-item label="账户账号">
           <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
@@ -143,7 +144,7 @@
             label="批次号">
           </el-table-column>
           <el-table-column
-            prop="batchNo"
+            prop="contractNo"
             width="160"
             sortable
             label="合同编号">
@@ -182,33 +183,33 @@
             label="配载体积">
           </el-table-column>
           <el-table-column
-            prop="driverName"
+            prop="onSendPay"
             label="现付运费"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="driverName"
+            prop="onCardPay"
             label="现付油卡"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="driverName"
-            label="到付现金"
+            prop="onSendPay"
+            label="现付运费"
             width="130"
             sortable
           >
           </el-table-column><el-table-column
-          prop="driverName"
+          prop="arrCardPay"
           label="到付油卡"
           width="130"
           sortable
         >
         </el-table-column><el-table-column
-          prop="driverName"
+          prop="totalPay"
           label="运费合计"
           width="130"
           sortable
@@ -279,7 +280,7 @@
             label="批次号">
           </el-table-column>
           <el-table-column
-            prop="batchNo"
+            prop="contractNo"
             width="160"
             sortable
             label="合同编号">
@@ -318,33 +319,49 @@
             label="配载体积">
           </el-table-column>
           <el-table-column
-            prop="driverName"
+            prop="onSendPay"
             label="现付运费"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="driverName"
+            prop="onCardPay"
             label="现付油卡"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="driverName"
-            label="到付现金"
+            prop="backSendPay"
+            label="回付运费"
             width="130"
             sortable
           >
-          </el-table-column><el-table-column
-          prop="driverName"
+          </el-table-column>
+          <el-table-column
+            prop="backCardPay"
+            label="回付油卡"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="arrSendPay"
+            label="到付运费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+          prop="arrCardPay"
           label="到付油卡"
           width="130"
           sortable
         >
-        </el-table-column><el-table-column
-          prop="driverName"
+        </el-table-column>
+          <el-table-column
+          prop="totalPay"
           label="运费合计"
           width="130"
           sortable
@@ -411,7 +428,7 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" :isArtery="isArtery"></SaveDialog>
   </div>
 </template>
 
@@ -487,17 +504,18 @@
               "payDetailList":[],
               "hadPayDetailList":[]
             },
-            //总计
+            //保存总计数据
             tota:{
               alreadyPaytota:[],
               dealPaytota:[],
             },
-            //保存总计数据
             alreadyPaytota:[],
             dealPaytota:[],
+            //保存总计数据
             sendId:'',
             visibleDialog:false,
             loading:false,
+            isArtery:false,
             btnsize: 'mini',
             searchTitle:{
               orgId:'',
@@ -508,7 +526,7 @@
             searchDealPay:{
               orgId:'',
               memberType:'3',
-              loadTypeId:38,
+              loadTypeId:39,
               payTypeStatus:'pay',
               truckIdNumber:'',
               startTime:'',
@@ -517,7 +535,7 @@
             searchAlReadyPay:{
               orgId:'',
               memberType:'3',
-              loadTypeId:38,
+              loadTypeId:39,
               payTypeStatus:'hadPay',
               truckIdNumber:'',
               startTime:'',
@@ -549,7 +567,7 @@
       mounted(){
         this.searchCreatTime = this.defaultTime
 
-        this.changeOrgid(this.otherinfo)
+        this.changeOrgid(this.otherinfo,this.$route.query.id)
         if(this.$route.query.id){
           this.sendId = this.$route.query.id
           this.changeId(this.$route.query.id)
@@ -634,6 +652,7 @@
           this.loading = true
           return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
             this.dealPayInfo = data
+            this.dealPaytota = data
             this.loading = false
           })
         },
@@ -641,13 +660,18 @@
           this.loading = true
           return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
             this.alreadyPayInfo = data
+            this.alreadyPaytota = data
             this.loading = false
           })
         },
-        changeOrgid(item){
+        changeOrgid(item,checkId){
           this.searchTitle.orgId = item.orgid
           this.searchDealPay.orgId = item.orgid
           this.searchAlReadyPay.orgId = item.orgid
+          this.moiffyDealPay.orgId = item.orgid
+          this.moiffyAlReadyPay.orgId = item.orgid
+          this.moiffyDealPay.checkId = checkId
+          this.moiffyAlReadyPay.checkId = checkId
         },
         changeId(id){
           this.searchTitle.id = id
@@ -684,6 +708,7 @@
           this.$refs[formName].validate((valid) => {
             if (valid) {
               this.oopenVisibleDialog()
+              this.isArtery = true
             } else {
               return false
             }
@@ -704,26 +729,35 @@
             this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
+              a.onSendPay = el.onSendPay
+              a.onCardPay = el.onCardPay
+              a.backCardPay = el.backCardPay
               a.arrSendPay = el.arrSendPay
+              a.arrCardPay = el.arrCardPay
               return a
             }) :[]
             this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
+              a.onSendPay = el.onSendPay
+              a.onCardPay = el.onCardPay
+              a.backCardPay = el.backCardPay
               a.arrSendPay = el.arrSendPay
+              a.arrCardPay = el.arrCardPay
               return a
             }) : []
           //总计
           this.tota.dealPaytota = this.dealPaytota ?  this.dealPaytota.map(el=>{
             const a = {}
-            a.shortPay = el.shortPay
+            a.totalPay = el.totalPay
             return a
           }) :[]
           this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el=>{
             const a = {}
-            a.shortPay = el.shortPay
+            a.totalPay = el.totalPay
             return a
           }) : []
+
         },
         validateIsEmpty(msg = '不能为空！') {
           return (rule, value, callback) => {
@@ -794,7 +828,7 @@
 </script>
 
 <style lang="scss">
-.short_lll{
+.ahort_lll{
   margin: 0 9px;
   .sTop{
 
@@ -853,7 +887,7 @@
         border-top-color: transparent;
         border-right-color: transparent;
         border-bottom-color: transparent;
-        width: 171px;
+        width: 187px;
         border-radius: 0;
       }
       .el-input__inner:focus{

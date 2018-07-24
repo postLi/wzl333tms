@@ -446,7 +446,7 @@
             searchDealPay:{
               orgId:'',
               memberType:'3',
-              loadTypeId:38,
+              loadTypeId:40,
               payTypeStatus:'pay',
               truckIdNumber:'',
               startTime:'',
@@ -455,7 +455,7 @@
             searchAlReadyPay:{
               orgId:'',
               memberType:'3',
-              loadTypeId:38,
+              loadTypeId:40,
               payTypeStatus:'hadPay',
               truckIdNumber:'',
               startTime:'',
@@ -487,7 +487,7 @@
       mounted(){
         this.searchCreatTime = this.defaultTime
 
-        this.changeOrgid(this.otherinfo)
+        this.changeOrgid(this.otherinfo,this.$route.query.id)
         if(this.$route.query.id){
           this.sendId = this.$route.query.id
           this.changeId(this.$route.query.id)
@@ -558,7 +558,7 @@
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
             this.dealPayInfo = data
-            this.dealPaytota = data
+            // this.dealPaytota = data
             this.loading = false
           })
         },
@@ -566,7 +566,7 @@
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
             this.alreadyPayInfo = data
-            this.alreadyPaytota = data
+            // this.alreadyPaytota = data
             this.loading = false
           })
         },
@@ -594,10 +594,14 @@
             this.loading = false
           })
         },
-        changeOrgid(item){
+        changeOrgid(item,checkId){
           this.searchTitle.orgId = item.orgid
           this.searchDealPay.orgId = item.orgid
           this.searchAlReadyPay.orgId = item.orgid
+          this.moiffyDealPay.orgId = item.orgid
+          this.moiffyAlReadyPay.orgId = item.orgid
+          this.moiffyDealPay.checkId = checkId
+          this.moiffyAlReadyPay.checkId = checkId
         },
         changeId(id){
           this.searchTitle.id = id
@@ -634,6 +638,7 @@
           this.$refs[formName].validate((valid) => {
             if (valid) {
               this.oopenVisibleDialog()
+              this.deliver = true
             } else {
               return false
             }
@@ -654,13 +659,13 @@
             this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
-              a.arrSendPay = el.arrSendPay
+              a.sendPay = el.sendPay
               return a
             }) :[]
             this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
-              a.arrSendPay = el.arrSendPay
+              a.sendPay = el.sendPay
               return a
             }) : []
           //总计

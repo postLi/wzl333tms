@@ -20,6 +20,7 @@
         <el-select v-model="searchForm.checkStatus">
           <el-option label="未对账" :value="0"></el-option>
           <el-option label="已对账" :value="1"></el-option>
+          <el-option label="全部"  value=""></el-option>
         </el-select>
       </el-form-item>
       <el-form-item class="staff_searchinfo_tn art_marginTop" >
@@ -77,7 +78,7 @@ export default {
       },
       searchForm: {
         orgId: '',
-        checkStatus: 0,
+        checkStatus: '',
         startTime: '',//
         endTime:''
       },

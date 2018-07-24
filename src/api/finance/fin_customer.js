@@ -34,6 +34,19 @@ export function postCFinanceinitialize(params) {
     return res.data || { list: [], totalCount: 0 }
   })
 }
+/**对账明细列表
+ *
+
+ /finance/customerdetail/v1/saveCustomerDetail
+ 保存或修改客户对账
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function postCSaveCustomerDetail(params) {
+  return fetch.post('/api-finance/finance/customerdetail/v1/saveCustomerDetail/', params).then(res => {
+    return res.data || { list: [], totalCount: 0 }
+  })
+}
 /**
  * /finance/customerdetail/v1/{id}
  根据ID删除客户对账表信息

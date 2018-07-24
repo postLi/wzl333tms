@@ -198,6 +198,7 @@
           >
           </el-table-column>
 
+          <!--<el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>-->
 
         </el-table>
       </div>
@@ -362,7 +363,7 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" :isShort="isShort" ></SaveDialog>
   </div>
 </template>
 
@@ -449,6 +450,7 @@
             sendId:'',
             visibleDialog:false,
             loading:false,
+            isShort:false,
             btnsize: 'mini',
             searchTitle:{
               orgId:'',
@@ -502,7 +504,7 @@
         // this.messageInfo.checkStartTime = new Date()
         // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
         this.messageButtonInfo.createTime = new Date()
-        this.changeOrgid(this.otherinfo)
+        this.changeOrgid(this.otherinfo,this.$route.query.id)
         if(this.$route.query.id){
           this.sendId = this.$route.query.id
           this.changeId(this.$route.query.id)
@@ -609,15 +611,20 @@
             this.loading = false
           })
         },
-        changeOrgid(item){
+        changeOrgid(item,checkId){
           this.searchTitle.orgId = item.orgid
           this.searchDealPay.orgId = item.orgid
           this.searchAlReadyPay.orgId = item.orgid
+          this.moiffyDealPay.orgId = item.orgid
+          this.moiffyAlReadyPay.orgId = item.orgid
+          this.moiffyDealPay.checkId = checkId
+          this.moiffyAlReadyPay.checkId = checkId
         },
         changeId(id){
           this.searchTitle.id = id
           this.searchDealPay.id = id
           this.searchAlReadyPay.id = id
+
         },
         getTrunkName(trunk) {
           if (trunk) {
@@ -680,6 +687,7 @@
           this.$refs[formName].validate((valid) => {
             if (valid) {
               this.oopenVisibleDialog()
+              this.isShort = true
             } else {
               return false
             }
@@ -695,13 +703,13 @@
             this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
-              a.arrSendPay = el.arrSendPay
+              a.shortPay = el.shortPay
               return a
             }) :[]
             this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
               const a = {}
               a.shipOrderId = el.shipOrderId
-              a.arrSendPay = el.arrSendPay
+              a.shortPay = el.shortPay
               return a
             }) : []
           //总计
