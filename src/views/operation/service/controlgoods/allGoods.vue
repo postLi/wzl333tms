@@ -92,30 +92,44 @@
               <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
             </el-table-column>
             <el-table-column
-              prop="senderCustomerName"
+              prop="shipSenderName"
               label="发货人"
               width="120"
               sortable
               >
             </el-table-column>
             <el-table-column
-              prop="senderCustomerMobile"
+              prop="shipSenderMobile"
               label="发货人电话"
               width="120"
               sortable
               >
             </el-table-column>
             <el-table-column
-              prop="receiverCustomerName"
+              prop="shipReceiverName"
               label="收货人"
               width="120"
               sortable
               >
             </el-table-column>
             <el-table-column
-              prop="receiverCustomerMobile"
+              prop="shipReceiverMobile"
               label="收货人电话"
               width="120"
+              sortable
+              >
+            </el-table-column>
+            <el-table-column
+              prop="shipSenderAddress"
+              label="发货人地址"
+              width="200"
+              sortable
+              >
+            </el-table-column>
+            <el-table-column
+              prop="shipReceiverAddress"
+              label="收货地址"
+              width="200"
               sortable
               >
             </el-table-column>
@@ -305,35 +319,20 @@
             </el-table-column>
             <!-- 这里没有找到对应的字段 -->
             <el-table-column
-              prop="senderCustomerUnit"
+              prop="shipSenderUnit"
               label="发货单位"
               width="200"
               sortable
               >
             </el-table-column>
-          <el-table-column
-              prop="receiverCustomerUnit"
+            <el-table-column
+              prop="shipReceiverUnit"
               label="收货单位"
               width="200"
               sortable
               >
             </el-table-column>
-            <el-table-column
-              prop="senderDetailedAddress"
-              label="发货人地址"
-              width="200"
-              sortable
-              >
-            </el-table-column>
             
-          
-            <el-table-column
-              prop="receiverDetailedAddress"
-              label="收货地址"
-              width="200"
-              sortable
-              >
-            </el-table-column>
             <!-- 这里没有找到对应的字段 -->
             <el-table-column
               prop="brokerageFee"
@@ -604,7 +603,7 @@ export default {
                 message: '控货成功~',
                 type: 'success'
               })
-                  // fetchData()
+              this.fetchData()
               return false
             })
           }

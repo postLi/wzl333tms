@@ -13,10 +13,10 @@
           </el-form-item> -->
           <el-form-item label="运单号" prop="shipSn">
               <!--<el-input v-model="formInline.shipSn"></el-input>-->
-              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="getShipSn"  v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false" />
+              <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="getShipSn" :key="querykey" v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false" />
             </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
-            <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" type="order"  @change="getShipSn"  v-model="form.shipGoodsSn" :disabled="isCheck || isDeal ? true : false"/>
+            <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" :key="querykey"  type="order"  @change="getShipSn"  v-model="form.shipGoodsSn" :disabled="isCheck || isDeal ? true : false"/>
             <!-- <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input> -->
           </el-form-item>
   
@@ -247,6 +247,7 @@ export default {
     return {
       // dialogImageUrl: '',
       // dialogVisible: false,
+      querykey: '11',
       searchCreatTime: +new Date(),
       form: {
         'abnormalAmount': '',
@@ -382,6 +383,10 @@ export default {
     // },
 
     info() {
+      for (const i in this.form) {
+        this.form[i] = ''
+      }
+      this.querykey = +new Date()
       if (this.isModify) {
         this.popTitle = '异常修改'
         const data = Object.assign({}, this.info)
@@ -418,13 +423,10 @@ export default {
   },
   methods: {
     // handleRemove(file, fileList) {
-    //     console.log(file, fileList);
+    //   console.log(file, fileList)
     // },
     // handlePreview(file) {
-    //   console.log(file);
-    // },
-    // handleRemove(file, fileList) {
-    //   console.log(file, fileList)
+    //   console.log(file)
     // },
     // handlePictureCardPreview(file) {
     //   this.dialogImageUrl = file.url
@@ -622,11 +624,11 @@ export default {
       if (!this.isModify) {
         this.form.abnormalNo = oldVal
       }
-      // this.form.shipSn = ''
-      // this.form.shipGoodsSn = ''
+      this.form.shipSn = ''
+      this.form.shipGoodsSn = ''
     },
     closeMe(done) {
-      // this.reset()
+      this.reset()
       this.$emit('update:popVisible', false)
       // this.$emit('close')
       if (typeof done === 'function') {

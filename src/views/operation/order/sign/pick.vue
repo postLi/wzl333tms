@@ -619,7 +619,7 @@ export default {
         //   },
         // },
   methods: {
-     parseShipStatus(id){
+    parseShipStatus(id) {
       return parseShipStatus(id)
     },
     fetchAllreceipt() {

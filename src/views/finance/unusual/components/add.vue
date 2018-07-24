@@ -383,7 +383,7 @@ export default {
       // const oldVal = this.form[type]
 
       if (data) {
-        console.log('ship data:', JSON.stringify(data))
+        console.log('ship data:', data)
         if (this.isModify || this.isDbClick) {
           this.form.shipSn = data.shipSn
           this.form.shipFee = data.shipFee
@@ -402,7 +402,7 @@ export default {
           this.form.shipPayWayName = data.shipPayWay
           this.form.cargoWeight = data.cargoWeight
           this.form.cargoVolume = data.cargoVolume
-          this.form.shipFee = data.shipFee
+          // this.form.shipFee = data.shipFee
           this.form.nowPayFee = data.nowPayFee
 
           this.form.fee = data.changeFee

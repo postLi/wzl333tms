@@ -24,8 +24,8 @@
         <el-form-item label="收货人:" prop="receiver_customer_name"> 
           <el-input maxlength="20" v-model="form.receiver_customer_name" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="收货人电话:" prop="eceiver_customer_mobile">
-          <el-input maxlength="20" v-model="form.eceiver_customer_mobile" auto-complete="off" :disabled="true"></el-input>
+        <el-form-item label="收货人电话:" prop="receiver_customer_mobile">
+          <el-input maxlength="20" v-model="form.receiver_customer_mobile" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收时间:" prop="signTime" >
           <el-date-picker
@@ -62,7 +62,8 @@
           <SelectType v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
         </el-form-item>
         <el-form-item class="driverRemarks ms" label="备注" prop="remark" >
-          <input class="bz" maxlength="200" v-model.trim="form.remark" :disabled="isDbclick" placeholder="最多可输入250个字符"/>
+          <input class="bz" maxlength="200" v-model.trim="form.remark" v-if="isDbclick" disabled="isDbclick"  placeholder="最多可输入250个字符"/>
+          <input class="bz1" maxlength="200" v-model.trim="form.remark" v-else  placeholder="最多可输入250个字符"/>
             <!-- <el-input type="textarea" maxlength="200" v-model="form.remark" :disabled="isDbclick"></el-input> -->
         </el-form-item>
       </div>
@@ -524,6 +525,17 @@ export default {
     color:#999;
     background:rgb(244,246,249);
     // background-color:#f5f7fa;;
+  }
+  .bz1{
+  height: 35px;
+  line-height: 35px;
+  width:1055px;
+  padding-left:20px;
+  border:1px solid #ccc;
+  border-radius: 5px;
+  color:#999;
+  // background:rgb(244,246,249);
+  // background-color:#f5f7fa;;
   }
   .mark .pz{
     width:100px;
