@@ -24,10 +24,10 @@
           <div slot="content">
             功能：把同个区域不同网点收的货物配载到分拨中心，进行干线配载
           </div>
-          <router-link to="./order/shortDepart">
+          <div @click="gotoPage('deliver', './order/shortDepart')">
             <i class="flowicon duanbo"></i>
             <p>短驳接收</p>
-          </router-link>
+          </div>
         </el-tooltip>
         <el-tooltip placement="top">
           <div slot="content">
@@ -80,7 +80,7 @@
           <div slot="content">
             功能：将运单转给第三方承运商
           </div>
-          <router-link to="./order/transfer">
+          <router-link to="./order/transferLoad">
             <i class="flowicon zhongzhuan"></i>
             <p>中转外发</p>
           </router-link>
@@ -101,19 +101,19 @@
             <div slot="content">
               功能：对目的网点寄回的回单做接收
             </div>
-            <router-link to="./order/receipt">
+            <div @click="gotoPage('Accept', './order/receipt')">
               <i class="flowicon jieshou"></i>
               <p>回单接收</p>
-            </router-link>
+            </div>
           </el-tooltip>
           <el-tooltip placement="bottom">
             <div slot="content">
               功能：开单网点把回单发放给客户
             </div>
-            <router-link to="./order/receipt">
+            <div @click="gotoPage('Grant', './order/receipt')">
               <i class="flowicon fafang"></i>
               <p>回单发放</p>
-            </router-link>
+            </div>
           </el-tooltip>
         </div>
         <div class="operation_flow_foot_right">
@@ -121,19 +121,19 @@
             <div slot="content">
               功能：从收货人处回收回单
             </div>
-            <router-link to="./order/receipt">
+            <div @click="gotoPage('Recycle', './order/receipt')">
               <i class="flowicon huishou"></i>
               <p>回单回收</p>
-            </router-link>
+            </div>
           </el-tooltip>
           <el-tooltip placement="bottom">
             <div slot="content">
               功能：目的网点把回单寄到开单网点
             </div>
-            <router-link to="./order/receipt">
+            <div @click="gotoPage('Send', './order/receipt')">
               <i class="flowicon jichu"></i>
               <p>回单寄出</p>
-            </router-link>
+            </div>
           </el-tooltip>
         </div>
       </div>
@@ -146,13 +146,8 @@ export default {
     return {}
   },
   methods: {
-    gotoPage(type) {
-      switch (type) {
-        case 'pickUp':
-          this.$router.push({ path: './order/pickUp' })
-          console.log(this.$router)
-          break
-      }
+    gotoPage(name, path) {
+      this.$router.push({ path: path, query: { tableKey: name } })
     }
   }
 }

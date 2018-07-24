@@ -112,6 +112,8 @@ function bldStr(ctlType, id, para, height)
  str += '<param Name="CtlVersion" Value="' +ctlver+ '">';
  str += '<param Name="ZipUrl" Value="' +zipurl+ '">';
  str += '<param Name="id" Value="' +id+ '">';
+ str += '<param name="windowless" value="true"/>';
+ str += '<param name="wmode" value="transparent">';
  str += '<param Name="Cookie" Value="' +document.cookie+ '">';
  str += '<param Name="CtlPara" Value="' +para+ '">';
  if($B.ppapi) str += '<param Name="core" Value="pure"><param Name="Locate" value="' +window.location.href+ '">';

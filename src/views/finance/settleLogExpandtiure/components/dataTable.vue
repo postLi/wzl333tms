@@ -1,35 +1,12 @@
 <template>
+   <!-- 批次支出 -->
   <transferTable>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
-      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
-        <el-form-item>
-          <el-select v-model="searchForm.batchNo" placeholder="请选择类型" :size="btnsize" clearable>
-            <el-option label="短驳" value="38"></el-option>
-            <el-option label="干线" value="39"></el-option>
-            <el-option label="送货" value="40"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" placeholder="请输入车牌号" clearable></querySelect>
-        </el-form-item>
-        <el-form-item>
-          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
-        </el-form-item>
-      </el-form>
+       <!-- 搜索左边表格 -->
+      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
     </div>
     <!-- 左边表格区 批次支出 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-      <!-- <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
-        <el-form-item label="批次">
-          <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
-        </el-form-item>
-         <el-form-item label="车牌号">
-          <querySelect v-model="searchForm.truckIdNumber"  :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
-        </el-form-item>
-        <el-form-item>
-           <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
-        </el-form-item>
-      </el-form> -->
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
@@ -39,7 +16,12 @@
             <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="shipSn" label="发车批次" fixed width="120">
+        <el-table-column label="发车批次" fixed width="120">
+          <template slot-scope="props">
+            <span v-if="props.row.shortBatchNo">{{props.row.shortBatchNo}}</span> <!-- 短驳 -->
+            <span v-if="props.row.mainBatchNo">{{props.row.mainBatchNo}}</span> <!-- 干线 -->
+            <span v-if="props.row.sendBatchNo">{{props.row.sendBatchNo}}</span> <!-- 送货 -->
+          </template>
         </el-table-column>
         <el-table-column prop="truckIdNumber" sortable label="车牌号" width="120">
         </el-table-column>
@@ -65,7 +47,7 @@
         </el-table-column>
         <el-table-column prop="repertoryVolume" sortable label="到车时间" width="120">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="发车网点" width="120">
+        <el-table-column prop="shipFromOrgName" sortable label="发车网点" width="120">
         </el-table-column>
         <el-table-column prop="cargoWeight" sortable label="到车网点" width="120">
         </el-table-column>
@@ -84,25 +66,30 @@
             <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="shipSn" label="发车批次" fixed width="120">
+        <el-table-column label="发车批次" fixed width="120">
+          <template slot-scope="props">
+            <span v-if="props.row.shortBatchNo">{{props.row.shortBatchNo}}</span> <!-- 短驳 -->
+            <span v-if="props.row.mainBatchNo">{{props.row.mainBatchNo}}</span> <!-- 干线 -->
+            <span v-if="props.row.sendBatchNo">{{props.row.sendBatchNo}}</span> <!-- 送货 -->
+          </template>
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="车牌号" width="120">
+        <el-table-column prop="truckIdNumber" sortable label="车牌号" width="120">
         </el-table-column>
-        <el-table-column prop="amount" sortable label="司机" width="120">
+        <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>
-        <el-table-column prop="onPay" sortable label="短驳费" width="120">
+        <el-table-column prop="shortPay" sortable label="短驳费" width="120">
         </el-table-column>
-        <el-table-column prop="arrivalPay" sortable label="送货费" width="120">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120">
         </el-table-column>
         <el-table-column prop="backPay" sortable label="干线合计" width="120">
         </el-table-column>
-        <el-table-column prop="monthPay" sortable label="发站装卸费" width="120">
+        <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="发站其他费" width="120">
+        <el-table-column prop="startOtherPay" sortable label="发站其他费" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="到站装卸费" width="120">
+        <el-table-column prop="endLoadPay" sortable label="到站装卸费" width="120">
         </el-table-column>
-        <el-table-column prop="cargoName" sortable label="到站其他费" width="120">
+        <el-table-column prop="endOtherPay" sortable label="到站其他费" width="120">
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="整车保险费" width="120">
         </el-table-column>
@@ -110,7 +97,7 @@
         </el-table-column>
         <el-table-column prop="repertoryVolume" sortable label="到车时间" width="120">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="发车网点" width="120">
+        <el-table-column prop="shipFromOrgName" sortable label="发车网点" width="120">
         </el-table-column>
         <el-table-column prop="cargoWeight" sortable label="到车网点" width="120">
         </el-table-column>
@@ -127,6 +114,7 @@ import querySelect from '@/components/querySelect/index'
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
+import currentSearch from './currentSearch'
 export default {
   data() {
     return {
@@ -141,6 +129,7 @@ export default {
       btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
@@ -166,7 +155,8 @@ export default {
   },
   components: {
     transferTable,
-    querySelect
+    querySelect,
+    currentSearch
   },
   watch: {
     isModify: {
@@ -192,16 +182,22 @@ export default {
     getList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
+      this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
         this.leftTable = this.orgData.left
+        this.orgLeftTable = this.orgData.left
         this.rightTable = this.orgData.right
         this.$emit('loadTable', this.rightTable)
       } else {
         getOrderShipList(this.otherinfo.orgid, this.incomePayType, this.paymentsType).then(data => {
           this.leftTable = data
+          this.orgLeftTable = data
           this.$emit('loadTable', this.rightTable)
         })
       }
+    },
+    getSearch (obj) { // 搜索
+     this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -242,6 +238,10 @@ export default {
           if (item !== -1) { // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
           }
+          let orgItem = this.orgLeftTable.indexOf(e)
+          if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+            this.orgLeftTable.splice(orgItem, 1)
+          }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -255,6 +255,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据

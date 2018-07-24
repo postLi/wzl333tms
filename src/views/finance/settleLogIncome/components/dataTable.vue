@@ -2,7 +2,7 @@
   <transferTable>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
      <!-- 搜索左边表格 -->
-      <currentSearch :info="orgLeftTable" @search="getSearch"></currentSearch>
+      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
     </div>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -186,7 +186,6 @@ export default {
     },
     getSearch (obj) { // 搜索
      this.leftTable = obj
-     console.log(obj)
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

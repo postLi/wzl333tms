@@ -8,7 +8,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
       </div>
       <div class="info_tab">
-        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
+        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
+        style="background-color:transparent; position: absolute; z-index: -3000; width: 100%; height: calc(100% - 100px); top: 120px;left:0;"></iframe>
       </div>
     </div>
   </div>
@@ -72,11 +73,11 @@ export default {
   width: 100%;
   height: calc(100%);
   .chartIframe {
+    position:relative;
+    z-index:1;
     width: 100%;
     height: 100%;
-    box-shadow: 1px 1px 10px #bbb;
-    overflow: hidden;
-    scrolling: no;
+    box-shadow: 1px 1px 10px #ddd;
   }
 }
 

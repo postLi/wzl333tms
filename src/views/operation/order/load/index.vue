@@ -222,18 +222,20 @@ import { getSystemTime } from '@/api/common'
 export default {
   data() {
     const validateInt = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('不能为空'))
-      } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
+      // if (value === '' || value === null || !value || value === undefined) {
+      //   callback(new Error('不能为空'))
+      // } else 
+      if (REGEX.ONLY_NUMBER_GT.test(value)) {
         callback()
       } else {
         callback(new Error('请输入整数'))
       }
     }
     const validateBigDecimal = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('不能为空'))
-      } else if (REGEX.FLOAT2ING.test(value)) {
+      // if (value === '' || value === null || !value || value === undefined) {
+      //   callback(new Error('不能为空'))
+      // } else 
+      if (REGEX.FLOAT2ING.test(value)) {
         callback()
       } else {
         callback(new Error('请输入最多两位小数'))
@@ -871,14 +873,6 @@ export default {
     flex-direction: column;
 
     .loadFrom {
-      // padding: 0 10px 5px 0;
-      // .el-form-item {
-      //   margin-bottom: 0px;
-      //   .el-date-editor.el-input,
-      //   .el-date-editor.el-input__inner {
-      //     width: 100%;
-      //   }
-      // }
       margin-bottom:10px;
       .loadFrom-type {
         position: absolute;
@@ -923,18 +917,6 @@ export default {
         width:220px;
       }
     }
-    // .el-collapse-item__content {
-    //   padding-bottom: 0;
-    //   .el-form-item__content>.el-input {
-    //     max-width: 195px;
-    //   }
-    //   .el-textarea {
-    //     max-width: 1060px;
-    //   }
-    // }
-    // .el-form-item--mini.el-form-item {
-    //   margin-bottom: 5px;
-    // }
   }
 }
 .my-autocomplete {
@@ -982,27 +964,6 @@ ul.feeList {
       margin-top:-6px;
     }
   }
-
-  // border-top: 2px dotted #bbbbbb;
-  // padding: 5px 10px 0px 10px;
-  // background-color: #fbfbfb;
-  // width: 100%;
-  // display: flex;
-  // flex-direction: row;
-  // .el-form-item__error {
-  //   padding-top: 0px;
-  //   top: 90%;
-  // }
-  // li {
-  //   border-right: 1px solid #eeeeee;
-  //   width: 10%;
-  //   height:60px;
-  //   p {
-  //     text-align: center;
-  //     line-height: 18px;
-  //     font-size: 14px;
-  //   }
-  // }
 }
 
 </style>

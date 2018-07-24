@@ -1,35 +1,11 @@
 <template>
   <transferTable>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
-      <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
-        <el-form-item>
-          <el-select v-model="searchForm.batchNo" placeholder="请选择类型" :size="btnsize" clearable>
-            <el-option label="短驳" value="38"></el-option>
-            <el-option label="干线" value="39"></el-option>
-            <el-option label="送货" value="40"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <querySelect v-model="searchForm.truckIdNumber" :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" placeholder="请输入车牌号" clearable></querySelect>
-        </el-form-item>
-        <el-form-item>
-          <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
-        </el-form-item>
-      </el-form>
+     <!-- 搜索左边表格 -->
+      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
     </div>
     <!-- 左边表格区  运单支出-->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-      <!-- <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm clearfix">
-        <el-form-item label="批次">
-          <el-input :size="btnsize" placeholder="短驳.干线.送货批次搜索"></el-input>
-        </el-form-item>
-         <el-form-item label="车牌号">
-          <querySelect v-model="searchForm.truckIdNumber"  :size="btnsize" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
-        </el-form-item>
-        <el-form-item>
-           <el-button size="mini" type="primary" icon="el-icon-search">搜索</el-button>
-        </el-form-item>
-      </el-form> -->
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
@@ -53,21 +29,21 @@
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="出发城市" width="120">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="到达城市" width="120">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="重量" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="发货方" width="120">
+        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
         <el-table-column prop="remark" sortable label="运单备注" width="120">
         </el-table-column>
@@ -98,21 +74,21 @@
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="出发城市" width="120">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="到达城市" width="120">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="重量" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="发货方" width="120">
+        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
         <el-table-column prop="remark" sortable label="运单备注" width="120">
         </el-table-column>
@@ -127,6 +103,7 @@ import querySelect from '@/components/querySelect/index'
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
+import currentSearch from './currentSearchOrder'
 export default {
   data() {
     return {
@@ -141,6 +118,7 @@ export default {
       btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
@@ -166,7 +144,8 @@ export default {
   },
   components: {
     transferTable,
-    querySelect
+    querySelect,
+    currentSearch
   },
   watch: {
     isModify: {
@@ -192,16 +171,22 @@ export default {
     getList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
+      this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
         this.leftTable = this.orgData.left
         this.rightTable = this.orgData.right
+        this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
         getOrderShipList(this.otherinfo.orgid, this.incomePayType, this.paymentsType).then(data => {
           this.leftTable = data
+          this.orgLeftTable = data
           this.$emit('loadTable', this.rightTable)
         })
       }
+    },
+    getSearch (obj) { // 搜索
+     this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -242,6 +227,10 @@ export default {
           if (item !== -1) { // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
           }
+          let orgItem = this.orgLeftTable.indexOf(e)
+          if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+            this.orgLeftTable.splice(orgItem, 1)
+          }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -255,6 +244,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
@@ -263,7 +253,6 @@ export default {
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
-        console.log('rightTable', this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },

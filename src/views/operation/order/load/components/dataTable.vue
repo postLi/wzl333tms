@@ -1,5 +1,9 @@
 <template>
   <transferTable>
+    <div slot="tableSearch" class="tableHeadItemForm clearfix">
+     <!-- 搜索左边表格 -->
+      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
+    </div>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
@@ -114,6 +118,7 @@ import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
+import currentSearch from './currentSearch'
 export default {
   data() {
     return {
@@ -126,6 +131,7 @@ export default {
       btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
@@ -150,7 +156,8 @@ export default {
     ])
   },
   components: {
-    transferTable
+    transferTable,
+    currentSearch
   },
   watch: {
     isModify: {
@@ -178,16 +185,22 @@ export default {
       console.log('isModify', this.isModify)
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
+      this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
         this.leftTable = this.orgData.left
         this.rightTable = this.orgData.right
+        this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
+          this.orgLeftTable = data.data
           this.$emit('loadTable', this.rightTable)
         })
       }
+    },
+    getSearch (obj) { // 搜索
+     this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -272,6 +285,10 @@ export default {
           if (item !== -1) { // 源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
           }
+          let orgItem = this.orgLeftTable.indexOf(e)
+          if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+            this.orgLeftTable.splice(orgItem, 1)
+          }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -285,6 +302,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据

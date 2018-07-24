@@ -1,27 +1,15 @@
 <template>
-  <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
-    <el-form-item>
-      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @focus="clearSender">
-        <el-option label="发货方" value="unit"></el-option>
-        <el-option label="发货人" value="customer"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item v-if="senderSearch==='customer'">
+  <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="70px" class="tableHeadItemForm">
+    <el-form-item label="到达城市">
       <el-autocomplete 
-      v-model="searchForm.shipSenderName" 
+      v-model="searchForm.shipToCityName" 
       :size="btnsize" 
-      popper-class="hidePopper" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)" 
+      placeholder="到达城市搜索" 
       @select="handleSelect">
-      </el-autocomplete>
-    </el-form-item>
-    <el-form-item v-if="senderSearch==='unit'">
-      <el-autocomplete 
-      v-model="searchForm.senderCustomerUnit" 
-      :size="btnsize" 
-      popper-class="hidePopper" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'senderCustomerUnit',queryString, cb)" placeholder="发货人搜索" 
-      @select="handleSelect">
+        <template slot-scope="{ item }">
+          <div class="name">{{ item.shipToCityName }}</div>
+        </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="运单号">
@@ -29,7 +17,7 @@
       v-model="searchForm.shipSn" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
-      placeholder="发货人搜索" 
+      placeholder="运单号搜索" 
       @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.shipSn }}</div>
@@ -49,8 +37,7 @@ export default {
     return {
       senderSearch: '',
       searchForm: {
-        shipSenderName: '',
-        senderCustomerUnit: '',
+        shipToCityName: '',
         shipSn: ''
       },
       btnsize: 'mini',
@@ -65,6 +52,7 @@ export default {
   },
   methods: {
     querySearch(type, queryString, cb) {
+      console.log(this.info)
       let leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图
       this.selectVal = type // 当前选择输入的对象

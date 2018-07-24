@@ -1,38 +1,58 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @focus="clearSender">
-        <el-option label="发货方" value="unit"></el-option>
-        <el-option label="发货人" value="customer"></el-option>
+      <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" clearable @focus="clearSender">
+        <el-option label="短驳" value="short"></el-option>
+        <el-option label="干线" value="load"></el-option>
+        <el-option label="送货" value="deliver"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item v-if="senderSearch==='customer'">
+    <el-form-item v-if="senderSearch==='short'">
       <el-autocomplete 
-      v-model="searchForm.shipSenderName" 
+      v-model="searchForm.shortBatchNo" 
       :size="btnsize" 
       popper-class="hidePopper" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索"
       @select="handleSelect">
+       <template slot-scope="{ item }">
+          <div class="name">{{ item.shortBatchNo }}</div>
+        </template>
       </el-autocomplete>
     </el-form-item>
-    <el-form-item v-if="senderSearch==='unit'">
+    <el-form-item v-if="senderSearch==='load'">
       <el-autocomplete 
-      v-model="searchForm.senderCustomerUnit" 
+      v-model="searchForm.mainBatchNo" 
       :size="btnsize" 
       popper-class="hidePopper" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'senderCustomerUnit',queryString, cb)" placeholder="发货人搜索" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" 
       @select="handleSelect">
+      <template slot-scope="{ item }">
+          <div class="name">{{ item.mainBatchNo }}</div>
+        </template>
       </el-autocomplete>
     </el-form-item>
-    <el-form-item label="运单号">
+    <el-form-item v-if="senderSearch==='deliver'">
       <el-autocomplete 
-      v-model="searchForm.shipSn" 
+      v-model="searchForm.sendBatchNo" 
       :size="btnsize" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
-      placeholder="发货人搜索" 
+      popper-class="hidePopper" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" 
+      @select="handleSelect">
+      <template slot-scope="{ item }">
+          <div class="name">{{ item.sendBatchNo }}</div>
+        </template>
+      </el-autocomplete>
+    </el-form-item>
+    <el-form-item label="车牌号">
+      <el-autocomplete 
+      clearable
+      v-model="searchForm.truckIdNumber" 
+      :size="btnsize" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" 
+      placeholder="车牌号搜索" 
       @select="handleSelect">
         <template slot-scope="{ item }">
-          <div class="name">{{ item.shipSn }}</div>
+          <div class="name">{{ item.truckIdNumber }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
@@ -49,9 +69,10 @@ export default {
     return {
       senderSearch: '',
       searchForm: {
-        shipSenderName: '',
-        senderCustomerUnit: '',
-        shipSn: ''
+        shortBatchNo: '',
+        mainBatchNo: '',
+        sendBatchNo: '',
+        truckIdNumber: ''
       },
       btnsize: 'mini',
       selectVal: ''
