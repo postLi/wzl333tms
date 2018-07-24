@@ -104,7 +104,7 @@
         dialogData:{},
         checked1: true,
         popTitle: '',
-        totaMoney: '',
+        totaMoney: 0,
         loading:false,
       }
     },
@@ -135,7 +135,7 @@
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
-          this.totaMoney = this.totaMoney ? this.dialogInfo[0].toPay + this.dialogInfo[1].toPay : 0
+          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay
           console.log(this.totaMoney)
           if(this.sendId){
             this.dotInfo.id = this.sendId

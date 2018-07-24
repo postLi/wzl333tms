@@ -29,7 +29,7 @@
           end-placeholder="结束日期">
         </el-date-picker>
         <el-form-item class="">
-          <el-button type="primary" @click="onSubmit(formName)">查询</el-button>
+          <el-button type="primary" @click="onSubmit()">查询</el-button>
         </el-form-item>
       </div>
       </el-form>
