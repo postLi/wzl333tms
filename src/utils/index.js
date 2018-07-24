@@ -21,7 +21,8 @@ export function parseTime(time, cFormat) {
       time = parseInt(time) * 1000
     } else if (/(\d){4}-(\d){2}-(\d){2}\s+(\d){2}:(\d){2}:(\d){2}/.test(time)) {
       // IE需要标准格式
-      time = time.replace(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6Z')
+      // time = time.replace(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6Z')
+      time = time.replace(/-/g, '/')
     }
 
     date = new Date(time)
