@@ -65,7 +65,16 @@ export function deleteCarrierdetail(id) {
   return fetch.delete('/api-finance/finance/carrierdetail/v1/' + id )
 }
 
+/**
 
+ /finance/carrierdetail/v1/{id}
+ 查询详情/修改页面 根据主表id查询明细表的所有数据
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function getCarrierCarrierdetail(id) {
+  return fetch.get('/api-finance/finance/carrierdetail/v1/' + id)
+}
 
 /**
 

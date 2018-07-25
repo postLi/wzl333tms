@@ -113,7 +113,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -257,7 +257,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -394,7 +394,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -539,7 +539,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -688,13 +688,13 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" @success="fetchList" ></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" @success="fetchList" :urlId="$route.query.urlId"></SaveDialog>
   </div>
 </template>
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCarrierinitialize,postCreatesaveCarrierDetail} from '@/api/finance/fin_carrier'
+  import {postCarrierinitialize,getCarrierCarrierdetail,postCreatesaveCarrierDetail} from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -720,6 +720,11 @@
             checkBillName:'',
             messageInfo:{
               orgName:'',
+              memberId:'',
+              orgId:'',
+              companyId:'',
+              memberIdType:'',
+              memberCode:'',
               memberName:'',
               orgBusinessOfficer:'',
               orgBusinessOfficerPhone:'',
@@ -748,24 +753,30 @@
             dealInfo:[],
             alreadyPayInfo:[],
             alreadyInfo:[],
+
+            form:{
+              tmsFinanceBillCheckDto:{
+                checkBillName:''
+              },
+              carrierDetailDtoList:[],
+
+            },
+            //总计
+            tota:{
+              dealtota:[],
+              dealPaytota:[],
+              alreadytota:[],
+              alreadyPaytota:[]
+            },
             dealPayInfoData:[],//应付    1-应收 2-应付 3-已收 4-已付
             dealInfoData:[],
             alreadyPayInfoData:[],
             alreadyInfoData:[],
-            form:{
-              tmsFinanceBillCheckDto:{},
-              carrierDetailDtoList:[]
-            },
             //总计
-            tota:{
-              alreadyPaytota:[],
-              dealPaytota:[],
-            },
             sendId:'',
             visibleDialog:false,
             loading:false,
             btnsize: 'mini',
-            sendId: '',
             searchTitle:{
               carrierId:'',//
               startTime:'',
@@ -807,13 +818,14 @@
         this.searchCreatTime = this.defaultTime
         if(this.$route.query.tab === '承运商对账-创建对账'){
           this.onSubmit()
-          // this.sendId = this.$route.query.id
         }else{
-
+          this.modifyList()
+          this.sendId = this.$route.query.id
         }
 
       },
       methods:{
+        //
         fetchList(){
           this.loading = true
           this.searchTitle.carrierId = this.$route.query.id
@@ -823,32 +835,54 @@
             data.carrierDetailDtoList.forEach((el,val) => {
               if(el.type === 1){
                 this.dealInfo.push(el)
-                // this.dealInfoData.push(el)
+                this.dealInfoData.push(el)
               }
               else if(el.type === 2){
                 this.dealPayInfo.push(el)
-                // this.dealPayInfoData.push(el)
+                this.dealPayInfoData.push(el)
               }
               else if(el.type === 3){
                 this.alreadyInfo.push(el)
-                // this.alreadyInfoData.push(el)
+                this.alreadyInfoData.push(el)
               }
               else{
                 this.alreadyPayInfo.push(el)
-                // this.alreadyPayInfoData.push(el)
+                this.alreadyPayInfoData.push(el)
               }
             })
             this.loading = false
           })
         },
-
+        modifyList(){
+          this.loading = true
+          this.searchTitle.carrierId = this.$route.query.id
+          return getCarrierCarrierdetail(this.searchTitle.carrierId).then(res => {
+            let data = res.data
+            this.messageArr = data.tmsFinanceBillCheckDto
+            this.infoMessage(this.messageArr)
+            data.carrierDetailDtoList.forEach((el,val) => {
+              if(el.type === 1){
+                this.dealInfo.push(el)
+                this.dealInfoData.push(el)
+              }
+              else if(el.type === 2){
+                this.dealPayInfo.push(el)
+                this.dealPayInfoData.push(el)
+              }
+              else if(el.type === 3){
+                this.alreadyInfo.push(el)
+                this.alreadyInfoData.push(el)
+              }
+              else{
+                this.alreadyPayInfo.push(el)
+                this.alreadyPayInfoData.push(el)
+              }
+            })
+            this.loading = false
+          })
+        },
         getTrunkName(trunk) {
           if (trunk) {
-            // this.searchTitle.memberName = trunk.truckIdNumber
-            // this.searchDealPay.truckIdNumber = trunk.truckIdNumber
-            // this.searchAlReadyPay.truckIdNumber = trunk.truckIdNumber
-            // console.log(trunk)
-
           }
         },
         onSubmit(){
@@ -863,9 +897,9 @@
         submit(formName){
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.loading = true
-              let promiseObj
-              let data = {}
+              this.oopenVisibleDialog()
+              // this.loading = true
+              this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
               for(const i in this.messageInfo){
                 this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
               }
@@ -876,53 +910,33 @@
               this.dealPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
               this.alreadyInfo.map(el=>this.form.carrierDetailDtoList.push(el))
               this.alreadyPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
+              //
+              this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el=>{
+                const a = {}
+                a.totalFee = el.totalFee
 
-              data = this.form
-              // data.checkStartTime = parseTime(data.checkStartTime)
-              // data.checkEndTime = parseTime(data.checkEndTime)
-              // data.createTime = parseTime(data.createTime)
-              if(this.$route.query.tab === '承运商对账-修改查看'){
-                data.id = this.$route.query.id
-                promiseObj = postCreatesaveCarrierDetail(data)
-              }else{
-                promiseObj = postCreatesaveCarrierDetail(data)
-              }
+                return a
+              }) : []
+              this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
+                const a = {}
+                a.totalCost = el.totalCost
+                return a
+              }) : []
+              this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
+                const a = {}
+                a.totalFee = el.totalFee
+                return a
+              }) : []
+              this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
+                const a = {}
+                a.totalCost = el.totalCost
+                return a
+              }) : []
 
-              promiseObj.then(res => {
-                this.loading = false
-                this.$message({
-                  message: '操作成功~',
-                  type: 'success'
-                })
-                this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable')
-                this.closeMe()
-              }).catch(err => {
-                this.loading = false
-              })
             } else {
               return false
             }
           })
-          // for(const i in this.messageInfo){
-          //   this.form[i] = this.messageInfo[i]
-          // }
-          // for(const i in this.messageButtonInfo){
-          //   this.form[i] = this.messageButtonInfo[i]
-          // }
-          // this.form.orgId = this.otherinfo.orgid
-          // this.form.checkBillName = this.checkBillName
-          // this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
-          //   const a = {}
-          //   a.shipOrderId = el.shipOrderId
-          //   a.arrSendPay = el.arrSendPay
-          //   return a
-          // }) :[]
-          // this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
-          //   const a = {}
-          //   a.shipOrderId = el.shipOrderId
-          //   a.arrSendPay = el.arrSendPay
-          //   return a
-          // }) : []
 
         },
         validateIsEmpty(msg = '不能为空！') {
@@ -962,18 +976,39 @@
 
           return sums;
         },
-        iconDelete(scope){
-          this.dealInfo = this.dealInfo.filter(el => {
-            return el.id !== scope.row.id
+
+        iconDeleteDeal(index){
+          this.dealInfo = this.dealInfo.filter((el,inx) => {
+            return inx !== index
           })
-          this.dealPayInfo = this.dealPayInfo.filter(el => {
-            return el.id !== scope.row.id
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
           })
-          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-            return el.id !== scope.row.id
+        },
+        iconDeleteDealPay(index){
+
+          this.dealPayInfo = this.dealPayInfo.filter((el,inx) => {
+            return inx !== index
           })
-          this.alreadyInfo = this.alreadyInfo.filter(el => {
-            return el.id !== scope.row.id
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
+        },
+
+        iconDeleteAlready(index){
+          this.alreadyInfo = this.alreadyInfo.filter((el,inx) => {
+            return inx !== index
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
+        },
+        iconDeleteAlreadyPay(index){
+          this.alreadyPayInfo = this.alreadyPayInfo.filter((el,inx) => {
+            return inx !== index
           })
           this.$message({
             message: '删除成功~',
@@ -1002,6 +1037,11 @@
           this.messageInfo.financialOfficerPhone = item.financialOfficerPhone
           this.messageInfo.orgBusinessOfficer = item.orgBusinessOfficer
           this.messageInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
+          this.messageInfo.memberId = item.memberId
+          this.messageInfo.orgId = item.orgId
+          this.messageInfo.companyId = item.companyId
+          this.messageInfo.memberIdType = item.memberIdType
+          this.messageInfo.memberCode = item.memberCode
           this.messageButtonInfo.companyName = item.companyName
           this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
           this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone

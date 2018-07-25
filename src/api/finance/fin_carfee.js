@@ -75,6 +75,9 @@ export function postCarfBillCheckCarUpdateList(params) {
   })
 }
 
+
+//公用方法
+
 /**
  * /finance/tmsfinancebillcheckcardetail/v1/{id}
  根据ID删除财务车费对账信息
@@ -83,4 +86,14 @@ export function postCarfBillCheckCarUpdateList(params) {
  */
 export function deleteCarShort(id) {
   return fetch.delete('/api-finance/finance/tmsfinancebillcheck/v1/' + id )
+}
+/**
+ * http://localhost:7010/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective?access_token={{access_token}}
+ 完成对账,取消完成对账信息
+ checkStatus是对账状态 0 未对账，1已对账',
+ * @param id
+ * @returns {*}
+ */
+export function postUpdateBillCheckSelective(params) {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective' + params )
 }

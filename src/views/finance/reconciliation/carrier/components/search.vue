@@ -16,12 +16,8 @@
           <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
       <el-form-item label="承运商:">
-        <!--<el-input-->
-          <!--maxlength="20"-->
-          <!--v-model="searchForm.customerName"-->
-          <!--clearable>-->
-        <!--</el-input>-->
-        <SelectType v-model="searchForm.carrierName" type="carrier " placeholder="请选择" class="pickup-way" maxlength="20" @click="carrierItem"/>
+        <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" :filterable="true" show="select"  @change="getCarrier"/>
+
       </el-form-item>
       <el-form-item class="staff_searchinfo_tn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -33,12 +29,14 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
+import querySelect from '@/components/querySelect/index'
 import { REGEX } from '@/utils/validate'
 import { parseTime } from '@/utils/'
 export default {
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    querySelect
   },
   props: {
     btnsize: {
@@ -78,7 +76,6 @@ export default {
       },
       searchForm: {
         orgid: '',
-        carrierName: '',//
         carrierId: '',///
         startTime: '',//
         endTime:''
@@ -99,6 +96,11 @@ export default {
     // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
+    getCarrier(item) {
+      if (item) {
+        this.searchForm.carrierId = item.carrierId
+      }
+    },
     onSubmit () {
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
       this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
@@ -106,11 +108,10 @@ export default {
     },
     clearForm () {
       this.searchForm.orgid = this.orgid
-      this.searchForm.customerName = ''
-      this.searchForm.customerMobile = ''
+      this.searchForm.carrierId = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchForm.searchCreatTime = []
+      this.searchCreatTime = []
     },
     carrierItem(item){
       this.searchForm.orgid = item.orgid

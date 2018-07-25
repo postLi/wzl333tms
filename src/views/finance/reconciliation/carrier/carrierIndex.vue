@@ -150,7 +150,6 @@ export default {
         "pageSize": 100,
         "vo": {
           "orgid":'',
-          carrierName: '',//
           carrierId: '',//
           startTime: '',//
           endTime:''

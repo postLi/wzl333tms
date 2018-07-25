@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column
             prop="checkBillName"
-            width="130"
+            width="320"
             sortable
             label="对账单名">
           </el-table-column>
@@ -98,28 +98,28 @@
             >
           </el-table-column>
           <el-table-column
-            prop="ReceivableFee"
+            prop="receivableFee"
             label="应收账款"
             width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="PayableFee"
+            prop="payableFee"
             label="应付账款"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="ReceivedFee"
+            prop="receivedFee"
             label="已收账款"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="PaidFee"
+            prop="paidFee"
             label="已付账款"
             width="120"
             sortable
@@ -229,6 +229,7 @@ import {  getExportExcel } from '@/api/company/customerManage'
 
 import {postCFinancebillcheckList,deleteCustomer,postCompletion} from '@/api/finance/fin_customer'
 import {postCarrierdetailList} from '@/api/finance/fin_carrier'
+import {deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -347,7 +348,8 @@ export default {
             path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
             query: {
               tab: '承运商对账-修改查看',
-              id: this.$route.query.id
+              id: this.selected[0].id,
+              urlId: this.$route.query.id
             }
           })
 
@@ -364,28 +366,28 @@ export default {
 
           }else{
             this.openAddCustomer()
-            // if(this.selected[0].checkStatus === '未对账'){
-            //   let data = {
-            //     id:'',
-            //     checkStatus:0
-            //   }
-            //   data.id = this.selected[0].id
-            //   postCompletion(data).then(res => {
-            //     this.loading = false
-            //     this.$message({
-            //       type: 'success',
-            //       message: '操作成功~'
-            //     })
-            //     this.fetchData()
-            //   }).catch(err => {
-            //     this.loading = false
-            //   })
-            // }else{
-            //   this.$message({
-            //     type: 'info',
-            //     message: '该对账单已经完成对账~'
-            //   })
-            // }
+            if(this.selected[0].checkStatus === 0){
+              let data = {
+                id:'',
+                checkStatus:0
+              }
+              data.id = this.selected[0].id
+              postUpdateBillCheckSelective(data).then(res => {
+                this.loading = false
+                this.$message({
+                  type: 'success',
+                  message: '操作成功~'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this.loading = false
+              })
+            }else{
+              this.$message({
+                type: 'info',
+                message: '该对账单已经完成对账~'
+              })
+            }
           }
 
           break;
@@ -400,13 +402,13 @@ export default {
             return false
 
           }else{
-            if(this.selected[0].checkStatus === '已对账'){
+            if(this.selected[0].checkStatus === 1){
               let _data = {
                 id:'',
                 checkStatus:1
               }
               _data.id = this.selected[0].id
-              postCompletion(_data).then(res => {
+              postUpdateBillCheckSelective(_data).then(res => {
                 this.loading = false
                 this.$message({
                   type: 'success',
@@ -436,9 +438,9 @@ export default {
               return false
 
             }else{
-              if(this.selected[0].statusStr === '未对账'){
+              if(this.selected[0].statusStr === 0){
                 let id = this.selected[0].id
-                deleteCustomer(id).then(res => {
+                deleteCarShort(id).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',

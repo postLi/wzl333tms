@@ -1,6 +1,6 @@
 <template>
   <div class="saveDialog-maintain">
-    <PopFrame :title="'对账单名称'+popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
+    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div class="depmain-div" >
@@ -82,7 +82,8 @@
         type: [Object,Array],
         default: false
       },
-      sendId: [Number,String]
+      sendId: [Number,String],
+      urlId: [Number,String]
     },
     data() {
       return {
@@ -92,11 +93,19 @@
         dialogInfo:[
           {
             toPay:0,
-            date:"应付账款"
+            date:"应收清单"
           },
           {
             toPay:0,
-            date:"已付账款"
+            date:"应付清单"
+          },
+          {
+            toPay:0,
+            date:"已收清单"
+          },
+          {
+            toPay:0,
+            date:"已付清单"
           }
         ],
         dialogData:{},
@@ -119,37 +128,41 @@
       tota:{
         handler(newVal){
           this.dialogData = this.tota
-          this.dialogData.dealPaytota.map(el=>{
+          this.dialogData.dealtota.map(el=>{
             this.$set(this.dialogInfo, 0, {
-              date:"应付账款",
-              toPay: this.dialogInfo[0].toPay + (el.shortPay ? +el.shortPay : 0)
+              date:"应收清单",
+              toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
             })
             //this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
-          this.dialogData.alreadyPaytota.map(el=>{
+          this.dialogData.dealPaytota.map(el=>{
             this.$set(this.dialogInfo, 1, {
-              date:"已付账款",
-              toPay: this.dialogInfo[1].toPay + (el.shortPay ? +el.shortPay : 0)
+              date:"应付清单",
+              toPay: this.dialogInfo[1].toPay + (el.totalCost ? +el.totalCost : 0)
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
-          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay
-          if(this.sendId){
-            this.dotInfo.id = this.sendId
-          }else{
-            this.dotInfo
-          }
+          this.dialogData.alreadytota.map(el=>{
+            this.$set(this.dialogInfo, 2, {
+              date:"已收清单",
+              toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
+            })
+            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+          })
+          this.dialogData.alreadyPaytota.map(el=>{
+            this.$set(this.dialogInfo, 3, {
+              date:"已付清单",
+              toPay: this.dialogInfo[3].toPay + (el.totalCost ? +el.totalCost : 0)
+            })
+            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+          })
+          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay+ this.dialogInfo[2].toPay+ this.dialogInfo[3].toPay
         },
         deep: true
       },
       dotInfo :{
         handler(newVal) {
-          this.popTitle = this.dotInfo.checkBillName
-          if(this.sendId){
-            this.dotInfo.id = this.sendId
-          }else{
-            this.dotInfo
-          }
+          this.popTitle = this.dotInfo.tmsFinanceBillCheckDto.checkBillName
         },
         deep: true
       },
@@ -158,17 +171,13 @@
       },
       sendId(newVal){
 
-        if(this.sendId){
-          this.dotInfo.id = this.sendId
-        }else{
-          this.dotInfo
-        }
+      },
+      urlId(){
+        console.log(this.urlId)
       }
     },
     mounted() {
-      if(this.popVisible){
-        this.popTitle = this.dotInfo.checkBillName
-      }
+
     },
     methods: {
       search (item) {
@@ -197,25 +206,19 @@
       submitForm(formName) {
         // this.$refs[formName].validate((valid) => {
         //   if (valid) {
+
             this.loading = true
             let promiseObj
-            let data = []
-            data = this.dotInfo
-            // delete data.payDetailList.shortPay
-
-
-// this.messageInfo.checkStartTime = new Date()
-        // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
-        // this.messageButtonInfo.createTime = new Date()
-        data.checkStartTime = parseTime(data.checkStartTime)
-        data.checkEndTime = parseTime(data.checkEndTime)
-        data.createTime = parseTime(data.createTime)
+            let data = {}
+            for(const i in this.dotInfo){
+              data[i] = this.dotInfo[i]
+            }
+            // data = this.dotInfo
             if(this.sendId){
-              data.id = this.sendId
-
-              promiseObj = postCreateBillCheckCarInfo(data)
+              data.tmsFinanceBillCheckDto.id = this.sendId
+              promiseObj = postCreatesaveCarrierDetail(data)
             }else{
-              promiseObj = postCreateBillCheckCarInfo(data)
+              promiseObj = postCreatesaveCarrierDetail(data)
             }
 
             promiseObj.then(res => {
@@ -224,7 +227,7 @@
                 message: '添加成功~',
                 type: 'success'
               })
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
+              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId)
               this.closeMe()
             }).catch(err => {
               this.loading = false

@@ -225,6 +225,7 @@
 import {  getExportExcel } from '@/api/company/customerManage'
 
 import {postCFinancebillcheckList,deleteCustomer,postCompletion} from '@/api/finance/fin_customer'
+import {deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
@@ -365,7 +366,7 @@ export default {
                 checkStatus:0
               }
               data.id = this.selected[0].id
-              postCompletion(data).then(res => {
+              postUpdateBillCheckSelective(data).then(res => {
                 this.loading = false
                 this.$message({
                   type: 'success',
@@ -401,7 +402,7 @@ export default {
                 checkStatus:1
               }
               _data.id = this.selected[0].id
-              postCompletion(_data).then(res => {
+              postUpdateBillCheckSelective(_data).then(res => {
                 this.loading = false
                 this.$message({
                   type: 'success',
@@ -431,9 +432,9 @@ export default {
               return false
 
             }else{
-              if(this.selected[0].statusStr === '未对账'){
+              if(this.selected[0].statusStr === 0){
                 let id = this.selected[0].id
-                deleteCustomer(id).then(res => {
+                deleteCarShort(id).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',
