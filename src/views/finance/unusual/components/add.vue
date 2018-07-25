@@ -216,10 +216,10 @@ export default {
         remark: [
           { required: true, message: '请输入异动备注', trigger: 'blur' }
         ],
-        shipSn: [
-          // { required: true, trigger: 'blur', validator: validateshipSn}
-          { required: true, message: '请输入运单号', trigger: 'change' }
-        ],
+        // shipSn: [
+        //   // { required: true, trigger: 'blur', validator: validateshipSn}
+        //   { required: true, message: '请输入运单号', trigger: 'change' }
+        // ],
         incomePayType: [
           { required: true, message: '请选择费用类型', trigger: 'change' }
         ]
@@ -302,7 +302,6 @@ export default {
       if (this.isModify) {
         this.popTitle = '异动修改'
         this.fetchShipInfo(this.info)
-        console.log(this.id + 'ppp')
       } else if (this.isDbClick) {
         this.popTitle = '异动查看'
         this.fetchShipInfo(this.info)
@@ -481,7 +480,8 @@ export default {
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
-            promiseObj = putXiugai(this.id, data) // 修改
+            console.log(6666, this.info.id)
+            promiseObj = putXiugai(this.info.id, data) // 修改
           } else {
             promiseObj = postInsertAbnormal(data) // 登记
           }

@@ -110,7 +110,7 @@ export default {
   mounted() {
     // 默认进来的网点
     this.searchForm.shipFromOrgid = this.orgid
-    // this.onSubmit()
+    this.onSubmit()
   },
   methods: {
     getOrgid(id) {

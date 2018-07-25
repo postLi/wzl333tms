@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div :class="{'hideuploadbtn': (filelist.length >= limit) || disabled}">
       <el-upload
         drag
         v-if="uploadUrl" 
@@ -7,7 +7,10 @@
         :action="uploadUrl"
         :multiple="false" 
         list-type="picture-card"
+        :show-file-list="showFileList" 
+        :file-list="filelist"
         :limit="limit"
+        :disabled="disabled"
         :before-upload="beforeUpload"
         :on-preview="handlePictureCardPreview"
         :on-error="handleError"
@@ -15,7 +18,7 @@
         :on-success="handleImageScucess"
         :on-remove="handleRemove">
         <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div>
-        <i class="el-icon-plus"></i>
+        <!-- <i class="el-icon-plus"></i> -->
       </el-upload>
       <el-dialog :visible.sync="dialogVisible" :append-to-body="true">
         <img width="100%" :src="dialogImageUrl" alt="">
@@ -208,6 +211,11 @@ export default {
             margin-top: 0;
         }
     }
+}
+.hideuploadbtn{
+  .el-upload.el-upload--picture-card{
+    display: none;
+  }
 }
 </style>
 

@@ -301,7 +301,7 @@ export default {
   },
   mounted() {
     // this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchAllreceipt()
+    // this.fetchAllreceipt()
     // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       // this.loading = false
             // this.licenseTypes = resArr[1]
@@ -325,7 +325,6 @@ export default {
         'currentPage': 1,
         'pageSize': 10,
         'vo': {
-          // 'shipSn': ''
         }
       },
       total: 0,
@@ -345,8 +344,9 @@ export default {
       return postAbnormalUnusual(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
+
         this.loading = false
-        console.log(data.list)
+        // console.log(data.list, data.list[0].statusValue)
       })
     },
 
@@ -390,21 +390,26 @@ export default {
           break
         // 修改
         case 'xiugai':
+          console.log(this.statusValue)
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能修改一条数据',
               type: 'warning'
             })
+          } else if (this.selected[0].statusValue !== '未结算') {
+            this.$message({
+              message: '订单已结算不能进行修改',
+              type: 'warning'
+            })
           } else {
             this.isCheck = false
             // this.selectInfo = {}
-                  //  this.isDbclick = false
+            //  this.isDbclick = false
             // this.id = this.selected[0].id
             // this.selectInfo = this.selected[0]
             this.selectInfo = Object.assign({}, this.selected[0])
             this.isModify = true
             this.isDbClick = false
-            // console.log('this.selectInfo:', this.selected)
             this.openAddAbnormal()
           }
           break

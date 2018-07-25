@@ -121,7 +121,7 @@
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
             <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
-          <div class="clearfix uploadcard"  >
+          <div class="clearfix uploadcard">
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default {
         'abnormalPicture': '',
         'disposePicture': '',
         'abnormalStatus': '119',
-        'abnormalType': '',
+        'abnormalType': '122',
         'childShipId': '',
         'createTime': '',
         'disposeOpinion': '',
@@ -249,7 +249,10 @@ export default {
         'disposeTime': '',
         'disposeName': '',
         'dutyOrgId': '',
-        // 'dutyOrgName': '',
+        'disposeOrgName': '',
+        'registerTime': '',
+        'abnormalTypeName': '',
+        'dutyOrgName': '',
         'orgId': '',
         'registerFee': '',
         'registerName': '',
@@ -266,7 +269,7 @@ export default {
       tooltip: false,
       rules: {
         abnormalAmount: [
-          { required: true, trigger: 'blur', validator: validateNameSn }
+          { required: true, trigger: 'change', validator: validateNameSn }
         ],
         abnormalType: [
           { required: true, message: '必选', trigger: 'blur' }
@@ -373,22 +376,20 @@ export default {
       this.querykey = +new Date()
       if (this.isModify) {
         this.popTitle = '异常修改'
-        const data = Object.assign({}, this.info)
-        for (const i in this.form) {
-          this.form[i] = data[i]
-        }
-        this.form.id = data.id
+        GetLook(this.info.id).then(res => {
+          this.form = res
+          this.form.disposeTime = new Date()
+        })
       } else if (this.isCheck) {
         this.popTitle = '查看明细'
         GetLook(this.info.id).then(res => {
           this.form = res
           this.form.disposeTime = new Date()
-          this.form.disposeName = this.otherinfo.name
-          console.log(res + '查看明细')
+          // this.form.disposeName = this.otherinfo.name
         })
       } else if (this.isDeal) {
         this.popTitle = '异常处理'
-        console.log(this.isDeal + '异常处理')
+
         GetLook(this.info.id).then(res => {
           this.form = res
           this.form.disposeTime = new Date()
@@ -478,7 +479,7 @@ export default {
     },
     getShipSn(data) {
       if (data) {
-        console.log('data:', data.createTime, data)
+        console.log('data:', data)
         // this.formInline.shipGoodsSn = data.shipGoodsSn
         // this.sendId.pickupId = data.id
 
@@ -488,23 +489,7 @@ export default {
         this.form.cargoName = data.cargoName
         this.form.cargoPack = data.cargoPack
         this.form.cargoAmount = data.cargoAmount
-
-        // this.form.shipSn = data.shipSn
-        // this.form.shipGoodsSn = data.shipGoodsSn
         this.form.shipId = data.id
-        this.form.abnormalDescribe = data.abnormalDescribe
-        this.form.abnormalAmount = data.abnormalAmount
-        this.form.disposeOrgId = data.disposeOrgId
-        this.form.registerFee = data.registerFee
-        this.form.dutyOrgId = data.dutyOrgId
-        this.form.abnormalStatus = data.abnormalStatus
-        this.form.disposeUserId = data.disposeUserId
-        this.form.disposeOpinion = data.disposeOpinion
-
-        // this.form.registerUserId = data.registerUserId
-        // this.form.registerTime = +this.form.registerTime
-        // this.form.createTime = +this.form.createTime
-        // this.form.disposeTime = +this.form.disposeTime
       }/* else {
           this.$message({
             message: '查无此信息~',
@@ -566,12 +551,16 @@ export default {
 
           let promiseObj
           // 判断操作，调用对应的函数
-          if (this.isModify || this.isDeal) {
-            data.abnormalStatus = 119
-            promiseObj = PutXiuGai(data) // 修改或处理异常
-          } else {
+          if (this.isModify) {
             data.abnormalStatus = 118
-            promiseObj = PostNewAbnormal(data)
+            promiseObj = PutXiuGai(data) // 修改
+          } else if (this.isDeal) {
+            data.abnormalStatus = 119
+            promiseObj = PutXiuGai(data)// 处理
+          } else {
+            data.abnormalType = this.form.abnormalType
+            data.abnormalStatus = 118
+            promiseObj = PostNewAbnormal(data)// 登记
           }
 
           promiseObj.then(res => {
@@ -602,7 +591,7 @@ export default {
       this.form.shipGoodsSn = ''
     },
     closeMe(done) {
-      this.reset()
+      // this.reset()
       this.$emit('update:popVisible', false)
       // this.$emit('close')
       if (typeof done === 'function') {
