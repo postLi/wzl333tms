@@ -490,7 +490,8 @@ export default {
     fetchFn() {
       return this.remoteFn(this.queryParam).then(res => {
         const data = res.data ? res.data : res
-        const list = (data.list ? data.list : data) || []
+        let list = (data.list ? data.list : data) || []
+        list = Array.isArray(list) ? list : []
         return this.formatList(list)
       })
     },

@@ -204,6 +204,22 @@ export default {
         'label': '收货人',
         'prop': 'shipReceiverName'
       }, {
+        'label': '发货人电话',
+        'prop': 'senderMobile',
+        width: 150
+      }, {
+        'label': '发货人地址',
+        'prop': 'senderAddr',
+        width: 150
+      }, {
+        'label': '收货人电话',
+        'prop': 'receiverMoblie',
+        width: 150
+      }, {
+        'label': '收货地址',
+        'prop': 'receiverAddr',
+        width: 150
+      }, {
         'label': '货品名',
         'prop': 'cargoName'
       }, {
@@ -221,18 +237,6 @@ export default {
       }, {
         'label': '制单人',
         'prop': 'userName'
-      }, {
-        'label': '发货人电话',
-        'prop': 'senderMobile'
-      }, {
-        'label': '发货人地址',
-        'prop': 'senderAddr'
-      }, {
-        'label': '收货人电话',
-        'prop': 'receiverMoblie'
-      }, {
-        'label': '收货地址',
-        'prop': 'receiverAddr'
       }, {
         'label': '交接方式',
         'prop': 'shipDeliveryMethod'
