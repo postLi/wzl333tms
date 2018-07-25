@@ -8,8 +8,9 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
       </div> -->
       <div class="info_tab">
-        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
-        <!-- <iframe src="about:blank" frameborder="0" style="left: 167px; top: 46px; width: 400px; height: 300px; position: absolute; z-index: 1004; background-color: rgb(153, 153, 153);" hidefocus="true"></iframe> -->
+        <div class="hidetrigger"></div>
+        <iframe v-show="isShow" :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
+        <!-- <iframe src="about:blank" frameborder="0" style="left: 0px; top: 46px; width: 800px; height: 400px; position: absolute; z-index: 1004; background-color: rgb(0,0,0);" hidefocus="true"></iframe> -->
       </div>
     </div>
   </div>
@@ -31,6 +32,7 @@ export default {
   data() {
     return {
       chartIframe: '',
+      hideiframe: 'hide',
       query: {
         typeIds: ''
         // currentPage: 1,
@@ -40,7 +42,8 @@ export default {
         // createTimeStart: '',
         // createTimeEnd: ''
       },
-      btnsize: 'mini'
+      btnsize: 'mini',
+      isShow: true
     }
   },
   computed: {
@@ -52,8 +55,20 @@ export default {
     doAction(type) {},
     hideIframe (bool) {
       if (bool) {
+        if(this.hideiframe !== 'show'){
+          this.hideiframe = 'show'
+          document.getElementById('senderIframe').contentWindow.hideChart(bool)
+        }
+        console.log(document.getElementById('senderIframe').contentWindow)
+       
+        // this.isShow = bool
+      } else {
+        if(this.hideiframe !== 'hide'){
+          this.hideiframe = 'hide'
+          document.getElementById('senderIframe').contentWindow.hideChart(bool)
+        }
       }
-      console.log('hide',this.$refs.senderIframe.contentWindow)
+      // console.log('hide',this.$refs.senderIframe.contentWindow)
     },
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
@@ -83,6 +98,12 @@ export default {
     overflow: hidden;
     scrolling: no;
   }
+}
+.hidetrigger{
+  position: absolute;
+  width:calc(100% - 20px);
+  height:calc(100% - 100px);
+
 }
 
 </style>

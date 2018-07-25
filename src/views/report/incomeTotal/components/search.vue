@@ -8,13 +8,13 @@
       <SelectTree v-model="searchForm.shipFromOrgid" clearable>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="发货人" prop="senderCustomerName">
+    <!-- <el-form-item label="发货人" prop="senderCustomerName">
       <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
         <template slot-scope="{item}">
           {{ item.customerName }} : {{ item.customerMobile }}
         </template>
       </querySelect>
-    </el-form-item>
+    </el-form-item> -->
     
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -57,7 +57,7 @@ export default {
         shipFromOrgid: '',
         // currentPage: 1,
         // pageSize: 100,
-        senderCustomerName: ''
+        // senderCustomerName: ''
         // createTimeStart: '',
         // createTimeEnd: ''
       },

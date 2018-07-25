@@ -1,7 +1,9 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" clearable @focus="clearSender">
+      <!-- @focus="clearSender" -->
+      <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" 
+      @change="changeSenderSearch">
         <el-option label="短驳" value="short"></el-option>
         <el-option label="干线" value="load"></el-option>
         <el-option label="送货" value="deliver"></el-option>
@@ -11,7 +13,6 @@
       <el-autocomplete 
       v-model="searchForm.shortBatchNo" 
       :size="btnsize" 
-      popper-class="hidePopper" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索"
       @select="handleSelect">
        <template slot-scope="{ item }">
@@ -23,7 +24,6 @@
       <el-autocomplete 
       v-model="searchForm.mainBatchNo" 
       :size="btnsize" 
-      popper-class="hidePopper" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" 
       @select="handleSelect">
       <template slot-scope="{ item }">
@@ -35,7 +35,6 @@
       <el-autocomplete 
       v-model="searchForm.sendBatchNo" 
       :size="btnsize" 
-      popper-class="hidePopper" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" 
       @select="handleSelect">
       <template slot-scope="{ item }">
@@ -67,7 +66,7 @@ export default {
   },
   data() {
     return {
-      senderSearch: '',
+      senderSearch: 'short',
       searchForm: {
         shortBatchNo: '',
         mainBatchNo: '',
@@ -75,7 +74,8 @@ export default {
         truckIdNumber: ''
       },
       btnsize: 'mini',
-      selectVal: ''
+      selectVal: '',
+      settlementId: ''
     }
   },
   props: {
@@ -84,7 +84,29 @@ export default {
       default: []
     }
   },
+  mounted () {
+    this.initSettlementid()
+  },
   methods: {
+    initSettlementid () {
+      let type = this.senderSearch
+      switch (type) {
+        case 'short': // 短驳
+        this.settlementId = 180 
+        break
+        case 'load': // 干线
+        this.settlementId = 179
+        break
+        case 'deliver': // 送货
+        this.settlementId = 181
+        break
+      }
+      this.$emit('setSettlementId', this.settlementId)
+    },
+    changeSenderSearch (obj) {
+      this.initSettlementid()
+      this.$emit('setSettlementId', this.settlementId)
+    },
     querySearch(type, queryString, cb) {
       let leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图

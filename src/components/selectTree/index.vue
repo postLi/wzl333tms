@@ -1,10 +1,12 @@
 <template>
-  <el-select ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" @change="change">
+  <el-select  ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
         v-for="item in openGroups"
         :key="item.id"
         :label="item.name"
-        :value="item.id">
+        :value="item.id"
+        
+        >
         <div :class="'indent indent'+item.index">{{ item.name }}</div>
         </el-option>
     </el-select>
@@ -31,6 +33,14 @@ function expandGroups (data, i) {
 
 export default {
   props: {
+    focus: {
+      type: Function,
+      default: ()=>{}
+    },
+    blur: {
+      type: Function,
+      default: ()=>{}
+    },
     value: {
       type: [Number, String]
     },

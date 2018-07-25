@@ -21,7 +21,7 @@
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="经办人" prop="agent">
-                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="id" search="name" label="name" placeholder="选择经办人" />
+                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="name" search="name" label="name" placeholder="选择经办人" />
                 </el-form-item>
               </div>
               <div class="feeFrom-type-baseInfo">
@@ -80,6 +80,7 @@ export default {
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
       loading: false,
       feeInfo: 'feeInfoOne',
+      settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       btnsize: 'mini',
       formModel: {
         settlementTime: '',
@@ -143,6 +144,7 @@ export default {
       let szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
+      this.$set(this.addIncomeInfo, 'settlementId', this.settlementId)
       this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)

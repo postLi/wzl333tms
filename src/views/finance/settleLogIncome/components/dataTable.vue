@@ -41,7 +41,7 @@
         </el-table-column>
         <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
+        <el-table-column prop="shipSenderUnit" sortable label="发货方" width="120">
         </el-table-column>
         <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
@@ -101,7 +101,7 @@ import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
 import currentSearch from './currentSearch'
 export default {
@@ -110,8 +110,9 @@ export default {
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       tablekey: '',
       truckMessage: '',
-      incomePayType: 'PAYABLE',
+      incomePayType: 'RECEIVABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
+      settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       loading: false,
       btnsize: 'mini',
       searchForm: {},
@@ -182,6 +183,9 @@ export default {
         this.$set(obj, 'orgId', this.otherinfo.orgid)
         this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
+        this.$set(obj, 'settlementId', this.settlementId)
+        this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         getOrderShipList(obj).then(data => {
           this.leftTable = data
           this.orgLeftTable = data

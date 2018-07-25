@@ -22,14 +22,30 @@ export function getFeeInfo(orgId, paymentsType) {
 }
 /**
  * 记收入-运单信息
+ *      orgId: data.orgId,
+        paymentsType: data.paymentsType,
+        incomePayType: data.incomePayType,
+        settlementId: data.settlementId,
+        startTime: data.startTime,
+        endTime: data.endTime
  */
 export function getOrderShipList(data) {
-  return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
-      params: {
-        orgId: data.orgId,
-        paymentsType: data.paymentsType,
-        incomePayType: data.incomePayType
-      }
+  // return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList?orgId='
+  //   +data.orgId+'&incomePayType=' + data.incomePayType
+  //   +'&paymentsType='+data.paymentsType 
+  //   +'&settlementId=' + data.settlementId
+  //   +'startTime=' + data.startTime
+  //   +'&endTime=' + data.endTime)
+  //   .then(res => {
+  //     return res.data
+  //   })
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
+      orgId: data.orgId,
+      paymentsType: data.paymentsType,
+      incomePayType: data.incomePayType,
+      settlementId: data.settlementId,
+      startTime: data.startTime,
+      endTime: data.endTime
     })
     .then(res => {
       return res.data
@@ -44,10 +60,10 @@ export function postCancelSettlement(data) {
 /**
  * 记收入支出
  */
-export function postAddIncome(data){
-	return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/', data).then(res => {
-		return res.data
-	})
+export function postAddIncome(data) {
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/', data).then(res => {
+    return res.data
+  })
 }
 /**************************************
  *             资金流水明细

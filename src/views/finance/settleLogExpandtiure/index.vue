@@ -21,7 +21,7 @@
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="经办人" prop="agent">
-                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="id" search="name" label="name" placeholder="选择经办人">
+                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="name" search="name" label="name" placeholder="选择经办人">
                   </querySelect>
                 </el-form-item>
               </div>
@@ -56,7 +56,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
+              <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange"></dataTable>
             </div>
           </el-tab-pane>
           <el-tab-pane label="运单支出" name="second">
@@ -66,7 +66,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable"  :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -97,6 +97,7 @@ export default {
     return {
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
       loading: false,
+      // settlementId: 180, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
       formModel: {
@@ -114,6 +115,11 @@ export default {
       'otherinfo'
     ])
   },
+  watch: {
+    settlementId (newVal) {
+      return newVal
+    }
+  },
   mounted() {
     this.getFeeInfo()
   },
@@ -121,7 +127,6 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = parseTime(data)
-        console.log(this.formModel.settlementTime)
       })
     },
     getFeeInfo() {
@@ -135,7 +140,6 @@ export default {
         this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
         this.formModel.remark = data.remark
         this.getSystemTime()
-        console.log('getFeeInfo', data)
       })
     },
     doAction(type) {
@@ -162,9 +166,16 @@ export default {
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
       this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
+      this.$set(this.addIncomeInfo, 'settlementId', this.setSettlementId)
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
       this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
+      if (this.activeName === 'first') { // 批次支出
+        
+      }else if (this.activeName === 'second'){ // 运单支出
+        this.settlementId = 178
+      }
+      this.$set(this.addIncomeInfo, 'settlementId', this.settlementId)
     },
     save() {
       if (this.loadTable.length < 1) {
@@ -172,7 +183,6 @@ export default {
         return false
       }
       this.setData()
-      console.log(this.addIncomeInfo)
       postAddIncome(this.addIncomeInfo).then(data => {
           this.$message({ type: 'success', message: '保存成功！' })
           this.$router.push({ path: './settleLog' })
@@ -180,6 +190,9 @@ export default {
         .catch(error => {
           this.$message({ type: 'error', message: '保存失败！' })
         })
+    },
+    setSettlementId (val) {
+      this.settlementId = val
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -194,7 +207,6 @@ export default {
     },
     handleClick() {},
     getLoadTable(obj) {
-      console.log(obj)
       this.loadTable = Object.assign([], obj)
     },
     getTableChange(obj) {

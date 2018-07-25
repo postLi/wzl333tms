@@ -1,11 +1,11 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期"  @focus="hideIframe(true)" @blur="hideIframe(false)">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" clearable @click="hideIframe">
+      <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" :blur="()=>{hideIframe(false)}">
       </SelectTree>
     </el-form-item>
     <el-form-item label="发货人" prop="senderCustomerName">
@@ -85,8 +85,8 @@ export default {
       }
       this.$emit('change', searchObj)
     },
-    hideIframe () {
-      this.$emit('hideIframe', true)
+    hideIframe (status) {
+      this.$emit('hideIframe', status)
     },
     clearForm(formName) {
       this.$nextTick(() => {

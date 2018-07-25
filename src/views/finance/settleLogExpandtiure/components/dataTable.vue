@@ -3,7 +3,7 @@
   <transferTable>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
        <!-- 搜索左边表格 -->
-      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
+      <currentSearch :info="orgLeftTable" @change="getSearch" @setSettlementId="setSettlementId"></currentSearch>
     </div>
     <!-- 左边表格区 批次支出 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -27,11 +27,11 @@
         </el-table-column>
         <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>
-        <el-table-column prop="shortPay" sortable label="短驳费" width="120">
+         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
-        <el-table-column prop="sendPay" sortable label="送货费" width="120">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120"  v-else-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="干线合计" width="120">
+        <el-table-column prop="backPay" sortable label="干线合计" width="120" v-else>
         </el-table-column>
         <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120">
         </el-table-column>
@@ -77,11 +77,11 @@
         </el-table-column>
         <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>
-        <el-table-column prop="shortPay" sortable label="短驳费" width="120">
+        <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
-        <el-table-column prop="sendPay" sortable label="送货费" width="120">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120"  v-else-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="干线合计" width="120">
+        <el-table-column prop="backPay" sortable label="干线合计" width="120" v-else>
         </el-table-column>
         <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120">
         </el-table-column>
@@ -112,7 +112,7 @@ import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import querySelect from '@/components/querySelect/index'
 import transferTable from '@/components/transferTable'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
 import currentSearch from './currentSearch'
 export default {
@@ -122,8 +122,9 @@ export default {
       tablekey: '',
       truckMessage: '',
       searchForm: {},
-      incomePayType: 'PAYABLE',
+      incomePayType: 'PAYABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
+      settlementId: 179, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       loading: false,
       btnsize: 'mini',
       selectedRight: [],
@@ -192,6 +193,9 @@ export default {
         this.$set(obj, 'orgId', this.otherinfo.orgid)
         this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
+        this.$set(obj, 'settlementId', this.settlementId)
+        this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         getOrderShipList(obj).then(data => {
           this.leftTable = data
           this.orgLeftTable = data
@@ -199,6 +203,12 @@ export default {
         })
         obj = {}
       }
+    },
+    setSettlementId (val) {
+      this.settlementId = val
+      console.log(val, this.settlementId)
+      this.tableKey = Math.random()
+      this.$emit('setSettlementId', this.settlementId)
     },
     getSearch (obj) { // 搜索
      this.leftTable = obj

@@ -5,7 +5,7 @@
 		<Properties>
 			<BackGround bgColor="#FFFFFF"/>
 			<DefaultTD>
-				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" datatype="0" isRound="true" isPrint="true"/>
+				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" datatype="1" isRound="true" isPrint="true"/>
 			</DefaultTD>
 			<Other isShowZero="true" isRefOri="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
 		</Properties>
@@ -13,122 +13,41 @@
 			<Font faceName="微软雅黑" charSet="134" height="-14" weight="400" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
 		</Fonts>
 		<Table>
-			<Col width="140" isHide="true"/>
-			<Col width="140" isHide="true"/>
+			<Col width="140"/>
+			<Col width="140"/>
+			<Col width="140"/>
+			<Col width="140"/>
+			<Col width="140"/>
+			<Col width="140"/>
+			<Col width="15"/>
 			<TR height="24" sequence="0">
-				<TD col="0" datatype="1">总收入</TD>
-				<TD col="1" datatype="1" formula="=data(&apos;ds1\data&apos;, 1, &apos;totalFee&apos;)"/>
+				<TD formula="=headrow(&apos;ds1\data&apos;)">总收入</TD>
+				<TD>现付</TD>
+				<TD>到付</TD>
+				<TD>回单付</TD>
+				<TD>月结</TD>
+				<TD>异动费用</TD>
+				<TD topBorder="0" datatype="0"/>
 			</TR>
 			<TR height="24" sequence="1">
-				<TD col="0" datatype="1">现付</TD>
-				<TD col="1" datatype="1" formula="=data(&apos;ds1\data&apos;, 1, &apos;nowPayFee&apos;)"/>
+				<TD formula="=datarow(&apos;ds1\data&apos;)"/>
+				<TD/>
+				<TD/>
+				<TD/>
+				<TD/>
+				<TD/>
+				<TD topBorder="0" datatype="0"/>
 			</TR>
-			<TR height="24" sequence="2">
-				<TD col="0" datatype="1">到付</TD>
-				<TD col="1" datatype="1" formula="=data(&apos;ds1\data&apos;, 1, &apos;arrivePayFee&apos;)"/>
-			</TR>
-			<TR height="24" sequence="3">
-				<TD col="0" datatype="1">回单付</TD>
-				<TD col="1" datatype="1" formula="=data(&apos;ds1\data&apos;, 1, &apos;receiptPayFee&apos;)"/>
-			</TR>
-			<TR height="24" sequence="4">
-				<TD col="0" datatype="1">月结</TD>
-				<TD col="1" datatype="1" formula="=data(&apos;ds1\data&apos;, 1, &apos;monthPayFee&apos;)"/>
-			</TR>
-			<TR height="24" sequence="5">
-				<TD col="0" datatype="1">异动费用</TD>
-				<TD col="1" datatype="1" formula="=data(&apos;ds1\data&apos;, 1, &apos;changeFee&apos;)"/>
-			</TR>
-			<TR height="24" sequence="6">
-			</TR>
-			<TR height="24" sequence="7">
-			</TR>
-			<TR height="24" sequence="8">
-			</TR>
-			<TR height="24" sequence="9">
-			</TR>
-			<TR height="24" sequence="10">
-			</TR>
-			<TR height="24" sequence="11">
-			</TR>
-			<TR height="24" sequence="12">
-			</TR>
-			<TR height="24" sequence="13">
-			</TR>
-			<TR height="24" sequence="14">
-			</TR>
-			<TR height="24" sequence="15">
-			</TR>
-			<TR height="24" sequence="16">
-			</TR>
-			<TR height="24" sequence="17">
-			</TR>
-			<TR height="24" sequence="18">
-			</TR>
-			<TR height="24" sequence="19">
-			</TR>
-			<TR height="24" sequence="20">
-			</TR>
-			<TR height="24" sequence="21">
-			</TR>
-			<TR height="24" sequence="22">
-			</TR>
-			<TR height="24" sequence="23">
-			</TR>
-			<TR height="24" sequence="24">
-			</TR>
-			<TR height="24" sequence="25">
-			</TR>
-			<TR height="24" sequence="26">
-			</TR>
-			<TR height="24" sequence="27">
-			</TR>
-			<TR height="24" sequence="28">
-			</TR>
-			<TR height="24" sequence="29">
-			</TR>
-			<TR height="24" sequence="30">
-			</TR>
-			<TR height="24" sequence="31">
-			</TR>
-			<TR height="15" sequence="32">
-				<TD col="0" leftBorder="0"/>
-				<TD col="1" leftBorder="0"/>
+			<TR height="15" sequence="2">
+				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" topBorder="0" datatype="0"/>
 			</TR>
 		</Table>
-		<GraphicObjects>
-			<Echart unDragAbleAtRuntime="1" borderThick="1" borderColor="#000000" SamplePage="bar1">
-				<Properties Exp="Type=2;Theme=red;DataRow=1;DataExp1=1,2,3,4,5,6;Meaning1=费用统计;MeaningPos=1;"/>
-				<Rect x1="4" y1="10" x2="1421" y2="764"/>
-				<Option><![CData[
-option = {
-    title : {
-        text: '应收应付统计表'
-    }, 
-    tooltip : {
-        trigger: 'axis'
-    }, 
-    xAxis : [
-        {
-            type: 'category', 
-            data : ['总收入','现付','到付','回单付','月结','异动费用']
-        }
-    ], 
-    yAxis : [
-        {type: 'value'}
-    ], 
-    series : [
-        {
-            type: 'bar', 
-            name: '费用统计', 
-            data : [8918,1501,7284,0,0,133]
-        }
-    ], 
-    calculable: true
-};
-]]></Option>
-			</Echart>
-		</GraphicObjects>
 		<PrintPage>
 			<Paper>
 				<Margin left="19" top="25" right="19" bottom="25"/>
@@ -147,7 +66,7 @@ option = {
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>/financeReport/reportdata/srtj.json.txt</Source>
+	<Source>http://localhost:7010/api-finance/finance/report/v1/findDetail?startCreatTime=2018-05-13 00:00:00&amp;endCreatTime=2018-07-25 23:59:59&amp;shipFromOrgid=1&amp;access_token=be87c690-3ca0-4431-8f62-78cf268004e7</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>
@@ -183,7 +102,7 @@ option = {
 			<text>id</text>
 			<type>string</type>
 			<visible>false</visible>
-			<sequence>2</sequence>
+			<sequence>1</sequence>
 		</Column>
 		<Column>
 			<name>data\nowPayFee</name>
@@ -225,7 +144,7 @@ option = {
 			<text>总收入</text>
 			<type>string</type>
 			<visible>true</visible>
-			<sequence>1</sequence>
+			<sequence>2</sequence>
 		</Column>
 		<Column>
 			<name>data\startCreatTime</name>

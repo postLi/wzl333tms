@@ -33,8 +33,8 @@ export default {
     return {
       chartIframe: '',
       query: {
-        currentPage: 1,
-        pageSize: 100
+        // currentPage: 1,
+        // pageSize: 100
         // senderCustomerName: '',
         // shipFromOrgid: '',
         // createTimeStart: '',
