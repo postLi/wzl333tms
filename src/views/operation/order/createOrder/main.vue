@@ -367,7 +367,7 @@
                 <tr>
                   <td>
                     <el-date-picker
-                      v-model="form.tmsOrderTransfer.createTime"
+                      v-model="form.tmsOrderTransfer.transferTime"
                       type="date"
                       value-format="yyyy-MM-dd hh:mm:ss"
                       :picker-options="pickoption2"
@@ -1099,7 +1099,7 @@ export default {
 
       }
       if (!this.output.isOrder) {
-        this.form.tmsOrderTransfer.createTime = this.nowTime
+        this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
     },
     // 选择出发城市
@@ -1536,7 +1536,7 @@ export default {
         for (const i in this.form.tmsOrderTransfer) {
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
-        this.form.tmsOrderTransfer.createTime = parseTime(this.form.tmsOrderTransfer.createTime)
+        this.form.tmsOrderTransfer.transferTime = parseTime(this.form.tmsOrderTransfer.transferTime)
       }
     },
     // 回填订单信息
@@ -1762,7 +1762,7 @@ export default {
               delete data.tmsOrderTransfer
               data.tmsOrderTransfer = {}
             } else {
-              data.tmsOrderTransfer.createTime = new Date((data.tmsOrderTransfer.createTime + '').trim()).getTime()
+              data.tmsOrderTransfer.transferTime = new Date((data.tmsOrderTransfer.transferTime + '').trim()).getTime()
               if (this.output.ismodify) {
                 data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer ? this.orderData.tmsOrderTransfer.id : ''
               }
