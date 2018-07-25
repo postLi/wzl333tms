@@ -50,6 +50,7 @@ function getUrlParams() { // 获取url里面的参数
   str = str.substr(num + 1)
   var arr = str.split('&')
   var query = new Object()
+  
 
   for (var i = 0; i < arr.length - 1; i++) {
     num = arr[i].indexOf("=");

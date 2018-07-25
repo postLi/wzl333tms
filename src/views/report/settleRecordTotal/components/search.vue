@@ -90,7 +90,7 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
-        this.searchForm.shipFromOrgid = this.orgid
+        this.searchForm.orgId = this.orgid
       })
     }
   }

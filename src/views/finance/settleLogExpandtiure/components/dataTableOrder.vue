@@ -21,13 +21,17 @@
         </el-table-column>
         <el-table-column prop="amount" sortable label="运费合计" width="120">
         </el-table-column>
-        <el-table-column prop="onPay" sortable label="现付" width="120">
+        <el-table-column prop="kickBackPay" sortable label="回扣" width="120">
         </el-table-column>
-        <el-table-column prop="arrivalPay" sortable label="到付" width="120">
+        <el-table-column prop="transferPay" sortable label="中转费" width="120">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="回单付" width="120">
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
-        <el-table-column prop="monthPay" sortable label="月结" width="120">
+        <el-table-column prop="exceptionPay" sortable label="异常理赔" width="120">
+        </el-table-column>
+        <el-table-column prop="pickPuPay" sortable label="实际提货费" width="120">
+        </el-table-column>
+        <el-table-column prop="othePay" sortable label="其他费用" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>

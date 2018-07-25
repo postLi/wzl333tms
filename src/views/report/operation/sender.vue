@@ -31,7 +31,7 @@ export default {
     return {
       chartIframe: '',
       query: {
-        typeIds: ''
+        // typeIds: ''
         // currentPage: 1,
         // pageSize: 100
         // senderCustomerName: '',
@@ -60,7 +60,6 @@ export default {
       let path = window.location.protocol + '//' + window.location.host + '/static/supcan/operation.html' + str
       this.chartIframe = encodeURI(path)
       console.log(path, this.$refs.senderIframe.contentWindow)
-
     },
     setTable() {}
   }

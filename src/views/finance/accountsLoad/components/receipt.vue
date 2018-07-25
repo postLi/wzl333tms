@@ -209,6 +209,10 @@ export default {
         case 'waybillKickback':
         return '回扣'
       }
+    },
+    currentPage () {
+      let currentPage = this.$route.query.currentPage
+      return currentPage.substr(5, currentPage.length)
     }
   },
   props: {
@@ -315,7 +319,7 @@ export default {
           postLoadSettlement(this.submitData).then(data => {
               this.$message({ type: 'success', message: '操作成功' })
               this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch' })
+              this.$router.push({ path: './accountsPayable/batch', query:{name: this.currentPage} })
             })
             .catch(error => {
               this.$message({ type: 'error', message: '操作失败' })

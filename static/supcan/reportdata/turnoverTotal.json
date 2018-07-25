@@ -1,0 +1,43 @@
+﻿{
+  "status": 200,
+  "data": {
+    "pageNum": 1,
+    "pageSize": 2000,
+    "size": 2,
+    "startRow": 1,
+    "endRow": 2,
+    "total": 2,
+    "pages": 1,
+    "list": [
+      {
+        "id": "0",
+        "shipFromOrgid": 1,
+        "orgidName": "青春物流",
+        "createTimeStart": null,
+        "createTimeEnd": null,
+        "totalFee": 2410,
+        "shipTotalFee": 1953,
+        "brokerageFee": 457,
+        "nowPayFee": 0,
+        "arrivePayFee": 2410,
+        "receiptPayFee": 0,
+        "monthPayFee": 0
+      },      
+    "prePage": 0,
+    "nextPage": 0,
+    "isFirstPage": true,
+    "isLastPage": true,
+    "hasPreviousPage": false,
+    "hasNextPage": false,
+    "navigatePages": 8,
+    "navigatepageNums": [
+      1
+    ],
+    "navigateFirstPage": 1,
+    "navigateLastPage": 1,
+    "firstPage": 1,
+    "lastPage": 1
+  },
+  "text": "请求成功",
+  "errorInfo": null
+}

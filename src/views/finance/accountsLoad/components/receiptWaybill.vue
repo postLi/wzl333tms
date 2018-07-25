@@ -188,6 +188,10 @@ export default {
         case 'waybillUnusual':
           return '异动费用结算'
       }
+    },
+    currentPage () {
+      let currentPage = this.$route.query.currentPage
+      return currentPage.substr(7, currentPage.length)
     }
   },
   props: {
@@ -305,7 +309,7 @@ export default {
           postCreateloadSettlement(this.getRouteInfo.vo.shipFromOrgid, this.submitData).then(data => {
               this.$message({ type: 'success', message: '操作成功' })
               this.closeMe()
-              this.$router.push({ path: './accountsPayable/waybill' })
+              this.$router.push({ path: './accountsPayable/waybill', query:{name: this.currentPage} })
             })
             .catch(error => {
               this.$message({ type: 'error', message: '操作失败' })

@@ -31,15 +31,7 @@ export default {
   data() {
     return {
       chartIframe: '',
-      query: {
-        typeIds: ''
-        // currentPage: 1,
-        // pageSize: 100
-        // senderCustomerName: '',
-        // shipFromOrgid: '',
-        // createTimeStart: '',
-        // createTimeEnd: ''
-      },
+      query: {},
       btnsize: 'mini'
     }
   },
@@ -58,9 +50,8 @@ export default {
       for (const item in this.query) {
         str += item + '=' + String(this.query[item]).trim() + '&'
       }
-      const path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html' + str
+      const path = window.location.protocol + '//' + window.location.host + '/static/supcan/turnoverTotal.html' + str
       this.chartIframe = encodeURI(path)
-      console.log(path, this.$refs.senderIframe.contentWindow)
     },
     setTable() {}
   }

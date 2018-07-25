@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Stict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+  <link rel="stylesheet" type="text/css" href="untils/common.css" />
+  <script src="binary/dynaload.js"></script>
+  <script src="untils/common.js"></script>
+  <script>
+  var query = getUrlParams()
+  console.log('query\n', query)
+
+  function OnReady(id) {
+    AF.func("Build", "report/turnoverTotal.xml");
+    AF.func("SelectCell", "0\r\n0");
+    //指定ds1数据源取数的URL地址 
+    // var access_token = "60da667b-1b50-4ad7-87e3-a7b270f932c7";
+    // AF.func("SetSource", "turnover \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/turnoverReport?createTimeStart=2017-01-01&createTimeEnd=2018-07-18&shipFromOrgid=1&access_token=" + access_token);
+    AF.func("SetSource", "turnover \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/turnoverReport" + query);
+    //需要重新计算， 因为SetSource仅仅是相当于更改一个属性 
+    AF.func("Calc", "");
+  }
+
+  </script>
+</head>
+
+<body>
+  <div id="main" style="position:relative;width:100%;height:380px">
+    <script>
+    insertReport('AF', 'FullScreen;Border= single;')
+
+    </script>
+    <!--Rebar=Print;-->
+  </div>
+</body>
+
+</html>

@@ -143,6 +143,7 @@ export default {
     }
   },
   created() {
+    this.setPage()
     // this.getParentPage()
   },
   methods: {

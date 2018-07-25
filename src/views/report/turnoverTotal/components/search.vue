@@ -8,13 +8,6 @@
       <SelectTree v-model="searchForm.shipFromOrgid" clearable>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="发货人" prop="senderCustomerName">
-      <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
-        <template slot-scope="{item}">
-          {{ item.customerName }} : {{ item.customerMobile }}
-        </template>
-      </querySelect>
-    </el-form-item>
     
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -62,7 +55,7 @@ export default {
         // createTimeEnd: ''
       },
       rules: {
-        shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
+        // shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
@@ -79,11 +72,8 @@ export default {
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
-        this.$set(searchObj, 'startCreatTime', this.searchTime[0])
-        this.$set(searchObj, 'endCreatTime', this.searchTime[1])
-        // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-        // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        this.$set(searchObj, 'createTimeStart', this.searchTime[0])
+        this.$set(searchObj, 'createTimeEnd', this.searchTime[1])
       }
       this.$emit('change', searchObj)
     },
@@ -91,7 +81,7 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
-        this.searchForm.shipFromOrgid = this.orgid
+        // this.searchForm.shipFromOrgid = this.orgid
       })
     }
   }
