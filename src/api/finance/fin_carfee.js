@@ -95,5 +95,5 @@ export function deleteCarShort(id) {
  * @returns {*}
  */
 export function postUpdateBillCheckSelective(params) {
-  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective' + params )
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective' , params )
 }

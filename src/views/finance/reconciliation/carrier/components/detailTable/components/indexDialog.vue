@@ -1,12 +1,12 @@
 <template>
   <div class="saveDialog-maintain">
-    <PopFrame :title="'对账单名称'+popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
+    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div class="depmain-div" >
           <div class="dialogMoney">
 
-          对账总金额：<span>40元</span>。
+          对账总金额：<span>{{totaMoney}}元</span>
           </div>
           <el-table
             ref="multipleTable"
@@ -58,7 +58,7 @@
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import {postCreatesaveCustomerDetail} from '@/api/finance/fin_carrier'
+  import {postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
   // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
 
   export default {
@@ -104,8 +104,10 @@
             date:"已付账款"
           }
         ],
+        dialogData:{},
         checked1: true,
         popTitle: '',
+        totaMoney: '',
         loading:false,
         formInline: {
           shipSn: '',
@@ -125,23 +127,18 @@
     },
     watch: {
       dotInfo (newVal) {
-        if(this.sendId){
-          this.dotInfo.id = this.sendId
-        }else{
-          this.dotInfo
-        }
+        this.dialogInfo[0].toPay = this.dotInfo.receivableFee
+        this.dialogInfo[1].toPay = this.dotInfo.payableFee
+        this.dialogInfo[2].toPay = this.dotInfo.receivedFee
+        this.dialogInfo[3].toPay = this.dotInfo.paidFee
+        this.totaMoney = this.dotInfo.receivableFee + this.dotInfo.payableFee + this.dotInfo.receivedFee + this.dotInfo.paidFee
+        this.popTitle = this.dotInfo.checkBillName
       },
-      popVisible (newVal) {
-        this.fetchData()
+        popVisible (newVal) {
+
       },
       sendId(newVal){
 
-        if(this.sendId){
-          this.dotInfo.id = this.sendId
-          console.log(this.dotInfo.id);
-        }else{
-          this.dotInfo
-        }
       }
     },
     mounted() {
@@ -151,17 +148,7 @@
     },
     methods: {
       search (item) {
-        // return item.pickupBatchNumber ? false : true
-      },
-      fetchFindByShipSnOrGoodSn() {
-        // this.loading = true
-        // return getFindShipByid(this.dotInfo.id).then(data => {
-        //   this.usersArr = data
-        //   this.loading = false
-        // })
-      },
-      fetchData() {
-        this.fetchFindByShipSnOrGoodSn()
+
       },
       closeMe (done) {
         this.reset()
@@ -171,43 +158,26 @@
         }
       },
       reset(){
-        // this.formInline.shipSn = ''
-        // this.formInline.shipGoodsSn = ''
-        // this.formInline.pickupFee = ''
       },
 
       submitForm(formName) {
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-            this.loading = true
-            let promiseObj
-            let data = []
-            data = this.dotInfo
-        console.log("全部" + this.dotInfo);
-            if(this.sendId){
-              data.id = this.sendId
-              promiseObj = postCreatesaveCustomerDetail(data)
-              console.log("修改" + data);
-            }else{
-              promiseObj = postCreatesaveCustomerDetail(data)
-              alert('lll')
-            }
+        let data = {
+          id:'',
+          checkStatus:1
+        }
+        data.id = this.dotInfo.id
+        postUpdateBillCheckSelective(data).then(res => {
+          this.loading = false
+          this.$message({
+            type: 'success',
+            message: '操作成功~'
+          })
+          this.$emit('success')
+          this.closeMe()
+        }).catch(err => {
+          this.loading = false
+        })
 
-            promiseObj.then(res => {
-              this.loading = false
-              this.$message({
-                message: '添加成功~',
-                type: 'success'
-              })
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee')
-              this.closeMe()
-            }).catch(err => {
-              this.loading = false
-            })
-        //   } else {
-        //     return false;
-        //   }
-        // });
       },
     }
   }

@@ -343,8 +343,8 @@ export default {
             path: '/finance/reconciliation/customer/detailTable/customerRecon',
             query: {
               tab: '客户对账-修改查看',
-              id: this.$route.query.id
-              // id: 805
+              id: this.selected[0].id,
+              urlId: this.$route.query.id
             }
           })
 
@@ -360,7 +360,7 @@ export default {
             return false
 
           }else{
-            if(this.selected[0].checkStatus === '未对账'){
+            if(this.selected[0].checkStatus === 0){
               let data = {
                 id:'',
                 checkStatus:0
@@ -396,7 +396,7 @@ export default {
             return false
 
           }else{
-            if(this.selected[0].checkStatus === '已对账'){
+            if(this.selected[0].checkStatus === 1){
               let _data = {
                 id:'',
                 checkStatus:1

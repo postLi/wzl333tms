@@ -17,7 +17,6 @@
       </el-form-item>
       <el-form-item label="发货人:">
         <el-input
-          placeholder="发货方或发货人"
           maxlength="15"
           v-model="searchForm.customerName"
           clearable>

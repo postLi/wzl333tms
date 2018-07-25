@@ -207,49 +207,15 @@ export default {
       switch (type) {
         // 明细
           case 'storage':
-            this.selectInfo = this.selected[0]
-
             this.$router.push({
               path: '/finance/reconciliation/customer/detailTable',
               query: {
-                tab: '客户对账',
+                tab: '客户对账-对账明细',
                 id: this.selectInfo.shipSenderId
               }
             })
 
             break;
-          // 停用
-          case 'stop':
-            this.closeAddCustomer()
-            if(this.selected.length > 1){
-              this.$message({
-                message: '只能选择一条数据进行跟踪设置~',
-                type: 'warning'
-              })
-              return false
-
-            }else{
-              if(this.selected[0].statusStr === '启用'){
-                let id = this.selected[0].id
-                putStop(id).then(res => {
-                  this.loading = false
-                  this.$message({
-                    type: 'success',
-                    message: '操作成功~'
-                  })
-                      this.fetchData()
-                }).catch(err => {
-                  this.loading = false
-                })
-              }else{
-                this.$message({
-                 type: 'info',
-                 message: '当前收支方式已经在停用状态~'
-                })
-              }
-            }
-
-              break;
           // 导出数据
           case 'export':
               let ids2 = this.selected.map(el => {

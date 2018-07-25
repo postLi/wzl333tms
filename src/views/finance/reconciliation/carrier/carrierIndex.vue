@@ -202,7 +202,6 @@ export default {
       switch (type) {
         // 明细
           case 'storage':
-            // this.selectInfo = this.selected[0]
 
             this.$router.push({
               path: '/finance/reconciliation/carrier/detailTable',
