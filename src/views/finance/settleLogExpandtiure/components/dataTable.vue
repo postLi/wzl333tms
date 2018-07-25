@@ -118,11 +118,10 @@ import currentSearch from './currentSearch'
 export default {
   data() {
     return {
+      searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       tablekey: '',
-      loadTruck: '',
       truckMessage: '',
       searchForm: {},
-      loadTruck: 'loadTruckOne',
       incomePayType: 'PAYABLE',
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
       loading: false,
@@ -183,17 +182,22 @@ export default {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.orgLeftTable = this.$options.data().orgLeftTable
+      let obj = {}
       if (this.isModify) {
         this.leftTable = this.orgData.left
         this.orgLeftTable = this.orgData.left
         this.rightTable = this.orgData.right
         this.$emit('loadTable', this.rightTable)
       } else {
-        getOrderShipList(this.otherinfo.orgid, this.incomePayType, this.paymentsType).then(data => {
+        this.$set(obj, 'orgId', this.otherinfo.orgid)
+        this.$set(obj, 'incomePayType', this.incomePayType)
+        this.$set(obj, 'paymentsType', this.paymentsType)
+        getOrderShipList(obj).then(data => {
           this.leftTable = data
           this.orgLeftTable = data
           this.$emit('loadTable', this.rightTable)
         })
+        obj = {}
       }
     },
     getSearch (obj) { // 搜索

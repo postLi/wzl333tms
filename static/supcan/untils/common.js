@@ -50,7 +50,7 @@ function getUrlParams() { // 获取url里面的参数
   str = str.substr(num + 1)
   var arr = str.split('&')
   var query = new Object()
-  
+
 
   for (var i = 0; i < arr.length - 1; i++) {
     num = arr[i].indexOf("=");
@@ -67,7 +67,14 @@ function getUrlParams() { // 获取url里面的参数
       strQuery += item + '=' + query[item] + '&'
     }
   }
-  strQuery = strQuery.substr(0,strQuery.length - 1)
+  strQuery = strQuery.substr(0, strQuery.length - 1)
   console.log(strQuery)
   return strQuery
+}
+
+function hideChart(bGray) { // 隐藏
+  AF.func("grayWindow", "");
+  if (bGray) {
+    AF.func("grayWindow", "1\r\n backcolor=#FFFFFF;alpha=100");
+  }
 }

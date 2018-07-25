@@ -23,12 +23,12 @@ export function getFeeInfo(orgId, paymentsType) {
 /**
  * 记收入-运单信息
  */
-export function getOrderShipList(orgId, incomePayType, paymentsType) {
+export function getOrderShipList(data) {
   return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
       params: {
-        orgId: orgId,
-        paymentsType: paymentsType,
-        incomePayType: incomePayType
+        orgId: data.orgId,
+        paymentsType: data.paymentsType,
+        incomePayType: data.incomePayType
       }
     })
     .then(res => {

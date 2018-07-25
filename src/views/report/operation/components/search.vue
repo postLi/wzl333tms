@@ -1,21 +1,25 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="开单时间">
+    <el-form-item label="时间">
       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="开单网点" prop="shipFromOrgid">
-      <SelectTree v-model="searchForm.shipFromOrgid" clearable>
+    <el-form-item label="开单网点" prop="orgId">
+      <SelectTree v-model="searchForm.orgId" clearable>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="发货人" prop="senderCustomerName">
-      <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
-        <template slot-scope="{item}">
-          {{ item.customerName }} : {{ item.customerMobile }}
-        </template>
-      </querySelect>
+    <el-form-item label="到达城市" prop="shipToCityName">
+     <el-input v-model="searchForm.shipToCityName" clearable></el-input>
     </el-form-item>
-    
+     <el-form-item label="业务类型" prop="selectType">
+     <el-select v-model="searchForm.selectType">
+      <el-option v-for="(item, index) in selectType"
+      :label="item.label"
+      :value="item.value"
+      :key="item.key"
+      ></el-option>
+     </el-select>
+    </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -25,12 +29,12 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
-import querySelect from '@/components/querySelect/index'
+import SelectType from '@/components/selectType/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    SelectType
   },
   props: {
     btnsize: {
@@ -54,13 +58,28 @@ export default {
     }
     return {
       searchForm: {
-        shipFromOrgid: ''
+        orgId: '',
+        selectType: ''
         // currentPage: 1,
         // pageSize: 100,
         // senderCustomerName: '',
         // createTimeStart: '',
         // createTimeEnd: ''
       },
+      selectType: [
+      {
+        value: 0,
+        label: '全部'
+      },
+      {
+        value: 1,
+        label: '走货业务'
+      },
+      {
+        value: 2,
+        label: '来货业务'
+      }
+      ],
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
@@ -72,7 +91,8 @@ export default {
     }
   },
   mounted() {
-    this.searchForm.shipFromOrgid = this.orgid
+    this.searchForm.orgId = this.orgid
+    this.searchForm.selectType = 1
     this.onSubmit()
   },
   methods: {
@@ -80,8 +100,8 @@ export default {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
-        this.$set(searchObj, 'startCreatTime', this.searchTime[0])
-        this.$set(searchObj, 'endCreatTime', this.searchTime[1])
+        this.$set(searchObj, 'startTime', this.searchTime[0])
+        this.$set(searchObj, 'endTime', this.searchTime[1])
         // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
@@ -91,7 +111,7 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
-        this.searchForm.shipFromOrgid = this.orgid
+        this.searchForm.orgId = this.orgid
       })
     }
   }

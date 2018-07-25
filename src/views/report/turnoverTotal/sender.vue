@@ -4,9 +4,9 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
-      <div class="btns_box">
+     <!--  <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
-      </div>
+      </div> -->
       <div class="info_tab">
         <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
         <!-- <iframe src="about:blank" frameborder="0" style="left: 167px; top: 46px; width: 400px; height: 300px; position: absolute; z-index: 1004; background-color: rgb(153, 153, 153);" hidefocus="true"></iframe> -->

@@ -8,7 +8,9 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
       </div> -->
       <div class="info_tab">
-        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
+        <!-- <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
+        style="background-color:transparent; position: absolute; z-index: -3000; width: 100%; height: calc(100% - 100px); top: 120px;left:0;"></iframe> -->
+        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"></iframe>
       </div>
     </div>
   </div>
@@ -31,11 +33,8 @@ export default {
     return {
       chartIframe: '',
       query: {
-        shipToCityName: '',
-        businessType: ''
-        // typeIds: ''
-        // currentPage: 1,
-        // pageSize: 100
+        currentPage: 1,
+        pageSize: 100
         // senderCustomerName: '',
         // shipFromOrgid: '',
         // createTimeStart: '',
@@ -56,12 +55,14 @@ export default {
       let access_token = getToken()
       this.$set(this.query, 'access_token', access_token)
       let str = '?'
-      for (let item in this.query) {
-        str += item + '=' + this.query[item] + '&'
+      for (let item in this.query){
+        str += item +'=' + String(this.query[item]).trim()+ '&'
       }
-      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/operation.html' + str
-      this.chartIframe = encodeURI(path)
-      console.log(path, this.$refs.senderIframe.contentWindow)
+
+      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/incomeTotal.html'+ str + '&'+Math.random()
+        this.chartIframe = encodeURI(path)
+      // this.chartIframe = encodeURI(path)
+
     },
     setTable() {}
   }
@@ -73,11 +74,11 @@ export default {
   width: 100%;
   height: calc(100%);
   .chartIframe {
+    position:relative;
+    z-index:1;
     width: 100%;
     height: 100%;
-    box-shadow: 1px 1px 10px #bbb;
-    overflow: hidden;
-    scrolling: no;
+    box-shadow: 1px 1px 10px #ddd;
   }
 }
 

@@ -3,7 +3,7 @@
     <div class="eltab clearfix">
       <span @click="component = 'Kickback'" class="tab-label" :class="{'active-tab': component.indexOf('Kickback')!==-1}">回扣</span>
       <span @click="component = 'Transfer'" class="tab-label" :class="{'active-tab': component.indexOf('Transfer')!==-1}">中转费</span>
-      <span @click="component = 'Ticket'" class="tab-label" :class="{'active-tab': component.indexOf('Ticket')!==-1}">单票提货费</span>
+      <span @click="component = 'Ticket'" class="tab-label" :class="{'active-tab': component.indexOf('Ticket')!==-1}">实际提货费</span>
       <span @click="component = 'Unusual'" class="tab-label" :class="{'active-tab': component.indexOf('Unusual')!==-1}">异动费用</span>
       <span @click="component = 'Abnormal'" class="tab-label" :class="{'active-tab': component.indexOf('Abnormal')!==-1}">异常理赔</span>
       <span @click="component = 'Other'" class="tab-label" :class="{'active-tab': component.indexOf('Other')!==-1}">其他费用支出</span>

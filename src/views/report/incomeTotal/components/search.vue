@@ -4,8 +4,8 @@
       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="开单网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" clearable @click="hideIframe">
+    <el-form-item label="开单网点" prop="shipFromOrgid">
+      <SelectTree v-model="searchForm.shipFromOrgid" clearable>
       </SelectTree>
     </el-form-item>
     <el-form-item label="发货人" prop="senderCustomerName">
@@ -15,6 +15,7 @@
         </template>
       </querySelect>
     </el-form-item>
+    
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -53,10 +54,10 @@ export default {
     }
     return {
       searchForm: {
-        orgId: ''
+        shipFromOrgid: '',
         // currentPage: 1,
         // pageSize: 100,
-        // senderCustomerName: '',
+        senderCustomerName: ''
         // createTimeStart: '',
         // createTimeEnd: ''
       },
@@ -71,28 +72,23 @@ export default {
     }
   },
   mounted() {
-    this.searchForm.orgId = this.orgid
+    this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()
   },
   methods: {
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'startTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
-        // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-        // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        this.$set(searchObj, 'startCreatTime', this.searchTime[0])
+        this.$set(searchObj, 'endCreatTime', this.searchTime[1])
       }
       this.$emit('change', searchObj)
-    },
-    hideIframe () {
-      this.$emit('hideIframe', true)
     },
     clearForm(formName) {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
-        this.searchForm.orgId = this.orgid
+        this.searchForm.shipFromOrgid = this.orgid
       })
     }
   }

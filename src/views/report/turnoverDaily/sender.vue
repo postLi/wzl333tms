@@ -4,12 +4,13 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
-      <div class="btns_box">
+      <!-- <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
-      </div>
+      </div> -->
       <div class="info_tab">
-        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
-        style="background-color:transparent; position: absolute; z-index: -3000; width: 100%; height: calc(100% - 100px); top: 120px;left:0;"></iframe>
+        <!-- <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
+        style="background-color:transparent; position: absolute; z-index: -3000; width: 100%; height: calc(100% - 100px); top: 120px;left:0;"></iframe> -->
+        <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"></iframe>
       </div>
     </div>
   </div>

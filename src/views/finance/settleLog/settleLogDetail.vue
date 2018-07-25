@@ -448,6 +448,7 @@ export default {
     setView() {
       // 设置表格视图 
       // 【shipOrderType关联类型（1-运单/2-配载单/3-中转单）】
+      
       if (this.$route.query.shipOrderType) {
         switch (this.shipOrderType) {
           case '1':
@@ -512,7 +513,7 @@ export default {
       }
     },
     cancelCount() {
-      this.$confirm('确定要取消【 ' + this.selectedList[0].flowId + ' 】吗？', '提示', {
+      this.$confirm('确定要取消结算【 ' + this.selectedList[0].flowId + ' 】吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

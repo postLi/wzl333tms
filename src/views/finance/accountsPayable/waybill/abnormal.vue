@@ -112,6 +112,15 @@ export default {
         fixed: false
       },
       {
+        label: '运单标识',
+        prop: 'shipIdentifying',
+        width: '150',
+        fixed: false,
+        slot: function(scope) {
+            return parseShipStatus(scope.row.shipIdentifying)
+          }
+      },
+      {
         label: '出发城市',
         prop: 'shipFromCityName',
         width: '150',
@@ -203,15 +212,6 @@ export default {
         prop: 'cargoVolume',
         width: '150',
         fixed: false
-      },
-      {
-        label: '运单标识',
-        prop: 'shipIdentifying',
-        width: '150',
-        fixed: false,
-        slot: function(scope) {
-            return parseShipStatus(scope.row.shipIdentifying)
-          }
       },
         // {
         //   label: '承运商',

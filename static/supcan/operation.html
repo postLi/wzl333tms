@@ -3,22 +3,28 @@
  <head> 
  <meta http-equiv="Content-Type" content="text/html; charset=GB2312"/>
   <link rel="stylesheet" type="text/css" href="untils/common.css" />
- <script src="binary/dynaload.js"></script> 
-   <script src="untils/common.js"></script>
+  <script src="binary/dynaload.js"></script>
+  <script src="untils/common.js"></script>
  <script> 
+ var query = getUrlParams()
 
-  var query = getUrlParams()
 function OnReady(id)
 {
     AF.func("Build", "report/operation.xml");
-    AF.func("SelectCell", "0\r\n0");
+	
+    //AF.func("SelectCell", "0\r\n0");
 	//指定ds1数据源取数的URL地址 
-	// var access_token ="60da667b-1b50-4ad7-87e3-a7b270f932c7";
-	// var startCreatTime = "2018-05-13 00:00:00";
-	// var endCreatTime = "2018-07-24 23:59:59";
-	// var shipFromOrgid = 1;
-    // AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/findDetail?startCreatTime="+startCreatTime+"&endCreatTime="+endCreatTime+"&shipFromOrgid="+shipFromOrgid+"&access_token="+access_token); 
-    AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/findDetail"+query); 		
+	// var access_token ="3471ea1a-8dcd-4c9f-95e9-258dbcf564cb";
+	// var startTime = "2018-07-13 11:11:11";
+	// var endTime = "2018-07-24 11:11:11";
+	// var orgId = 1;
+	// var selectType = 2;
+	// var shipToCityName = "";
+	// var businessType = "";
+	
+     // AF.func("SetSource", "ds1 \r\n http://localhost:7010/api-finance/finance/report/v1/findOperationReport?startTime="+startTime+"&endTime="+endTime+"&orgId="+orgId+"&selectType="+selectType+"&shipToCityName="+shipToCityName+"&businessType="+businessType+"&access_token="+access_token);  
+     AF.func("SetSource", "ds1 \r\n http://localhost:7010/api-finance/finance/report/v1/findOperationReport"+query);  
+                            
    //需要重新计算， 因为SetSource仅仅是相当于更改一个属性?
     AF.func("Calc", "");  
 }
@@ -26,7 +32,9 @@ function OnReady(id)
  </head> 
  <body> 
  <div id="main" style="position:relative;width:100%;height:380px"> 
-   <script>insertReport('AF','FullScreen; Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0')</script> <!--Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0-->
+   <script>
+    insertReport('AF', 'FullScreen; Rebar=Print; print=11, 216,18;Border=none;LeftRulerWidthPercent=0')
+    </script> <!--Rebar=Print;-->
  </div> 
  </body> 
 </html> 

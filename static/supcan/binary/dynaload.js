@@ -47,13 +47,12 @@ function NewBrowserObj()
     }
   }
   obj.is64 = (agnt.indexOf("win64")>=0 || agnt.indexOf("x64")>=0) ? true : false;
-  //alert(obj.type);
   return obj;
 }
  
 //浏览器对象(全局对象)
 var $B = NewBrowserObj();
-//alert($B.type);
+
 //让 ppapi 语法兼容 npapi：为 <object> 添加 func( ) 函数
 if($B.ppapi) {
   Object.prototype.func = function(funcname, para) {
@@ -112,8 +111,6 @@ function bldStr(ctlType, id, para, height)
  str += '<param Name="CtlVersion" Value="' +ctlver+ '">';
  str += '<param Name="ZipUrl" Value="' +zipurl+ '">';
  str += '<param Name="id" Value="' +id+ '">';
- str += '<param name="windowless" value="true"/>';
- str += '<param name="wmode" value="transparent">';
  str += '<param Name="Cookie" Value="' +document.cookie+ '">';
  str += '<param Name="CtlPara" Value="' +para+ '">';
  if($B.ppapi) str += '<param Name="core" Value="pure"><param Name="Locate" value="' +window.location.href+ '">';

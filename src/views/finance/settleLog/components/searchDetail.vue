@@ -71,7 +71,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgId = this.orgid
-    this.searchForm.settlementId = this.TYPE[0].value
+    this.searchForm.settlementId = this.$const.SETTLEMENT_ID[0].value
     this.onSubmit()
   },
   methods: {
@@ -87,7 +87,7 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.searchForm.orgId = this.orgid
-        this.searchForm.settlementId = this.TYPE[0].value
+        this.searchForm.settlementId = this.$const.SETTLEMENT_ID[0].value
         this.$refs[formName].resetFields()
       })
     }
