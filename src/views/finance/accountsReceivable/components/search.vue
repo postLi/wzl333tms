@@ -14,6 +14,9 @@
         </el-date-picker>
       </div>
     </el-form-item>
+    <el-form-item v-if="filter" label="网点:">
+      <select-tree v-model="searchForm.orgAllId" />
+    </el-form-item>
     <el-form-item label="开单网点:">
       <select-tree v-model="searchForm.shipFromOrgid" />
     </el-form-item>
@@ -78,6 +81,10 @@ export default {
     },
     orgid: {
       type: Number
+    },
+    filter: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
