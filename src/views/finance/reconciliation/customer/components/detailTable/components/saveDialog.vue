@@ -129,6 +129,7 @@
       tota:{
         handler(newVal){
           this.dialogData = this.tota
+          console.log(this.tota);
           this.dialogData.dealtota.map(el=>{
             this.$set(this.dialogInfo, 0, {
               date:"应收清单",
@@ -139,7 +140,7 @@
           this.dialogData.dealPaytota.map(el=>{
             this.$set(this.dialogInfo, 1, {
               date:"应付清单",
-              toPay: this.dialogInfo[1].toPay + (el.totalCost ? +el.totalCost : 0)
+              toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
@@ -153,7 +154,7 @@
           this.dialogData.alreadyPaytota.map(el=>{
             this.$set(this.dialogInfo, 3, {
               date:"已付清单",
-              toPay: this.dialogInfo[3].toPay + (el.totalCost ? +el.totalCost : 0)
+              toPay: this.dialogInfo[3].toPay + (el.totalFee ? +el.totalFee : 0)
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
@@ -200,6 +201,7 @@
             for(const i in this.dotInfo){
               data[i] = this.dotInfo[i]
             }
+        data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
             if(this.sendId){
               data.tmsFinanceBillCheckDto.id = this.sendId
               promiseObj = postCSaveCustomerDetail(data)
@@ -212,7 +214,7 @@
             promiseObj.then(res => {
               this.loading = false
               this.$message({
-                message: '添加成功~',
+                message: '操作成功~',
                 type: 'success'
               })
 

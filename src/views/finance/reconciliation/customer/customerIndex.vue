@@ -95,7 +95,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -106,15 +106,13 @@ import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialwa
 import {postCustomerdetailList} from '@/api/finance/fin_customer'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddCustomer
+    TableSetup
   },
   computed: {
       ...mapGetters([
@@ -248,9 +246,7 @@ export default {
     },
     getDbClick(row, event){
       this.selectInfo = row
-      this.isModify = false
-      this.isDbclick = true
-      this.openAddCustomer()
+
     }
   }
 }

@@ -25,7 +25,6 @@
     <el-form-item label="发货人电话:">
       <el-input
         v-numberOnly
-        placeholder="请输入手机号码"
         maxlength="11"
         v-model="searchForm.customerMobile"
         clearable>

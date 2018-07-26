@@ -200,6 +200,7 @@
             for(const i in this.dotInfo){
               data[i] = this.dotInfo[i]
             }
+        data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
             if(this.sendId){
               data.tmsFinanceBillCheckDto.id = this.sendId
               promiseObj = postCreatesaveCarrierDetail(data)

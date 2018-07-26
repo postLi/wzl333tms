@@ -124,7 +124,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="checkStatusZh"
+            prop="checkStatusName"
             label="对账状态"
             width="120"
             sortable
@@ -418,7 +418,7 @@ export default {
               return false
 
             }else{
-              if(this.selected[0].statusStr === 0){
+              if(this.selected[0].checkStatus === 0){
                 let id = this.selected[0].id
                 deleteCarShort(id).then(res => {
                   this.loading = false

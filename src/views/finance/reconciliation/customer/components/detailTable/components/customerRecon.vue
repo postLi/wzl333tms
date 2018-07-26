@@ -354,8 +354,15 @@
           >
           </el-table-column>
           <el-table-column
-            prop="registerFee"
+            prop="unusualFee"
             label="异动减款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="registerFee"
+            label="异常金额"
             width="130"
             sortable
           >
@@ -667,8 +674,15 @@
           >
           </el-table-column>
           <el-table-column
-            prop="registerFee"
+            prop="unusualFee"
             label="异动减款"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="registerFee"
+            label="异常金额"
             width="130"
             sortable
           >
@@ -958,7 +972,7 @@
               }) : []
               this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
                 const a = {}
-                a.totalCost = el.totalCost
+                a.totalFee = el.totalFee
                 return a
               }) : []
               this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
@@ -968,10 +982,10 @@
               }) : []
               this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
                 const a = {}
-                a.totalCost = el.totalCost
+                a.totalFee = el.totalFee
                 return a
               }) : []
-
+              console.log(this.tota);
               if(!this.form.customerDetailDtoList.length){
                 this.$message({
                   message: '各款项不能为空~',
