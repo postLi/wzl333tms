@@ -87,7 +87,7 @@ export default {
         shipFromOrgid: '', // 网点
         shipSn: '', //  运单号
         statusName: 'NOSETTLEMENT', // 结算状态
-        searchCreatTime: '', // 登记时间
+        // searchCreatTime: [], // 登记时间
         // shipFromCityCode: '',
         shipFromCityName: '',
         // shipToCityCode: '',
@@ -131,7 +131,7 @@ export default {
       this.$emit('change', data)
     },
     clearForm() {
-      this.searchCreatTime = []
+      this.searchCreatTime = this.$options.data().searchCreatTime
       this.searchForm.shipFromOrgid = ''
       this.searchForm.shipSn = ''
       this.searchForm.status = ''

@@ -111,7 +111,7 @@
   </pop-right>
 </template>
 <script>
-// import { REGEX } from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 // import { GetAbnormalNo, PostNewAbnormal, putXiugai, GetLook } from '@/api/operation/dashboard'
 import { postInsertAbnormal, putXiugai } from '@/api/finance/unusual'
 import { getAllUser } from '@/api/company/employeeManage'
@@ -177,6 +177,15 @@ export default {
   },
   data() {
     const _this = this
+    const validatefee = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输异动费用'))
+      } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
+        callback()
+      } else {
+        callback(new Error('费用不能小于0'))
+      }
+    }
     return {
       timekey: '111',
       querykey: '11',
@@ -217,7 +226,8 @@ export default {
       tooltip: false,
       rules: {
         fee: [
-          { required: true, message: '必填只能输入数字', trigger: 'blur' }
+          // { required: true, message: '必填只能输入数字', trigger: 'blur' }
+          { required: true, trigger: 'blur', validator: validatefee }
         ],
         remark: [
           { required: true, message: '请输入异动备注', trigger: 'blur' }
