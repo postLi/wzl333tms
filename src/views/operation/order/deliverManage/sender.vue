@@ -15,7 +15,7 @@
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
-      <div class="info_tab">
+      <div class="info_tab" id="deliverManageTable">
         <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
@@ -53,8 +53,9 @@ import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, loadJs } from '@/utils/index'
 import SignFrom from './components/sign'
+import { getLodop } from '@/utils/LodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -80,6 +81,7 @@ export default {
     // })
   },
   data() {
+    let LODOP
     return {
       loading: false,
       btnsize: 'mini',
@@ -206,6 +208,18 @@ export default {
     }
   },
   methods: {
+    printPDF() {
+      this.CreateOneFormPage()
+      LODOP.PREVIEW()
+    },
+    CreateOneFormPage() {
+      LODOP = getLodop();
+      LODOP.PRINT_INIT("订货单");
+      LODOP.SET_PRINT_STYLE("FontSize", 18);
+      LODOP.SET_PRINT_STYLE("Bold", 1);
+      LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+      LODOP.ADD_PRINT_HTM(88, 200, 350, 600, document.getElementById("deliverManageTable").innerHTML);
+    },
     fetchAllData() {
       this.loading = true
       this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
@@ -236,7 +250,7 @@ export default {
     },
     doAction(type) {
       let isWork = false
-      if (this.selected.length < 1 && type !== 'add' && type !== 'print' && type !=='export') { // 判断是否有选中项
+      if (this.selected.length < 1 && type !== 'add' && type !== 'print' && type !== 'export') { // 判断是否有选中项
         // this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -268,7 +282,7 @@ export default {
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
         case 'print': // 打印
-        this.$lodop.myPreview
+          this.printPDF()
           // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
       }

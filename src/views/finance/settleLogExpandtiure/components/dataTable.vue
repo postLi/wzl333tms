@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-else-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="干线合计" width="120" v-else>
+        <el-table-column prop="loadFeeTotal" sortable label="干线合计" width="120" v-else>
         </el-table-column>
         <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120">
         </el-table-column>

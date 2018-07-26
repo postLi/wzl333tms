@@ -9,7 +9,7 @@ import '@/icons' // icon
 import './errorLog'// error
 import '@/permission' // permission
 import * as $const from './utils/constant'
-// import * as $lodop from './utils/lodopFuncs'
+// import * as $lodop from './utils/LodopFuncs'
 
 import * as filters from './filters'
 
