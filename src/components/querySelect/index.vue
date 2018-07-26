@@ -264,6 +264,7 @@ export default {
           break
         case 'carrier':
           fn = getAllCarrier
+          this.queryParam.vo.orgid = this.getOrgid
           break
         case 'sender':
           this.queryParam.vo.customerType = 1
