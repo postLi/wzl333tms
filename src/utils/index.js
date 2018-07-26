@@ -548,3 +548,44 @@ export function getTotal() {
   console.log('total args:', args, total, 'final:', (total / 10000))
   return (total / 10000)
 }
+
+/**
+ * 加载js
+ * 返回promise对象
+ */
+export function loadJs(src, callback) {
+  return new Promise((resolve, reject) => {
+    var doc = document
+    var script = doc.createElement('script')
+    var head = doc.head || doc.getElementsByTagName('head')[0] || doc.documentElement
+    script.async = 'async'
+
+    script.onload = script.onreadystatechange = function() {
+      if (!script.readyState || /loaded|complete/.test(script.readyState)) {
+      // Handle memory leak in IE
+        script.onload = script.onreadystatechange = null
+
+      // Remove the script
+        if (head && script.parentNode) {
+          head.removeChild(script)
+        }
+
+      // Dereference the script
+        script = undefined
+
+      // Callback if not abort
+        if (callback) {
+          callback()
+        }
+        resolve()
+      }
+    }
+
+    script.onerror = function(err) {
+      reject('加载失败:' + JSON.stringify(err))
+    }
+
+    script.src = src
+    head.insertBefore(script, head.firstChild)
+  })
+}
