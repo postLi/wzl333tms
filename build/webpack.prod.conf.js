@@ -8,9 +8,9 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 
 var env = process.env.BUILD_ENV === 'test' ? config.test.env : config.build.env
-console.log('process.env.BUILD_ENV： ', process.env.BUILD_ENV, env)
 
 function resolveApp(relativePath) {
     return path.resolve(relativePath);
@@ -34,11 +34,22 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new webpack.optimize.UglifyJsPlugin({
+    /* new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       },
       sourceMap: false
+    }), */
+    new ParallelUglifyPlugin({
+      cacheDir: '.cache/',
+      uglifyJS:{
+        output: {
+          comments: false
+        },
+        compress: {
+          warnings: false
+        }
+      }
     }),
     // extract css into its own file
     /* new ExtractTextPlugin({
