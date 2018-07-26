@@ -35,10 +35,10 @@
           <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="发货人">
-          <el-input v-model="messageInfo.memberPerson" auto-complete="off" ></el-input>
+          <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input v-model="messageInfo.orgBusinessOfficerPhone" auto-complete="off"  maxlength="12" v-numberOnly></el-input>
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off"  maxlength="12" v-numberOnly disabled></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
@@ -756,7 +756,7 @@
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCFinanceinitialize,postCustomerdetail} from '@/api/finance/fin_customer'
+  import {postCFinanceinitialize,getCustomerdetail} from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -783,8 +783,9 @@
             messageInfo:{
               orgName:'',
               memberName:'',
-              orgBusinessOfficer:'',
-              orgBusinessOfficerPhone:'',
+              memberPerson:'',
+              memberPersonPhone:'',
+              memberCode:'',
               checkStartTime:'',
               checkEndTime:'',
               bankAccount:'',
@@ -794,7 +795,11 @@
               financialOfficer:'',
               financialOfficerPhone:'',
               alipayAccount:'',
-              wechatAccount:''
+              wechatAccount:'',
+              companyId:'',
+              memberId:'',
+              orgId:'',
+              memberIdType:'',
             },
             messageButtonInfo:{
               companyName:'',
@@ -814,7 +819,7 @@
               tmsFinanceBillCheckDto:{
                 checkBillName:''
               },
-              carrierDetailDtoList:[],
+              customerDetailDtoList:[],
 
             },
             //总计
@@ -895,7 +900,8 @@
         modifyList(){
           this.loading = true
           this.searchTitle.shipSenderId = this.$route.query.id
-          return postCustomerdetail(this.searchTitle.shipSenderId).then(data => {
+          return getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
+            let data = res.data
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
 
@@ -932,51 +938,50 @@
         submit(formName){
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              alert('')
-              // this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
-              // for(const i in this.messageInfo){
-              //   this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
-              // }
-              // for(const i in this.messageButtonInfo){
-              //   this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
-              // }
-              // this.dealInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-              // this.dealPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-              // this.alreadyInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-              // this.alreadyPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-              // //
-              // this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el=>{
-              //   const a = {}
-              //   a.totalFee = el.totalFee
+              this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+              for(const i in this.messageInfo){
+                this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
+              }
+              for(const i in this.messageButtonInfo){
+                this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
+              }
+              this.dealInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              this.dealPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              this.alreadyInfo.map(el=>this.form.customerDetailDtoList.push(el))
+              this.alreadyPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
               //
-              //   return a
-              // }) : []
-              // this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
-              //   const a = {}
-              //   a.totalCost = el.totalCost
-              //   return a
-              // }) : []
-              // this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
-              //   const a = {}
-              //   a.totalFee = el.totalFee
-              //   return a
-              // }) : []
-              // this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
-              //   const a = {}
-              //   a.totalCost = el.totalCost
-              //   return a
-              // }) : []
-              //
-              // if(!this.form.carrierDetailDtoList.length){
-              //   this.$message({
-              //     message: '各款项不能为空~',
-              //     type: 'error'
-              //   })
-              //   this.closeVisibleDialog()
-              //   return false
-              // }else{
-              //   this.oopenVisibleDialog()
-              // }
+              this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el=>{
+                const a = {}
+                a.totalFee = el.totalFee
+
+                return a
+              }) : []
+              this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
+                const a = {}
+                a.totalCost = el.totalCost
+                return a
+              }) : []
+              this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
+                const a = {}
+                a.totalFee = el.totalFee
+                return a
+              }) : []
+              this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
+                const a = {}
+                a.totalCost = el.totalCost
+                return a
+              }) : []
+
+              if(!this.form.customerDetailDtoList.length){
+                this.$message({
+                  message: '各款项不能为空~',
+                  type: 'error'
+                })
+                this.closeVisibleDialog()
+                return false
+              }else{
+                this.oopenVisibleDialog()
+              }
 
             } else {
               return false
@@ -1071,7 +1076,9 @@
         infoMessage(item){
           this.messageInfo.orgName = item.orgName
           this.messageInfo.memberName = item.memberName
+          this.messageInfo.memberPerson = item.memberPerson
           this.messageInfo.memberPersonPhone = item.memberPersonPhone
+          this.messageInfo.memberCode = item.memberCode
           this.messageInfo.settlementType = item.settlementType
           this.messageInfo.checkBillCode = item.checkBillCode
           this.messageInfo.bankAccount = item.bankAccount
@@ -1082,8 +1089,10 @@
           this.messageInfo.checkEndTime = item.checkEndTime
           this.messageInfo.financialOfficer = item.financialOfficer
           this.messageInfo.financialOfficerPhone = item.financialOfficerPhone
-          this.messageInfo.orgBusinessOfficer = item.orgBusinessOfficer
-          this.messageInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
+          this.messageInfo.companyId = item.companyId
+          this.messageInfo.memberId = item.memberId
+          this.messageInfo.orgId = item.orgId
+          this.messageInfo.memberIdType = item.memberIdType
           this.messageButtonInfo.companyName = item.companyName
           this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
           this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone

@@ -96,35 +96,35 @@
             >
           </el-table-column>
           <el-table-column
-            prop="ReceivableFee"
+            prop="receivableFee"
             label="应收账款"
             width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="PayableFee"
+            prop="payableFee"
             label="应付账款"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="ReceivedFee"
+            prop="receivedFee"
             label="已收账款"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="PaidFee"
+            prop="paidFee"
             label="已付账款"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="checkStatus"
+            prop="checkStatusZh"
             label="对账状态"
             width="120"
             sortable
@@ -152,14 +152,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orgBusinessOfficer"
-            label="财务负责人"
+            prop="memberPerson"
+            label="业务负责人"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="orgBusinessOfficerPhone"
+            prop="memberPersonPhone"
             label="业务负责人电话"
             width="140"
             sortable
@@ -187,14 +187,14 @@
           >
           </el-table-column>
           <el-table-column
-            prop="orgFinancialOfficer"
+            prop="financialOfficer"
             label="财务负责人"
             width="130"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="orgFinancialOfficerPhone"
+            prop="financialOfficerPhone"
             label="财务负责人电话"
             width="130"
             sortable
@@ -332,7 +332,6 @@ export default {
               query: {
                 tab: '客户对账-创建对账',
                 id: this.$route.query.id
-                // id: 805
               }
             })
 
@@ -475,10 +474,14 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event){
-      this.selectInfo = row
-      this.isModify = false
-      this.isDbclick = true
-      this.openAddCustomer()
+      this.$router.push({
+        path: '/finance/reconciliation/customer/detailTable/customerRecon',
+        query: {
+          tab: '客户对账-修改查看',
+          id: row.id,
+          urlId: this.$route.query.id
+        }
+      })
     }
   }
 }

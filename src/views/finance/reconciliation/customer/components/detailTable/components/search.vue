@@ -89,7 +89,7 @@ export default {
   },
   watch: {
     orgid(newVal){
-      this.searchForm.orgid = newVal
+      this.searchForm.orgId = newVal
     }
   },
   mounted () {

@@ -13,7 +13,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="开单网点:">
-          <SelectTree v-model="searchForm.orgId" />
+          <SelectTree v-model="searchForm.orgid" />
       </el-form-item>
       <el-form-item label="发货人:">
         <el-input
@@ -85,7 +85,7 @@ export default {
         }
       },
       searchForm: {
-        orgId: '',
+        orgid: '',
         customerName: '',//
         customerMobile: '',//
         startTime: '',//
@@ -102,7 +102,7 @@ export default {
     }
   },
   mounted () {
-    this.searchForm.orgId = this.orgid
+    this.searchForm.orgid = this.orgid
     this.onSubmit()
     // this.searchForm.batchTypeId = this.orgid
   },
@@ -113,7 +113,7 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
-      this.searchForm.orgId = this.orgid
+      this.searchForm.orgid = this.orgid
       this.searchForm.customerName = ''
       this.searchForm.customerMobile = ''
       this.searchForm.startTime = ''

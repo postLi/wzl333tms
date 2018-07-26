@@ -126,12 +126,8 @@ export default {
       }
   },
   mounted () {
-    this.searchQuery.vo.orgId = this.otherinfo.orgid
-    // this.fetchAllCustomer()
-    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
-    //   console.log(res)
-    //   this.loading = false
-    // })
+    this.searchQuery.vo.orgid = this.otherinfo.orgid
+
   },
   data () {
     return {
@@ -154,7 +150,7 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-          "orgId":'',
+          "orgid":'',
           customerName: '',//
           customerMobile: '',//
           startTime: '',//

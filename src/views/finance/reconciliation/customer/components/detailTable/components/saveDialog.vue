@@ -57,7 +57,7 @@
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import {postCreatesaveCarrierDetail} from '@/api/finance/fin_carrier'
+  import {postCSaveCustomerDetail} from '@/api/finance/fin_customer'
   //parseTime
   import {parseTime} from '@/utils'
   export default {
@@ -202,11 +202,11 @@
             }
             if(this.sendId){
               data.tmsFinanceBillCheckDto.id = this.sendId
-              promiseObj = postCreatesaveCarrierDetail(data)
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId)
+              promiseObj = postCSaveCustomerDetail(data)
+              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.urlId)
             }else{
-              promiseObj = postCreatesaveCarrierDetail(data)
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId)
+              promiseObj = postCSaveCustomerDetail(data)
+              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.memberId)
             }
 
             promiseObj.then(res => {
