@@ -116,7 +116,7 @@ export default {
       },
       {
         label: '其他费用支出',
-        prop: 'otherfeeOut',
+        prop: 'fee',
         width: '150',
         fixed: false
       },

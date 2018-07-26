@@ -14,7 +14,7 @@
                   <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></querySelect>
                 </el-form-item>
                 <el-form-item label="收入金额" prop="amount">
-                  <el-input :size="btnsize" v-model="formModel.amount" clearable placeholder="收入金额"></el-input>
+                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="发生时间" prop="settlementTime">
                   <el-date-picker size="mini" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="发生时间">
@@ -86,7 +86,8 @@ export default {
         settlementTime: '',
         wechatAccount: '',
         alipayAccount: '',
-        financialWay: ''
+        financialWay: '',
+        amount: 0
       },
       formModelRules: {},
       setLoadTableList: {},
@@ -177,7 +178,13 @@ export default {
       })
     },
     getLoadTable(obj) {
+      let amount = 0
       this.loadTable = Object.assign([], obj)
+      this.loadTable.forEach((e, index) => {
+        amount += e.shipFeeTotal
+      })
+      this.formModel.amount = amount
+      console.log(this.formModel.amount)
     }
   }
 }

@@ -134,7 +134,7 @@ export default {
       },
       {
         label: '异动费用',
-        prop: 'totalCost',
+        prop: 'fee',
         width: '150',
         fixed: false
       },

@@ -92,7 +92,7 @@ export default {
       {
         label: '运单号',
         prop: 'shipSn',
-        width: '180',
+        width: '150',
         fixed: true
       },
       {
@@ -136,7 +136,7 @@ export default {
       },
       {
         label: '回扣',
-        prop: 'brokerageFee',
+        prop: 'fee',
         width: '150',
         fixed: false
       },

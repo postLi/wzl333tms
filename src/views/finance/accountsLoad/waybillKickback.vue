@@ -157,7 +157,7 @@ export default {
         },
         {
           label: '回扣',
-          prop: 'brokerageFee',
+          prop: 'fee',
           width: '120',
           fixed: false
         },
@@ -275,7 +275,7 @@ export default {
         },
         {
           label: '回扣',
-          prop: 'brokerageFee',
+          prop: 'fee',
           width: '120',
           fixed: false
         },

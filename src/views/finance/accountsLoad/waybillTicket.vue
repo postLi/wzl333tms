@@ -156,7 +156,7 @@ export default {
         },
         {
           label: '实际提货费',
-          prop: 'pickupFee',
+          prop: 'fee',
           width: '120',
           fixed: false
         },
@@ -274,7 +274,7 @@ export default {
         },
         {
           label: '实际提货费',
-          prop: 'pickupFee',
+          prop: 'fee',
           width: '120',
           fixed: false
         },

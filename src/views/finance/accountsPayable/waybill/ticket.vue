@@ -136,7 +136,7 @@ export default {
       },
       {
         label: '单票提货费',
-        prop: 'pickupFee',
+        prop: 'fee',
         width: '150',
         fixed: false
       },

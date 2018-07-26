@@ -134,7 +134,7 @@ export default {
       },
       {
         label: '中转费合计',
-        prop: 'totalCost',
+        prop: 'fee',
         width: '150',
         fixed: false
       },

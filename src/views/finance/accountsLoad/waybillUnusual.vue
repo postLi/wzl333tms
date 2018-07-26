@@ -156,7 +156,7 @@ export default {
         },
         {
           label: '中转费',
-          prop: 'totalCost',
+          prop: 'fee',
           width: '120',
           fixed: false
         },
@@ -274,7 +274,7 @@ export default {
         },
         {
           label: '中转费',
-          prop: 'totalCost',
+          prop: 'fee',
           width: '120',
           fixed: false
         },

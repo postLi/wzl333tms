@@ -13,8 +13,8 @@
                 <el-form-item label="单据号" prop="settlementSn">
                   <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" disabled></querySelect>
                 </el-form-item>
-                <el-form-item label="收入金额" prop="amount">
-                  <el-input :size="btnsize" v-model="formModel.amount" clearable placeholder="收入金额"></el-input>
+                <el-form-item label="支出金额" prop="amount">
+                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="支出金额" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="发生时间" prop="settlementTime">
                   <el-date-picker size="mini" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="发生时间">
@@ -27,7 +27,7 @@
               </div>
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="收支方式" prop="financialWay">
-                  <selectType  filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" clearable placeholder="选择收支方式"></selectType>
+                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" clearable placeholder="选择收支方式"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
                   <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable></el-input>
@@ -66,7 +66,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable"  :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -101,7 +101,8 @@ export default {
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
       formModel: {
-        settlementTime: ''
+        settlementTime: '',
+        amount: 0
       },
       formModelRules: {},
       setLoadTableList: {},
@@ -116,7 +117,7 @@ export default {
     ])
   },
   watch: {
-    settlementId (newVal) {
+    settlementId(newVal) {
       return newVal
     }
   },
@@ -171,8 +172,8 @@ export default {
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
       this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
       if (this.activeName === 'first') { // 批次支出
-        
-      }else if (this.activeName === 'second'){ // 运单支出
+
+      } else if (this.activeName === 'second') { // 运单支出
         this.settlementId = 178
       }
       this.$set(this.addIncomeInfo, 'settlementId', this.settlementId)
@@ -191,7 +192,7 @@ export default {
           this.$message({ type: 'error', message: '保存失败！' })
         })
     },
-    setSettlementId (val) {
+    setSettlementId(val) {
       this.settlementId = val
     },
     cancel() {
@@ -207,7 +208,19 @@ export default {
     },
     handleClick() {},
     getLoadTable(obj) {
+      let amount = 0
       this.loadTable = Object.assign([], obj)
+      this.loadTable.forEach((e, index) => {
+        // e.shipFeeTotal = 3
+        // e.loadFeeTotal = 6
+        if (e.shipFeeTotal) {
+          amount += e.shipFeeTotal
+        }else {
+          amount += e.loadFeeTotal
+        }
+      })
+      this.formModel.amount = amount
+      console.log(this.formModel.amount)
     },
     getTableChange(obj) {
       console.log(obj)
