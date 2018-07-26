@@ -477,6 +477,7 @@
           </el-table>
         </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+        <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
       </div>
     </div>
 </template>
@@ -486,11 +487,13 @@ import SearchForm from './components/search'
 import { PostControlgoods } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import TableSetup from './components/tableSetup'
 import { objectMerge2 } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 export default {
   components: {
     SearchForm,
+    TableSetup,
     Pager
   },
   computed: {
@@ -521,7 +524,8 @@ export default {
       component: 'Send',
       selectInfo: {},
       dataset: [],
-                // loading:false,
+      setupTableVisible: false,
+      loading: false,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
@@ -531,11 +535,6 @@ export default {
 
       },
       searchForm: {
-                    // "currentPage":1,
-                    // "pageSize":10,
-                    // "vo":{
-                    //     "pageType":1
-                    // }
         id: ''
       },
       total: 0,
@@ -548,7 +547,7 @@ export default {
     },
           // PutFh
     fetchAllPutFh() {
-            // this.loading = true
+      this.loading = true
       return PostControlgoods(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
@@ -579,8 +578,12 @@ export default {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-
-    setTable() {},
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },

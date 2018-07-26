@@ -1,4 +1,5 @@
 <template>
+  <div class="tab-wrapper tab-wrapper-100">
     <div class="tab-content" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -535,15 +536,16 @@
       </div>
       <Addsign :isPick="isPick" :issender="true" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id" :isDelivery="isDelivery"></Addsign>
       <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
-      <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
+      <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
     </div>
+  </div>
 </template>
 <script>
 import SearchForm from './components/search'
 import { postDeliveryList, postCancelSign } from '@/api/operation/sign'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-// import TableSetup from './components/tableSetup'
+import TableSetup from './components/tableSetup'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
 import { objectMerge2 } from '@/utils/index'
@@ -553,23 +555,23 @@ export default {
     SearchForm,
     Addsign,
     Addbatch,
-        // TableSetup,
+    TableSetup,
     Pager
   },
   computed: {
-    ...mapGetters([
-      'otherinfo'
-    ]),
+    ...mapGetters(['otherinfo']),
     orgid() {
-            // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+      return this.isModify
+        ? this.selectInfo.orgid
+        : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
-        // this.searchQuery.vo.orgId = this.otherinfo.orgid
+    // this.searchQuery.vo.orgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       this.loading = false
-            // this.licenseTypes = resArr[1]
+      // this.licenseTypes = resArr[1]
     })
   },
   data() {
@@ -591,14 +593,14 @@ export default {
       dotInfo: [],
       repertoryId: '',
       signId: '',
-                // loading:false,
+      // loading:false,
       searchQuery: {
-        'currentPage': 1,
-        'pageSize': 10000,
-        'vo': {
-          'shipId': '',
-          'signId': '',
-          'signStatus': '226'
+        currentPage: 1,
+        pageSize: 10000,
+        vo: {
+          shipId: '',
+          signId: '',
+          signStatus: '226'
         }
       },
       total: 0,
@@ -606,7 +608,7 @@ export default {
     }
   },
   methods: {
-     parseShipStatus(id){
+    parseShipStatus(id) {
       return parseShipStatus(id)
     },
     fetchAllreceipt() {
@@ -620,27 +622,27 @@ export default {
     fetchData() {
       this.fetchAllreceipt()
     },
-         // 获取组件返回的搜索参数
+    // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
-            // 根据搜索参数请求后台获取数据
+      // 根据搜索参数请求后台获取数据
       objectMerge2(this.searchQuery.vo, searchParam)
-            // this.searchQuery.vo.orgId = searchParam.orgid
+      // this.searchQuery.vo.orgId = searchParam.orgid
       this.fetchData()
     },
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-        // getSearchParam (searchParam) {
-        //   Object.assign(this.searchQuery.vo, searchParam)
-        //   this.fetchAllreceipt()
-        // },
+    // getSearchParam (searchParam) {
+    //   Object.assign(this.searchQuery.vo, searchParam)
+    //   this.fetchAllreceipt()
+    // },
     doAction(type) {
       if (type === 'import') {
         this.showImport()
         return false
       }
-          // 判断是否有选中项
+      // 判断是否有选中项
       if (!this.selected.length) {
         this.$message({
           message: '请选择要操作的项~',
@@ -650,19 +652,19 @@ export default {
       }
 
       switch (type) {
-              // 签收
+        // 签收
         case 'pick':
           const ids = this.selected.filter(el => {
             return el.signStatus !== 227
           })
           if (ids.length > 1) {
-               /*  this.searchQuery.vo.repertoryId = ids.map(el => {
+            /*  this.searchQuery.vo.repertoryId = ids.map(el => {
                   return el.repertoryId
                 }) */
             this.dotInfo = ids
 
             this.isSongh = true
-                // this.isModify = true;
+            // this.isModify = true;
             this.isDelivery = true
             this.isPick = false
             this.openAddBatch()
@@ -680,7 +682,6 @@ export default {
           }
           break
         case 'amend':
-
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能修改单条数据',
@@ -706,26 +707,28 @@ export default {
             const signId = this.selected[0].signId
             this.searchQuery.vo.shipId = shipId
             this.searchQuery.vo.signId = signId
-                // console.log(repertoryId);
-            postCancelSign(this.searchQuery.vo).then(res => {
-              this.$message({
-                message: '取消签收成功~',
-                type: 'success'
+            // console.log(repertoryId);
+            postCancelSign(this.searchQuery.vo)
+              .then(res => {
+                this.$message({
+                  message: '取消签收成功~',
+                  type: 'success'
+                })
+                // this.$emit('success')
+                this.fetchAllreceipt()
+                return false
               })
-              // this.$emit('success')
-              this.fetchAllreceipt()
-              return false
-            }).catch(res => {
-                    // this.loading = false
-              this.$message.warning(res.text)
-                    // this.closeMe()
-            })
+              .catch(res => {
+                // this.loading = false
+                this.$message.warning(res.text)
+                // this.closeMe()
+              })
           } else {
             this.$message.warning('不可取消~')
           }
           break
       }
-          // 清除选中状态，避免影响下个操作
+      // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
     setTable() {
@@ -758,7 +761,6 @@ export default {
       this.isDbclick = true
       this.openAddSign()
     }
-
   }
 }
 </script>

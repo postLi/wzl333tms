@@ -1,4 +1,5 @@
 <template>
+  <div class="tab-wrapper tab-wrapper-100">
     <div class="tab-content" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -533,17 +534,18 @@
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      <Addsign :isPick="isPick" :issender="true" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id" :isDelivery="isDelivery"></Addsign>
-      <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
-      <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
     </div>
+    <Addsign :isPick="isPick" :issender="true" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id" :isDelivery="isDelivery"></Addsign>
+    <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+  </div>
 </template>
 <script>
 import SearchForm from './components/search'
 import { postTransferList, postCancelSign } from '@/api/operation/sign'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-// import TableSetup from './components/tableSetup'
+import TableSetup from './components/tableSetup'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
 import { objectMerge2 } from '@/utils/index'
@@ -553,7 +555,7 @@ export default {
     SearchForm,
     Addsign,
     Addbatch,
-        // TableSetup,
+    TableSetup,
     Pager
   },
   computed: {
@@ -606,7 +608,7 @@ export default {
     }
   },
   methods: {
-     parseShipStatus(id){
+    parseShipStatus(id) {
       return parseShipStatus(id)
     },
     fetchAllreceipt() {

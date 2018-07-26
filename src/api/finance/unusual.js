@@ -31,8 +31,10 @@ export function postInsertAbnormal(params) {
 }
  */
 export function putXiugai(id, params) {
-  return fetch.put('/api-finance/finance/tmsfinancefeedetail/v1/' + id, params)
+  return fetch.put('/api-finance/finance/tmsfinancefeedetail/v1/update/' + id, params)
 }
+
+// /finance/tmsfinancefeedetail/v1/update/1022010035347128320?access_token=4381f00c-fd66-4de9-b9dc-20fed97eeec9
 /**
  * 异动删除
  */

@@ -185,6 +185,7 @@
       </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
         <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :isCheck="isCheck" :isDeal="isDeal" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
+        <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
       </div>
     </div>
 </template>
@@ -192,6 +193,7 @@
 import SearchForm from './components/search'
 import { PostGetAbnormalList } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
+import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
 import { objectMerge2 } from '@/utils/index'
@@ -199,6 +201,7 @@ export default {
   components: {
     SearchForm,
     Pager,
+    TableSetup,
     Addabnormal
   },
   computed: {

@@ -288,13 +288,15 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款回收" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
-    </div>
+      <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+  </div>
 </div>
 </template>
 <script>
 import SearchForm from './components/search'
 import { postGoodsfundsList, putUpdateCancelReceipt } from '@/api/finance/payment'
 import { mapGetters } from 'vuex'
+import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import AddPayment from './components/add'
 import { objectMerge2 } from '@/utils/index'
@@ -302,6 +304,7 @@ export default {
   components: {
     SearchForm,
     Pager,
+    TableSetup,
     AddPayment
   },
   computed: {
@@ -330,6 +333,7 @@ export default {
       isModify: false,
       popVisible: false,
       isAccept: false,
+      setupTableVisible: false,
       // rec_status:113,
       loading: false,
       searchQuery: {
@@ -439,8 +443,12 @@ export default {
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    setTable() {}
-
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    }
   }
 }
 </script>

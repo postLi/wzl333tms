@@ -1,6 +1,6 @@
 <template>
 <div class="tab-wrapper tab-wrapper-100">
-    <div class="tab-content" v-loading="loading">
+    <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
@@ -271,7 +271,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
       <Addunusual :issender="true" :isModify="isModify" :isDbClick="isDbClick" :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
-      <!-- <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  /> -->
+      <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
     </div>
 </div>
 </template>
@@ -279,7 +279,7 @@
 import SearchForm from './components/search'
 import { postAbnormalUnusual, Delete } from '@/api/finance/unusual'
 import { mapGetters } from 'vuex'
-// import TableSetup from './components/tableSetup'
+import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addunusual from './components/add'
 import { objectMerge2 } from '@/utils/index'
@@ -287,7 +287,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-        // TableSetup,
+    TableSetup,
     Addunusual
   },
   computed: {

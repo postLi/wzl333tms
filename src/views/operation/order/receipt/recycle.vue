@@ -1,5 +1,6 @@
 <template>
-    <div class="tab-content">
+  <div class="tab-wrapper tab-wrapper-100">
+    <div class="tab-content"  @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -322,20 +323,24 @@
         </div>  
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-      <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept"/>
     </div>
+    <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept"/>
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+  </div>
 </template>
 <script>
 import SearchForm from './components/search'
 import { postReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import TableSetup from './components/tableSetup'
 import AddMark from './components/add'
 import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SearchForm,
     Pager,
+    TableSetup,
     AddMark
   },
   computed: {
@@ -363,6 +368,7 @@ export default {
       dotInfo: [],
       isModify: false,
       popVisible: false,
+      setupTableVisible: false,
       isAccept: false,
                 // rec_status:113,
                 // loading:false,
@@ -473,8 +479,12 @@ export default {
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    setTable() {}
-
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    }
   }
 }
 </script>

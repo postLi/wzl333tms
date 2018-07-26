@@ -8,12 +8,12 @@
             </el-select> -->
           <el-form-item label="运单号" prop="shipSn">
             <!-- <el-input v-if="this.isDbClick" v-model="form.shipSn"  maxlength="20" auto-complete="off" :disabled="true"></el-input> -->
-              <querySelect valuekey="shipSn" search="shipSn" :disabled="this.isDbClick"  type="order" :key="querykey"  @change="fetchShipInfo"  placeholder="请输入运单号" v-model="form.shipSn">
+              <querySelect valuekey="shipSn" :param="{'shipFromOrgid': otherinfo.orgid}" search="shipSn" :disabled="this.isDbClick"  type="order" :key="querykey"  @change="fetchShipInfo2"  placeholder="请输入运单号" v-model="form.shipSn">
               </querySelect>
               <!-- <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo"  v-model="form.shipSn" :disabled="isDbClick ? true : false" /> -->
           </el-form-item>
-          <el-form-item label="开单时间" prop="createTime">
-            <el-input :value="form.createTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+          <el-form-item label="开单时间" prop="shipcreateTime">
+            <el-input :value="form.shipcreateTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="出发城市" prop="shipFromCityName">
             <el-input v-model="form.shipFromCityName"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
@@ -57,7 +57,7 @@
         <div class="box1">
           <div class="titles">异动费用</div>
           <el-form-item label="异动费用" prop="fee" >
-            <el-input v-model="form.fee" v-number-only:point maxlength="6" auto-complete="off" placeholder="请输入异动费用"></el-input>
+            <el-input v-model="form.fee" v-number-only:point maxlength="6" auto-complete="off" placeholder="请输入异动费用" :disabled="isDbClick ? true : false"></el-input>
           </el-form-item>
           <!-- <el-form-item label="费用类型" prop="value">
             <el-select v-model="form.feeTypeId" placeholder="请选择费用类型">
@@ -70,24 +70,27 @@
             </el-select>
           </el-form-item> -->
           <el-form-item label="费用类型:" prop="incomePayType">
-            <el-select v-model="form.incomePayType">
+            <el-select v-model="form.incomePayType" :disabled="isDbClick ? true : false">
               <el-option label="异动增款" value="RECEIVABLE"></el-option>
               <el-option label="异动减款" value="PAYABLE"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="异动时间:" prop="createTime">
-          <el-date-picker
-            v-model="searchCreatTime"
-            align="right"
-            type="date"
-            :picker-options="pickOption2"
-            placeholder="选择日期"
-            value-format="timestamp"
-            >
-          </el-date-picker>
+            <el-input v-if="isDbClick" maxlength="200" v-model="form.createTime" :disabled="true"></el-input>
+            <el-date-picker
+              v-else
+              v-model="form.createTime"
+              align="right"
+              type="date"
+              :key="timekey"
+              :picker-options="pickOption2"
+              placeholder="选择日期"
+              value-format="timestamp"
+              >
+            </el-date-picker>
           </el-form-item> 
           <el-form-item class="driverRemarks ms" label="异动备注" prop="remark" >
-            <el-input type="textarea" maxlength="200" v-model="form.remark" placeholder="注：最多可输入200个字符"></el-input>
+            <el-input type="textarea" maxlength="200" v-model="form.remark" placeholder="注：最多可输入200个字符" :disabled="isDbClick ? true : false"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -173,7 +176,9 @@ export default {
     ])
   },
   data() {
+    const _this = this
     return {
+      timekey: '111',
       querykey: '11',
       searchCreatTime: +new Date(),
       incomePayType: 'RECEIVABLE',
@@ -185,6 +190,7 @@ export default {
         remark: '',
         // 运单信息
         shipSn: '',
+        shipcreateTime: '',
         createTime: '',
         shipFromCityName: '',
         shipToCityName: '',
@@ -216,10 +222,10 @@ export default {
         remark: [
           { required: true, message: '请输入异动备注', trigger: 'blur' }
         ],
-        // shipSn: [
-        //   // { required: true, trigger: 'blur', validator: validateshipSn}
-        //   { required: true, message: '请输入运单号', trigger: 'change' }
-        // ],
+        shipSn: [
+          // { required: true, trigger: 'blur', validator: validateshipSn}
+          { required: true, message: '请输入运单号', trigger: 'blur' }
+        ],
         incomePayType: [
           { required: true, message: '请选择费用类型', trigger: 'change' }
         ]
@@ -240,7 +246,8 @@ export default {
       pickOption2: {
         firstDayOfWeek: 1,
         disabledDate(time) {
-          return time.getTime() < Date.now()
+          // return time.getTime() < Date.now()
+          return time.getTime() < new Date(_this.form.shipcreateTime.replace(/-/g, '/')).getTime()
         }
       }
 
@@ -250,7 +257,7 @@ export default {
     this.form.orgid = this.orgid
     if (!this.inited) {
       this.inited = true
-      this.initInfo()
+      this.initInfo() // 进来的时候初始化页面
     }
   },
   watch: {
@@ -302,10 +309,11 @@ export default {
       if (this.isModify) {
         this.popTitle = '异动修改'
         this.fetchShipInfo(this.info)
+        // this.form.createTime = this.info.createTime
       } else if (this.isDbClick) {
         this.popTitle = '异动查看'
         this.fetchShipInfo(this.info)
-
+        // this.form.createTime = this.info.createTime
         // console.log(this.info.nowPayFee)
       } else {
         this.popTitle = '异动登记'
@@ -314,7 +322,7 @@ export default {
         // this.fetchShipInfo(this.info)
         this.form.incomePayType = this.incomePayType
         this.form.shipSn = ''
-        // this.form.createTime = new Date()
+        this.form.createTime = new Date()
         // this.dengji()
       }
     }
@@ -378,46 +386,72 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
+    infoData() {
+      // postAbnormalUnusual.
+    },
+    fetchShipInfo2(data) {
+      // const oldVal = this.form[type]
+
+      if (data) {
+        console.log('get ship data:', data)
+        this.timekey = Math.random()
+        this.form.shipcreateTime = data.createTime
+        this.form.shipFromCityName = data.shipFromCityName
+        this.form.shipToCityName = data.shipToCityName
+        this.form.cargoName = data.cargoName
+        this.form.cargoPack = data.cargoPack
+        this.form.cargoAmount = data.cargoAmount
+        this.form.cargoVolume = data.cargoVolume
+        this.form.shipFee = data.shipFee
+        this.form.shipPayWayName = data.shipPayWay
+        this.form.shipSn = data.shipSn
+        // this.form.createTime = data.createTime
+        this.form.shipNowpayFee = data.shipNowpayFee
+        this.form.shipArrivepayFee = data.shipArrivepayFee
+        this.form.shipMonthpayFee = data.shipMonthpayFee
+        this.form.shipReceiptpayFee = data.shipReceiptpayFee
+
+        this.form.cargoWeight = data.cargoWeight
+
+        this.form.nowPayFee = data.nowPayFee
+        this.form.shipLoadId = data.id
+
+        this.form.shipPayWay = data.shipPayWay
+      }
+    },
     fetchShipInfo(data) {
       // const oldVal = this.form[type]
 
       if (data) {
         console.log('ship data:', data)
-        if (this.isModify || this.isDbClick) {
-          this.form.shipSn = data.shipSn
-          this.form.shipFee = data.shipFee
-          this.form.createTime = data.createTime
-          this.form.cargoName = data.cargoName
-          this.form.cargoPack = data.cargoPack
-          this.form.cargoAmount = data.cargoAmount
-          this.form.shipLoadId = data.shipId
-          this.form.shipFromCityName = data.shipFromCityName
-          this.form.shipToCityName = data.shipToCityName
-          this.form.shipMonthpayFee = data.monthPayFee
-          this.form.shipReceiptpayFee = data.receiptPayFee
-          this.form.shipArrivepayFee = data.arrivePayFee
 
-          this.form.shipNowpayFee = data.nowPayFee
-          this.form.shipPayWayName = data.shipPayWay
-          this.form.cargoWeight = data.cargoWeight
-          this.form.cargoVolume = data.cargoVolume
+        this.form.shipSn = data.shipSn
+        this.form.shipFee = data.shipFee
+        this.form.shipcreateTime = data.shipCreateTime
+        this.form.createTime = this.isModify ? +new Date(data.createTime.replace(/-/g, '/')) : data.createTime // 时间转换
+        this.form.cargoName = data.cargoName
+        this.form.cargoPack = data.cargoPack
+        this.form.cargoAmount = data.cargoAmount
+        this.form.shipLoadId = data.shipId
+        this.form.shipFromCityName = data.shipFromCityName
+        this.form.shipToCityName = data.shipToCityName
+        this.form.shipMonthpayFee = data.monthPayFee
+        this.form.shipReceiptpayFee = data.receiptPayFee
+        this.form.shipArrivepayFee = data.arrivePayFee
+
+        this.form.shipNowpayFee = data.nowPayFee
+        this.form.shipPayWayName = data.shipPayWay
+        this.form.cargoWeight = data.cargoWeight
+        this.form.cargoVolume = data.cargoVolume
           // this.form.shipFee = data.shipFee
-          this.form.nowPayFee = data.nowPayFee
+        this.form.nowPayFee = data.nowPayFee
 
-          this.form.fee = data.changeFee
-          this.form.incomePayType = data.incomePayType
-          this.form.shipCreateTime = data.shipCreateTime
-          this.form.remark = data.remark
-          this.form.shipLoadId = data.id
-          this.form.shipPayWayName = data.shipPayWay
+        this.form.fee = data.changeFee
+        this.form.incomePayType = data.incomePayType
+        this.form.remark = data.remark
+        this.form.shipPayWayName = data.shipPayWay
 
-          this.form.shipPayWay = data.shipPayWay
-        } else {
-          this.form = Object.assign(this.form, data)
-          this.form.shipLoadId = data.id
-          this.form.shipNowpayFee = data.shipNowpayFee
-          this.form.shipPayWayName = data.shipPayWayName
-        }
+        this.form.shipPayWay = data.shipPayWay
       }
       //  else {
         // this.$message({
@@ -662,6 +696,7 @@ export default {
         min-width: 725px;
         height: 50%;
         line-height: 1.5;
+        color:#2ca3f1;
     }
     .ts{
       color:orange;

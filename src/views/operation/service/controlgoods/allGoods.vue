@@ -477,6 +477,7 @@
           </el-table>
         </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+        <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
       </div>
     </div>
 </template>
@@ -487,13 +488,14 @@ import { GetControl } from '@/api/operation/dashboard'
 import orderManageApi from '@/api/operation/orderManage'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-// import { deleteTrunkInfo } from '@/api/company/trunkManage'
+import TableSetup from './components/tableSetup'
 import { objectMerge2 } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 
 export default {
   components: {
     SearchForm,
+    TableSetup,
     Pager
   },
   computed: {
@@ -516,6 +518,7 @@ export default {
       selectInfo: {},
       dataset: [],
       loading: false,
+      setupTableVisible: false,
       selected: [],
       searchQuery: {
         'currentPage': 1,
@@ -611,11 +614,15 @@ export default {
           // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
-    },
-    setTable() {}
-
+    }
   }
 }
 </script>

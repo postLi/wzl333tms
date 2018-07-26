@@ -4,8 +4,8 @@
       <SearchForm :orgid="otherinfo.orgid" type="funds_account_status" title="到账" status="fundsAccountStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('send')">货款汇款</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消汇款</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('send')">货款到账</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消到账</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
             <!-- <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印</el-button> -->
@@ -274,7 +274,8 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
-    </div>
+      <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+  </div>
 </div>
 </template>
 <script>
@@ -282,11 +283,13 @@ import SearchForm from './components/search'
 import { postGoodsfundsList, putUpdateCancelReceipt } from '@/api/finance/payment'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import TableSetup from './components/tableSetup'
 import AddPayment from './components/add'
 import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     SearchForm,
+    TableSetup,
     Pager,
     AddPayment
   },
@@ -315,6 +318,7 @@ export default {
       dotInfo: {},
       isModify: false,
       popVisible: false,
+      setupTableVisible: false,
       isAccept: false,
       // rec_status:113,
       loading: false,
@@ -424,8 +428,12 @@ export default {
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    setTable() {}
-
+    setTable() {
+      this.setupTableVisible = true
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
+    }
   }
 }
 </script>
