@@ -71,7 +71,6 @@ function getLodop(oOBJECT, oEMBED) {
           document.body.innerHTML = strCLodopInstall + document.body.innerHTML;
         return;
       } else {
-
         if (CLODOP.CVERSION < "3.0.4.3") {
           if (isIE) document.write(strCLodopUpdate);
           else

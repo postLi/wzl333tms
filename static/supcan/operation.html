@@ -8,7 +8,7 @@
   <script src="untils/common.js"></script>
   <script>
   var query = getUrlParams()
-
+  var path = window.location.protocol + '//' + window.location.host
   function OnReady(id) {
     AF.func("Build", "report/operation.xml");
 
@@ -23,7 +23,7 @@
     // var businessType = "";
 
     // AF.func("SetSource", "ds1 \r\n http://localhost:7010/api-finance/finance/report/v1/findOperationReport?startTime="+startTime+"&endTime="+endTime+"&orgId="+orgId+"&selectType="+selectType+"&shipToCityName="+shipToCityName+"&businessType="+businessType+"&access_token="+access_token);  
-    AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/findOperationReport" + query);
+    AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-finance/finance/report/v1/findOperationReport" + query);
 
     //需要重新计算， 因为SetSource仅仅是相当于更改一个属性?
     AF.func("Calc", "");
@@ -35,8 +35,8 @@
 <body>
   <div id="main" style="position:relative;width:100%;height:380px">
     <script>
-    // insertReport('AF', 'FullScreen;Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0 ')
-    insertReport('AF', '')
+    insertReport('AF', 'FullScreen;Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0 ')
+    // insertReport('AF', '')
 
     </script>
     <!--Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0-->

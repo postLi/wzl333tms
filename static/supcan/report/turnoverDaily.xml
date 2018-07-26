@@ -5,7 +5,7 @@
 		<Properties>
 			<BackGround bgColor="#FFFFFF"/>
 			<DefaultTD>
-				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="2" topBorder="2" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="center" vAlign="middle" isProtected="false" isThousandSeparat="true" datatype="0" isRound="true" isPrint="true"/>
+				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#1E1E1E" topBorderStyle="solid" decimal="2" align="center" vAlign="middle" isProtected="false" isThousandSeparat="true" datatype="1" isRound="true" isPrint="true"/>
 			</DefaultTD>
 			<Other isShowZero="true" isRefOri="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
 		</Properties>
@@ -13,6 +13,7 @@
 			<Font faceName="Microsoft YaHei UI" charSet="134" height="-14" weight="400" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
 			<Font faceName="Microsoft YaHei UI" charSet="134" height="-19" weight="700" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
 			<Font faceName="Microsoft YaHei UI" charSet="134" height="-14" weight="700" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
+			<Font faceName="微软雅黑" charSet="134" height="-37" weight="700" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
 		</Fonts>
 		<Table>
 			<Col width="140"/>
@@ -28,118 +29,102 @@
 			<Col width="140"/>
 			<Col width="140"/>
 			<Col width="140"/>
-			<Col width="45"/>
+			<Col width="2"/>
 			<TR height="25" sequence="0">
-				<TD fontIndex="1" charSpace="2">营业额日报表</TD>
-				<TD fontIndex="1" charSpace="2">营业额日报表</TD>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD/>
+				<TD fontIndex="3" leftBorder="2" topBorder="2" topBorderColor="#C0C0C0" datatype="0" charSpace="2">营业额日报表</TD>
+				<TD fontIndex="1" leftBorder="2" topBorder="2" datatype="0" charSpace="2">营业额日报表</TD>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD topBorderColor="#C0C0C0" datatype="0"/>
 			</TR>
 			<TR height="25" sequence="1">
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD leftBorder="1" topBorder="1"/>
-				<TD/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD datatype="0"/>
+				<TD topBorderColor="#C0C0C0" datatype="0"/>
 			</TR>
 			<TR height="26" sequence="2">
-				<TD fontIndex="2">序号</TD>
-				<TD fontIndex="2">开单网点</TD>
-				<TD fontIndex="2">签收网点</TD>
-				<TD fontIndex="2">到达城市</TD>
-				<TD fontIndex="2">发货人</TD>
-				<TD fontIndex="2">货品名</TD>
-				<TD fontIndex="2">现付</TD>
-				<TD fontIndex="2">到付</TD>
-				<TD fontIndex="2">回单付</TD>
-				<TD fontIndex="2">月结</TD>
-				<TD fontIndex="2">运费合计</TD>
-				<TD fontIndex="2">回扣</TD>
-				<TD fontIndex="2">实收金额</TD>
-				<TD fontIndex="2"/>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">序号</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">开单网点</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">签收网点</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">到达城市</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">发货人</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">货品名</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">现付(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">到付(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">回单付(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">月结(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">运费合计(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">回扣(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" datatype="0">实收金额(元)</TD>
+				<TD fontIndex="2" leftBorderColor="#1E1E1E" datatype="0"/>
 			</TR>
 			<TR height="24" sequence="3">
-				<TD datatype="1" formula="=dataRowNumber()"/>
-				<TD datatype="1" formula="=datarow(&apos;营业额日报表\data\list\jsonobject&apos;)"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD/>
+				<TD leftBorderColor="#1E1E1E" formula="=dataRowNumber()"/>
+				<TD leftBorderColor="#1E1E1E" formula="=datarow(&apos;营业额日报表\data\list\jsonobject&apos;)"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
+				<TD leftBorderColor="#1E1E1E"/>
 			</TR>
-			<TR height="24" sequence="4">
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="6"/>
-				<TD datatype="6"/>
-				<TD datatype="6"/>
-				<TD datatype="6"/>
-				<TD datatype="6"/>
-				<TD datatype="6"/>
-				<TD datatype="6"/>
-				<TD/>
+			<TR height="22" sequence="4">
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E">合计</TD>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(G4:@G4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(H4:@H4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(I4:@I4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(J4:@J4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(K4:@K4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(L4:@L4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" datatype="6" formula="=Sum(M4:@M4)"/>
+				<TD leftBorderColor="#1E1E1E" datatype="6"/>
 			</TR>
-			<TR height="24" sequence="5">
-				<TD datatype="1"/>
-				<TD datatype="1">合计</TD>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="6" formula="=Sum(G4:G5,0.0001)">0.0001</TD>
-				<TD datatype="6" formula="=Sum(H4:H5,0.0001)">0.0001</TD>
-				<TD datatype="6" formula="=Sum(I4:I5,0.0001)">0.0001</TD>
-				<TD datatype="6" formula="=Sum(J4:J5,0.0001)">0.0001</TD>
-				<TD datatype="6" formula="=Sum(K4:K5,0.0001)">0.0001</TD>
-				<TD datatype="6" formula="=Sum(L4:L5,0.0001)">0.0001</TD>
-				<TD datatype="6" formula="=Sum(M4:M5,0.0001)">0.0001</TD>
-				<TD/>
-			</TR>
-			<TR height="24" sequence="6">
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD datatype="1"/>
-				<TD/>
+			<TR height="4" sequence="5">
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
+				<TD leftBorder="2"/>
 			</TR>
 		</Table>
 		<Merges>
@@ -163,7 +148,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://localhost:7010/api-finance/finance/report/v1/dateReport?currentPage=1&amp;pageSize=1000&amp;shipFromOrgid=1&amp;senderCustomerName=&amp;createTimeStart=2018-07-07&amp;createTimeEnd=2018-10-10&amp;access_token=dc43710f-c91e-4e3f-aaa8-73303fbc6854</Source>
+	<Source>http://192.168.1.157:7010/api-finance/finance/report/v1/dateReport?currentPage=1&amp;pageSize=1000&amp;shipFromOrgid=1&amp;senderCustomerName=&amp;createTimeStart=2018-07-07&amp;createTimeEnd=2018-10-10&amp;access_token=4381f00c-fd66-4de9-b9dc-20fed97eeec9</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>

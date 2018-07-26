@@ -8,7 +8,8 @@
   <script src="untils/common.js"></script>
   <script>
   var query = getUrlParams()
-
+  // var path = window.location.protocol + '//' + window.location.host
+  var path = window.location.protocol + '//' + window.location.host
   function OnReady(id) {
     AF.func("Build", "report/incomeTotal.xml");
     AF.func("SelectCell", "0\r\n0");
@@ -17,8 +18,9 @@
     // var startCreatTime = "2018-05-13 00:00:00";
     // var endCreatTime = "2018-07-25 23:59:59";
     // var shipFromOrgid = 1;
-    // AF.func("SetSource", "ds1 \r\n http://localhost:7010/api-finance/finance/report/v1/findDetail?startCreatTime="+startCreatTime+"&endCreatTime="+endCreatTime+"&shipFromOrgid="+shipFromOrgid+"&access_token="+access_token);  
-    AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/findDetail" + query);
+    // AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/findDetail?startCreatTime="+startCreatTime+"&endCreatTime="+endCreatTime+"&shipFromOrgid="+shipFromOrgid+"&access_token="+access_token);  
+    AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-finance/finance/report/v1/findDetail" + query);
+    console.log("ds1 \r\n "+ path +"/api/api-finance/finance/report/v1/findDetail" + query)
     AF.func("Calc", "");
   }
 
@@ -28,8 +30,8 @@
 <body>
   <div id="main" style="position:relative;width:100%;height:380px">
     <script>
-    // insertReport('AF', 'FullScreen;Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0')
-    insertReport('AF', '')
+    insertReport('AF', 'FullScreen;Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0')
+    // insertReport('AF', '')
 
     </script>
     <!--Rebar=Print; print=11, 216,18;TabScrollBar=none;Border=none;LeftRulerWidthPercent=0-->

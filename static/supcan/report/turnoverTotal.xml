@@ -5,7 +5,7 @@
 		<Properties>
 			<BackGround bgColor="#FFFFFF"/>
 			<DefaultTD>
-				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" datatype="0" isRound="true" isPrint="true"/>
+				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#1E1E1E" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" datatype="0" isRound="true" isPrint="true"/>
 			</DefaultTD>
 			<Other isShowZero="true" isRefOri="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
 		</Properties>
@@ -15,18 +15,18 @@
 			<Font faceName="微软雅黑" charSet="134" height="-14" weight="700" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
 		</Fonts>
 		<Table>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
-			<Col width="140"/>
+			<Col width="187"/>
+			<Col width="277"/>
+			<Col width="163"/>
+			<Col width="164"/>
+			<Col width="165"/>
+			<Col width="162"/>
+			<Col width="166"/>
+			<Col width="161"/>
+			<Col width="174"/>
 			<Col width="15"/>
 			<TR height="24" sequence="0">
-				<TD fontIndex="1" align="center">营业额汇总表</TD>
+				<TD fontIndex="1" topBorderColor="#C0C0C0" align="center">营业额汇总表</TD>
 				<TD/>
 				<TD/>
 				<TD/>
@@ -50,30 +50,42 @@
 				<TD topBorder="0"/>
 			</TR>
 			<TR height="24" sequence="2">
-				<TD fontIndex="2" align="center">序号</TD>
-				<TD fontIndex="2" align="center">开单网点</TD>
-				<TD fontIndex="2" align="center">总运费</TD>
-				<TD fontIndex="2" align="center">实收费用</TD>
-				<TD fontIndex="2" align="center">回扣</TD>
-				<TD fontIndex="2" align="center">现付</TD>
-				<TD fontIndex="2" align="center">到付</TD>
-				<TD fontIndex="2" align="center">回单付</TD>
-				<TD fontIndex="2" align="center">月结</TD>
-				<TD topBorder="0"/>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">序号</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">开单网点</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">总运费(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">实收费用(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">回扣(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">现付(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">到付(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">回单付(元)</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF" leftBorderColor="#1E1E1E" align="center">月结(元)</TD>
+				<TD topBorder="0" leftBorderColor="#1E1E1E"/>
 			</TR>
 			<TR height="24" sequence="3">
-				<TD align="center" datatype="1" formula="=dataRowNumber()">1</TD>
-				<TD align="center" datatype="1" formula="=datarow(&apos;turnoverTotal\data\list\jsonobject&apos;)"/>
-				<TD align="center" datatype="1"/>
-				<TD align="center" datatype="1"/>
-				<TD align="center" datatype="1"/>
-				<TD align="center" datatype="1"/>
-				<TD align="center" datatype="1"/>
-				<TD align="center" datatype="1"/>
-				<TD align="center" datatype="1"/>
-				<TD topBorder="0"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=dataRowNumber()"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=datarow(&apos;turnoverTotal\data\list\jsonobject&apos;)"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD topBorder="0" leftBorderColor="#1E1E1E"/>
 			</TR>
-			<TR height="15" sequence="4">
+			<TR height="24" sequence="4">
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1">合计</TD>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(C4:@C4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(D4:@D4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(E4:@E4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(F4:@F4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(G4:@G4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(H4:@H4)"/>
+				<TD textColor="#0000FF" leftBorderColor="#1E1E1E" align="center" datatype="1" formula="=sum(I4:@I4)"/>
+				<TD topBorder="0" leftBorderColor="#1E1E1E"/>
+			</TR>
+			<TR height="15" sequence="5">
 				<TD leftBorder="0"/>
 				<TD leftBorder="0"/>
 				<TD leftBorder="0"/>
@@ -641,7 +653,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>D:\demo\apache-tomcat-7.0.88\webapps\financeReport\reportdata\turnoverTotal.json</Source>
+	<Source>http://192.168.1.157:7010/api-finance/finance/report/v1/turnoverReport?createTimeStart=2017-01-01&amp;createTimeEnd=2018-10-25&amp;shipFromOrgid=1&amp;access_token=4381f00c-fd66-4de9-b9dc-20fed97eeec9</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>
