@@ -1742,7 +1742,7 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           // 判断运费是否符合总计
-          if (getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee) !== this.form.tmsOrderShip.shipTotalFee) {
+          if (getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee) !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
             console.log(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee), this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
             this.$message.error('各付款方式之和与合计运费不等~')
           } else {

@@ -61,7 +61,7 @@
               <template slot-scope="scope">
                 <div v-if="column.expand">
                   <!-- <template v-if="scope.row[column.prop.replace(/^input/i,'').replace(/fee$/i,'').toLocaleLowerCase()+'State'] === 'ALLSETTLEMENT'">已结算</template> -->
-                  <el-checkbox checked @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-checkbox>
+                  <el-checkbox checked @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" >{{ scope.row[column.prop.replace(/^input/i,'not')] }}</el-checkbox>
                   
                   <!-- <el-checkbox checked v-model="rightTable[scope.$index][column.prop]" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-checkbox> -->
                 </div>

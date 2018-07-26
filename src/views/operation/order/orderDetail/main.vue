@@ -268,7 +268,7 @@
             <div class="order-form-item">
               <span class="order-form-label">车牌号</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.truckIdNumber" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipTruckIdNumber" />
               </el-form-item>
             </div>
           </el-col>
