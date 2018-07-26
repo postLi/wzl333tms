@@ -64,7 +64,7 @@
         </el-table-column>
         <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
         </el-table-column>
-        <el-table-column prop="amount" sortable label="运费合计" width="120">
+        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="120">
         </el-table-column>
