@@ -305,7 +305,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          accountApi.postCreateFee(this.otherinfo.orgid, this.submitData).then(data => {
+          accountApi.postCreateFee(this.$route.query.searchQuery.orgAllId, this.submitData).then(data => {
             this.$message({ type: 'success', message: '操作成功' })
             this.closeMe()
             this.$router.push({ path: '/finance/accountsReceivable' })
