@@ -211,7 +211,7 @@ export default {
               path: '/finance/reconciliation/customer/detailTable',
               query: {
                 tab: '客户对账-对账明细',
-                id: this.selectInfo.shipSenderId
+                id: this.selected[0].shipSenderId
               }
             })
 

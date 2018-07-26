@@ -83,6 +83,7 @@
         default: false
       },
       sendId: [Number,String],
+      memberId: [Number,String],
       urlId: [Number,String]
     },
     data() {
@@ -167,32 +168,21 @@
         deep: true
       },
       popVisible (newVal) {
-        this.fetchData()
+
       },
       sendId(newVal){
 
       },
+      memberId(newVal){
+      },
+
       urlId(){
-        console.log(this.urlId)
       }
     },
-    mounted() {
 
+    mounted() {
     },
     methods: {
-      search (item) {
-        // return item.pickupBatchNumber ? false : true
-      },
-      fetchFindByShipSnOrGoodSn() {
-        // this.loading = true
-        // return getFindShipByid(this.dotInfo.id).then(data => {
-        //   this.usersArr = data
-        //   this.loading = false
-        // })
-      },
-      fetchData() {
-        this.fetchFindByShipSnOrGoodSn()
-      },
       closeMe (done) {
         this.reset()
         this.$emit('update:popVisible', false);
@@ -204,21 +194,19 @@
       },
 
       submitForm(formName) {
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-
             this.loading = true
             let promiseObj
             let data = {}
             for(const i in this.dotInfo){
               data[i] = this.dotInfo[i]
             }
-            // data = this.dotInfo
             if(this.sendId){
               data.tmsFinanceBillCheckDto.id = this.sendId
               promiseObj = postCreatesaveCarrierDetail(data)
+              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId)
             }else{
               promiseObj = postCreatesaveCarrierDetail(data)
+              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId)
             }
 
             promiseObj.then(res => {
@@ -227,15 +215,11 @@
                 message: '添加成功~',
                 type: 'success'
               })
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId)
+
               this.closeMe()
             }).catch(err => {
               this.loading = false
             })
-        //   } else {
-        //     return false;
-        //   }
-        // });
       },
     }
   }

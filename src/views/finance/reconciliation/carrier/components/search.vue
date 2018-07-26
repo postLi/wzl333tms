@@ -107,6 +107,7 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm () {
+
       this.searchForm.orgid = this.orgid
       this.searchForm.carrierId = ''
       this.searchForm.startTime = ''

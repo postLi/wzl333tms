@@ -1,13 +1,12 @@
 <template>
-  <div class="saveDialog-maintain">
+  <div class="saveDialog-index">
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
-        <!--isDepMain-->
         <div class="depmain-div" >
-          <div class="dialogMoney">
+          <!--<div class="dialogMoney">-->
 
-          对账总金额：<span>{{totaMoney}}元</span>
-          </div>
+          <!--对账总金额：<span>{{totaMoney}}元</span>-->
+          <!--</div>-->
           <el-table
             ref="multipleTable"
             :data="dialogInfo"
@@ -59,7 +58,6 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import {postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
-  // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
 
   export default {
     components: {
@@ -147,9 +145,6 @@
       }
     },
     methods: {
-      search (item) {
-
-      },
       closeMe (done) {
         this.reset()
         this.$emit('update:popVisible', false);
@@ -170,7 +165,7 @@
           this.loading = false
           this.$message({
             type: 'success',
-            message: '操作成功~'
+            message: '该对账单已经完成对账~'
           })
           this.$emit('success')
           this.closeMe()
@@ -184,7 +179,7 @@
 </script>
 
 <style lang="scss">
-  .saveDialog-maintain .pickpopDepMain{
+  .saveDialog-index .pickpopDepMain{
     top: 29%;
     bottom: auto;
     min-width: 486px;
@@ -195,7 +190,7 @@
     }
 
   }
-  .saveDialog-maintain .popRight-content{
+  .saveDialog-index .popRight-content{
     padding: 20px 0 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{

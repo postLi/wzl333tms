@@ -217,7 +217,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <IndexDialog :issender="true" :isModify="isModify"  :dotInfo="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"></IndexDialog>
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
@@ -228,7 +228,7 @@ import {postCFinancebillcheckList,deleteCustomer,postCompletion} from '@/api/fin
 import {deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/add'
+import IndexDialog from '../../../carrier/components/detailTable/components/indexDialog'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
@@ -237,7 +237,7 @@ export default {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    IndexDialog
   },
   computed: {
       ...mapGetters([
@@ -318,7 +318,7 @@ export default {
       if(!this.selected.length && type !== 'storage'){
           // this.closeAddCustomer()
           this.$message({
-              message: '请选择要操作的项~',
+              message: '请选择要操作的对账单~',
               type: 'warning'
           })
           return false
@@ -351,7 +351,6 @@ export default {
           break;
         // 对账完成 cancelCom
         case 'completion':
-          this.closeAddCustomer()
           if(this.selected.length > 1){
             this.$message({
               message: '只能选择一条数据进行跟踪设置~',
@@ -360,22 +359,10 @@ export default {
             return false
 
           }else{
+
             if(this.selected[0].checkStatus === 0){
-              let data = {
-                id:'',
-                checkStatus:0
-              }
-              data.id = this.selected[0].id
-              postUpdateBillCheckSelective(data).then(res => {
-                this.loading = false
-                this.$message({
-                  type: 'success',
-                  message: '操作成功~'
-                })
-                this.fetchData()
-              }).catch(err => {
-                this.loading = false
-              })
+              this.openAddCustomer()
+              this.selectInfo = this.selected[0]
             }else{
               this.$message({
                 type: 'info',
@@ -399,7 +386,7 @@ export default {
             if(this.selected[0].checkStatus === 1){
               let _data = {
                 id:'',
-                checkStatus:1
+                checkStatus:0
               }
               _data.id = this.selected[0].id
               postUpdateBillCheckSelective(_data).then(res => {

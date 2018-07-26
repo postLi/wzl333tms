@@ -44,17 +44,17 @@ export function postCFinanceinitialize(params) {
  */
 export function postCSaveCustomerDetail(params) {
   return fetch.post('/api-finance/finance/customerdetail/v1/saveCustomerDetail/', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data
   })
 }
 /**
- * /finance/customerdetail/v1/{id}
- 根据ID删除客户对账表信息
+ * http://192.168.1.78:7010/yuwen/finance/customerdetail/v1/1016947217178558464?access_token={{access_token
+ 修改查看客户对账表信息
  * @param id
  * @returns {*}
  */
-export function deleteCustomer(id) {
-  return fetch.delete('/api-finance/finance/customerdetail/v1/' + id )
+export function postCustomerdetail(id) {
+  return fetch.post('/api-finance/finance/customerdetail/v1/' + id )
 }
 
 

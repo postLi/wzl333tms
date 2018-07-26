@@ -215,6 +215,9 @@
             width="140"
             sortable
           >
+            <template slot-scope="scope">
+              <el-input v-model="dealInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+            </template>
           </el-table-column>
 
 
@@ -352,6 +355,9 @@
             width="140"
             sortable
           >
+            <template slot-scope="scope">
+              <el-input v-model="dealPayInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+            </template>
           </el-table-column>
 
 
@@ -496,6 +502,9 @@
             width="140"
             sortable
           >
+            <template slot-scope="scope">
+              <el-input v-model="alreadyInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+            </template>
           </el-table-column>
 
 
@@ -634,6 +643,9 @@
             width="140"
             sortable
           >
+            <template slot-scope="scope">
+              <el-input v-model="alreadyPayInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+            </template>
           </el-table-column>
 
 
@@ -688,7 +700,7 @@
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" @success="fetchList" :urlId="$route.query.urlId"></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" :memberId="messageInfo.memberId" @success="fetchList" :urlId="$route.query.urlId"></SaveDialog>
   </div>
 </template>
 
@@ -777,6 +789,7 @@
             visibleDialog:false,
             loading:false,
             btnsize: 'mini',
+
             searchTitle:{
               carrierId:'',//
               startTime:'',
@@ -825,7 +838,6 @@
 
       },
       methods:{
-        //
         fetchList(){
           this.loading = true
           this.searchTitle.carrierId = this.$route.query.id
@@ -881,24 +893,17 @@
             this.loading = false
           })
         },
-        getTrunkName(trunk) {
-          if (trunk) {
-          }
-        },
         onSubmit(){
           const searchObj = {}
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime,searchObj.endTime)
-          // searchObj.carrierId = this.$route.query.id
           this.fetchList()
         },
         //保存 /////////////
         submit(formName){
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.oopenVisibleDialog()
-              // this.loading = true
               this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
               for(const i in this.messageInfo){
                 this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
@@ -932,6 +937,17 @@
                 a.totalCost = el.totalCost
                 return a
               }) : []
+
+              if(!this.form.carrierDetailDtoList.length){
+                this.$message({
+                  message: '各款项不能为空~',
+                  type: 'error'
+                })
+                this.closeVisibleDialog()
+                return false
+              }else{
+                this.oopenVisibleDialog()
+              }
 
             } else {
               return false

@@ -191,7 +191,7 @@ export default {
       // 判断是否有选中项
 
       if(!this.selected.length){
-          // this.closeAddCustomer()
+
           this.$message({
               message: '请选择要操作的项~',
               type: 'warning'
@@ -249,10 +249,13 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event){
-      this.selectInfo = row
-      this.isModify = false
-      this.isDbclick = true
-      this.openAddCustomer()
+      this.$router.push({
+        path: '/finance/reconciliation/carrier/detailTable',
+        query: {
+          tab: '承运商对账-对账明细',
+          id: row.carrierId
+        }
+      })
     }
   }
 }

@@ -107,7 +107,7 @@ export default {
       this.searchForm.checkStatus = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchForm.searchCreatTime = []
+      this.searchCreatTime = []
     }
   }
 }
