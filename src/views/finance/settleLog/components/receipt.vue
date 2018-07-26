@@ -13,14 +13,14 @@
         </div>
         <div class="receiptDialog_head_item">
           <label>经办人</label>
-          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" :disabled="isEdit" placeholder="经办人" />
+          <el-input v-model="formModel.settlementBy" :size="btnsize" placeholder="经办人" :disabled="isEdit"></el-input>
         </div>
       </div>
       <div class="receiptDialog_table">
-        <el-table :data="formModel.detailDtoList" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
+        <el-table :data="formModel.flowFeeMidList" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
           <el-table-column prop="date" label="序号" type="index" width="70">
           </el-table-column>
-          <el-table-column prop="dataName" label="费用项">
+          <el-table-column prop="feeType" label="费用项">
           </el-table-column>
           <el-table-column>
             <el-table-column prop="tenMillion" label="千" width="40">
@@ -74,10 +74,6 @@
       </div>
     </el-form>
     <div slot="footer">
-      <div v-if="!isEdit">
-        <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-document">保存</el-button>
-        <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
-      </div>
       <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">{{isEdit?'关 闭':'取 消'}}</el-button>
     </div>
   </el-dialog>
@@ -85,7 +81,7 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { GetFeeInfo, postLoadSettlement } from '@/api/finance/accountsPayable'
+import { getSettlementInfo } from '@/api/finance/settleLog'
 import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
@@ -109,6 +105,7 @@ export default {
       formModel: {},
       loading: true,
       rules: {},
+      settlementInfo: {},
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
@@ -193,6 +190,7 @@ export default {
     },
     info(newVal) {
       if (newVal) {
+        console.log('info', this.info)
         return this.info
       }
     }
@@ -207,42 +205,32 @@ export default {
       this.loading = false
     },
     getFeeInfo() {
-      let orgId = this.otherinfo.orgid
-      this.formModel = Object.assign({}, this.info[0])
-      console.log(this.formModel, this.info)
       this.$set(this.formModel, 'szDtoList', [])
-      this.formModel.szDtoList = Object.assign([], this.info)
-      // this.initDetailDtoList()
-      // return GetFeeInfo(orgId, this.paymentsType).then(data => {
-      //   this.formModel = data.data
-      //   this.formModel.settlementTime = parseTime(new Date()) 
-      //   this.formModel.settlementBy = this.otherinfo.name
-      //   // this.getSystemTime()
-      //   this.initDetailDtoList()
-      // })
+      getSettlementInfo(this.info[0].flowId).then(data => {
+        this.settlementInfo = data.data
+        this.initDetailDtoList()
+      })
     },
     initDetailDtoList() {
-      this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([], this.info)
-      this.formModel.detailDtoList.forEach((e, index) => {
-        e.dataName = this.dataName
-        this.formModel.amount += e.amount
-        let data = e.amount.toFixed(2).toString().split('').reverse()
-        let item = data.indexOf('.')
-        if (item !== -1) {
-          data.splice(item, 1)
-        }
-        e.fen = data[0]
-        e.jiao = data[1]
-        e.yuan = data[2]
-        e.ten = data[3]
-        e.hundren = data[4]
-        e.thousand = data[5]
-        e.tenThousand = data[6]
-        e.oneHundrenThousand = data[7]
-        e.million = data[8]
-        e.tenMillion = data[9]
-      })
+      this.formModel = Object.assign({}, this.settlementInfo)
+      if (this.formModel.flowFeeMidList.length > 0) {
+        this.formModel.flowFeeMidList.forEach((e, index) => {
+          let data = e.amount.toFixed(2).toString().split('').reverse()
+          if (item !== -1) {
+            data.splice(item, 1)
+          }
+          e.fen = data[0]
+          e.jiao = data[1]
+          e.yuan = data[2]
+          e.ten = data[3]
+          e.hundren = data[4]
+          e.thousand = data[5]
+          e.tenThousand = data[6]
+          e.oneHundrenThousand = data[7]
+          e.million = data[8]
+          e.tenMillion = data[9]
+        })
+      }
       this.amountMessage = smalltoBIG(this.formModel.amount)
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
       let apoint = this.amount.indexOf('.')
@@ -261,53 +249,6 @@ export default {
         done()
       }
     },
-    setData() {
-      this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
-      this.$set(this.submitData, 'settlementSn', this.formModel.settlementSn)
-      this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
-      this.$set(this.submitData, 'settlementTime', this.formModel.settlementTime)
-      this.$set(this.submitData, 'remark', this.formModel.remark)
-      this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
-      this.$set(this.submitData, 'tmsFinanceFinancialWayLogList', this.formModel.szDtoList)
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.setData()
-          postLoadSettlement(this.submitData).then(data => {
-              this.$message({ type: 'success', message: '操作成功' })
-              this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch' })
-            })
-            .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
-            })
-        }
-      })
-    },
-    minusItem(row, index) {
-      let item = this.formModel.szDtoList.indexOf(row)
-      if (item !== -1) {
-        this.formModel.szDtoList.splice(item, 1)
-      }
-    },
-    plusItem() {
-      let data = {
-        agent: '',
-        alipayAccount: '',
-        bankAccount: '',
-        bankAccountName: '',
-        bankName: '',
-        chequeNumber: '',
-        financialWay: '',
-        flowId: '',
-        receivableNumber: '',
-        rnum: '',
-        wechatAccount: ''
-      }
-      this.formModel.szDtoList.push(data)
-    },
     getSum(param) { // 表格合计-自定义显示
       const { columns, data } = param
       const sums = []
@@ -321,12 +262,6 @@ export default {
           sums[index] = this.amountMessage
           return
         }
-        // for(let i = 13; i > -1; i--) {
-        //   if (index === i) {
-        //     sums[index] = this.amount[i-6]
-        //     return
-        //   }
-        // }
         let count = -2 // 从第3列开始显示
         for (let i = 12; i > 2; i--) {
           count++

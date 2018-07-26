@@ -92,7 +92,7 @@ export default {
       {
         label: '运单号',
         prop: 'shipSn',
-        width: '120',
+        width: '180',
         fixed: true
       },
       {

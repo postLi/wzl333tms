@@ -270,6 +270,7 @@ export default {
     showCount() {
       this.tableReceiptInfo = Object.assign([],this.selectedList)
       this.popVisibleDialog = true
+      this.$refs.multipleTable.clearSelection()
     },
     closeDialog() {
       this.popVisibleDialog = false

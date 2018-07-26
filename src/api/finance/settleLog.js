@@ -22,23 +22,8 @@ export function getFeeInfo(orgId, paymentsType) {
 }
 /**
  * 记收入-运单信息
- *      orgId: data.orgId,
-        paymentsType: data.paymentsType,
-        incomePayType: data.incomePayType,
-        settlementId: data.settlementId,
-        startTime: data.startTime,
-        endTime: data.endTime
  */
 export function getOrderShipList(data) {
-  // return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList?orgId='
-  //   +data.orgId+'&incomePayType=' + data.incomePayType
-  //   +'&paymentsType='+data.paymentsType 
-  //   +'&settlementId=' + data.settlementId
-  //   +'startTime=' + data.startTime
-  //   +'&endTime=' + data.endTime)
-  //   .then(res => {
-  //     return res.data
-  //   })
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
       orgId: data.orgId,
       paymentsType: data.paymentsType,
@@ -82,5 +67,11 @@ export function postDetailList(data) {
  * 取消结算
  */
 export function postDetailCancel(data) {
-  return fetch.delete('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/' + data)
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/' + data)
+}
+/**
+ * 查看结算单
+ */
+export function getSettlementInfo(flowId) {
+  return fetch.get('/tmsfinanceservice/finance/tmsfinancecapitalflow/v1/getSettlementInfo?flowId=' + flowId)
 }

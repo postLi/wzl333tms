@@ -2,54 +2,35 @@
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
       <!-- @focus="clearSender" -->
-      <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" 
-      @change="changeSenderSearch">
+      <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" @change="changeSenderSearch">
         <el-option label="短驳" value="short"></el-option>
         <el-option label="干线" value="load"></el-option>
         <el-option label="送货" value="deliver"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item v-if="senderSearch==='short'">
-      <el-autocomplete 
-      v-model="searchForm.shortBatchNo" 
-      :size="btnsize" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索"
-      @select="handleSelect">
-       <template slot-scope="{ item }">
+      <el-autocomplete v-model="searchForm.shortBatchNo" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect">
+        <template slot-scope="{ item }">
           <div class="name">{{ item.shortBatchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='load'">
-      <el-autocomplete 
-      v-model="searchForm.mainBatchNo" 
-      :size="btnsize" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" 
-      @select="handleSelect">
-      <template slot-scope="{ item }">
+      <el-autocomplete v-model="searchForm.mainBatchNo" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect">
+        <template slot-scope="{ item }">
           <div class="name">{{ item.mainBatchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='deliver'">
-      <el-autocomplete 
-      v-model="searchForm.sendBatchNo" 
-      :size="btnsize" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" 
-      @select="handleSelect">
-      <template slot-scope="{ item }">
+      <el-autocomplete v-model="searchForm.sendBatchNo" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect">
+        <template slot-scope="{ item }">
           <div class="name">{{ item.sendBatchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-autocomplete 
-      clearable
-      v-model="searchForm.truckIdNumber" 
-      :size="btnsize" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" 
-      placeholder="车牌号搜索" 
-      @select="handleSelect">
+      <el-autocomplete clearable v-model="searchForm.truckIdNumber" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.truckIdNumber }}</div>
         </template>
@@ -84,28 +65,29 @@ export default {
       default: []
     }
   },
-  mounted () {
+  mounted() {
     this.initSettlementid()
   },
   methods: {
-    initSettlementid () {
+    initSettlementid() {
       let type = this.senderSearch
       switch (type) {
         case 'short': // 短驳
-        this.settlementId = 180 
-        break
+          this.settlementId = 180
+          break
         case 'load': // 干线
-        this.settlementId = 179
-        break
+          this.settlementId = 179
+          break
         case 'deliver': // 送货
-        this.settlementId = 181
-        break
+          this.settlementId = 181
+          break
       }
       this.$emit('setSettlementId', this.settlementId)
     },
-    changeSenderSearch (obj) {
-      this.initSettlementid()
-      this.$emit('setSettlementId', this.settlementId)
+    changeSenderSearch(obj) {
+      if (obj) {
+        this.initSettlementid()
+      }
     },
     querySearch(type, queryString, cb) {
       let leftTable = this.info

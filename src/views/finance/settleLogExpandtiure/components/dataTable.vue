@@ -1,14 +1,14 @@
 <template>
-   <!-- 批次支出 -->
+  <!-- 批次支出 -->
   <transferTable>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
-       <!-- 搜索左边表格 -->
+      <!-- 搜索左边表格 -->
       <currentSearch :info="orgLeftTable" @change="getSearch" @setSettlementId="setSettlementId"></currentSearch>
     </div>
     <!-- 左边表格区 批次支出 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+      <el-table :key="tablekey" ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -18,18 +18,21 @@
         </el-table-column>
         <el-table-column label="发车批次" fixed width="120">
           <template slot-scope="props">
-            <span v-if="props.row.shortBatchNo">{{props.row.shortBatchNo}}</span> <!-- 短驳 -->
-            <span v-if="props.row.mainBatchNo">{{props.row.mainBatchNo}}</span> <!-- 干线 -->
-            <span v-if="props.row.sendBatchNo">{{props.row.sendBatchNo}}</span> <!-- 送货 -->
+            <span v-if="props.row.shortBatchNo">{{props.row.shortBatchNo}}</span>
+            <!-- 短驳 -->
+            <span v-if="props.row.mainBatchNo">{{props.row.mainBatchNo}}</span>
+            <!-- 干线 -->
+            <span v-if="props.row.sendBatchNo">{{props.row.sendBatchNo}}</span>
+            <!-- 送货 -->
           </template>
         </el-table-column>
         <el-table-column prop="truckIdNumber" sortable label="车牌号" width="120">
         </el-table-column>
         <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>
-         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
+        <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
-        <el-table-column prop="sendPay" sortable label="送货费" width="120"  v-else-if="settlementId===181">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120" v-else-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="backPay" sortable label="干线合计" width="120" v-else>
         </el-table-column>
@@ -58,7 +61,7 @@
     <!-- 右边表格区 -->
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+      <el-table :key="tablekey" ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -68,9 +71,12 @@
         </el-table-column>
         <el-table-column label="发车批次" fixed width="120">
           <template slot-scope="props">
-            <span v-if="props.row.shortBatchNo">{{props.row.shortBatchNo}}</span> <!-- 短驳 -->
-            <span v-if="props.row.mainBatchNo">{{props.row.mainBatchNo}}</span> <!-- 干线 -->
-            <span v-if="props.row.sendBatchNo">{{props.row.sendBatchNo}}</span> <!-- 送货 -->
+            <span v-if="props.row.shortBatchNo">{{props.row.shortBatchNo}}</span>
+            <!-- 短驳 -->
+            <span v-if="props.row.mainBatchNo">{{props.row.mainBatchNo}}</span>
+            <!-- 干线 -->
+            <span v-if="props.row.sendBatchNo">{{props.row.sendBatchNo}}</span>
+            <!-- 送货 -->
           </template>
         </el-table-column>
         <el-table-column prop="truckIdNumber" sortable label="车牌号" width="120">
@@ -79,7 +85,7 @@
         </el-table-column>
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
-        <el-table-column prop="sendPay" sortable label="送货费" width="120"  v-else-if="settlementId===181">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120" v-else-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="backPay" sortable label="干线合计" width="120" v-else>
         </el-table-column>
@@ -161,7 +167,7 @@ export default {
   watch: {
     isModify: {
       handler(cval, oval) { // 深度监听
-        this.getList()
+        // this.getList()
       },
       deep: true
     },
@@ -175,9 +181,9 @@ export default {
       deep: true
     }
   },
-  activated() {
-    this.getList()
-  },
+  // activated() {
+  // this.getList()
+  // },
   methods: {
     getList() {
       this.leftTable = this.$options.data().leftTable
@@ -204,14 +210,18 @@ export default {
         obj = {}
       }
     },
-    setSettlementId (val) {
-      this.settlementId = val
-      console.log(val, this.settlementId)
-      this.tableKey = Math.random()
-      this.$emit('setSettlementId', this.settlementId)
+    setSettlementId(val) {
+      if (val) {
+        this.settlementId = val
+        this.tableKey = Math.random()
+        this.rightTable = this.$options.data().rightTable
+        this.getList() // 重新获取列表
+        console.log(this.leftTable)
+        this.$emit('setSettlementId', this.settlementId)
+      }
     },
-    getSearch (obj) { // 搜索
-     this.leftTable = obj
+    getSearch(obj) { // 搜索
+      this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -269,7 +279,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
-          this.orgLeftTable.push(e)
+          // this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
@@ -382,26 +392,26 @@ export default {
 </script>
 <style lang="scss">
 .tableHeadItemForm {
-    margin-left:5px;
-    display: flex;
-    flex-direction: row;
-    .el-select{
-      width:100px;
-      .el-input{
-        width:100px;
-      }
-    }
+  margin-left: 5px;
+  display: flex;
+  flex-direction: row;
+  .el-select {
+    width: 100px;
     .el-input {
-      width: 125px;
-      .el-input__inner{
-        padding: 0 10px;
-      }
+      width: 100px;
     }
   }
+  .el-input {
+    width: 125px;
+    .el-input__inner {
+      padding: 0 10px;
+    }
+  }
+}
+
 .tableHeadItemBtn {
   height: 100%;
-  position: relative;
-  // .tableHeadItemForm{
+  position: relative; // .tableHeadItemForm{
   //   position:absolute;
   //   z-index:2;
   //   top:-41px;

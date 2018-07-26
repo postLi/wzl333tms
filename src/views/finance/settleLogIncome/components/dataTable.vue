@@ -248,7 +248,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
-          this.orgLeftTable.push(e)
+          // this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据

@@ -236,7 +236,7 @@ export default {
     },
     doAction(type) {
       let isWork = false
-      if (this.selected.length < 1 && type !== 'add') { // 判断是否有选中项
+      if (this.selected.length < 1 && type !== 'add' && type !== 'print' && type !=='export') { // 判断是否有选中项
         // this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -268,7 +268,8 @@ export default {
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
         case 'print': // 打印
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        this.$lodop.myPreview
+          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
       }
       // 清除选中状态，避免影响下个操作
