@@ -224,7 +224,7 @@
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
 
-import {postCFinancebillcheckList,deleteCustomer,postCompletion} from '@/api/finance/fin_customer'
+import {postCFinancebillcheckList} from '@/api/finance/fin_customer'
 import {deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'

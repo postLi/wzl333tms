@@ -9,7 +9,7 @@
             <SelectTree v-model="form.orgId" :disabled="isDbclick" />
           </el-form-item>
           <el-form-item label="收支方式" prop="financialWay">
-            <SelectType v-model="form.financialWay" type="financial_way_type" placeholder="请选择"  @change="financialWayClick" :disabled="isDbclick ? isDbclick : isModify"/>
+            <SelectType v-model="form.financialWayId" type="financial_way_type" placeholder="请选择"  @change="financialWayClick" @mounted="getData" :disabled="isDbclick ? isDbclick : isModify"/>
 
           </el-form-item>
 
@@ -117,9 +117,10 @@ export default {
   },
   data () {
     const validatebankName = function (rule, value, callback) {
-      if(REGEX.ONLY_CHINESE.test(value) || !value){
+      if(REGEX.ONLY_CHINESE.test(value) || this.form.financialWayId){
         callback()
       }
+
       else {
         callback(new Error('只能输入中文'))
       }
@@ -137,6 +138,7 @@ export default {
       form: {
         orgId:'',
         financialWay:'',//收支方式
+        financialWayId: '',
         bankName:'',//银行名称
         bankAccount:'',//银行卡号
         bankAccountName:'',//开户人
@@ -215,26 +217,27 @@ export default {
     changeInfo(item){
       this.form.orgId = item.orgId
       this.form.financialWay = item.financialWay
-      // console.log(item.financialWay);
+      this.form.financialWayId = item.financialWayId
       this.form.remark = item.remark
       this.form.bankAccount = item.bankAccount
       this.form.bankAccountName = item.bankAccountName
       this.form.alipayAccount = item.alipayAccount
       this.form.wechatAccount = item.wechatAccount
       this.form.bankName = item.bankName
-      this.financialWayClick(this.form.financialWay)
+      this.financialWayClick(this.form.financialWayId)
     },
     newInfo(item){
       this.form.orgId = item.orgId
-
       this.form.remark = ''
       this.form.bankAccount = ''
       this.form.bankAccountName = ''
       this.form.alipayAccount = ''
       this.form.wechatAccount = ''
-      this.form.financialWay = 280
+      this.form.financialWayId = 280
+      this.form.financialWay = ''
 
-      this.financialWayClick(this.form.financialWay)
+
+      this.financialWayClick(this.form.financialWayId)
 
     },
     validateIsEmpty (msg = '不能为空！') {
@@ -246,7 +249,11 @@ export default {
         }
       }
     },
+    getData(data){
+
+    },
     financialWayClick(item){
+      console.log(item)
       this.bankPay = false
       this.aliPay = false
       this.wPay = false
@@ -254,23 +261,18 @@ export default {
       this.chePay = false
 
       if(item === 280 || item === '银行卡'){
-        this.form.financialWay = 280
         this.bankPay = true
 
       }else if(item === 281 || item === '支付宝'){
-        this.form.financialWay = 281
         this.aliPay = true
       }
       else if(item === 282 || item === '微信'){
-        this.form.financialWay = 282
         this.wPay = true
       }
       else if(item === 283 || item === '现金'){
-        this.form.financialWay = 283
         this.casyPay = true
       }
       else{
-        this.form.financialWay = 284
         this.chePay = true
       }
 

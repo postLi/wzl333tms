@@ -129,7 +129,6 @@
       tota:{
         handler(newVal){
           this.dialogData = this.tota
-          console.log(this.tota);
           this.dialogData.dealtota.map(el=>{
             this.$set(this.dialogInfo, 0, {
               date:"应收清单",

@@ -2,7 +2,7 @@
   <!---->
   <div class="costomerCreat_lll" v-loading="loading" >
     <div class="sTop">
-      <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
+      <el-form :inline="true" :size="btnsize" label-position="right"   label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
       <div class="sTitle">
         <el-form-item label="">
@@ -29,7 +29,7 @@
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName">
+      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName" :rules="rules">
 
         <el-form-item label="发货方">
           <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
@@ -64,8 +64,8 @@
         <el-form-item label="财务负责人">
           <el-input v-model="messageInfo.financialOfficer" auto-complete="off" maxlength="10"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式">
-          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off"  maxlength="12" v-numberOnly></el-input>
+        <el-form-item label="联系方式" prop="financialOfficerPhone">
+          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off"  maxlength="11" v-numberOnly></el-input>
         </el-form-item>
         <el-form-item label="支付宝">
           <el-input v-model="messageInfo.alipayAccount" auto-complete="off" maxlength="30"></el-input>
@@ -743,7 +743,7 @@
             <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item label="联系方式">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="12" v-numberOnly></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="11" v-numberOnly></el-input>
           </el-form-item>
           <el-form-item label="时间">
             <el-date-picker
@@ -858,9 +858,9 @@
               endTime:'',
             },
             rules:{
-              truckIdNumber:[
-                { required: true, validator: this.validateIsEmpty('车牌号不能为空'), trigger: 'blur' }
-              ]
+              // financialOfficerPhone:[
+              //   { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+              // ]
             }
           };
 
@@ -985,7 +985,6 @@
                 a.totalFee = el.totalFee
                 return a
               }) : []
-              console.log(this.tota);
               if(!this.form.customerDetailDtoList.length){
                 this.$message({
                   message: '各款项不能为空~',
