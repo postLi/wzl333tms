@@ -236,7 +236,7 @@ export default {
           break
         case 'showDetail':
           if (isShow) {
-            this.showDetail()
+            this.showDetail() // 查看明细
           }
           break
         case 'export':
@@ -295,7 +295,7 @@ export default {
           path: './settleLogDetail',
           query: {
             flowId: this.selectedList[0].flowId,
-            shipOrderType: this.selectedList[0].shipOrderType
+            settlementId: this.selectedList[0].settlementId
           }
         })
       }

@@ -399,6 +399,7 @@ export default {
         this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
         this.isFresh = true
       } else {
+        this.searchQuery = Object.assign({} ,this.getRouteInfo)
         this.$set(this.searchQuery.vo, 'feeType', this.feeType)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false

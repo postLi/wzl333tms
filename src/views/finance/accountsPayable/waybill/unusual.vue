@@ -89,15 +89,15 @@ export default {
       tableColumn: [
       {
         label: '运单号',
-        prop: 'shipId',
+        prop: 'shipSn',
         width: '120',
-        fixed: false
+        fixed: true
       },
       {
         label: '开单网点',
         prop: 'shipFromOrgName',
         width: '150',
-        fixed: true
+        fixed: false
       },
       {
         label: '货号',

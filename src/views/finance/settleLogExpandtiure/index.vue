@@ -27,7 +27,7 @@
               </div>
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="收支方式" prop="financialWay">
-                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" clearable placeholder="选择收支方式"></selectType>
+                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
                   <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable></el-input>
@@ -102,6 +102,8 @@ export default {
       btnsize: 'mini',
       formModel: {
         settlementTime: '',
+        financialWay: '',
+        financialWayId: '',
         amount: 0
       },
       formModelRules: {},
@@ -135,7 +137,7 @@ export default {
         this.formModel.amount = data.amount
         this.formModel.settlementSn = data.settlementSn
         this.formModel.agent = data.settlementBy
-        this.formModel.financialWay = data.szDtoList[0].financialWay
+        this.formModel.financialWay = this.$const.FINANCE_WAY[data.szDtoList[0].financialWay]
         this.formModel.bankAccount = data.szDtoList[0].bankAccou
         this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
         this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
@@ -162,7 +164,14 @@ export default {
           break
       }
     },
-    setData() {
+    setFinanceWay (obj) {
+      this.formModel.financialWayId = obj
+      this.formModel.financialWay = obj
+      console.log(obj, this.formModel.financialWay, this.$const.FINANCE_WAY[this.formModel.financialWay])
+    },
+    setData() { // 设置传给后台的数据结构
+      this.formModel.financialWayId = this.formModel.financialWay
+      this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
       let szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)

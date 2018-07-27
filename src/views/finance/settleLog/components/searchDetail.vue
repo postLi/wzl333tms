@@ -8,11 +8,11 @@
       <SelectTree v-model="searchForm.orgId">
       </SelectTree>
     </el-form-item>
-    <el-form-item label="方向" prop="settlementId">
-      <el-select v-model="searchForm.settlementId" placeholder="方向" :size="btnsize">
-       <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
-      </el-select>
-    </el-form-item>
+    <!-- <el-form-item label="费用类型" prop="feeId">
+     <selectType v-model="searchForm.feeId" type="fee_type" @change="selectFeeType">
+        <el-option slot="head" label="全部" value=""></el-option>
+      </selectType>
+    </el-form-item> -->
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -24,10 +24,12 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import SelectType from '@/components/selectType/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    SelectType
   },
   props: {
     btnsize: {
@@ -52,7 +54,8 @@ export default {
     return {
       searchForm: {
         orgId: '',
-        settlementId: ''
+        settlementId: '',
+        feeId: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
@@ -75,6 +78,9 @@ export default {
     this.onSubmit()
   },
   methods: {
+    selectFeeType (obj) {
+      console.log(obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {

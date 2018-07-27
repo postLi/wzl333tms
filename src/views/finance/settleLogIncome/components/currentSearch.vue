@@ -10,20 +10,26 @@
       <el-autocomplete 
       v-model="searchForm.shipSenderName" 
       :size="btnsize" 
-      popper-class="hidePopper" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='unit'">
       <el-autocomplete 
-      v-model="searchForm.senderCustomerUnit" 
+      v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
-      popper-class="hidePopper" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'senderCustomerUnit',queryString, cb)" placeholder="发货人搜索" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>
+    <!-- <el-form-item v-if="senderSearch==='unit'">
+      <el-autocomplete 
+      v-model="searchForm.senderCustomerUnit" 
+      :size="btnsize" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'senderCustomerUnit',queryString, cb)" placeholder="发货人搜索" 
+      @select="handleSelect">
+      </el-autocomplete>
+    </el-form-item> -->
     <el-form-item label="运单号">
       <el-autocomplete 
       v-model="searchForm.shipSn" 

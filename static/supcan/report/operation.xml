@@ -21,7 +21,7 @@
 			<Col width="313"/>
 			<Col width="15"/>
 			<TR height="71" sequence="0">
-				<TD fontIndex="1" align="center">营运统计分析</TD>
+				<TD fontIndex="1" textColor="#05ACF3" align="center">营运统计分析</TD>
 				<TD/>
 				<TD/>
 				<TD/>
@@ -29,27 +29,27 @@
 				<TD topBorder="0" datatype="0"/>
 			</TR>
 			<TR height="24" sequence="1">
-				<TD bgColor="#C0C0FF" leftBorderColor="#404040" align="center" formula="=headrow(&apos;ds1\data\jsonobject&apos;)">时间</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#404040" align="center">运费</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#404040" align="center">件数</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#404040" align="center">吨(千克)</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#404040" align="center">方(体积)</TD>
-				<TD topBorder="0" align="center" datatype="0"/>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" align="center" formula="=headrow(&apos;ds1\data\jsonobject&apos;)">时间</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" align="center">运费</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" align="center">件数</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" align="center">吨(千克)</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" align="center">方(体积)</TD>
+				<TD textColor="#FFFFFF" bgColor="#FFFFFF" topBorder="0" leftBorderColor="#FFFFFF" align="center" datatype="0"/>
 			</TR>
 			<TR height="24" sequence="2">
-				<TD leftBorderColor="#404040" topBorderColor="#404040" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
-				<TD leftBorderColor="#404040" topBorderColor="#404040"/>
-				<TD leftBorderColor="#404040" topBorderColor="#404040"/>
-				<TD leftBorderColor="#404040" topBorderColor="#404040"/>
-				<TD leftBorderColor="#404040" topBorderColor="#404040"/>
-				<TD topBorder="0" datatype="0"/>
+				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
+				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD topBorder="0" leftBorderStyle="dash" datatype="0"/>
 			</TR>
 			<TR height="15" sequence="3">
-				<TD leftBorder="0" topBorderColor="#000000" datatype="0"/>
-				<TD leftBorder="0" topBorderColor="#000000" datatype="0"/>
-				<TD leftBorder="0" topBorderColor="#000000" datatype="0"/>
-				<TD leftBorder="0" topBorderColor="#000000" datatype="0"/>
-				<TD leftBorder="0" topBorderColor="#000000" datatype="0"/>
+				<TD leftBorder="0" topBorderColor="#000000" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderColor="#000000" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderColor="#000000" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderColor="#000000" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderColor="#000000" topBorderStyle="dash" datatype="0"/>
 				<TD leftBorder="0" topBorder="0" datatype="0"/>
 			</TR>
 		</Table>
@@ -57,8 +57,8 @@
 			<Range row1="0" col1="0" row2="0" col2="4"/>
 		</Merges>
 		<PrintPage>
-			<Paper>
-				<Margin left="19" top="25" right="19" bottom="25"/>
+			<Paper oriantation="landscape" scale="65">
+				<Margin left="8" top="7" right="9" bottom="10"/>
 			</Paper>
 			<Page isIgnoreValidBorder="false">
 				<PageCode>
@@ -74,7 +74,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://localhost:7010/api-finance/finance/report/v1/findOperationReport?startTime=2018-07-13 11:11:11&amp;endTime=2018-07-28 11:11:11&amp;orgId=1&amp;selectType=2&amp;shipToCityName=&amp;businessType=&amp;access_token=4381f00c-fd66-4de9-b9dc-20fed97eeec9</Source>
+	<Source>http://localhost:7010/api-finance/finance/report/v1/findOperationReport?startTime=2018-07-13 11:11:11&amp;endTime=2018-07-28 11:11:11&amp;orgId=1&amp;selectType=2&amp;shipToCityName=&amp;businessType=&amp;access_token=bf45717a-f769-4caa-92fb-2ae2fce239d8</Source>
 	<Memo>11111</Memo>
 	<XML_RecordAble_Nodes>
 		<Node>

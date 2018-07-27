@@ -12,6 +12,11 @@
         <el-option slot="head" label="全部" value=""></el-option>
       </selectType>
     </el-form-item>
+    <!--  <el-form-item label="方向" prop="settlementId">
+      <el-select v-model="searchForm.settlementId" placeholder="方向" :size="btnsize">
+       <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
+      </el-select>
+    </el-form-item> -->
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>

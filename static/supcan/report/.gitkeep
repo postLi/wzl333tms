@@ -28,7 +28,7 @@
 			<Col width="178"/>
 			<Col width="15"/>
 			<TR height="77" sequence="0">
-				<TD fontIndex="3" textColor="#05ACF3" leftBorderColor="#C0C0C0" topBorderColor="#C0C0C0">应收应付统计表</TD>
+				<TD fontIndex="3" leftBorderColor="#C0C0C0" topBorderColor="#C0C0C0">应收应付统计表</TD>
 				<TD fontIndex="1"/>
 				<TD fontIndex="2"/>
 				<TD align="left"/>
@@ -41,13 +41,13 @@
 				<TD topBorder="0" leftBorderColor="#C0C0C0" align="left"/>
 			</TR>
 			<TR height="31" sequence="1">
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">序号</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">费用项目</TD>
-				<TD fontIndex="2" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">应收汇总</TD>
+				<TD fontIndex="1" bgColor="#C0C0FF">序号</TD>
+				<TD fontIndex="1" bgColor="#C0C0FF">费用项目</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF">应收汇总</TD>
 				<TD align="left"/>
 				<TD align="left"/>
 				<TD align="left"/>
-				<TD fontIndex="2" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">应付汇总</TD>
+				<TD fontIndex="2" bgColor="#C0C0FF">应付汇总</TD>
 				<TD align="left"/>
 				<TD align="left"/>
 				<TD align="left"/>
@@ -56,41 +56,41 @@
 			<TR height="39" sequence="2">
 				<TD align="left"/>
 				<TD align="left" datatype="1" formula="=headrow(&apos;ds1\data\jsonobject&apos;)">费用项目</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">应收合计</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">已收</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">未收</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">数量</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">应付合计</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">已付</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">未付</TD>
-				<TD fontIndex="1" textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" datatype="1">数量</TD>
+				<TD fontIndex="1" bgColor="#C0FFC0" datatype="1">应收合计</TD>
+				<TD fontIndex="1" bgColor="#C0FFC0" datatype="1">已收</TD>
+				<TD fontIndex="1" bgColor="#C0FFC0" datatype="1">未收</TD>
+				<TD fontIndex="1" bgColor="#C0FFC0" datatype="1">数量</TD>
+				<TD fontIndex="1" bgColor="#FFC0C0" datatype="1">应付合计</TD>
+				<TD fontIndex="1" bgColor="#FFC0C0" datatype="1">已付</TD>
+				<TD fontIndex="1" bgColor="#FFC0C0" datatype="1">未付</TD>
+				<TD fontIndex="1" bgColor="#FFC0C0" datatype="1">数量</TD>
 				<TD topBorder="0" align="left"/>
 			</TR>
 			<TR height="24" sequence="3">
-				<TD leftBorderStyle="dash" topBorderStyle="dash" decimal="0" formula="=dataRowNumber()"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="1" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD topBorder="0" leftBorderStyle="dash" align="left"/>
+				<TD decimal="0" formula="=dataRowNumber()"/>
+				<TD datatype="1" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD datatype="6"/>
+				<TD topBorder="0" align="left"/>
 			</TR>
 			<TR height="24" sequence="4">
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" decimal="0">合计</TD>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(C4:@C4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(D4:@D4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(E4:@E4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(F4:@F4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(G4:@G4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(H4:@H4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(I4:@I4)"/>
-				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" datatype="1" formula="=sum(J4:@J4)"/>
-				<TD textColor="#FFFFFF" topBorder="0" align="left"/>
+				<TD textColor="#0000FF" decimal="0">合计</TD>
+				<TD textColor="#0000FF" datatype="1"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(C4:@C4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(D4:@D4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(E4:@E4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(F4:@F4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(G4:@G4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(H4:@H4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(I4:@I4)"/>
+				<TD textColor="#0000FF" datatype="1" formula="=sum(J4:@J4)"/>
+				<TD topBorder="0" align="left"/>
 			</TR>
 			<TR height="15" sequence="5">
 				<TD leftBorder="0"/>
@@ -114,8 +114,8 @@
 			<Range row1="0" col1="0" row2="0" col2="9"/>
 		</Merges>
 		<PrintPage>
-			<Paper oriantation="landscape" scale="66">
-				<Margin left="8" top="9" right="7" bottom="10"/>
+			<Paper>
+				<Margin left="19" top="25" right="19" bottom="25"/>
 			</Paper>
 			<Page isIgnoreValidBorder="false">
 				<PageCode>
@@ -131,7 +131,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://192.168.1.157:7010/api-finance/finance/report/v1/FeeAggregation?orgId=1&amp;startTime=2017-01-01&amp;endTime=2018-07-24&amp;typeIds=&amp;access_token=f55d5daa-9239-4120-b853-5b225f750500</Source>
+	<Source>http://192.168.1.157:7010/api-finance/finance/report/v1/FeeAggregation?orgId=1&amp;startTime=2017-01-01&amp;endTime=2018-07-24&amp;typeIds=&amp;access_token=768ace13-07af-43b7-9716-7da74decdff8</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>

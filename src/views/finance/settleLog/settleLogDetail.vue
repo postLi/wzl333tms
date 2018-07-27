@@ -79,7 +79,7 @@ export default {
       tableColumn: [],
       columnOrder: [{
           label: '结算网点',
-          prop: 'orgId',
+          prop: 'orgName',
           width: "120",
           fixed: false
         },
@@ -90,10 +90,16 @@ export default {
           fixed: true
         },
         {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '150',
+          fixed: false
+        },
+        {
           label: '结算类型',
           prop: 'settlementIdZh',
           width: '150',
-          fixed: false
+          fixed: true
         },
         {
           label: '结算人',
@@ -184,7 +190,7 @@ export default {
         },
         {
           label: '收支方式',
-          prop: 'paymentsType',
+          prop: 'financialWay',
           width: '150',
           fixed: false
         },
@@ -233,9 +239,9 @@ export default {
       ],
       columnBatch: [{
           label: '结算网点',
-          prop: 'orgid',
+          prop: 'orgName',
           width: '150',
-          fixed: true
+          fixed: false
         },
         {
           label: '短驳批次',
@@ -259,13 +265,13 @@ export default {
           label: '结算单号',
           prop: 'settlementSn',
           width: '150',
-          fixed: false
+          fixed: true
         },
         {
           label: '结算类型',
           prop: 'settlementIdZh',
           width: '150',
-          fixed: false
+          fixed: true
         },
         {
           label: '结算人',
@@ -375,7 +381,7 @@ export default {
         },
         {
           label: '收支方式',
-          prop: 'paymentsType',
+          prop: 'financialWay',
           width: '150',
           fixed: false
         },
@@ -431,8 +437,8 @@ export default {
     flowId() {
       return this.$route.query.flowId
     },
-    shipOrderType() {
-      return this.$route.query.shipOrderType
+    settlementId() {
+      return this.$route.query.settlementId
     }
   },
   methods: {
@@ -447,26 +453,17 @@ export default {
     },
     setView() {
       // 设置表格视图 
-      // 【shipOrderType关联类型（1-运单/2-配载单/3-中转单）】
-      
-      if (this.$route.query.shipOrderType) {
-        switch (this.shipOrderType) {
-          case '1':
+      // 【178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算】
+      if (this.$route.query.settlementId === 178) {
           this.tableColumn = this.columnOrder // 运单视图
-            break
-          case '2':
-          this.tableColumn = this.columnBatch // 批次视图
-            break
-          case '3':
-            break
-        }
       }else {
-        this.tableColumn = this.columnOrder // 没有数据上显示运单视图
+        this.tableColumn = this.columnBatch // 没有数据上显示运单视图
       }
     },
     fetchList() {
       if (this.$route.query) {
         this.$set(this.searchQuery.vo, 'flowId', this.flowId)
+        this.$set(this.searchQuery.vo, 'settlementId', this.settlementId)
         postDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
         })

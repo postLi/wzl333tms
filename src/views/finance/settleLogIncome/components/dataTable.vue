@@ -27,6 +27,8 @@
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="120">
         </el-table-column>
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
+        </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
@@ -72,6 +74,8 @@
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="120">
         </el-table-column>
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
+        </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
@@ -86,7 +90,7 @@
         </el-table-column>
         <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
+        <el-table-column prop="shipSenderUnit" sortable label="发货方" width="120">
         </el-table-column>
         <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>

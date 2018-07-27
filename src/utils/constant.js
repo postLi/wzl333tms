@@ -59,3 +59,18 @@ export const FEE_STATUS = {
   PARTSETTLEMENT: '部分交账',
   ALLSETTLEMENT: '已交账'
 }
+/**
+ * 支付方式
+ */
+export const FINANCE_WAY = {
+  280: '银行卡',
+  281: '支付宝',
+  282: '微信',
+  283: '现金',
+  284: '支票',
+ '银行卡': 280,
+ '支付宝': 281,
+ '微信': 282,
+ '现金': 283,
+ '支票': 284
+}

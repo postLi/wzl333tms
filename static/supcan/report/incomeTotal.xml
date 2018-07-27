@@ -14,15 +14,15 @@
 			<Font faceName="微软雅黑" charSet="134" height="-37" weight="400" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
 		</Fonts>
 		<Table>
-			<Col width="279"/>
-			<Col width="247"/>
-			<Col width="282"/>
-			<Col width="257"/>
-			<Col width="263"/>
-			<Col width="373"/>
+			<Col width="220"/>
+			<Col width="205"/>
+			<Col width="232"/>
+			<Col width="228"/>
+			<Col width="220"/>
+			<Col width="266"/>
 			<Col width="15"/>
 			<TR height="59" sequence="0">
-				<TD fontIndex="1" topBorderColor="#C0C0C0" align="center">收入统计表</TD>
+				<TD fontIndex="1" textColor="#05ACF3" topBorderColor="#C0C0C0" align="center">收入统计表</TD>
 				<TD/>
 				<TD/>
 				<TD/>
@@ -31,30 +31,30 @@
 				<TD topBorder="0" datatype="0"/>
 			</TR>
 			<TR height="24" sequence="1">
-				<TD bgColor="#C0C0FF" leftBorderColor="#1E1E1E" formula="=headrow(&apos;ds1\data&apos;)">总收入(元)</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#1E1E1E">现付(元)</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#1E1E1E">到付(元)</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#1E1E1E">回单付(元)</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#1E1E1E">月结(元)</TD>
-				<TD bgColor="#C0C0FF" leftBorderColor="#1E1E1E">异动费用(元)</TD>
-				<TD topBorder="0" leftBorderColor="#1E1E1E" datatype="0"/>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF" formula="=headrow(&apos;ds1\data&apos;)">总收入(元)</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">现付(元)</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">到付(元)</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">回单付(元)</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">月结(元)</TD>
+				<TD textColor="#FFFFFF" bgColor="#404040" leftBorderColor="#FFFFFF" topBorderColor="#FFFFFF">异动费用(元)</TD>
+				<TD bgColor="#FFFFFF" topBorder="0" leftBorderColor="#FFFFFF" datatype="0"/>
 			</TR>
 			<TR height="24" sequence="2">
-				<TD textColor="#000080" leftBorderColor="#1E1E1E" formula="=datarow(&apos;ds1\data&apos;)"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E"/>
-				<TD topBorder="0" leftBorderColor="#1E1E1E" datatype="0"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash" formula="=datarow(&apos;ds1\data&apos;)"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
+				<TD topBorder="0" leftBorderColor="#1E1E1E" leftBorderStyle="dash" datatype="0"/>
 			</TR>
 			<TR height="15" sequence="3">
-				<TD leftBorder="0" datatype="0"/>
-				<TD leftBorder="0" datatype="0"/>
-				<TD leftBorder="0" datatype="0"/>
-				<TD leftBorder="0" datatype="0"/>
-				<TD leftBorder="0" datatype="0"/>
-				<TD leftBorder="0" datatype="0"/>
+				<TD leftBorder="0" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderStyle="dash" datatype="0"/>
+				<TD leftBorder="0" topBorderStyle="dash" datatype="0"/>
 				<TD leftBorder="0" topBorder="0" datatype="0"/>
 			</TR>
 		</Table>
@@ -62,8 +62,8 @@
 			<Range row1="0" col1="0" row2="0" col2="5"/>
 		</Merges>
 		<PrintPage>
-			<Paper>
-				<Margin left="19" top="25" right="19" bottom="25"/>
+			<Paper oriantation="landscape" scale="77">
+				<Margin left="7" top="9" right="8" bottom="10"/>
 			</Paper>
 			<Page isIgnoreValidBorder="false">
 				<PageCode>
@@ -79,7 +79,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://localhost:7010/api-finance/finance/report/v1/findDetail?startCreatTime=2018-05-13 00:00:00&amp;endCreatTime=2018-07-25 23:59:59&amp;shipFromOrgid=1&amp;access_token=4381f00c-fd66-4de9-b9dc-20fed97eeec9</Source>
+	<Source>http://localhost:7010/api-finance/finance/report/v1/findDetail?startCreatTime=2018-05-13 00:00:00&amp;endCreatTime=2018-07-27 23:59:59&amp;shipFromOrgid=1&amp;access_token=cc7b5d76-3618-487f-a697-a5676ab65c31</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>

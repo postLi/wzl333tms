@@ -401,6 +401,7 @@ export default {
         // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
       } else {
+        this.searchQuery = Object.assign({} ,this.getRouteInfo)
         this.$set(this.searchQuery.vo, 'feeType', this.feeType)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false
@@ -417,9 +418,10 @@ export default {
       this.rightTable = this.$options.data().rightTable
       this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.orgLeftTable = this.$options.data().orgLeftTable
-
       this.initLeftParams() // 设置searchQuery
+
       if (!this.isFresh) {
+        console.log(this.searchQuery)
         postFindListByFeeType(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListShipSns.forEach(e => {

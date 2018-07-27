@@ -26,7 +26,7 @@
               </div>
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="收支方式" prop="financialWay">
-                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" clearable placeholder="选择收支方式"></selectType>
+                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
                   <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable></el-input>
@@ -87,6 +87,7 @@ export default {
         wechatAccount: '',
         alipayAccount: '',
         financialWay: '',
+        financialWayId: '',
         amount: 0
       },
       formModelRules: {},
@@ -109,7 +110,6 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = parseTime(data)
-        console.log(this.formModel.settlementTime)
       })
     },
     getFeeInfo() {
@@ -120,13 +120,10 @@ export default {
         if (data.szDtoList.length > 0) {
           this.formModel.wechatAccount = data.szDtoList[0].wechatAccount ? data.szDtoList[0].wechatAccount : ''
           this.formModel.alipayAccount = data.szDtoList[0].alipayAccount ? data.szDtoList[0].alipayAccount : ''
-          this.formModel.financialWay = data.szDtoList[0].financialWay ? data.szDtoList[0].financialWay : ''
+          this.formModel.financialWay = data.szDtoList[0].financialWay ? this.$const.FINANCE_WAY[data.szDtoList[0].financialWay] : ''
         }
-
         this.formModel.remark = data.remark
-
         this.getSystemTime()
-        console.log('getFeeInfo', data.szDtoList[0])
       })
     },
     doAction(type) {
@@ -141,7 +138,14 @@ export default {
           break
       }
     },
+    setFinanceWay (obj) {
+      this.formModel.financialWayId = obj
+      this.formModel.financialWay = obj
+      console.log(obj, this.formModel.financialWay, this.$const.FINANCE_WAY[this.formModel.financialWay])
+    },
     setData() { // 设置传给后台的数据结构
+      this.formModel.financialWayId = this.formModel.financialWay
+      this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
       let szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
@@ -150,6 +154,7 @@ export default {
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
       this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
+
     },
     save() {
       if (this.loadTable.length < 1) {

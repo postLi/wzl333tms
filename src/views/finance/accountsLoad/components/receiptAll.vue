@@ -11,14 +11,13 @@
           <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
           </el-date-picker>
         </div>
-
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
         </div>
       </div>
       <div class="receiptDialog_table">
-        <el-table :data="formModel.detailDtoList" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
+        <el-table :data="formModel.detailDtoList2" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
           <el-table-column prop="date" label="序号" type="index" width="70">
           </el-table-column>
           <el-table-column prop="dataName" label="费用项">
@@ -48,17 +47,17 @@
         </el-table>
       </div>
       <div class="receiptDialog_todo">
-         <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
+        <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-               <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="100">
             <template slot-scope="props">
               <!-- <el-input v-model="props.row.financialWay" :size="btnsize"></el-input> -->
-              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
+              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize" @change="(item) => sender(item,props.$index)">
                 <template slot-scope="{item}">
                   <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
                 </template>
@@ -142,7 +141,9 @@ export default {
     return {
       amount: 0,
       amountMessage: '',
-      formModel: {},
+      formModel: {
+        detailDtoList2: []
+      },
       loading: true,
       rules: {},
       btnsize: 'mini',
@@ -166,16 +167,16 @@ export default {
     getRouteInfo() {
       return this.$route.query.searchQuery
     },
-    settlementTypeId () {
+    settlementTypeId() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchArrivalAll':
-        return 179
+          return 179
         case 'batchTruckAll':
-        return 179
+          return 179
       }
     },
-    currentPage () {
+    currentPage() {
       let currentPage = this.$route.query.currentPage
       return currentPage.substr(5, currentPage.length)
     }
@@ -213,13 +214,13 @@ export default {
   methods: {
     init() {
       this.loading = false
-      console.log(this.info)
     },
     getFeeInfo() {
       let orgId = this.otherinfo.orgid
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
-        this.formModel.settlementTime = parseTime(new Date()) 
+        this.formModel.detailDtoList2 = []
+        this.formModel.settlementTime = parseTime(new Date())
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
@@ -227,8 +228,21 @@ export default {
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([],this.info)
-      this.formModel.detailDtoList.forEach((e, index) => {
+      this.formModel.detailDtoList = Object.assign([], this.info)
+      // 设置费用项
+      const obj = {}
+      this.formModel.detailDtoList.map(el => {
+        if (obj[el.dataName]) {
+          obj[el.dataName].amount += el.amount
+        } else {
+          obj[el.dataName] = el
+        }
+      })
+      for (const i in obj) {
+        this.formModel.detailDtoList2.push(obj[i])
+      }
+
+      this.formModel.detailDtoList2.forEach((e, index) => {
         this.formModel.amount += e.amount
         let data = e.amount.toFixed(2).toString().split('').reverse()
         let item = data.indexOf('.')
@@ -246,15 +260,15 @@ export default {
         e.million = data[8]
         e.tenMillion = data[9]
       })
-      this.amountMessage = smalltoBIG(this.formModel.amount)
-      this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
+      this.amountMessage = smalltoBIG(this.formModel.amount) // 设置总计中文大写数字
+      this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse() // 设置总计数字位置
       let apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
-         this.amount.splice(apoint, 1)
+        this.amount.splice(apoint, 1)
       }
     },
-    sender (item, index) {
-      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
+    sender(item, index) {
+      this.$set(this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index], item))
     },
     getSystemTime() {
       getSystemTime().then(data => {
@@ -274,17 +288,19 @@ export default {
       this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
       this.$set(this.submitData, 'settlementTime', this.formModel.settlementTime)
       this.$set(this.submitData, 'remark', this.formModel.remark)
-      this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
+      // this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
+      this.$set(this.submitData, 'tmsFinanceSettlementList', Object.assign([], this.info))
       this.$set(this.submitData, 'tmsFinanceFinancialWayLogList', this.formModel.szDtoList)
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
+          console.log(this.submitData)
           postLoadSettlement(this.submitData).then(data => {
               this.$message({ type: 'success', message: '操作成功' })
               this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch', query:{name: this.currentPage} })
+              this.$router.push({ path: './accountsPayable/batch', query: { name: this.currentPage } })
             })
             .catch(error => {
               this.$message({ type: 'error', message: '操作失败' })
@@ -317,8 +333,7 @@ export default {
     getSum(param) { // 表格合计-自定义显示
       const { columns, data } = param
       const sums = []
-      this.$nextTick(() => {
-      })
+      this.$nextTick(() => {})
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '合计'
@@ -329,7 +344,7 @@ export default {
           return
         }
         let count = -2 // 从第3列开始显示
-        for(let i = 12; i > 2; i--) {
+        for (let i = 12; i > 2; i--) {
           count++
           if (index === i) {
             sums[index] = this.amount[count]

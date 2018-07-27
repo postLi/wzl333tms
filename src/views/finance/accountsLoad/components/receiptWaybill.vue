@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="receiptDialog_table">
-        <el-table :data="formModel.detailDtoList" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
+        <el-table :data="formModel.detailDtoList2" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
           <el-table-column prop="date" label="序号" type="index" width="70">
           </el-table-column>
           <el-table-column prop="dataName" label="费用项">
@@ -141,7 +141,9 @@ export default {
     return {
       amount: 0,
       amountMessage: '',
-      formModel: {},
+      formModel: {
+        detailDtoList2: []
+      },
       loading: true,
       rules: {},
       btnsize: 'mini',
@@ -232,6 +234,7 @@ export default {
       let orgId = this.otherinfo.orgid
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
+        this.formModel.detailDtoList2 = []
         this.formModel.settlementTime = parseTime(new Date())
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
@@ -241,7 +244,20 @@ export default {
     initDetailDtoList() {
       this.formModel.amount = 0
       this.formModel.detailDtoList = Object.assign([], this.info)
-      this.formModel.detailDtoList.forEach((e, index) => {
+       // 设置费用项
+      const obj = {}
+      this.formModel.detailDtoList.map(el => {
+        if (obj[el.dataName]) {
+          obj[el.dataName].amount += el.amount
+        } else {
+          obj[el.dataName] = el
+        }
+      })
+      for (const i in obj) {
+        this.formModel.detailDtoList2.push(obj[i])
+      }
+      
+      this.formModel.detailDtoList2.forEach((e, index) => {
         this.formModel.amount += e.amount
         let data = Number(e.amount).toFixed(2).toString().split('').reverse() // 默认保留两位小数 toFixed(2)
         let item = data.indexOf('.')
@@ -306,6 +322,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
+          console.log(this.submitData)
           postCreateloadSettlement(this.getRouteInfo.vo.shipFromOrgid, this.submitData).then(data => {
               this.$message({ type: 'success', message: '操作成功' })
               this.closeMe()

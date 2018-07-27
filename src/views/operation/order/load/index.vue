@@ -187,10 +187,14 @@
         </el-collapse-item>
       </el-collapse>
       <!-- 操作按钮区 -->
-      <div class="load_btn_boxs">
+      <div class="load_btn_boxs" v-if="!isEdit">
         <el-button size="mini" plain type="primary" @click="doAction('precent')"><icon-svg icon-class="btn12_guanlianyd" /> 配载率</el-button>
         <el-button size="mini" plain type="primary" @click="doAction('finish')"><icon-svg icon-class="btn14_fache" /> 完成配载</el-button>
         <el-button size="mini" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '><icon-svg icon-class="btn17_daocheqd" /> 完成并发车</el-button>
+      </div>
+      <div class="load_btn_boxs" v-if="isEdit">
+        <el-button size="mini" plain type="primary" @click="doAction('precent')"><icon-svg icon-class="btn12_guanlianyd" /> 配载率</el-button>
+        <el-button size="mini" plain type="primary" @click="doAction('finish')"><icon-svg icon-class="btn14_fache" /> 保存</el-button>
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
@@ -465,7 +469,7 @@ export default {
         data.id = this.orgData.id
         data.orgid = this.orgData.orgid
         data.batchNo = this.orgData.batchNo
-        data.arriveOrgid = this.orgData.orgid
+        data.arriveOrgid = this.orgData.arriveOrgid
         data.loadTypeId = this.loadTypeId
         data.batchTypeId = this.batchTypeIdFinish
         data.apportionTypeId = this.orgData.apportionTypeId

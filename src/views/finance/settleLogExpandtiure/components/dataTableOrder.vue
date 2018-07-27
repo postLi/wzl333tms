@@ -90,7 +90,7 @@
         </el-table-column>
         <el-table-column prop="cargoVolume" sortable label="体积" width="120">
         </el-table-column>
-        <el-table-column prop="senderCustomerUnit" sortable label="发货方" width="120">
+        <el-table-column prop="shipSenderUnit" sortable label="发货方" width="120">
         </el-table-column>
         <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
