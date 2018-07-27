@@ -277,7 +277,7 @@ export default {
         this.isFresh = true // 是否手动刷新页面
       } else {
         this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        this.searchQuery.vo.orgAllId = this.otherinfo.orgid
+        this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
         this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
       }

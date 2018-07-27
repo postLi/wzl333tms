@@ -98,7 +98,7 @@ export default {
           senderCompanyName: '',
           shipFromCityCode: '',
           shipToCityCode: '',
-          orgAllId: '',
+          ascriptionOrgId: '',
           shipSn: '',
           'status': 'NOSETTLEMENT',
           'feeType': 5

@@ -15,7 +15,7 @@
       </div>
     </el-form-item>
     <el-form-item v-if="filter" label="网点:">
-      <select-tree v-model="searchForm.orgAllId" />
+      <select-tree v-model="searchForm.ascriptionOrgId" />
     </el-form-item>
     <el-form-item label="开单网点:">
       <select-tree v-model="searchForm.shipFromOrgid" />
@@ -100,7 +100,7 @@ export default {
         shipFromCityCode: '',
         shipToCityCode: '',
         shipSn: '',
-        orgAllId: '',
+        ascriptionOrgId: '',
         status: ''
       }
     }
@@ -112,7 +112,7 @@ export default {
   },
   mounted() {
     this.searchCreatTime = this.defaultTime
-    this.searchForm.orgAllId = this.otherinfo.orgid
+    this.searchForm.ascriptionOrgId = this.otherinfo.orgid
     // this.searchForm.status = 'NOSETTLEMENT'
     this.onSubmit()
   },

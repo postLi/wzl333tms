@@ -267,6 +267,7 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
+          e.paymentId = e.paymentId || 16
           this.rightTable.push(e)
           const item = this.leftTable.indexOf(e)
           if (item !== -1) {
