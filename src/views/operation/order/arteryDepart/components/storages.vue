@@ -47,7 +47,7 @@
                   </el-form-item>
                   <el-form-item label="预计到达日期:" class="art_arriveTime">
                     <!--<el-input :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')" maxlength="15" clearable disabled>-->
-                    <el-input :value="formModel.requireArrivedTime " maxlength="15" clearable disabled>
+                    <el-input :value="formModel.planArrivedTime " maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="备注:" class="art_remk">

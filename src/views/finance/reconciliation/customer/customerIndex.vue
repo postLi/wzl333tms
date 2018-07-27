@@ -1,6 +1,6 @@
 <template>
   <!--v-loading="loading"-->
-  <div class="tab-content" >
+  <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -101,8 +101,6 @@
 </template>
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
-//postCustomerdetailList
-import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
 import {postCustomerdetailList} from '@/api/finance/fin_customer'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
@@ -119,8 +117,7 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+
       }
   },
   mounted () {
@@ -129,14 +126,14 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      // loading: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
       trackId:'',
       batchTypeId:'',//批次状态
       //加载状态
-      // loading: true,
+      loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
