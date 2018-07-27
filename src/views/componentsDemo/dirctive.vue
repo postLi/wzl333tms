@@ -5,7 +5,7 @@
     <blockquote>
       目前所有自定义指令都是注册到全局，可在子组件中直接使用
     </blockquote>
-    
+
     <h3>v-numberOnly</h3>
     <p>只允许输入数字</p>
     <input v-numberOnly type="text">
@@ -14,6 +14,15 @@
     </blockquote>
     <p>修饰符 v-number-only:point 允许小数点</p>
     <input v-number-only:point type="text">
+    <p>elementUI 输入框</p>
+    <el-input v-numberOnly clearable></el-input>
+    <p>带校检的输入框</p>
+    <el-form>
+    <el-form-item label="账户账号" >
+      <el-input  auto-complete="off" maxlength="20" v-numberOnly clearable></el-input>
+    </el-form-item>
+    </el-form>
+
 
     <h3>v-showPicture</h3>
     <p>弹窗展示图片</p>

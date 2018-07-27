@@ -156,17 +156,17 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <IndexDialog :issender="true" :isModify="isModify" :isDbclick="isDbclick" :dotInfo="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"></IndexDialog>
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
   import {  getExportExcel } from '@/api/company/customerManage'
   import {postCompletion} from '@/api/finance/fin_customer'
-  import {postCarfShortDetailList,deleteCarShort} from '@/api/finance/fin_carfee'
+  import {postCarfShortDetailList,deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
   import TableSetup from './components/tableSetup'
-  import AddCustomer from './components/add'
+  import IndexDialog from './components/indexDialog'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
 
@@ -175,7 +175,7 @@
       SearchForm,
       Pager,
       TableSetup,
-      AddCustomer
+      IndexDialog
     },
     computed: {
       ...mapGetters([
@@ -287,7 +287,6 @@
             break;
           // 对账完成 cancelCom
           case 'completion':
-            this.closeAddCustomer()
             if(this.selected.length > 1){
               this.$message({
                 message: '只能选择一条数据进行跟踪设置~',
@@ -296,22 +295,10 @@
               return false
 
             }else{
+
               if(this.selected[0].checkStatus === 0){
-                let data = {
-                  id:'',
-                  checkStatus:0
-                }
-                data.id = this.selected[0].id
-                postCompletion(data).then(res => {
-                  this.loading = false
-                  this.$message({
-                    type: 'success',
-                    message: '操作成功~'
-                  })
-                  this.fetchData()
-                }).catch(err => {
-                  this.loading = false
-                })
+                this.openAddCustomer()
+                this.selectInfo = this.selected[0]
               }else{
                 this.$message({
                   type: 'info',
@@ -335,10 +322,10 @@
               if(this.selected[0].checkStatus === 1){
                 let _data = {
                   id:'',
-                  checkStatus:1
+                  checkStatus:0
                 }
                 _data.id = this.selected[0].id
-                postCompletion(_data).then(res => {
+                postUpdateBillCheckSelective(_data).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',

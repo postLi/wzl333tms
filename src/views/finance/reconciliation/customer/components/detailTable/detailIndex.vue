@@ -1,6 +1,6 @@
 <template>
   <!--v-loading="loading"-->
-  <div class="tab-content" >
+  <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -244,8 +244,6 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
       }
   },
   mounted () {
@@ -254,14 +252,13 @@ export default {
   },
   data () {
     return {
-      loading: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
       trackId:'',
       batchTypeId:'',//批次状态
       //加载状态
-      // loading: true,
+      loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -296,8 +293,6 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      // Object.assign(this.searchQuery, obj)
-      // this.fetchData()
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
@@ -316,7 +311,6 @@ export default {
       // 判断是否有选中项
 
       if(!this.selected.length && type !== 'storage'){
-          // this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的对账单~',
               type: 'warning'

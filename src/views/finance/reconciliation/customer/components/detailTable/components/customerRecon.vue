@@ -1,8 +1,8 @@
 <template>
   <!---->
   <div class="costomerCreat_lll" v-loading="loading" >
-    <div class="sTop">
-      <el-form :inline="true" :size="btnsize" label-position="right"   label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
+    <div class="sTop" >
+      <el-form :inline="true" ref="formName1" :size="btnsize" label-position="right"   label-width="100px" class="short_searchinfo clearfix"  :model="searchTitle">
 
       <div class="sTitle">
         <el-form-item label="">
@@ -29,10 +29,10 @@
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName" :rules="rules">
+      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName2" :rules="rules">
 
         <el-form-item label="发货方">
-          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
+          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled ></el-input>
         </el-form-item>
         <el-form-item label="发货人">
           <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
@@ -41,7 +41,7 @@
           <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off"  maxlength="12" v-numberOnly disabled></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
-          <el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>
+          <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
         </el-form-item>
         <el-form-item label="客户编号">
           <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
@@ -53,25 +53,25 @@
           <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="结算方式">
-          <el-input v-model="messageInfo.settlementType" auto-complete="off" maxlength="8"></el-input>
+          <el-input v-model="messageInfo.settlementType" auto-complete="off" maxlength="8" clearable></el-input>
         </el-form-item>
-        <el-form-item label="账户账号">
-          <el-input v-model="messageInfo.bankAccount" auto-complete="off" maxlength="20" v-numberOnly></el-input>
+        <el-form-item label="账户账号" prop="bankAccount">
+          <el-input v-model="messageInfo.bankAccount" auto-complete="off" maxlength="20"  clearable></el-input>
         </el-form-item>
         <el-form-item label="账户开户行">
-          <el-input v-model="messageInfo.bankName" auto-complete="off" maxlength="15"></el-input>
+          <el-input v-model="messageInfo.bankName" auto-complete="off" maxlength="15" clearable></el-input>
         </el-form-item>
         <el-form-item label="财务负责人">
-          <el-input v-model="messageInfo.financialOfficer" auto-complete="off" maxlength="10"></el-input>
+          <el-input v-model="messageInfo.financialOfficer" auto-complete="off" maxlength="10" clearable></el-input>
         </el-form-item>
         <el-form-item label="联系方式" prop="financialOfficerPhone">
-          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off"  maxlength="11" v-numberOnly></el-input>
+          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off"  maxlength="11" clearable></el-input>
         </el-form-item>
         <el-form-item label="支付宝">
-          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" maxlength="30"></el-input>
+          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" maxlength="30" clearable></el-input>
         </el-form-item>
         <el-form-item label="微信" class="sWetPay">
-          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" maxlength="30"></el-input>
+          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" maxlength="30" clearable></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -718,7 +718,7 @@
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
-        <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName">
+        <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
           <!--<el-form-item label="总计">-->
             <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
           <!--</el-form-item>-->
@@ -731,19 +731,19 @@
 
 
           <el-form-item label="公司名称">
-            <el-input v-model="messageButtonInfo.companyName" auto-complete="off" ></el-input>
+            <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
           </el-form-item>
           <el-form-item label="业务负责人">
-            <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off"></el-input>
+            <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
           </el-form-item>
           <el-form-item label="联系方式">
-            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" ></el-input>
+            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>
           </el-form-item>
           <el-form-item label="财务负责人">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10"></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10" clearable></el-input>
           </el-form-item>
-          <el-form-item label="联系方式">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="11" v-numberOnly></el-input>
+          <el-form-item label="联系方式" prop="orgFinancialOfficerPhone">
+            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="11"  clearable></el-input>
           </el-form-item>
           <el-form-item label="时间">
             <el-date-picker
@@ -770,6 +770,8 @@
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+
   import {postCFinanceinitialize,getCustomerdetail} from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
@@ -858,9 +860,19 @@
               endTime:'',
             },
             rules:{
-              // financialOfficerPhone:[
-              //   { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-              // ]
+              "bankAccount":[
+                // { trigger: 'change', validator: validateOnlyNum}
+                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+              ],
+              "financialOfficerPhone":[
+                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+              ],
+
+            },
+            btnRule:{
+             "orgFinancialOfficerPhone": [
+                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+                ]
             }
           };
 
@@ -873,14 +885,7 @@
       },
       mounted(){
         this.searchCreatTime = this.defaultTime
-        if(this.$route.query.tab === '客户对账-创建对账'){
           this.onSubmit()
-
-        }else{
-          this.modifyList()
-          this.sendId = this.$route.query.id
-        }
-
       },
       methods:{
         fetchList(){
@@ -889,7 +894,7 @@
           return postCFinanceinitialize(this.searchTitle).then(data => {
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
-
+            this.infoList()
             data.customerDetailDtoList.forEach((el,val) => {
               if(el.type === 1){
                 this.dealInfo.push(el)
@@ -918,7 +923,7 @@
             let data = res.data
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
-
+            this.infoList()
             data.customerDetailDtoList.forEach((el,val) => {
               if(el.type === 1){
                 this.dealInfo.push(el)
@@ -946,55 +951,67 @@
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime,searchObj.endTime)
-          // searchObj.carrierId = this.$route.query.id
-          this.fetchList()
-        },
-        submit(formName){
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
-              for(const i in this.messageInfo){
-                this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
-              }
-              for(const i in this.messageButtonInfo){
-                this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
-              }
-              this.dealInfo.map(el=>this.form.customerDetailDtoList.push(el))
-              this.dealPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
-              this.alreadyInfo.map(el=>this.form.customerDetailDtoList.push(el))
-              this.alreadyPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
-              //
-              this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el=>{
-                const a = {}
-                a.totalFee = el.totalFee
 
-                return a
-              }) : []
-              this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
-                const a = {}
-                a.totalFee = el.totalFee
-                return a
-              }) : []
-              this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
-                const a = {}
-                a.totalFee = el.totalFee
-                return a
-              }) : []
-              this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
-                const a = {}
-                a.totalFee = el.totalFee
-                return a
-              }) : []
-              if(!this.form.customerDetailDtoList.length){
-                this.$message({
-                  message: '各款项不能为空~',
-                  type: 'error'
-                })
-                this.closeVisibleDialog()
-                return false
-              }else{
-                this.oopenVisibleDialog()
-              }
+          if(this.$route.query.tab === '客户对账-创建对账'){
+            this.fetchList()
+
+          }else{
+            this.modifyList()
+            this.sendId = this.$route.query.id
+          }
+        },
+        submit(){
+          this.$refs["formName2"].validate((valid) => {
+            if (valid) {
+              this.$refs["formName3"].validate((valid) => {
+                if (valid) {
+                  this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+                  for(const i in this.messageInfo){
+                    this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
+                  }
+                  for(const i in this.messageButtonInfo){
+                    this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
+                  }
+                  this.dealInfo.map(el=>this.form.customerDetailDtoList.push(el))
+                  this.dealPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
+                  this.alreadyInfo.map(el=>this.form.customerDetailDtoList.push(el))
+                  this.alreadyPayInfo.map(el=>this.form.customerDetailDtoList.push(el))
+                  //
+                  this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el=>{
+                    const a = {}
+                    a.totalFee = el.totalFee
+
+                    return a
+                  }) : []
+                  this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
+                    const a = {}
+                    a.totalFee = el.totalFee
+                    return a
+                  }) : []
+                  this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
+                    const a = {}
+                    a.totalFee = el.totalFee
+                    return a
+                  }) : []
+                  this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
+                    const a = {}
+                    a.totalFee = el.totalFee
+                    return a
+                  }) : []
+                  if(!this.form.customerDetailDtoList.length){
+                    this.$message({
+                      message: '各款项不能为空~',
+                      type: 'error'
+                    })
+                    this.closeVisibleDialog()
+                    return false
+                  }else{
+                    this.oopenVisibleDialog()
+                  }
+                }
+              })
+
+
 
             } else {
               return false
@@ -1003,7 +1020,38 @@
 
         },
         canBtn(){
+          this.$confirm('确定要取消对账单吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            // this.$router.back(-1)
+           if(this.$route.query.tab === '客户对账-创建对账'){
+             this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.$route.query.id)
 
+           }else{
+             this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.$route.query.urlId)
+           }
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消操作'
+            })
+          })
+        },
+        infoList(){
+          this.dealInfo = []
+          this.dealInfoData = []
+          this.dealPayInfo = []
+          this.dealPayInfoData = []
+          this.alreadyInfo = []
+          this.alreadyInfoData = []
+          this.alreadyPayInfoData = []
         },
         validateIsEmpty(msg = '不能为空！') {
           return (rule, value, callback) => {
@@ -1019,7 +1067,7 @@
           const sums = [];
           columns.forEach((column, index) => {
             if (index === 0) {
-              sums[index] = '总价';
+              sums[index] = '合计';
               return;
             }
             const values = data.map(item => Number(item[column.property]));
@@ -1046,35 +1094,29 @@
           this.dealInfo = this.dealInfo.filter((el,inx) => {
             return inx !== index
           })
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
+          this.delCont()
         },
         iconDeleteDealPay(index){
 
           this.dealPayInfo = this.dealPayInfo.filter((el,inx) => {
             return inx !== index
           })
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
+          this.delCont()
         },
 
         iconDeleteAlready(index){
           this.alreadyInfo = this.alreadyInfo.filter((el,inx) => {
             return inx !== index
           })
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
+          this.delCont()
         },
         iconDeleteAlreadyPay(index){
           this.alreadyPayInfo = this.alreadyPayInfo.filter((el,inx) => {
             return inx !== index
           })
+          this.delCont()
+        },
+        delCont(){
           this.$message({
             message: '删除成功~',
             type: 'success'
@@ -1183,10 +1225,8 @@
     border: 1px solid #b4b4b4;
     border-top: transparent;
     border-bottom: transparent;
-    /*padding: 16px 0 10px 0;*/
 
     .el-form-item{
-      /*width: 265px;*/
       margin-bottom: 0;
       margin-right: -5px;
       border: 1px solid #b4b4b4;
@@ -1204,7 +1244,6 @@
 
     }
     .el-form-item:nth-of-type(6){
-      /*border-top-color: transparent;*/
       border-right-color: transparent;
     }
     .el-form-item:nth-of-type(7){
@@ -1234,11 +1273,8 @@
       border-top-color: transparent;
       border-right-color: transparent;
       .el-form-item__content{
-        /*width: 90%;*/
         .el-input{
           .el-input__inner{
-            /*width: 100%;*/
-
           }
 
         }
@@ -1293,21 +1329,24 @@
             }
           }
           .el-form-item:nth-of-type(1){
-            /*border-bottom-color: transparent;*/
             border-right-color: transparent;
-          }
-          .el-form-item:nth-of-type(1){
             border-left-color: transparent;
             width: 100%;
             .el-input__inner{
               width: 1625px;
             }
           }
+          .el-form-item:nth-of-type(1){
+
+          }
           .el-form-item:nth-of-type(3){
             border-left-color: transparent;
           }
           .el-form-item:nth-of-type(2n){
             border-right-color: transparent;
+          }
+          .el-form-item:last-of-type{
+            border-right-color: #b4b4b4;
           }
         }
       .el-input__inner:focus {

@@ -126,7 +126,6 @@ export default {
   },
   data () {
     return {
-      // loading: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -167,8 +166,6 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      // Object.assign(this.searchQuery, obj)
-      // this.fetchData()
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
@@ -187,7 +184,6 @@ export default {
       // 判断是否有选中项
 
       if(!this.selected.length){
-          // this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
               type: 'warning'
@@ -242,8 +238,14 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event){
-      this.selectInfo = row
 
+      this.$router.push({
+        path: '/finance/reconciliation/customer/detailTable',
+        query: {
+          tab: '客户对账-对账明细',
+          id: row.shipSenderId
+        }
+      })
     }
   }
 }

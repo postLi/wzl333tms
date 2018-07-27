@@ -1,6 +1,5 @@
 <template>
-  <!--v-loading="loading"-->
-  <div class="tab-content" >
+  <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -88,56 +87,41 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <!--<AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />-->
-    <!--<IndexDialog :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"></IndexDialog>-->
+
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
   </div>
 </template>
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
-//postCustomerdetailList
-import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
-// import {postCustomerdetailList} from '@/api/finance/fin_customer' postCarrierdetailList
 import {postCarrierCarrierList} from '@/api/finance/fin_carrier'
 import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
-import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddCustomer
+    TableSetup
   },
   computed: {
       ...mapGetters([
           'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
       }
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    // this.fetchAllCustomer()
-    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
-    //   console.log(res)
-    //   this.loading = false
-    // })
   },
   data () {
     return {
-      loading: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
       trackId:'',
-      batchTypeId:'',//批次状态
       //加载状态
-      // loading: true,
+      loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -170,8 +154,6 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      // Object.assign(this.searchQuery, obj)
-      // this.fetchData()
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
