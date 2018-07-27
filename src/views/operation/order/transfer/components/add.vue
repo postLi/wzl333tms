@@ -14,7 +14,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="到站电话" prop="arrivalMobile">
-            <el-input size="mini" disabled :value="form.arrivalMobile" v-number-only placeholder="到站电话">
+            <el-input size="mini" disabled :value="form.arrivalMobile" placeholder="到站电话">
             </el-input>
           </el-form-item>
           <el-form-item label="备注" class="remark">
@@ -116,21 +116,21 @@ export default {
   },
   computed: {
     'fixPhone': {
-        get() {
-          return this.phoneshort + '-' + this.phonelong
-        },
-        set(val) {
+      get() {
+        return this.phoneshort + '-' + this.phonelong
+      },
+      set(val) {
           // let names = val.match(/(.*)(.{7})$/)
-          const names = val ?　val.split('-')　: ''
-          if (names) {
-            this.phoneshort = names[1] ? names[0] : ''
-            this.phonelong = names[1] ? names[1] : names[0]
-          } else {
-            this.phoneshort = ''
-            this.phonelong = ''
-          }
+        const names = val ?　val.split('-')　: ''
+        if (names) {
+          this.phoneshort = names[1] ? names[0] : ''
+          this.phonelong = names[1] ? names[1] : names[0]
+        } else {
+          this.phoneshort = ''
+          this.phonelong = ''
         }
       }
+    }
   },
   data() {
     const _this = this
@@ -517,9 +517,8 @@ export default {
     },
     // 获取批次详细信息
     getUpdateTransferDetail(transferBatchNo) {
-      return transferManageApi.getUpdateTransferDetail(this.otherinfo.orgid, transferBatchNo).then(res => {
-        const data = res.data
-        if (!data.transferBatchNo) {
+      return transferManageApi.getTransferBatchDetailsList({ orgId: this.otherinfo.orgid, transferBatchNo: transferBatchNo }).then(data => {
+        if (!data.length) {
           // 当这个批次号不能获取到信息时，提示用户
           this.$alert('当前批次号不存在', '提示', {
             confirmButtonText: '确定',
@@ -528,11 +527,12 @@ export default {
             }
           })
         } else {
+          this.usersArr = data
+          const res = data[0]
           for (const i in this.form) {
-            this.form[i] = data[i]
+            this.form[i] = res[i]
           }
           this.form.transferTime = parseTime(new Date(this.form.transferTime))
-          this.usersArr = data.tmsOrderTransferDetails || []
         }
       })
     },
