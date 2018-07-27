@@ -27,7 +27,9 @@
         v-numberOnly
         maxlength="11"
         v-model="searchForm.customerMobile"
-        clearable>
+        clearable
+        prop="customerMobile"
+      >
       </el-input>
     </el-form-item>
       <el-form-item class="staff_searchinfo_tn art_marginTop" >
@@ -42,6 +44,7 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { REGEX } from '@/utils/validate'
 import { parseTime } from '@/utils/'
+
 export default {
   components: {
     SelectTree,
@@ -67,7 +70,20 @@ export default {
   },
   data () {
     let _this = this
+    const valiCustomerMobile = function (rule, value, callback) {
+      if(REGEX.ONLY_NUMBER.test(value)){
+        callback()
+      }
+      else {
+        callback(new Error('只能输入数字'))
+      }
+    }
     return {
+      rules: {
+        customerMobile:[
+          {validator: valiCustomerMobile, trigger: 'blur'}
+        ]
+      },
       searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       pickOption: {
         firstDayOfWeek:1,
@@ -89,9 +105,6 @@ export default {
         customerMobile: '',//
         startTime: '',//
         endTime:''
-      },
-      rules: {
-
       }
     }
   },
@@ -117,7 +130,7 @@ export default {
       this.searchForm.customerMobile = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchForm.searchCreatTime = []
+      this.searchCreatTime = []
     }
   }
 }
