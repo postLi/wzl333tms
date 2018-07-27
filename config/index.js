@@ -42,8 +42,8 @@ module.exports = {
       },
       '/localapi' : {
         target: "http://192.168.1.233:7010",
-        // target: 'http://192.168.1.23:7010',
-        pathRewrite: {'^/localapi': ''}
+        pathRewrite: {'^/localapi': ''},
+        changeOrigin: true
       },
       '/wukunzhi': {
         target: "http://192.168.1.42:7010",

@@ -422,6 +422,7 @@ export default {
             promiseObj = putXiugai(this.id, data)
             // console.log(data);
           } else if (this.isDelivery) {
+            data.orgId = this.repertoryId.orgId
             promiseObj = postSign(data)// 不批量
           } else {
             promiseObj = postPickupSign(data)// 不批量

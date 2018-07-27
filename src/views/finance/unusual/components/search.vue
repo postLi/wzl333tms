@@ -125,16 +125,19 @@ export default {
     onSubmit() {
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
       this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
+      // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ' + '00:00:00') + '' : ''
+      // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ' + '23:59:59') + '' : ''
       // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
       // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
       const data = Object.assign({}, this.searchForm)
       this.$emit('change', data)
     },
     clearForm() {
-      this.searchCreatTime = this.$options.data().searchCreatTime
-      this.searchForm.shipFromOrgid = ''
+      // this.searchCreatTime = this.$options.data().searchCreatTime
+      // this.searchCreatTime = []
+      // this.searchForm.shipFromOrgid = ''
       this.searchForm.shipSn = ''
-      this.searchForm.status = ''
+      // this.searchForm.statusName = ''
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
     }

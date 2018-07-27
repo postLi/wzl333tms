@@ -598,9 +598,10 @@ export default {
         currentPage: 1,
         pageSize: 10000,
         vo: {
-          shipId: '',
-          signId: '',
-          signStatus: '226'
+          'shipId': '',
+          'signId': '',
+          'signStatus': '226',
+          'shipFromOrgid': 1
         }
       },
       total: 0,
@@ -702,6 +703,7 @@ export default {
           const id = this.selected.filter(el => {
             return el.signStatus === 227
           })
+
           if (id.length) {
             const shipId = this.selected[0].shipId
             const signId = this.selected[0].signId

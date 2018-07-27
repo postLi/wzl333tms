@@ -127,10 +127,10 @@ export default {
     },
     clearForm() {
       this.searchForm.shipSn = ''
-      this.searchForm.orgId = ''
+      // this.searchForm.orgId = ''
       // this.searchForm.orgId = this.orgid
-      this.searchForm.abnormalStatus = ''
-      this.searchCreatTime = []
+      // this.searchForm.abnormalStatus = ''
+      // this.searchCreatTime = []
     }
   }
 }

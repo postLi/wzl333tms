@@ -162,8 +162,8 @@ export default {
       this.searchForm.shipSenderId = ''
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
-      this.thestatus = ''
-      this.searchCreatTime = []
+      // this.thestatus = ''
+      // this.searchCreatTime = []
     }
   }
 }

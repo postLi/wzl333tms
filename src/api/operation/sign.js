@@ -48,7 +48,7 @@ export function postPickupSign(id) {
  * 根据ID修改运单签收信息
  */
 export function putXiugai(id, params) {
-  return fetch.post('/api-order/order/sign/v1/?id=' + id, params)
+  return fetch.put('/api-order/order/sign/v1/?id=' + id, params)
 }
 
 /**
@@ -102,7 +102,7 @@ export function postSign(id) {
  * {
 	"currentPage":1,
 	"pageSize":10000,
-	"vo":{	
+	"vo":{
 	}
 }
  */
@@ -131,7 +131,7 @@ export function postBatchSign(id) {
 /**
  * 批量提货签收
  * 自提批量签收,需要传递库存ids
- * {	
+ * {
 	"repertoryIds":[25,26],
 	"signTime":"",
 	"signName":"张三",

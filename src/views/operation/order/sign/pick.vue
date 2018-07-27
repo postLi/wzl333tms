@@ -604,7 +604,8 @@ export default {
         'vo': {
           'repertoryId': '',
           'signId': '',
-          'signStatus': '226'
+          'signStatus': '226',
+          'shipFromOrgid': 1
         }
       },
       total: 0,

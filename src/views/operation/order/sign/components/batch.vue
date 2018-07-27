@@ -133,7 +133,8 @@ export default {
 
         'loadIds': [],
         'shipIds': [],
-        'childShipIds': []
+        'childShipIds': [],
+        'orgIds': []
       },
       formLabelWidth: '80px',
       tooltip: false,
@@ -233,6 +234,9 @@ export default {
             })
             data.childShipIds = this.dotInfo.map(el => {
               return el.childShipId
+            })
+            data.orgIds = this.dotInfo.map(el => {
+              return el.orgId
             })
             data.loadIds = this.dotInfo.map(el => {
               return el.loadId

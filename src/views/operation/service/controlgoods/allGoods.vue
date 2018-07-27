@@ -524,7 +524,7 @@ export default {
         'currentPage': 1,
         'pageSize': 100,
         'vo': {
-          // 'status': 1
+          'shipFromOrgid': 1
         }
 
       },
