@@ -1,18 +1,18 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" clearable>
+      <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
       </SelectTree>
     </el-form-item>
     <el-form-item label="到达城市" prop="shipToCityName">
-     <el-input v-model="searchForm.shipToCityName" clearable></el-input>
+     <el-input v-model="searchForm.shipToCityName"></el-input>
     </el-form-item>
      <el-form-item label="业务类型" prop="selectType">
-     <el-select v-model="searchForm.selectType">
+     <el-select v-model="searchForm.selectType" @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
       <el-option v-for="(item, index) in selectType"
       :label="item.label"
       :value="item.value"
@@ -106,6 +106,9 @@ export default {
         // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
+    },
+    hideIframe (status) {
+      this.$emit('hideIframe', status)
     },
     clearForm(formName) {
       this.$nextTick(() => {

@@ -295,7 +295,8 @@ export default {
           path: './settleLogDetail',
           query: {
             flowId: this.selectedList[0].flowId,
-            settlementId: this.selectedList[0].settlementId
+            settlementId: this.selectedList[0].settlementId,
+            orgId: this.searchQuery.vo.orgId
           }
         })
       }

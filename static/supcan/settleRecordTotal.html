@@ -10,7 +10,6 @@
   var query = getUrlParams()
   var path = window.location.protocol + '//' + window.location.host
   function OnReady(id) {
-    // hideChart(true)
     AF.func("Build", "report/settleRecordTotal.xml");
     AF.func("SelectCell", "0\r\n0");
     // var access_token ="3471ea1a-8dcd-4c9f-95e9-258dbcf564cb";
@@ -21,7 +20,6 @@
     //    AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/FeeAggregation?orgId=1&startTime=2017-01-01&endTime="+endTime+"&typeIds=&access_token="+access_token);  
     AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-finance/finance/report/v1/FeeAggregation" + query);
     AF.func("Calc", "");
-    // hideChart(true)
   }
 
   function OnEvent() {}

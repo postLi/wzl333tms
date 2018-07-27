@@ -8,11 +8,15 @@
       <SelectTree v-model="searchForm.orgId">
       </SelectTree>
     </el-form-item>
-    <!-- <el-form-item label="费用类型" prop="feeId">
-     <selectType v-model="searchForm.feeId" type="fee_type" @change="selectFeeType">
+    <el-form-item label="费用类型" prop="feeId">
+      <el-select v-model="searchForm.feeId">
+        <el-option label="全部" value=""></el-option>
+        <el-option v-for="item in feeIds" :label="item.feeType" :value="item.id" :key="item.id"></el-option>
+      </el-select>
+      <!-- <selectType v-model="searchForm.feeId" type="fee_type" @change="selectFeeType">
         <el-option slot="head" label="全部" value=""></el-option>
-      </selectType>
-    </el-form-item> -->
+      </selectType> -->
+    </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -25,6 +29,7 @@ import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SelectType from '@/components/selectType/index'
+import { getFeeTypeDict } from '@/api/finance/settleLog'
 export default {
   components: {
     SelectTree,
@@ -57,6 +62,7 @@ export default {
         settlementId: '',
         feeId: ''
       },
+      feeIds: [],
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
@@ -64,7 +70,8 @@ export default {
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: pickerOptions2
-      }
+      },
+      settlementId: ''
     }
   },
   watch: {
@@ -74,11 +81,18 @@ export default {
   },
   mounted() {
     this.searchForm.orgId = this.orgid
-    this.searchForm.settlementId = this.$const.SETTLEMENT_ID[0].value
+
+    this.getFeeTypeDict()
     this.onSubmit()
   },
   methods: {
-    selectFeeType (obj) {
+    getFeeTypeDict() {
+      this.settlementId = Number(this.$route.query.settlementId)
+      getFeeTypeDict(this.settlementId).then(data => {
+        this.feeIds = data
+      })
+    },
+    selectFeeType(obj) {
       console.log(obj)
     },
     onSubmit() {

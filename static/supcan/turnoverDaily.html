@@ -9,9 +9,7 @@
   <script>
   var query = getUrlParams()
   var path = window.location.protocol + '//' + window.location.host
-
   function OnReady(id) {
-
     AF.func("Build", "report/turnoverDaily.xml");
     AF.func("SelectCell", "0\r\n0");
     //指定ds1数据源取数的URL地址 
@@ -25,7 +23,6 @@
 
     // AF.func("SetSource", "营业额日报表 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/dateReport?currentPage=" + currentPage + "&pageSize=" + pageSize + "&shipFromOrgid=" + shipFromOrgid + "&senderCustomerName=" + senderCustomerName + "&createTimeStart=" + createTimeStart + "&createTimeEnd=" + createTimeEnd + "&access_token=" + access_token);
     AF.func("SetSource", "营业额日报表 \r\n "+ path  +"/api/api-finance/finance/report/v1/dateReport" + query);
-    console.log("http://192.168.1.157:7010/api-finance/finance/report/v1/dateReport" + query)
     //需要重新计算， 因为SetSource仅仅是相当于更改一个属性 
     AF.func("Calc", "");
   }

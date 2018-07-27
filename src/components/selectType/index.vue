@@ -1,5 +1,5 @@
 <template>
-  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs">
+  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs" @focus="focus" @blur="blur">
     <slot name="head"></slot>
     <template v-for="item in types">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
@@ -67,6 +67,14 @@ fee_status 交账状态
 export default {
   name: 'selectType',
   props: {
+    focus: {
+      type: Function,
+      default: ()=>{}
+    },
+    blur: {
+      type: Function,
+      default: ()=>{}
+    },
     orgid: {
       type: [Number, String],
       default: ''

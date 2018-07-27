@@ -1,19 +1,24 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期"  @focus="hideIframe(true)" @blur="hideIframe(false)">
+      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" :blur="()=>{hideIframe(false)}">
+      <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
       </SelectTree>
     </el-form-item>
-    <el-form-item label="发货人" prop="senderCustomerName">
-      <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
+    <el-form-item label="费用项目" prop="typeIds">
+      <el-select v-model="searchForm.typeIds" multiple collapse-tags placeholder="请选择" @focus="()=>{hideIframe(true)}" @visible-change="(bool)=>{hideIframe(bool)}">
+        <el-option slot="head" label="全部" value=""></el-option>
+        <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.id">
+        </el-option>
+      </el-select>
+      <!-- <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
         <template slot-scope="{item}">
           {{ item.customerName }} : {{ item.customerMobile }}
         </template>
-      </querySelect>
+      </querySelect> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -25,11 +30,14 @@
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
+import SelectType from '@/components/selectType/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import { getSelectType } from '@/api/common'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    SelectType
   },
   props: {
     btnsize: {
@@ -67,25 +75,35 @@ export default {
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: pickerOptions2
-      }
+      },
+      feeIdsArr: []
     }
   },
   mounted() {
     this.searchForm.orgId = this.orgid
+    this.getSelectType()
     this.onSubmit()
   },
   methods: {
+    getSelectType () {
+      let type = 'fee_type'
+      getSelectType(type, this.orgid).then(data => {
+        this.feeIdsArr = data
+      })
+    },
+    multiple() {
+      this.hideIframe(false)
+    },
+    selectFeeType(obj) {},
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'startTime', this.searchTime[0])
         this.$set(searchObj, 'endTime', this.searchTime[1])
-        // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-        // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
     },
-    hideIframe (status) {
+    hideIframe(status) {
       this.$emit('hideIframe', status)
     },
     clearForm(formName) {

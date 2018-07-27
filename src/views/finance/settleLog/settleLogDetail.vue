@@ -2,7 +2,7 @@
   <!-- 资金流水明细 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="orgId" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
@@ -439,6 +439,9 @@ export default {
     },
     settlementId() {
       return this.$route.query.settlementId
+    },
+    orgId () {
+      return this.$route.query.orgId
     }
   },
   methods: {

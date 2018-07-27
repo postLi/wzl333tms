@@ -1,7 +1,7 @@
 <template>
   <div class="tab-content chartSender">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" @hideIframe="hideIframe"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <!-- <div class="btns_box">
@@ -51,6 +51,19 @@ export default {
   },
   methods: {
     doAction(type) {},
+    hideIframe (bool) {
+      if (bool) {
+        if(this.hideiframe !== 'show'){
+          this.hideiframe = 'show'
+          document.getElementById('senderIframe').contentWindow.hideChart(bool)
+        }
+      } else {
+        if(this.hideiframe !== 'hide'){
+          this.hideiframe = 'hide'
+          document.getElementById('senderIframe').contentWindow.hideChart(bool)
+        }
+      }
+    },
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
       let access_token = getToken()
@@ -59,7 +72,7 @@ export default {
       for (let item in this.query) {
         str += item + '=' + this.query[item] + '&'
       }
-      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/operation.html' + str
+      let path = window.location.protocol + '//' + window.location.host + '/static/supcan/operation.html' + str + (new Date()).getTime()
       this.chartIframe = encodeURI(path)
       console.log(path, this.$refs.senderIframe.contentWindow)
     },

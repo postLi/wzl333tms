@@ -59,16 +59,12 @@ export default {
           this.hideiframe = 'show'
           document.getElementById('senderIframe').contentWindow.hideChart(bool)
         }
-        console.log(document.getElementById('senderIframe').contentWindow)
-       
-        // this.isShow = bool
       } else {
         if(this.hideiframe !== 'hide'){
           this.hideiframe = 'hide'
           document.getElementById('senderIframe').contentWindow.hideChart(bool)
         }
       }
-      // console.log('hide',this.$refs.senderIframe.contentWindow)
     },
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
@@ -78,9 +74,8 @@ export default {
       for (const item in this.query) {
         str += item + '=' + String(this.query[item]).trim() + '&'
       }
-      const path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html' + str
+      const path = window.location.protocol + '//' + window.location.host + '/static/supcan/settleRecordTotal.html' + str + (new Date()).getTime()
       this.chartIframe = encodeURI(path)
-      console.log(path, this.$refs.senderIframe.contentWindow)
     },
     setTable() {}
   }

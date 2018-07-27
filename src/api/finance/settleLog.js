@@ -40,7 +40,10 @@ export function getOrderShipList(data) {
  * 取消结算
  */
 export function postCancelSettlement(data) {
-  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement?flowId=' + data.flowId + '&detailFlowId=' + data.detailFlowId)
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement', {
+    flowId: data.flowId,
+    detailFlowId: data.detailFlowId
+  })
 }
 /**
  * 记收入支出
@@ -74,4 +77,15 @@ export function postDetailCancel(data) {
  */
 export function getSettlementInfo(flowId) {
   return fetch.get('/tmsfinanceservice/finance/tmsfinancecapitalflow/v1/getSettlementInfo?flowId=' + flowId)
+}
+/**
+ * 查看费用类型
+ */
+export function getFeeTypeDict(settlementId) {
+  return fetch.post('/api-finance/finance/tmsfinancefeetype/v1/getFeeTypeDict/', {
+      settlementId: settlementId
+    })
+    .then(res => {
+      return res.data
+    })
 }
