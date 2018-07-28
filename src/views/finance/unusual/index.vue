@@ -87,7 +87,7 @@
             >
           </el-table-column>
           <el-table-column
-            prop="changeFee"
+            prop="fee"
             label="异动费用"
             width="120"
             sortable
@@ -472,10 +472,8 @@ export default {
     },
     getDbClick(row, event) {
       this.selectInfo = row
-      // this.isCheck = true
       this.isDbClick = true
       this.isModify = false
-      // this.isCheck = true
       this.openAddAbnormal()
     }
   }

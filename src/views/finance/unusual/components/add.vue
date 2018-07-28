@@ -112,7 +112,6 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-// import { GetAbnormalNo, PostNewAbnormal, putXiugai, GetLook } from '@/api/operation/dashboard'
 import { postInsertAbnormal, putXiugai } from '@/api/finance/unusual'
 import { getAllUser } from '@/api/company/employeeManage'
 // import orderManage from '@/api/operation/orderManage'
@@ -186,12 +185,18 @@ export default {
         callback(new Error('费用不能小于0'))
       }
     }
+    const validateshipSn = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('请输入运单号'))
+      }
+    }
     return {
       timekey: '111',
       querykey: '11',
       searchCreatTime: +new Date(),
       incomePayType: 'RECEIVABLE',
       form: {
+        loading: false,
         // 异动费用
         incomePayType: 'RECEIVABLE',
         fee: '',
@@ -227,14 +232,14 @@ export default {
       rules: {
         fee: [
           // { required: true, message: '必填只能输入数字', trigger: 'blur' }
-          { required: true, trigger: 'blur', validator: validatefee }
+          { required: true, trigger: 'change', validator: validatefee }
         ],
         remark: [
-          { required: true, message: '请输入异动备注', trigger: 'blur' }
+          { required: true, message: '请输入异动备注', trigger: 'change' }
         ],
         shipSn: [
-          // { required: true, trigger: 'blur', validator: validateshipSn}
-          { required: true, message: '请输入运单号', trigger: 'blur' }
+          { required: true, trigger: 'change', validator: validateshipSn }
+          // { required: true, message: '请输入运单号', trigger: 'blur' }
         ],
         incomePayType: [
           { required: true, message: '请选择费用类型', trigger: 'change' }
@@ -319,12 +324,9 @@ export default {
       if (this.isModify) {
         this.popTitle = '异动修改'
         this.fetchShipInfo(this.info)
-        // this.form.createTime = this.info.createTime
       } else if (this.isDbClick) {
         this.popTitle = '异动查看'
         this.fetchShipInfo(this.info)
-        // this.form.createTime = this.info.createTime
-        // console.log(this.info.nowPayFee)
       } else {
         this.popTitle = '异动登记'
         this.form.orgId = this.orgid
@@ -397,7 +399,6 @@ export default {
       this.form.orgid = id
     },
     infoData() {
-      // postAbnormalUnusual.
     },
     fetchShipInfo2(data) {
       // const oldVal = this.form[type]
@@ -456,11 +457,10 @@ export default {
           // this.form.shipFee = data.shipFee
         this.form.nowPayFee = data.nowPayFee
 
-        this.form.fee = data.changeFee
+        this.form.fee = data.fee
         this.form.incomePayType = data.incomePayType
         this.form.remark = data.remark
         this.form.shipPayWayName = data.shipPayWay
-
         this.form.shipPayWay = data.shipPayWay
       }
       //  else {
@@ -509,7 +509,7 @@ export default {
     submitForm(ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          // this.loading = true
+          this.loading = true
           this.obj.shipSn = this.form.shipSn
           this.obj.fee = this.form.fee
           this.obj.incomePayType = this.form.incomePayType
@@ -554,7 +554,6 @@ export default {
       // if (!this.isModify) {
       //   this.form.abnormalNo = oldVal
       // }
-      // this.form.shipSn = ''
     },
     closeMe(done) {
       this.reset()

@@ -199,6 +199,7 @@ export default {
         'documentNum': '',
         'signTypeId': '99',
         'remark': '',
+        // 'signRemark': '',
         'signPic': ''
       },
       obj: {
@@ -259,7 +260,7 @@ export default {
     repertoryId: {
       handler(newVal) {
         // this.setInfo()
-        console.log('repertoryId:', this.form, newVal)
+        console.log('repertoryId:', this.form, newVal, this.repertoryId)
       },
       deep: true
     },
@@ -329,8 +330,10 @@ export default {
       // 查看信息1
       if (this.isDbclick) {
         this.popTitle = '查看信息'
+        // this.form.remark = this.repertoryId.signRemark
       } else if (this.isPick) {
         this.popTitle = '修改签收'
+        // this.form.remark = this.repertoryId.signRemark
       } else {
         this.popTitle = '签收录入'
       }
@@ -356,6 +359,7 @@ export default {
       this.obj.signTypeId = this.repertoryId.signTypeId
       this.obj.remark = this.repertoryId.remark
       this.obj.signPic = this.repertoryId.signPic
+      this.form.remark = this.repertoryId.signRemark
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
@@ -416,6 +420,7 @@ export default {
           data.childShipId = this.repertoryId.childShipId
           data.shipId = this.repertoryId.shipId
           data.loadId = this.repertoryId.loadId
+          // data.remark = this.repertoryId.signRemark
           // console.log(this.repertoryId.loadId)
           let promiseObj
           if (this.isPick) {
@@ -523,7 +528,7 @@ export default {
     padding-left:20px;
     border:1px solid #ccc;
     border-radius: 5px;
-    color:#999;
+    color:#3e9ff1;
     background:rgb(244,246,249);
     // background-color:#f5f7fa;;
   }
@@ -534,7 +539,7 @@ export default {
   padding-left:20px;
   border:1px solid #ccc;
   border-radius: 5px;
-  color:#999;
+  color:#3e9ff1;
   // background:rgb(244,246,249);
   // background-color:#f5f7fa;;
   }
