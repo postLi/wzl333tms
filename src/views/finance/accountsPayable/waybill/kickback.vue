@@ -287,6 +287,7 @@ export default {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
         console.log(this.dataList)
       })
     },

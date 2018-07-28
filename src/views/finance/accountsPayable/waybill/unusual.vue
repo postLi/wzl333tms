@@ -303,6 +303,7 @@ export default {
     fetchList() {
       return postFindChangeList(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},

@@ -167,7 +167,6 @@ export default {
     setFinanceWay (obj) {
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
-      console.log(obj, this.formModel.financialWay, this.$const.FINANCE_WAY[this.formModel.financialWay])
     },
     setData() { // 设置传给后台的数据结构
       this.formModel.financialWayId = this.formModel.financialWay
@@ -220,8 +219,6 @@ export default {
       let amount = 0
       this.loadTable = Object.assign([], obj)
       this.loadTable.forEach((e, index) => {
-        // e.shipFeeTotal = 3
-        // e.loadFeeTotal = 6
         if (e.shipFeeTotal) {
           amount += e.shipFeeTotal
         }else {

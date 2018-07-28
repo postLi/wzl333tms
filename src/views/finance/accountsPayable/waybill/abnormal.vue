@@ -302,6 +302,7 @@ export default {
       this.selectListShipSns = []
       return postFindAbnormalList(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},

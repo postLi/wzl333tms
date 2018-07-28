@@ -266,6 +266,7 @@ export default {
       this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
       return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},

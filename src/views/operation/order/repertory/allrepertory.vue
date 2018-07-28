@@ -85,13 +85,13 @@ export default {
       {
         label: '运单状态',
         prop: 'shipStatusName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运单标识',
         prop: 'shipIdentifying',
-        width: '120',
+        width: '150',
         fixed: false,
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
@@ -109,13 +109,13 @@ export default {
       {
         label: '库存时长',
         prop: 'hashours',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '开单网点',
         prop: 'fromOrgName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
@@ -130,43 +130,43 @@ export default {
       {
         label: '货品名',
         prop: 'cargoName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '库存件数',
         prop: 'repertoryAmount',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '库存重量',
         prop: 'repertoryWeight',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '库存体积',
         prop: 'repertoryVolume',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运单件数',
         prop: 'cargoAmount',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运单重量',
         prop: 'cargoWeight',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运单体积',
         prop: 'cargoVolume',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
@@ -184,141 +184,141 @@ export default {
       {
         label: '发货人',
         prop: 'senderCustomerName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '发货人电话',
         prop: 'receiverCustomerMobile',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '收货人',
         prop: 'receiverCustomerName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '收货人电话',
         prop: 'receiverCustomerMobile',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '交接方式',
         prop: 'shipDeliveryMethodName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运费',
         prop: 'shipTotalFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '提货费',
         prop: 'pickupFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
         // {
         //   label: "实际提货费",
         //   prop: "realityhandlingFee",
-        //   width: "120"
+        //   width: "150"
         // },
       {
         label: '回扣',
         prop: 'brokerageFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '保险费',
         prop: 'insuranceFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '声明价值',
         prop: 'productPrice',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '包装费',
         prop: 'packageFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '送货费',
         prop: 'deliveryFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运费合计',
         prop: 'shipTotalFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '付款方式',
         prop: 'shipPayWayName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '现付',
         prop: 'shipNowpayFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '到付',
         prop: 'shipArrivepayFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '回单付',
         prop: 'shipReceiptpayFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '月结',
         prop: 'shipMonthpayFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '备注',
         prop: 'shipRemarks',
-        width: '120',
+        width: '150',
         fixed: false
       },
         // {
         //   label: "到达省",
         //   prop: "orgId",
-        //   width: "120"
+        //   width: "150"
         // },
         // {
         //   label: "到达市",
         //   prop: "orgId",
-        //   width: "120"
+        //   width: "150"
         // },
         // {
         //   label: "到达县区",
         //   prop: "orgId",
-        //   width: "120"
+        //   width: "150"
         // },
       {
         label: '发货方',
         prop: 'senderCustomerUnit',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
@@ -330,131 +330,131 @@ export default {
       {
         label: '收货方',
         prop: 'receiverCustomerUnit',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '收货地址',
         prop: 'receiverDetailedAddress',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '货号',
         prop: 'shipGoodsSn',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '品种规格',
         prop: 'description',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '件数单价',
         prop: 'amountFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '重量单价',
         prop: 'weightFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '体积单价',
         prop: 'volumeFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '回单号',
         prop: 'shipReceiptSn',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '回单要求',
         prop: 'shipReceiptRequireName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '回单份数',
         prop: 'shipReceiptNum',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '代收货款',
         prop: 'agencyFund',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '代收款手续费',
         prop: 'commissionFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '制单人',
         prop: 'userName',
-        width: '120'
+        width: '150'
       },
       {
         label: '客户单号',
         prop: 'shipCustomerNumber',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '运输方式',
         prop: 'shipShippingTypeName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '业务类型',
         prop: 'shipBusinessType',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '是时效',
         prop: 'shipEffectiveName',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '上楼费',
         prop: 'goupstairsFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '叉车费',
         prop: 'forkliftFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
       {
         label: '装卸费',
         prop: 'handlingFee',
-        width: '120',
+        width: '150',
         fixed: false
       },
         // {
         //   label: "实际装卸费",
         //   prop: "realityhandlingFee",
-        //   width: "120"
+        //   width: "150"
         // },
       {
         label: '入仓费',
         prop: 'housingFee',
-        width: '120',
+        width: '150',
         fixed: false
       }
       ]

@@ -301,6 +301,7 @@ export default {
     fetchList() {
       return postFindTransferList(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},

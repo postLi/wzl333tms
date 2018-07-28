@@ -469,6 +469,7 @@ export default {
         this.$set(this.searchQuery.vo, 'settlementId', this.settlementId)
         postDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
+          this.total = data.total
         })
         this.setView() // 设置视图
       }

@@ -118,7 +118,7 @@ export default {
         right: []
       },
       isFresh: false,
-      feeType: 10,
+      feeType: 11,
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
@@ -155,19 +155,19 @@ export default {
           fixed: false
         },
         {
-          label: '中转费',
+          label: '异动费用',
           prop: 'fee',
           width: '120',
           fixed: false
         },
         {
-          label: '未结中转费',
+          label: '未结异动费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结中转费',
+          label: '已结异动费用',
           prop: 'closeFee',
           width: '120',
           fixed: false
@@ -273,31 +273,31 @@ export default {
           fixed: false
         },
         {
-          label: '中转费',
+          label: '异动费用',
           prop: 'fee',
           width: '120',
           fixed: false
         },
         {
-          label: '未结中转费',
+          label: '未结异动费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结中转费',
+          label: '已结异动费用',
           prop: 'closeFee',
           width: '120',
           fixed: false
         },
         {
-          label: '实结中转费',
-          prop: 'inputTotalCost',
+          label: '实结异动费用',
+          prop: 'inputChangeFee',
           width: '120',
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.inputTotalCost
+            return scope.row.inputChangeFee
           }
         },
         {
@@ -455,7 +455,7 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      // console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

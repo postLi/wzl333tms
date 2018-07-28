@@ -211,6 +211,7 @@ export default {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},

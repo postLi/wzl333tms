@@ -322,6 +322,7 @@ export default {
       console.log(this.searchQuery)
       return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},

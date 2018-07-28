@@ -106,7 +106,7 @@
       </div>
     </div>
     <div slot="footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button type="primary" @click="submitForm()">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </el-dialog>
@@ -145,7 +145,7 @@ export default {
       const data = []
       if (this.columns.length > 0) {
         this.columns.forEach((e, index) => {
-          if (!e.fixed) { // 除去固定列
+          if (index > 49) {  // 默认隐藏列
             data.push({
               label: e.label,
               key: index,
@@ -163,10 +163,11 @@ export default {
       const data = []
       if (this.columns.length > 0) {
         this.columns.forEach((e, index) => {
-          if (e.fixed) { // 选择固定列
+          if (index > -1 && index < 50) { // 默认显示列
             data.push({
               label: e.label,
               key: index,
+              width: e.width,
               fixed: e.fixed,
               prop: e.prop,
               slot: e.slot
@@ -178,8 +179,8 @@ export default {
     }
     const getleftListLen = _ => { // 计算左边列表的长度
       let count = 0
-      this.columns.forEach(e => {
-        if (!e.fixed) {
+      this.columns.forEach((e, index) => {
+        if (index > 49) {
           count++
         }
       })
@@ -187,8 +188,8 @@ export default {
     }
     const getRightListLen = _ => { // 计算右边列表的长度
       let count = 0
-      this.columns.forEach(e => {
-        if (e.fixed) {
+      this.columns.forEach((e, index) => {
+        if (index > -1 && index < 50) {
           count++
         }
       })
@@ -212,11 +213,14 @@ export default {
       searchRight: '',
       leftListLen: getleftListLen(),
       rightListLen: getRightListLen(),
-      isCheck: true, // false-不可选择 true-可以选择,
+      isCheck: true, // 判断显示列数是否超过50个，false-不可选择 true-可以选择,
       maxLen: 50,
       rightCheckLen: 0,
       leftCheckLen: 0
     }
+  },
+  mounted () {
+    this.submitForm() // 打开页面就开启表格设置
   },
   methods: {
     sort(array) { // 从小到大排序
@@ -235,7 +239,7 @@ export default {
       }
     },
     checkRightLen() { // 判断右边列表是否超过50个字段
-      if (this.showColumnData.length > 50) {
+      if (this.showColumnData.length > this.maxLen) {
         this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
         this.isCheck = true
       } else {
@@ -246,8 +250,8 @@ export default {
     setColumnLen() { // 更新数据
       this.leftListLen = this.columnData.length
       this.rightListLen = this.showColumnData.length
-      this.orgShowColumnData = objectMerge2([], this.showColumnData)
-      this.orgColumnData = objectMerge2([], this.columnData)
+      // this.orgShowColumnData = objectMerge2([], this.showColumnData)
+      // this.orgColumnData = objectMerge2([], this.columnData)
     },
     handChangeAllLeft(val) { // 左边列表全选
       this.checkListLeft = val ? Object.assign([], this.columnData) : []
@@ -270,6 +274,14 @@ export default {
           return false
         }
       })
+      this.orgColumnData = this.orgColumnData.filter(el => {
+        if (this.checkListLeft.indexOf(el) === -1) {
+          return true
+        } else {
+          this.orgShowColumnData.push(el)
+          return false
+        }
+      })
       this.checkListLeft = [] // 清空左边勾选列表
       this.setColumnLen()
       this.leftCheckLen = 0
@@ -277,9 +289,14 @@ export default {
     goLeft() { // 将显示列勾选的项转移到隐藏列（右边->左边）
       this.checkListRight.forEach((e, index) => {
         this.columnData.push(e) // 将右边勾选的数据项返回到左边
+        this.orgColumnData.push(e) // 搜索源数据
         let item = this.showColumnData.indexOf(e)
         if (item !== -1) { // 源数据减去被穿梭的数据
           this.showColumnData.splice(item, 1)
+        }
+        let orgItem = this.orgShowColumnData.indexOf(e)
+        if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+          this.orgShowColumnData.splice(item, 1)
         }
       })
       this.sort(this.columnData)
@@ -293,12 +310,16 @@ export default {
         return false
       }
       this.showColumnData.push(row)
+      this.orgShowColumnData.push(row)
       this.columnData.splice(index, 1)
+      this.orgColumnData.splice(index, 1)
       this.setColumnLen()
     },
     dbCheckItemRight(row, index, event) { // 双击-右边列表选择项（右边->左边）
       this.columnData.push(row)
+      this.orgColumnData.push(row)
       this.showColumnData.splice(index, 1)
+      this.orgShowColumnData.splice(index, 1)
       this.setColumnLen()
       this.sort(this.columnData)
     },
@@ -312,10 +333,11 @@ export default {
       this.searchLeft = queryString
       if (queryString.label === undefined) {
         if (!this.searchLeft) { // 如果搜索框为空则恢复左边列表
-          this.columnData = objectMerge2([], this.orgColumnData)
+          this.columnData = Object.assign([], this.orgColumnData)
+          console.log('querySearchLeft', queryString.label , this.orgColumnData)
         }
       }
-      let col = this.orgColumnData
+      let col = Object.assign([], this.orgColumnData)
       let results = queryString ? col.filter(this.createFilter(queryString)) : col
       // 调用 callback 返回建议列表的数据
       cb(results)
@@ -324,10 +346,10 @@ export default {
       this.searchRight = queryString
       if (queryString.label === undefined) {
         if (!this.searchRight) { // 如果搜索框为空则恢复右边列表
-          this.showColumnData = objectMerge2([], this.orgShowColumnData)
+          this.showColumnData = Object.assign([], this.orgShowColumnData)
         }
       }
-      let col = this.orgShowColumnData
+      let col = Object.assign([], this.orgShowColumnData)
       let results = queryString ? col.filter(this.createFilter(queryString)) : col
       // 调用 callback 返回建议列表的数据
       cb(results)
@@ -368,10 +390,11 @@ export default {
       }
     },
     handleChange(value, direction, movedKeys) {
-      this.rightList = objectMerge2([], value)
+      this.rightList = Object.assign([], value)
     },
     handleSwitch(obj) {},
-    submitForm(formName) {
+    submitForm() {
+      console.log('表格设置开启中')
       let data = Object.assign([], this.showColumnData)
       this.$emit('success', data)
       this.listKey = Math.random()

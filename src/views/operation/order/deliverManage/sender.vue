@@ -55,7 +55,7 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, loadJs } from '@/utils/index'
 import SignFrom from './components/sign'
-import { getLodop } from '@/utils/LodopFuncs'
+import { getLodop, PrintInFullPage, SaveAsFile, CreatePrintPage } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -279,11 +279,13 @@ export default {
           }
           break
         case 'export': // 导入
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        SaveAsFile('deliverManageTable')
+          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           // this.export()
           break
         case 'print': // 打印
-          this.printPDF()
+          // this.printPDF()
+          PrintInFullPage('deliverManageTable')
           // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
       }

@@ -268,6 +268,7 @@ export default {
       console.log('fetchListsearchQuery', this.searchQuery)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
         console.log(this.dataList)
       })
     },
