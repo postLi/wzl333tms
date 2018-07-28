@@ -500,7 +500,7 @@ export default {
               type: 'info'
             })
           } else {
-            var id = this.deleteItem[0].id
+            var id = deleteItem[0].id
             this.$confirm('确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？', '提示', {
               confirmButtonText: '删除',
               cancelButtonText: '取消',

@@ -593,7 +593,7 @@ export default {
       // 用来保存货物对象的信息
       cargoObject: {},
       // 用来保存货物列表
-      cargoList: [{}, {}],
+      cargoList: [{}],
       // 最多创建N个货品
       maxCargoLength: 15,
       // sender副本
@@ -601,7 +601,7 @@ export default {
       sender: {},
       receiver: {},
       form: {
-        cargoList: [{}, {}],
+        cargoList: [{}],
         sender: {
           customerUnit: '',
           customerType: '',
@@ -1140,7 +1140,7 @@ export default {
       }) */
       if (this.output.iscreate) {
         this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
-        this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
+        // this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
         console.log('theFeeConfig:', this.cargoObject, this.cargoList)
       }
     },
@@ -1715,7 +1715,7 @@ export default {
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
-      this.form.cargoList = [{}, {}]
+      this.form.cargoList = [{}]
       this.form.sender = this.resetObj(this.form.sender)
       this.form.receiver = this.resetObj(this.form.receiver)
       this.form.customerList = []
