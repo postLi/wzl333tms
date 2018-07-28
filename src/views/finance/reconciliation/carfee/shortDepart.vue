@@ -182,8 +182,7 @@
         'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+
       }
     },
     mounted () {
