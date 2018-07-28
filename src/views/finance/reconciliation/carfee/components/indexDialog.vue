@@ -117,11 +117,10 @@
     },
     watch: {
       dotInfo (newVal) {
-        console.log(this.dotInfo);
-        this.dialogInfo[0].toPay = this.dotInfo.payAmount
-        this.dialogInfo[1].toPay = this.dotInfo.hadPayAmount
+        this.dialogInfo[0].toPay = this.dotInfo.payAmount ? this.dotInfo.payAmount : 0
+        this.dialogInfo[1].toPay = this.dotInfo.hadPayAmount ? this.dotInfo.hadPayAmount : 0
         this.totaMoney = this.dotInfo.payAmount + this.dotInfo.hadPayAmount
-        // this.popTitle = this.dotInfo.checkBillName
+        this.popTitle = this.dotInfo.checkBillName
       },
         popVisible (newVal) {
 

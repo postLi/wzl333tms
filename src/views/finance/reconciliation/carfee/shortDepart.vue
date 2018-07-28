@@ -162,7 +162,6 @@
 </template>
 <script>
   import {  getExportExcel } from '@/api/company/customerManage'
-  import {postCompletion} from '@/api/finance/fin_customer'
   import {postCarfShortDetailList,deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
   import TableSetup from './components/tableSetup'
@@ -410,10 +409,13 @@
         this.selected = selection
       },
       getDbClick(row, event){
-        this.selectInfo = row
-        this.isModify = false
-        this.isDbclick = true
-        this.openAddCustomer()
+        this.$router.push({
+          path: '/finance/reconciliation/carfee/components/shortRecon',
+          query: {
+            tab: '短驳对账-修改查看',
+            id: row.id
+          }
+        })
         this.$refs.multipleTable.clearSelection()
       }
     }

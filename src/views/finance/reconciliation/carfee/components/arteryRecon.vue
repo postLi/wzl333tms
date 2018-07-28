@@ -543,11 +543,13 @@
             },
             moiffyDealPay:{
               orgId:'',
+              loadTypeId:39,
               payTypeStatus:'pay',
               checkId:'1'
             },
             moiffyAlReadyPay:{
               orgId:'',
+              loadTypeId:39,
               payTypeStatus:'hadPay',
               checkId:'1'
             },
@@ -854,6 +856,7 @@
           font-size: 18px;
           color: #333333;
           font-weight: 600;
+          width: 180%;
         }
         .el-input__inner:focus{
           border-bottom-color: #c0c4cc;

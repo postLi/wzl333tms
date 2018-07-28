@@ -719,9 +719,6 @@
     <div class="sBottom">
       <div class="sMessageBut">
         <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
-          <!--<el-form-item label="总计">-->
-            <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
-          <!--</el-form-item>-->
           <el-form-item label="备注">
             <el-input v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
           </el-form-item>

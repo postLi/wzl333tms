@@ -410,10 +410,13 @@
         this.selected = selection
       },
       getDbClick(row, event){
-        this.selectInfo = row
-        this.isModify = false
-        this.isDbclick = true
-        this.openAddCustomer()
+        this.$router.push({
+          path: '/finance/reconciliation/carfee/components/deliverRecon',
+          query: {
+            tab: '送货对账-修改查看',
+            id: row.id
+          }
+        })
         this.$refs.multipleTable.clearSelection()
       }
     }

@@ -463,11 +463,13 @@
             },
             moiffyDealPay:{
               orgId:'',
+              loadTypeId:40,
               payTypeStatus:'pay',
               checkId:'1'
             },
             moiffyAlReadyPay:{
               orgId:'',
+              loadTypeId:40,
               payTypeStatus:'hadPay',
               checkId:'1'
             },
@@ -497,54 +499,7 @@
         }
       },
       methods:{
-        getSummaries(param) {
-          const { columns, data } = param;
-          const sums = [];
-          columns.forEach((column, index) => {
-            if (index === 0) {
-              sums[index] = '总价';
-              return;
-            }
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += ' ';
 
-            } else {
-              sums[index] = '';
-            }
-
-          });
-
-          return sums;
-        },
-        iconDelete(scope){
-          this.dealPayInfo = this.dealPayInfo.filter(el => {
-            return el.id !== scope.row.id
-          })
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
-        },
-        //
-        iconDeleteAl(scope){
-          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-            return el.id !== scope.row.id
-
-          })
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
-        },
         fetchList(){
           this.loading = true
           return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
@@ -732,6 +687,54 @@
           this.searchDealPay.endTime = endTime
           this.searchAlReadyPay.endTime = endTime
         },
+        getSummaries(param) {
+          const { columns, data } = param;
+          const sums = [];
+          columns.forEach((column, index) => {
+            if (index === 0) {
+              sums[index] = '合计';
+              return;
+            }
+            const values = data.map(item => Number(item[column.property]));
+            if (!values.every(value => isNaN(value))) {
+              sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return prev + curr;
+                } else {
+                  return prev;
+                }
+              }, 0);
+              sums[index] += ' ';
+
+            } else {
+              sums[index] = '';
+            }
+
+          });
+
+          return sums;
+        },
+        iconDelete(scope){
+          this.dealPayInfo = this.dealPayInfo.filter(el => {
+            return el.id !== scope.row.id
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
+        },
+        //
+        iconDeleteAl(scope){
+          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
+            return el.id !== scope.row.id
+
+          })
+          this.$message({
+            message: '删除成功~',
+            type: 'success'
+          })
+        },
         clickDetails(row, event, column){
           this.$refs.multipleTable.toggleRowSelection(row)
         },
@@ -774,6 +777,7 @@
           font-size: 18px;
           color: #333333;
           font-weight: 600;
+          width: 180%;
         }
         .el-input__inner:focus{
           border-bottom-color: #c0c4cc;

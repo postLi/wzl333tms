@@ -408,14 +408,15 @@
         this.selected = selection
       },
       getDbClick(row, event){
-        this.selectInfo = row
-        this.isModify = false
-        this.isDbclick = true
-        this.openAddCustomer()
+        this.$router.push({
+          path: '/finance/reconciliation/carfee/components/arteryRecon',
+          query: {
+            tab: '干线对账-修改查看',
+            id: row.id
+          }
+        })
         this.$refs.multipleTable.clearSelection()
       }
     }
   }
 </script>
-
-
