@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Sender from './customerIndex'
+import Sender from './detailIndex'
 
 export default {
   components: {
