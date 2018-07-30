@@ -55,6 +55,11 @@ export default {
       path: '/components/querySelect',
       name: '下拉框查询',
       component: _import('componentsDemo/querySelect')
+    },
+    {
+      path: '/components/tableSetup',
+      name: '表格设置',
+      component: _import('componentsDemo/tableSetup')
     }
   ]
 }

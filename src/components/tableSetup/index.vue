@@ -7,7 +7,7 @@
 
     <el-table :key="tablekey"></el-table>
 
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
 
     //script
       import TableSetup from '@/components/tableSetup'
@@ -21,7 +21,7 @@
             tablekey: 0, // 初始化表格视图key
             tableColumn: [] // 后台接口获取到的列表数据
           }
-        }
+        },
         methods: {
           setTable() {
             this.setupTableVisible = true
