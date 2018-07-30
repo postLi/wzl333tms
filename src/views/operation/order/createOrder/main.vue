@@ -1646,7 +1646,7 @@ export default {
           }
         }
       })
-      this.form.tmsOrderShip.shipTotalFee = total
+      this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
     },
     setShipFee() {
       const key = parseInt(this.form.tmsOrderShip.shipPayWay, 10)
@@ -1692,9 +1692,9 @@ export default {
           this.shipReceiptpayFeeDisabled = false
           this.shipMonthpayFeeDisabled = false
 
-          this.form.tmsOrderShip.shipNowpayFee = this.form.tmsOrderShip.shipTotalFee / 2
+          this.form.tmsOrderShip.shipNowpayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
 
-          this.form.tmsOrderShip.shipArrivepayFee = this.form.tmsOrderShip.shipTotalFee / 2
+          this.form.tmsOrderShip.shipArrivepayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
 
           break
       }
@@ -1799,6 +1799,7 @@ export default {
             data.customerList[1].customerType = 2
             // 处理货物
             data.tmsOrderCargoList = this.form.cargoList.filter(el => {
+              // 没填写货品名称的丢弃
               return !!el.cargoName
             }).map(el => {
               const b = {}
@@ -1813,6 +1814,13 @@ export default {
             })
             data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
 
+            // 处理费用的小数点
+            data.tmsOrderShip.shipTotalFee = parseFloat(data.tmsOrderShip.shipTotalFee, 10).toFixed(2)
+            data.tmsOrderShip.shipNowpayFee = parseFloat(data.tmsOrderShip.shipNowpayFee, 10).toFixed(2)
+            data.tmsOrderShip.shipArrivepayFee = parseFloat(data.tmsOrderShip.shipArrivepayFee, 10).toFixed(2)
+            data.tmsOrderShip.shipReceiptpayFee = parseFloat(data.tmsOrderShip.shipReceiptpayFee, 10).toFixed(2)
+            data.tmsOrderShip.shipMonthpayFee = parseFloat(data.tmsOrderShip.shipMonthpayFee, 10).toFixed(2)
+
             if (this.output.ismodify) {
               /* this.$message.success('成功修改运单！')
                 this.batchSaveList[this.currentBatch].data = data
@@ -1826,6 +1834,9 @@ export default {
                   }
                 }
                 return */
+
+
+
               data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
               data.tmsOrderShip.shipStatus = this.orderData.tmsOrderShip.shipStatus
               console.log('change Order:', data)
