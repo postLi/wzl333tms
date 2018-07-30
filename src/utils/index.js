@@ -368,8 +368,11 @@ export const pickerOptions2 = [{
 }, {
   text: '本月',
   onClick(picker) {
-    const end = new Date()
-    const start = new Date(end.getFullYear(), end.getMonth(), 1)
+    let _end = new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth() + 1, 1)
+
+    const end = new Date(_end.getTime() - 3600 * 1000 * 24)
     picker.$emit('pick', [start, end])
   }
 }, {
