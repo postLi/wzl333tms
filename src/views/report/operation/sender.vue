@@ -32,7 +32,7 @@ export default {
       chartIframe: '',
       query: {
         shipToCityName: '',
-        businessType: ''
+        // businessType: ''
         // typeIds: ''
         // currentPage: 1,
         // pageSize: 100

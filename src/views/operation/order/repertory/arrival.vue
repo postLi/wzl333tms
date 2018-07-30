@@ -47,6 +47,7 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     Pager,
@@ -432,7 +433,7 @@ export default {
       this.fetchAllOrderRepertory()
     },
     doAction(type) {
-      if (type !== 'colorpicker' && this.selected.length !== 1) {
+      if (type === 'colorpicker') {
         this.closeColorpicker()
         this.$message({
           message: '请选择一条数据~',
@@ -444,13 +445,13 @@ export default {
           this.reportorSelect = this.selected
           this.openColor()
           break
-        case 'print':
+        case 'export': // 导出
           this.closeColorpicker()
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+          SaveAsFile(this.repertoryArr, this.tableColumn)
           break
-        case 'export':
+        case 'print': // 打印
           this.closeColorpicker()
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+          PrintInFullPage(this.repertoryArr, this.tableColumn)
           break
       }
     },

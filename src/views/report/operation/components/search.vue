@@ -11,9 +11,18 @@
     <el-form-item label="到达城市" prop="shipToCityName">
      <el-input v-model="searchForm.shipToCityName"></el-input>
     </el-form-item>
-     <el-form-item label="业务类型" prop="selectType">
+    <el-form-item label="时间类型" prop="selectType">
      <el-select v-model="searchForm.selectType" @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
       <el-option v-for="(item, index) in selectType"
+      :label="item.label"
+      :value="item.value"
+      :key="item.key"
+      ></el-option>
+     </el-select>
+    </el-form-item>
+     <el-form-item label="业务类型" prop="businessType">
+     <el-select v-model="searchForm.businessType" @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
+      <el-option v-for="(item, index) in businessType"
       :label="item.label"
       :value="item.value"
       :key="item.key"
@@ -59,14 +68,15 @@ export default {
     return {
       searchForm: {
         orgId: '',
-        selectType: ''
+        selectType: '',
+        businessType: ''
         // currentPage: 1,
         // pageSize: 100,
         // senderCustomerName: '',
         // createTimeStart: '',
         // createTimeEnd: ''
       },
-      selectType: [
+      businessType: [
       {
         value: 0,
         label: '全部'
@@ -80,6 +90,14 @@ export default {
         label: '来货业务'
       }
       ],
+      selectType: [{
+        value: 1,
+        label: '按月'
+      },
+      {
+        value: 2,
+        label: '按日'
+      }],
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
@@ -93,6 +111,7 @@ export default {
   mounted() {
     this.searchForm.orgId = this.orgid
     this.searchForm.selectType = 2
+    this.searchForm.businessType = 1
     this.onSubmit()
   },
   methods: {

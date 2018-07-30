@@ -15,7 +15,7 @@
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
-      <div class="info_tab" id="deliverManageTable">
+      <div class="info_tab">
         <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
@@ -55,7 +55,7 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, loadJs } from '@/utils/index'
 import SignFrom from './components/sign'
-import { getLodop, PrintInFullPage, SaveAsFile, CreatePrintPage } from '@/utils/lodopFuncs'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -156,18 +156,18 @@ export default {
         },
         {
           label: "送货时间",
-          prop: "departureTime",
-          width: "150",
+          prop: "loadTime",
+          width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
           label: "完成时间",
-          prop: "receivingTime",
-          width: "150",
+          prop: "departureTime",
+          width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -208,18 +208,6 @@ export default {
     }
   },
   methods: {
-    printPDF() {
-      this.CreateOneFormPage()
-      LODOP.PREVIEW()
-    },
-    CreateOneFormPage() {
-      LODOP = getLodop();
-      LODOP.PRINT_INIT("订货单");
-      LODOP.SET_PRINT_STYLE("FontSize", 18);
-      LODOP.SET_PRINT_STYLE("Bold", 1);
-      LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-      LODOP.ADD_PRINT_HTM(88, 200, 350, 600, document.getElementById("deliverManageTable").innerHTML);
-    },
     fetchAllData() {
       this.loading = true
       this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
@@ -278,15 +266,11 @@ export default {
             this.cancelDeliver()
           }
           break
-        case 'export': // 导入
-        SaveAsFile('deliverManageTable')
-          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
-          // this.export()
+        case 'export': // 导出
+          SaveAsFile(this.infoList, this.tableColumn)
           break
         case 'print': // 打印
-          // this.printPDF()
-          PrintInFullPage('deliverManageTable')
-          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+          PrintInFullPage(this.infoList, this.tableColumn)
           break
       }
       // 清除选中状态，避免影响下个操作

@@ -1,4 +1,6 @@
  var CreatedOKLodop7766 = null;
+ var createTableComplate = false
+ var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
 
  //====判断是否需要安装CLodop云打印服务器:====
  export function needCLodop() {
@@ -48,9 +50,16 @@
    oscript.src = "http://localhost:18000/CLodopfuncs.js?priority=0";
    head.insertBefore(oscript, head.firstChild);
  };
-
  //====获取LODOP对象的主过程：====
  export function getLodop(oOBJECT, oEMBED) {
+   // var strHtmInstall = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
+   // var strHtmUpdate = "<br><p color='#FF00FF'>打印控件需要升级!点击这里<a href='"+ downloadPath+"' target='_self'>执行升级</a>,升级后请重新进入。</p>";
+   // var strHtm64_Install = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
+   // var strHtm64_Update = "<br><p color='#FF00FF'>打印控件需要升级!点击这里<a href='"+ downloadPath+"' target='_self'>执行升级</a>,升级后请重新进入。</p>";
+   // var strHtmFireFox = "<br><br><p color='#FF00FF'>（注意：如曾安装过Lodop旧版附件npActiveXPLugin,请在【工具】->【附加组件】->【扩展】中先卸它）</p>";
+   // var strHtmChrome = "<br><br><p color='#FF00FF'>(如果此前正常，仅因浏览器升级或重安装而出问题，需重新执行以上安装）</p>";
+   // var strCLodopInstall = "<br><p color='#FF00FF'>CLodop云打印服务(localhost本地)未安装启动!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面。</p>";
+   // var strCLodopUpdate = "<br><p color='#FF00FF'>CLodop云打印服务需升级!点击这里<a href='"+ downloadPath+"' target='_self'>执行升级</a>,升级后请刷新页面。</p>";
    var strHtmInstall = "<br><font color='#FF00FF'>打印控件未安装!点击这里<a href='install_lodop32.exe' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</font>";
    var strHtmUpdate = "<br><font color='#FF00FF'>打印控件需要升级!点击这里<a href='install_lodop32.exe' target='_self'>执行升级</a>,升级后请重新进入。</font>";
    var strHtm64_Install = "<br><font color='#FF00FF'>打印控件未安装!点击这里<a href='install_lodop64.exe' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</font>";
@@ -68,8 +77,12 @@
        if (!LODOP) {
          if (isIE) document.write(strCLodopInstall);
          else
+          var conf = confirm("没有安装LODOP云打印插件,确认下载？")
+          if (conf) {
+            window.open(downloadPath)
+          }
            document.body.innerHTML = strCLodopInstall + document.body.innerHTML;
-         return;
+         return false;
        } else {
          if (CLODOP.CVERSION < "3.0.4.3") {
            if (isIE) document.write(strCLodopUpdate);
@@ -166,20 +179,25 @@
    LODOP.PRINT_DESIGN();
  };
  //打印表格
- export function PrintInFullPage(id) {
+ export function PrintInFullPage(data, columns) {
    // LODOP = getLodop();
    // LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页表格");
    // LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
    // LODOP.ADD_PRINT_TABLE("2%", "1%", "96%", "98%", document.getElementById(id).innerHTML);
    // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
    // LODOP.PREVIEW();
+
+   let tableId = createTable(data, columns)  // 重新创建打印视图table
    LODOP = getLodop();
    LODOP.PRINT_INIT("订货单");
-   LODOP.SET_PRINT_STYLE("FontSize", 18);
-   LODOP.SET_PRINT_STYLE("Bold", 1);
+   // LODOP.SET_PRINT_STYLE("FontSize", 10);
+   // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+   // LODOP.SET_PRINT_STYLE("Bold", 1);
    LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
    // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-   LODOP.ADD_PRINT_HTM(0, 0, 350, 600, document.getElementById(id).innerHTML);
+   LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
+   // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+   LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
    LODOP.PREVIEW();
  };
 
@@ -213,15 +231,16 @@
  };
 
  // 保存为xls文件
- export function SaveAsFile(id) {
+ export function SaveAsFile(data, columns) {
+   let tableId = createTable(data, columns) // 重新创建打印视图table
    LODOP = getLodop();
-   LODOP.PRINT_INIT("");
-   LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(id).innerHTML);
-   // LODOP.ADD_PRINT_TABLE("2%", "1%", "96%", "98%", document.getElementById(id).innerHTML);
+   LODOP.PRINT_INIT("数据表格");
+   // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+   LODOP.ADD_PRINT_TABLE("1%", "1%", "100%", "100%", document.getElementById(tableId).innerHTML);
    //LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML); 
    LODOP.SET_SAVE_MODE("Orientation", 2); //Excel文件的页面设置：横向打印   1-纵向,2-横向;
    LODOP.SET_SAVE_MODE("PaperSize", 9); //Excel文件的页面设置：纸张大小   9-对应A4
-   // LODOP.SET_SAVE_MODE("Zoom", 90); //Excel文件的页面设置：缩放比例
+   LODOP.SET_SAVE_MODE("Zoom", 100); //Excel文件的页面设置：缩放比例
    LODOP.SET_SAVE_MODE("CenterHorizontally", true); //Excel文件的页面设置：页面水平居中
    LODOP.SET_SAVE_MODE("CenterVertically", true); //Excel文件的页面设置：页面垂直居中
    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到） 
@@ -240,4 +259,50 @@
 
      };
    } catch (err) {}
+ };
+
+ function createTable(data, columns) { // 打印导出创建表格视图
+   let div = document.createElement('div')
+   let table = document.createElement('table')
+   let thead = document.createElement('thead')
+   let tbody = document.createElement('tbody')
+   let theadTr = document.createElement('tr')
+   let colgroup = document.createElement('colgroup') // 设置列宽 无效果
+
+   for (let i = 0; i < columns.length; i++) { // 设置表头
+     let th = document.createElement('td')
+     let col = document.createElement('col')
+     col.setAttribute('width', columns[i].width)
+     th.innerHTML = columns[i].label
+     th.style.fontWeight = 600
+
+     theadTr.appendChild(th)
+     colgroup.appendChild(col)
+   }
+   table.appendChild(colgroup)
+   table.appendChild(thead)
+   thead.appendChild(theadTr)
+
+   table.appendChild(tbody) // 对应列数据填充
+   for (let k = 0; k < data.length; k++) {
+     let tbodyTr = tbody.insertRow()
+     for (let j = 0; j < columns.length; j++) {
+       let td = tbodyTr.insertCell()
+       td.innerHTML = data[k][columns[j].prop]
+       td.style.width =  data[k][columns[j].width] + 'px'
+     }
+   }
+   let tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+   table.setAttribute("width", "100%")
+   table.setAttribute("border", "1px solid #999")
+   table.style.borderCollapse = 'collapse'
+   table.style.fontSize = '12px'
+   // table.style.wordBreak = 'break-all';
+   // table.style.wordWrap = 'break'
+   div.appendChild(table)
+   div.setAttribute("id", tableId);
+   div.setAttribute("width", "100%");
+   document.body.appendChild(div) // 创建table
+   createTableComplate = true
+   return tableId
  };

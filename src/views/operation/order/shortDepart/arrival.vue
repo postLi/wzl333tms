@@ -50,6 +50,7 @@ import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     Pager,
@@ -81,8 +82,7 @@ export default {
           arriveOrgid: 0
         }
       },
-      tableColumn: [
-        {
+      tableColumn: [{
           label: "序号",
           prop: "id",
           width: "180",
@@ -234,7 +234,7 @@ export default {
     },
     doAction(type) {
       let isWork = false
-      if (this.selected.length !== 1) {
+      if (this.selected.length !== 1 && type !== 'export' && type !== 'printList') {
         this.$message({
           message: '请选择一条数据~',
           type: 'warning'
@@ -286,10 +286,12 @@ export default {
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
         case 'printList':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+          PrintInFullPage(this.infoList, this.tableColumn)
+          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
         case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+          SaveAsFile(this.infoList, this.tableColumn)
+          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
       }
     },

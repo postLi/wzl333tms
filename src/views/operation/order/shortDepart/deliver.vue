@@ -52,6 +52,7 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     Pager,
@@ -214,7 +215,7 @@ export default {
     },
     doAction(type) {
       let isWork = false
-      if (this.selected.length < 1 && type !== 'add' && this.selectedList.length < 1) {
+      if (this.selected.length < 1 && type !== 'add' && this.selectedList.length < 1 && type !== 'export' && type !== 'print') {
         this.$message({
           message: '请选择数据~',
           type: 'warning'
@@ -263,11 +264,11 @@ export default {
         case 'edit': // 修改
           this.edit()
           break
-        case 'print':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'export': // 导出
+          SaveAsFile(this.dataList, this.tableColumn)
           break
-        case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'print': // 打印
+          PrintInFullPage(this.dataList, this.tableColumn)
           break
       }
     },

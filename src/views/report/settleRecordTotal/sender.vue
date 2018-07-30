@@ -53,8 +53,8 @@ export default {
   },
   methods: {
     doAction(type) {},
-    hideIframe (bool) {
-      if (bool) {
+    hideIframe (bool) { 
+      if (bool) { // true-隐藏iframe false-显示iframe
         if(this.hideiframe !== 'show'){
           this.hideiframe = 'show'
           document.getElementById('senderIframe').contentWindow.hideChart(bool)
