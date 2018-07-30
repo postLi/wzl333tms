@@ -87,11 +87,20 @@ service.interceptors.response.use(
         })
       } else if (status === 401) {
         // 401:非法的token;Token 过期了;
+        const ifr = document.getElementById('senderIframe')
+        // 如果有报表组件，需要隐藏她
+        if (ifr) {
+          ifr.contentWindow.hideChart(true)
+        }
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          store.dispatch('FedLogOut').then(() => {
+            location.reload()// 为了重新实例化vue-router对象 避免bug
+          })
+        }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
             location.reload()// 为了重新实例化vue-router对象 避免bug
           })
