@@ -90,7 +90,6 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -237,7 +236,6 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -377,7 +375,6 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -525,16 +522,9 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -741,6 +731,9 @@
               ],
             },
             btnRule:{
+              "orgBusinessOfficerPhone": [
+                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+              ],
               "orgFinancialOfficerPhone": [
                 {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
               ]
@@ -1139,6 +1132,7 @@
           border-left-color: transparent;
           border-right-color: transparent;
           border-top-color: transparent;
+          border-bottom:3px double #c0c4cc;
           font-size: 18px;
           color: #333333;
           font-weight: 600;

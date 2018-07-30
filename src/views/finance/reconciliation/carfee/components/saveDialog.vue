@@ -151,19 +151,20 @@
       },
       tota:{
         handler(newVal){
+          this.dialogInfo[0].toPay = 0
+          this.dialogInfo[1].toPay = 0
           this.dialogData = this.tota
-
           this.dialogData.dealPaytota.map(el=>{
             this.$set(this.dialogInfo, 0, {
               date:"应付账款",
-              toPay: this.dialogInfo[0].toPay + (el.shortPay ? +el.shortPay : 0)
+              toPay: this.dialogInfo[0].toPay + (el.totalPay ? +el.totalPay : 0)
             })
             //this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
           this.dialogData.alreadyPaytota.map(el=>{
             this.$set(this.dialogInfo, 1, {
               date:"已付账款",
-              toPay: this.dialogInfo[1].toPay + (el.shortPay ? +el.shortPay : 0)
+              toPay: this.dialogInfo[1].toPay + (el.totalPay ? +el.totalPay : 0)
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
@@ -188,7 +189,7 @@
         deep: true
       },
       popVisible (newVal) {
-        this.fetchData()
+        // this.fetchData()
       },
       sendId(newVal){
 
@@ -214,27 +215,17 @@
         }
       },
       reset(){
+
       },
 
       submitForm(formName) {
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
             this.loading = true
             let promiseObj
             let data = []
             data = this.dotInfo
-            // delete data.payDetailList.shortPay
-
-
-// this.messageInfo.checkStartTime = new Date()
-        // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
-        // this.messageButtonInfo.createTime = new Date()
-
-        data.checkStartTime = parseTime(data.checkStartTime)
-        data.checkEndTime = parseTime(data.checkEndTime)
+        data.checkStartTime = (data.checkStartTime + ' 00:00:00')
+        data.checkEndTime = (data.checkEndTime) + ' 23:59:59'
         data.createTime = parseTime(data.createTime)
-
-
         if(this.sendId){
               data.id = this.sendId
               if(this.deliver){
@@ -276,14 +267,10 @@
                 type: 'success'
               })
 
-              this.closeMe()
+              this.reset()
             }).catch(err => {
               this.loading = false
             })
-        //   } else {
-        //     return false;
-        //   }
-        // });
       },
     }
   }

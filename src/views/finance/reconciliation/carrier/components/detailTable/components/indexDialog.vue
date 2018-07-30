@@ -125,6 +125,10 @@
     },
     watch: {
       dotInfo (newVal) {
+        this.dialogInfo[0].toPay = 0
+        this.dialogInfo[1].toPay = 0
+        this.dialogInfo[2].toPay = 0
+        this.dialogInfo[3].toPay = 0
         this.dialogInfo[0].toPay = this.dotInfo.receivableFee
         this.dialogInfo[1].toPay = this.dotInfo.payableFee
         this.dialogInfo[2].toPay = this.dotInfo.receivedFee

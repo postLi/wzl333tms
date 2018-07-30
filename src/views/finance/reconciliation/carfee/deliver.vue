@@ -165,7 +165,7 @@
 <script>
   import {  getExportExcel } from '@/api/company/customerManage'
   import {postCompletion} from '@/api/finance/fin_customer'
-  import {postCarfShortDetailList,deleteCarShort} from '@/api/finance/fin_carfee'
+  import {postCarfShortDetailList,deleteCarShort,postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
   import TableSetup from './components/tableSetup'
   import IndexDialog from './components/indexDialog'
@@ -321,10 +321,10 @@
               if(this.selected[0].checkStatus === 1){
                 let _data = {
                   id:'',
-                  checkStatus:1
+                  checkStatus:0
                 }
                 _data.id = this.selected[0].id
-                postCompletion(_data).then(res => {
+                postUpdateBillCheckSelective(_data).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',

@@ -7,8 +7,6 @@
       <div class="sTitle">
         <el-form-item label="">
           <el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>
-
-          <!--&nbsp;<p>对账表</p>-->
       </el-form-item>
       </div>
       <div class="sDate">
@@ -90,7 +88,7 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
+
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -248,16 +246,10 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
+
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -409,7 +401,6 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -568,7 +559,7 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="150"
+
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -733,8 +724,8 @@
           <el-form-item label="业务负责人">
             <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
           </el-form-item>
-          <el-form-item label="联系方式">
-            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>
+          <el-form-item label="联系方式" prop="orgBusinessOfficerPhone">
+            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable maxlength="11"></el-input>
           </el-form-item>
           <el-form-item label="财务负责人">
             <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10" clearable></el-input>
@@ -867,6 +858,9 @@
 
             },
             btnRule:{
+              "orgBusinessOfficerPhone": [
+                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+              ],
              "orgFinancialOfficerPhone": [
                 {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
                 ]
@@ -1182,7 +1176,6 @@
       .sTitle{
         flex: 1;
         text-align: center;
-
         span{
           position: relative;
           top: -20px;
@@ -1195,6 +1188,7 @@
           border-left-color: transparent;
           border-right-color: transparent;
           border-top-color: transparent;
+          border-bottom:3px double #c0c4cc;
           font-size: 18px;
           color: #333333;
           font-weight: 600;

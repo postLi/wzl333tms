@@ -2,22 +2,21 @@
   <!---->
   <div class="short_lll" v-loading="loading" >
     <div class="sTop">
-      <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules"  label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
+      <el-form :inline="true" :size="btnsize" label-position="right"   label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
       <div class="sTitle">
         <el-form-item label="">
           <el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>
-
-          <!--&nbsp;<p>对账表</p>-->
       </el-form-item>
       </div>
-      <!--<div class="sTitle"><p>广州网点2018年6月7日-2018年8月12日</p>&nbsp;<p>对账表</p></div>-->
       <div class="sDate">
-
-          <el-form-item label="" prop="memberName" placeholder="请选择车牌号">
-              <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable/>
-
+          <el-form-item label="车牌号" prop="memberName" v-if="$route.query.id">
+            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled></el-input>
           </el-form-item>
+        <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-else>
+          <querySelect search="truckIdNumber" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />
+
+        </el-form-item>
         <el-date-picker
           v-model="searchCreatTime"
           :default-value="defaultTime"
@@ -35,7 +34,7 @@
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName">
+      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName2" :rules="rules">
 
         <el-form-item label="车牌号">
           <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
@@ -56,7 +55,7 @@
         <el-form-item label="结束时间">
           <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="账户账号">
+        <el-form-item label="账户账号" prop="bankAccount">
           <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="账户开户行">
@@ -85,16 +84,9 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="200"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--type="selection"-->
-            <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -108,7 +100,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDelete(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDelete(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -167,7 +159,7 @@
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width="202"
             sortable
           >
             <template slot-scope="scope">
@@ -192,7 +184,6 @@
           :summary-method="getSummaries"
           @row-dblclick="getDbClick"
           @row-click="clickDetails"
-          height="200"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -215,7 +206,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteAl(scope)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteAl(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -274,7 +265,7 @@
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width="202"
             sortable
           >
             <template slot-scope="scope">
@@ -289,32 +280,27 @@
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
-        <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName">
-          <!--<el-form-item label="总计">-->
-            <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
-          <!--</el-form-item>-->
+        <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
           <el-form-item label="备注">
             <el-input v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
           </el-form-item>
             <div class="sMessageCont_info">
         <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
       </div>
-
-
           <el-form-item label="公司名称">
             <el-input v-model="messageButtonInfo.companyName" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="业务负责人">
             <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="联系方式">
-            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" ></el-input>
+          <el-form-item label="联系方式" prop="orgBusinessOfficerPhone">
+            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" maxlength="11"></el-input>
           </el-form-item>
           <el-form-item label="财务负责人">
             <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10"></el-input>
           </el-form-item>
-          <el-form-item label="联系方式">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="12" v-numberOnly></el-input>
+          <el-form-item label="联系方式" prop="orgFinancialOfficerPhone">
+            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="11" ></el-input>
           </el-form-item>
           <el-form-item label="时间">
             <el-date-picker
@@ -322,7 +308,7 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
-            <!--<el-input v-model="messageButtonInfo.createTime" auto-complete="off" maxlength="8"></el-input>-->
+
           </el-form-item>
         </el-form>
       </div>
@@ -331,7 +317,7 @@
       <div>
         <el-button >打印</el-button>
         <el-button >导出</el-button>
-        <el-button >取消</el-button>
+        <el-button @click="canBtn()">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
@@ -341,7 +327,8 @@
 
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
-  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCreateBillCheckCarInfo,postCarfDtoById,postCarfBillCheckCarUpdateList} from '@/api/finance/fin_carfee'
+  import { REGEX } from '@/utils/validate'
+  import {postCarfBillCheckCarBaseInfo,postCarfBillCheckCarInitList,postCarfDtoById,postCarfBillCheckCarUpdateList} from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import {objectMerge2} from '@/utils/index'
@@ -422,7 +409,9 @@
             sendId:'',
             visibleDialog:false,
             loading:false,
+            isShort:false,
             deliver:false,
+            isArtery:false,
             btnsize: 'mini',
             searchTitle:{
               orgId:'',
@@ -461,8 +450,16 @@
               checkId:'1'
             },
             rules:{
-              memberName:[
-                { required: true, validator: this.validateIsEmpty('车牌号不能为空'), trigger: 'blur' }
+              "bankAccount":[
+                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+              ],
+            },
+            btnRule:{
+              "orgBusinessOfficerPhone": [
+                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+              ],
+              "orgFinancialOfficerPhone": [
+                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
               ]
             }
           };
@@ -480,7 +477,12 @@
         if(this.$route.query.id){
           this.sendId = this.$route.query.id
           this.changeId(this.$route.query.id)
-          this.onSubmit()
+          this.moodifyList().then(()=>{
+            this.searchDealPay.truckIdNumber =  this.searchTitle.memberName
+            this.searchAlReadyPay.truckIdNumber =  this.searchTitle.memberName
+          })
+          this.moodifyDealPay()
+          this.moodifyReadyPay()
         }else{
 
         }
@@ -568,16 +570,16 @@
         },
         //查询
         onSubmit(){
-          if(this.$route.query.id){
-            this.sendId = this.$route.query.id
-            this.moodifyList()
-            this.moodifyDealPay()
-            this.moodifyReadyPay()
-          }else{
-
+          if(this.searchTitle.memberName){
             this.fetchList()
             this.fetchDealPay()
             this.fetchReadyPay()
+          }else{
+            this.$message({
+              message: '车牌号不能为空~',
+              type: 'error'
+            })
+            return false
           }
           const searchObj = {}
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
@@ -585,54 +587,97 @@
           this.infoSearchTime(searchObj.startTime,searchObj.endTime)
         },
         //保存
-        submit(formName){
-          this.$refs[formName].validate((valid) => {
+        submit(){
+          this.$refs["formName2"].validate((valid) => {
             if (valid) {
-              this.oopenVisibleDialog()
-              this.deliver = true
+              this.$refs["formName3"].validate((valid) => {
+                if (valid) {
+                  for(const i in this.messageInfo){
+                    this.form[i] = this.messageInfo[i]
+                  }
+                  for(const i in this.messageButtonInfo){
+                    this.form[i] = this.messageButtonInfo[i]
+                  }
+                  this.form.orgId = this.otherinfo.orgid
+                  this.form.checkBillName = this.checkBillName
+                  this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
+                    const a = {}
+                    a.shipOrderId = el.shipOrderId
+                    a.sendPay = el.sendPay
+                    a.departureTime = el.departureTime
+                    a.batchNo = el.batchNo
+                    a.driverName = el.driverName
+                    a.orgName = el.orgName
+                    a.loadAmount = el.loadAmount
+                    a.loadWeight = el.loadWeight
+                    a.loadVolume = el.loadVolume
+                    a.remark = el.remark
+                    return a
+                  }) :[]
+                  this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
+                    const a = {}
+                    a.shipOrderId = el.shipOrderId
+                    a.sendPay = el.sendPay
+                    a.departureTime = el.departureTime
+                    a.batchNo = el.batchNo
+                    a.driverName = el.driverName
+                    a.orgName = el.orgName
+                    a.loadAmount = el.loadAmount
+                    a.loadWeight = el.loadWeight
+                    a.loadVolume = el.loadVolume
+                    a.remark = el.remark
+                    return a
+                  }) : []
+                  //总计
+                  this.tota.dealPaytota = this.dealPaytota ?  this.dealPaytota.map(el=>{
+                    const a = {}
+                    a.totalPay = el.totalPay
+                    return a
+                  }) :[]
+                  this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el=>{
+                    const a = {}
+                    a.totalPay = el.totalPay
+                    return a
+                  }) : []
+
+                  if(!this.form.payDetailList.length && !this.form.hadPayDetailList.length){
+                    this.$message({
+                      message: '各款项不能为空~',
+                      type: 'error'
+                    })
+                    this.closeVisibleDialog()
+                    return false
+                  }else{
+                    this.oopenVisibleDialog()
+                    this.deliver = true
+                    this.isShort = false
+                    this.isArtery = false
+                  }
+                }
+              })
             } else {
               return false
             }
           })
-          // messageInfo:{
-          //   checkStartTime:'',
-          //     checkEndTime:'',
-          // this.messageInfo.checkStartTime = parseTime(this.messageInfo.checkStartTime)
-          // console.log(this.messageInfo.checkStartTime);
-          for(const i in this.messageInfo){
-            this.form[i] = this.messageInfo[i]
-          }
-          for(const i in this.messageButtonInfo){
-            this.form[i] = this.messageButtonInfo[i]
-          }
-          this.form.orgId = this.otherinfo.orgid
-          this.form.checkBillName = this.checkBillName
-            this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
-              const a = {}
-              a.shipOrderId = el.shipOrderId
-              a.sendPay = el.sendPay
-              return a
-            }) :[]
-            this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el=>{
-              const a = {}
-              a.shipOrderId = el.shipOrderId
-              a.sendPay = el.sendPay
-              return a
-            }) : []
-          //总计
-          this.tota.dealPaytota = this.dealPaytota ?  this.dealPaytota.map(el=>{
-            const a = {}
-            a.shortPay = el.shortPay
-            return a
-          }) :[]
-          this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el=>{
-            const a = {}
-            a.shortPay = el.shortPay
-            return a
-          }) : []
+        },
+        canBtn(){
+          this.$confirm('确定要取消对账单吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=deliver')
 
-
-
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消操作'
+            })
+          })
         },
         validateIsEmpty(msg = '不能为空！') {
           return (rule, value, callback) => {
@@ -650,6 +695,7 @@
           this.visibleDialog = false
         },
         infoMessageData(item){
+          this.searchTitle.memberName = item.memberName
           this.messageInfo.memberName = item.memberName
           this.messageInfo.memberPerson = item.memberPerson
           this.messageInfo.memberPersonPhone = item.memberPersonPhone
@@ -707,21 +753,20 @@
 
           return sums;
         },
-        iconDelete(scope){
-          this.dealPayInfo = this.dealPayInfo.filter(el => {
-            return el.id !== scope.row.id
+        iconDelete(index){
+          this.dealPayInfo = this.dealPayInfo.filter((el,inx) => {
+            return inx !== index
           })
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
+          this.delCont()
         },
         //
-        iconDeleteAl(scope){
-          this.alreadyPayInfo = this.alreadyPayInfo.filter(el => {
-            return el.id !== scope.row.id
-
+        iconDeleteAl(index){
+          this.alreadyPayInfo = this.alreadyPayInfo.filter((el,inx) => {
+            return inx !== index
           })
+          this.delCont()
+        },
+        delCont(){
           this.$message({
             message: '删除成功~',
             type: 'success'
@@ -766,6 +811,7 @@
           border-left-color: transparent;
           border-right-color: transparent;
           border-top-color: transparent;
+          border-bottom:3px double #c0c4cc;
           font-size: 18px;
           color: #333333;
           font-weight: 600;
@@ -784,6 +830,20 @@
     }
     .el-form--inline .el-form-item {
       vertical-align: middle;
+    }
+    .sDate{
+      .el-form-item__label{
+        line-height: 40px;
+      }
+      .el-input__inner{
+        height: 40px;
+      }
+      .el-input.is-disabled{
+        .el-input__inner{
+          background-color: transparent;
+          color: #666;
+        }
+      }
     }
   }
 
@@ -863,6 +923,22 @@
         color: #668cf0;
         padding: 4px 0 5px 0;
         font-weight: 600;
+      }
+    }
+    .info_tab{
+      .el-table__fixed-body-wrapper{
+        .deletebtn{
+          .svg-icon{
+            fill: #bec4d1;
+            font-size: 18px;
+          }
+        }
+        .deletebtn:hover{
+          .svg-icon{
+            fill: #ff4381;
+            cursor: pointer;
+          }
+        }
       }
     }
   }

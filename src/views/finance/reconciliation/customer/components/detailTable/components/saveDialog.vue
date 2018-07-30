@@ -128,6 +128,10 @@
     watch: {
       tota:{
         handler(newVal){
+          this.dialogInfo[0].toPay = 0
+          this.dialogInfo[1].toPay = 0
+          this.dialogInfo[2].toPay = 0
+          this.dialogInfo[3].toPay = 0
           this.dialogData = this.tota
           this.dialogData.dealtota.map(el=>{
             this.$set(this.dialogInfo, 0, {
