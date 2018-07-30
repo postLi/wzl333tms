@@ -12,7 +12,7 @@
               <!-- 基本信息 -->
               <el-form-item label="承运商" class="addCarrierInput" prop="carrierId">
                 <i class="el-icon-plus el-input__icon" @click="doAction('addTruck')"></i>
-                <querySelect size="mini" show='select' search="carrierName" remote :name="carrierName" v-model="formModel.carrierId" type="carrier" valuekey="carrierId" :filterable="false" @change="getCarrier" >
+                <querySelect size="mini" show='select' search="carrierName" :remote="true" :name="carrierName" v-model="formModel.carrierId" type="carrier" valuekey="carrierId" :filterable="false" @change="getCarrier" >
                 </querySelect>
               </el-form-item>
               <el-form-item prop="transferTime" label="中转日期">
