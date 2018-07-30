@@ -1641,6 +1641,7 @@ export default {
         // 匹配系统设置里的运费合计规则
         for (const i in el) {
           if (this.config.shipFee[i] === '1') {
+            console.log('被加入的费用：', i, el[i])
             total = getTotal(total, el[i])
           }
         }

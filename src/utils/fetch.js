@@ -90,7 +90,13 @@ service.interceptors.response.use(
         const ifr = document.getElementById('senderIframe')
         // 如果有报表组件，需要隐藏她
         if (ifr) {
-          ifr.contentWindow.hideChart(true)
+          const onload = ifr.onload
+          ifr.onload = function() {
+            setTimeout(() => {
+              ifr.contentWindow.hideChart(true)
+            }, 100)
+            onload && onload()
+          }
         }
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',

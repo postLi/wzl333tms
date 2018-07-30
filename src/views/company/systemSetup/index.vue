@@ -92,7 +92,7 @@
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.packageFee">包装费</el-checkbox>
               </el-form-item>
               <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.forkliftCharge">叉车费</el-checkbox>
+                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.forkliftFee">叉车费</el-checkbox>
               </el-form-item>
               <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.customsFee">报关费</el-checkbox>
@@ -110,7 +110,7 @@
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.stampTax">印花税</el-checkbox>
               </el-form-item>
               <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.otherFee">其他费用</el-checkbox>
+                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.otherfeeOut">其他费用</el-checkbox>
               </el-form-item>
             </div>
           </div>
@@ -386,7 +386,7 @@ export default {
           'customsFee': '0',
           'commissionFee': '0',
           'handlingFee': '1',
-          'otherFee': '0',
+          'otherfeeOut': '0',
           'brokerageFee': '1',
           'goupstairsFee': '0',
           'taxes': '0',
@@ -394,7 +394,7 @@ export default {
           'housingFee': '0',
           'deliveryFee': '1',
           'insuranceFee': '0',
-          'forkliftCharge': '1',
+          'forkliftFee': '1',
           'pickupFee': '1',
           'stampTax': '0',
           'productPrice': '0',
