@@ -379,8 +379,6 @@
             searchCreatTime: [],
             // changeCreateTime: [],
             defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
-            searchForm:{},
-            usersArr:[],
             messageArr:[],
             checkBillName:'',
             messageInfo:{
@@ -542,7 +540,9 @@
           this.loading = true
           return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
             this.dealPayInfo = []
+            this.dealPaytota = []
             this.dealPayInfo = data
+            this.dealPaytota = data
             this.loading = false
           })
         },
@@ -550,7 +550,9 @@
           this.loading = true
           return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
             this.alreadyPayInfo = []
+            this.alreadyPaytota = []
             this.alreadyPayInfo = data
+            this.alreadyPaytota = data
             this.loading = false
           })
         },

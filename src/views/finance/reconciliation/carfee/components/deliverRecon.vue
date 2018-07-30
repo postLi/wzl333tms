@@ -6,7 +6,7 @@
 
       <div class="sTitle">
         <el-form-item label="">
-          <el-input v-model="checkBillName" auto-complete="off" ></el-input><span>对账表</span>
+          <el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>
 
           <!--&nbsp;<p>对账表</p>-->
       </el-form-item>
@@ -51,29 +51,10 @@
         </el-form-item>
         <el-form-item label="开始时间">
           <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
-          <!--<el-date-picker-->
-            <!--v-model="messageInfo.checkStartTime"-->
-            <!--align="right"-->
-            <!--type="date"-->
-            <!--placeholder="选择日期"-->
-            <!--value-format="timestamp"-->
-            <!--:picker-options="pickOption"-->
-          <!--&gt;-->
-          <!--</el-date-picker>-->
 
         </el-form-item>
         <el-form-item label="结束时间">
           <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
-          <!--<el-date-picker-->
-            <!--v-model="messageInfo.checkEndTime"-->
-            <!--align="right"-->
-            <!--type="date"-->
-            <!--:picker-options="pickOption2"-->
-            <!--placeholder="选择日期"-->
-            <!--value-format="timestamp"-->
-
-          <!--&gt;-->
-          <!--</el-date-picker>-->
         </el-form-item>
         <el-form-item label="账户账号">
           <el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>
@@ -189,6 +170,9 @@
             width="140"
             sortable
           >
+            <template slot-scope="scope">
+              <el-input v-model="dealPayInfo[scope.$index].remark" auto-complete="off"  maxlength="30" clearable></el-input>
+            </template>
           </el-table-column>
 
 
@@ -293,6 +277,9 @@
             width="140"
             sortable
           >
+            <template slot-scope="scope">
+              <el-input v-model="alreadyPayInfo[scope.$index].remark" auto-complete="off"  maxlength="30" clearable></el-input>
+            </template>
           </el-table-column>
 
 
@@ -504,7 +491,6 @@
           this.loading = true
           return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
             this.messageArr = data
-
             this.infoMessageData(this.messageArr)
             this.loading = false
           })
@@ -512,16 +498,20 @@
         fetchDealPay(){
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
+            this.dealPayInfo = []
+            this.dealPaytota = []
             this.dealPayInfo = data
-            // this.dealPaytota = data
+            this.dealPaytota = data
             this.loading = false
           })
         },
         fetchReadyPay(){
           this.loading = true
           return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
+            this.alreadyPayInfo = []
+            this.alreadyPaytota = []
             this.alreadyPayInfo = data
-            // this.alreadyPaytota = data
+            this.alreadyPaytota = data
             this.loading = false
           })
         },
@@ -538,14 +528,20 @@
         moodifyDealPay(){
           this.loading = true
           return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
+            this.dealPayInfo = []
+            this.dealPaytota = []
             this.dealPayInfo = data
+            this.dealPaytota = data
             this.loading = false
           })
         },
         moodifyReadyPay(){
           this.loading = true
           return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
+            this.alreadyPayInfo = []
+            this.alreadyPaytota = []
             this.alreadyPayInfo = data
+            this.alreadyPaytota = data
             this.loading = false
           })
         },
@@ -654,10 +650,6 @@
           this.visibleDialog = false
         },
         infoMessageData(item){
-
-          // this.messageInfo.checkStartTime = new Date()
-          // this.messageInfo.checkEndTime = new Date(+new Date() + 60 * 24 * 60 * 60 * 60)
-          // this.messageButtonInfo.createTime = new Date()
           this.messageInfo.memberName = item.memberName
           this.messageInfo.memberPerson = item.memberPerson
           this.messageInfo.memberPersonPhone = item.memberPersonPhone

@@ -1,6 +1,6 @@
 <template>
   <div class="saveDialog-maintain">
-    <PopFrame :title="'对账单名称'+popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
+    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div class="depmain-div" >
@@ -178,7 +178,6 @@
       },
       dotInfo :{
         handler(newVal) {
-          console.log(this.dotInfo);
           this.popTitle = this.dotInfo.checkBillName
           if(this.sendId){
             this.dotInfo.id = this.sendId
@@ -207,19 +206,6 @@
 
     },
     methods: {
-      search (item) {
-        // return item.pickupBatchNumber ? false : true
-      },
-      fetchFindByShipSnOrGoodSn() {
-        // this.loading = true
-        // return getFindShipByid(this.dotInfo.id).then(data => {
-        //   this.usersArr = data
-        //   this.loading = false
-        // })
-      },
-      fetchData() {
-        this.fetchFindByShipSnOrGoodSn()
-      },
       closeMe (done) {
         this.reset()
         this.$emit('update:popVisible', false);
