@@ -444,6 +444,9 @@ export default {
       return this.$route.query.orgId
     }
   },
+  created () {
+    this.setView()
+  },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj)

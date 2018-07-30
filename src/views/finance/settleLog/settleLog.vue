@@ -263,9 +263,11 @@ export default {
       this.$set(data, 'flowId', this.selectedList[0].flowId)
       postCancelSettlement(data).then(data => {
           this.$message({ type: 'success', message: '取消结算操作成功' })
+          this.fetchList()
         })
         .catch(error => {
           this.$message({ type: 'error', message: '取消结算操作失败' })
+          this.fetchList()
         })
     },
     showCount() {

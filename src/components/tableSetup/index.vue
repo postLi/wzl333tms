@@ -41,7 +41,8 @@
       <!-- 左边列表 -->
       <div class="tableSetup_list">
         <div class="tableSetup_head">
-          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列 {{leftCheckLen}} / {{leftListLen}}</el-checkbox>
+          <div class="tableSetup_head_select">选择：{{leftCheckLen}}</div>
+          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列  {{leftListLen}} / {{columnListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchLeft" :fetch-suggestions="querySearchLeft" placeholder="请输入内容" @select="handleSearchLeft" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -75,7 +76,8 @@
       <!-- 右边列表 -->
       <div class="tableSetup_list">
         <div class="tableSetup_head">
-          <el-checkbox :indeterminate="isIndeterminateRight" v-model="checkAllRight" @change="handChangeAllRight">显示列 {{rightCheckLen}} / {{rightListLen}}</el-checkbox>
+          <div class="tableSetup_head_select">选择：{{rightCheckLen}}</div>
+          <el-checkbox :indeterminate="isIndeterminateRight" v-model="checkAllRight" @change="handChangeAllRight">显示列 {{rightListLen}} / {{columnListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchRight" :fetch-suggestions="querySearchRight" placeholder="请输入内容" @select="handleSearchRight" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -177,7 +179,7 @@ export default {
       }
       return data
     }
-    const getleftListLen = _ => { // 计算左边列表的长度
+    const getleftListLen = _ => { // 计算左边列表的数量
       let count = 0
       this.columns.forEach((e, index) => {
         if (index > 49) {
@@ -186,7 +188,7 @@ export default {
       })
       return count
     }
-    const getRightListLen = _ => { // 计算右边列表的长度
+    const getRightListLen = _ => { // 计算右边列表的数量
       let count = 0
       this.columns.forEach((e, index) => {
         if (index > -1 && index < 50) {
@@ -194,6 +196,9 @@ export default {
         }
       })
       return count
+    }
+    const getColumnListLen = _=> { // 计算所有列的数量
+      return this.columns.length
     }
     return {
       orgColumnData: generateData(),
@@ -213,6 +218,7 @@ export default {
       searchRight: '',
       leftListLen: getleftListLen(),
       rightListLen: getRightListLen(),
+      columnListLen: getColumnListLen(),
       isCheck: true, // 判断显示列数是否超过50个，false-不可选择 true-可以选择,
       maxLen: 50,
       rightCheckLen: 0,
@@ -451,9 +457,16 @@ export default {
     }
 
     .tableSetup_head {
+      width:100%;
       background-color: #eee;
       padding: 10px 10px 5px 10px;
       box-shadow: 1px 3px 10px #eee;
+      position:relative;
+      .tableSetup_head_select{
+        position:absolute;
+        right:10px;
+        top:10px;
+      }
     }
     .tableSetup_content {
       overflow: auto;
