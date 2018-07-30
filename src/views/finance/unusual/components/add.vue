@@ -185,11 +185,13 @@ export default {
         callback(new Error('费用不能小于0'))
       }
     }
-    const validateshipSn = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('请输入运单号'))
-      }
-    }
+    // const validateshipSn = function(rule, value, callback) {
+    //   if (value === '' || value === null || !value || value === undefined) {
+    //     callback(new Error('请输入运单号'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       timekey: '111',
       querykey: '11',
@@ -232,17 +234,17 @@ export default {
       rules: {
         fee: [
           // { required: true, message: '必填只能输入数字', trigger: 'blur' }
-          { required: true, trigger: 'change', validator: validatefee }
+          { required: true, validator: validatefee }
         ],
         remark: [
-          { required: true, message: '请输入异动备注', trigger: 'change' }
+          { required: true, message: '请输入异动备注' }
         ],
         shipSn: [
-          { required: true, trigger: 'change', validator: validateshipSn }
-          // { required: true, message: '请输入运单号', trigger: 'blur' }
+          // { required: true, validator: validateshipSn }
+          { required: true, message: '请输入运单号' }
         ],
         incomePayType: [
-          { required: true, message: '请选择费用类型', trigger: 'change' }
+          { required: true, message: '请选择费用类型' }
         ]
       },
       // fileList2:[],
@@ -330,7 +332,7 @@ export default {
       } else {
         this.popTitle = '异动登记'
         this.form.orgId = this.orgid
-
+        console.log('登记')
         // this.fetchShipInfo(this.info)
         this.form.incomePayType = this.incomePayType
         this.form.shipSn = ''
@@ -507,6 +509,7 @@ export default {
       }) */
     },
     submitForm(ruleForm) {
+      console.log(6666, this.info.id)
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -524,7 +527,6 @@ export default {
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
-            console.log(6666, this.info.id)
             promiseObj = putXiugai(this.info.id, data) // 修改
           } else {
             promiseObj = postInsertAbnormal(data) // 登记
