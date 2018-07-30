@@ -176,7 +176,7 @@ export default {
         border-bottom:1px dashed #999;
         .el-form-item{
             margin-bottom: 0;
-            margin-top:10px;
+            // margin-top:10px;
         }
         
     }

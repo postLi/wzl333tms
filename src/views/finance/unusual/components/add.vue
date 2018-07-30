@@ -220,7 +220,8 @@ export default {
         shipArrivepayFee: '',
         shipMonthpayFee: '',
         shipReceiptpayFee: '',
-        shipPayWayName: ''
+        shipPayWayName: '',
+        shipFromOrgid: ''
 
       },
       obj: {
@@ -228,6 +229,7 @@ export default {
         shipLoadId: '',
         incomePayType: '',
         remark: ''
+        // ascriptionOrgid: ''
       },
       formLabelWidth: '80px',
       tooltip: false,
@@ -430,6 +432,7 @@ export default {
         this.form.shipLoadId = data.id
 
         this.form.shipPayWay = data.shipPayWay
+        this.form.shipFromOrgid = data.shipFromOrgid
       }
     },
     fetchShipInfo(data) {
@@ -518,17 +521,17 @@ export default {
           this.obj.incomePayType = this.form.incomePayType
           this.obj.remark = this.form.remark
           this.obj.shipLoadId = this.form.shipLoadId
+          // this.obj.ascriptionOrgid = this.form.shipFromOrgid // 只是登记的时候传
+
           this.obj.createTime = new Date(this.form.createTime).getTime()
           // this.obj.createTime = new Date(data.createTime).getTime()
           const data = objectMerge2({}, this.obj)
-          // console.log(this.obj, this.form.createTime)
-
-          // data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
             promiseObj = putXiugai(this.info.id, data) // 修改
           } else {
+            this.$set(data, 'ascriptionOrgid', this.form.shipFromOrgid)// 用set方法添加到data里面
             promiseObj = postInsertAbnormal(data) // 登记
           }
 

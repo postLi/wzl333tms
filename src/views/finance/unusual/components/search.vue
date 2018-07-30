@@ -147,7 +147,10 @@ export default {
 <style lang="scss">
 .unusual_search{
   .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-    margin:10px 0px;
+    // margin:10px 0px;
+  }
+  .tab-wrapper .tab-content .staff_searchinfo{
+    margin:0 10px;
   }
   .el-range-editor--mini.el-input__inner{
     width: 200px;

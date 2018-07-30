@@ -151,4 +151,14 @@ export default {
   height: 28px;
   width: 200px;
 }
+
+.tab-wrapper .tab-content .staff_searchinfo{
+  padding:10px 0;
+  margin: 0 10px;
+  border-bottom:1px dashed #999;
+  .el-form-item{
+    margin:0 10px;
+  }
+}
+
 </style>

@@ -17,8 +17,13 @@
         :on-exceed="onexceed"
         :on-success="handleImageScucess"
         :on-remove="handleRemove">
-        <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div>
+        <!-- <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div> -->
         <!-- <i class="el-icon-plus"></i> -->
+        <slot name="content">
+          <el-button :size="size" type="primary" style="">点击上传</el-button>
+          <div class="el-upload__text" >将文件拖拽到此区域</div>
+          <div v-if="tip" class="upload__tip">{{ tip }}</div>
+        </slot>
       </el-upload>
       <el-dialog :visible.sync="dialogVisible" :append-to-body="true">
         <img width="100%" :src="dialogImageUrl" alt="">
@@ -278,11 +283,13 @@ export default {
         }
         .el-button{
             margin-top: 24px;
+            // float:left;
         }
         .el-upload__text{
             margin-top: 10px;
             margin-bottom: 5px;
             font-size: 12px;
+            line-height:43px;
         }
         .upload__tip{
             font-size:12px;
@@ -292,6 +299,12 @@ export default {
             font-size:13px;
             color:#666;
             margin-top:14px;
+        }
+        .el-upload--picture-card{
+          line-height:43px;
+        }
+        .upload__tip{
+          line-height:43px;
         }
     }
 
