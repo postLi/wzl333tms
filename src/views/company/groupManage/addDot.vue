@@ -177,19 +177,15 @@
       var callBackName = (rule, value, callback) => {
         callback()
       }
-      var collectionFee = (rule, value, callback) => {
-        if (!REGEX.ONLY_NUMBER.test(value) && !value === '') {
-          return callback(new Error('请输入数字'))
-        } else {
-          callback()
-        }
-      }
 
       var benchmark = (rule, value, callback) => {
-        // 暂定
-        if (!REGEX.NUM_POINT.test(value) && !REGEX.NUM_PERCENTAGE.test(value) && value !== '') {
+        if (!REGEX.NUM_POINT.test(value) && !REGEX.NUM_PERCENTAGE.test(value)) {
           return callback(new Error('请输入百分比和小数点'))
-        } else {
+        }
+        else if(!REGEX.ONLY_NUMBER.test(value)){
+          return callback(new Error('请输入数字'))
+        }
+        else {
           callback()
         }
       }
@@ -203,13 +199,13 @@
       var remarks = (rule, value, callback) => {
         callback()
       }
-      // var city = (rule, value,callback) => {
-      //   if (!value) {
-      //     return callback(new Error('请选择城市~'));
-      //   } else{
-      //     callback();
-      //   }
-      // }
+      var city = (rule, value,callback) => {
+        if (!value) {
+          return callback(new Error('请选择城市~'));
+        } else{
+          callback();
+        }
+      }
       return {
         popTitle: '新增网点',
         // 多选框
@@ -273,23 +269,23 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
-            { required: true, trigger: 'blur' }
+            { required: true, validator: city, trigger: 'blur' }
           ],
           collectionFee: [
-            { validator: collectionFee, trigger: 'blur' },
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER},
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           benchmark: [
-            { validator: benchmark, trigger: 'blur' }
+            { validator: benchmark, trigger: 'blur' },
           ],
           warningQuota: [
-            { validator: collectionFee, trigger: 'blur' },
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER},
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           lockMachineQuota: [
-            { validator: collectionFee, trigger: 'blur' },
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER},
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],

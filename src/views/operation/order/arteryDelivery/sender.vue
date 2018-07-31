@@ -77,10 +77,6 @@
             width="160"
             sortable
             >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
-            <!--</template>-->
-
           </el-table-column>
           <!--<el-table-column-->
             <!--prop="vipNum"-->
@@ -361,9 +357,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam (obj) {
-      // this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
-      // this.fetchAllCustomer()
       this.fetchData()
     },
     showImport () {
@@ -395,16 +389,16 @@ export default {
               return false
 
             }else{
-              if(this.selected[0].bathStatusName === '已到车'){
+              if(this.selected[0].bathStatusName === '已到车' || this.selected[0].bathStatusName === '在途中'){
                 this.selectInfo = this.selected[0]
                 this.isModify = false
                 this.openAddCustomer()
               }else{
                 this.closeAddCustomer()
-                this.$message({
-                  message: '已到车的批次才可以做到货入库~',
-                  type: 'warning'
-                })
+                // this.$message({
+                //   message: '已到车的批次才可以做到货入库~',
+                //   type: 'warning'
+                // })
                 return false
               }
 
