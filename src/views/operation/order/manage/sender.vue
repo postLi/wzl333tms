@@ -421,6 +421,13 @@ export default {
                 type: 'warning'
               })
               return false
+            }
+            else if(this.selected[0].orderStatus === 216 ) {
+              this.$message({
+                message: '已作废的运单不可以受理~',
+                type: 'warning'
+              })
+              return false
             }else{
               return false
             }
@@ -560,7 +567,7 @@ export default {
           // 删除
           case 'delete':
             this.closeAddCustomer()
-            if(this.selected[0].orderStatus === 213 || this.selected[0].orderStatus === 215){
+            if(this.selected[0].orderStatus === 213 || this.selected[0].orderStatus === 215 || this.selected[0].orderStatus === 216){
 
               let deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
               let ids = this.selected.map(item => {

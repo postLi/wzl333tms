@@ -15,18 +15,19 @@
       </div>
 
       <div class="side_right">
+        <h5 style="line-height: 32px;font-size: 14px">网点信息:</h5>
         <el-collapse accordion change="doLayout">
           <el-collapse-item>
-            <div class="side_right_top">
+            <div class="side_right_top" :class="{currActive:form.status ===31}">
               <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
                 <el-form-item label="网点名称" :label-width="formLabelWidth" >
-                  <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
+                  <el-input v-model="form.orgName" auto-complete="off" disabled ></el-input>
                 </el-form-item>
                 <el-form-item label="网点类型" :label-width="formLabelWidth">
                   <el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
-                  <el-input :value='form.status ==="32" ? "有效" : "有效"' disabled></el-input>
+                  <el-input :value='form.status ===32 ? "有效" : "无效"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="客服人员" :label-width="formLabelWidth" >
                   <el-input v-model="form.serviceName" auto-complete="off" disabled></el-input>
@@ -105,6 +106,7 @@
                 prop="id"
                 width="60"
                 label="序号">
+                <template slot-scope="scope">{{  scope.$index + 1 }}</template>
               </el-table-column>
               <el-table-column
                 fixed
@@ -162,7 +164,9 @@
        <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" :createrId ="otherinfo.orgid"></DepMaintain>
     </div>
-    <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+    <div class="info_news_footer">
+     <div class="total_footer">共计:{{ total }}</div>
+      <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
   </div>
 </template>
 <script type="text/javascript">
@@ -377,6 +381,7 @@ export default {
               break
 
           }
+          this.$refs.multipleTable.clearSelection()
         },
           // 表头筛选
         filterTag(value, row) {
@@ -411,4 +416,8 @@ export default {
 <style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";
   @import "./index.css";
+  .info_news_footer .total_footer{
+    float:left;
+    padding-left: 200px;
+  }
 </style>

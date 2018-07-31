@@ -16,7 +16,11 @@
         <div class="btns_box clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addRole')">新增角色</el-button><el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('roleNot')" plain>修改</el-button><el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除</el-button><el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain>参照</el-button><el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain>关联员工</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addRole')">新增角色</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('roleNot')" plain>修改</el-button>
+            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain>参照</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain>关联员工</el-button>
             <!--表格功能-->
           </div>
         </div>
@@ -42,6 +46,7 @@
               fixed
               prop="id"
               label="序号" width="50">
+              <template slot-scope="scope">{{  scope.$index + 1 }}</template>
             </el-table-column>
             <el-table-column
               fixed
@@ -66,7 +71,7 @@
 
       </div>
     </div>
-    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.orgid" :theUser="theUser" @success="getSeachInfo"></AddRole>
+    <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot" @success="getSeachInfo"></RelationPer>
   </div>
 </template>
@@ -245,7 +250,7 @@
             })
             ids = ids.slice(0, ids.length - 1)
             const id = this.selected[0].id
-            this.$confirm('确定要删除 ' + deleteItem + ' 员工吗？', '提示', {
+            this.$confirm('确定要删除 ' + deleteItem + ' 角色吗？', '提示', {
               confirmButtonText: '删除',
               cancelButtonText: '取消',
               type: 'warning'

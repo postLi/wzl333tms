@@ -2,18 +2,18 @@
   <div class="add-dot" v-loading="loading">
   <pop-right :title='popTitle' :isShow="popVisible" @close="closeMe" class='addEmployeerPop'>
     <template class='addEmployeerPop-content' slot="content">
-          <el-form :model="form" :rules="rules" ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-            <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
-              <el-input v-model="form.orgName" auto-complete="off"></el-input>
+
+          <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+            <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName" maxlength="15">
+              <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
               <el-select v-model="form.orgType">
-                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-                <!--<el-option label="分拨中心" :value="2"></el-option>-->
+                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id" :disabled="form.status===31"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
-              <el-select v-model="form.status" :disabled="isModify ? false : true">
+              <el-select v-model="form.status" :disabled="isModify ? false : true" >
                 <!--<el-option v-for="item in netWorkStatus" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
                 <el-option label="有效" :value="32"></el-option>
                 <el-option label="无效" :value="31"></el-option>
@@ -21,50 +21,50 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree v-model="form.parentId" :disabled="isModify" />
+              <SelectTree v-model="form.parentId"  :disabled="isModify || form.status===31"/>
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
-              <el-select v-model="form.manageType">
+              <el-select v-model="form.manageType" :disabled="form.status===31">
                 <!--<el-option v-for="item in manageType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
                 <el-option label="自营" :value="3"></el-option>
                 <el-option label="加盟" :value="4"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="创建时间" v-if="isModify" :label-width="formLabelWidth">
-              <el-input :disabled="isModify" :value="form.createTime | parseTime('{y}/{m}/{d}')"></el-input>
+              <el-input  :value="form.createTime | parseTime('{y}/{m}/{d}')" :disabled="isModify || form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
-              <el-input v-model="form.responsibleName" auto-complete="off"></el-input>
+              <el-input v-model="form.responsibleName" auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
-              <el-input  v-model="form.responsibleTelephone"  auto-complete="off"></el-input>
+              <el-input  v-model="form.responsibleTelephone"  auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
-              <SelectCity :city="form.city" @change="getCity" />
+              <SelectCity :city="form.city" @change="getCity" :disabled="form.status===31"/>
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
-              <el-input v-model="form.serviceName" auto-complete="off"></el-input>
+              <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" maxlength="13">
-              <el-input v-model="form.servicePhone" auto-complete="off"></el-input>
+              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
-              <el-input v-model="form.detailedAddr" auto-complete="off"></el-input>
+              <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
-            <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
-              <el-input v-model="form.networkCode" auto-complete="off"></el-input>
+            <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode" maxlength="10">
+              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="collectionFee">
-              <el-input v-model="form.collectionFee" auto-complete="off" maxlength="9"></el-input>
+              <el-input v-model="form.collectionFee" auto-complete="off" maxlength="9" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="提现基准" :label-width="formLabelWidth" prop="benchmark">
-              <el-input v-model="form.benchmark"  auto-complete="off"></el-input>
+              <el-input v-model="form.benchmark"  auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth" prop="warningQuota">
-              <el-input v-model="form.warningQuota" auto-complete="off" maxlength="9"></el-input>
+              <el-input v-model="form.warningQuota" auto-complete="off" maxlength="9" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="lockMachineQuota">
-              <el-input v-model="form.lockMachineQuota" auto-complete="off" maxlength="9"></el-input>
+              <el-input v-model="form.lockMachineQuota" auto-complete="off" maxlength="9" :disabled="form.status===31"></el-input>
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">

@@ -102,3 +102,9 @@
   cursor: not-allowed;
 
 }
+
+
+/*修改全局绿色输入框*/
+.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+  border-color: #dcdfe6;
+}

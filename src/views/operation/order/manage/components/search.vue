@@ -18,7 +18,7 @@
     <el-form-item label="订单状态：">
       <SelectType v-model="searchForm.orderStatus" type="order_status" />
     </el-form-item>
-    <el-form-item label="运单号:">
+    <el-form-item label="订单号:">
       <el-input
         v-numberOnly
         placeholder=""

@@ -125,13 +125,13 @@
               </td>
 
               <td>
-                <el-form-item label="代收款">
-                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-form-item label="代收款" prop="tmsOrderCargoList.agencyFund">
+                  <el-input  v-model="form.tmsOrderCargoList.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
               <td>
-                <el-form-item label="代收款手续费">
-                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
+                <el-form-item label="代收款手续费" prop="tmsOrderCargoList.commissionFee">
+                  <el-input  v-model="form.tmsOrderCargoList.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
             </tr>
@@ -143,13 +143,13 @@
               </td>
 
               <td>
-                <el-form-item label="运费">
-                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.shipFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-form-item label="运费" prop="tmsOrderCargoList.shipFee">
+                  <el-input v-model="form.tmsOrderCargoList.shipFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
               <td>
-                <el-form-item label="声明价值">
-                  <el-input v-numberOnly v-model="form.tmsOrderCargoList.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-form-item label="声明价值" prop="tmsOrderCargoList.productPrice">
+                  <el-input v-model="form.tmsOrderCargoList.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
             </tr>
@@ -258,9 +258,7 @@ export default {
       if (!value && !hasOne) {
         callback(new Error('体积或重量必填其中一项'))
       }
-      if (!REGEX.ONLY_NUMBER.test(value)) {
-        callback(new Error('只能输入数字'))
-      } else {
+      else {
         hasOne = true
         callback()
       }
@@ -268,7 +266,7 @@ export default {
     return {
       rules: {
         'tmsOrderPre.orderToCityName': [
-          { validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur'] }
+          { required: true,validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur'] }
         ],
         'customSend.customerName': [
           { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' }
@@ -282,7 +280,7 @@ export default {
         ],
         'customRece.customerMobile': [
           { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'blur' },
-          { validator: validateMobile, trigger: 'change' }
+          { validator: validateMobile, trigger: 'blur' }
         ],
         'tmsOrderCargoList.cargoName': [
           { validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur' }
@@ -294,12 +292,28 @@ export default {
         ],
         'tmsOrderCargoList.cargoVolume': [{
           validator: validateVolumnWeight, trigger: 'blur'
-        }],
-        'tmsOrderCargoList.cargoWeight': [{
+        },
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}],
+        'tmsOrderCargoList.cargoWeight':
+          [{
           validator: validateVolumnWeight, trigger: 'blur'
-        }],
+        },
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        ],
         'tmsOrderCargoList.description': [
           { validator: validateOnlyNumberAndLetter, trigger: ['change'] }
+        ],
+        'tmsOrderCargoList.agencyFund':[
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        ],
+        'tmsOrderCargoList.commissionFee':[
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        ],
+        'tmsOrderCargoList.shipFee':[
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        ],
+        'tmsOrderCargoList.productPrice':[
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
         ]
       },
       btnsize: 'mini',

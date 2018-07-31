@@ -155,14 +155,13 @@
               let promiseObj = putUpdatePickkupStatus(this.getMentInfo.pickupId)
               promiseObj.then(res => {
                 this.loading = false
-                this.$alert('操作成功', '提示', {
-                  confirmButtonText: '确定',
-                  callback: action => {
+                this.$message({
+                  message: '提货完成~',
+                  type: 'success'
+                })
                     this.closeMe()
                     this.$emit('success')
                     this.reset()
-                  }
-                });
               }).catch(err => {
                 this.loading = false
               })

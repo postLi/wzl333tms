@@ -21,7 +21,7 @@
         <div class="info_date">货物信息</div>
         <div class="pickUp-order">
           <el-form-item label="货品名" prop="tmsOrderPickup.pickupName">
-            <querySelect search="value" valuekey="value" :maxlength="8" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
+            <querySelect search="value" valuekey="value" maxlength="8" type="cargoName" :remote="true" v-model="form.tmsOrderPickup.pickupName" :disabled="isDbclick"  />
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
@@ -71,7 +71,7 @@
             <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick" maxlength="18"></el-input>
           </el-form-item>
           <el-form-item label="提货状态" prop="tmsOrderPickup.pickupStatus">
-            <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
+            <SelectType :filterfn="filterfn" v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="出车时间" class="customerunit">
               <el-date-picker
@@ -187,6 +187,13 @@ export default {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
+    const validateTruckIdNumber = function(rule, value, callback) {
+      if (!value) {
+        callback(new Error('车牌号不能为空'))
+      } else {
+        callback
+      }
+    }
 
     return {
       rules: {
@@ -195,6 +202,7 @@ export default {
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator: validatePickupNum, trigger: 'blur' },
+          { required: true, validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupVolume': [
           { validator: validatePickupNum, trigger: 'blur' },
@@ -217,7 +225,9 @@ export default {
           // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsDriver.truckIdNumber': [
-          { max: 8, message: '车牌号最多可输入8个字符' }
+          // {  validator: this.validateIsEmpty('车牌号不能为空')}
+          // { required: true, validator: this.validateIsEmpty('车牌号不能为空')}
+          // { max: 8, message: '车牌号最多可输入8个字符' }
         ],
         'tmsDriver.driverName': [
           // { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
@@ -336,6 +346,9 @@ export default {
     }
   },
   methods: {
+    filterfn(el){
+      return el.id !== 235
+    },
     getTrunkName(trunk) {
       if (trunk) {
         this.form.tmsDriver.driverName = trunk.driverName
@@ -356,8 +369,8 @@ export default {
       this.form.tmsOrderPickup.payMethod = item.payMethod
       this.form.tmsOrderPickup.pickupStatus = item.pickupStatus
       this.form.tmsOrderPickup.remark = item.remark
-      this.form.tmsOrderPickup.arriveTime = item.arriveTime
-      this.form.tmsOrderPickup.outTime = item.outTime
+      this.form.tmsOrderPickup.arriveTime = +new Date(item.arriveTime)
+      this.form.tmsOrderPickup.outTime = +new Date(item.outTime)
       this.form.tmsOrderPickup.toCityName = item.toCityName
       this.form.tmsOrderPickup.id = item.id
 
@@ -475,13 +488,19 @@ export default {
       })
     },
     reset() {
-      this.$refs['ruleForm'].resetFields()
-      this.form.tmsCustomer = ''
-      this.form.tmsDriver = ''
-      this.form.tmsTruck = ''
-      this.form.tmsOrderPickup = ''
+      // this.$refs['ruleForm'].resetFields()
+      // this.form.tmsCustomer = ''
+      // this.form.tmsDriver = ''
+      // this.form.tmsTruck = ''
+      // this.form.tmsOrderPickup = ''
+
+      this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+      this.form.tmsTruck = this.setObject(this.form.tmsTruck)
+      this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+      this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
     },
     closeMe(done) {
+      this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
@@ -491,6 +510,7 @@ export default {
 }
 </script>
 <style lang="scss">
+
   .addPickUpPop{
     left: auto;
     top: 50px;

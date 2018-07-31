@@ -199,9 +199,9 @@
                     </el-table-column>
                     <el-table-column prop="shipSenderMobile" label="发货人电话" width="120" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipSenderName" label="收货人电话" width="120" sortable>
+                    <el-table-column prop="shipReceiverName" label="收货人" width="120" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipSenderMobile" label="收货人电话" width="120" sortable>
+                    <el-table-column prop="shipReceiverMobile" label="收货人电话" width="120" sortable>
                     </el-table-column>
                     <el-table-column prop="cargoName" label="货品名" width="100" sortable>
                     </el-table-column>

@@ -46,7 +46,7 @@
               fixed
               sortable
               prop="shipGoodsSn"
-              width="150"
+              width="190"
               label="货号">
             </el-table-column>
             <el-table-column
@@ -117,7 +117,6 @@
           hasOne = true
         }
         if(!hasOne){
-          console.log(value, hasOne, this.formInline.shipSn, this.formInline.shipGoodsSn)
           callback(new Error('运单号或货号必填其中一项'))
         }
         else{
@@ -186,6 +185,7 @@
       infoData(item){
         this.getMentInfo.pickupBatchNumber = item.pickupBatchNumber
         this.getMentInfo.driverName = item.driverName
+        this.getMentInfo.truckIdNumber = item.truckIdNumber
         this.getMentInfo.getMentInfo = item.getMentInfo
         this.getMentInfo.truckFee = item.truckFee
         this.sendId.pickupId = item.id
@@ -269,9 +269,6 @@
             return false
           }
           else{
-            let _this = this
-            // console.log(this.selected[0].id);
-            // console.log(this.selected[0].shipId);
             let promiseObj = putRremoveShip(this.selected[0].id,this.selected[0].shipId)
             promiseObj.then(res => {
               this.loading = false
@@ -301,12 +298,12 @@
   .pick-maintain .pickpopDepMain{
     top: 29%;
     bottom: auto;
-    min-width: 580px;
-    max-width:  580px;
+    min-width: 600px;
+    max-width:  600px;
 
   }
   .pick-maintain .popRight-content{
-    padding: 20px 0 5px 10px;
+    padding: 20px 10px 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{
       margin-right: -8px;

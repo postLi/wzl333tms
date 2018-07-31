@@ -15,6 +15,9 @@
   padding-top:10px;
   border-right: 2px solid #ccc;
 }
+.side_left .el-tree .el-tree-node{
+  width: 200px;
+}
 .side_left .el-tree-node__content{
   border-bottom: 1px solid #ddd;
 }
@@ -51,6 +54,10 @@ background-color: rgb(195,232,255);
 }
 
 /*右侧栏*/
+.side_right_top.currActive .el-input.is-disabled  .el-input__inner{
+  color: #606266;
+  }
+
 .side_right {
   flex: 1;
   flex-wrap:wrap;
@@ -58,6 +65,7 @@ background-color: rgb(195,232,255);
   height: 100%;
   flex-direction: column;
   display: flex;
+  width: 100%;
 }
 .side_right_top{
   border-bottom:2px dotted #ccc;

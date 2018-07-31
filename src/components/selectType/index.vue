@@ -1,7 +1,7 @@
 <template>
   <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs" @focus="focus" @blur="blur">
     <slot name="head"></slot>
-    <template v-for="item in types">
+    <template v-for="item in listdata">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
       <slot v-bind:item="item">
         <!-- 回退的内容 -->
@@ -94,12 +94,19 @@ export default {
     remote: {
       type: Boolean,
       default: false
+    },
+    filterfn: {
+      type: Function,
+      default: (el) => el
     }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
-    ])
+    ]),
+    listdata(){
+      return this.types.filter(this.filterfn)
+    }
   },
   data() {
     return {
