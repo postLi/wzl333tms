@@ -121,9 +121,11 @@
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
             <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
-          <div class="clearfix uploadcard">
-            <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
-          </div>
+          <el-form-item class="clearfix">
+            <div class="clearfix uploadcard">
+              <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture"  v-model="form.disposePicture" :disabled="isCheck ? true : false"/>
+            </div>
+          </el-form-item>
         </div>
       </el-form>
     </template>
@@ -269,7 +271,7 @@ export default {
       tooltip: false,
       rules: {
         abnormalAmount: [
-          { required: true, trigger: 'change', validator: validateNameSn }
+          { required: true, validator: validateNameSn }
         ],
         abnormalType: [
           { required: true, message: '必选', trigger: 'blur' }
@@ -656,33 +658,17 @@ export default {
     .select-tree{
       width: 100%;
     }
-    //上传图片
-    .el-upload-list--picture-card .el-upload-list__item{
-      width: 234px;
-      height: 136px;
-    }
-    .el-upload-dragger{
-      width: 234px;
-      height: 136px;
-    }
-    .el-upload--picture-card{
-      width:234px;
-      height:136px;
-    }
-    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-      margin-top:8px;
-    }
-    //上传图片end
-    .drviercard,.certcard,.idcard{
-      float: left;
-      width: 100%;
-      height: 136px;
-      margin-bottom: 14px;
-      margin-left:13%;
-      position:absolute;
-      right:111px;
-      top:111px;
-    }
+   
+    // .drviercard,.certcard,.idcard{
+    //   float: left;
+    //   width: 100%;
+    //   height: 136px;
+    //   margin-bottom: 14px;
+    //   margin-left:13%;
+    //   position:absolute;
+    //   right:111px;
+    //   top:111px;
+    // }
     .el-textarea{
       min-width: 722px;
     }
@@ -753,27 +739,51 @@ export default {
     }
     
   }
-  .uploadlist{
-    width: 100%;
-    margin-left:80px;
-    li{
-      float: left;
-      width: 100px;
-      margin-right: 10px;
-    }
-  }
+ 
   
   .uploadcard{
     padding:20px 20px 20px 90px;
-  }
-  .disabledUpload{
-    .el-upload{
-      display: none;
+     //上传图片
+    // .el-upload--picture-card
+    .el-upload-list--picture-card .el-upload-list__item{
+      width: 234px;
+      height: 136px;
+    }
+    .el-upload-dragger{
+      width: 234px;
+      height: 136px;
+    }
+    .el-upload--picture-card{
+      width:234px;
+      line-height: 30px;
+      // height:136px;
+      
+    }
+    .upload__tip{
+      line-height: 30px;
+    }
+    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+      margin-top:8px;
+    }
+    //上传图片end
+     .uploadlist{
+      width: 100%;
+      margin-left:80px;
+      li{
+        float: left;
+        width: 100px;
+        margin-right: 10px;
+      }
     }
   }
-  .el-input--mini .el-input__inner{
-    color: #3e9ff1;
-  }
+  // .disabledUpload{
+  //   .el-upload{
+  //     display: none;
+  //   }
+  // }
+  // .el-input--mini .el-input__inner{
+  //   color: #3e9ff1;
+  // }
 }
 </style>
 

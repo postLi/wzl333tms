@@ -18,7 +18,7 @@
             :on-error="handleError"
             :on-success="handleImageScucess">
             <slot name="content">
-                <div v-if="title && !showFileList" class="upload__title">{{ title }}</div>
+                <!-- <div v-if="title && !showFileList" class="upload__title">{{ title }}</div> -->
                 <el-button :size="size" type="primary">点击上传</el-button>
                 <div class="el-upload__text" v-if="!showFileList">将文件拖拽到此区域</div>
                 <div v-if="tip" class="upload__tip">{{ tip }}</div>

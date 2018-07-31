@@ -1,6 +1,7 @@
 <template>
     <div :class="{'hideuploadbtn': (filelist.length >= limit) || disabled}">
       <el-upload
+        class="image-uploader"
         drag
         v-if="uploadUrl" 
         :data="upload" 
@@ -17,11 +18,16 @@
         :on-exceed="onexceed"
         :on-success="handleImageScucess"
         :on-remove="handleRemove">
+
+        <!-- <i class="el-icon-upload"></i> -->
+        <!-- <el-button :size="size" type="primary" style="">点击上传</el-button> -->
+        <!-- <div class="el-upload__text clearfix"><span class="fl">将文件拖拽至此区域上传</span><em class="fl">点击上传</em></div> -->
+        <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
         <!-- <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div> -->
         <!-- <i class="el-icon-plus"></i> -->
         <slot name="content">
-          <el-button :size="size" type="primary" style="">点击上传</el-button>
-          <div class="el-upload__text" >将文件拖拽到此区域</div>
+          <el-button :size="size" type="primary" class="button">点击上传</el-button>
+          <div class="el-upload__text">将文件拖拽到此区域</div>
           <div v-if="tip" class="upload__tip">{{ tip }}</div>
         </slot>
       </el-upload>
@@ -213,7 +219,7 @@ export default {
         width: auto;
 
         .el-button{
-            margin-top: 0;
+            margin-top: 20px;
         }
     }
 }
