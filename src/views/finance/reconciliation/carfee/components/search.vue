@@ -118,7 +118,7 @@ export default {
       this.searchForm.memberPerson = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchForm.searchCreatTime = []
+      // this.searchCreatTime = []
     }
   }
 }

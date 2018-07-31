@@ -424,7 +424,7 @@
               memberType:'3',
               loadTypeId:40,
               payTypeStatus:'pay',
-              truckIdNumber:'',
+              memberName:'',
               startTime:'',
               endTime:''
             },
@@ -433,7 +433,7 @@
               memberType:'3',
               loadTypeId:40,
               payTypeStatus:'hadPay',
-              truckIdNumber:'',
+              memberName:'',
               startTime:'',
               endTime:''
             },
@@ -478,8 +478,8 @@
           this.sendId = this.$route.query.id
           this.changeId(this.$route.query.id)
           this.moodifyList().then(()=>{
-            this.searchDealPay.truckIdNumber =  this.searchTitle.memberName
-            this.searchAlReadyPay.truckIdNumber =  this.searchTitle.memberName
+            this.searchDealPay.memberName =  this.searchTitle.memberName
+            this.searchAlReadyPay.memberName =  this.searchTitle.memberName
           })
           this.moodifyDealPay()
           this.moodifyReadyPay()
@@ -564,8 +564,8 @@
         getTrunkName(trunk) {
           if (trunk) {
             this.searchTitle.memberName = trunk.truckIdNumber
-            this.searchDealPay.truckIdNumber = trunk.truckIdNumber
-            this.searchAlReadyPay.truckIdNumber = trunk.truckIdNumber
+            this.searchDealPay.memberName = trunk.truckIdNumber
+            this.searchAlReadyPay.memberName = trunk.truckIdNumber
           }
         },
         //查询
@@ -815,7 +815,8 @@
           font-size: 18px;
           color: #333333;
           font-weight: 600;
-          width: 180%;
+          width: 200%;
+          text-align: center;
         }
         .el-input__inner:focus{
           border-bottom-color: #c0c4cc;

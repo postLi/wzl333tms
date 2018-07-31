@@ -932,7 +932,8 @@
           font-size: 18px;
           color: #333333;
           font-weight: 600;
-          width: 180%;
+          width: 200%;
+          text-align: center;
         }
         .el-input__inner:focus{
           border-bottom-color: #c0c4cc;

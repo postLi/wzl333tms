@@ -25,16 +25,16 @@
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
-            <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" :disabled="isDbclick" maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="体积" prop="tmsOrderPickup.pickupVolume">
-            <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick" maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="重量" prop="tmsOrderPickup.pickupWeight">
-            <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick" maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="运费" prop="tmsOrderPickup.carriage">
-            <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" :disabled="isDbclick" maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="付款方式" >
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way"  class="pickup-way" :disabled="isDbclick"/>
@@ -43,7 +43,7 @@
             <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="备注" prop="tmsOrderPickup.remark" class="order_remark">
-            <el-input v-model="form.tmsOrderPickup.remark" type="textarea" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsOrderPickup.remark" type="textarea" auto-complete="off" :disabled="isDbclick" maxlength="300"></el-input>
           </el-form-item>
         </div>
         <div class="info_date">其他信息</div>
@@ -52,13 +52,13 @@
             <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
           <el-form-item label="代收费用" prop="tmsOrderPickup.collectionFee">
-            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick" maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="tmsDriver.truckIdNumber">
-            <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick"/>
+            <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick" maxlength="8"/>
           </el-form-item>
           <el-form-item label="司机姓名" prop="tmsDriver.driverName">
-            <querySelect search="driverName" valuekey="driverName" type="driver" @change="getdriverName" :remote="true" v-model="form.tmsDriver.driverName" :disabled="isDbclick"/>
+            <querySelect search="driverName" valuekey="driverName" type="driver" @change="getdriverName" :remote="true" v-model="form.tmsDriver.driverName" :disabled="isDbclick" maxlength="8"/>
           </el-form-item>
           <el-form-item label="车辆类型">
             <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
@@ -68,7 +68,7 @@
             <!--<querySelect search="driverMobile" type="driver"  @change="getdriverMobile" :remote="true" v-model="form.tmsDriver.driverMobile" />-->
           </el-form-item>
           <el-form-item label="车辆单位" prop="tmsTruck.truckUnit">
-            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick" maxlength="18"></el-input>
           </el-form-item>
           <el-form-item label="提货状态" prop="tmsOrderPickup.pickupStatus">
             <SelectType v-model="form.tmsOrderPickup.pickupStatus" type="pickup_status" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
@@ -192,24 +192,19 @@ export default {
       rules: {
         'tmsOrderPickup.pickupName': [
           { required: true, validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur' }
-          // {max: 8, message: '货品名最多可输入8个字符', trigger:'blur'}
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator: validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '件数最多可输入8个字符', trigger: 'blur' }
-          // { min: 2, max: 8, message: '件数最多可输入8位数', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupVolume': [
           { validator: validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '体积最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupWeight': [
           { validator: validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '重量最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.carriage': [
           { validator: validatePickupNum, mtrigger: 'blur' },
-          { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
+          // { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.remark': [
           { max: 300, message: '备注最多可输入300个字符', trigger: 'blur' }
@@ -219,14 +214,13 @@ export default {
         ],
         'tmsOrderPickup.collectionFee': [
           { validator: validatePickupNum, trigger: 'blur' },
-          { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
+          // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsDriver.truckIdNumber': [
           { max: 8, message: '车牌号最多可输入8个字符' }
-         // {validator: this.validateIsEmpty('车牌号不能为空')},
         ],
         'tmsDriver.driverName': [
-          { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
+          // { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
           { required: true, validator: this.validateIsEmpty('司机姓名不能为空'), trigger: 'blur' }
         ],
         'tmsDriver.driverMobile': [
@@ -236,7 +230,7 @@ export default {
           { max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.arriveTime': [
-          { required: true, validator: this.validateIsEmpty('要求到达时间不能为空'), trigger: ['blur'] }
+          { required: true, validator: this.validateIsEmpty('要求到达时间不能为空'), trigger: 'blur' }
         ],
         'tmsCustomer.customerMobile': [
           { required: true, validator: this.validateIsEmpty('发货人手机号不能为空'), trigger: ['blur'] }

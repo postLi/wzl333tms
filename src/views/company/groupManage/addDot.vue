@@ -45,7 +45,7 @@
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth" prop="checkPhone">
+            <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" maxlength="13">
               <el-input v-model="form.servicePhone" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
@@ -55,16 +55,16 @@
               <el-input v-model="form.networkCode" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="collectionFee">
-              <el-input v-model="form.collectionFee" auto-complete="off"></el-input>
+              <el-input v-model="form.collectionFee" auto-complete="off" maxlength="9"></el-input>
             </el-form-item>
             <el-form-item label="提现基准" :label-width="formLabelWidth" prop="benchmark">
               <el-input v-model="form.benchmark"  auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth" prop="warningQuota">
-              <el-input v-model="form.warningQuota" auto-complete="off"></el-input>
+              <el-input v-model="form.warningQuota" auto-complete="off" maxlength="9"></el-input>
             </el-form-item>
             <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="lockMachineQuota">
-              <el-input v-model="form.lockMachineQuota" auto-complete="off"></el-input>
+              <el-input v-model="form.lockMachineQuota" auto-complete="off" maxlength="9"></el-input>
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
@@ -79,7 +79,7 @@
                   :rows="2"
                   placeholder="不可超300字"
                   v-model="form.remarks"
-                  auto-complete="off"></el-input>
+                  auto-complete="off" maxlength="300"></el-input>
               </el-form-item>
             </div>
           </el-form>
@@ -179,14 +179,14 @@
       }
 
       var benchmark = (rule, value, callback) => {
-        if (!REGEX.NUM_POINT.test(value) && !REGEX.NUM_PERCENTAGE.test(value)) {
-          return callback(new Error('请输入百分比和小数点'))
-        }
-        else if(!REGEX.ONLY_NUMBER.test(value)){
-          return callback(new Error('请输入数字'))
-        }
-        else {
+        if(!value){
           callback()
+        }
+        else if (REGEX.NUM_POINT2.test(value) || REGEX.NUM_PERCENTAGE.test(value)) {
+          return callback()
+        }
+        else{
+          return callback(new Error('请输入百分比或两位小数'))
         }
       }
       var networkCode = (rule, value, callback) => {
@@ -251,7 +251,7 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           responsibleTelephone: [
-            { pattern: REGEX.MOBILE, trigger: ['blur', 'change'] }
+            { pattern: REGEX.MOBILE, message: '请输入正确的电话号码',trigger: ['blur', 'change'] }
           ],
           serviceName: [
             { validator: callBackName, trigger: 'blur' },
@@ -259,8 +259,8 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           servicePhone: [
-            { pattern: REGEX.TELEPHONE, trigger: ['blur', 'change'] },
-            { max: 13, message: '不可超过13个字符', trigger: 'blur' }
+            { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话',trigger: ['blur', 'change'] }
+
           ],
           // 网点代码
           networkCode: [
@@ -273,26 +273,26 @@
           ],
           collectionFee: [
             { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER},
-            { min: 2, message: '最少2个字符', trigger: 'blur' },
-            { max: 9, message: '不可超过9个字符', trigger: 'blur' }
+            // { min: 2, message: '最少2个字符', trigger: 'blur' },
+            // { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           benchmark: [
             { validator: benchmark, trigger: 'blur' },
           ],
           warningQuota: [
             { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER},
-            { min: 2, message: '最少2个字符', trigger: 'blur' },
-            { max: 9, message: '不可超过9个字符', trigger: 'blur' }
+            // { min: 2, message: '最少2个字符', trigger: 'blur' },
+            // { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           lockMachineQuota: [
             { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER},
-            { min: 2, message: '最少2个字符', trigger: 'blur' },
-            { max: 9, message: '不可超过9个字符', trigger: 'blur' }
+            // { min: 2, message: '最少2个字符', trigger: 'blur' },
+            // { max: 9, message: '不可超过9个字符', trigger: 'blur' }
           ],
           remarks: [
             { validator: remarks, trigger: 'blur' },
-            { min: 2, message: '最少2个字符', trigger: 'blur' },
-            { max: 300, message: '不可超过300个字符', trigger: 'blur' }
+            // { min: 2, message: '最少2个字符', trigger: 'blur' },
+            // { max: 300, message: '不可超过300个字符', trigger: 'blur' }
           ]
         },
         dialogVisible: false,

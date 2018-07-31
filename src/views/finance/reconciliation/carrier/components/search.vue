@@ -112,7 +112,7 @@ export default {
       this.searchForm.carrierId = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchCreatTime = []
+      // this.searchCreatTime = []
     },
     carrierItem(item){
       this.searchForm.orgid = item.orgid

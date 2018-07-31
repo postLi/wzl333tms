@@ -130,7 +130,7 @@ export default {
       this.searchForm.customerMobile = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchCreatTime = []
+      // this.searchCreatTime = []
     }
   }
 }
