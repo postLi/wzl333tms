@@ -220,16 +220,19 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-    this.getAllList()
+    // this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    // this.getAllList()
     this.eventBus.$on('updateCurrentData')
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
-      this.searchQuery.vo = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
-      if (!this.searchQuery.vo.arriveOrgid) {
-        this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+       if (obj.batchTypeId === 46) {
+        obj.batchTypeId = undefined
       }
+      this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
+      // if (!this.searchQuery.vo.arriveOrgid) {
+      //   this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+      // }
       this.getAllList()
     },
     doAction(type) {

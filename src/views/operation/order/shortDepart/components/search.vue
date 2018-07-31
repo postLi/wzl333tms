@@ -101,11 +101,11 @@ export default {
         this.searchForm.batchTypeId = undefined
       }
       this.$emit('change', this.searchForm)
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      this.searchForm = Object.assign({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      this.searchForm = Object.assign({}, this.$options.data().searchForm)
       this.searchTime = this.$options.data().searchTime
     }
   }

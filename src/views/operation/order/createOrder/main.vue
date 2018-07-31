@@ -449,6 +449,8 @@ import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
+import { CreatePrintPage } from '@/utils/lodopFuncs'
+import { getPrintOrderItems } from '@/api/operation/print'
 
 export default {
   components: {
@@ -784,7 +786,8 @@ export default {
       // 用来保存外部参数信息
       output: {},
       // 用来缓存当前页面的一些信息
-      dataCache: {}
+      dataCache: {},
+      tmsOrderShipId: '' // 运单保存后返回的运单ID
     }
   },
   computed: {
@@ -1875,6 +1878,7 @@ export default {
               orderManage.postNewOrder(data).then(res => {
                 this.$message.success('成功创建运单！')
                 data.tmsOrderShip.id = res.data
+                this.tmsOrderShipId = res.data
                 // 当为批次列表过来的，不作处理
                 if (!this.output.isbatch) {
                   if (this.output.isPreOrder) {
@@ -1905,11 +1909,12 @@ export default {
         case 'cleanKey':
           this.reset()
           break
-        case 'printLibkey':
+        case 'printLibkey': // 打印标签
           this.$message.info('正在开发中，敬请期待。')
           break
-        case 'printShipKey':
-          this.$message.info('正在开发中，敬请期待。')
+        case 'printShipKey': // 打印运单
+          this.print()
+          // this.$message.info('正在开发中，敬请期待。')
           break
         case 'saveShipKey':
           this.submitForm()
@@ -1918,6 +1923,19 @@ export default {
           this.$message.info('正在开发中，敬请期待。')
           break
       }
+    },
+    print () {
+      if (this.tmsOrderShipId) {
+        let shipId = this.tmsOrderShipId
+        let info = ''
+        getPrintOrderItems(shipId).then(data => {
+          info = data.data
+          CreatePrintPage(info)
+        })
+      }else {
+        this.$message({type: 'warning', message: '请先保存运单，成功保存的运单才可以打印！'})
+      }
+      
     },
     // 右下角设置按钮菜单点击操作
     handleCommand(command) {

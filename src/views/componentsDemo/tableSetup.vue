@@ -22,9 +22,9 @@
       <h5>1/父组件引入：</h5>
       <el-alert title="// html   复制后自己格式化一下~" type="primary" :closable="false">
       	<div v-html class="component-remark-html">
-      		{{htmlMessage1}}<br><br>
-      		{{htmlMessage2}}<br><br>
-      		{{htmlMessage3}}
+      		{{htmlMessage1}} <el-button type="info" icon="el-icon-document" size="mini" plain v-clipboard:copy='htmlMessage1' v-clipboard:success='clipboardSuccess'>copy</el-button><br><br>
+      		{{htmlMessage2}} <el-button type="info" icon="el-icon-document" size="mini" plain v-clipboard:copy='htmlMessage2' v-clipboard:success='clipboardSuccess'>copy</el-button><br><br>
+      		{{htmlMessage3}} <el-button type="info" icon="el-icon-document" size="mini" plain v-clipboard:copy='htmlMessage3' v-clipboard:success='clipboardSuccess'>copy</el-button>
       	</div>
       </el-alert>
       <el-alert title="// script" type="primary" :closable="false">
@@ -55,6 +55,7 @@
       </div>
       </el-alert>
       <h5>2/数据结构：</h5>
+       <el-alert title="" type="primary" :closable="false">
       <div class="component-remark-html">
       	<b>【 tableColumn 】：对应< el-table >上的列column <el-tag size="mini" type="info">Array</el-tag></b><br>
       	label: 数据字段展示名称 <el-tag size="mini" type="info">String</el-tag> <el-tag size="mini">必填项</el-tag><br>
@@ -77,6 +78,7 @@
         <b>【 setupTableVisible 】：表格设置弹出框是否关闭 <el-tag size="mini" type="info">Boolean</el-tag> false-关闭 true-显示</b><br>
         <b>【 tablekey 】：表格视图key， 可以刷新当前table视图 <el-tag size="mini" type="info">Number</el-tag> 可采用Math.random()或者 new Date().getTime()</b><br>
       </div>
+    </el-alert>
     </div>
   </div>
 </template>
@@ -474,6 +476,13 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+    },
+    clipboardSuccess() {
+      this.$message({
+        message: '复制成功',
+        type: 'success',
+        duration: 1500
+      })
     }
   }
 }

@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="运单号" prop="shipSn">
-      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
+      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn"></querySelect>
     </el-form-item>
     <el-form-item label="出发城市">
       <el-input v-model="searchForm.shipFromCityName"></el-input>
@@ -58,7 +58,7 @@ export default {
         shipToCityName: ''
       },
       rules: {
-        shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
+        // shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],

@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
-      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable></selectBatchType>
+      <selectBatchType v-model="searchForm.batchTypeId" clearable type="short_batch_type"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
       <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
@@ -63,7 +63,7 @@ export default {
     return {
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
-        orgid: setDefaultOrgid(),
+        // orgid: setDefaultOrgid(),
         loadTypeId: 38,
         // apportionTypeId: '',
         // arriveOrgid: '',
@@ -83,7 +83,7 @@ export default {
         // arrivedEndDate: ''
       },
       rules: {
-        orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
+        // orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       defaultTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions2: {
@@ -91,25 +91,30 @@ export default {
       }
     }
   },
+  mounted () {
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
-      if (this.searchForm.batchTypeId === 46) {
-        this.searchForm.batchTypeId = undefined
-      }
+      // if (this.searchForm.batchTypeId === 46) {
+      //   this.searchForm.batchTypeId = undefined
+      // }
       if (this.searchTime) {
         this.$set(this.searchForm, 'beginTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(this.searchForm, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
+      this.$set(this.searchForm, 'arriveOrgid', this.orgid)
       this.$emit('change', this.searchForm)
-      this.searchForm = this.$options.data().searchForm
-      this.searchForm.orgid = this.orgid
+        
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      console.log(this.$options.data().searchForm)
-      this.searchForm = this.$options.data().searchForm
+      this.searchForm = Object.assign({}, this.$options.data().searchForm)
       this.searchTime = this.$options.data().searchTime
       this.searchForm.orgid = this.orgid
+      if (this.searchForm.batchTypeId === undefined) {
+        this.searchForm.batchTypeId = 46
+      }
     }
   }
 }
