@@ -12,7 +12,7 @@
             <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
-        <el-table
+        <!-- <el-table
           ref="multipleTable"
           :data="dataset"
           stripe
@@ -182,11 +182,23 @@
             sortable
             >
           </el-table-column>
-        </el-table>
-      </div>
+        </el-table> -->
+          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+        </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
         <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :isCheck="isCheck" :isDeal="isDeal" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
-        <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
       </div>
     </div>
 </template>
@@ -194,10 +206,11 @@
 import SearchForm from './components/search'
 import { PostGetAbnormalList } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
-import TableSetup from './components/tableSetup'
+// import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -223,10 +236,10 @@ export default {
   },
   data() {
     return {
+      tablekey: 0,
       btnsize: 'mini',
       component: 'Send',
       selectInfo: {},
-      loading: true,
       dataset: [],
       isModify: false,
       isCheck: false,
@@ -235,16 +248,138 @@ export default {
       setupTableVisible: false,
       licenseTypes: [],
       selected: [],
-
-              // loading:false,
+      loading: false,
+      total: 0,
+      id: '',
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
         'vo': {
         }
       },
-      total: 0,
-      id: ''
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '异常编号',
+        prop: 'abnormalNo',
+        width: '120',
+        fixed: true
+      }, {
+        label: '登记时间',
+        prop: 'registerTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.registerTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '处理时间',
+        prop: 'disposeTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.disposeTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异常状态',
+        prop: 'abnormalStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异常类型',
+        prop: 'abnormalTypeName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '登记网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '责任网点',
+        prop: 'dutyOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '登记人',
+        prop: 'registerName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '登记金额',
+        prop: 'registerFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异常件数',
+        prop: 'abnormalAmount',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      }, {
+        label: '包装',
+        prop: 'cargoPack',
+        width: '120',
+        fixed: false
+      }, {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异常描述',
+        prop: 'abnormalDescribe',
+        width: '120',
+        fixed: false
+      }, {
+        label: '处理结果',
+        prop: 'disposeResultName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '处理网点',
+        prop: 'disposeOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '处理人',
+        prop: 'disposeName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '处理意见',
+        prop: 'disposeOpinion',
+        width: '120',
+        fixed: false
+      }]
     }
   },
   methods: {

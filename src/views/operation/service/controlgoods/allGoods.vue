@@ -8,7 +8,7 @@
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
-          <el-table
+          <!-- <el-table
             ref="multipleTable"
             :data="dataset"
             stripe
@@ -25,13 +25,6 @@
               type="selection"
               width="50">
             </el-table-column>
-            <!-- <el-table-column
-              fixed
-              sortable
-              prop="shipId"
-              label="序号"
-              width="200">
-            </el-table-column> -->
             <el-table-column
               prop="shipSn"
               sortable
@@ -48,13 +41,6 @@
                 {{ scope.row.status === 1 ? "未放货" : "已放货" }}
               </template>
             </el-table-column>
-            <!-- <el-table-column
-              prop=""
-              sortable
-              width="200"
-              label="放货时间">
-              <template slot-scope="scope">{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-            </el-table-column> -->
             <el-table-column
               prop="shipStatusName"
               label="运单状态"
@@ -230,7 +216,7 @@
               sortable
               >
             </el-table-column>
-            <!--代收款找不到-->
+           
             <el-table-column
               prop="agencyFund"
               label="代收货款"
@@ -288,7 +274,7 @@
               sortable
               >
             </el-table-column>
-            <!-- 这里没有找到对应的字段 -->
+          
             <el-table-column
               label="目的省"
               width="120"
@@ -317,7 +303,7 @@
               sortable
               >
             </el-table-column>
-            <!-- 这里没有找到对应的字段 -->
+          
             <el-table-column
               prop="shipSenderUnit"
               label="发货单位"
@@ -333,7 +319,7 @@
               >
             </el-table-column>
             
-            <!-- 这里没有找到对应的字段 -->
+        
             <el-table-column
               prop="brokerageFee"
               label="回扣"
@@ -401,7 +387,7 @@
               sortable
               >
             </el-table-column>
-            <!--实际提货费-->
+        
             <el-table-column
               prop="shipFee"
               label="实际提货费"
@@ -474,10 +460,22 @@
               >
             </el-table-column>
 
+          </el-table> -->
+          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
           </el-table>
         </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-        <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
       </div>
     </div>
 </template>
@@ -488,8 +486,9 @@ import { GetControl } from '@/api/operation/dashboard'
 import orderManageApi from '@/api/operation/orderManage'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import TableSetup from './components/tableSetup'
-import { objectMerge2 } from '@/utils/index'
+// import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
+import { objectMerge2, parseTime } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 
 export default {
@@ -520,6 +519,10 @@ export default {
       loading: false,
       setupTableVisible: false,
       selected: [],
+      total: 0,
+      id: '',
+      allId: true,
+      tablekey: 0,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 100,
@@ -528,9 +531,323 @@ export default {
         }
 
       },
-      total: 0,
-      id: '',
-      allId: true
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '控货状态',
+        prop: 'status',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.status === 1 ? '未放货' : '已放货'
+        },
+        fixed: false
+      }, {
+        label: '运单状态',
+        prop: 'shipStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '运单标识',
+        prop: 'shipIdentifying',
+        width: '120',
+        slot: (scope) => {
+          return parseShipStatus(scope.row.shipIdentifying)
+        },
+        fixed: false
+      }, {
+        label: '开单网点',
+        prop: 'fromOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '目的网点',
+        prop: 'toOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '120',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人地址',
+        prop: 'shipSenderAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货地址',
+        prop: 'shipReceiverAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '交接方式',
+        prop: 'shipDeliveryMethodName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货物名称',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '品种规格',
+        prop: 'description',
+        width: '120',
+        fixed: false
+      }, {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '件数单价',
+        prop: 'amountFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量单价',
+        prop: 'weightFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '体积单价',
+        prop: 'volumeFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '送货方式',
+        prop: 'shipDeliveryMethodName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单要求',
+        prop: 'shipReceiptRequireName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单份数',
+        prop: 'shipReceiptNum',
+        width: '120',
+        fixed: false
+      }, {
+        label: '代收货款',
+        prop: 'agencyFund',
+        width: '120',
+        fixed: false
+      }, {
+        label: '付款方式',
+        prop: 'shipPayWay',
+        width: '120',
+        fixed: false
+      }, {
+        label: '现付',
+        prop: 'shipNowpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到付',
+        prop: 'shipArrivepayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单付',
+        prop: 'shipReceiptpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '月结',
+        prop: 'shipMonthpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '合计运费',
+        prop: 'shipTotalFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }, {
+        label: '目的省',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        },
+        fixed: false
+      }, {
+        label: '目的市',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        },
+        fixed: false
+      }, {
+        label: '目的区',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        },
+        fixed: false
+      }, {
+        label: '制单人',
+        prop: 'userName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货单位',
+        prop: 'shipSenderUnit',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货单位',
+        prop: 'shipReceiverUnit',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回扣',
+        prop: 'brokerageFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '送货费',
+        prop: 'deliveryFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '代收手续费',
+        prop: 'commissionFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '声明价值',
+        prop: 'productPrice',
+        width: '120',
+        fixed: false
+      }, {
+        label: '保险费',
+        prop: 'insuranceFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '包装费',
+        prop: 'packageFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '提货费',
+        prop: 'pickupFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '上楼费',
+        prop: 'goupstairsFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '实际提货费',
+        prop: 'shipFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '叉车费',
+        prop: 'forkliftFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '实际装卸费',
+        prop: 'realityhandlingFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '报关费',
+        prop: 'customsFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '其他费收入',
+        prop: 'otherfeeIn',
+        width: '120',
+        fixed: false
+      }, {
+        label: '其他费支出',
+        prop: 'otherfeeOut',
+        width: '120',
+        fixed: false
+      }, {
+        label: '税率',
+        prop: 'taxRate',
+        width: '120',
+        fixed: false
+      }, {
+        label: '入仓费',
+        prop: 'housingFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '印花税',
+        prop: 'stampTax',
+        width: '120',
+        fixed: false
+      }]
     }
   },
   methods: {
@@ -616,6 +933,10 @@ export default {
     },
     setTable() {
       this.setupTableVisible = true
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     closeSetupTable() {
       this.setupTableVisible = false
