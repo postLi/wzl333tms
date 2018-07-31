@@ -33,7 +33,7 @@ import fetch from '../../utils/fetch'
  */
 export function getAllDriver(params) {
   return fetch.post('/api-system/system/Driver/v1/DriverList', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || { list: [], total: 0 }
   })
 }
 /**

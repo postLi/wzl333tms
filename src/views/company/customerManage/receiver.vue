@@ -115,7 +115,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange"  /></div> </div>    
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
@@ -138,12 +138,12 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ]),
+      'otherinfo'
+    ]),
     orgid() {
-        console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-      }
+      console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
   },
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
@@ -181,7 +181,7 @@ export default {
       this.loading = true
       return getAllCustomer(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },
@@ -210,14 +210,13 @@ export default {
       if (!this.selected.length && type !== 'add') {
         this.closeAddCustomer()
         this.$message({
-            message: '请选择要操作的项~',
-            type: 'warning'
-          })
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
         return false
       }
 
       console.log('this.selected:', this.selected)
-
 
       switch (type) {
           // 添加客户
@@ -227,61 +226,61 @@ export default {
           this.openAddCustomer()
           break
           // 修改客户信息
-          case 'modify':
+        case 'modify':
           this.isModify = true
           if (this.selected.length > 1) {
-                this.$message({
-                    message: '每次只能修改单条数据~',
-                    type: 'warning'
-                  })
-              }
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          }
           this.selectInfo = this.selected[0]
           this.openAddCustomer()
           break
           // 删除客户
-          case 'delete':
+        case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
                   // =>todo 删除多个
           let ids = this.selected.map(item => {
-                    return item.customerId
-                  })
+            return item.customerId
+          })
           ids = ids.join(',')
 
           this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                  }).then(() => {
-                    deleteSomeCustomerInfo(ids).then(res => {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                          })
-                        this.fetchData()
-                      }).catch(err => {
-                        this.$message({
-                            type: 'info',
-                            message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })
-                      })
-                  }).catch(() => {
-                    this.$message({
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteSomeCustomerInfo(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
                         type: 'info',
-                        message: '已取消删除'
+                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
                       })
-                  })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
           break
           // 导出数据
-          case 'export':
+        case 'export':
           const ids2 = this.selected.map(el => {
-                return el.customerId
-              })
+            return el.customerId
+          })
           getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '即将自动下载!'
-                })
-              })
+            this.$message({
+              type: 'success',
+              message: '即将自动下载!'
+            })
+          })
           break
       }
       // 清除选中状态，避免影响下个操作

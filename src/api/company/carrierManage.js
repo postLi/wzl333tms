@@ -31,7 +31,7 @@ import { exportWithIframe } from '@/utils/index'
  */
 export function getAllCarrier(params) {
   return fetch.post('/api-system/system/carrier/v1/list', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || { list: [], total: 0 }
   })
 }
 /**

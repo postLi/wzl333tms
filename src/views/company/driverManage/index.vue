@@ -188,7 +188,7 @@ export default {
       this.loading = true
       return getAllDriver(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },
