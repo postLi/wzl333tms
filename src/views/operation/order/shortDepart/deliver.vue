@@ -14,7 +14,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-       <!-- 完成并发车：有发车时间和配载时间
+        <!-- 完成并发车：有发车时间和配载时间
             完成配载：只有配载时间 -->
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
           <el-table-column fixed sortable type="selection" width="50">
@@ -97,12 +97,11 @@ export default {
         truckIdNumber: '',
         dirverName: ''
       },
-      tableColumn: [
-        {
+      tableColumn: [{
           label: "序号",
           prop: "id",
           width: "110"
-        },{
+        }, {
           label: "发车批次",
           prop: "batchNo",
           width: "110"
@@ -230,35 +229,17 @@ export default {
           break
         case 'truck': // 发车
           if (isWork) {
-            this.$confirm('此操作将发车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.truck()
-            })
+            this.truck()
           }
           break
         case 'chanelTruck': // 取消发车
           if (isWork) {
-            this.$confirm('此操作将取消发车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.chanelTruck()
-            })
+            this.chanelTruck()
           }
           break
         case 'chanelRepertory': // 取消装车
           if (isWork) {
-            this.$confirm('此操作将取消装车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.chanelRepertory()
-            })
+            this.chanelRepertory()
           }
           break
         case 'edit': // 修改
@@ -361,17 +342,22 @@ export default {
     truck() { // 发车
       this.setData(47)
       if (this.isBatch) {
-        console.log('loadIds', this.commonTruck.loadIds)
-        putTruckDepart(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '发车成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-          })
+        this.$confirm('此操作将发车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          putTruckDepart(this.commonTruck).then(data => {
+              if (data) {
+                this.$message({ type: 'success', message: '发车成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: '操作失败' })
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
       }
@@ -380,16 +366,22 @@ export default {
     chanelTruck() { // 取消发车
       this.setData(48)
       if (this.isBatch) {
-        putTruckChanel(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '取消发车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-          })
+        this.$confirm('此操作将取消发车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          putTruckChanel(this.commonTruck).then(data => {
+              if (data) {
+                this.$message({ type: 'success', message: '取消发车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: '操作失败' })
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '短驳中状态才可以取消发车' })
       }
@@ -398,16 +390,22 @@ export default {
     chanelRepertory() { // 取消装车
       this.setData(47)
       if (this.isBatch) {
-        putTruckLoad(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '取消装车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-          })
+        this.$confirm('此操作将取消装车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          putTruckLoad(this.commonTruck).then(data => {
+              if (data) {
+                this.$message({ type: 'success', message: '取消装车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: '操作失败' })
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '已装车状态才可以取消装车' })
       }

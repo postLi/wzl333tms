@@ -77,11 +77,11 @@
        if (!LODOP) {
          if (isIE) document.write(strCLodopInstall);
          else
-          var conf = confirm("没有安装LODOP云打印插件,确认下载？")
-          if (conf) {
-            window.open(downloadPath)
-          }
-           document.body.innerHTML = strCLodopInstall + document.body.innerHTML;
+           var conf = confirm("没有安装LODOP云打印插件,确认下载？")
+         if (conf) {
+           window.open(downloadPath)
+         }
+         document.body.innerHTML = strCLodopInstall + document.body.innerHTML;
          return false;
        } else {
          if (CLODOP.CVERSION < "3.0.4.3") {
@@ -187,7 +187,7 @@
    // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
    // LODOP.PREVIEW();
 
-   let tableId = createTable(data, columns)  // 重新创建打印视图table
+   let tableId = createTable(data, columns) // 重新创建打印视图table
    LODOP = getLodop();
    LODOP.PRINT_INIT("订货单");
    // LODOP.SET_PRINT_STYLE("FontSize", 10);
@@ -197,37 +197,43 @@
    // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
    LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
    // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-   LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+   LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
    LODOP.PREVIEW();
  };
 
  //创建打印页面    
- export function CreatePrintPage() {
-
+ export function CreatePrintPage(info) {
    LODOP = getLodop();
-   LODOP.PRINT_INITA(9, 7, 2400, 1400, "安发网络-青春物流托运单打印");
-   LODOP.SET_PRINT_PAGESIZE(0, 2400, 1400, "A4");
-   LODOP.ADD_PRINT_SETUP_BKIMG("D:\\resourcesfile\\images\\青春物流.jpg");
-   LODOP.ADD_PRINT_TEXT(57, 47, 100, 25, "广州");
-   LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   LODOP.ADD_PRINT_TEXT(165, 14, 75, 20, "电脑");
-   LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   LODOP.ADD_PRINT_TEXT(38, 366, 109, 20, "2018-7-12");
-   LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   LODOP.ADD_PRINT_TEXT(324, 177, 166, 20, "这里是备注信息");
-   LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   LODOP.ADD_PRINT_TEXT(63, 170, 100, 20, "湖北");
-   LODOP.ADD_PRINT_TEXT(41, 488, 100, 19, "201872808");
-   LODOP.ADD_PRINT_TEXT(85, 93, 81, 20, "方坚");
-   LODOP.ADD_PRINT_TEXT(114, 96, 82, 20, "刘德华");
-   LODOP.ADD_PRINT_TEXT(90, 230, 202, 20, "广东省广州市番禺区市桥街道");
-   LODOP.ADD_PRINT_TEXT(116, 234, 204, 20, "湖北省襄阳市樊城区春天大道2203");
-   LODOP.ADD_PRINT_TEXT(90, 485, 100, 20, "13825160872");
-   LODOP.ADD_PRINT_TEXT(112, 486, 100, 20, "13825160866");
-   LODOP.ADD_PRINT_TEXT(164, 104, 60, 20, "90821");
-   LODOP.ADD_PRINT_TEXT(163, 184, 29, 20, "件");
-   LODOP.ADD_PRINT_TEXT(269, 323, 58, 20, "460元");
-   LODOP.PREVIEW();
+   // let info = "LODOP.PRINT_INITA(9,7,2400,1400,\"青春物流流托运单打印\");LODOP.ADD_PRINT_TEXT(41,488,100,19,\"180701404\");LODOP.ADD_PRINT_TEXT(57,47,100,25,\"云南省,\");LODOP.ADD_PRINT_TEXT(63,170,100,20,\"北京市,\");LODOP.ADD_PRINT_TEXT(85,93,81,20,\"发发\");LODOP.ADD_PRINT_TEXT(114,96,82,20,\"收收A\");LODOP.ADD_PRINT_TEXT(90,230,202,20,\"大街上\");LODOP.ADD_PRINT_TEXT(90,485,100,20,\"15920000002\");LODOP.ADD_PRINT_TEXT(116,234,204,20,\"收货address\");LODOP.ADD_PRINT_TEXT(112,486,100,20,\"15932145601\");LODOP.ADD_PRINT_TEXT(165,14,75,20,\"电脑\");LODOP.ADD_PRINT_TEXT(164,104,60,20,\"1807014043\");LODOP.ADD_PRINT_TEXT(163,184,29,20,\"56\");LODOP.ADD_PRINT_TEXT(269,323,58,20,\"34.00\");LODOP.ADD_PRINT_TEXT(324,177,166,20,\"\");LODOP.ADD_PRINT_TEXT(38,366,109,20,\"2018-07-31\" );"
+   // info.replace(/^\"|\"$/g,"")
+   info.replace(/[\\]/g, "")
+   LODOP.ADD_PRINT_SETUP_BKIMG("D:\\company\\program\\TMS\\print\\运单背景图");
+   eval(info)
+   LODOP.PRINT_SETUP()
+
+   // LODOP.PRINT_INITA(9, 7, 2400, 1400, "安发网络-青春物流托运单打印");
+   // LODOP.SET_PRINT_PAGESIZE(0, 2400, 1400, "A4");
+   // LODOP.ADD_PRINT_SETUP_BKIMG("D:\\resourcesfile\\images\\青春物流.jpg");
+   // LODOP.ADD_PRINT_TEXT(57, 47, 100, 25, "广州");
+   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
+   // LODOP.ADD_PRINT_TEXT(165, 14, 75, 20, "电脑");
+   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
+   // LODOP.ADD_PRINT_TEXT(38, 366, 109, 20, "2018-7-12");
+   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
+   // LODOP.ADD_PRINT_TEXT(324, 177, 166, 20, "这里是备注信息");
+   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
+   // LODOP.ADD_PRINT_TEXT(63, 170, 100, 20, "湖北");
+   // LODOP.ADD_PRINT_TEXT(41, 488, 100, 19, "201872808");
+   // LODOP.ADD_PRINT_TEXT(85, 93, 81, 20, "方坚");
+   // LODOP.ADD_PRINT_TEXT(114, 96, 82, 20, "刘德华");
+   // LODOP.ADD_PRINT_TEXT(90, 230, 202, 20, "广东省广州市番禺区市桥街道");
+   // LODOP.ADD_PRINT_TEXT(116, 234, 204, 20, "湖北省襄阳市樊城区春天大道2203");
+   // LODOP.ADD_PRINT_TEXT(90, 485, 100, 20, "13825160872");
+   // LODOP.ADD_PRINT_TEXT(112, 486, 100, 20, "13825160866");
+   // LODOP.ADD_PRINT_TEXT(164, 104, 60, 20, "90821");
+   // LODOP.ADD_PRINT_TEXT(163, 184, 29, 20, "件");
+   // LODOP.ADD_PRINT_TEXT(269, 323, 58, 20, "460元");
+   // LODOP.PREVIEW();
  };
 
  // 保存为xls文件
@@ -260,6 +266,28 @@
      };
    } catch (err) {}
  };
+ // 创建打印机列表
+ export function CreatePrinterList() {
+   let iPrinterCount = LODOP.GET_PRINTER_COUNT()
+   let arr = new Array()
+   for (let i = 0; i < iPrinterCount; i++) {
+    let item = {
+      label: LODOP.GET_PRINTER_NAME(i),
+      value: String(i)
+    }
+    arr.push(item)
+   }
+   return arr
+   // if (document.getElementById('PrinterList').innerHTML != "") return;
+   // LODOP = getLodop();
+   // var iPrinterCount = LODOP.GET_PRINTER_COUNT();
+   // for (var i = 0; i < iPrinterCount; i++) {
+   //   var option = document.createElement('option');
+   //   option.innerHTML = LODOP.GET_PRINTER_NAME(i);
+   //   option.value = i;
+   //   document.getElementById('PrinterList').appendChild(option);
+   // };
+ }
 
  function createTable(data, columns) { // 打印导出创建表格视图
    let div = document.createElement('div')
@@ -289,7 +317,7 @@
      for (let j = 0; j < columns.length; j++) {
        let td = tbodyTr.insertCell()
        td.innerHTML = data[k][columns[j].prop]
-       td.style.width =  data[k][columns[j].width] + 'px'
+       td.style.width = data[k][columns[j].width] + 'px'
      }
    }
    let tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id

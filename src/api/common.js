@@ -67,3 +67,11 @@ export function getSelectType(type = '', orgId) {
     return res.data || []
   })
 }
+
+/**
+ * 下载文件
+ */
+export function downloadFile() {
+  let fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
+  return fileUrl
+} 

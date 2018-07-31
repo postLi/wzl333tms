@@ -101,7 +101,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="110">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" search="driverName" type="driver" label="driverName" :remote="true" :size="btnsize" />
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="id" search="name" label="name" />
             </template>
           </el-table-column>
         </el-table>
@@ -239,6 +239,9 @@ export default {
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
+        this.formModel.szDtoList.forEach(e => {
+          e.agent = this.otherinfo.name
+        })
       })
     },
     initDetailDtoList() {
@@ -342,7 +345,7 @@ export default {
     },
     plusItem() {
       let data = {
-        agent: '',
+        agent: this.otherinfo.name,
         alipayAccount: '',
         bankAccount: '',
         bankAccountName: '',

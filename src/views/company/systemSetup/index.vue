@@ -185,19 +185,33 @@
         </el-collapse-item>
         <el-collapse-item name="setup4" title="打印设置">
           <div class="clearfix setup-table">
-            <div class="setup-left">打印设置</div>
+            <div class="setup-left">打印机设置</div>
             <div class="setup-right">
               <el-form-item>
                 运单
-                <el-input v-model="form.printSetting.ship" placeholder=""></el-input>
+                <selectPrinter v-model="form.printSetting.ship"></selectPrinter>
               </el-form-item>
               <el-form-item>
                 标签
-                <el-input v-model="form.printSetting.label" placeholder=""></el-input>
+                <selectPrinter v-model="form.printSetting.label"></selectPrinter>
               </el-form-item>
               <el-form-item>
                 清单
-                <el-input v-model="form.printSetting.inventory" placeholder=""></el-input>
+                <selectPrinter v-model="form.printSetting.inventory"></selectPrinter>
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="downloadFile" icon="el-icon-download" type="primary" plain>下载插件</el-button>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="clearfix setup-table">
+            <div class="setup-left">打印内容设置</div>
+            <div class="setup-right">
+              <el-form-item>
+                <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
               </el-form-item>
             </div>
           </div>
@@ -208,16 +222,23 @@
     <div class="system-setup-footer">
       <el-button type="primary" @click="saveData" :disabled="nochange">保存</el-button>
     </div>
+    <!-- <printSetOrder></printSetOrder> -->
   </div>
 </template>
 <script>
 import { getAllSetting, putSetting, putResetSetting } from '@/api/company/systemSetup'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
+import { CreatePrinterList } from '@/utils/lodopFuncs'
+import selectPrinter from '@/components/selectPrinter/index'
+import { downloadFile } from '@/api/common'
+import printSetOrder from './components/printSetOrder'
 
 export default {
   components: {
-    SelectType
+    SelectType,
+    selectPrinter,
+    printSetOrder
   },
   computed: {
     ...mapGetters([
@@ -445,6 +466,16 @@ export default {
     })
   },
   methods: {
+    doAction (type) {
+      switch (type) {
+        case 'printSetOrder': // 打印运单设置
+        this.$message({type: 'warning', message: '功能尚在开发中'})
+        break
+        case 'printSetLi': // 打印标签设置
+        this.$message({type: 'warning', message: '功能尚在开发中'})
+        break
+      }
+    },
     getInfo(module, type = '') {
       return getAllSetting({
         orgid: this.otherinfo.orgid,
@@ -515,6 +546,9 @@ export default {
           this.form.shipPageFunc.shipFieldValue[i] = '0'
         }
       }
+    },
+    downloadFile () { // 下载系统所需插件
+     window.open(downloadFile())
     }
   },
   watch: {

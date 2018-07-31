@@ -583,7 +583,13 @@
       </table>
       </div>
     </div>
-
+    <!-- 打印区域 -->
+    <el-row :gutter="12">
+      <el-col :span="12" :offset="10" style="margin-top: 20px;">
+        <el-button @click="doAction('printLibkey')" icon="el-icon-printer" type="success" >打印标签</el-button>
+        <el-button @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" >打印运单</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -596,6 +602,10 @@ import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
+// 打印插件
+import { CreatePrintPage } from '@/utils/lodopFuncs'
+// 获取打印位置参数接口
+import { getPrintOrderItems, getPrintLibItems } from '@/api/operation/print'
 
 export default {
   components: {
@@ -900,6 +910,20 @@ export default {
       this.form.tmsOrderShipInfo = this.resetObj(this.form.tmsOrderShipInfo)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
       // this.setOrderDate()
+    },
+    doAction (type) {
+      switch (type) {
+        case 'printLibkey':
+        getPrintLibItems(this.form.tmsOrderShipInfo.id).then(data => {
+          CreatePrintPage(data)
+        })
+        break
+        case 'printShipKey':
+          getPrintOrderItems(this.form.tmsOrderShipInfo.id).then(data => {
+            CreatePrintPage(data)
+          })
+        break
+      }
     }
   }
 }

@@ -787,7 +787,8 @@ export default {
       output: {},
       // 用来缓存当前页面的一些信息
       dataCache: {},
-      tmsOrderShipId: '' // 运单保存后返回的运单ID
+      tmsOrderShipId: '', // 运单保存后返回的运单ID,
+      isSavePrint: false // false-不保存并打印 true-保存并打印
     }
   },
   computed: {
@@ -1895,6 +1896,9 @@ export default {
                   this.batchSaveList[this.currentBatch].issave = true
                   this.goNextEditBatch()
                 }
+                if (this.isSavePrint) { // 判断是否要 保存并打印
+                  this.print() // 执行成功后打印运单
+                }
               }).catch(err => {
                 this.$message.error('创建失败，原因：' + err.text)
               })
@@ -1918,9 +1922,12 @@ export default {
           break
         case 'saveShipKey':
           this.submitForm()
+          this.isSavePrint = false // false-不保存并打印，只保存
           break
         case 'savePrintKey':
-          this.$message.info('正在开发中，敬请期待。')
+          this.submitForm()
+          this.isSavePrint = true // true-保存并打印
+          // this.$message.info('正在开发中，敬请期待。')
           break
       }
     },
@@ -1929,8 +1936,7 @@ export default {
         let shipId = this.tmsOrderShipId
         let info = ''
         getPrintOrderItems(shipId).then(data => {
-          info = data.data
-          CreatePrintPage(info)
+          CreatePrintPage(data)
         })
       }else {
         this.$message({type: 'warning', message: '请先保存运单，成功保存的运单才可以打印！'})

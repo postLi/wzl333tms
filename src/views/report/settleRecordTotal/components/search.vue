@@ -14,11 +14,9 @@
         <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.id">
         </el-option>
       </el-select>
-      <!-- <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
-        <template slot-scope="{item}">
-          {{ item.customerName }} : {{ item.customerMobile }}
-        </template>
-      </querySelect> -->
+    </el-form-item>
+    <el-form-item label="发货方" prop="senderId">
+    <querySelect v-model="searchForm.senderId" valuekey="customerId" search="customerName" type="sender" label="customerName" :remote="true"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}"></querySelect>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>

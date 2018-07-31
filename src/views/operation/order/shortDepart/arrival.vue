@@ -226,7 +226,7 @@ export default {
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
-       if (obj.batchTypeId === 46) {
+      if (obj.batchTypeId === 46) {
         obj.batchTypeId = undefined
       }
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
@@ -249,13 +249,7 @@ export default {
       switch (type) {
         case 'truck': // 短驳到车
           if (isWork) {
-            this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.truck()
-            })
+            this.truck()
           }
           break
         case 'repertory': // 短驳入库
@@ -265,24 +259,12 @@ export default {
           break
         case 'chanelTruck': // 取消到车
           if (isWork) {
-            this.$confirm('此操作将取消到车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.chanelTruck()
-            })
+            this.chanelTruck()
           }
           break
         case 'chanelRepertory': // 取消入库
           if (isWork) {
-            this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.chanelRepertory()
-            })
+            this.chanelRepertory()
           }
           break
         case 'printPaper':
@@ -330,15 +312,22 @@ export default {
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'typeId', 49) // 49为短驳到车，54为干线到车
       if (this.loadInfo.bathStatusName === '短驳中') {
-        postConfirmToCar(data).then(data => {
-            this.$message({ type: 'success', message: '短驳到车操作成功' })
-            this.getAllList()
-            this.clearInfo()
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-            this.clearInfo()
-          })
+        this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          postConfirmToCar(data).then(data => {
+              this.$message({ type: 'success', message: '短驳到车操作成功' })
+              this.getAllList()
+              this.clearInfo()
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: '操作失败' })
+              this.clearInfo()
+            })
+        })
+
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
         this.clearInfo()
@@ -358,15 +347,22 @@ export default {
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'loadType', 38) // 装载类型：38-短驳
       if (this.loadInfo.bathStatusName === '已到车') {
-        postCancelLoad(data).then(data => {
-            this.$message({ type: 'success', message: '取消到车成功' })
-            this.getAllList()
-            this.clearInfo()
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-            this.clearInfo()
-          })
+        this.$confirm('此操作将取消到车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          postCancelLoad(data).then(data => {
+              this.$message({ type: 'success', message: '取消到车成功' })
+              this.getAllList()
+              this.clearInfo()
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: '操作失败' })
+              this.clearInfo()
+            })
+        })
+
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消到车' })
         this.clearInfo()
@@ -378,15 +374,21 @@ export default {
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       if (this.loadInfo.bathStatusName === '已入库') {
-        postCancelPut(data).then(data => {
-            this.$message({ type: 'success', message: '取消入库成功' })
-            this.getAllList()
-            this.clearInfo()
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-            this.clearInfo()
-          })
+        this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          postCancelPut(data).then(data => {
+              this.$message({ type: 'success', message: '取消入库成功' })
+              this.getAllList()
+              this.clearInfo()
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: '操作失败' })
+              this.clearInfo()
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消入库' })
         this.clearInfo()

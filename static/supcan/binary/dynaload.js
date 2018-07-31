@@ -63,7 +63,7 @@ if($B.ppapi) {
 //private:
 function bldStr(ctlType, id, para, height)
 {
- var ctlver = '1.0.110.0';
+ var ctlver = '1.0.110.2';
 
  //取得组件包的绝对路径(假设和dynaload.js部署在同一个目录)
  var SupcanPath="", arrScript = document.getElementsByTagName("script");
