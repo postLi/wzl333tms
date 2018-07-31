@@ -750,11 +750,12 @@ export default {
       height: 136px;
     }
     .el-upload-dragger{
-      width: 234px;
-      height: 136px;
+      width: 232px;
+      height: 134px;
     }
     .el-upload--picture-card{
       width:234px;
+      height: 134px;
       line-height: 30px;
       // height:136px;
       

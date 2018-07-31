@@ -36,6 +36,7 @@
             prop="id"
             label="序号"
             width="200">
+            <template slot-scope="scope">{{ ((searchForms.currentPage - 1)*searchForms.pageSize) + scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed

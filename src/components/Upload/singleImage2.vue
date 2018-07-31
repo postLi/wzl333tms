@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'hideuploadbtn': (filelist.length >= limit) || disabled}">
+    <div class="box_container" :class="{'hideuploadbtn': (filelist.length >= limit) || disabled}">
       <el-upload
         class="image-uploader"
         drag
@@ -233,7 +233,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
     @import "src/styles/mixin.scss";
     
-    .upload-container {
+    .box_container {
         width: 100%;
         position: relative;
         @include clearfix;
@@ -295,10 +295,11 @@ export default {
             margin-top: 10px;
             margin-bottom: 5px;
             font-size: 12px;
-            line-height:43px;
+            line-height:30px;
         }
         .upload__tip{
             font-size:12px;
+            line-height:30px;
             color:#999;
         }
         .upload__title{
