@@ -63,6 +63,7 @@ export default {
   },
   data() {
     return {
+      selectInfoList: [],
       total: 0,
       btnsize: 'mini',
       setupTableVisible: false,
@@ -251,10 +252,18 @@ export default {
           this.edit()
           break
         case 'export': // 导出
-          SaveAsFile(this.dataList, this.tableColumn)
+          SaveAsFile({
+            data: this.selectInfoList.length ? this.selectInfoList : this.dataList,
+            columns: this.tableColumn,
+            name: '短驳发车'
+          })
           break
         case 'print': // 打印
-          PrintInFullPage(this.dataList, this.tableColumn)
+          PrintInFullPage({
+            data: this.selectInfoList.length ? this.selectInfoList : this.dataList,
+            columns: this.tableColumn,
+            name: '短驳发车'
+          })
           break
       }
     },
@@ -268,6 +277,7 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
+      this.selectInfoList = Object.assign([], list)
       if (list.length === 1) {
         this.selected = Object.assign([], list)
         this.isDisBtn = false

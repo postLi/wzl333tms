@@ -180,15 +180,10 @@
    LODOP.PRINT_DESIGN();
  };
  //打印表格
- export function PrintInFullPage(data, columns) {
-   // LODOP = getLodop();
-   // LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页表格");
-   // LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
-   // LODOP.ADD_PRINT_TABLE("2%", "1%", "96%", "98%", document.getElementById(id).innerHTML);
-   // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-   // LODOP.PREVIEW();
+ export function PrintInFullPage(obj) {
 
-   let tableId = createTable(data, columns) // 重新创建打印视图table
+   // let tableId = createTable(data, columns) // 重新创建打印视图table
+   let tableId = createTable(obj) // 重新创建打印视图table
    LODOP = getLodop();
    LODOP.PRINT_INIT("订货单");
    // LODOP.SET_PRINT_STYLE("FontSize", 10);
@@ -197,6 +192,22 @@
    LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
    // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
    LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
+   // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+   LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
+   LODOP.PREVIEW();
+ };
+ // 打印结算单
+ export function PrintSettlement(obj) {
+   let tableId = createSettlement(obj) // 重新创建打印视图table
+   LODOP = getLodop();
+   LODOP.PRINT_INIT("订货单");
+   // LODOP.SET_PRINT_STYLE("FontSize", 10);
+   // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+   // LODOP.SET_PRINT_STYLE("Bold", 1);
+   LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
+   // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+   // LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
+   LODOP.ADD_PRINT_HTM("5%", "10%", "80%", "95%", document.getElementById(tableId).innerHTML);
    // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
    LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
    LODOP.PREVIEW();
@@ -211,35 +222,14 @@
    LODOP.ADD_PRINT_SETUP_BKIMG("D:\\company\\program\\TMS\\print\\运单背景图");
    eval(info)
    LODOP.PRINT_SETUP()
-
-   // LODOP.PRINT_INITA(9, 7, 2400, 1400, "安发网络-青春物流托运单打印");
-   // LODOP.SET_PRINT_PAGESIZE(0, 2400, 1400, "A4");
-   // LODOP.ADD_PRINT_SETUP_BKIMG("D:\\resourcesfile\\images\\青春物流.jpg");
-   // LODOP.ADD_PRINT_TEXT(57, 47, 100, 25, "广州");
-   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   // LODOP.ADD_PRINT_TEXT(165, 14, 75, 20, "电脑");
-   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   // LODOP.ADD_PRINT_TEXT(38, 366, 109, 20, "2018-7-12");
-   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   // LODOP.ADD_PRINT_TEXT(324, 177, 166, 20, "这里是备注信息");
-   // LODOP.SET_PRINT_STYLEA(0, "FontSize", 11);
-   // LODOP.ADD_PRINT_TEXT(63, 170, 100, 20, "湖北");
-   // LODOP.ADD_PRINT_TEXT(41, 488, 100, 19, "201872808");
-   // LODOP.ADD_PRINT_TEXT(85, 93, 81, 20, "方坚");
-   // LODOP.ADD_PRINT_TEXT(114, 96, 82, 20, "刘德华");
-   // LODOP.ADD_PRINT_TEXT(90, 230, 202, 20, "广东省广州市番禺区市桥街道");
-   // LODOP.ADD_PRINT_TEXT(116, 234, 204, 20, "湖北省襄阳市樊城区春天大道2203");
-   // LODOP.ADD_PRINT_TEXT(90, 485, 100, 20, "13825160872");
-   // LODOP.ADD_PRINT_TEXT(112, 486, 100, 20, "13825160866");
-   // LODOP.ADD_PRINT_TEXT(164, 104, 60, 20, "90821");
-   // LODOP.ADD_PRINT_TEXT(163, 184, 29, 20, "件");
-   // LODOP.ADD_PRINT_TEXT(269, 323, 58, 20, "460元");
    // LODOP.PREVIEW();
  };
 
  // 保存为xls文件
- export function SaveAsFile(data, columns) {
-   let tableId = createTable(data, columns) // 重新创建打印视图table
+ export function SaveAsFile(obj) {
+
+   // let tableId = createTable(data, columns) // 重新创建打印视图table
+   let tableId = createTable(obj) // 重新创建打印视图table
    LODOP = getLodop();
    LODOP.PRINT_INIT("数据表格");
    // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
@@ -251,7 +241,12 @@
    LODOP.SET_SAVE_MODE("CenterHorizontally", true); //Excel文件的页面设置：页面水平居中
    LODOP.SET_SAVE_MODE("CenterVertically", true); //Excel文件的页面设置：页面垂直居中
    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到） 
-   LODOP.SAVE_TO_FILE("新文件名.xls");
+   if (obj.name) {
+    LODOP.SAVE_TO_FILE(obj.name + ".xls");
+  }else {
+    LODOP.SAVE_TO_FILE("新文件名.xls");
+  }
+   
  };
 
  //检查当前是否有装lodop插件
@@ -272,25 +267,19 @@
    let iPrinterCount = LODOP.GET_PRINTER_COUNT()
    let arr = new Array()
    for (let i = 0; i < iPrinterCount; i++) {
-    let item = {
-      label: LODOP.GET_PRINTER_NAME(i),
-      value: String(i)
-    }
-    arr.push(item)
+     let item = {
+       label: LODOP.GET_PRINTER_NAME(i),
+       value: String(i)
+     }
+     arr.push(item)
    }
    return arr
-   // if (document.getElementById('PrinterList').innerHTML != "") return;
-   // LODOP = getLodop();
-   // var iPrinterCount = LODOP.GET_PRINTER_COUNT();
-   // for (var i = 0; i < iPrinterCount; i++) {
-   //   var option = document.createElement('option');
-   //   option.innerHTML = LODOP.GET_PRINTER_NAME(i);
-   //   option.value = i;
-   //   document.getElementById('PrinterList').appendChild(option);
-   // };
  }
 
- function createTable(data, columns) { // 打印导出创建表格视图
+ function createTable(obj) { // 打印导出创建表格视图
+   let data = obj.data // 数据表格
+   let columns = obj.columns // 表格设置列
+
    let div = document.createElement('div')
    let table = document.createElement('table')
    let thead = document.createElement('thead')
@@ -335,3 +324,62 @@
    createTableComplate = true
    return tableId
  };
+
+ function createSettlement(obj) { // 打印创建结算单视图
+   console.log(obj)
+   let tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+   let div = document.createElement('div')
+   let h3 = document.createElement('b') // 标题【结算收款单】
+   let infoDiv = document.createElement('div')
+   let table = document.createElement('table')
+   let thead = document.createElement('thead')
+   let tbody = document.createElement('tbody')
+   // 添加表头标题
+   let theadStr = '<tr><th rowspan="2" style="background-color:#f5f7fa;">序号</th><th rowspan="2" style="background-color:#f5f7fa;width:50%;">费用</th><th colspan="10" style="background-color:#f5f7fa;">&nbsp;</th></tr>' +
+     '<tr style="background-color:#f5f7fa;"><th style="background-color:#f5f7fa;">千</th><th style="background-color:#f5f7fa;">百</th><th style="background-color:#f5f7fa;">十</th><th style="background-color:#f5f7fa;">万</th><th style="background-color:#f5f7fa;">千</th><th style="background-color:#f5f7fa;">百</th><th style="background-color:#f5f7fa;">十</th><th style="background-color:#f5f7fa;">元</th><th style="background-color:#f5f7fa;">角</th><th style="background-color:#f5f7fa;">元</th></tr>'
+   h3.innerHTML = '结 算 收 款 单'
+   let tbodyStr = '' // 添加数据行
+   for (let i = 0; i < obj.detailDtoList2.length; i++) {
+     tbodyStr += '<tr style="min-height: 36px;">'
+     tbodyStr += '<td>' + (i + 1) + '</td>' + '<td>' + obj.detailDtoList2[i].dataName + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].tenMillion ? obj.detailDtoList2[i].tenMillion : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].million ? obj.detailDtoList2[i].million : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].oneHundrenThousand ? obj.detailDtoList2[i].oneHundrenThousand : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].tenThousand ? obj.detailDtoList2[i].tenThousand : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].thousand ? obj.detailDtoList2[i].thousand : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].hundren ? obj.detailDtoList2[i].hundren : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].ten ? obj.detailDtoList2[i].ten : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].yuan ? obj.detailDtoList2[i].yuan : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].jiao ? obj.detailDtoList2[i].jiao : '') + '</td>' +
+       '<td>' + (obj.detailDtoList2[i].fen ? obj.detailDtoList2[i].fen : '') + '</td>'
+     tbodyStr += '</tr>'
+   }
+   // 添加表尾合计
+   tbodyStr += '<tr style="height:36px;"><td>合计</td><td style="text-align:left;">大写：' + obj.amountMessage + '</td>' +
+     '<td colspan="10" style="text-align:left;">小写：' + obj.amount + ' 元</td>'
+   // 结算单信息
+   let infoStr = '<p style="margin:0;padding:0;">单据号<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
+     obj.settlementSn + '</label></p><p style="margin:0;padding:0;">发生时间<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
+     obj.settlementTime + '</label></p><p style="margin:0;padding:0;">经办人<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
+     obj.settlementBy + '</label></p>'
+
+   div.setAttribute("id", tableId)
+   div.setAttribute("style", "text-align:center;width:100%;font-family:'微软雅黑';font-size:10px")
+   h3.setAttribute("style", "border-bottom: 2px solid #333;margin-left:calc(50% - 80px);font-size:1.6rem;")
+   table.setAttribute("style", "width: 100%;text-align:center;font-size:0.8rem;font-family:'微软雅黑';margin-top:0.8rem;")
+   thead.setAttribute("style", "background-color: '#EEEEEE';font-weight:400;")
+   table.setAttribute("border", "1px solid #999")
+   table.style.borderCollapse = 'collapse'
+   infoDiv.setAttribute("style", "width:100%;display: inline-flex;flex-direction: row;line-height: 1.3rem;margin-top: 2rem;margin-bottom: 1rem;justify-content: space-between;font-size:1rem;")
+   thead.innerHTML = theadStr
+   tbody.innerHTML = tbodyStr
+   infoDiv.innerHTML = infoStr
+   div.appendChild(h3)
+   div.appendChild(infoDiv)
+   table.appendChild(thead)
+   table.appendChild(tbody)
+   div.appendChild(table)
+
+   document.body.appendChild(div)
+   return tableId
+ }

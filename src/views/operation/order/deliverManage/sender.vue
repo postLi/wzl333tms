@@ -123,11 +123,11 @@ export default {
         }
       },
       tableColumn: [{
-          label: "ID",
+          label: "序号",
           width: "80",
           fixed: true,
           slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1)*this.searchQuery.pageSize) + scope.$index + 1
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
         },
         {
@@ -272,10 +272,18 @@ export default {
           }
           break
         case 'export': // 导出
-          SaveAsFile(this.infoList, this.tableColumn)
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
         case 'print': // 打印
-          PrintInFullPage(this.infoList, this.tableColumn)
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
       }
       // 清除选中状态，避免影响下个操作

@@ -278,13 +278,19 @@ export default {
         case 'printPaper':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
-        case 'printList':
-          PrintInFullPage(this.infoList, this.tableColumn)
-          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+       case 'export': // 导出
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '短驳到货'
+          })
           break
-        case 'export':
-          SaveAsFile(this.infoList, this.tableColumn)
-          // this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'printList': // 打印
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '短驳到货'
+          })
           break
       }
     },

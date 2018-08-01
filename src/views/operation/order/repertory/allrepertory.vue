@@ -534,11 +534,19 @@ export default {
           break
         case 'export': // 导出
           this.closeColorpicker()
-          SaveAsFile(this.repertoryArr, this.tableColumn)
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.repertoryArr,
+            columns: this.tableColumn,
+            name: '全部库存'
+          })
           break
         case 'print': // 打印
           this.closeColorpicker()
-          PrintInFullPage(this.repertoryArr, this.tableColumn)
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.repertoryArr,
+            columns: this.tableColumn,
+            name: '全部库存'
+          })
           break
       }
     },

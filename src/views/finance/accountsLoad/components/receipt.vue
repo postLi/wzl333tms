@@ -116,7 +116,7 @@
     </el-form>
     <div slot="footer">
       <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-document">保存</el-button>
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
+      <el-button type="primary" @click="print" :size="btnsize" icon="el-icon-printer">保存并打印</el-button>
       <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">取 消</el-button>
     </div>
   </el-dialog>
@@ -129,6 +129,7 @@ import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
 import querySelect from '@/components/querySelect/index'
+import { PrintSettlement } from '@/utils/lodopFuncs'
 export default {
   components: {
     querySelect
@@ -248,6 +249,12 @@ export default {
     })
   },
   methods: {
+    print () {
+      let data = Object.assign(this.formModel)
+      this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
+      PrintSettlement(data)
+      this.submitForm('formModel')
+    },
     init() {
       this.loading = false
     },

@@ -1,7 +1,8 @@
 <template>
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="receiptDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules">
-      <div class="receiptDialog_head">
+      <div id="settlementWaybill">
+        <div class="receiptDialog_head">
         <div class="receiptDialog_head_item">
           <label>单据号</label>
           <el-input v-model="formModel.settlementSn" placeholder="请输入" :size="btnsize" disabled></el-input>
@@ -46,6 +47,7 @@
             </el-table-column>
           </el-table-column>
         </el-table>
+      </div>
       </div>
       <div class="receiptDialog_todo">
         <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
@@ -113,7 +115,7 @@
     </el-form>
     <div slot="footer">
       <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-document">保存</el-button>
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
+      <el-button type="primary" @click="print" :size="btnsize" icon="el-icon-printer">保存并打印</el-button>
       <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">取 消</el-button>
     </div>
   </el-dialog>
@@ -126,6 +128,7 @@ import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
 import querySelect from '@/components/querySelect/index'
+import { PrintSettlement } from '@/utils/lodopFuncs'
 export default {
   components: {
     querySelect
@@ -227,6 +230,12 @@ export default {
     })
   },
   methods: {
+    print () {
+      let data = Object.assign(this.formModel)
+      this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
+      PrintSettlement(data)
+      this.submitForm('formModel')
+    },
     init() {
       this.loading = false
     },

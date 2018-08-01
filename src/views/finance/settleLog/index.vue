@@ -5,17 +5,17 @@
   </div>
 </template>
 <script>
-import settleLog from './settleLog'
+import settleLog2 from './settleLog'
 import settleLogDetail from './settleLogDetail'
 export default {
   name: 'settleLog',
   components: {
-    settleLog,
+    settleLog2,
     settleLogDetail
   },
   data() {
     return {
-      component: 'settleLog'
+      component: 'settleLog2'
     }
   },
   mounted() {
@@ -26,7 +26,7 @@ export default {
       if (this.$route.path.indexOf('settleLogDetail') !== -1) {
         this.component = 'settleLogDetail'
       } else {
-        this.component = 'settleLog'
+        this.component = 'settleLog2'
       }
     }
   }
