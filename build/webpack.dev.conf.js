@@ -7,10 +7,25 @@ var baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+var os = require('os')
 
 function resolveApp(relativePath) {
   return path.resolve(relativePath);
 }
+
+//获取内网ip
+// 其它方式 https://blog.csdn.net/binggoogle/article/details/52005847
+function getLocalIp(){
+  var map = [];  
+  var ifaces = os.networkInterfaces();
+  for (var dev in ifaces) {  
+      if(ifaces[dev][1].address.indexOf('192.168') != -1) {  
+          return ifaces[dev][1].address;  
+      }  
+  }    
+  return map;
+}
+
 
 // add hot-reload related code to entry chunks
 
@@ -32,7 +47,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
-    host:  config.dev.host,
+    host:  getLocalIp() || config.dev.host,
     port:  config.dev.port,
     open: config.dev.autoOpenBrowser,
     overlay: config.dev.errorOverlay
