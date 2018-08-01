@@ -19,28 +19,28 @@
         </el-form-item>
         
         <el-form-item label="可载重" prop="truckLoad">
-          <el-input v-model.number="form.truckLoad" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLoad" v-numberOnly maxlength="18" auto-complete="off">
             <template slot="append">吨</template>
           </el-input>
         </el-form-item>
         
         <el-form-item label="可载体积" prop="truckVolume">
-          <el-input v-model.number="form.truckVolume" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckVolume" v-numberOnly maxlength="18" auto-complete="off">
             <template slot="append">方</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车长" prop="truckLength">
-          <el-input v-model.number="form.truckLength" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLength" v-numberOnly maxlength="18" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车宽" prop="truckWidth">
-          <el-input v-model.number="form.truckWidth" maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckWidth" v-numberOnly maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车高" prop="truckHeight">
-          <el-input v-model.number="form.truckHeight" maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckHeight" v-numberOnly maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
@@ -56,7 +56,7 @@
             v-model="form.truckRegisterDate"
             align="right"
             type="date"
-            :picker-options="pickOption2"
+            :picker-options="pickOption"
             placeholder="选择日期"
             value-format="timestamp"
             >
@@ -161,6 +161,7 @@ export default {
     ])
   },
   data() {
+    const _this = this
     // const _this = this
 
     // const validateFormMobile = function(rule, value, callback) {
@@ -182,6 +183,7 @@ export default {
     }
 
     return {
+
       form: {
         'dirverMobile': '', // 司机电话 11
         'driverId': '', // 司机ID
@@ -245,13 +247,22 @@ export default {
       departments: [],
       groups: [],
       inited: false,
-
-      pickOption2: {
-        firstDayOfWeek: 1
-      },
       cacheDriverList: {},
-      DriverList: []
-
+      DriverList: [],
+      pickOption: {
+        firstDayOfWeek: 1,
+        disabledDate(time) {
+          // 小于终止日
+          return _this.form.truckRegisterDate ? time.getTime() > _this.form.truckRegisterDate : false
+        }
+      },
+      pickOption2: {
+        firstDayOfWeek: 1,
+        disabledDate(time) {
+          // 大于起始日
+          return _this.form.truckScrapDate ? time.getTime() < _this.form.truckScrapDate : false
+        }
+      }
     }
   },
   mounted() {

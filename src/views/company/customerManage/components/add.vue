@@ -69,7 +69,7 @@
           <el-input v-model.trim="form.bankCardNumber" v-numberOnly maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="detailedAddress">
-          <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
+          <el-input type="textarea" v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
     </template>

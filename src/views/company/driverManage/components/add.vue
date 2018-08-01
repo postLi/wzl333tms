@@ -30,7 +30,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.bankCardNumber" v-numberOnly maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行名称" prop="bankName">
           <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
@@ -42,7 +42,7 @@
           <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.driverRemarks"></el-input>
+          <el-input type="textarea" maxlength="125" v-model.trim="form.driverRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <el-form-item class="clearfix uploadcard">
@@ -119,13 +119,13 @@ export default {
       }
     }
 
-    const validateFormMobile = function(rule, value, callback) {
-      if (REGEX.MOBILE.test(value)) {
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
+    // const validateFormMobile = function(rule, value, callback) {
+    //   if (REGEX.MOBILE.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
 
     const validateFormNumber = function(rule, value, callback) {
       console.log('rule:', rule)
@@ -133,6 +133,15 @@ export default {
       callback()
     }
 
+    const validatedriverCardid = function(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('请输入身份证号'))
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+        callback()
+      } else {
+        callback(new Error('身份证号码只能输入英文和数字'))
+      }
+    }
     return {
       form: {
         'bankCardNumber': '', // 银行卡号 20
@@ -162,8 +171,11 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          { required: true, message: '请输入手机号码' }
           // { validator: validateFormNumber, trigger: 'change'}
+        ],
+        driverCardid: [
+          { validator: validatedriverCardid, trigger: 'change' }
         ]
       },
       popTitle: '新增司机',

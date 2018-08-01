@@ -254,7 +254,7 @@ export default {
           })
           ids = ids.join(',')
 
-          this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
+          this.$confirm('确定要删除 ' + deleteItem + ' 司机吗？', '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning'
