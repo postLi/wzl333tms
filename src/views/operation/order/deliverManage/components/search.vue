@@ -2,8 +2,6 @@
   <!-- <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix"> -->
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="送货时间:">
-      <!-- <el-date-picker v-model="searchTime" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
-      </el-date-picker> -->
       <el-date-picker
             v-model="searchTime"
             type="daterange"
@@ -100,7 +98,7 @@ export default {
         // orgId: '',
         driverName: '',
         truckIdNumber: '', //车牌号
-        batchTypeId: '', //批次状态
+        batchTypeId: 56, //批次状态
         batchNo: '', //发车批次
         loadTypeId: 40, //配载类型
         endTime: '', //结束时间
@@ -130,15 +128,15 @@ export default {
         this.searchForm.loadStartTime =  parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
         this.searchForm.loadEndTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
-      if (this.searchForm.batchTypeId === 56) {
-        this.searchForm.batchTypeId = undefined
-      }
+      // if (this.searchForm.batchTypeId === 56) {
+      //   this.searchForm.batchTypeId = undefined
+      // }
       this.$emit('change', this.searchForm)
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      // this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      this.searchForm = Object.assign({}, this.$options.data().searchForm)
       this.searchTime = this.$options.data().searchTime
     }
   }

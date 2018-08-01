@@ -83,10 +83,12 @@ export default {
         }
       },
       tableColumn: [{
-          label: "序号",
-          prop: "id",
-          width: "180",
-          fixed: true
+          label: "ID",
+          width: "80",
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1)*this.searchQuery.pageSize) + scope.$index + 1
+          }
         },
         {
           label: "发货批次",
@@ -130,6 +132,12 @@ export default {
         {
           label: "目的网点",
           prop: "endOrgName",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "发车网点",
+          prop: "orgName",
           width: "120",
           fixed: false
         },
@@ -226,9 +234,9 @@ export default {
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
-      if (obj.batchTypeId === 46) {
-        obj.batchTypeId = undefined
-      }
+      // if (obj.batchTypeId === 46) {
+      //   obj.batchTypeId = undefined
+      // }
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
       // if (!this.searchQuery.vo.arriveOrgid) {
       //   this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
@@ -362,7 +370,6 @@ export default {
               this.clearInfo()
             })
         })
-
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消到车' })
         this.clearInfo()
@@ -396,6 +403,9 @@ export default {
     },
     getAllList() { // 获取短驳到货列表
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 46) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postLoadList(this.searchQuery).then(data => {
         if (data) {
           this.infoList = data.list

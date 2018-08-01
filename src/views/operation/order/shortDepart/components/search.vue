@@ -91,17 +91,20 @@ export default {
       }
     }
   },
+  mounted () {
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
       if (this.searchTime) {
         this.searchForm.loadStartTime = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
         this.searchForm.loadEndTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
-      if (this.searchForm.batchTypeId === 46) {
-        this.searchForm.batchTypeId = undefined
-      }
+      // if (this.searchForm.batchTypeId === 46) {
+      //   this.searchForm.batchTypeId = undefined
+      // }
       this.$emit('change', this.searchForm)
-      this.searchForm = Object.assign({}, this.$options.data().searchForm)
+      // this.searchForm = Object.assign({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

@@ -28,7 +28,7 @@
             </td>
             <th>可载重量</th>
             <td>
-              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
@@ -43,7 +43,7 @@
             </td>
             <th>要求到达时间</th>
             <td>
-              <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>

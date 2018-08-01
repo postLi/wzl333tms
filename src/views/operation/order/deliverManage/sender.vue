@@ -124,9 +124,11 @@ export default {
       },
       tableColumn: [{
           label: "ID",
-          prop: "id",
-          width: "180",
-          fixed: true
+          width: "80",
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1)*this.searchQuery.pageSize) + scope.$index + 1
+          }
         },
         {
           label: "送货批次",
@@ -211,6 +213,9 @@ export default {
     fetchAllData() {
       this.loading = true
       this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
+      if (this.searchQuery.vo.batchTypeId === 56) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.infoList = data.list
         this.total = data.total

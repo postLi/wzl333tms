@@ -69,7 +69,7 @@ export function getSelectType(type = '', orgId) {
 }
 
 /**
- * 下载文件
+ * 下载常用插件
  */
 export function downloadFile() {
   let fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'

@@ -50,6 +50,7 @@ import TableSetup from '@/components/tableSetup'
 import { postDetailList, postDetailCancel } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -480,7 +481,7 @@ export default {
     setTable() {},
     doAction(type) {
       let isShow = false
-      if (this.selectedList.length !== 1) {
+      if (this.selectedList.length !== 1 && type !== 'export' && type !== 'print') {
         isShow = false
         this.$message({ type: 'warning', message: '请选择一条数据' })
       } else {
@@ -509,15 +510,15 @@ export default {
           }
           break
         case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待！' })
+          SaveAsFile(this.dataList, this.tableColumn)
           break
         case 'print':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待！' })
+          PrintInFullPage(this.dataList, this.tableColumn)
           break
       }
     },
     cancelCount() {
-      this.$confirm('确定要取消结算【 ' + this.selectedList[0].flowId + ' 】吗？', '提示', {
+      this.$confirm('确定要取消结算【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

@@ -113,18 +113,18 @@ export default {
       loadId: '',
       detailList: [],
       query: {
-        "arriveOrgid": 0,
-        "batchNo": "",
-        "batchTypeId": 0,
-        "departureEndTime": "",
-        "departureStartTime": "",
-        "dirverName": "",
-        "loadEndTime": "",
-        "loadId": 0,
-        "loadStartTime": "",
-        "loadTypeId": 0,
-        "orgId": 0,
-        "truckIdNumber": ""
+        arriveOrgid: 0,
+        batchNo: "",
+        batchTypeId: 0,
+        departureEndTime: "",
+        departureStartTime: "",
+        dirverName: "",
+        loadEndTime: "",
+        loadId: 0,
+        loadStartTime: "",
+        loadTypeId: 0,
+        orgId: 0,
+        truckIdNumber: ""
       }
     }
   },

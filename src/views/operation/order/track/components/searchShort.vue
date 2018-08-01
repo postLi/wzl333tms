@@ -57,9 +57,9 @@ export default {
     return {
       searchForm: {
         loadTypeId: 38,
-        orgId: 0
+        orgId: 0,
         // batchNo: '',
-        // batchTypeId: '',
+        batchTypeId: 46,
         // deliveryBatchType: '',
         // dirverName: '',
         // endTime: '',
@@ -83,6 +83,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
       if (this.searchForm.truckIdNumber) {
@@ -91,20 +94,19 @@ export default {
        if (this.searchForm.dirverName) {
         this.searchForm.dirverName = this.searchForm.dirverName.driverName
       }
-      if (this.searchForm.batchTypeId === 46) {
-        this.searchForm.batchTypeId = undefined
-      }
+      // if (this.searchForm.batchTypeId === 46) {
+      //   this.searchForm.batchTypeId = undefined
+      // }
       if (this.searchTime) {
         this.searchForm.startTime =  parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
         this.searchForm.endTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
       this.$emit('change', this.searchForm)
-      this.searchForm = Object.assign({}, this.searchData)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchTime = []
-      this.searchForm = Object.assign({}, this.searchData)
+      this.searchTime = this.$options.data().searchTime
+      this.searchForm = Object.assign({}, this.$options.data().searchForm)
     }
   }
 }

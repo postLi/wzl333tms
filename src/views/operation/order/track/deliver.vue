@@ -92,12 +92,14 @@ export default {
       tableColumn: [{
           label: "送货批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
           prop: "batchTypeName",
-          width: "120"
+          width: "120",
+          fixed: true
         },
         {
           label: "送货时间",
@@ -310,6 +312,9 @@ export default {
     },
     getAllList() {
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 56) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postTrackList(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list

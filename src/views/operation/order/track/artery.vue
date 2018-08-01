@@ -83,12 +83,14 @@ export default {
       tableColumn: [{
           label: "发车批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
           prop: "batchTypeName",
-          width: "120"
+          width: "120",
+          fixed: true
         },
         {
           label: "车牌号",
@@ -108,9 +110,17 @@ export default {
         {
           label: "发车时间",
           prop: "departureTime",
-          width: "120",
+          width: "180",
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: "配载时间",
+          prop: "loadTime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -218,14 +228,6 @@ export default {
           width: "120"
         },
         {
-          label: "配载时间",
-          prop: "loadTime",
-          width: "120",
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
           label: "配载人",
           prop: "username",
           width: "120"
@@ -295,6 +297,9 @@ export default {
     },
     getAllList() {
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 51) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postTrackList(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list

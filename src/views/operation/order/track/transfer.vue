@@ -88,7 +88,26 @@ export default {
           // truckIdNumber: ''
         }
       },
-      tableColumn: [{
+      tableColumn: [
+      {
+          label: "中转单号",
+          prop: "oddNumbers",
+          width: "120",
+          fixed: true
+        },
+      {
+          label: "运单号",
+          prop: "shipSn",
+          width: "120",
+          fixed: true
+        },
+        {
+          label: "运单状态",
+          prop: "shipStatusName",
+          width: "120",
+          fixed: true
+        },
+         {
           label: "开单网点",
           prop: "shipFromOrgid",
           width: "110"
@@ -108,21 +127,7 @@ export default {
           prop: "arrivalMobile",
           width: "120"
         },
-        {
-          label: "运单状态",
-          prop: "shipStatusName",
-          width: "120"
-        },
-        {
-          label: "运单号",
-          prop: "shipSn",
-          width: "120"
-        },
-        {
-          label: "中转单号",
-          prop: "oddNumbers",
-          width: "120"
-        },
+        
         // {
         //   label: "中转批次",
         //   prop: "batchTypeId",
@@ -131,7 +136,7 @@ export default {
         {
           label: "开单时间",
           prop: "createTime",
-          width: "120",
+          width: "180",
           slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -139,7 +144,7 @@ export default {
         {
           label: "中转时间",
           prop: "transferTime",
-          width: "120",
+          width: "180",
           slot: (scope) => {
             return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }

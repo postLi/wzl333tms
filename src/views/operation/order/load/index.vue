@@ -397,6 +397,7 @@ export default {
   },
   created() {
     this.setLoadTypeId()
+    console.log(this.$route)
   },
   activated() {
     this.init()

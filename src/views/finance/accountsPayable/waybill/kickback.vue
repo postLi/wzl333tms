@@ -47,6 +47,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -92,7 +93,7 @@ export default {
       {
         label: '运单号',
         prop: 'shipSn',
-        width: '150',
+        width: '120',
         fixed: true
       },
       {
@@ -288,7 +289,6 @@ export default {
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
-        console.log(this.dataList)
       })
     },
     setTable() {},
@@ -298,8 +298,10 @@ export default {
           this.count()
           break
         case 'export':
+          SaveAsFile(this.dataList, this.tableColumn)
           break
         case 'print':
+          PrintInFullPage(this.dataList, this.tableColumn)
           break
       }
     },

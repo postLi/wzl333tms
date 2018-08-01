@@ -1,5 +1,6 @@
 <template>
   <el-select  ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+        <slot name="head"></slot>
         <el-option
         v-for="item in openGroups"
         :key="item.id"

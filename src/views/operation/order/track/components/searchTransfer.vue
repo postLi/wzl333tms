@@ -90,7 +90,7 @@ export default {
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchTime = []
+      this.searchTime = this.$options.data().searchTime
       this.searchForm = Object.assign({}, this.searchData)
     }
   }

@@ -92,12 +92,14 @@ export default {
       tableColumn: [{
           label: "发货批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
-          prop: "bathStatusName",
-          width: "120"
+          prop: "batchTypeName",
+          width: "120",
+          fixed: true
         },
         {
           label: "车牌号",
@@ -233,6 +235,9 @@ export default {
     },
     getAllList() {
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 46) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postTrackList(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list

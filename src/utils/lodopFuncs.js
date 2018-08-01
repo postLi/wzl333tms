@@ -1,6 +1,7 @@
  var CreatedOKLodop7766 = null;
  var createTableComplate = false
- var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
+ // var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
+ let downloadPath = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
 
  //====判断是否需要安装CLodop云打印服务器:====
  export function needCLodop() {

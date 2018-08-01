@@ -1,11 +1,22 @@
 <template>
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <el-form-item label="发车时间">
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+    <!-- <el-form-item label="发车时间">
       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
+    </el-form-item> -->
+    <el-form-item label="送货时间:">
+      <el-date-picker
+            v-model="searchTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions"
+            end-placeholder="结束日期">
+          </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态" prop="batchTypeId">
-      <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type" clearable></selectBatchType>
+      <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次">
       <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
@@ -57,9 +68,9 @@ export default {
     return {
       searchForm: {
         loadTypeId: 39,
-        orgId: 0
+        orgId: 0,
         // batchNo: '',
-        // batchTypeId: '',
+        batchTypeId: 51,
         // deliveryBatchType: '',
         // dirverName: '',
         // endTime: '',
@@ -79,6 +90,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.onSubmit()
+  },
   methods: {
     onSubmit() {
       if (this.searchForm.truckIdNumber) {
@@ -87,20 +101,20 @@ export default {
       if (this.searchForm.dirverName) {
         this.searchForm.dirverName = this.searchForm.dirverName.driverName
       }
-      if (this.searchForm.batchTypeId === 51) {
-        this.searchForm.batchTypeId = undefined
-      }
+      // if (this.searchForm.batchTypeId === 51) {
+      //   this.searchForm.batchTypeId = undefined
+      // }
       if (this.searchTime) {
         this.searchForm.startTime =  parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
         this.searchForm.endTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
       this.$emit('change', this.searchForm)
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      // this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
-      this.searchTime = []
-      this.searchForm = objectMerge2({}, this.$options.data().searchForm)
+      this.searchTime = this.$options.data().searchTime
+      this.searchForm = Object.assign({}, this.$options.data().searchForm)
     }
   }
 }

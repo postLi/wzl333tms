@@ -47,6 +47,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -221,8 +222,10 @@ export default {
           this.count()
           break
         case 'export':
+          SaveAsFile(this.dataList, this.tableColumn)
           break
         case 'print':
+          PrintInFullPage(this.dataList, this.tableColumn)
           break
       }
     },

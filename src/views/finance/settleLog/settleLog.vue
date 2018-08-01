@@ -54,6 +54,7 @@ import TableSetup from '@/components/tableSetup'
 import { postFindLowList, postCancelSettlement } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -206,7 +207,7 @@ export default {
     setTable() {},
     doAction(type) {
       let isShow = false
-      if (this.selectedList.length !== 1 && type !== 'income' && type !== 'expandtiure') {
+      if (this.selectedList.length !== 1 && type !== 'income' && type !== 'expandtiure' && type !== 'export' && type !== 'print') {
         isShow = false
         this.$message({ type: 'warning', message: '请选择一条数据' })
       } else {
@@ -221,7 +222,7 @@ export default {
           break
         case 'cancelCount': // 取消结算
           if (isShow) {
-            this.$confirm('确定要取消【 ' + this.selectedList[0].flowId + ' 】吗？', '提示', {
+            this.$confirm('确定要取消【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
@@ -241,10 +242,10 @@ export default {
           }
           break
         case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待！' })
+          SaveAsFile(this.dataList, this.tableColumn)
           break
         case 'print':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待！' })
+          PrintInFullPage(this.dataList, this.tableColumn)
           break
       }
     },

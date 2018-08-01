@@ -47,6 +47,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postFindAbnormalList } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -312,8 +313,10 @@ export default {
           this.count()
           break
         case 'export':
+          SaveAsFile(this.dataList, this.tableColumn)
           break
         case 'print':
+          PrintInFullPage(this.dataList, this.tableColumn)
           break
       }
     },
