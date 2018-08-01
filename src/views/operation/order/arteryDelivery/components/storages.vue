@@ -150,7 +150,7 @@
                     fixed
                     sortable
                     label="序号"
-                    width="80">
+                    width="60">
                       <template slot-scope="scope">{{  scope.$index + 1 }}</template>
                     </el-table-column>
                     <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点">
@@ -159,47 +159,57 @@
                     </el-table-column>
                     <el-table-column prop="childShipSn" sortable width="120" label="子运单号">
                     </el-table-column>
+                    <el-table-column prop="loadAmount" sortable width="100" label="应到件数">
+                    </el-table-column>
+                    <!--actualWeight   loadWeight-->
+                    <el-table-column sortable prop="loadWeight" width="100" label="应到重量" >
+                    </el-table-column>
+                    <!--actualVolume   loadVolume-->
+                    <el-table-column label="应到体积" width="100" prop="loadVolume" sortable >
+                    </el-table-column>
+
+
                       <!--actualAmount  loadAmount-->
-                      <el-table-column prop="actualAmount" sortable width="120" label="实到件数" v-if="isModify">
+                      <el-table-column prop="actualAmount" sortable width="100" label="实到件数" v-if="isModify">
                       </el-table-column>
                       <!--actualWeight   loadWeight-->
-                      <el-table-column sortable prop="actualWeight" width="120" label="实到重量" v-if="isModify">
+                      <el-table-column sortable prop="actualWeight" width="100" label="实到重量" v-if="isModify">
                       </el-table-column>
                       <!--actualVolume   loadVolume-->
-                      <el-table-column label="实到体积" width="120" prop="actualVolume" sortable v-if="isModify">
+                      <el-table-column label="实到体积" width="100" prop="actualVolume" sortable v-if="isModify">
                       </el-table-column>
 
 
-                      <el-table-column prop="actualAmount" sortable width="120" label="实到件数" v-if="!isModify">
+                      <el-table-column prop="actualAmount" sortable width="100" label="实到件数" v-if="!isModify" class="actuaNum">
                         <template slot-scope="scope">
                           <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
                         </template>
                       </el-table-column>
-                      <el-table-column sortable prop="actualWeight" width="120" label="实到重量" v-if="!isModify">
+                      <el-table-column sortable prop="actualWeight" width="100" label="实到重量" v-if="!isModify">
                         <template slot-scope="scope">
                           <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
                         </template>
                       </el-table-column>
-                      <el-table-column sortable prop="actualVolume" width="120" label="实到体积" v-if="!isModify">
+                      <el-table-column sortable prop="actualVolume" width="100" label="实到体积" v-if="!isModify">
                         <template slot-scope="scope">
                           <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
                         </template>
                       </el-table-column>
-                    <el-table-column prop="loadAmount" label="配载件数" width="120" sortable>
+                    <el-table-column prop="loadAmount" label="配载件数" width="100" sortable>
                     </el-table-column>
-                    <el-table-column sortable prop="loadWeight" width="110" label="配载重量">
+                    <el-table-column sortable prop="loadWeight" width="100" label="配载重量">
                     </el-table-column>
-                    <el-table-column prop="loadVolume" label="配载体积" width="120" sortable>
+                    <el-table-column prop="loadVolume" label="配载体积" width="100" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipFromCityName" label="出发城市" width="120" sortable>
+                    <el-table-column prop="shipFromCityName" label="出发城市" width="100" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipToCityName" label="到达城市" width="120" sortable>
+                    <el-table-column prop="shipToCityName" label="到达城市" width="100" sortable>
                     </el-table-column>
                     <el-table-column prop="shipSenderName" label="发货人" width="100" sortable>
                     </el-table-column>
                     <el-table-column prop="shipSenderMobile" label="发货人电话" width="120" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipReceiverName" label="收货人" width="120" sortable>
+                    <el-table-column prop="shipReceiverName" label="收货人" width="100" sortable>
                     </el-table-column>
                     <el-table-column prop="shipReceiverMobile" label="收货人电话" width="120" sortable>
                     </el-table-column>
@@ -207,7 +217,7 @@
                     </el-table-column>
                     <el-table-column prop="shipGoodsSn" label="货号" width="130" sortable>
                     </el-table-column>
-                    <el-table-column prop="shipRemarks" label="运单备注" width="120" sortable>
+                    <el-table-column prop="shipRemarks" label="运单备注" width="110" sortable>
                     </el-table-column>
                   </el-table>
                 </div>
@@ -678,8 +688,10 @@ export default {
       let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
       let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
       let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      console.log("实到",curAmount);
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
+
         this.detailList[newVal].actualAmount = curloadAmount
         this.detailList[newVal].actualWeight = curloadWeight
         this.detailList[newVal].actualVolume = curloadVolume
@@ -752,6 +764,7 @@ export default {
             e.actualAmount = e.loadAmount
             e.actualWeight = e.loadWeight
             e.actualVolume = e.loadVolume
+
           })
         })
       })
@@ -1013,6 +1026,27 @@ export default {
       .el-table td,
       .el-table th {
         padding: 5px 0;
+      }
+      .actuaNum{
+
+      }
+      .el-table__row {
+        .el-table_2_column_43{
+          .el-input__inner{
+            border-color: #3e9ff1;
+          }
+        }
+        .el-table_2_column_44{
+          .el-input__inner{
+            border-color: #3e9ff1;
+          }
+        }
+        .el-table_2_column_45{
+          .el-input__inner{
+            border-color: #3e9ff1;
+          }
+        }
+
       }
     }
   }

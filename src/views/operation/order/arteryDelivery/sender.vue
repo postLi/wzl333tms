@@ -88,7 +88,7 @@
           <el-table-column
             sortable
             prop="dirverName"
-            width="130"
+            width="150"
             label="司机名称">
           </el-table-column>
           <el-table-column
@@ -107,14 +107,14 @@
           </el-table-column>
 
           <el-table-column
-            prop="truckLoad"
+            prop="actualWeight"
             label="实到重量"
             width="110"
             sortable
             >
           </el-table-column>
           <el-table-column
-            prop="truckVolume"
+            prop="actualVolume"
             label="实到体积"
             width="110"
             sortable
@@ -340,7 +340,6 @@ export default {
   methods: {
     fetchAllCustomer () {
       this.loading = true
-      // this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
       return postArtList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
@@ -351,8 +350,6 @@ export default {
       this.fetchAllCustomer()
     },
     handlePageChange (obj) {
-      // Object.assign(this.searchQuery, obj)
-      // this.fetchData()
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },

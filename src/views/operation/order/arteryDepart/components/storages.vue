@@ -142,37 +142,37 @@
                     fixed
                     sortable
                     label="序号"
-                    width="100">
+                    width="60">
                       <template slot-scope="scope">{{  scope.$index + 1 }}</template>
                     </el-table-column>
                     <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点" >
                     </el-table-column>
                     <el-table-column prop="shipSn" width="150" sortable label="运单号">
                     </el-table-column>
-                    <el-table-column prop="childShipId" sortable width="180" label="子运单号">
+                    <el-table-column prop="childShipId" sortable width="120" label="子运单号">
                     </el-table-column>
-                    <el-table-column prop="loadAmount" label="配载件数" width="120" sortable>
+                    <el-table-column prop="loadAmount" label="配载件数" width="100" sortable>
                     </el-table-column>
-                    <el-table-column sortable prop="loadWeight" width="110" label="配载重量">
+                    <el-table-column sortable prop="loadWeight" width="100" label="配载重量">
                     </el-table-column>
-                    <el-table-column prop="loadVolume" label="配载体积" width="120" sortable>
+                    <el-table-column prop="loadVolume" label="配载体积" width="100" sortable>
                     </el-table-column>
                     <!--actualAmount-->
-                    <el-table-column prop="loadAmount" sortable width="120" label="库存件数">
+                    <el-table-column prop="loadAmount" sortable width="100" label="库存件数">
                     </el-table-column>
                     <!--actualWeight-->
-                    <el-table-column sortable prop="loadWeight" width="120" label="库存重量">
+                    <el-table-column sortable prop="loadWeight" width="100" label="库存重量">
                     </el-table-column>
                     <!--actualVolume-->
-                    <el-table-column label="库存体积" width="120" prop="loadVolume" sortable>
+                    <el-table-column label="库存体积" width="100" prop="loadVolume" sortable>
                     </el-table-column>
-                    <el-table-column prop="loadAmount" sortable width="120" label="运单件数">
+                    <el-table-column prop="loadAmount" sortable width="100" label="运单件数">
                     </el-table-column>
                     <!--actualWeight-->
-                    <el-table-column sortable prop="loadWeight" width="120" label="运单重量">
+                    <el-table-column sortable prop="loadWeight" width="100" label="运单重量">
                     </el-table-column>
                     <!--actualVolume-->
-                    <el-table-column label="运单体积" width="120" prop="loadVolume" sortable>
+                    <el-table-column label="运单体积" width="100" prop="loadVolume" sortable>
                     </el-table-column>
                     <el-table-column prop="shipFromCityName" label="出发城市" width="120" sortable>
                     </el-table-column>

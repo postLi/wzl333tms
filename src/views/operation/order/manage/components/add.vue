@@ -97,7 +97,7 @@
               </td>
               <td>
                 <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityName">
-                  <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
+                  <querySelect @change="selectToCity" show="select" search="longAddr" type="city"  v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
                 </el-form-item>
               </td>
               <td>

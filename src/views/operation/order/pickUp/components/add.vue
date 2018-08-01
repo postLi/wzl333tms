@@ -40,7 +40,7 @@
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way"  class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="到达城市" class="order_toCityCode">
-            <querySelect @change="selectToCity" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
+            <querySelect @change="selectToCity" show="select" search="longAddr" type="city"  v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="备注" prop="tmsOrderPickup.remark" class="order_remark">
             <el-input v-model="form.tmsOrderPickup.remark" type="textarea" auto-complete="off" :disabled="isDbclick" maxlength="300"></el-input>
