@@ -149,6 +149,10 @@ export default {
             const nexturl = this.$route.query.tourl
             this.$router.push({ path: nexturl && nexturl.indexOf('/login') === -1 ? nexturl : '/' })
           }).catch(() => {
+            this.$message({
+              message: '系统提示用户不存在~',
+              type: 'warning'
+            })
             this.loading = false
           })
         } else {

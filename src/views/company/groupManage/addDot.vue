@@ -40,7 +40,8 @@
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
-              <SelectCity :city="form.city" @change="getCity" :disabled="form.status===31" />
+              <!--<SelectCity :city="form.city" @change="getCity" :disabled="form.status===31" />-->
+              <querySelect filterable show="select" @change="getCity" search="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" />
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
@@ -103,13 +104,15 @@
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
   import SelectCity from '@/components/selectCity/index'
+  import querySelect from '@/components/querySelect/index'
   import { REGEX } from '../../../utils/validate'
 
   export default {
     components: {
       popRight,
       SelectTree,
-      SelectCity
+      SelectCity,
+      querySelect
     },
     props: {
       popVisible: {
