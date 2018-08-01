@@ -1,5 +1,5 @@
 <template>
-  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs" @focus="focus" @blur="blur">
+  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" :filterable="filterable" v-bind="$attrs" @focus="focus" @blur="blur">
     <slot name="head"></slot>
     <template v-for="item in listdata">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
@@ -69,11 +69,11 @@ export default {
   props: {
     focus: {
       type: Function,
-      default: ()=>{}
+      default: () => {}
     },
     blur: {
       type: Function,
-      default: ()=>{}
+      default: () => {}
     },
     orgid: {
       type: [Number, String],
@@ -98,13 +98,17 @@ export default {
     filterfn: {
       type: Function,
       default: (el) => el
+    },
+    filterable: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
-    listdata(){
+    listdata() {
       return this.types.filter(this.filterfn)
     }
   },
@@ -160,6 +164,9 @@ export default {
         getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(cb)
       }
     },
+    setHightLight(str, key) {
+      return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
+    },
     change(item) {
       this.$emit('change', item)
       this.$emit('input', this.val)
@@ -167,3 +174,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.highlight{
+    font-style: normal;
+    color: #f00;
+  }
+</style>

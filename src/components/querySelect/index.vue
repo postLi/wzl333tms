@@ -37,7 +37,7 @@
     v-model="handlevalue"
     :popper-class="'query-input-autocomplete ' + setCustomCss"
     :filterable="filterable"
-    @change="() => {$emit('focus'),handleSelect()}"
+    @change="(val) => {$emit('focus'),handleSelect(val)}"
     @focus="()=>{$emit('focus'),initData()}"
     @blur="()=>{$emit('blur')}"
     :value-key="showkey"
@@ -55,14 +55,24 @@
       :value="item[valuekey]">
         <slot name="select-remote" v-bind:item="item">
           <!-- 回退的内容 -->
-          {{ item[showkey] }}
+          <template v-if="type === 'sender' || type === 'receiver'">
+            <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+          </template>
+          <template v-else-if="type === 'city'">
+            <div class="query-input-city-info">
+              <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
+            </div>
+          </template>
+          <template v-else>
+            <span v-html="highLight(item, showkey)"></span>
+          </template>
         </slot>
     </el-option>
   </el-select>
   <el-select
     v-if="show === 'select' && !remote"
     v-model="handlevalue"
-    @change="() => {$emit('change'),handleSelect()}"
+    @change="(val) => {$emit('change'),handleSelect(val)}"
     @focus="()=>{$emit('focus'),initData()}"
     @blur="()=>{$emit('blur')}"
     :value-key="showkey"
@@ -79,7 +89,17 @@
       :value="item[valuekey]">
         <slot name="select" v-bind:item="item">
           <!-- 回退的内容 -->
-          {{ item[showkey] }}
+          <template v-if="type === 'sender' || type === 'receiver'">
+            <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+          </template>
+          <template v-else-if="type === 'city'">
+            <div class="query-input-city-info">
+              <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
+            </div>
+          </template>
+          <template v-else>
+            <span v-html="highLight(item, showkey)"></span>
+          </template>
         </slot>
     </el-option>
   </el-select>
@@ -392,7 +412,7 @@ export default {
       },
       canchangeparam: true,
       // 缓存最近一次的请求数据
-      lastQuery: '*',
+      lastQuery: '\\*',
       lastRequest: []
     }
   },
@@ -520,6 +540,9 @@ export default {
             // 如果有自定义的搜索函数，则调用其进行判断
           if (typeof this.searchFn === 'function') {
             return this.searchFn(el, queryString)
+          }
+          if (queryString === '') {
+            return true
           }
             // 字符串  布尔值 空值 数值
             // 模糊匹配 全等于

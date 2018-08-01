@@ -127,7 +127,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :sizes="[2,5,10,20,100]" :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
@@ -178,7 +178,7 @@ export default {
       selected: [],
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 2,
+        'pageSize': 100,
         'vo': {
           'orgid': 1,
           customerType: 1,
@@ -272,9 +272,9 @@ export default {
               this.fetchData()
             }).catch(err => {
               this.$message({
-                        type: 'info',
-                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                      })
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
             })
           }).catch(() => {
             this.$message({

@@ -40,7 +40,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
             <el-form-item prop="tmsOrderShip.shipFromCityCode">
-              <querySelect :getinput="true" search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderShip.shipFromCityCode" :remote="true" />
+              <querySelect show='select' filterable :getinput="true" search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderShip.shipFromCityCode" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -48,7 +48,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
             <el-form-item prop="tmsOrderShip.shipToCityCode">
-              <querySelect :getinput="true" @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderShip.shipToCityCode" :remote="true" />
+              <querySelect show='select' filterable :getinput="true" @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderShip.shipToCityCode" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -531,29 +531,29 @@ export default {
       activeNames: ['1'],
       rules2: {
         'tmsOrderShip.shipSn': [
-          { validator: this.validateIsEmpty('订单号不能为空！'), trigger: 'change' },
-          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] },
-          { validator: validateOrderNum, trigger: 'change' }
+          { validator: this.validateIsEmpty('订单号不能为空！') },
+          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母' },
+          { validator: validateOrderNum }
         ],
         'tmsOrderShip.shipToCityCode': [
-          { validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['change'] }
+          { validator: this.validateIsEmpty('到达城市不能为空'), trigger: 'blur' }
         ],
         'sender.customerName': [
-          { validator: this.validateIsEmpty('发货人不能为空'), trigger: 'change' }
+          { validator: this.validateIsEmpty('发货人不能为空') }
         ],
         'sender.customerMobile': [
-          { validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'change' },
-          { validator: validateMobile, trigger: 'change' }
+          { validator: this.validateIsEmpty('发货人联系电话不能为空') },
+          { validator: validateMobile }
         ],
         'receiver.customerName': [
-          { validator: this.validateIsEmpty('收货人不能为空'), trigger: 'change' }
+          { validator: this.validateIsEmpty('收货人不能为空') }
         ],
         'receiver.customerMobile': [
-          { validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'change' },
-          { validator: validateMobile, trigger: 'change' }
+          { validator: this.validateIsEmpty('收货人联系电话不能为空') },
+          { validator: validateMobile }
         ],
         'tmsOrderShip.shipCustomerNumber': [
-          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母', trigger: ['change'] }
+          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '只能输入数字跟字母' }
         ]
       },
       // 用来判断是否有填体积或者重量
@@ -1645,7 +1645,6 @@ export default {
         // 匹配系统设置里的运费合计规则
         for (const i in el) {
           if (this.config.shipFee[i] === '1') {
-            console.log('被加入的费用：', i, el[i])
             total = getTotal(total, el[i])
           }
         }
@@ -1663,7 +1662,12 @@ export default {
       this.form.tmsOrderShip.shipArrivepayFee = '0.00'
       this.form.tmsOrderShip.shipMonthpayFee = '0.00'
       this.form.tmsOrderShip.shipReceiptpayFee = '0.00'
-
+      // 处理切换为免费后的计算逻辑
+      if (key === 103) {
+        this.form.tmsOrderShip.shipTotalFee = 0
+      } else {
+        this.getTotalFee()
+      }
       switch (key) {
         // 现付
         case 76:
@@ -1687,6 +1691,7 @@ export default {
           break
         // 免费
         case 103:
+
           this.form.tmsOrderShip.shipTotalFee = '0.00'
           break
         // 多笔付
@@ -1839,8 +1844,6 @@ export default {
                 }
                 return */
 
-
-
               data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
               data.tmsOrderShip.shipStatus = this.orderData.tmsOrderShip.shipStatus
               console.log('change Order:', data)
@@ -1931,17 +1934,16 @@ export default {
           break
       }
     },
-    print () {
+    print() {
       if (this.tmsOrderShipId) {
-        let shipId = this.tmsOrderShipId
-        let info = ''
+        const shipId = this.tmsOrderShipId
+        const info = ''
         getPrintOrderItems(shipId).then(data => {
           CreatePrintPage(data)
         })
-      }else {
-        this.$message({type: 'warning', message: '请先保存运单，成功保存的运单才可以打印！'})
+      } else {
+        this.$message({ type: 'warning', message: '请先保存运单，成功保存的运单才可以打印！' })
       }
-      
     },
     // 右下角设置按钮菜单点击操作
     handleCommand(command) {
