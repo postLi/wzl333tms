@@ -176,6 +176,7 @@
             >
           </el-table-column>
         </el-table> -->
+        <!-- 开始 -->
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
@@ -188,6 +189,7 @@
             </el-table-column>
           </template>
         </el-table>
+        <!-- 结束 -->
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
@@ -204,6 +206,7 @@ import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -238,7 +241,7 @@ export default {
       isCheck: false,
       AddAbnormalVisible: false,
       setupTableVisible: false,
-      tablekey: 0,
+      tablekey: 0, // 加上
       isDbclick: false,
       licenseTypes: [],
       selected: [],
@@ -250,7 +253,7 @@ export default {
         'vo': {
         }
       },
-      // tableColumn: []
+      // tableColumn: []  列表对字段
       tableColumn: [{
         label: '序号',
         prop: 'id',
@@ -401,11 +404,19 @@ export default {
     },
     doAction(type) {
       if (type === 'export') {
-        this.showImport()
-        return false
+        // 默认选择全部
+        if (this.selected.length === 0) {
+          SaveAsFile(this.dataset, this.tableColumn)
+        } else {
+        // 筛选选中的项
+          SaveAsFile(this.selected, this.tableColumn)
+        }
+
+        // this.showImport()
+        // return false
       }
-          // 判断是否有选中项
-      if (!this.selected.length && type !== 'reg') {
+      // 判断是否有选中项
+      if (!this.selected.length && type !== 'reg' && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -581,6 +592,7 @@ export default {
     closeSetupTable() {
       this.setupTableVisible = false
     },
+    // 显示列表
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图

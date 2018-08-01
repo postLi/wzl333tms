@@ -9,10 +9,10 @@
           <el-input v-model="form.carrierSn" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商" prop="carrierName">
-          <el-input v-model="form.carrierName" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierName" maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
-          <el-input v-numberOnly v-model="form.carrierMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.carrierMobile"  maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="liableName">
           <el-input v-model="form.liableName" maxlength="25" auto-complete="off"></el-input>
@@ -46,7 +46,7 @@
           <el-input v-numberOnly maxlength="11" v-model="form.customerServicePhone" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="地址" prop="carrierAddr">
-          <el-input v-model="form.carrierAddr" maxlength="50" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierAddr" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="carrierRemarks" label="备注" prop="carrierRemarks">
           <el-input type="textarea" maxlength="125" v-model="form.carrierRemarks"></el-input>
@@ -60,7 +60,7 @@
   </pop-right>
 </template>
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import { postCarrier, putCarrier } from '@/api/company/carrierManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
@@ -95,32 +95,32 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ])
+    ...mapGetters([
+      'otherinfo'
+    ])
   },
-  data () {
+  data() {
     const _this = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       } else {
         if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
+          this.$refs.ruleForm2.validateField('checkPass')
         }
-        callback();
+        callback()
       }
     }
 
-    const validateFormMobile = function (rule, value, callback) {
-      if(REGEX.MOBILE.test(value)){
+    const validateFormMobile = function(rule, value, callback) {
+      if (REGEX.MOBILE.test(value)) {
         callback()
       } else {
         callback(new Error('请输入有效的手机号码'))
       }
     }
 
-    const validateFormNumber = function (rule, value, callback) {
+    const validateFormNumber = function(rule, value, callback) {
       console.log('rule:', rule)
       _this.form[rule.field] = value.replace(REGEX.NO_NUMBER, '')
       callback()
@@ -128,34 +128,34 @@ export default {
 
     return {
       form: {
-        "carrierAddr": "", // 地址 50
+        'carrierAddr': '', // 地址 50
         // "carrierId": 0, // 承运商ID 11
-        "carrierMobile": "", // 承运商电话 11
-        "carrierName": "", // 承运商 10
-        "carrierRemarks": "", // 备注 125
-        "carrierSn": "", // 承运商编号 15
-        "contractEndtime": "", // 合同终止日
-        "contractStarttime": "", // 合同起始日
-        "customerServicePhone": "", // 客服电话 11
-        "liableName": "", // 负责人 25
-        "liablePhone": "", // 负责人电话 11
-        "orgid": 0 // 所属机构 11
+        'carrierMobile': '', // 承运商电话 11
+        'carrierName': '', // 承运商 10
+        'carrierRemarks': '', // 备注 125
+        'carrierSn': '', // 承运商编号 15
+        'contractEndtime': '', // 合同终止日
+        'contractStarttime': '', // 合同起始日
+        'customerServicePhone': '', // 客服电话 11
+        'liableName': '', // 负责人 25
+        'liablePhone': '', // 负责人电话 11
+        'orgid': 0 // 所属机构 11
       },
       formLabelWidth: '100px',
       tooltip: false,
       rules: {
         carrierName: [
-          { required: true, message: '请输入承运商名称', trigger: 'blur' }
+          { required: true, message: '请输入承运商名称' }
         ],
         orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+          { required: true, message: '请选择所属机构' }
         ],
         carrierMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          { required: true, message: '请输入承运商电话' }
         ],
         liablePhone: [
-          { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-          //{ validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入负责人手机号码' }
+          // { validator: validateFormNumber, trigger: 'change'}
         ]
       },
       popTitle: '新增承运商',
@@ -168,14 +168,14 @@ export default {
       groups: [],
       inited: false,
       pickOption: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           // 小于终止日
           return _this.form.contractEndtime ? time.getTime() > _this.form.contractEndtime : false
         }
       },
       pickOption2: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           // 大于起始日
           return _this.form.contractStarttime ? time.getTime() < _this.form.contractStarttime : false
@@ -184,34 +184,34 @@ export default {
 
     }
   },
-  mounted () {
+  mounted() {
     this.form.orgid = this.orgid
-    if(!this.inited){
+    if (!this.inited) {
       this.inited = true
       this.initInfo()
     }
   },
   watch: {
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
+    popVisible(newVal, oldVal) {
+      if (!this.inited) {
         this.inited = true
         this.initInfo()
       }
     },
-    orgid (newVal) {
+    orgid(newVal) {
       this.form.orgid = newVal
     },
-    info () {
-      if(this.isModify){
+    info() {
+      if (this.isModify) {
         this.popTitle = '修改承运商'
-        let data = Object.assign({},this.info)
-        for(let i in this.form){
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
           this.form[i] = data[i]
         }
         this.form.carrierId = data.carrierId
       } else {
         this.popTitle = '新增承运商'
-        for(let i in this.form){
+        for (const i in this.form) {
           this.form[i] = ''
         }
         delete this.form.carrierId
@@ -220,21 +220,21 @@ export default {
     }
   },
   methods: {
-    initInfo () {
+    initInfo() {
       this.loading = false
     },
-    getOrgid (id) {
+    getOrgid(id) {
       this.form.orgid = id
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({},this.form)
+          const data = Object.assign({}, this.form)
           data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
-          if(this.isModify){
+          if (this.isModify) {
             promiseObj = putCarrier(data)
           } else {
             promiseObj = postCarrier(data)
@@ -248,25 +248,25 @@ export default {
                 this.closeMe()
                 this.$emit('success')
               }
-            });
+            })
           }).catch(err => {
             this.loading = false
           })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    reset () {
+    reset() {
       this.$refs['ruleForm'].resetFields()
     },
-    closeMe (done) {
+    closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
-      if(typeof done === 'function'){
+      this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
         done()
       }
-    },
+    }
   }
 }
 </script>

@@ -54,10 +54,10 @@
           <SelectTree v-model="form.orgid" filterable />
         </el-form-item>
         <el-form-item label="客户VIP号" prop="vipNum">
-          <el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model="form.vipNum" maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
-          <el-input v-model="form.idcard" auto-complete="off"></el-input>
+          <el-input v-model="form.idcard" maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开户行" prop="openBank">
           <el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>
@@ -66,7 +66,7 @@
           <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.bankCardNumber" v-numberOnly maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="detailedAddress">
           <el-input v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
@@ -148,18 +148,29 @@ export default {
       }
     }
 
-    const validateFormMobile = function(rule, value, callback) {
-      if (REGEX.MOBILE.test(value)) {
+    const validateFormvipNum = function(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('请输入客户VIP号'))
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
       } else {
-        callback(new Error('请输入有效的手机号码'))
+        callback(new Error('客户的VIP号只能输入字母和阿拉伯数字'))
       }
     }
 
-    const validateFormNumber = function(rule, value, callback) {
-      _this.form.customerMobile = value.replace(REGEX.NO_NUMBER, '')
-      callback()
+    const validateidcard = function(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('请输入身份证号'))
+      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+        callback()
+      } else {
+        callback(new Error('身份证号码只能输入字母和数字'))
+      }
     }
+    // const validateFormNumber = function(rule, value, callback) {
+    //   _this.form.customerMobile = value.replace(REGEX.NO_NUMBER, '')
+    //   callback()
+    // }
 
     return {
       phoneshort: '', // 固话区号
@@ -191,19 +202,25 @@ export default {
       tooltip: false,
       rules: {
         companyName: [
-          { required: true, message: '请输入公司名称', trigger: 'blur' },
-          { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
+          { required: true, message: '请输入公司名称' },
+          { min: 2, max: 25, message: '长度在 2 到 25 个字符' }
         ],
         orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+          { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          { required: true, message: '请输入手机号码' }
          // { validator: validateFormNumber, trigger: 'change'}
         ],
         customerName: [
-          { required: true, message: '请输入联系人', trigger: 'blur' },
-          { max: 30, message: '不能超过30个字符', trigger: 'blur' }
+          { required: true, message: '请输入联系人' },
+          { max: 30, message: '不能超过30个字符' }
+        ],
+        vipNum: [
+          { validator: validateFormvipNum, trigger: 'change' }
+        ],
+        idcard: [
+          { validator: validateidcard, trigger: 'change' }
         ]
       },
       popTitle: '新增发货人',
