@@ -373,6 +373,7 @@ export default {
       this.form.tmsOrderPickup.outTime = +new Date(item.outTime)
       this.form.tmsOrderPickup.toCityName = item.toCityName
       this.form.tmsOrderPickup.id = item.id
+      this.form.tmsOrderPickup.truckFee = item.truckFee
 
       this.form.tmsTruck.truckIdNumber = item.truckIdNumber
       this.form.tmsTruck.truckType = item.truckType
@@ -477,6 +478,7 @@ export default {
               callback: action => {
                 this.$emit('success')
                 this.closeMe()
+                this.reset()
               }
             })
           }).catch(err => {
@@ -488,19 +490,17 @@ export default {
       })
     },
     reset() {
-      // this.$refs['ruleForm'].resetFields()
-      // this.form.tmsCustomer = ''
-      // this.form.tmsDriver = ''
-      // this.form.tmsTruck = ''
-      // this.form.tmsOrderPickup = ''
-
-      this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-      this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-      this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-      this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
+      Object.assign(this.form.tmsOrderPickup)
+      Object.assign(this.form.tmsTruck)
+      Object.assign(this.form.tmsDriver)
+      Object.assign(this.form.tmsCustomer)
+      // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
+      // this.form.tmsTruck = this.setObject(this.form.tmsTruck)
+      // this.form.tmsDriver = this.setObject(this.form.tmsDriver)
+      // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
     },
     closeMe(done) {
-      this.reset()
+      // this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()

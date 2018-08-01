@@ -261,7 +261,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
@@ -273,6 +273,7 @@ import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import {objectMerge2} from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -285,16 +286,11 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchForms.vo.orgid , this.otherinfo.orgid)
         return this.isModify ? this.selectInfo.orgid : this.searchForms.vo.orgid || this.otherinfo.orgid
       }
   },
   mounted () {
     this.searchForms.vo.orgid = this.otherinfo.orgid
-    // this.fetchAllList(this.otherinfo.orgid).then(res => {
-    //   this.loading = false
-    // })
-    // this.fetchAllList(this.otherinfo.orgid)
   },
   data () {
     return {
@@ -315,13 +311,178 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
-
           orderStatus: '',
           orderSn: '',
           createTime: '',
           endTime: ''
         }
-      }
+      },
+      tableColumn:[
+        {
+          label:'序号',
+          prop:'id',
+          width:'50',
+          fixed:true,
+          slot:(scope) => {
+            return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) +scope.$index + 1
+          }
+        },{
+          label:'订单号',
+          prop:'orderSn',
+          width:'130',
+          fixed:true,
+        },{
+          label:'订单状态',
+          prop:'orerStatusName',
+          width:'110',
+          fixed:true,
+        },{
+          label:'关联运单号',
+          prop:'shipSn',
+          width:'130',
+          fixed:false,
+        },{
+          label:'订单类型',
+          prop:'orderTypeName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'紧急度',
+          prop:'orderEffectiveName',
+          width:'100',
+          fixed:false,
+        },{
+          label:'提货方式',
+          prop:'orderPickupMethodName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'货品名',
+          prop:'cargoName',
+          width:'90',
+          fixed:false,
+        },{
+          label:'件数',
+          prop:'cargoAmount',
+          width:'80',
+          fixed:false,
+        },{
+          label:'重量',
+          prop:'cargoWeight',
+          width:'90',
+          fixed:false,
+        },{
+          label:'体积',
+          prop:'cargoVolume',
+          width:'80',
+          fixed:false,
+        },{
+          label:'包装',
+          prop:'cargoPack',
+          width:'80',
+          fixed:false,
+        },{
+          label:'品种规格',
+          prop:'description',
+          width:'110',
+          fixed:false,
+        },{
+          label:'运费',
+          prop:'shipFee',
+          width:'80',
+          fixed:false,
+        },{
+          label:'付款方式',
+          prop:'orderPayWayName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'创建时间',
+          prop:'createTime',
+          width:'160',
+          fixed:false,
+        },{
+          label:'发货人',
+          prop:'senderName',
+          width:'150',
+          fixed:false,
+        },{
+          label:'发货人电话',
+          prop:'senderMobile',
+          width:'130',
+          fixed:false,
+        },{
+          label:'收货人',
+          prop:'receiverName',
+          width:'150',
+          fixed:false,
+        },{
+          label:'收货人电话',
+          prop:'receiverMobile',
+          width:'130',
+          fixed:false,
+        },{
+          label:'拒绝原因',
+          prop:'refuseReason',
+          width:'150',
+          fixed:false,
+        },{
+          label:'备注',
+          prop:'orderRemarks',
+          width:'120',
+          fixed:false,
+        },{
+          label:'出发城市',
+          prop:'orderFromCityName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'目的城市',
+          prop:'orderToCityName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'开单网点',
+          prop:'orderFromOrgName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'目的网点',
+          prop:'orderToOrgName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'声明价值',
+          prop:'productPrice',
+          width:'110',
+          fixed:false,
+        },{
+          label:'代收款',
+          prop:'agencyFund',
+          width:'90',
+          fixed:false,
+        },{
+          label:'代收款手续费',
+          prop:'commissionFee',
+          width:'130',
+          fixed:false,
+        },{
+          label:'件数单价',
+          prop:'cargoAmount',
+          width:'110',
+          fixed:false,
+        },{
+          label:'重量单价',
+          prop:'weightFee',
+          width:'110',
+          fixed:false,
+        },{
+          label:'体积单价',
+          prop:'volumeFee',
+          width:'110',
+          fixed:false,
+        }
+      ]
     }
   },
   mounted(){
@@ -365,11 +526,16 @@ export default {
     },
     doAction (type) {
       if(type==='import'){
-        this.showImport()
-        return false
+        // 默认选择全部
+        if (this.selected.length === 0) {
+          SaveAsFile(this.usersArr, this.tableColumn)
+        } else {
+          // 筛选选中的项
+          SaveAsFile(this.selected, this.tableColumn)
+        }
       }
       // 判断是否有选中项
-      if(!this.selected.length && type !== 'add' && type !== 'acceptance'){
+      if(!this.selected.length && type !== 'add' && type !== 'acceptance' && type !== 'import'){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -385,9 +551,6 @@ export default {
         })
         return false
       }
-
-      // console.log("this.selected:", this.selected)
-
       switch (type) {
           // 添加客户
           case 'add':
@@ -651,7 +814,12 @@ export default {
       this.isDbclick = true
       this.openAddCustomer()
       this.$refs.multipleTable.clearSelection()
-    }
+    },
+    // 显示列表
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
+    },
   }
 }
 </script>
