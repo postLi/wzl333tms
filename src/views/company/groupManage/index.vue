@@ -181,6 +181,7 @@
     import { getUserInfo } from '../../../utils/auth'
 
 export default {
+      name: 'groupManage',
       components: {
         AddDot,
         AddPeople,

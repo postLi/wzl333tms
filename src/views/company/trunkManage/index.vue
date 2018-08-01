@@ -168,6 +168,7 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
 export default {
+  name: 'trunkManage',
   components: {
     SearchForm,
     Pager,

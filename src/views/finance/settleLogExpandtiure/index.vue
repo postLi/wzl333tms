@@ -86,6 +86,7 @@ import dataTable from './components/dataTable'
 import dataTableOrder from './components/dataTableOrder'
 import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
 export default {
+  name: 'settleLogExpandtiure',
   components: {
     SelectTree,
     selectType,
@@ -164,14 +165,14 @@ export default {
           break
       }
     },
-    setFinanceWay (obj) {
+    setFinanceWay(obj) {
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
     },
     setData() { // 设置传给后台的数据结构
       this.formModel.financialWayId = this.formModel.financialWay
       this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
-      let szDtoList = []
+      const szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
       this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
@@ -193,9 +194,9 @@ export default {
       }
       this.setData()
       postAddIncome(this.addIncomeInfo).then(data => {
-          this.$message({ type: 'success', message: '保存成功！' })
-          this.$router.push({ path: './settleLog' })
-        })
+        this.$message({ type: 'success', message: '保存成功！' })
+        this.$router.push({ path: './settleLog' })
+      })
         .catch(error => {
           this.$message({ type: 'error', message: '保存失败！' })
         })
@@ -210,7 +211,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$router.push({
-          path: './settleLog',
+          path: './settleLog'
         })
       })
     },
@@ -221,7 +222,7 @@ export default {
       this.loadTable.forEach((e, index) => {
         if (e.shipFeeTotal) {
           amount += e.shipFeeTotal
-        }else {
+        } else {
           amount += e.loadFeeTotal
         }
       })

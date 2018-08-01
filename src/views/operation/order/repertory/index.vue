@@ -17,6 +17,7 @@ import arrival from './arrival'
 import deliver from './deliver'
 import allrepertory from './allrepertory'
 export default {
+  name: 'orderrepertory',
   components: {
   	allrepertory,
   	deliver,
@@ -28,7 +29,7 @@ export default {
   	  default: false
   	}
   },
-  data () {
+  data() {
     return {
       component: 'allrepertory'
     }

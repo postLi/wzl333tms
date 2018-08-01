@@ -23,6 +23,7 @@ import Month from './month'
 import Abnormal from './abnormal'
 
 export default {
+  name: 'accountsReceivable',
   components: {
     All,
     Cash,

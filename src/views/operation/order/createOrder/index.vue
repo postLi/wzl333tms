@@ -7,15 +7,16 @@
 import Main from './main'
 
 export default {
+  name: 'createOrder',
   components: {
     Main
   },
-  data () {
+  data() {
     return {
-      userinfo: {}  
+      userinfo: {}
     }
   },
-  mounted () {
+  mounted() {
   }
 }
 </script>

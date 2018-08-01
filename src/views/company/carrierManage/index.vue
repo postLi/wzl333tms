@@ -123,6 +123,7 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
 export default {
+  name: 'carrierManage',
   components: {
     SearchForm,
     Pager,

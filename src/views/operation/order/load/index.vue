@@ -224,11 +224,12 @@ import loadChart from './components/loadChart'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 export default {
+  name: 'orderload',
   data() {
     const validateInt = function(rule, value, callback) {
       // if (value === '' || value === null || !value || value === undefined) {
       //   callback(new Error('不能为空'))
-      // } else 
+      // } else
       if (REGEX.ONLY_NUMBER_GT.test(value)) {
         callback()
       } else {
@@ -238,7 +239,7 @@ export default {
     const validateBigDecimal = function(rule, value, callback) {
       // if (value === '' || value === null || !value || value === undefined) {
       //   callback(new Error('不能为空'))
-      // } else 
+      // } else
       if (REGEX.FLOAT2ING.test(value)) {
         callback()
       } else {
@@ -357,7 +358,7 @@ export default {
     },
     orgid() {},
     loadTruckInfo() {
-      let data = Object.assign({}, this.formModel)
+      const data = Object.assign({}, this.formModel)
       if (!data.truckLoad) {
         this.$set(data, 'truckLoad', 0)
       }
@@ -367,7 +368,7 @@ export default {
       return data
     },
     loadInfoPercent() {
-      let data = Object.assign([], this.loadInfoPercentOrg)
+      const data = Object.assign([], this.loadInfoPercentOrg)
       return data
     },
     loadTimeFormName() {
@@ -427,7 +428,7 @@ export default {
      * batch_type_id：批次状态（字典表46-58，短驳和干线配载完就是已装车，短驳发车是短驳中，干线发车是在途中，送货为送货中）
      */
     setLoadTypeId() {
-      let typeid = Number(this.$route.query.loadTypeId)
+      const typeid = Number(this.$route.query.loadTypeId)
       if (typeid) {
         // this.loadTypeId = typeid
         switch (typeid) {
@@ -466,7 +467,7 @@ export default {
         this.truckMessage = this.orgData.batchNo
         this.contractNo = this.orgData.contractNo
         // formModel 数据
-        let data = {}
+        const data = {}
         data.id = this.orgData.id
         data.orgid = this.orgData.orgid
         data.batchNo = this.orgData.batchNo
@@ -487,7 +488,7 @@ export default {
         data.deliveryFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
         this.formModel = objectMerge2({}, data)
         // formFee 数据
-        let dataFee = {}
+        const dataFee = {}
         dataFee.nowpayCarriage = this.orgData.nowpayCarriage
         dataFee.nowpayOilCard = this.orgData.nowpayOilCard
         dataFee.backpayCarriage = this.orgData.backpayCarriage
@@ -500,7 +501,6 @@ export default {
         dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
         dataFee.arriveOtherFee = this.orgData.arriveOtherFee
         this.formFee = objectMerge2({}, dataFee)
-
       } else {
         this.orgData = objectMerge2({}, this.$options.data().orgData)
         this.isEdit = false
@@ -675,7 +675,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
+        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
       } else {}
       this.init()
     },
@@ -737,7 +737,7 @@ export default {
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
       this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
-       this.formModel.planArrivedTime = parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ')+'23:59:59'
+      this.formModel.planArrivedTime = parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
@@ -831,8 +831,8 @@ export default {
     //   cb(results)
     // },
     querySearchTruck(queryString, cb) {
-      let truckList = this.Trucks
-      let results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
+      const truckList = this.Trucks
+      const results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
       // 调用 callback 返回车辆列表的数据
       cb(results)
     },

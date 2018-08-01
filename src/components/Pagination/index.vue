@@ -45,7 +45,6 @@
           v-for="(item,index) in sizes"
           :key="index"
           :label="item"
-          :disabled=" total < item"
           :value="item">
         </el-option>
       </el-select>

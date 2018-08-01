@@ -129,6 +129,7 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 
 export default {
+  name: 'driverManage',
   components: {
     SearchForm,
     Pager,

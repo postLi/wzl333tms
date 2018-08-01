@@ -14,6 +14,7 @@ import receipt from './receipt' // 回单付
 import month from './month' // 月结
 
 export default {
+  name: 'accountsLoadReceivable',
   components: {
     all,
     arrive,

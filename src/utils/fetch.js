@@ -70,6 +70,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+    console.info('=============请求出错==============：', error)
     if (error.response) {
       const status = error.response.status
 

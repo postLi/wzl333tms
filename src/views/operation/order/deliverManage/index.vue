@@ -10,6 +10,7 @@
 import Sender from './sender'
 
 export default {
+  name: 'deliverManage',
   components: {
     Sender
   },

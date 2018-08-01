@@ -59,6 +59,7 @@ import addCraieer from '@/views/company/carrierManage/components/add'
 import dataTable from './components/dataTable'
 
 export default {
+  name: 'ordertransferLoad',
   components: {
     dataTable,
     addCraieer,

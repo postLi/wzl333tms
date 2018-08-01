@@ -65,6 +65,7 @@ import SearchForm from './components/search2'
 import TableSetup from './components/tableSetup'
 
 export default {
+  name: 'handAccountDetail',
   components: {
     SearchForm,
     TableSetup

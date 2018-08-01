@@ -29,6 +29,7 @@ Vue.use(Router)
   * redirect : if `redirect:noredirect` will not redirct in the levelbar
   * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
   * meta : `{ role: ['admin'] }`  will control the page role
+  * noCache 设定是否被缓存默认为 true
   **/
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
@@ -42,7 +43,7 @@ export const constantRouterMap = [
     name: '首页',
     hidden: true,
     children: [{
-      path: 'dashboard', name: '首页', icon: 'shouye', component: _import('dashboard/index'),
+      path: 'dashboard', name: 'dashboard', icon: 'shouye', component: _import('dashboard/index'),
       meta: { title: '首页', noCache: true }
     }]
   }

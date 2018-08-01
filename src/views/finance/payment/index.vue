@@ -20,6 +20,7 @@ import Grant from './grant'// 发放
 import Accept from './accept'// 接收
 // import Flow from './flow'
 export default {
+  name: 'financepayment',
   components: {
     Send,
     Recycle,

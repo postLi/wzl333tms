@@ -8,6 +8,7 @@
 import settleLog from './settleLog'
 import settleLogDetail from './settleLogDetail'
 export default {
+  name: 'settleLog',
   components: {
     settleLog,
     settleLogDetail

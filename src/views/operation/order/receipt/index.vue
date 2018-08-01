@@ -18,6 +18,7 @@ import Grant from './grant' // 发放
 import Accept from './accept' // 接收
 // import Flow from './flow'
 export default {
+  name: 'orderreceipt',
   components: {
     Send,
     Recycle,
@@ -51,7 +52,7 @@ export default {
   methods: {
     setPage() {
       if (this.$route.query.tableKey) {
-        let tableKey = this.$route.query.tableKey
+        const tableKey = this.$route.query.tableKey
         switch (tableKey) {
           case 'Recycle':
             this.component = 'Recycle'
@@ -66,7 +67,6 @@ export default {
             this.component = 'Grant'
             break
         }
-
       } else {
         this.component = 'Recycle'
       }

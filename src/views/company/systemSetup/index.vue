@@ -235,6 +235,7 @@ import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrder'
 
 export default {
+  name: 'systemSetup',
   components: {
     SelectType,
     selectPrinter,
@@ -466,14 +467,14 @@ export default {
     })
   },
   methods: {
-    doAction (type) {
+    doAction(type) {
       switch (type) {
         case 'printSetOrder': // 打印运单设置
-        this.$message({type: 'warning', message: '功能尚在开发中'})
-        break
+          this.$message({ type: 'warning', message: '功能尚在开发中' })
+          break
         case 'printSetLi': // 打印标签设置
-        this.$message({type: 'warning', message: '功能尚在开发中'})
-        break
+          this.$message({ type: 'warning', message: '功能尚在开发中' })
+          break
       }
     },
     getInfo(module, type = '') {
@@ -547,8 +548,8 @@ export default {
         }
       }
     },
-    downloadFile () { // 下载系统所需插件
-     window.open(downloadFile())
+    downloadFile() { // 下载系统所需插件
+      window.open(downloadFile())
     }
   },
   watch: {

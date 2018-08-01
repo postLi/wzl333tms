@@ -14,6 +14,7 @@
 import arrival from './arrival'
 import deliver from './deliver'
 export default {
+  name: 'shortDepart',
   components: {
     deliver,
     arrival

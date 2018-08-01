@@ -22,6 +22,7 @@ import short from './short'
 import deliver from './deliver'
 import transfer from './transfer'
 export default {
+  name: 'ordertrack',
   components: {
     artery,
     short,
@@ -39,11 +40,11 @@ export default {
       component: 'artery'
     }
   },
-  activated () {
+  activated() {
     this.isTransfer()
   },
   methods: {
-    isTransfer () {
+    isTransfer() {
       if (this.$route.query.transfer) {
         this.component = 'transfer'
       } else {

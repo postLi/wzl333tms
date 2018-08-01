@@ -19,6 +19,7 @@ import Transfer from './transfer'// 中转签收
 
 // import Flow from './flow'
 export default {
+  name: 'ordersign',
   components: {
     Pick,
     Delivery,

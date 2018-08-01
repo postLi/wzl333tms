@@ -83,6 +83,7 @@
   import RelationPer from './relationPer'
   import DepMaintain from './depMaintain'
   export default {
+    name: 'permissionManage',
     components: {
       AddRole,
       RelationPer,
@@ -269,9 +270,9 @@
               })
             }).catch(() => {
               this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
+                type: 'info',
+                message: '已取消删除'
+              })
             })
             break
         }

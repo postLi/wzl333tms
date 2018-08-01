@@ -17,6 +17,7 @@ import Dashboard from './dashboard'
 import History from './history'
 
 export default {
+  name: 'orderManage',
   components: {
     All,
     Dashboard,

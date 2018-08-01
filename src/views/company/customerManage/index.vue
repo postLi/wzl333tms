@@ -15,6 +15,7 @@ import Sender from './sender'
 import Receiver from './receiver'
 
 export default {
+  name: 'customerManage',
   components: {
     Sender,
     Receiver

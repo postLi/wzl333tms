@@ -118,6 +118,7 @@ import SetAuth from './authorization'
 import Pager from '@/components/Pagination/index'
 
 export default{
+  name: 'employeeManage',
   components: {
     SearchForm,
     TableSetup,

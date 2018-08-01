@@ -284,6 +284,7 @@ import Pager from '@/components/Pagination/index'
 import Addunusual from './components/add'
 import { objectMerge2 } from '@/utils/index'
 export default {
+  name: 'financeunusual',
   components: {
     SearchForm,
     Pager,

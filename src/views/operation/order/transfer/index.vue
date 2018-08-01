@@ -15,6 +15,7 @@ import transfered from './transfered'
 import batch from './batch'
 
 export default {
+  name: 'ordertransfer',
   components: {
     transfered,
     batch
