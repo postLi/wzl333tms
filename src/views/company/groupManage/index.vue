@@ -65,7 +65,7 @@
                 </el-form-item>
 
                 <el-form-item label="预警额度" :label-width="formLabelWidth">
-                  <el-input v-model="form.warningQuota" auto-complete="off" disabled></el-input>
+                  <el-input v-model="form.warningQuota" auto-complete="off" disabled ></el-input>
                 </el-form-item>
 
 
@@ -106,7 +106,7 @@
                 prop="id"
                 width="60"
                 label="序号">
-                <template slot-scope="scope">{{  scope.$index + 1 }}</template>
+                <template slot-scope="scope">{{ ((pageNum - 1)*pageSize) + scope.$index + 1 }}</template>
               </el-table-column>
               <el-table-column
                 fixed
@@ -256,7 +256,9 @@ export default {
           },
                   // 缓存节点数据
           orgInfoCache: {},
-          userinfo: {}
+          userinfo: {},
+          pageSize:'',
+          pageNum:'',
         }
       },
       mounted() {

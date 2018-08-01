@@ -1,6 +1,6 @@
 <template>
   <!--label-width="80px"-->
-  <el-form :inline="true" :size="btnsize" label-position="right" :model="searchForm"  class="staff_searchinfo clearfix">
+  <el-form :inline="true" :size="btnsize" label-position="right" :model="searchForm"  class="staff_searchinfo clearfix" :rules="rules">
       <el-form-item label="创建时间:">
         <div class="block">
           <el-date-picker
@@ -18,13 +18,15 @@
     <el-form-item label="订单状态：">
       <SelectType v-model="searchForm.orderStatus" type="order_status" />
     </el-form-item>
-    <el-form-item label="订单号:">
+    <el-form-item label="订单号:" prop="orderSn">
       <el-input
-        v-numberOnly
+
         placeholder=""
         maxlength="11"
         v-model="searchForm.orderSn"
-        clearable>
+        clearable
+        @keyup.enter.native="onSubmit"
+      >
       </el-input>
     </el-form-item>
       <el-form-item class="staff_searchinfo--btn">
@@ -37,6 +39,7 @@
 <script>
 import SelectType from '@/components/selectType/index'
 import { parseTime } from '@/utils/'
+import { REGEX } from '@/utils/validate'
 export default {
   components: {
     SelectType
@@ -62,7 +65,12 @@ export default {
       searchForm: {
         orderStatus: '',
         orderSn: ''
-      }
+      },
+      rules:{
+        orderSn:[
+          // { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        ],
+      },
     }
   },
   watch: {
@@ -91,7 +99,7 @@ export default {
     clearForm () {
       this.searchForm.createTime = ''
       this.searchForm.endTime = ''
-      this.searchCreatTime = []
+      // this.searchCreatTime = []
       this.searchForm.orderStatus = ''
       this.searchForm.orderSn = ''
     }

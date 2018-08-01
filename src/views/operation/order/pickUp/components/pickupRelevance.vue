@@ -28,7 +28,7 @@
             height="160"
             tooltip-effect="dark"
             :default-sort = "{prop: 'id', order: 'ascending'}"
-            style="width: 100%">
+            style="width: 560px">
             <el-table-column
               fixed
               sortable
@@ -46,7 +46,7 @@
               fixed
               sortable
               prop="shipGoodsSn"
-              width="190"
+              width="160"
               label="货号">
             </el-table-column>
             <el-table-column

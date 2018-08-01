@@ -77,7 +77,7 @@ export default {
 .popRight-header{
   height: 30px;
   line-height: 30px;
-	background-color: #0b4b7c;
+	background-color: #42485B;
   color: #fff;
   text-align: left;
   font-weight: 600;
