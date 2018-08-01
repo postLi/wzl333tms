@@ -26,15 +26,15 @@
             <el-option label="女" value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="归属网点" :label-width="formLabelWidth">
-          <SelectTree v-model="form.orgid" />
+        <el-form-item label="归属网点" :label-width="formLabelWidth" prop="orgid">
+          <SelectTree filterable v-model="form.orgid" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
           <el-select filterable  multiple v-model="form.rolesId" placeholder="请选择权限">
             <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="归属部门" :label-width="formLabelWidth">
+        <el-form-item label="归属部门" :label-width="formLabelWidth" prop="departmentId">
           <SelectType v-model="form.departmentId" type="department_type" filterable placeholder="请选择部门" />
           <!-- <el-select v-model="form.departmentId" placeholder="请选择部门">
             <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
@@ -56,12 +56,14 @@ import popRight from '@/components/PopRight/index'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
 import SelectType from '@/components/selectType/index'
+import querySelect from '@/components/querySelect/index'
 
 export default {
   components: {
     popRight,
     SelectTree,
-    SelectType
+    SelectType,
+    querySelect
   },
   props: {
     popVisible: {
@@ -82,8 +84,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ])
+      'otherinfo'
+    ])
   },
   data() {
     var validatePass = (rule, value, callback) => {
@@ -114,6 +116,7 @@ export default {
     }
 
     return {
+      querykey: '11',
       form: {
         name: '', // 用户姓名
         mobilephone: '', // 手机号码
@@ -129,7 +132,7 @@ export default {
       tooltip: false,
       rules: {
         name: [
-          { required: true, message: '请输入用户姓名', trigger: 'blur' },
+          { required: true, message: '请输入用户姓名' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         password: [
@@ -137,10 +140,10 @@ export default {
           { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
         ],
         mobilephone: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          { required: true, message: '请输入手机号码', pattern: REGEX.MOBILE }
         ],
         username: [
-          { required: true, message: '请输入有效的登录账号', trigger: 'blur', pattern: REGEX.USERNAME },
+          { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
           { max: 15, message: '不能超过15个字符', trigger: 'blur' }
         ],
         position: [

@@ -1,6 +1,5 @@
 <template>
-  <el-select  ref="myautocomplete" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
-        <slot name="head"></slot>
+  <el-select  ref="myautocomplete" :filterable="filterable" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
         v-for="item in openGroups"
         :key="item.id"
@@ -15,18 +14,18 @@
 <script>
 // 引入事件对象
 import { eventBus } from '@/eventBus'
-  import { getAllOrgInfo  } from '@/api/company/employeeManage'
-  import { mapGetters } from 'vuex'
+import { getAllOrgInfo } from '@/api/company/employeeManage'
+import { mapGetters } from 'vuex'
 /**
  * 将多层级树结构展开未扁平数组，并对每个元素添加层级值index
  */
-function expandGroups (data, i) {
+function expandGroups(data, i) {
   let res = []
   data.map(el => {
     el.index = i
     res.push(el)
-    if(el.children){
-      res = res.concat(expandGroups(el.children, i+1))
+    if (el.children) {
+      res = res.concat(expandGroups(el.children, i + 1))
     }
   })
   return res
@@ -36,11 +35,11 @@ export default {
   props: {
     focus: {
       type: Function,
-      default: ()=>{}
+      default: () => {}
     },
     blur: {
       type: Function,
-      default: ()=>{}
+      default: () => {}
     },
     value: {
       type: [Number, String]
@@ -48,15 +47,19 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    filterable: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
-    value (newVal) {
+    value(newVal) {
       this.aid = newVal
       this.init()
     }
   },
-  mounted () {
+  mounted() {
     this.aid = this.value
     this.init()
     eventBus.$on('closepopbox', () => {
@@ -66,25 +69,25 @@ export default {
   },
   computed: {
     ...mapGetters([
-          'otherinfo'
-      ]),
-    openGroups () {
+      'otherinfo'
+    ]),
+    openGroups() {
       // 用来标记是第几层
-      let index = 1
+      const index = 1
       let res
       res = expandGroups(this.groups, index)
       return res
     }
   },
-  data () {
+  data() {
     return {
       groups: [],
       aid: ''
     }
   },
   methods: {
-    init () {
-      if(!this.inited){
+    init() {
+      if (!this.inited) {
         this.inited = true
         getAllOrgInfo(this.otherinfo.companyId).then(data => {
           this.groups = data
@@ -93,7 +96,7 @@ export default {
         })
       }
     },
-    change (val) {
+    change(val) {
       this.$emit('change', val)
       this.$emit('input', val)
     }

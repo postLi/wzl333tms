@@ -205,13 +205,13 @@ export default {
           { required: true, validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupVolume': [
-          { validator: validatePickupNum, trigger: 'blur' },
+          { validator: validatePickupNum, trigger: 'blur' }
         ],
         'tmsOrderPickup.pickupWeight': [
-          { validator: validatePickupNum, trigger: 'blur' },
+          { validator: validatePickupNum, trigger: 'blur' }
         ],
         'tmsOrderPickup.carriage': [
-          { validator: validatePickupNum, mtrigger: 'blur' },
+          { validator: validatePickupNum, mtrigger: 'blur' }
           // { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.remark': [
@@ -221,7 +221,7 @@ export default {
           { validator: validatePickupNum, trigger: 'blur' }
         ],
         'tmsOrderPickup.collectionFee': [
-          { validator: validatePickupNum, trigger: 'blur' },
+          { validator: validatePickupNum, trigger: 'blur' }
           // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsDriver.truckIdNumber': [
@@ -346,7 +346,7 @@ export default {
     }
   },
   methods: {
-    filterfn(el){
+    filterfn(el) {
       return el.id !== 235
     },
     getTrunkName(trunk) {

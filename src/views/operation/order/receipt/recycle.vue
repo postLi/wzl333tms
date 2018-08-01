@@ -464,7 +464,7 @@ export default {
         fixed: false
       }, {
         label: '付款方式',
-        prop: 'shipPayWay',
+        prop: 'shipPayWayName',
         width: '120',
         fixed: false
       }, {

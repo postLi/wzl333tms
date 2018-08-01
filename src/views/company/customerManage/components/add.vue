@@ -45,13 +45,13 @@
           <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
-          <el-input v-numberOnly v-model="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model.trim="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话" class="customerPhone" prop="customerPhone">
           <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
+          <SelectTree v-model="form.orgid" filterable />
         </el-form-item>
         <el-form-item label="客户VIP号" prop="vipNum">
           <el-input v-model="form.vipNum" maxlength="11" auto-complete="off"></el-input>

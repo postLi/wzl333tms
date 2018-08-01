@@ -85,12 +85,12 @@
           <el-input v-numberOnly v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机" prop="driverId">
-          <el-select v-model="form.driverId" filterable placeholder="请选择">
+          <el-select  @change="getDriverPhone" v-model="form.driverId" filterable placeholder="请选择司机">
             <el-option v-for="item in DriverList" :key="item.id" :label="item.driverName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="司机电话" prop="driverMobile">
+        <el-form-item label="司机电话" prop="dirverMobile">
           <el-input maxlength="20" v-numberOnly v-model="form.dirverMobile" auto-complete="off"></el-input>
         </el-form-item>
         <div class="hr"></div>
@@ -161,15 +161,15 @@ export default {
     ])
   },
   data() {
-    const _this = this
+    // const _this = this
 
-    const validateFormMobile = function(rule, value, callback) {
-      if (REGEX.MOBILE.test(value)) {
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
+    // const validateFormMobile = function(rule, value, callback) {
+    //   if (REGEX.MOBILE.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
 
     const createValidate = function(max, tip) {
       return function(rule, value, callback) {
@@ -211,8 +211,11 @@ export default {
         truckIdNumber: [
           { required: true, message: '请输入车牌号码', trigger: 'blur' }
         ],
+        driverId: [
+          { required: true, message: '司机名称不能为空' }
+        ],
         orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+          { required: true, message: '请选择所属机构' }
         ],
         driverMobile: [
           { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
@@ -282,6 +285,13 @@ export default {
     }
   },
   methods: {
+    // 给一个change事件把列表的数据带出来回填
+    getDriverPhone(id) {
+      const find = this.DriverList.filter(el => el.id === id)
+      if (find[0]) {
+        this.form.dirverMobile = find[0].driverMobile
+      }
+    },
     initPanel() {
       if (this.isModify) {
         this.popTitle = '修改车辆'
