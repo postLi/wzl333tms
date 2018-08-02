@@ -72,6 +72,15 @@ export function getSelectType(type = '', orgId) {
  * 下载常用插件
  */
 export function downloadFile() {
-  let fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
+  const fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
   return fileUrl
-} 
+}
+
+/**
+ * 初始化系统
+ */
+export function getInitializationCheck() {
+  return fetch.get('/api-system/system/setting/v1/InitializationCheck/').then(res => {
+    return res.data
+  })
+}
