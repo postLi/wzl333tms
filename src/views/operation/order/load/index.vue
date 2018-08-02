@@ -400,6 +400,10 @@ export default {
     this.setLoadTypeId()
     console.log(this.$route)
   },
+  mounted () {
+    this.init()
+    this.getSystemTime()
+  },
   activated() {
     this.init()
     this.getSystemTime()
@@ -606,12 +610,15 @@ export default {
       switch (this.loadTypeId) {
         case 38: // 短驳
           this.$router.push({ path: '././shortDepart' })
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart')
           break
         case 39: // 干线
           this.$router.push({ path: '././arteryDepart' })
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
           break
         case 40: // 送货
           this.$router.push({ path: '././deliverManage' })
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/deliverManage')
           break
       }
     },

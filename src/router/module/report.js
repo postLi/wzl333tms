@@ -13,6 +13,9 @@ export default {
     { path: '/report/turnoverDaily', icon: 'information', hidden: false, name: '营业额日报表', component: _import('report/turnoverDaily/index'), meta: { title: '营业额日报表', noCache: true }},
     { path: '/report/turnoverTotal', icon: 'information', hidden: false, name: '营业额汇总表', component: _import('report/turnoverTotal/index'), meta: { title: '营业额汇总表', noCache: true }},
     { path: '/report/operation', icon: 'information', hidden: false, name: '营运统计分析', component: _import('report/operation/index'), meta: { title: '运营统计分析', noCache: true }},
-    { path: '/report/incomeTotal', icon: 'information', hidden: false, name: '收入统计', component: _import('report/incomeTotal/index'), meta: { title: '收入统计', noCache: true }}
+    { path: '/report/incomeTotal', icon: 'information', hidden: false, name: '收入统计', component: _import('report/incomeTotal/index'), meta: { title: '收入统计', noCache: true }},
+    { path: '/report/crossReport', icon: 'information', hidden: false, name: '网点业务费用对比', component: _import('report/crossReport/index'), meta: { title: '网点业务费用对比', noCache: true }},
+    { path: '/report/crossReport2', icon: 'information', hidden: false, name: '网点年度费用对比', component: _import('report/crossReport2/index'), meta: { title: '网点年度费用对比', noCache: true }},
+    { path: '/report/crossReport3', icon: 'information', hidden: false, name: '网点业务类型', component: _import('report/crossReport3/index'), meta: { title: '网点业务类型', noCache: true }}
   ]
 }

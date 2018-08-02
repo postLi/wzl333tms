@@ -5,7 +5,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <!-- <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain>打印</el-button>
       </div> -->
       <div class="info_tab">
         <!-- <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
@@ -61,6 +61,15 @@ export default {
           this.hideiframe = 'hide'
           document.getElementById('senderIframe').contentWindow.hideChart(bool)
         }
+      }
+    },
+    doAction (type) {
+      switch(type) {
+        case 'print':
+        console.log('vue page printed')
+        // document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Toolbar', '11', '0', '', ''  )
+        document.getElementById('senderIframe').contentWindow.OnEvent('AF','BeforePrint','','', '', '')
+        break
       }
     },
     getSearchParam(obj) {

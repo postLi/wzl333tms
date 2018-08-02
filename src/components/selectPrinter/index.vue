@@ -7,7 +7,7 @@
     @focus="focus" 
     @blur="blur">
     <slot name="head"></slot>
-      <el-option v-for="item in printers" :key="item.value" :label="item.label" :value="item.value">
+      <el-option v-for="item in printers" :key="item.label" :label="item.label" :value="item.label">
       </el-option>
     </el-select>
 </template>
@@ -46,6 +46,7 @@ export default {
   methods: {
     CreatePrinterList () {
       this.printers =  Object.assign([], CreatePrinterList())
+      console.log('printers' ,this.printers) 
     },
     change (item) {
       this.$emit('change', item)

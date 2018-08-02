@@ -422,6 +422,10 @@ export default {
     }
   },
   activated() {
+    this.editInfoVisible = false
+    if (this.$route.query.transfer) {
+      this.editInfoVisible = true
+    }
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchList()
   },
@@ -437,14 +441,12 @@ export default {
     getSelection(list) {
       if (this.$route.query.transfer) {
         this.transferId = this.$route.query.transfer
-        console.log(this.transferId)
       } else {
         if (list.length === 1) {
           this.selectInfo = Object.assign([], list)
           this.isDisBtn = false
           // let tid = this.selectInfo[0].transferId
           this.transferId = this.selectInfo[0].transferId
-          console.log(this.transferId)
           this.trackInfo = Object.assign({}, this.selectInfo[0])
         } else if (list.length > 1) {
           this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
@@ -494,6 +496,7 @@ export default {
     isTransferTrack() {
       if (this.$route.query.transfer) {
         console.log('transfer', this.$route.query.transfer)
+        this.getSelection()
         this.setInfo()
       } else {
         this.closeMe()

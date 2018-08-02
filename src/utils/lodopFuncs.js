@@ -267,11 +267,12 @@
    let iPrinterCount = LODOP.GET_PRINTER_COUNT()
    let arr = new Array()
    for (let i = 0; i < iPrinterCount; i++) {
-     let item = {
-       label: LODOP.GET_PRINTER_NAME(i),
-       value: String(i)
-     }
-     arr.push(item)
+     // let item = {
+     //   label: LODOP.GET_PRINTER_NAME(i),
+     //   value: String(i)
+     // }
+     // arr.push(item)
+     arr[i] = LODOP.GET_PRINTER_NAME(i)
    }
    return arr
  }

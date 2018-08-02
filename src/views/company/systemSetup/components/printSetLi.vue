@@ -1,6 +1,6 @@
 <template>
-  <!-- 打印运单设置 -->
-  <el-dialog title="打印运单设置" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print">
+  <!-- 打印标签设置 -->
+  <el-dialog title="打印标签设置" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print">
     <div class="print_aside">
       <div class="print_aside_head">
         <span>字段列表 {{formModel.labelList.length}} </span>
@@ -41,7 +41,7 @@
 </template>
 <script>
 import draggable from 'vuedraggable'
-import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
+import { getSettingCompanyLi, putSettingCompanyLi } from '@/api/operation/print'
 export default {
   components: {
     draggable
@@ -73,18 +73,18 @@ export default {
     popVisible() {
       if (this.popVisible) {
         this.dialogVisible = true
-        this.getSettingCompanyOrder()
+        this.getSettingCompanyLi()
       } else {
         this.dialogVisible = false
       }
     }
   },
   mounted() {
-    this.getSettingCompanyOrder()
+    this.getSettingCompanyLi()
   },
   methods: {
-    getSettingCompanyOrder() {
-      getSettingCompanyOrder().then(data => {
+    getSettingCompanyLi() {
+      getSettingCompanyLi().then(data => {
         this.formModel.labelList = data
       })
 
@@ -111,7 +111,7 @@ export default {
         			return false
         		}
         	})
-          putSettingCompanyOrder(this.formModel.labelList).then(data => {
+          putSettingCompanyLi(this.formModel.labelList).then(data => {
             this.$message({type: 'success', message: '运单打印设置成功！'})
           })
         }

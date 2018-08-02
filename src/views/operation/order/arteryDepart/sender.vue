@@ -537,7 +537,7 @@ export default {
       switch (type) {
         // 新增配载
         case 'add':
-          this.$router.push({ path: '././load', query: { loadTypeId: 39 }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '././load', query: { loadTypeId: 39, tab:'新增配载' }}) // 38-短驳 39-干线 40-送货
           break
         // 添加客户
         case 'storage':
@@ -564,7 +564,7 @@ export default {
             return false
           } else {
             this.selectInfo = this.selected[0]
-            this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo }})
+            this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
           }
           break
         //    发车

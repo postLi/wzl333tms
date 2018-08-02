@@ -308,7 +308,7 @@ export default {
       data = {}
     },
     add() {
-      this.$router.push({ path: '././load', query: { loadTypeId: 40 } })
+      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货' } })
     },
     edit() {
       if (this.selected.length !== 1) {
@@ -321,7 +321,7 @@ export default {
         this.$message({ type: 'warning', message: '送货中状态才可以编辑' })
       } else if (this.selected.length === 1) {
         this.selectInfo = this.selected[0]
-        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random() } })
+        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货' } })
       }
     },
     deliverFinish() { // 送货完成

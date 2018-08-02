@@ -189,15 +189,21 @@
             <div class="setup-right">
               <el-form-item>
                 运单
-                <selectPrinter v-model="form.printSetting.ship"></selectPrinter>
+                <el-select  v-model="form.printSetting.ship">
+                  <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+                </el-select >
               </el-form-item>
               <el-form-item>
                 标签
-                <selectPrinter v-model="form.printSetting.label"></selectPrinter>
+                <el-select  v-model="form.printSetting.label">
+                  <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+                </el-select >
               </el-form-item>
               <el-form-item>
                 清单
-                <selectPrinter v-model="form.printSetting.inventory"></selectPrinter>
+                <el-select  v-model="form.printSetting.inventory">
+                  <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+                </el-select >
               </el-form-item>
               <el-form-item>
                 <el-button @click="downloadFile" icon="el-icon-download" type="primary" plain>下载插件</el-button>
@@ -222,7 +228,8 @@
     <div class="system-setup-footer">
       <el-button type="primary" @click="saveData" :disabled="nochange">保存</el-button>
     </div>
-    <!-- <printSetOrder></printSetOrder> -->
+    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder"></printSetOrder>
+    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi"></printSetLi>
   </div>
 </template>
 <script>
@@ -233,13 +240,15 @@ import { CreatePrinterList } from '@/utils/lodopFuncs'
 import selectPrinter from '@/components/selectPrinter/index'
 import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrder'
+import printSetLi from './components/printSetLi'
 
 export default {
   name: 'systemSetup',
   components: {
     SelectType,
     selectPrinter,
-    printSetOrder
+    printSetOrder,
+    printSetLi
   },
   computed: {
     ...mapGetters([
@@ -249,8 +258,11 @@ export default {
   data() {
     return {
       // 表单项
+      printers: [],
       shipNo: '',
       cargoNo: '',
+      printSetOrderVisible: false,
+      printSetLiVisible: false,
       nochange: true,
       tooltip1: false,
       tooltip2: false,
@@ -462,20 +474,38 @@ export default {
       this.setShipNo()
       this.setCargoNo()
       this.initField()
+      this.initPrinter()
       // 加载好后才可以提交数据
       this.nochange = false
     })
   },
   methods: {
+    initPrinter () {
+      this.printers = Object.assign([], CreatePrinterList())
+    },
     doAction(type) {
       switch (type) {
         case 'printSetOrder': // 打印运单设置
-          this.$message({ type: 'warning', message: '功能尚在开发中' })
+          this.printSetOrder()
+          // this.$message({ type: 'warning', message: '功能尚在开发中' })
           break
         case 'printSetLi': // 打印标签设置
-          this.$message({ type: 'warning', message: '功能尚在开发中' })
+        this.printSetLi()
+          // this.$message({ type: 'warning', message: '功能尚在开发中' })
           break
       }
+    },
+    printSetOrder () {
+      this.printSetOrderVisible = true
+    },
+    printSetLi () {
+      this.printSetLiVisible = true
+    },
+    closePrintSetOrder() {
+      this.printSetOrderVisible = false
+    },
+    closePrintSetLi () {
+      this.printSetLiVisible = false
     },
     getInfo(module, type = '') {
       return getAllSetting({
@@ -640,7 +670,7 @@ export default {
 
       .setup-table{
         margin: 0 0 10px;
-        min-height: 64px;
+        min-height: 58px;
         display: flex;
 
         .setup-left{
@@ -654,7 +684,7 @@ export default {
         }
 
         .setup-right{
-          padding: 16px;
+          padding: 10px 16px; 
           flex:1;
         }
       }

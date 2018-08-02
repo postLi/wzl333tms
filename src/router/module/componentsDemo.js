@@ -60,6 +60,11 @@ export default {
       path: '/components/tableSetup',
       name: '表格设置',
       component: _import('componentsDemo/tableSetup')
+    },
+    {
+      path: '/components/print',
+      name: '打印导出',
+      component: _import('componentsDemo/print')
     }
   ]
 }

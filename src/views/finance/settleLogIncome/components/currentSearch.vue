@@ -35,7 +35,7 @@
       v-model="searchForm.shipSn" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
-      placeholder="发货人搜索" 
+      placeholder="运单号搜索" 
       @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.shipSn }}</div>

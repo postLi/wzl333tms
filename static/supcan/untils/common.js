@@ -40,7 +40,6 @@ window.onresize = function() {
   autoResize();
 }
 
-function OnEvent() {}
 
 function getUrlParams() { // 获取url里面的参数
 
@@ -72,9 +71,42 @@ function getUrlParams() { // 获取url里面的参数
   return strQuery
 }
 
+function getValue(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", 'i');
+  var res = window.location.search.substr(1).match(reg);
+  if (res[2]) {
+    return res[2];
+  } else {
+    return null;
+  }
+}
+
+function getToken() { // 获取token
+  let urlToken = getValue('access_token')
+  return urlToken
+}
+
 function hideChart(bGray) { // 隐藏
   AF.func("grayWindow", "");
   if (bGray) {
     AF.func("grayWindow", "1\r\n backcolor=#FFFFFF;alpha=100");
+  }
+}
+
+// function OnEvent() {}
+
+function OnEvent(id, Event, p1, p2, p3, p4) {
+  console.log(id, Event, p1, p2, p3, p4)
+  switch (Event) {
+    case 'BeforePrint':
+    console.log(Event, '234234')
+      AF.func("BeforePrint", "");
+      break
+    case 'Printed':
+      AF.func("Printed", p1, p2);
+      break
+    case 'PrintSetupBeforeUpdate':
+      AF.func("PrintSetupBeforeUpdate", p1);
+      break
   }
 }

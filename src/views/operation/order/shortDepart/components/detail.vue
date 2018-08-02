@@ -74,9 +74,12 @@
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
-          <el-table-column fixed width="50" sortable type="selection"></el-table-column>
+          <el-table-column fixed width="50" sortable type="selection" fixed></el-table-column>
+          <el-table-column sortable width="120" prop="shipSn" label="运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="运单号"></el-table-column>
+            <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
+            <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
+            <el-table-column sortable width="120" prop="loadVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
               <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
@@ -84,20 +87,17 @@
           </el-table-column>
           <el-table-column sortable width="110" prop="actualWeight" label="实到重量" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="actualVolume" sortable label="实到体积" width="110" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
-          <!-- <el-table-column sortable width="120" prop="cargoAmount" label="运单件数"></el-table-column>
-          <el-table-column sortable width="120" prop="cargoWeight" label="运单重量"></el-table-column>
-          <el-table-column sortable width="120" prop="cargoVolume" label="运单体积"></el-table-column> -->
           <el-table-column sortable width="160" prop="shipFromCityName" label="出发城市"></el-table-column>
           <el-table-column sortable width="160" prop="shipToCityName" label="到达城市"></el-table-column>
           <el-table-column sortable width="120" prop="shipSenderName" label="发货人"></el-table-column>
@@ -169,7 +169,7 @@ export default {
         this.toggleAllRows()
         if (this.info.arriveOrgName) {
           this.isEditActual = true
-        }else {
+        } else {
           this.isEditActual = false
         }
       }
@@ -329,24 +329,24 @@ export default {
       this.setData()
       if (this.newData.tmsOrderLoadDetailsList.length === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[0], true)
-        this.$message({type: 'warning', message: '至少要有一条数据'})
+        this.$message({ type: 'warning', message: '至少要有一条数据' })
         return false
-      }else {
+      } else {
         postAddRepertory(50, this.newData).then(data => {
-          if (data.status === 200) {
-            this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
-            this.$message({ type: 'success', message: '短驳入库操作成功' })
-            this.message = true
-          } else {
+            if (data.status === 200) {
+              this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
+              this.$message({ type: 'success', message: '短驳入库操作成功' })
+              this.message = true
+            } else {
+              this.message = false
+            }
+            this.$emit('isSuccess', this.message)
+          })
+          .catch(error => {
             this.message = false
-          }
-          this.$emit('isSuccess', this.message)
-        })
-        .catch(error => {
-          this.message = false
-          this.$emit('isSuccess', this.message)
+            this.$emit('isSuccess', this.message)
 
-        })
+          })
       }
     },
     getLoadTrack() {

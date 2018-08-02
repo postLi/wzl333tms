@@ -68,37 +68,37 @@
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankName" :size="btnsize" ></el-input>
+              <el-input v-model="props.row.bankName" :size="btnsize" @change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankAccount" label="银行卡号">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankAccount" :size="btnsize"></el-input>
+              <el-input type="number" v-model.number="props.row.bankAccount" :size="btnsize"@change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankAccountName" label="开户人">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankAccountName" :size="btnsize"></el-input>
+              <el-input v-model="props.row.bankAccountName" :size="btnsize"@change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="chequeNumber" label="支票号码">
             <template slot-scope="props">
-              <el-input v-model="props.row.chequeNumber" :size="btnsize"></el-input>
+              <el-input v-model="props.row.chequeNumber" :size="btnsize"@change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="receivableNumber" label="汇款号码">
             <template slot-scope="props">
-              <el-input v-model="props.row.receivableNumber" :size="btnsize"></el-input>
+              <el-input v-model="props.row.receivableNumber" :size="btnsize"@change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="wechatAccount" label="微信号">
             <template slot-scope="props">
-              <el-input v-model="props.row.wechatAccount" :size="btnsize"></el-input>
+              <el-input v-model="props.row.wechatAccount" :size="btnsize"@change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="alipayAccount" label="支付宝号">
             <template slot-scope="props">
-              <el-input v-model="props.row.alipayAccount" :size="btnsize"></el-input>
+              <el-input v-model="props.row.alipayAccount" :size="btnsize"@change="(item) => checkStrLen(item,props.$index)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="110">
@@ -141,6 +141,7 @@ export default {
         callback()
       }
     }
+    
     return {
       amount: 0,
       amountMessage: '',
@@ -345,6 +346,9 @@ export default {
             })
         }
       })
+    },
+    checkStrLen (row, index) {
+      console.log(row)
     },
     minusItem(row, index) {
       let item = this.formModel.szDtoList.indexOf(row)

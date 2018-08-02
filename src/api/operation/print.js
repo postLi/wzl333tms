@@ -16,3 +16,36 @@ export function getPrintLibItems(shipId) {
   	return res.data
   })
 }
+/**
+ * 查询公司运单配置信息
+ */
+export function getSettingCompanyOrder () {
+  return fetch.get('/api-order/order/print/v1/setting').then(res => {
+  	return res.data
+  })
+}
+/**
+ * 修改公司运单配置信息
+ */
+export function putSettingCompanyOrder (data) {
+	return fetch.put('/api-order/order/print/v1/', data).then(res => {
+		return res.data
+	})
+}
+
+/**
+ * 查询公司运单标签配置信息
+ */
+export function getSettingCompanyLi () {
+  return fetch.get('/api-order/order/printlib/v1/setting').then(res => {
+    return res.data
+  })
+}
+/**
+ * 修改公司运单标签配置信息
+ */
+export function putSettingCompanyLi (data) {
+  return fetch.put('/api-order/order/printlib/v1/', data).then(res => {
+    return res.data
+  })
+}
