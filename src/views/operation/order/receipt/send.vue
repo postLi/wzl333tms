@@ -334,7 +334,8 @@ export default {
         'pageSize': 10000,
         'vo': {
           'pageType': 2,
-          'receiptIds': []
+          'receiptIds': [],
+          'sendStatus': 107
         }
       },
       tableColumn: [{

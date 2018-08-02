@@ -361,11 +361,12 @@ export default {
                 // acceptStatus:115,
                 // loading:false,
       searchQuery: {
-                    // "currentPage":1,
-                    // "pageSize":10,
+        'currentPage': 1,
+        'pageSize': 10000,
         'vo': {
           'pageType': 3,
-          'receiptIds': []
+          'receiptIds': [],
+          'acceptStatus': 109
         }
       },
       total: 0

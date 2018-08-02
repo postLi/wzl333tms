@@ -179,7 +179,7 @@ export default {
     const validatefee = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输异动费用'))
-      } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
+      } else if (REGEX.Number_big.test(value)) {
         callback()
       } else {
         callback(new Error('费用不能小于0'))

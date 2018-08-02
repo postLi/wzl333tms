@@ -5,7 +5,7 @@
       </el-form-item>
       <el-form-item :label="title+'货人'">
           <el-input
-              :placeholder="title+'货单位或'+title+'货人'"
+              :placeholder="title+'货方或/'+title+'货人'"
               v-model="searchForm.name"
               maxlength="15"
               clearable>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 
 export default {
@@ -49,25 +49,25 @@ export default {
     }
   },
   computed: {
-    title () {
+    title() {
       return this.issender ? '发' : '收'
     }
   },
-  data () {
-    let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
+  data() {
+    const _this = this
+    const validateFormMobile = function(rule, value, callback) {
+      if (validateMobile(value)) {
         callback()
       } else {
         callback(new Error('请输入有效的手机号码'))
       }
     }
 
-    const validateFormEmployeer = function (rule, value, callback) {
+    const validateFormEmployeer = function(rule, value, callback) {
       callback()
     }
 
-    const validateFormNumber = function (rule, value, callback) {
+    const validateFormNumber = function(rule, value, callback) {
       _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
@@ -80,28 +80,28 @@ export default {
       },
       rules: {
         mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
+          // validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }]
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgid = this.orgid
   },
   methods: {
-    getOrgid (id){
+    getOrgid(id) {
       this.searchForm.orgid = id
     },
-    onSubmit () {
+    onSubmit() {
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.name = ''
       this.searchForm.orgid = this.orgid
       this.searchForm.mobile = ''

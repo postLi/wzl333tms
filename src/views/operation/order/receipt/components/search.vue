@@ -118,19 +118,15 @@ export default {
         console.log(status)
         if (status === 'rec_status') {
           this.thestatus = 105
-          this.$set(this.searchForm, 'recStatus', this.thestatus)
         }
         if (status === 'accept_status') {
           this.thestatus = 109
-          this.$set(this.searchForm, 'acceptStatus', this.thestatus)
         }
         if (status === 'send_status') {
           this.thestatus = 107
-          this.$set(this.searchForm, 'sendStatus', this.thestatus)
         }
         if (status === 'giveout_status') {
           this.thestatus = 111
-          this.$set(this.searchForm, 'giveoutStatus', this.thestatus)
         }
       },
       immediate: true
@@ -156,7 +152,9 @@ export default {
       // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
       this.searchForm.startTime = this.searchCreatTime ? (parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00') : ''
       this.searchForm.endTime = this.searchCreatTime ? (parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59') : ''
-      this.$emit('change', this.searchForm)
+      const data = Object.assign({}, this.searchForm)
+      data[this.status] = this.thestatus
+      this.$emit('change', data)
     },
     clearForm() {
       this.searchForm.shipFromOrgid = ''

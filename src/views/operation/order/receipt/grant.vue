@@ -346,11 +346,12 @@ export default {
       loading: false,
       setupTableVisible: false,
       searchQuery: {
-                    // "currentPage":1,
-                    // "pageSize":10,
+        'currentPage': 1,
+        'pageSize': 10000,
         'vo': {
           'pageType': 4,
-          'receiptIds': []
+          'receiptIds': [],
+          'giveoutStatus': 111
         }
       },
       total: 0
