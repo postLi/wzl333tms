@@ -253,14 +253,14 @@ export default {
         firstDayOfWeek: 1,
         disabledDate(time) {
           // 小于终止日
-          return _this.form.truckRegisterDate ? time.getTime() > _this.form.truckRegisterDate : false
+          return _this.form.truckScrapDate ? time.getTime() > _this.form.truckScrapDate : false
         }
       },
       pickOption2: {
         firstDayOfWeek: 1,
         disabledDate(time) {
           // 大于起始日
-          return _this.form.truckScrapDate ? time.getTime() < _this.form.truckScrapDate : false
+          return _this.form.truckRegisterDate ? time.getTime() < _this.form.truckRegisterDate : false
         }
       }
     }
