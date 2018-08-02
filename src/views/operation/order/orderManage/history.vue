@@ -154,7 +154,7 @@ export default {
         'prop': 'createTime',
         'width': '180',
         'slot': function(scope) {
-          return `${parseTime(scope.row.createTime, '{y}{m}{d}')}`
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d}')}`
         }
       }, {
         'label': '发货人',

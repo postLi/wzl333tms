@@ -211,14 +211,14 @@ export default {
         'prop': 'ydCreateTime',
         'width': '100',
         'slot': function(scope) {
-          return `${parseTime(scope.row.ydCreateTime, '{y}{m}{d}')}`
+          return `${parseTime(scope.row.ydCreateTime, '{y}-{m}-{d}')}`
         }
       }, {
         'label': '中转时间',
         'prop': 'transferTime',
         'width': '100',
         'slot': function(scope) {
-          return `${parseTime(scope.row.transferTime, '{y}{m}{d}')}`
+          return `${parseTime(scope.row.transferTime, '{y}-{m}-{d}')}`
         }
       }, {
         'label': '中转运费',

@@ -142,7 +142,7 @@ export default {
         'prop': 'createTime',
         'width': '180',
         'slot': function(scope) {
-          return `${parseTime(scope.row.createTime, '{y}{m}{d}')}`
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d}')}`
         }
       }, {
         'label': '发货人',
@@ -457,9 +457,9 @@ export default {
               this.fetchData()
             }).catch(err => {
               this.$message({
-                        type: 'info',
-                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                      })
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
             })
           }).catch(() => {
             this.$message({
@@ -491,9 +491,9 @@ export default {
               this.fetchData()
             }).catch(err => {
               this.$message({
-                    type: 'info',
-                    message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
-                  })
+                type: 'info',
+                message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
             })
           }).catch(() => {
             this.$message({

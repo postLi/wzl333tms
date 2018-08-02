@@ -310,6 +310,12 @@ export default {
         for (const i in this.form) {
           this.form[i] = data[i]
         }
+        if (this.form.truckRegisterDate) {
+          this.form.truckRegisterDate = new Date(this.form.truckRegisterDate.replace(/-/g, '/'))
+        }
+        if (this.form.truckScrapDate) {
+          this.form.truckScrapDate = new Date(this.form.truckScrapDate.replace(/-/g, '/'))
+        }
         this.form.truckId = data.truckId
       } else {
         this.popTitle = '新增车辆'

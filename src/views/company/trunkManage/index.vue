@@ -106,14 +106,14 @@
             width="150"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.truckRegisterDate | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.truckRegisterDate | parseTime('{y}-{m}-{d}') }}</template>
           </el-table-column>
           <el-table-column
             label="车辆报废时间"
             width="150"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.truckScrapDate | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.truckScrapDate | parseTime('{y}-{m}-{d}') }}</template>
           </el-table-column>
           <el-table-column
             prop="truckRemarks"
@@ -290,7 +290,7 @@ export default {
               type: 'warning'
             })
           }
-          this.selectInfo = this.selected[0]
+          this.selectInfo = Object.assign({}, this.selected[0])
           this.openAddCustomer()
           break
           // 删除客户
@@ -352,6 +352,8 @@ export default {
       this.AddCustomerVisible = true
     },
     closeAddCustomer() {
+      this.selectInfo = {}
+      this.isModify = false
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {

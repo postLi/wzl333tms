@@ -82,7 +82,7 @@
             width="200"
             label="合同起始日">
             <template slot-scope="scope">
-                  {{ scope.row.contractStarttime | parseTime('{y}{m}{d}') }}
+                  {{ scope.row.contractStarttime | parseTime('{y}-{m}-{d}') }}
             </template>
           </el-table-column>
           <el-table-column
@@ -90,7 +90,7 @@
             width="200"
             label="合同终止日">
             <template slot-scope="scope">
-                  {{ scope.row.contractEndtime | parseTime('{y}{m}{d}') }}
+                  {{ scope.row.contractEndtime | parseTime('{y}-{m}-{d}') }}
             </template>
           </el-table-column>
           <el-table-column

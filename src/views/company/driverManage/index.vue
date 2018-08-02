@@ -76,7 +76,7 @@
             width="180"
             sortable
             >
-            <template slot-scope="scope">{{ scope.row.validityDate | parseTime('{y}{m}{d}') }}</template>
+            <template slot-scope="scope">{{ scope.row.validityDate | parseTime('{y}-{m}-{d}') }}</template>
           </el-table-column>
           <el-table-column
             prop="bankCardNumber"

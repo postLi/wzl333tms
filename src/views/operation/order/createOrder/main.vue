@@ -859,13 +859,13 @@ export default {
         if (newVal === '') {
           this.form.tmsOrderShip.shipTotalFee = '0.00'
         }
-        this.setShipFee()
+        this.setShipFee('aaaaa')
       },
       immediate: true
     },
     'form.tmsOrderShip.shipPayWay': {
       handler(newVal) {
-        this.setShipFee()
+        this.setShipFee('bbbbb')
       },
       immediate: true
     },
@@ -1542,6 +1542,16 @@ export default {
         }
         this.form.tmsOrderTransfer.transferTime = parseTime(this.form.tmsOrderTransfer.transferTime)
       }
+
+      // 处理下回填的多笔付数据
+      if (parseInt(this.form.tmsOrderShip.shipPayWay, 10) === 104) {
+        setTimeout(() => {
+          this.form.tmsOrderShip.shipNowpayFee = data.tmsOrderShipInfo.shipNowpayFee
+          this.form.tmsOrderShip.shipArrivepayFee = data.tmsOrderShipInfo.shipArrivepayFee
+          this.form.tmsOrderShip.shipMonthpayFee = data.tmsOrderShipInfo.shipMonthpayFee
+          this.form.tmsOrderShip.shipReceiptpayFee = data.tmsOrderShipInfo.shipReceiptpayFee
+        }, 300)
+      }
     },
     // 回填订单信息
     setPreOrder() {
@@ -1651,7 +1661,7 @@ export default {
       })
       this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
     },
-    setShipFee() {
+    setShipFee(flag) {
       const key = parseInt(this.form.tmsOrderShip.shipPayWay, 10)
       this.shipNowpayFeeDisabled = true
       this.shipArrivepayFeeDisabled = true
