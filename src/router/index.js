@@ -35,6 +35,22 @@ export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
   {
+    component: Layout,
+    redirect: '/checklist/index',
+    noDropdown: true,
+    hidden: true,
+    path: '/checklist',
+    children: [{
+      path: '/checklist/index',
+      component: _import('checklist/index'),
+      name: 'checklistpage',
+      meta: {
+        title: '初始化',
+        noCache: false
+      }
+    }]
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
