@@ -257,18 +257,33 @@
           >
           </el-table-column>
         </el-table>
+
+
+        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
+          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
+          <!--<template v-for="column in tableColumn">-->
+            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>-->
+            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">-->
+              <!--<template slot-scope="scope">-->
+                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>-->
+                <!--<span v-else v-html="column.slot(scope)"></span>-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+          <!--</template>-->
+        <!--</el-table>-->
+
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
 import { getExportExcel } from '@/api/company/customerManage'
 import { getPostlist,putRefuse,deletebatchDelete,putCancel,putAccept } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -294,6 +309,7 @@ export default {
   },
   data () {
     return {
+      tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -525,25 +541,25 @@ export default {
       // 显示导入窗口
     },
     doAction (type) {
-      if(type==='import'){
-        // 默认选择全部
-        if (this.selected.length === 0) {
-          SaveAsFile(this.usersArr, this.tableColumn)
-        } else {
-          // 筛选选中的项
-          SaveAsFile(this.selected, this.tableColumn)
-        }
-      }
+      // if(type==='export'){
+      //   // 默认选择全部
+      //   // if (this.selected.length === 0) {
+      //   //   SaveAsFile(this.usersArr, this.tableColumn)
+      //   // } else {
+      //   //   // 筛选选中的项
+      //   //   SaveAsFile(this.selected, this.tableColumn)
+      //   // }
+      // }
       // 判断是否有选中项
-      if(!this.selected.length && type !== 'add' && type !== 'acceptance' && type !== 'import'){
+       if(!this.selected.length && type !== 'add' && type !== 'export' && type !== 'acceptance'){
           this.closeAddCustomer()
           this.$message({
-              message: '请选择要操作的项~',
+              message: '请选择要操作的订单~',
               type: 'warning'
           })
           return false
       }
-      else if(!this.selected.length && type === 'acceptance'){
+      else if(!this.selected.length && type === 'acceptance' ){
         this.closeAddCustomer()
         this.$message({
           message: '请选择要受理的订单~',
@@ -552,11 +568,19 @@ export default {
         return false
       }
       switch (type) {
+        case 'export':
+          if (this.selected.length === 0) {
+            SaveAsFile(this.usersArr, this.tableColumn)
+          } else {
+            // 筛选选中的项
+            SaveAsFile(this.selected, this.tableColumn)
+          }
+          break;
           // 添加客户
           case 'add':
               this.isModify = false
               this.isDbclick = false
-              this.selectInfo = {}
+            this.selectInfo = {}
               this.openAddCustomer()
               break;
               //受理  acceptance
@@ -775,17 +799,17 @@ export default {
             }
               break;
           // 导出数据
-          case 'export':
-              let ids2 = this.selected.map(el => {
-                return el.customerId
-              })
-              getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                    type: 'success',
-                    message: '即将自动下载!'
-                })
-              })
-              break;
+          // case 'export':
+          //     let ids2 = this.selected.map(el => {
+          //       return el.customerId
+          //     })
+          //     getExportExcel(ids2.join(',')).then(res => {
+          //       this.$message({
+          //           type: 'success',
+          //           message: '即将自动下载!'
+          //       })
+          //     })
+          //     break;
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -815,11 +839,10 @@ export default {
       this.openAddCustomer()
       this.$refs.multipleTable.clearSelection()
     },
-    // 显示列表
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
-    },
+    }
   }
 }
 </script>

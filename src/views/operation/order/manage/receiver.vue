@@ -251,7 +251,7 @@
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
 import { getPostlist } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'

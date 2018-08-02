@@ -53,7 +53,7 @@
               fixed
               sortable
               prop="pickupFee"
-              width="150"
+              width="160"
               label="实际提货费">
             </el-table-column>
           </el-table>
@@ -129,10 +129,10 @@
         selected: [],
         rules:{
           shipSn:[
-            { validator:validateShipNum, trigger: ['blur','change'] }
+            { validator:validateShipNum, trigger: 'blur' }
           ],
           shipGoodsSn:[
-            { validator:validateShipNum, trigger: ['blur','change']}
+            { validator:validateShipNum, trigger: 'blur'}
           ]
         },
         formLabelWidth:'90',
@@ -223,11 +223,19 @@
         }
       },
       reset(){
+        // this.formInline = this.setObject(this.formInline)
+        this.formInline = Object.assign({},this.formInline)
+
         this.formInline.shipSn = ''
         this.formInline.shipGoodsSn = ''
         this.formInline.pickupFee = ''
       },
-
+      setObject(obj1, obj2) {
+        for (var i in obj1) {
+          obj1[i] = obj2 ? obj2[i] : ''
+        }
+        return obj1
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -245,6 +253,7 @@
               delete this.sendId.shipId
               this.fetchData()
               this.reset()
+              this.$emit('success')
             }).catch(err => {
               this.loading = false
             })
@@ -276,6 +285,7 @@
                 confirmButtonText: '确定',
                 callback: action => {
                   this.fetchData()
+                  this.$emit('success')
                 }
               });
             }).catch(err => {
@@ -303,7 +313,7 @@
 
   }
   .pick-maintain .popRight-content{
-    padding: 20px 10px 5px 10px;
+    padding: 5px 10px 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{
       margin-right: -8px;
@@ -329,6 +339,17 @@
       font-size: 14px;
 
     }
+    .el-input.is-disabled {
+      .el-input__inner {
+
+        background-color: #fff;
+        /*border-color: #e4e7ed;*/
+        color: #606266;
+        /*cursor: not-allowed;*/
+      }
+
+    }
+
   }
 
   .pick_center{

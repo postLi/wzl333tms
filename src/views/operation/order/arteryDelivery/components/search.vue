@@ -185,8 +185,8 @@ export default {
       this.searchForm.endTime = ''
       this.searchForm.arrivedbeginDate = ''
       this.searchForm.arrivedEndDate = ''
-      this.searchCreatTime = []
-      this.searchEndTime = []
+      // this.searchCreatTime = []
+      // this.searchEndTime = []
       this.searchForm.dirverName = ''
       this.searchForm.arriveOrgid = this.orgid
       this.searchForm.truckIdNumber = ''

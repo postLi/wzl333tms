@@ -135,7 +135,7 @@ export default {
     clearForm() {
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchCreatTime = []
+      // this.searchCreatTime = []
       this.searchForm.pickupBatchNumber = ''
       this.searchForm.truckIdNumber = ''
       this.searchForm.driverName = ''

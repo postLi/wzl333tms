@@ -8,7 +8,7 @@
           <el-form-item label="所属网点">
             <SelectTree v-model="form.orgId" :disabled="isDbclick" />
           </el-form-item>
-          <el-form-item label="收支方式" prop="financialWay">
+          <el-form-item label="收支方式" prop="financialWayId">
             <SelectType v-model="form.financialWayId" type="financial_way_type" placeholder="请选择"  @change="financialWayClick" @mounted="getData" :disabled="isDbclick ? isDbclick : isModify"/>
 
           </el-form-item>
@@ -127,7 +127,7 @@ export default {
     }
     return {
       rules: {
-        'financialWay':[
+        'financialWayId':[
           {required: true,validator: this.validateIsEmpty('收支方式不能为空'), trigger: 'blur'},
         ],
         bankName:[
@@ -253,7 +253,6 @@ export default {
 
     },
     financialWayClick(item){
-      console.log(item)
       this.bankPay = false
       this.aliPay = false
       this.wPay = false

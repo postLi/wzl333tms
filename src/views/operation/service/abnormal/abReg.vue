@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../../../company/groupManage/index.css">
 <template>
     <div class="tab-content" v-loading="loading">
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
@@ -8,7 +9,7 @@
           <el-button type="primary" :size="btnsize"  icon="el-icon-news" @click="doAction('check')" plain>查看明细</el-button>
           <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-          
+
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -191,7 +192,7 @@
         </el-table>
         <!-- 结束 -->
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <Addabnormal :issender="true" :isModify="isModify"  :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>

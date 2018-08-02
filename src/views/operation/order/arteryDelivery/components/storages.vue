@@ -138,8 +138,8 @@
                   <!--</div>-->
 
 
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
@@ -537,28 +537,6 @@ export default {
       // setupTableVisible: false,
       // AddCustomerVisible: false,
       formMode1: {
-        // arriveOrgName:'',//到达网点
-        // truckIdNumber:'',//车牌号码
-        // dirverName:'',//司机姓名
-        // dirverMobile:'',//司机电话
-        // truckVolume:'',//可载体积
-        // truckLoad:'',//可载重量
-        // apportionTypeName:'',//分摊方式
-        // DateTimeFormat:'',//配载日期
-        // requireArrivedTime:'',//要求到达日期：
-        // remark:'',
-        //  backpayCarriage:'',//现付运费
-        //  nowpayOilCard:'',//现付油卡
-        //  backpayCarriage:'',//回付运费
-        //  backpayOilCard:'',//回付油卡
-        //  arrivepayCarriage:'',//到付运费
-        //  arrivepayOilCard:'',//到付油卡
-        //  carloadInsuranceFee:'',//整车保险费
-        //  leaveHandlingFee:'',//发站装卸费
-        //  leaveOtherFee:'',//发站其他费
-        //  arriveHandlingFee:'',//到站装卸费
-        //  arriveOtherFee:'',//到站其他费
-        //   userName //配载人员
       },
       sendTypeId: {
         typeId: 54, //等于54为干线到车确认

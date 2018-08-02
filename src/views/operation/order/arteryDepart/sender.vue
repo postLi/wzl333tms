@@ -15,286 +15,295 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          @row-dblclick="getDbClick"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="100">
-            <template slot-scope="scope">{{ ((searchQuery.pageNum - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="batchNo"
-            width="120"
-            label="发车批次"
+        <!--<el-table-->
+          <!--ref="multipleTable"-->
+          <!--:data="usersArr"-->
+          <!--@row-dblclick="getDbClick"-->
+          <!--stripe-->
+          <!--border-->
+          <!--@row-click="clickDetails"-->
+          <!--@selection-change="getSelection"-->
+          <!--height="100%"-->
+          <!--tooltip-effect="dark"-->
+          <!--:default-sort = "{prop: 'id', order: 'ascending'}"-->
+          <!--style="width: 100%">-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--type="selection"-->
+            <!--width="50">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--label="序号"-->
+            <!--width="100">-->
+            <!--<template slot-scope="scope">{{ ((searchQuery.pageNum - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--prop="batchNo"-->
+            <!--width="120"-->
+            <!--label="发车批次"-->
 
-          >
-          </el-table-column>
-          <el-table-column
-            prop="truckIdNumber"
-            width="110"
-            sortable
-            label="车牌号">
-          </el-table-column>
-          <el-table-column
-            prop="orgName"
-            sortable
-            width="110"
-            label="发车网点">
-          </el-table-column>
-          <el-table-column
-            prop="arriveOrgName"
-            sortable
-            width="110"
-            label="目的网点">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="batchTypeName"
-            width="110"
-            label="批次状态">
-          </el-table-column>
-          <el-table-column
-            label="发车时间"
-            width="160"
-            prop="createTime"
-            sortable
-            >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-            <!--</template>-->
-            <!--<template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>-->
-          </el-table-column>
+          <!--&gt;-->
+          <!--</el-table-column>-->
           <!--<el-table-column-->
-            <!--prop="vipNum"-->
-            <!--label="车牌号"-->
+            <!--prop="truckIdNumber"-->
+            <!--width="110"-->
+            <!--sortable-->
+            <!--label="车牌号">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="orgName"-->
+            <!--sortable-->
+            <!--width="110"-->
+            <!--label="发车网点">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="arriveOrgName"-->
+            <!--sortable-->
+            <!--width="110"-->
+            <!--label="目的网点">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--sortable-->
+            <!--prop="batchTypeName"-->
+            <!--width="110"-->
+            <!--label="批次状态">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--label="发车时间"-->
+            <!--width="160"-->
+            <!--prop="createTime"-->
+            <!--sortable-->
+            <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--&lt;!&ndash;<el-table-column&ndash;&gt;-->
+            <!--&lt;!&ndash;prop="vipNum"&ndash;&gt;-->
+            <!--&lt;!&ndash;label="车牌号"&ndash;&gt;-->
+            <!--&lt;!&ndash;width="110"&ndash;&gt;-->
+            <!--&lt;!&ndash;sortable&ndash;&gt;-->
+            <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
+          <!--<el-table-column-->
+            <!--sortable-->
+            <!--prop="dirverName"-->
+            <!--width="110"-->
+            <!--label="司机名称">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="dirverMobile"-->
+            <!--label="司机电话"-->
             <!--width="110"-->
             <!--sortable-->
             <!--&gt;-->
           <!--</el-table-column>-->
-          <el-table-column
-            sortable
-            prop="dirverName"
-            width="110"
-            label="司机名称">
-          </el-table-column>
-          <el-table-column
-            prop="dirverMobile"
-            label="司机电话"
-            width="110"
-            sortable
-            >
-          </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="actualAmount"-->
-            <!--label="实到件数"-->
-            <!--width="110"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
+          <!--&lt;!&ndash;<el-table-column&ndash;&gt;-->
+            <!--&lt;!&ndash;prop="actualAmount"&ndash;&gt;-->
+            <!--&lt;!&ndash;label="实到件数"&ndash;&gt;-->
+            <!--&lt;!&ndash;width="110"&ndash;&gt;-->
+            <!--&lt;!&ndash;sortable&ndash;&gt;-->
+            <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
 
+          <!--&lt;!&ndash;<el-table-column&ndash;&gt;-->
+            <!--&lt;!&ndash;prop="truckLoad"&ndash;&gt;-->
+            <!--&lt;!&ndash;label="实到重量"&ndash;&gt;-->
+            <!--&lt;!&ndash;width="110"&ndash;&gt;-->
+            <!--&lt;!&ndash;sortable&ndash;&gt;-->
+            <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
+          <!--&lt;!&ndash;<el-table-column&ndash;&gt;-->
+            <!--&lt;!&ndash;prop="truckVolume"&ndash;&gt;-->
+            <!--&lt;!&ndash;label="实到体积"&ndash;&gt;-->
+            <!--&lt;!&ndash;width="110"&ndash;&gt;-->
+            <!--&lt;!&ndash;sortable&ndash;&gt;-->
+          <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
           <!--<el-table-column-->
-            <!--prop="truckLoad"-->
-            <!--label="实到重量"-->
-            <!--width="110"-->
+            <!--prop="loadAmountall"-->
+            <!--label="配载总件数"-->
+            <!--width="120"-->
             <!--sortable-->
-            <!--&gt;-->
+          <!--&gt;-->
           <!--</el-table-column>-->
           <!--<el-table-column-->
-            <!--prop="truckVolume"-->
-            <!--label="实到体积"-->
+            <!--prop="loadWeightall"-->
+            <!--label="配载总重量"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="loadVolumeall"-->
+            <!--label="配载总体积"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="weightLoadRate"-->
+            <!--label="重量装载率"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="volumeLoadRate"-->
+            <!--label="体积装载率"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="nowpayCarriage"-->
+            <!--label="现付运费"-->
             <!--width="110"-->
             <!--sortable-->
           <!--&gt;-->
           <!--</el-table-column>-->
-          <el-table-column
-            prop="loadAmountall"
-            label="配载总件数"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="loadWeightall"
-            label="配载总重量"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="loadVolumeall"
-            label="配载总体积"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="weightLoadRate"
-            label="重量装载率"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="volumeLoadRate"
-            label="体积装载率"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="nowpayCarriage"
-            label="现付运费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="nowpayOilCard"
-            label="现付油卡"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arrivepayCarriage"
-            label="到付运费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arrivepayOilCard"
-            label="到付油卡"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="backpayCarriage"
-            label="回付运费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="backpayOilCard"
-            label="回付油卡"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="shipFeeAmount"
-            label="运费合计"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="carloadInsuranceFee"
-            label="整车保险费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="leaveHandlingFee"
-            label="发站装卸费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="leaveOtherFee"
-            label="发站其他费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arriveHandlingFee"
-            label="到站装卸费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arriveOtherFee"
-            label="到站其他费"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="loadTime"
-            label="配载时间"
-            width="160"
-            sortable
-          >
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}-->
-            <!--</template>-->
-            <!--<template slot-scope="scope">{{ new Date(scope.row.loadTime).toLocaleDateString() }}</template>-->
-          </el-table-column>
-          <el-table-column
-            prop="userName"
-            label="配载人"
-            width="90"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="truckUserName"
-            label="发车人"
-            width="90"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="150"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="nowpayOilCard"-->
+            <!--label="现付油卡"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="arrivepayCarriage"-->
+            <!--label="到付运费"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="arrivepayOilCard"-->
+            <!--label="到付油卡"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="backpayCarriage"-->
+            <!--label="回付运费"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="backpayOilCard"-->
+            <!--label="回付油卡"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="shipFeeAmount"-->
+            <!--label="运费合计"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="carloadInsuranceFee"-->
+            <!--label="整车保险费"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="leaveHandlingFee"-->
+            <!--label="发站装卸费"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="leaveOtherFee"-->
+            <!--label="发站其他费"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="arriveHandlingFee"-->
+            <!--label="到站装卸费"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="arriveOtherFee"-->
+            <!--label="到站其他费"-->
+            <!--width="120"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="loadTime"-->
+            <!--label="配载时间"-->
+            <!--width="160"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="userName"-->
+            <!--label="配载人"-->
+            <!--width="90"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="truckUserName"-->
+            <!--label="发车人"-->
+            <!--width="90"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="remark"-->
+            <!--label="备注"-->
+            <!--width="150"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+
+
+
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
+
+
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
 import { getExportExcel } from '@/api/company/customerManage'
 import { postSelectLoadMainInfoList, putLoadDepart, putCancelLoadDepart, putCancelLoadTruck } from '@/api/operation/arteryDepart'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
-
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -307,16 +316,15 @@ export default {
       'otherinfo'
     ]),
     orgid() {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
+
     }
   },
   mounted() {
-    // this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
   },
   data() {
     return {
+      tablekey: 0,
       loading: true,
       btnsize: 'mini',
       usersArr: [],
@@ -343,9 +351,149 @@ export default {
           loadStartTime: '',
           departureStartTime: '',
           departureEndTime: ''
-          // arriveOrgid:'',
         }
-      }
+      },
+      tableColumn:[
+        {
+          label:'序号',
+          prop:'id',
+          width:'60',
+          fixed:true,
+          slot:(scope) => {
+            return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          }
+        },{
+          label:'发车批次',
+          prop:'batchNo',
+          width:'120',
+          fixed:true,
+        },{
+          label:'车牌号',
+          prop:'truckIdNumber',
+          width:'110',
+          fixed:true,
+        },{
+          label:'发车网点',
+          prop:'orgName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'目的网点',
+          prop:'arriveOrgName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'批次状态',
+          prop:'batchTypeName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'发车时间',
+          prop:'createTime',
+          width:'160',
+          fixed:false,
+        },{
+          label:'司机名称',
+          prop:'dirverName',
+          width:'110',
+          fixed:false,
+        },{
+          label:'配载总件数',
+          prop:'loadAmountall',
+          width:'120',
+          fixed:false,
+        },{
+          label:'配载总重量',
+          prop:'loadWeightall',
+          width:'120',
+          fixed:false,
+        },{
+          label:'配载总体积',
+          prop:'loadVolumeall',
+          width:'120',
+          fixed:false,
+        },{
+          label:'重量装载率',
+          prop:'weightLoadRate',
+          width:'120',
+          fixed:false,
+        },{
+          label:'体积装载率',
+          prop:'volumeLoadRate',
+          width:'120',
+          fixed:false,
+        },{
+          label:'现付运费',
+          prop:'nowpayCarriage',
+          width:'110',
+          fixed:false,
+        },{
+          label:'现付油卡',
+          prop:'nowpayOilCard',
+          width:'110',
+          fixed:false,
+        },{
+          label:'到付运费',
+          prop:'arrivepayCarriage',
+          width:'110',
+          fixed:false,
+        },{
+          label:'到付油卡',
+          prop:'arrivepayOilCard',
+          width:'110',
+          fixed:false,
+        },{
+          label:'回付运费',
+          prop:'backpayCarriage',
+          width:'110',
+          fixed:false,
+        },{
+          label:'回付油卡',
+          prop:'backpayOilCard',
+          width:'110',
+          fixed:false,
+        },{
+          label:'运费合计',
+          prop:'shipFeeAmount',
+          width:'110',
+          fixed:false,
+        },{
+          label:'整车保险费',
+          prop:'carloadInsuranceFee',
+          width:'120',
+          fixed:false,
+        },{
+          label:'发站装卸费',
+          prop:'leaveHandlingFee',
+          width:'120',
+          fixed:false,
+        },{
+          label:'发站其他费',
+          prop:'leaveOtherFee',
+          width:'120',
+          fixed:false,
+        },{
+          label:'配载时间',
+          prop:'loadTime',
+          width:'160',
+          fixed:false,
+        },{
+          label:'配载人',
+          prop:'userName',
+          width:'90',
+          fixed:false,
+        },{
+          label:'发车人',
+          prop:'truckUserName',
+          width:'120',
+          fixed:false,
+        },{
+          label:'备注',
+          prop:'remark',
+          width:'150',
+          fixed:false,
+        }
+      ]
     }
   },
   methods: {
@@ -587,7 +735,12 @@ export default {
       this.selectInfo = row
       this.openAddCustomer()
       this.$refs.multipleTable.clearSelection()
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
+
   }
 }
 </script>

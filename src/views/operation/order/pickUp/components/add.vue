@@ -54,7 +54,7 @@
           <el-form-item label="代收费用" prop="tmsOrderPickup.collectionFee">
             <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick" maxlength="8"></el-input>
           </el-form-item>
-          <el-form-item label="车牌号" prop="tmsDriver.truckIdNumber">
+          <el-form-item label="车牌号" prop="tmsTruck.truckIdNumber">
             <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick" maxlength="8"/>
           </el-form-item>
           <el-form-item label="司机姓名" prop="tmsDriver.driverName">
@@ -187,22 +187,15 @@ export default {
         callback(new Error('请输入正确的手机号码~'))
       }
     }
-    const validateTruckIdNumber = function(rule, value, callback) {
-      if (!value) {
-        callback(new Error('车牌号不能为空'))
-      } else {
-        callback
-      }
-    }
 
     return {
       rules: {
         'tmsOrderPickup.pickupName': [
-          { required: true, validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur' }
+          { required: true, validator: this.validateIsEmpty('货品名不能为空') }
         ],
         'tmsOrderPickup.pickupAmount': [
           { validator: validatePickupNum, trigger: 'blur' },
-          { required: true, validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur' }
+          { required: true, validator: this.validateIsEmpty('件数不能为空') }
         ],
         'tmsOrderPickup.pickupVolume': [
           { validator: validatePickupNum, trigger: 'blur' }
@@ -224,14 +217,14 @@ export default {
           { validator: validatePickupNum, trigger: 'blur' }
           // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
         ],
-        'tmsDriver.truckIdNumber': [
+        'tmsTruck.truckIdNumber': [
           // {  validator: this.validateIsEmpty('车牌号不能为空')}
-          // { required: true, validator: this.validateIsEmpty('车牌号不能为空')}
+          { required: true, validator: this.validateIsEmpty('车牌号不能为空')}
           // { max: 8, message: '车牌号最多可输入8个字符' }
         ],
         'tmsDriver.driverName': [
           // { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
-          { required: true, validator: this.validateIsEmpty('司机姓名不能为空'), trigger: 'blur' }
+          { required: true, validator: this.validateIsEmpty('司机姓名不能为空')}
         ],
         'tmsDriver.driverMobile': [
           { validator: validateMobile, trigger: 'change' }
@@ -240,13 +233,13 @@ export default {
           { max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.arriveTime': [
-          { required: true, validator: this.validateIsEmpty('要求到达时间不能为空'), trigger: 'blur' }
+          { required: true, validator: this.validateIsEmpty('要求到达时间不能为空') }
         ],
         'tmsCustomer.customerMobile': [
-          { required: true, validator: this.validateIsEmpty('发货人手机号不能为空'), trigger: ['blur'] }
+          { required: true, validator: this.validateIsEmpty('发货人手机号不能为空')}
         ],
         'tmsCustomer.detailedAddress': [
-          { required: true, validator: this.validateIsEmpty('提货地址不能为空'), trigger: ['blur'] }
+          { required: true, validator: this.validateIsEmpty('提货地址不能为空') }
         ]
       },
       pickOption: {
@@ -316,7 +309,7 @@ export default {
       this.initInfo()
     }
 
-    this.fetchGetPickUp()
+
   },
   watch: {
     popVisible(newVal, oldVal) {
@@ -342,6 +335,7 @@ export default {
         this.form.tmsOrderPickup.payMethod = 76
         this.form.tmsOrderPickup.pickupStatus = 236
         this.form.tmsOrderPickup.outTime = new Date()
+        this.fetchGetPickUp()
       }
     }
   },
@@ -450,6 +444,7 @@ export default {
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
 
           let promiseObj
+          console.log(this.form.tmsTruck.truckIdNumber)
           const data = objectMerge2({}, this.form)
           // 判断操作，调用对应的函数
           if (this.isModify) {
@@ -467,7 +462,6 @@ export default {
               data.tmsCustomer.customerId = this.form.tmsCustomer.customerId
             }
             data.tmsOrderPickup.outTime = +new Date(this.form.tmsOrderPickup.outTime)
-            // this.form.tmsOrderPickup.outTime = new Date()
             promiseObj = postAddPickup(data)
           }
 
@@ -478,7 +472,7 @@ export default {
               callback: action => {
                 this.$emit('success')
                 this.closeMe()
-                this.reset()
+                // this.reset()
               }
             })
           }).catch(err => {
@@ -490,6 +484,11 @@ export default {
       })
     },
     reset() {
+      // this.form.tmsOrderPickup = objectMerge2({}, this.form.tmsOrderPickup)
+      // this.form.tmsTruck = objectMerge2({}, this.form.tmsTruck)
+      // this.form.tmsDriver = objectMerge2({}, this.form.tmsDriver)
+      // this.form.tmsCustomer = objectMerge2({}, this.form.tmsCustomer)
+      // console.log(this.form);
       Object.assign(this.form.tmsOrderPickup)
       Object.assign(this.form.tmsTruck)
       Object.assign(this.form.tmsDriver)
@@ -500,7 +499,7 @@ export default {
       // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
     },
     closeMe(done) {
-      // this.reset()
+      this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
@@ -527,7 +526,9 @@ export default {
     .el-textarea__inner{
       color:#3e9ff1
     }
-
+    .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+      border-color: #dcdfe6;
+    }
   }
   .senderName_lrl{
     .el-autocomplete{

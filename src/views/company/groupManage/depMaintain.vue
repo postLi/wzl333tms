@@ -231,46 +231,68 @@
           }
         },
         editDep(item) {
-          this.loading = true
+
           const id = item.id
           this.dictName = item.dictName
-          const reqPromise = putDict(this.createrId, this.dictName, id)
-          reqPromise.then(res => {
+          if(item.orgid === 0){
             this.$message({
-              type: 'success',
-              message: '修改成功!'
+              type: 'info',
+              message: '系统默认部门不能修改!'
             })
-            this.loading = false
-            this.getSelectDict()
-            this.theulkey = (Math.random() + '').substr(2)
-          })
+            return false
+          }else{
+            this.loading = true
+            const reqPromise = putDict(this.createrId, this.dictName, id)
+            reqPromise.then(res => {
+              this.$message({
+                type: 'success',
+                message: '修改成功!'
+              })
+              this.loading = false
+              this.getSelectDict()
+              this.theulkey = (Math.random() + '').substr(2)
+            })
+          }
+
         },
         delDep(item) {
           const _id = item.id
           const deleteItem = item.dictName
-          this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
-            confirmButtonText: '删除',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            deletePerManage(_id).then(res => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.getSelectDict()
-            }).catch(err => {
-              this.$message({
-                type: 'info',
-                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-              })
-            })
-          }).catch(() => {
+
+          if(item.orgid === 0){
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: '系统默认部门不能修改!'
             })
-          })
+            return false
+          }else{
+            this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              deletePerManage(_id).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.getSelectDict()
+              }).catch(err => {
+                this.$message({
+                  type: 'info',
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              })
+            })
+          }
+
+
+
         }
       }
     }

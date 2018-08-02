@@ -14,116 +14,132 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="160">
-            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="120"
-            label="所属网点">
-          </el-table-column>
-          <el-table-column
-            prop="financialWay"
-            width="110"
-            sortable
-            label="收支方式">
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            sortable
-            width="140"
-            label="银行名称">
-          </el-table-column>
-          <el-table-column
-            prop="bankAccount"
-            sortable
-            width="180"
-            label="银行卡号">
-          </el-table-column>
+        <!--<el-table-->
+          <!--ref="multipleTable"-->
+          <!--:data="usersArr"-->
+          <!--stripe-->
+          <!--border-->
+          <!--@row-dblclick="getDbClick"-->
+          <!--@row-click="clickDetails"-->
+          <!--@selection-change="getSelection"-->
+          <!--height="100%"-->
+          <!--tooltip-effect="dark"-->
+          <!--:default-sort = "{prop: 'id', order: 'ascending'}"-->
+          <!--style="width: 100%">-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--type="selection"-->
+            <!--width="50">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--label="序号"-->
+            <!--width="160">-->
+            <!--<template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--prop="orgName"-->
+            <!--width="120"-->
+            <!--label="所属网点">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="financialWay"-->
+            <!--width="110"-->
+            <!--sortable-->
+            <!--label="收支方式">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="bankName"-->
+            <!--sortable-->
+            <!--width="140"-->
+            <!--label="银行名称">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="bankAccount"-->
+            <!--sortable-->
+            <!--width="180"-->
+            <!--label="银行卡号">-->
+          <!--</el-table-column>-->
 
-          <el-table-column
-            sortable
-            prop="bankAccountName"
-            width="130"
-            label="开户人">
-          </el-table-column>
-          <el-table-column
-            prop="alipayAccount"
-            label="支付宝账号"
-            width="160"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="wechatAccount"
-            label="微信号"
-            width="150"
-            sortable
-            >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--sortable-->
+            <!--prop="bankAccountName"-->
+            <!--width="130"-->
+            <!--label="开户人">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="alipayAccount"-->
+            <!--label="支付宝账号"-->
+            <!--width="160"-->
+            <!--sortable-->
+            <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="wechatAccount"-->
+            <!--label="微信号"-->
+            <!--width="150"-->
+            <!--sortable-->
+            <!--&gt;-->
+          <!--</el-table-column>-->
 
-          <el-table-column
-            prop="statusStr"
-            label="状态"
-            width="110"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="createBy"
-            label="创建人"
-            width="110"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="statusStr"-->
+            <!--label="状态"-->
+            <!--width="110"-->
+            <!--sortable-->
+            <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="createBy"-->
+            <!--label="创建人"-->
+            <!--width="110"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
 
-          <el-table-column
-            label="创建时间"
-            width="160"
-            sortable
-          >
-            <template slot-scope="scope">
-              {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}
-            </template>
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--label="创建时间"-->
+            <!--width="160"-->
+            <!--sortable-->
+          <!--&gt;-->
+            <!--<template slot-scope="scope">-->
+              <!--{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
+            <!--</template>-->
+          <!--</el-table-column>-->
 
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="150"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="remark"-->
+            <!--label="备注"-->
+            <!--width="150"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+
+
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
+
+
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
@@ -131,10 +147,12 @@ import {  getExportExcel } from '@/api/company/customerManage'
 import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
 import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   components: {
@@ -148,17 +166,11 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-        // return this.isModify ? this.selectInfo.arriveOrgid : this.searchQuery.vo.arriveOrgid || this.otherinfo.orgid
       }
   },
   mounted () {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
-    // Promise.all(this.fetchAllCustomer(this.otherinfo.orgid)).then(res => {
-    //   console.log(res)
-    //   this.loading = false
-    // })
   },
   data () {
     return {
@@ -166,6 +178,7 @@ export default {
       btnsize: 'mini',
       usersArr: [],
       total: 0,
+      tablekey: 0,
       trackId:'',
       batchTypeId:'',//批次状态
       //加载状态
@@ -185,7 +198,76 @@ export default {
           financialWay: '',//收支方式名称
           status:''
         }
-      }
+      },
+      tableColumn:[
+        {
+          label:'序号',
+          prop:'id',
+          width:'160',
+          fixed:true,
+          slot:(scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          }
+        },{
+          label:'所属网点',
+          prop:'orgName',
+          width:'120',
+          fixed:true,
+        },{
+          label:'收支方式',
+          prop:'financialWay',
+          width:'110',
+          fixed:true,
+        },{
+          label:'银行名称',
+          prop:'bankName',
+          width:'140',
+          fixed:false,
+        },{
+          label:'银行卡号',
+          prop:'bankAccount',
+          width:'180',
+          fixed:false,
+        },{
+          label:'开户人',
+          prop:'bankAccountName',
+          width:'130',
+          fixed:false,
+        },{
+          label:'支付宝账号',
+          prop:'alipayAccount',
+          width:'160',
+          fixed:false,
+        },{
+          label:'微信号',
+          prop:'wechatAccount',
+          width:'150',
+          fixed:false,
+        },{
+          label:'状态',
+          prop:'statusStr',
+          width:'110',
+          fixed:false,
+        },{
+          label:'创建人',
+          prop:'createBy',
+          width:'110',
+          fixed:false,
+        },{
+          label: '创建时间',
+          prop: 'createTime',
+          width: '160',
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
+          },
+          fixed: false
+        },{
+          label:'备注',
+          prop:'remark',
+          width:'150',
+          fixed:false,
+        }
+      ]
     }
   },
   methods: {
@@ -325,6 +407,10 @@ export default {
       this.isModify = false
       this.isDbclick = true
       this.openAddCustomer()
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

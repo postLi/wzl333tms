@@ -267,12 +267,12 @@
           ],
           // 网点代码
           networkCode: [
-            { required: true, validator: networkCode, trigger: 'blur' },
+            { required: true, validator: networkCode},
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
-            { required: true, validator: city, trigger: 'blur' }
+            { required: true, validator: city }
           ],
         },
         dialogVisible: false,

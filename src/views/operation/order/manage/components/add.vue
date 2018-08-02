@@ -92,7 +92,7 @@
               <td>
                 <el-form-item label="出发城市">
 
-                  <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"/>
+                  <querySelect search="longAddr" @change="selectFromCity" type="city"  v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick" show="select"/>
                 </el-form-item>
               </td>
               <td>
@@ -263,27 +263,35 @@ export default {
         callback()
       }
     }
+    var validcustomerName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('发货人不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       rules: {
         'tmsOrderPre.orderToCityName': [
-          { required: true,validator: this.validateIsEmpty('到达城市不能为空'), trigger: ['blur'] }
+          { required: true,validator: this.validateIsEmpty('到达城市不能为空')}
         ],
         'customSend.customerName': [
-          { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' }
+          // { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' },
+          {required: true, validator: validcustomerName }
         ],
         'customSend.customerMobile': [
-          { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空'), trigger: 'blur' },
+          { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') },
           { validator: validateMobile, trigger: 'blur' }
         ],
         'customRece.customerName': [
-          { required: true, validator: this.validateIsEmpty('收货人不能为空'), trigger: 'blur' }
+          { required: true, validator: this.validateIsEmpty('收货人不能为空')}
         ],
         'customRece.customerMobile': [
-          { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空'), trigger: 'blur' },
+          { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') },
           { validator: validateMobile, trigger: 'blur' }
         ],
         'tmsOrderCargoList.cargoName': [
-          { validator: this.validateIsEmpty('货品名不能为空'), trigger: 'blur' }
+          { validator: this.validateIsEmpty('货品名不能为空') }
           // { validator: validateCargoName, trigger: 'change' }
         ],
         'tmsOrderCargoList.cargoAmount': [
@@ -357,7 +365,7 @@ export default {
             agencyFund: '', // 代收款
             productPrice: '', // 声明价值
             shipFee: '', // 运费shipFee
-            cargoId: ''
+            id: ''
           }
         ],
         // 订单信息
@@ -375,7 +383,8 @@ export default {
           // commissionFee:'',//代收款手续费
           // agencyFund:'',//代收款
           // productPrice:'',//声明价值
-          orderRemarks: ''//
+          orderRemarks: '',//
+          id:''
           // cargoId,senderId,receiverId
         }
       },
@@ -461,7 +470,7 @@ export default {
       this.form.tmsOrderCargoList.commissionFee = item.commissionFee
       this.form.tmsOrderCargoList.shipFee = item.shipFee
       this.form.tmsOrderCargoList.productPrice = item.productPrice
-      this.form.tmsOrderCargoList.cargoId = item.id
+      this.form.tmsOrderCargoList.id = item.cargoId
       // 发
       this.form.customSend.customerName = item.senderName
       this.form.customSend.customerMobile = item.senderMobile
@@ -481,6 +490,7 @@ export default {
       this.form.tmsOrderPre.orderRemarks = item.orderRemarks
       // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
       this.form.tmsOrderPre.orderEffective = item.orderEffective
+      this.form.tmsOrderPre.id = item.id
     },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -554,6 +564,7 @@ export default {
           data.tmsOrderCargoList = [obj]
           // 判断操作，调用对应的函数
           if (this.isModify) {
+            // data.id = this.form.tmsOrderPre.id
             promiseObj = postModifyOrder(data)
           } else {
             promiseObj = postAddOrder(data)
@@ -577,9 +588,11 @@ export default {
       })
     },
     reset() {
-      this.$refs['ruleForm'].resetFields()
-      this.form.customerList[0] = ''
-      this.form.customerList[1] = ''
+      this.form.customerList[0] = objectMerge2({}, this.form.customerList[0])
+      this.form.customerList[1] = objectMerge2({}, this.form.customerList[1])
+      // this.$refs['ruleForm'].resetFields()
+      // this.form.customerList[0] = ''
+      // this.form.customerList[1] = ''
       // this.form.tmsOrderCargoList = ''
     },
     closeMe(done) {
@@ -663,6 +676,18 @@ export default {
   }
   .idcard-ver{
     float: right;
+  }
+  .el-input.is-disabled{
+    .el-input__inner{
+      /*border-color: transparent;*/
+      border-radius: 0;
+      /*text-align: center;*/
+      color: #606266;
+    }
+  }
+
+  .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+    border-color: #dcdfe6;
   }
 
 }
