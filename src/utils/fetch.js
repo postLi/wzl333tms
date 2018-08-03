@@ -59,11 +59,12 @@ service.interceptors.response.use(
     const res = response.data
 
     if (res.status !== 200 && response.config.url.indexOf('/uaa/oauth/token') === -1) {
-      Message({
+      console.info('=============状态不对出错==============：', res)
+      /* Message({
         message: ((res.errorInfo || '') + ' : ' + (res.msg || '') + ' : ' + (res.code || '') + ' : ' + (res.text || '') + ' : ' + (res.status || '')),
         type: 'error',
-        duration: 5 * 1000
-      })
+        duration: 1 * 1000
+      }) */
       // return Promise.reject(res)
       return res
     } else {

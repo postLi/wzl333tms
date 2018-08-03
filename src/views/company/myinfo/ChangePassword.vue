@@ -52,7 +52,16 @@ export default {
         callback()
       }
     }
+    var validatePass = (rule, value, callback) => {
+      if (this.isCheck === 'false') {
+        callback(new Error('请输入正确的密码！'))
+        this.isCheck = ''
+      } else {
+        callback()
+      }
+    }
     return {
+      isCheck: '',
       form: {
         id: 0,
         username: '',
@@ -67,7 +76,10 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         origin_pwd: [
-          { required: true, message: '请输入原密码', trigger: 'blur' }
+          { required: true, message: '请输入原密码', trigger: 'blur' },
+          {
+            validator: validatePass, message: '请输入正确的密码'
+          }
         ],
         pwd: [
           { required: true, message: '请输入新密码', trigger: 'blur' }
@@ -98,11 +110,11 @@ export default {
               }
             })
           }).catch(res => {
-            this.$alert(res.data.errorInfo, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-              }
-            })
+            if (res.text.indexOf('原密码错误') !== -1) {
+              this.isCheck = 'false'
+              this.$refs[formName].validate()
+            }
+            this.$message.error(res.text)
           })
         } else {
           return false
