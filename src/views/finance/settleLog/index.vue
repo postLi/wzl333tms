@@ -18,6 +18,11 @@ export default {
       component: 'settleLog2'
     }
   },
+  watch: {
+    $route(){
+      this.setComponent()
+    }
+  },
   mounted() {
     this.setComponent()
   },
