@@ -72,8 +72,9 @@ background-color: rgb(195,232,255);
   padding-bottom:10px;
 }
 .side_right .el-collapse-item__header{
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 15px;
 }
 .side_right .el-collapse-item__header i{
   line-height: 30px;

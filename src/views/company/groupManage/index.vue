@@ -15,9 +15,10 @@
       </div>
 
       <div class="side_right">
-        <h5 style="line-height: 32px;font-size: 14px">网点信息:</h5>
+        <!--<h5 style="line-height: 32px;font-size: 14px">网点信息:</h5>-->
         <el-collapse accordion change="doLayout">
-          <el-collapse-item>
+          <el-collapse-item title="网点信息:">
+            <!--<h5 style="line-height: 32px;font-size: 14px">网点信息:</h5>-->
             <div class="side_right_top" :class="{currActive:form.status ===31}">
               <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
                 <el-form-item label="网点名称" :label-width="formLabelWidth" >
