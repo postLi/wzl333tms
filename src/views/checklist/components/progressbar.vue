@@ -43,7 +43,6 @@ export default {
       &.showani{
         width: 100%;
       }
-      // border-radius: 2px;
     }
 
     .progressLabel{
