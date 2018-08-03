@@ -7,7 +7,7 @@ const shouldCalcProperty = ['nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arr
  * 根据列表数据计算合计值
  * @param {*} param 列表数据
  */
-export function getSummaries(param) {
+export function getSummaries(param,propsArr) {
   const { columns, data } = param
   const sums = []
   // console.log(columns, data)
@@ -18,7 +18,8 @@ export function getSummaries(param) {
     }
     const values = data.map(item => Number(item[column.property]))
     // if (!values.every(value => isNaN(value))) {
-    if (shouldCalcProperty.indexOf(column.property) !== -1) {
+    propsArr = propsArr || shouldCalcProperty
+    if (propsArr.indexOf(column.property) !== -1) {
       sums[index] = values.reduce((prev, curr) => {
         const value = Number(curr)
         if (!isNaN(value)) {
