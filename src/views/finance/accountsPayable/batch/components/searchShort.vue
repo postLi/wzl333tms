@@ -5,11 +5,11 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="短驳网点" prop="orgid">
-      <SelectTree v-model="searchForm.orgid" clearable>
+      <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid"  clearable>
       </SelectTree>
     </el-form-item>
     <el-form-item label="所属结算网点" prop="ascriptionOrgid">
-      <SelectTree v-model="searchForm.ascriptionOrgid" clearable>
+      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid"  clearable>
       </SelectTree>
     </el-form-item>
     <el-form-item label="短驳批次" prop="batchNo">

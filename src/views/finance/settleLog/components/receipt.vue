@@ -216,6 +216,7 @@ export default {
       if (this.formModel.flowFeeMidList.length > 0) {
         this.formModel.flowFeeMidList.forEach((e, index) => {
           let data = e.amount.toFixed(2).toString().split('').reverse()
+          let item = data.indexOf('.')
           if (item !== -1) {
             data.splice(item, 1)
           }

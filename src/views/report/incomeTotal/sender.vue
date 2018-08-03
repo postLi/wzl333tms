@@ -4,9 +4,9 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" @hideIframe="hideIframe"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
-      <!-- <div class="btns_box">
+      <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain>打印</el-button>
-      </div> -->
+      </div>
       <div class="info_tab">
         <!-- <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
         style="background-color:transparent; position: absolute; z-index: -3000; width: 100%; height: calc(100% - 100px); top: 120px;left:0;"></iframe> -->
@@ -68,7 +68,7 @@ export default {
         case 'print':
         console.log('vue page printed')
         // document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Toolbar', '11', '0', '', ''  )
-        document.getElementById('senderIframe').contentWindow.OnEvent('AF','BeforePrint','','', '', '')
+        document.getElementById('senderIframe').contentWindow.OnEvent('AF','Print','','', '', '')
         break
       }
     },

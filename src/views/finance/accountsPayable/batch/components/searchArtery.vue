@@ -16,7 +16,7 @@
       </SelectTree>
     </el-form-item>
     <el-form-item label="所属结算网点" prop="ascriptionOrgid">
-      <SelectTree v-model="searchForm.ascriptionOrgid" clearable>
+      <SelectTree v-model="searchForm.ascriptionOrgid"  :orgid="otherinfo.orgid"  clearable>
       </SelectTree>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">

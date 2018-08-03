@@ -83,7 +83,7 @@ export default {
         // shipFromCityCode: '',
         // shipLoadId: 0,
         // shipLoadIdType: 0,
-        // shipSn: '',
+        shipSn: '',
         // shipToCityCode: '',
         // startTime: '',
         status: ''

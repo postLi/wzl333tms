@@ -99,9 +99,11 @@ function OnEvent(id, Event, p1, p2, p3, p4) {
   console.log(id, Event, p1, p2, p3, p4)
   switch (Event) {
     case 'BeforePrint':
-    console.log(Event, '234234')
       AF.func("BeforePrint", "");
       break
+    case 'Print':
+    AF.func("Print", "isOpenSysDialog=true; WorkSheet=OpenDialog"); 
+    break
     case 'Printed':
       AF.func("Printed", p1, p2);
       break

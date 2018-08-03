@@ -34,7 +34,7 @@
             clearable>
         </el-input>
       </el-form-item>
-    <el-form-item label="订单状态：">
+    <el-form-item label="运单状态：">
       <select-type v-model="searchForm.shipStatus" type="ship_status" >
         <el-option slot="head" label="全部" value=""></el-option>
       </select-type>

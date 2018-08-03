@@ -51,6 +51,10 @@ export default {
     filterable: {
       type: Boolean,
       default: false
+    },
+    orgid:{
+      type: [String, Number],
+      default: ''
     }
   },
   watch: {
@@ -89,7 +93,7 @@ export default {
     init() {
       if (!this.inited) {
         this.inited = true
-        getAllOrgInfo(this.otherinfo.companyId).then(data => {
+        getAllOrgInfo(this.orgid || this.otherinfo.companyId).then(data => {
           this.groups = data
         }).catch(err => {
           this.inited = false

@@ -798,7 +798,7 @@ display: -ms-flexbox;
   background: #e9f3fa;
 }
 
-  .manage-add div.el-form-item{
+  .manage-add_lrl div.el-form-item{
     width: 40%;
   }
   .info_table{
