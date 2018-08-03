@@ -8,40 +8,48 @@
       </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
         <ul class="print_aside_content">
-          <draggable :move="canDragStart" :list="formModel.labelList" class="dragArea">
+          <!-- <draggable :list="formModel.labelList" class="dragArea" :move="canDragStart"> -->
+          <transition-group>
             <li v-for="(item, index) in formModel.labelList" :key="index">
               <i :class="item.isshow===1? 'el-icon-circle-check showLabel' : 'el-icon-circle-close hideLabel'"></i> <b>{{item.filedName}}</b> <span>{{item.filedValue}}</span>
               <el-switch v-model="item.isshow===1?true:false" :active-text="item.isshow?'显示':'隐藏'" @change="handleSwitch(item)" v-if="item.filedValue!=='setting'"></el-switch>
               <div class="print_aside_content_itemSet">
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.topx" placeholder="X轴坐标">
+                  <el-input :size="btnsize" v-model="item.topx" placeholder="X轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">X</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.lefty" placeholder="Y轴坐标">
+                  <el-input :size="btnsize" v-model="item.lefty" placeholder="Y轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">Y</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.width" placeholder="宽度">
+                  <el-input :size="btnsize" v-model="item.width" placeholder="宽度" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">宽</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.height" placeholder="高度">
+                  <el-input :size="btnsize" v-model="item.height" placeholder="高度" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">高</template>
                   </el-input>
                 </el-form-item>
               </div>
             </li>
-          </draggable>
+          </transition-group>
+          <!-- </draggable> -->
         </ul>
       </el-form>
     </div>
     <div class="print_main">
-      <div class="print_main_head">预览展示</div>
-      <div class="print_main_content">
+      <div class="print_main_head"><span>预览展示</span>
+        <!-- <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">临时预览背景图</el-button> -->
+      </div>
+      <div class="print_main_content" :style="printPreviewContent" :key="viewKey">
+        <div v-for="(item, index) in formModel.labelList" class="previewBlock" :style="{transform: 'translate(' + item.topx+'px,'+item.lefty + 'px)', width:item.width +'px', height:item.height+'px',lineHeight:item.height+'px'}" v-if="item.filedValue !=='setting' && item.isshow === 1" @mousedown="down" @mousemove="move" @mouseup="end">
+          <span>{{item.filedName}}</span>
+        </div>
+        <!-- </draggable> -->
       </div>
     </div>
   </el-dialog>
@@ -65,15 +73,9 @@ export default {
       formModel: {
         labelList: []
       },
-      rules: {}
-    }
-  },
-  computed: {
-    dialogVisible: {
-      get() {
-        return this.popVisible
-      },
-      set() {}
+      rules: {},
+      viewKey: 0,
+      flags: false
     }
   },
   watch: {
@@ -86,15 +88,79 @@ export default {
       }
     }
   },
+  computed: {
+    dialogVisible: {
+      get() {
+        return this.popVisible
+      },
+      set() {}
+    },
+    printPreviewContent() {
+      let viewWidth = 600
+      let viewHeight = 400
+      if (this.formModel) {
+        this.formModel.labelList.forEach(e => {
+          if (e.filedValue === 'setting') {
+            viewWidth = e.width
+            viewHeight = e.height
+          }
+        })
+      }
+      return {
+        width: viewWidth + 'px',
+        height: viewHeight + 'px'
+      }
+    },
+    printPreviewPaper() {
+
+    }
+  },
   mounted() {
     this.getSettingCompanyLi()
   },
   methods: {
+    down() {
+      console.log(event)
+      // this.flags = true;
+      // let touch;
+      // if (event.touches) {
+      //   touch = event.touches[0];
+      // } else {
+      //   touch = event;
+      // }
+      // this.position.x = touch.clientX;
+      // this.position.y = touch.clientY;
+      // this.dx = moveDiv.offsetLeft;
+      // this.dy = moveDiv.offsetTop;
+    },
+    move() {
+      // console.log(event)
+      // if (this.flags) {
+      //   let touch;
+      //   if (event.touches) {
+      //     touch = event.touches[0];
+      //   } else {
+      //     touch = event;
+      //   }
+      //   this.nx = touch.clientX - this.position.x;
+      //   this.ny = touch.clientY - this.position.y;
+      //   this.xPum = this.dx + this.nx;
+      //   this.yPum = this.dy + this.ny;
+      //   moveDiv.style.left = this.xPum + "px";
+      //   moveDiv.style.top = this.yPum + "px";
+      //   //阻止页面的滑动默认事件
+      //   document.addEventListener("touchmove", function() {
+      //     event.preventDefault();
+      //   }, false);
+      // }
+    },
+    end() {
+      // this.flags = false;
+    },
     getSettingCompanyLi() {
       getSettingCompanyLi().then(data => {
         this.formModel.labelList = data
       })
-
     },
     closeMe(done) {
       this.$emit('close')
@@ -118,9 +184,18 @@ export default {
               return false
             }
           })
+          // this.formModel.labelList.forEach(e => { // 测试随机位置
+          //   if (e.filedValue !== 'setting') {
+          //     e.topx = Math.random() * 300
+          //     e.lefty = Math.random() * 250
+          //     e.width = 80
+          //     e.height = 30
+          //   }
+          // })
           putSettingCompanyLi(this.formModel.labelList).then(data => {
-            this.$message({ type: 'success', message: '运单打印设置成功！' })
+            this.$message({ type: 'success', message: '标签打印设置成功！' })
             this.getSettingCompanyLi()
+            this.viewKey = new Date().getTime()
           })
         }
       })
@@ -128,6 +203,11 @@ export default {
     canDragStart(list) {},
     handleSwitch(obj) {
       obj.isshow === 1 ? obj.isshow = 0 : obj.isshow = 1
+    },
+    changeValue(obj, item, index) {
+      console.log(obj, item, index)
+      this.viewKey = new Date().getTime()
+
     }
   }
 }
