@@ -84,7 +84,7 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
@@ -484,79 +484,10 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+      return getSummaries(param)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      const strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2 || index === 3) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+      return getSummaries(param)
     },
     setHeader(h, { column }) {
       return h('el-button', {

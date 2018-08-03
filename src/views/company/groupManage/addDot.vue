@@ -69,9 +69,12 @@
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
-              <el-checkbox checked :true-label="0" :false-label="1" v-model="form.accountStatus" disabled>开通管理员账号</el-checkbox>
-              <p>登录账号：网点名称 密码：123456</p>
+              <el-checkbox checked :true-label="0" :false-label="1" v-model="form.accountStatus">开通管理员账号</el-checkbox>
+              <p> 密码：123456</p>
             </div>
+            <el-form-item v-if="form.accountStatus === 0 && !isModify" :label-width="formLabelWidth" prop="">
+              <el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" maxlength="20" ></el-input>
+            </el-form-item>
 
             <div class="rem-add-dot">
               <el-form-item label="备注" :label-width="formLabelWidth" prop="">
@@ -182,13 +185,11 @@
       }
 
       var benchmark = (rule, value, callback) => {
-        if(!value){
+        if (!value) {
           callback()
-        }
-        else if (REGEX.NUM_POINT2.test(value) || REGEX.NUM_PERCENTAGE.test(value)) {
+        } else if (REGEX.NUM_POINT2.test(value) || REGEX.NUM_PERCENTAGE.test(value)) {
           return callback()
-        }
-        else{
+        } else {
           return callback(new Error('请输入百分比或两位小数'))
         }
       }
@@ -202,11 +203,11 @@
       var remarks = (rule, value, callback) => {
         callback()
       }
-      var city = (rule, value,callback) => {
+      var city = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('请选择城市~'));
-        } else{
-          callback();
+          return callback(new Error('请选择城市~'))
+        } else {
+          callback()
         }
       }
       return {
@@ -239,12 +240,13 @@
           // 默认值
           accountStatus: 0,
           // id: '',
-          parentId: 0
+          parentId: 0,
+          accountName: '' // 管理员账号
 
         },
         rules: {
           orgName: [
-            { required: true, validator: orgName, trigger: 'blur' },
+            { required: true, validator: orgName, trigger: 'blur' }
             // { min: 2, message: '最少2个字符', trigger: 'blur' },
             // { max: 15, message: '不可超过15个字符', trigger: 'blur' }
           ],
@@ -254,7 +256,7 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           responsibleTelephone: [
-            { pattern: REGEX.MOBILE, message: '请输入正确的电话号码',trigger: ['blur', 'change'] }
+            { pattern: REGEX.MOBILE, message: '请输入正确的电话号码', trigger: ['blur', 'change'] }
           ],
           serviceName: [
             { validator: callBackName, trigger: 'blur' },
@@ -262,18 +264,18 @@
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           servicePhone: [
-            { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话',trigger: ['blur', 'change'] }
+            { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话', trigger: ['blur', 'change'] }
 
           ],
           // 网点代码
           networkCode: [
-            { required: true, validator: networkCode},
+            { required: true, validator: networkCode },
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
             { required: true, validator: city }
-          ],
+          ]
         },
         dialogVisible: false,
         formLabelWidth: '120px'

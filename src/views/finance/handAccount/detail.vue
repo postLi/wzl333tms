@@ -132,7 +132,8 @@ export default {
         'prop': 'noSettlementFee'
       }, {
         'label': '开单时间',
-        'prop': 'createTime'
+        'prop': 'createTime',
+        'width': '180'
       }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
@@ -247,7 +248,7 @@ export default {
           return
         }
         const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
+        if (!values.every(value => isNaN(value)) && column.property !== 'shipSn') {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -258,7 +259,7 @@ export default {
           }, 0)
           sums[index] += ' 元'
         } else {
-          sums[index] = 'N/A'
+          sums[index] = ' - '
         }
       })
 

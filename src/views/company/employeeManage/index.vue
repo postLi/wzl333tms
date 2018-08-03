@@ -116,6 +116,7 @@ import TableSetup from './tableSetup'
 import AddEmployeer from './add'
 import SetAuth from './authorization'
 import Pager from '@/components/Pagination/index'
+import { objectMerge2 } from '@/utils/'
 
 export default{
   name: 'employeeManage',
@@ -209,7 +210,7 @@ export default{
               type: 'warning'
             })
           }
-          this.theUser = this.selected[0]
+          this.theUser = objectMerge2({}, this.selected[0])
           this.openAddEmployeer()
           break
                 // 删除员工

@@ -13,7 +13,6 @@
       </el-form-item>
     <el-form-item label="交账状态：">
       <select-type v-model="searchForm.status" type="fee_status" >
-        <el-option slot="head" label="全部" value=""></el-option>
       </select-type>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">

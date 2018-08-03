@@ -15,7 +15,7 @@
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
-          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
+          <querySelect :orgid="otherinfo.orgid" v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
         </div>
       </div>
       <div class="receiptDialog_table">
@@ -104,7 +104,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="110">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" search="driverName" type="driver" label="driverName" :remote="true" :size="btnsize" />
+              <querySelect :orgid="otherinfo.orgid" v-model="props.row.agent" :size="btnsize" valuekey="id" search="name" label="name" />
             </template>
           </el-table-column>
         </el-table>
@@ -226,8 +226,8 @@ export default {
     })
   },
   methods: {
-    print () {
-      let data = Object.assign(this.formModel)
+    print() {
+      const data = Object.assign(this.formModel)
       this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
       PrintSettlement(data)
       this.submitForm('formModel')

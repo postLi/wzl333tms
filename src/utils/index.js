@@ -2,6 +2,40 @@
  * Created by jiachenpan on 16/11/18.
  */
 
+const shouldCalcProperty = ['nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee']
+/**
+ * 根据列表数据计算合计值
+ * @param {*} param 列表数据
+ */
+export function getSummaries(param) {
+  const { columns, data } = param
+  const sums = []
+  // console.log(columns, data)
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '总计'
+      return
+    }
+    const values = data.map(item => Number(item[column.property]))
+    // if (!values.every(value => isNaN(value))) {
+    if (shouldCalcProperty.indexOf(column.property) !== -1) {
+      sums[index] = values.reduce((prev, curr) => {
+        const value = Number(curr)
+        if (!isNaN(value)) {
+          return prev + curr
+        } else {
+          return prev
+        }
+      }, 0)
+      sums[index] += ' 元'
+    } else {
+      sums[index] = ' - '
+    }
+  })
+
+  return sums
+}
+
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null

@@ -112,7 +112,7 @@ export default {
       loading: false,
       checked: false,
       errInfo: false,
-      //模拟登陆信息
+      // 模拟登陆信息
       loginForm: {
         // accNum: '4',
         username: 'fangjian',
@@ -146,8 +146,9 @@ export default {
             this.loading = false
             // 获取登录前的页面地址
             // 有可能会出现前一个页面是现在登录账号没有权限访问的？
-            const nexturl = this.$route.query.tourl
-            this.$router.push({ path: nexturl && nexturl.indexOf('/login') === -1 ? nexturl : '/' })
+            // const nexturl = this.$route.query.tourl
+            // this.$router.push({ path: nexturl && nexturl.indexOf('/login') === -1 ? nexturl : '/' })
+            this.$router.push({ path: '/' })
           }).catch(() => {
             this.$message({
               message: '系统提示用户不存在~',

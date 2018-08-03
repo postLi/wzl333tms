@@ -1,5 +1,5 @@
 <template>
-  <div class="handAccount-manager tab-wrapper">
+  <div class=" tab-wrapper">
     <div class="eltab clearfix">
       <span @click="component = 'Short'" class="tab-label" :class="{'active-tab': component.indexOf('Short')!==-1}">短驳费</span>
 

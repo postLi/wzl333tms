@@ -65,6 +65,7 @@ import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
+import { getSummaries } from '@/utils/'
 
 export default {
   components: {
@@ -336,31 +337,7 @@ export default {
     },
     // 计算总数
     getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      // console.log(columns, data)
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ' 元'
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-
-      return sums
+      return getSummaries(param)
     }
   }
 }

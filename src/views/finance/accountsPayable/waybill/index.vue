@@ -1,5 +1,5 @@
 <template>
-  <div class="handAccount-manager tab-wrapper">
+  <div class=" tab-wrapper">
     <div class="eltab clearfix">
       <span @click="component = 'Kickback'" class="tab-label" :class="{'active-tab': component.indexOf('Kickback')!==-1}">回扣</span>
       <span @click="component = 'Transfer'" class="tab-label" :class="{'active-tab': component.indexOf('Transfer')!==-1}">中转费</span>
