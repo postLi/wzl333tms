@@ -433,7 +433,7 @@
 import { eventBus } from '@/eventBus'
 // 工具函数
 import { REGEX } from '@/utils/validate'
-import { closest, getTotal, objectMerge2, parseTime } from '@/utils/'
+import { closest, getTotal, objectMerge2, parseTime, tmsMath } from '@/utils/'
 // 请求接口
 import { getSystemTime } from '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
@@ -793,7 +793,7 @@ export default {
   },
   computed: {
     'transferTotalFee'() {
-      return getTotal(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.codService)
+      return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.codService).result()
     },
     'theFeeConfig'() {
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
@@ -846,8 +846,9 @@ export default {
     },
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
+        console.log('form.tmsOrderShip.shipReceiptRequire', newVal)
         let num = 1
-        if (newVal === 80 || newVal === '80') {
+        if (newVal === 80 || newVal === '80' || newVal === null) {
           num = 0
         }
         this.form.tmsOrderShip.shipReceiptNum = num
@@ -1655,7 +1656,7 @@ export default {
         // 匹配系统设置里的运费合计规则
         for (const i in el) {
           if (this.config.shipFee[i] === '1') {
-            total = getTotal(total, el[i])
+            total = tmsMath.add(total, el[i]).result()
           }
         }
       })
@@ -1711,9 +1712,16 @@ export default {
           this.shipReceiptpayFeeDisabled = false
           this.shipMonthpayFeeDisabled = false
 
-          this.form.tmsOrderShip.shipNowpayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
+          // this.form.tmsOrderShip.shipNowpayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
 
-          this.form.tmsOrderShip.shipArrivepayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
+          // this.form.tmsOrderShip.shipArrivepayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
+          this.form.tmsOrderShip.shipNowpayFee = tmsMath.div(this.form.tmsOrderShip.shipTotalFee, 2).result()
+
+          this.form.tmsOrderShip.shipArrivepayFee = tmsMath.div(this.form.tmsOrderShip.shipTotalFee, 2).result()
+
+          if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee).result() > this.form.tmsOrderShip.shipTotalFee) {
+            this.form.tmsOrderShip.shipNowpayFee = tmsMath.sub(this.form.tmsOrderShip.shipNowpayFee, 0.01).result()
+          }
 
           break
       }
@@ -1762,8 +1770,8 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           // 判断运费是否符合总计
-          if (getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee) !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
-            console.log(getTotal(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee), this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
+          if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result() !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
+            console.log(tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result(), this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
             this.$message.error('各付款方式之和与合计运费不等~')
           } else {
             // 再提取各个表格项里的数据

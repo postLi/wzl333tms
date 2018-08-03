@@ -7,7 +7,7 @@ const shouldCalcProperty = ['nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arr
  * 根据列表数据计算合计值
  * @param {*} param 列表数据
  */
-export function getSummaries(param,propsArr) {
+export function getSummaries(param, propsArr) {
   const { columns, data } = param
   const sums = []
   // console.log(columns, data)
@@ -626,4 +626,100 @@ export function loadJs(src, callback) {
     script.src = src
     head.insertBefore(script, head.firstChild)
   })
+}
+
+// 数学计算
+export const tmsMath = {
+  _result: 0,
+  _isCalc: false,
+  _add(a, b) {
+    var c, d, e
+    try {
+      c = a.toString().split('.')[1].length
+    } catch (f) {
+      c = 0
+    }
+    try {
+      d = b.toString().split('.')[1].length
+    } catch (f) {
+      d = 0
+    }
+    return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) + this._mul(b, e)) / e
+  },
+  _sub(a, b) {
+    var c, d, e
+    try {
+      c = a.toString().split('.')[1].length
+    } catch (f) {
+      c = 0
+    }
+    try {
+      d = b.toString().split('.')[1].length
+    } catch (f) {
+      d = 0
+    }
+    return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) - this._mul(b, e)) / e
+  },
+  _mul(a, b) {
+    var c = 0,
+      d = a.toString(),
+      e = b.toString()
+    try {
+      c += d.split('.')[1].length
+    } catch (f) {}
+    try {
+      c += e.split('.')[1].length
+    } catch (f) {}
+    return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c)
+  },
+  _div(a, b) {
+    var c, d, e = 0,
+      f = 0
+    try {
+      e = a.toString().split('.')[1].length
+    } catch (g) {}
+    try {
+      f = b.toString().split('.')[1].length
+    } catch (g) {}
+    return c = Number(a.toString().replace('.', '')), d = Number(b.toString().replace('.', '')), this._mul(c / d, Math.pow(10, f - e))
+  },
+  _calc(type, arg) {
+    const len = arg.length
+    var i = 0
+    // 如果第一个是除法或者减法计算，则将第一个参数当做除数/减数
+    if ((type === '_div' || type === '_sub') && !this._isCalc) {
+      this._result = arg[0]
+      i = 1
+    }
+    this._isCalc = true
+
+    let total = this._result
+
+    for (; i < len; i++) {
+      total = this[type](total, arg[i])
+    }
+    this._result = total
+  },
+  result(num = 2) {
+    const res = parseFloat(this._result, 10).toFixed(num) || 0
+    this._result = 0
+    this._isCalc = false
+    return parseFloat(res, 10)
+  },
+  add() {
+    this._calc('_add', arguments)
+    return this
+  },
+  sub() {
+    this._calc('_sub', arguments)
+    return this
+  },
+  mul() {
+    this._calc('_mul', arguments)
+    return this
+  },
+  div() {
+    this._calc('_div', arguments)
+    return this
+  }
 }

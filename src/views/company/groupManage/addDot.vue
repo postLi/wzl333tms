@@ -69,7 +69,7 @@
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
-              <el-checkbox checked :true-label="0" :false-label="1" v-model="form.accountStatus">开通管理员账号</el-checkbox>
+              <el-checkbox :true-label="0" :false-label="1" v-model="form.accountStatus">开通管理员账号</el-checkbox>
               <p> 密码：123456</p>
             </div>
             <el-form-item v-if="form.accountStatus === 0 && !isModify" :label-width="formLabelWidth" prop="">
@@ -238,7 +238,7 @@
           manageType: 3,
           remarks: '',
           // 默认值
-          accountStatus: 0,
+          accountStatus: 1,
           // id: '',
           parentId: 0,
           accountName: '' // 管理员账号
