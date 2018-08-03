@@ -287,7 +287,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify.sync="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
@@ -330,6 +330,7 @@ export default {
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
+      isAlFun: false,
       selectInfo: {},
       // 选中的行
       selected: [],
@@ -338,6 +339,7 @@ export default {
         "pageSize": 100,
         "vo": {
           "arriveOrgid": '',
+          "endOrgid": '',
           dirverName: '',
           truckIdNumber:'',//车牌号
           batchTypeId: '',//批次状态
@@ -574,6 +576,7 @@ export default {
               if(this.selected[0].bathStatusName === '已到车' || this.selected[0].bathStatusName === '在途中'){
                 this.selectInfo = this.selected[0]
                 this.isModify = false
+                this.isAlFun = false
                 this.openAddCustomer()
               }else{
                 this.closeAddCustomer()
@@ -766,12 +769,19 @@ export default {
         this.selectInfo = row
         this.openAddCustomer()
         this.isModify = true
-
+        this.isAlFun = false
+      }
+      if(row.bathStatusName === '已入库'){
+        this.selectInfo = row
+        this.openAddCustomer()
+        this.isModify = false
+        this.isAlFun = true
       }
       else {
         this.selectInfo = row
         this.openAddCustomer()
         this.isModify = false
+        this.isAlFun = false
 
       }
       // else {

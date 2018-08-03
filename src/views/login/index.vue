@@ -151,7 +151,7 @@ export default {
             this.$router.push({ path: '/' })
           }).catch(() => {
             this.$message({
-              message: '系统提示用户不存在~',
+              message: '您的账号或者密码有误~',
               type: 'warning'
             })
             this.loading = false

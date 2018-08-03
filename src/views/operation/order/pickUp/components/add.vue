@@ -178,6 +178,13 @@ export default {
         callback(new Error('只能输入数字'))
       }
     }
+    const validatetruckFee = function(rule, value, callback) {
+      if (REGEX.Number_point.test(value) || !value) {
+        callback()
+      }  else {
+        callback(new Error('只能输入数字'))
+      }
+    }
     const validateMobile = (rule, value, callback) => {
       if (REGEX.MOBILE.test(value) || !value) {
         callback()
@@ -211,7 +218,8 @@ export default {
           { max: 300, message: '备注最多可输入300个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.truckFee': [
-          { validator: validatePickupNum, trigger: 'blur' }
+          { validator: validatetruckFee, trigger: 'blur' }
+          // { validator: validatetruckFee, trigger: 'blur' }
         ],
         'tmsOrderPickup.collectionFee': [
           { validator: validatePickupNum, trigger: 'blur' }

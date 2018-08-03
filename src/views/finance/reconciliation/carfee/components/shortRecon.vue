@@ -721,6 +721,10 @@
               sums[index] = '合计';
               return;
             }
+            if (index === 3 || index === 4  || index === 5) {
+              sums[index] = '';
+              return;
+            }
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
@@ -959,6 +963,21 @@
             cursor: pointer;
           }
         }
+      }
+    }
+
+    .el-table {
+      thead{
+        line-height: 28px;
+
+      }
+      .cell{
+        line-height: 28px;
+      }
+    }
+    .el-table {
+      td{
+        padding: 0px 0;
       }
     }
   }

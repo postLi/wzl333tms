@@ -84,18 +84,37 @@
           </el-table-column>
 
         </el-table>
+
+
+        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
+          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
+          <!--<template v-for="column in tableColumn">-->
+            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>-->
+            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">-->
+              <!--<template slot-scope="scope">-->
+                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>-->
+                <!--<span v-else v-html="column.slot(scope)"></span>-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+          <!--</template>-->
+        <!--</el-table>-->
+        <!---->
+
+
+
+
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
 
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
 import {postCarrierCarrierList} from '@/api/finance/fin_carrier'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 export default {

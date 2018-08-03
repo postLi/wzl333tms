@@ -6,9 +6,18 @@
 
       <div class="sTitle">
         <el-form-item label="">
-          <el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>
 
-          <!--&nbsp;<p>对账表</p>-->
+          <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
+            <div slot="content">双击可修改对账单名称</div>
+            <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable  @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"  auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"  @blur="tooltip = false;disabledName = true" @mouseenter.native=" disabledName === true && (tooltip = true)" @mouseleave.native="tooltip = false;disabledName = true"></el-input>
+            <!--@blur="tooltip = false;disabledName = true"-->
+            <!--@mouseout.native="tooltip = false;disabledName = true"-->
+            <!--<template slot-scope="scope">-->
+              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
+            <!--</template>-->
+          </el-tooltip>
+
+          <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
       </el-form-item>
       </div>
       <div class="sDate">
@@ -112,8 +121,11 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
+            <!--<template slot-scope="scope">-->
+              <!--<span @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column
             fixed
@@ -258,8 +270,11 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
+            <!--<template slot-scope="scope">-->
+              <!--<span @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column
             fixed
@@ -397,8 +412,11 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
+            <!--<template slot-scope="scope">-->
+              <!--<span @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column
             fixed
@@ -538,8 +556,11 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
+            <!--<template slot-scope="scope">-->
+              <!--<span @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column
             fixed
@@ -718,6 +739,8 @@
           }
         }
           return {
+            tooltip: false,
+            disabledName:true,
             rules:{
               "bankAccount":[
                 // { trigger: 'change', validator: validateOnlyNum}
@@ -988,6 +1011,9 @@
             }
           }
         },
+        billNameOver(){
+          this.delCont()
+        },
         getSummaries(param) {
           const { columns, data } = param;
           const sums = [];
@@ -996,11 +1022,17 @@
               sums[index] = '合计';
               return;
             }
+            if (index === 3 || index === 4  || index === 5) {
+              sums[index] = '';
+              return;
+            }
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
                 if (!isNaN(value)) {
+                  // return Math.round((prev + curr) * 100) / 100;
+                  // return (prev + curr).toFixed(2);
                   return prev + curr;
                 } else {
                   return prev;
@@ -1121,6 +1153,28 @@
       .sTitle{
         flex: 1;
         text-align: center;
+        .el-tooltip.showBg{
+          .el-input__inner{
+            border-left-color: #c0c4cc;
+            border-right-color: #c0c4cc;
+            /*border-top-color: #c0c4cc;*/
+            /*border-bottom:3px double #c0c4cc;*/
+            /*font-size: 18px;*/
+            color: #fff;
+            font-weight: 600;
+            background: skyblue;
+          }
+        }
+        .el-input__suffix{
+          left: -20px;
+          top: -10px;
+        }
+        .el-input--suffix .el-input__inner {
+          padding-right: 0;
+        }
+        .el-input.is-disabled .el-input__inner {
+          background-color:#fff;
+        }
         span{
           position: relative;
           top: -20px;
@@ -1138,12 +1192,14 @@
           color: #333333;
           font-weight: 600;
         }
+
         .el-input__inner:focus{
           border-bottom-color: #c0c4cc;
         }
         .el-input{
           width: 158%;
         }
+
       }
       .el-form-item__content{
         line-height: 0;
@@ -1221,6 +1277,40 @@
         padding: 4px 0 5px 0;
         font-weight: 600;
       }
+    }
+    .info_tab{
+      .el-table__fixed-body-wrapper{
+        .deletebtn{
+          .svg-icon{
+            fill: #bec4d1;
+            font-size: 18px;
+          }
+        }
+        .deletebtn:hover{
+          .svg-icon{
+            fill: #ff4381;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .el-table {
+      thead{
+        line-height: 28px;
+
+      }
+      .cell{
+        line-height: 28px;
+      }
+    }
+    .el-table {
+      td{
+        padding: 0px 0;
+      }
+    }
+
+    span{
+      cursor: pointer;
     }
   }
   .sBottom{

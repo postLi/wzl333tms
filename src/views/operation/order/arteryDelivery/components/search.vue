@@ -31,7 +31,7 @@
           <SelectTree v-model="searchForm.arriveOrgid" />
       </el-form-item>
     <el-form-item label="目的网点:">
-      <!--<SelectTree v-model="searchForm.arriveOrgid" />-->
+      <SelectTree v-model="searchForm.endOrgid" />
     </el-form-item>
       <el-form-item label="发车批次:">
           <el-input
@@ -144,7 +144,8 @@ export default {
         endTime:'',//结束时间
         beginTime:'',//
         arrivedbeginDate:'',//到达时间(起始时间)
-        arrivedEndDate:''//到达时间(结束时间)
+        arrivedEndDate:'',//到达时间(结束时间)
+        endOrgid:'',//
       },
       rules: {
         mobile: [{
@@ -192,6 +193,7 @@ export default {
       // this.searchEndTime = []
       this.searchForm.dirverName = ''
       this.searchForm.arriveOrgid = this.orgid
+      this.searchForm.endOrgid = ''
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
     }

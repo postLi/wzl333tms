@@ -444,8 +444,10 @@ export default {
         this.form.customSend = objectMerge2({}, this.customSend)
         this.form.customRece = objectMerge2({}, this.customRece)
         this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
-        this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
-        this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
+        this.form.tmsOrderPre.orderFromCityName = ''
+        this.form.tmsOrderPre.orderToCityName = ''
+        // this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
+        // this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
         // this.form.tmsOrderPre.orderEffectiveName = ''
         this.form.tmsOrderCargoList.agencyFund = ''
         this.form.tmsOrderCargoList.commissionFee = ''

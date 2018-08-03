@@ -541,6 +541,14 @@ export default {
                   })
                 return false
               }
+            if(this.selected[0].pickupStatus === 237){
+              this.$message({
+                message: '提货完成不能修改~',
+                type: 'warning'
+              })
+              this.$refs.multipleTable.clearSelection()
+              return false
+            }
               this.selectInfo = this.selected[0]
               this.openAddCustomer()
               break;
@@ -559,6 +567,7 @@ export default {
               message: '已经提货完成了~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
             return false
           }
           this.selectInfo = this.selected[0]
@@ -581,14 +590,17 @@ export default {
           case 'delete':
             this.closeAddCustomer()
                   //=>todo 删除多个
-                  let ids = this.selected.filter(el=>{
-                    return el.pickupStatus === 236
-                  }).map(el => {
-                    return  el.id
-                  })
-            if(!ids.length){
-              this.$message.warning('提货完成的不可以删除~')
-            }else {
+                  // let ids = this.selected.filter(el=>{
+                  //   return el.pickupStatus === 236
+                  // }).map(el => {
+                  //   return  el.id
+                  // })
+            let ids = this.selected.map(el => {
+              return  el.id
+            })
+            // if(!ids.length){
+            //   this.$message.warning('提货完成不能删除~')
+            // }else {
               ids = ids.join(',')
               this.$confirm('确定要删除提货批次吗？', '提示', {
                           confirmButtonText: '删除',
@@ -614,7 +626,7 @@ export default {
                               message: '已取消删除'
                           })
                       })
-            }
+            // }
               break;
           // 导出数据
         case 'export':

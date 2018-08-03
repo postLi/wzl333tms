@@ -44,7 +44,7 @@
           <el-table-column
             fixed
             sortable
-            prop="memberName"
+            prop="orgName"
             width="130"
             label="网点">
           </el-table-column>

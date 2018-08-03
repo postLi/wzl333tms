@@ -6,6 +6,8 @@
 
       <div class="sTitle">
         <el-form-item label="">
+
+
           <el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>
       </el-form-item>
       </div>
@@ -111,7 +113,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -263,8 +265,9 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
+
           </el-table-column>
           <el-table-column
             fixed
@@ -423,7 +426,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -582,7 +585,7 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -1062,6 +1065,10 @@
               sums[index] = '合计';
               return;
             }
+            if (index === 3 || index === 4  || index === 5 || index === 7) {
+              sums[index] = '';
+              return;
+            }
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
@@ -1177,6 +1184,28 @@
       .sTitle{
         flex: 1;
         text-align: center;
+        .el-tooltip.showBg{
+          .el-input__inner{
+            border-left-color: #c0c4cc;
+            border-right-color: #c0c4cc;
+            /*border-top-color: #c0c4cc;*/
+            /*border-bottom:3px double #c0c4cc;*/
+            /*font-size: 18px;*/
+            color: #fff;
+            font-weight: 600;
+            background: skyblue;
+          }
+        }
+        .el-input__suffix{
+          left: -30px;
+          top: -10px;
+        }
+        .el-input--suffix .el-input__inner {
+          padding-right: 0;
+        }
+        .el-input.is-disabled .el-input__inner {
+          background-color:#fff;
+        }
         span{
           position: relative;
           top: -20px;
@@ -1286,6 +1315,37 @@
         color: #668cf0;
         padding: 4px 0 5px 0;
         font-weight: 600;
+      }
+    }
+
+    .info_tab{
+      .el-table__fixed-body-wrapper{
+        .deletebtn{
+          .svg-icon{
+            fill: #bec4d1;
+            font-size: 18px;
+          }
+        }
+        .deletebtn:hover{
+          .svg-icon{
+            fill: #ff4381;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .el-table {
+       thead{
+         line-height: 28px;
+
+       }
+      .cell{
+        line-height: 28px;
+      }
+    }
+    .el-table {
+      td{
+        padding: 0px 0;
       }
     }
   }
