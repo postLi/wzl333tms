@@ -4,9 +4,11 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" @hideIframe="hideIframe"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
-      <!-- <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
-      </div> -->
+      <div class="btns_box">
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button>
+      </div>
       <div class="info_tab">
         <div class="hidetrigger"></div>
         <iframe v-show="isShow" :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=auto name="showHere" class="chartIframe"></iframe>
@@ -52,15 +54,27 @@ export default {
     ])
   },
   methods: {
-    doAction(type) {},
-    hideIframe (bool) { 
+    doAction(type) {
+      switch (type) {
+        case 'print':
+          document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Print', '')
+          break
+        case 'preview':
+          document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Preview', '')
+          break
+        case 'setting':
+          document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Setting', '')
+          break
+      }
+    },
+    hideIframe(bool) {
       if (bool) { // true-隐藏iframe false-显示iframe
-        if(this.hideiframe !== 'show'){
+        if (this.hideiframe !== 'show') {
           this.hideiframe = 'show'
           document.getElementById('senderIframe').contentWindow.hideChart(bool)
         }
       } else {
-        if(this.hideiframe !== 'hide'){
+        if (this.hideiframe !== 'hide') {
           this.hideiframe = 'hide'
           document.getElementById('senderIframe').contentWindow.hideChart(bool)
         }
@@ -94,11 +108,11 @@ export default {
     scrolling: no;
   }
 }
-.hidetrigger{
-  position: absolute;
-  width:calc(100% - 20px);
-  height:calc(100% - 100px);
 
+.hidetrigger {
+  position: absolute;
+  width: calc(100% - 20px);
+  height: calc(100% - 100px);
 }
 
 </style>

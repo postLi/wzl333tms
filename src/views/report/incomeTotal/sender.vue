@@ -5,7 +5,9 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button>
       </div>
       <div class="info_tab">
         <!-- <iframe :src="chartIframe" id="senderIframe" ref="senderIframe" frameborder='0' scrolling=none name="showHere" class="chartIframe"
@@ -49,7 +51,6 @@ export default {
     ])
   },
   methods: {
-    doAction(type) {},
     hideIframe (bool) {
       if (bool) {
         if(this.hideiframe !== 'show'){
@@ -66,9 +67,13 @@ export default {
     doAction (type) {
       switch(type) {
         case 'print':
-        console.log('vue page printed')
-        // document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Toolbar', '11', '0', '', ''  )
-        document.getElementById('senderIframe').contentWindow.OnEvent('AF','Print','','', '', '')
+        document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Print', '')
+        break
+        case 'preview':
+        document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Preview', '')
+        break
+        case 'setting':
+        document.getElementById('senderIframe').contentWindow.OnEvent('AF', 'Setting', '')
         break
       }
     },

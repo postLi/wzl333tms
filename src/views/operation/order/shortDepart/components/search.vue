@@ -18,13 +18,15 @@
       <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
-      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
+      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" placeholder="发车批次" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
+       <el-input v-model="searchForm.truckIdNumber" maxlength="15" auto-complete="off" placeholder="车牌号" clearable></el-input>
+     <!--  <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect> -->
     </el-form-item>
     <el-form-item label="司机名称">
-      <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable />
+       <el-input v-model="searchForm.dirverName" maxlength="15" auto-complete="off" placeholder="司机名称"  clearable></el-input>
+      <!-- <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable /> -->
     </el-form-item>
     <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
@@ -79,8 +81,8 @@ export default {
         batchTypeId: 46,
         // "arriveOrgid": '',
         // "batchNo": '',
-        // "truckIdNumber": '',
-        // "dirverName": ''
+        truckIdNumber: '',
+        dirverName: ''
       },
       rules: {
         orgid: [{ validator: orgidIdentifier, tigger: 'blur' }]

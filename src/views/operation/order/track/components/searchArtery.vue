@@ -4,7 +4,7 @@
       <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item> -->
-    <el-form-item label="送货时间:">
+    <el-form-item label="发车时间:">
       <el-date-picker
             v-model="searchTime"
             type="daterange"
@@ -19,13 +19,15 @@
       <selectBatchType v-model="searchForm.batchTypeId" type="main_batch_type"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次">
-      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable></el-input>
+      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" placeholder="发车批次" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
+      <el-input v-model="searchForm.truckIdNumber" maxlength="15" auto-complete="off" placeholder="车牌号" clearable></el-input>
+      <!-- <querySelect search="truckIdNumber" :remote="true" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect> -->
     </el-form-item>
     <el-form-item label="司机名称">
-      <querySelect search="driverName" valuekey="dirverName" type="driver" v-model="searchForm.dirverName" label="driverName" :remote="true" clearable />
+       <el-input v-model="searchForm.dirverName" maxlength="15" auto-complete="off" placeholder="司机名称" clearable></el-input>
+      <!-- <querySelect search="driverName" valuekey="dirverName" type="driver" v-model="searchForm.dirverName" label="driverName" :remote="true" clearable /> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>

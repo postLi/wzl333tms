@@ -20,10 +20,14 @@
       </el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect>
+      <el-input v-model="searchForm.truckIdNumber" maxlength="15" clearable>
+      </el-input>
+      <!-- <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect> -->
     </el-form-item>
     <el-form-item label="司机名称">
-      <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable />
+      <el-input v-model="searchForm.dirverName" maxlength="15" clearable>
+      </el-input>
+      <!-- <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable /> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn art_marginTop">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -96,7 +100,7 @@ export default {
       },
       searchForm: {
         // orgId: '',
-        driverName: '',
+        dirverName: '',
         truckIdNumber: '', //车牌号
         batchTypeId: 56, //批次状态
         batchNo: '', //发车批次
@@ -110,7 +114,7 @@ export default {
           validator: validateFormNumber,
           trigger: 'change'
         }],
-        driverName: [{
+        dirverName: [{
           //validator: validateFormMobile, trigger: 'blur'
           validator: validateDriverName,
           trigger: 'change'

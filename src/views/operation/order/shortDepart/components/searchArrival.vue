@@ -75,15 +75,15 @@ export default {
         // apportionTypeId: '',
         // arriveOrgid: '',
         // batchNo: '',
-        batchTypeId: 46
+        batchTypeId: 46,
         // beginTime: '',
         // contractNo: '',
         // createTime: '',
         // dirverMobile: '',
-        // dirverName: '',
+        dirverName: '',
         // endTime: '',
         // loadTime: '',
-        // truckIdNumber: '',
+        truckIdNumber: ''
         // truckLoad: '',
         // truckVolume: '',
         // arrivedbeginDate: '',
@@ -118,7 +118,7 @@ export default {
       this.$refs[formName].resetFields()
       this.searchForm = Object.assign({}, this.$options.data().searchForm)
       this.searchTime = this.$options.data().searchTime
-      this.searchForm.orgid = this.orgid
+      this.searchForm.arriveOrgid = this.orgid
       if (this.searchForm.batchTypeId === undefined) {
         this.searchForm.batchTypeId = 46
       }

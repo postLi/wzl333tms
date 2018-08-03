@@ -92,23 +92,15 @@ function hideChart(bGray) { // 隐藏
     AF.func("grayWindow", "1\r\n backcolor=#FFFFFF;alpha=100");
   }
 }
-
-// function OnEvent() {}
-
-function OnEvent(id, Event, p1, p2, p3, p4) {
-  console.log(id, Event, p1, p2, p3, p4)
-  switch (Event) {
-    case 'BeforePrint':
-      AF.func("BeforePrint", "");
-      break
-    case 'Print':
-    AF.func("Print", "isOpenSysDialog=true; WorkSheet=OpenDialog"); 
-    break
-    case 'Printed':
-      AF.func("Printed", p1, p2);
-      break
-    case 'PrintSetupBeforeUpdate':
-      AF.func("PrintSetupBeforeUpdate", p1);
-      break
+console.log('sdfsdf')
+function OnEvent(id, Event, p1) {
+  console.log(id, Event, p1)
+  if (Event == "Print") {
+    AF.func("Callfunc", "11", "isOpenSysDialog=true; WorkSheet=Current");
   }
+  if (Event == "Preview")
+    AF.func("Callfunc", "18");
+   
+  if (Event == "Setting")
+     AF.func("Callfunc", "216");
 }

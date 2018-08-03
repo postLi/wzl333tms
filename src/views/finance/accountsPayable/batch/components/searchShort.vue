@@ -62,13 +62,13 @@ export default {
         // sign: 2,
         orgid: '',
         ascriptionOrgid: '',
-        status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
+        status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT',
         // loadStartTime: '',
         // loadEndTime: '',
         // departureStartTime: '',
         // departureEndTime: '',
         // batchNo: '',
-        // truckIdNumber: '',
+        truckIdNumber: ''
         // dirverName: ''
       },
       rules: {

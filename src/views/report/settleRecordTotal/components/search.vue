@@ -59,7 +59,8 @@ export default {
     }
     return {
       searchForm: {
-        orgId: ''
+        orgId: '',
+        senderId: ''
         // currentPage: 1,
         // pageSize: 100,
         // senderCustomerName: '',

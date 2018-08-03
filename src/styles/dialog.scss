@@ -113,16 +113,26 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
   }
   .print_main {
-    padding: 10px;
+    padding: 0 10px 10px 10px;
     border: 1px solid #eee;
     height: 100%;
     overflow: auto;
     position: relative;
+    text-align:center;
+    .print_main_head{
+      padding: 0 20px;
+      line-height: 48px;
+      font-weight:400;
+      // background-color:#FFF;
+    }
     .print_main_content{
-      background-color:100%;
-      width:800px;
-      height:600px;
+      margin:20px auto 0;
+      background-color:#fff;
+      box-shadow: 1px 1px 20px #ddd;
+      // width:800px;
+      // height:600px;
       display:block;
+      // margin-top:20px;
     }
   }
   .sortable-ghost {

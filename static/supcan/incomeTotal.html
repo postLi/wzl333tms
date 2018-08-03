@@ -8,25 +8,11 @@
   <script src="untils/common.js"></script>
   <script>
   var query = getUrlParams()
-  // var path = window.location.protocol + '//' + window.location.host
   var path = window.location.protocol + '//' + window.location.host
 
   function OnReady(id) {
     AF.func("Build", "report/incomeTotal.xml");
-  var xml = AF.func("GetProp", "Print");
-  console.log('xml',xml)
-
-    // AF.func("BeginBatchPrint", "isShareBlankPart=true"); //开始批打印
-    // for (var i = 0; i<2; i++) { //通常是循环
-    //   　
-    //   AF.func("SetSource", "ds1 \r\n " + path + "/api/api-finance/finance/report/v1/findDetail" + query); //设置查询取数条件
-    //   　
-    //   AF.func("Calc", ""); //填充数据
-    //   　
-    //   AF.func("Print", "isOpenSysDialog=true;WorkSheet=OpenDialog"); //在批中，该函数并没有实际的打印动作，并且也不需要参数，但该步骤必不可少
-    // }
-    // AF.func("EndBatchPrint", ""); //终止批打印：把打印任务送往打印机，此时才真正打印
-    // AF.func("SelectCell", "0\r\n0");
+ 
     //指定ds1数据源取数的URL地址 
     // var access_token ="be87c690-3ca0-4431-8f62-78cf268004e7";
     // var startCreatTime = "2018-05-13 00:00:00";
@@ -43,7 +29,8 @@
 <body>
   <div id="main" style="position:relative;width:100%;height:380px">
     <script>
-    insertReport('AF', 'FullScreen;Rebar=Print; print=11, 216,18;PagesTabPercent=0;Border=none;LeftRulerWidthPercent=0;Ruler=none;')
+    // insertReport('AF', 'FullScreen;Rebar=Print; print=11, 216,18;PagesTabPercent=0;Border=none;LeftRulerWidthPercent=0;Ruler=none;')
+   insertReport('AF', 'FullScreen;PagesTabPercent=0;Border=none;LeftRulerWidthPercent=0;Rebar=none')
     // insertReport('AF', '')
 
     </script>

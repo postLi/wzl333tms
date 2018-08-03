@@ -7,7 +7,8 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="承运商" prop="carrierName">
-         <querySelect v-model="searchForm.carrierName" search="carrierName" type="carrier" label="carrierName" :name="city" @change="getcity" :remote="true" clearable ></querySelect>
+          <el-input v-model="searchForm.carrierName" maxlength="15" auto-complete="off" placeholder="承运商" clearable></el-input>
+         <!-- <querySelect v-model="searchForm.carrierName" search="carrierName" type="carrier" label="carrierName" :name="city" @change="getcity" :remote="true" clearable ></querySelect> -->
         </el-form-item>
       </el-col>
       <el-col :span="4">
