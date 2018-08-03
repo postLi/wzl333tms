@@ -908,6 +908,7 @@
                   for(const i in this.messageButtonInfo){
                     this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
                   }
+                  this.form.carrierDetailDtoList = []
                   this.dealInfo.map(el=>this.form.carrierDetailDtoList.push(el))
                   this.dealPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
                   this.alreadyInfo.map(el=>this.form.carrierDetailDtoList.push(el))

@@ -27,9 +27,12 @@
     <el-form-item label="批次状态:">
       <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" />
     </el-form-item>
-      <el-form-item label="发站:">
+      <el-form-item label="发车网点:">
           <SelectTree v-model="searchForm.arriveOrgid" />
       </el-form-item>
+    <el-form-item label="目的网点:">
+      <!--<SelectTree v-model="searchForm.arriveOrgid" />-->
+    </el-form-item>
       <el-form-item label="发车批次:">
           <el-input
               v-model="searchForm.batchNo"

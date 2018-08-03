@@ -154,8 +154,8 @@
       return {
         rules:{
           roleName: [
-            { required: true, message: '请输入角色名称', validator: roleName,trigger: 'blur' },
-            { max: 12, message: '最多可输入12个字符', trigger: 'blur' }
+            { required: true, message: '请输入角色名称', validator: roleName },
+            { max: 12, message: '最多可输入12个字符' }
           ],
           remarks: [
             { validator: remarks,trigger: 'blur' },

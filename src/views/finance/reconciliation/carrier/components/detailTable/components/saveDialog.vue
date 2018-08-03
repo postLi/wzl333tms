@@ -195,6 +195,7 @@
         }
       },
       reset(){
+        this.dotInfo = {}
       },
 
       submitForm(formName) {

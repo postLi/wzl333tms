@@ -184,11 +184,12 @@
         switch (type) {
           // 新增角色
           case 'addRole':
+            this.theUser = {}
             this.addDoRoleVisible = true
             this.addRelatVisible = false
             this.isModify = false
             this.isReference = false
-            this.theUser = {}
+
             break
         // 修改角色
           case 'roleNot':

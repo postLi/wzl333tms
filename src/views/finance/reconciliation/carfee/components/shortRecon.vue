@@ -615,6 +615,8 @@
                   }
                   this.form.orgId = this.otherinfo.orgid
                   this.form.checkBillName = this.checkBillName
+                  this.form.payDetailList = []
+                  this.form.hadPayDetailList = []
                   this.form.payDetailList = this.dealPayInfo ?  this.dealPayInfo.map(el=>{
                     const a = {}
                     a.shipOrderId = el.shipOrderId
