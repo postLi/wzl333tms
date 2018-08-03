@@ -74,6 +74,11 @@ module.exports = {
         target: 'http://192.168.1.127:7010',
         pathRewrite: { '^/chenrongtao': '' },
         changeOrigin: true
+      },
+      '/home': {
+        target: 'http://frp.nanedo.com:8080',
+        pathRewrite: { '^/home': '' },
+        changeOrigin: true
       }
     },
     // vue-cli
