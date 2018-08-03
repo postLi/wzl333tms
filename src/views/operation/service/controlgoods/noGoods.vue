@@ -497,6 +497,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { objectMerge2 } from '@/utils/index'
 import { parseShipStatus, parseTime } from '@/utils/dict'
+import dataTableVue from '@/views/operation/order/transferLoad/components/dataTable.vue'
 
 export default {
   components: {
@@ -584,9 +585,9 @@ export default {
         label: '开单时间',
         prop: 'orderCreateTime',
         width: '180',
-        slot: (scope) => {
-          return `${parseTime(scope.row.orderCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-        },
+        // slot: (scope) => {
+        //   return `${parseTime(scope.row.orderCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        // },
         fixed: false
       }, {
         label: '发货人',
@@ -892,8 +893,8 @@ export default {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    getSelection(selected) {
-      this.selected = selected
+    getSelection(seldataTableVue) {
+      this.selected = seldataTableVue
     },
 
     doAction(type) {
@@ -950,7 +951,8 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
-    }
+    },
+    getDbClick() {}
   }
 }
 </script>

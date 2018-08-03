@@ -9,7 +9,7 @@
     <div class="box_top" v-else-if="type===2">
       <div class="top_content2" >
         <i class="el-icon-warning wzlicon"></i>
-        <h6>初始化检查中<el-button type="primary"   plain @click="doAction('send')" class="btn_qx">取消</el-button></h6>
+        <h6>初始化检查中<el-button type="primary"   plain @click="doAction" class="btn_qx">取消</el-button></h6>
         <p class="top_ts">当前检查：<span class="top_num">网点管理</span></p>
       </div>
       <progressbar :isani="showani" />
@@ -33,8 +33,75 @@
        <el-button type="primary" @click="doAction('check')">初始化检查中 返回</el-button> -->
        <h6>公司管理</h6>
        <div class="company_content">
-         <p v-if="dataset.driverCount > 0"><i :class="dataset.driverCount > 0 ? 'el-icon-success ' : ''"></i>{{dataset.driverCount}}</p>
-         <p v-else><i class="el-icon-warning"></i>{{dataset.driverCount}}</p>
+         <p v-if="dataset.orgCount > 0"><i :class="dataset.orgCount > 0 ? 'el-icon-success ' : ''"></i>网点管理：网点{{dataset.orgCount}}个，需要增加点击右边增加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+         <p v-else><i class="el-icon-warning"></i>网点管理：你还没有增加网点，请点击右边添加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+
+         <p v-if="dataset.roleCount > 0"><i :class="dataset.roleCount > 0 ? 'el-icon-success ' : ''"></i>权限管理：系统默认{{dataset.roleCount}}个，角色权限，需要增加点击右边增加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+         <p v-else><i class="el-icon-warning"></i>权限管理：你还没有增加角色权限，请点击右边添加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+
+         <p v-if="dataset.userCount > 0"><i :class="dataset.userCount > 0 ? 'el-icon-success ' : ''"></i>员工管理：已经有{{dataset.userCount}}位员工，需要增加请点击右边增加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+         <p v-else><i class="el-icon-warning"></i>员工管理：你还没有增加员工，请点击右边添加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+
+        <p v-if="dataset.senderCustomerCount > 0">
+          <i :class="dataset.senderCustomerCount > 0 ? 'el-icon-success ' : ''"></i>
+           客户管理：已经有{{dataset.senderCustomerCount}}位发货客户，需要添加请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+        <p v-else>
+          <i class="el-icon-warning"></i>
+          客户管理：你还没有添加发货客户，请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+
+        <p v-if="dataset.receiverCustomerCount > 0">
+          <i :class="dataset.receiverCustomerCount > 0 ? 'el-icon-success ' : ''"></i>
+           客户管理：已经有{{dataset.receiverCustomerCount}}位收货客户，需要增加请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+        <p v-else>
+          <i class="el-icon-warning"></i>
+          客户管理：你还没有添加收货客户，请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+
+
+         <p v-if="dataset.driverCount > 0"><i :class="dataset.driverCount > 0 ? 'el-icon-success ' : ''"></i>司机管理：已经有{{dataset.driverCount}}位司机，需要增加请点击右边增加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+         <p v-else><i class="el-icon-warning"></i>员工管理：你还没有添加司机，请点击右边增加按钮。<el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button></p>
+
+
+        <p v-if="dataset.truckCount > 0">
+          <i :class="dataset.truckCount > 0 ? 'el-icon-success ' : ''"></i>
+           车辆管理：已经有{{dataset.truckCount}}部车辆，需要增加请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+        <p v-else>
+          <i class="el-icon-warning"></i>
+          客户管理：你还没有添加车辆，请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+
+        <p v-if="dataset.carrierCount > 0">
+          <i :class="dataset.carrierCount > 0 ? 'el-icon-success ' : ''"></i>
+           承运商管理：已经有{{dataset.carrierCount}}个承运商，需要增加请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+        <p v-else>
+          <i class="el-icon-warning"></i>
+          客户管理：你还没有添加承运商，请点击右边增加按钮。
+          <el-button type="primary"  plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+
+
+        <p v-if="dataset.settingCount > 0">
+          <i :class="dataset.settingCount > 0 ? 'el-icon-success ' : ''"></i>
+           系统设置：已经有{{dataset.settingCount}}个系统设置，需要增加请点击右边增加按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">增加</el-button>
+        </p>
+        <p v-else>
+          <i class="el-icon-warning"></i>
+          系统设置：打印机连接还没连接，请点击右边设置按钮。
+          <el-button type="primary"   plain @click="doAction" class="btn_qx">设置</el-button>
+        </p>
        </div>
     </div>
      <div class="main_content" v-else-if="type===3">
@@ -160,12 +227,15 @@ export default {
     
   }
   .el-main{
+    .btn_qx{
+      padding: 3px 10px;
+      margin-left:12px;
+      font-size:12px;
+    }
     padding:0 20px;
     .main_content{
       text-align: center;
-      // position: relative;
       .el-button{
-        // position:absolute;
         width:300px;
         height:66px;
         font-size:20px;
@@ -182,6 +252,18 @@ export default {
         font-size: 16px;
         font-weight: normal;
          border-bottom: 1px solid  rgba(188, 188, 188, 1);
+      }
+      p{
+        font-size:14px;
+        margin:10px;
+        .el-icon-success{
+          color: rgb(0,204,0);
+          margin-right: 10px;
+        }
+        .el-icon-warning{
+          color:rgb(255,0,0); 
+          margin-right: 10px;
+        }
       }
       .company_content{
         padding:10px 20px;

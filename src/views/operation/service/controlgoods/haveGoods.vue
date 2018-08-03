@@ -930,7 +930,8 @@ export default {
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection() {}
+    getSelection() {},
+    getDbClick() {}
 
   }
 }

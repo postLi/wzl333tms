@@ -490,7 +490,6 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
-
 export default {
   components: {
     SearchForm,
@@ -943,7 +942,8 @@ export default {
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
-    }
+    },
+    getDbClick() {}
   }
 }
 </script>

@@ -1,6 +1,7 @@
-<link rel="stylesheet" href="../../../company/groupManage/index.css">
+
 <template>
     <div class="tab-content" v-loading="loading">
+      <!-- <link rel="stylesheet" href="../../../company/groupManage/index.css"> -->
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
@@ -207,7 +208,7 @@ import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
-import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import { SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
