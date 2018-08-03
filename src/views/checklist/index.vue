@@ -11,7 +11,6 @@
         <i class="el-icon-warning wzlicon"></i>
         <h6>初始化检查中<el-button type="primary"   plain @click="doAction('send')" class="btn_qx">取消</el-button></h6>
         <p class="top_ts">当前检查：<span class="top_num">网点管理</span></p>
-        
       </div>
       <progressbar :isani="showani" />
     </div>
@@ -32,7 +31,11 @@
     <div class="main_content2" v-else-if="type===2">
        <!-- 初始化检查中
        <el-button type="primary" @click="doAction('check')">初始化检查中 返回</el-button> -->
-       <p>{{dataset.driverCount}}</p>
+       <h6>公司管理</h6>
+       <div class="company_content">
+         <p v-if="dataset.driverCount > 0"><i :class="dataset.driverCount > 0 ? 'el-icon-success ' : ''"></i>{{dataset.driverCount}}</p>
+         <p v-else><i class="el-icon-warning"></i>{{dataset.driverCount}}</p>
+       </div>
     </div>
      <div class="main_content" v-else-if="type===3">
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
@@ -129,16 +132,11 @@ export default {
           color:#fff;
           font-weight: normal;
           .btn_qx{
-            // height: 25px;
-            // line-height: 3px;
             padding: 4px 12px;
             border:1px solid #fff;
             background:#99ccff;
             color:#fff;
             margin-left:12px;
-            // .el-button--primary.is-pla{
-            //   line-height: 6px;
-            // }
           }
         }
         .top_ts{
@@ -162,6 +160,7 @@ export default {
     
   }
   .el-main{
+    padding:0 20px;
     .main_content{
       text-align: center;
       // position: relative;
@@ -175,6 +174,18 @@ export default {
     }
     .main_content2{
       border:1px solid rgba(188, 188, 188, 1);
+      padding:10px 40px;
+     
+      h6{
+        height: 46px;
+        line-height: 46px;
+        font-size: 16px;
+        font-weight: normal;
+         border-bottom: 1px solid  rgba(188, 188, 188, 1);
+      }
+      .company_content{
+        padding:10px 20px;
+      }
     }
   }
 }
