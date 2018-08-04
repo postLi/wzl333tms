@@ -34,7 +34,7 @@
           <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.driverRemarks"></el-input>
+          <el-input type="textarea" maxlength="300" v-model="form.driverRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <el-form-item class="clearfix uploadcard">
@@ -102,12 +102,12 @@ export default {
     const _this = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       } else {
         if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
+          this.$refs.ruleForm2.validateField('checkPass')
         }
-        callback();
+        callback()
       }
     }
     const validateFormMobile = function(rule, value, callback) {
@@ -123,22 +123,22 @@ export default {
     }
     return {
       form: {
-        "bankCardNumber": "", // 银行卡号 20
-        "bankName": "", // 银行名称 20
-        "certification": "", // 从业资格证图片地址 125
-        "driverAddress": "", // 地址 50
-        "driverCardid": "", // 身份证号码 18
-        "driverMobile": "", // 手机号码 11
-        "driverName": "", // 司机姓名 10
-        "driverRemarks": "", // 备注 125
-        "drivingPicture": "", // 驾驶证图片地址 125
+        'bankCardNumber': '', // 银行卡号 20
+        'bankName': '', // 银行名称 20
+        'certification': '', // 从业资格证图片地址 125
+        'driverAddress': '', // 地址 50
+        'driverCardid': '', // 身份证号码 18
+        'driverMobile': '', // 手机号码 11
+        'driverName': '', // 司机姓名 10
+        'driverRemarks': '', // 备注 125
+        'drivingPicture': '', // 驾驶证图片地址 125
         // "id": 0, // 司机ID 11
-        "idcardPicture": "", // 身份证图片地址 125
-        "licenseType": '', // 驾驶证类型 18
-        "licenseTypeName": "",
-        "openBank": "", // 开户行 20
-        "validityDate": "", // 驾驶证有效期
-        "orgid": 0 // 所属机构 11
+        'idcardPicture': '', // 身份证图片地址 125
+        'licenseType': '', // 驾驶证类型 18
+        'licenseTypeName': '',
+        'openBank': '', // 开户行 20
+        'validityDate': '', // 驾驶证有效期
+        'orgid': 0 // 所属机构 11
       },
       formLabelWidth: '110px',
       tooltip: false,
@@ -181,7 +181,7 @@ export default {
     popVisible(newVal, oldVal) {
       if (!this.inited) {
         this.inited = true
-        this.initInfo()  
+        this.initInfo()
       }
     },
     orgid(newVal) {
@@ -190,14 +190,14 @@ export default {
     infoDriver() {
       if (this.isModifyDriver) {
         this.popTitle = '修改司机'
-        let data = Object.assign({}, this.infoDriver)
-        for (let i in this.form) {
+        const data = Object.assign({}, this.infoDriver)
+        for (const i in this.form) {
           this.form[i] = data[i]
         }
         this.form.id = data.id
       } else {
         this.popTitle = '新增司机'
-        for (let i in this.form) {
+        for (const i in this.form) {
           this.form[i] = ''
         }
         delete this.form.id
@@ -216,7 +216,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({}, this.form)
+          const data = Object.assign({}, this.form)
           data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
@@ -227,13 +227,9 @@ export default {
           }
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            })
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
           }).catch(err => {
             this.loading = false
           })
@@ -247,7 +243,7 @@ export default {
     },
     closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
+      this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
       }

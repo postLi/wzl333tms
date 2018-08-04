@@ -107,7 +107,7 @@ export default {
       this.$emit('change', searchObj)
     },
     clearForm() {
-      this.searchCreatTime = []
+      this.searchCreatTime = this.defaultTime
       this.searchForm.orgid = this.orgid
       this.searchForm.shipFormCityName = ''
       this.searchForm.startTime = ''

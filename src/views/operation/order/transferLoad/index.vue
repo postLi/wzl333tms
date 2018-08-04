@@ -28,7 +28,7 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="备注" prop="remark">
-                <el-input size="mini" maxlength="250" v-model="formModel.remark" placeholder="备注">
+                <el-input size="mini" maxlength="300" v-model="formModel.remark" placeholder="备注">
                 </el-input>
               </el-form-item>
             </el-form>
@@ -241,7 +241,7 @@ export default {
                 // this.reset()
               }
 
-              this.$message.success('操作成功！')
+              this.$message.success('保存成功！')
               this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
             }).catch(err => {
               this.$message.error(err.text || '未知错误')

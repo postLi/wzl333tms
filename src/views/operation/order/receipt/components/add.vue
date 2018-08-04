@@ -10,7 +10,8 @@
                   type="textarea"
                   :rows="7"
                   :cols="30"
-                  placeholder="最多20个字符"
+                  maxlength="300"
+                  placeholder="最多300个字符"
                   v-model="form.recRemark"
                   auto-complete="off"></el-input>
               </el-form-item>
@@ -24,7 +25,8 @@
                   type="textarea"
                   :rows="7"
                   :cols="30"
-                  placeholder="最多20个字符"
+                  maxlength="300"
+                  placeholder="最多300个字符"
                   v-model="form.acceptRemark"
                   auto-complete="off"></el-input>
               </el-form-item>

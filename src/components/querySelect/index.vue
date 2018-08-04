@@ -14,6 +14,8 @@
   @select="handleSelect"
   v-bind="$attrs"
   >
+  <i slot="suffix" v-if="suffix" :class="[suffix]" class="el-input__icon el-icon-date"></i>
+  <i slot="prefix" v-if="prefix" :class="[prefix]" class="el-input__icon el-icon-search"></i>
   <template slot-scope="{ item }">
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
@@ -218,6 +220,14 @@ export default {
     getinput: {
       type: Boolean,
       default: false
+    },
+    suffix: {
+      type: String,
+      default: ''
+    },
+    prefix: {
+      type: String,
+      default: ''
     }
   },
   watch: {
@@ -596,6 +606,9 @@ export default {
   .highlight{
     font-style: normal;
     color: #f00;
+  }
+  &.el-autocomplete-suggestion li.highlighted, &.el-autocomplete-suggestion li:hover{
+    background: rgb(203,225,247);
   }
 }
 .query-input-customer, .query-input-city{

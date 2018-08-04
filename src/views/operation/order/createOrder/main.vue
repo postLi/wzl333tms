@@ -9,7 +9,7 @@
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">
         <el-form-item prop="tmsOrderShip.shipSn">
-          <el-input size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+          <el-input v-onlyNumberAndLetter size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
         </el-form-item>
         </span></div>
       <div class="create-num">开单日期： <span class="create-num-info">
@@ -92,7 +92,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">发 货 人</span>
             <el-form-item prop="sender.customerName">
-              <querySelect search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
+              <querySelect suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
@@ -121,7 +121,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">收 货 人</span>
             <el-form-item prop="receiver.customerName">
-              <querySelect search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
+              <querySelect suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
@@ -157,9 +157,15 @@
                   <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
-                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: scope.$index === 0 ?  validateIsEmpty('货品件数不能为空！') : '', trigger: 'blur' }">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0('货品件数不能小于0！') : '', trigger: 'blur' }">
                   <el-input size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
+                  </el-form-item>
+                </template>
+                <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.shipFee'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0('请输入运费~') : '', trigger: 'blur' }">
+                  <el-input size="mini" maxlength="20"
+                  v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
@@ -315,7 +321,7 @@
             <div class="order-form-item">
               <span class="order-form-label">制单员</span>
               <el-form-item prop="tmsOrderShip.shipUserid">
-                <querySelect  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" />
+                <querySelect show="select" filterable  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" />
               </el-form-item>
             </div>
           </el-col>
@@ -512,10 +518,11 @@ export default {
 
     // REGEX.ONLY_NUMBER_AND_LETTER
     const validateOnlyNumberAndLetter = (rule, value, callback) => {
+      console.log("rule:",rule)
       if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
       } else {
-        this.$message.error('只能输入数字或者字母')
+        this.$message.error(rule.message || '只能输入数字或者字母')
         callback(new Error())
       }
     }
@@ -543,17 +550,17 @@ export default {
         ],
         'sender.customerMobile': [
           { validator: this.validateIsEmpty('发货人联系电话不能为空') },
-          { validator: validateMobile }
+          { validator: validateMobile,trigger: 'blur' }
         ],
         'receiver.customerName': [
           { validator: this.validateIsEmpty('收货人不能为空') }
         ],
         'receiver.customerMobile': [
           { validator: this.validateIsEmpty('收货人联系电话不能为空') },
-          { validator: validateMobile }
+          { validator: validateMobile,trigger: 'blur' }
         ],
         'tmsOrderShip.shipCustomerNumber': [
-          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '只能输入数字跟字母' }
+          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '请输入客户单号' }
         ]
       },
       // 用来判断是否有填体积或者重量
@@ -883,6 +890,17 @@ export default {
   },
   methods: {
     // 公共工具函数
+    validateIsEmptyOr0(msg = '不能为0'){
+      return (rule, value, callback) => {
+        const val = value ? parseInt(value, 10) : ''
+        if (!val || val < 0) {
+          this.$message.error(msg)
+          callback(new Error())
+        } else {
+          callback()
+        }
+      }
+    },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
@@ -1503,11 +1521,12 @@ export default {
       }
     },
     // 回填运单信息
+    // 将null值转为空值
     setOrderData(data) {
       data.tmsOrderShip = data.tmsOrderShipInfo || data.tmsOrderShip || {}
       // 设置运单信息
       for (const i in this.form.tmsOrderShip) {
-        this.form.tmsOrderShip[i] = data.tmsOrderShip[i]
+        this.form.tmsOrderShip[i] = data.tmsOrderShip[i] === null ? '' : data.tmsOrderShip[i]
       }
       this.form.tmsOrderShip.createTime = parseTime(this.form.tmsOrderShip.createTime)
       // 设置城市名称
@@ -1519,14 +1538,14 @@ export default {
       // 设置收发货人信息
       if (data.customerList[0]) {
         for (const i in this.form.sender) {
-          this.sender[i] = data.customerList[0][i]
-          this.form.sender[i] = data.customerList[0][i]
+          this.sender[i] = data.customerList[0][i] === null ? '' : data.customerList[0][i]
+          this.form.sender[i] = data.customerList[0][i] === null ? '' : data.customerList[0][i]
         }
       }
       if (data.customerList[1]) {
         for (const i in this.form.receiver) {
-          this.receiver[i] = data.customerList[1][i]
-          this.form.receiver[i] = data.customerList[1][i]
+          this.receiver[i] = data.customerList[1][i] === null ? '' : data.customerList[1][i]
+          this.form.receiver[i] = data.customerList[1][i] === null ? '' : data.customerList[1][i]
         }
       }
       // 回显控货
@@ -1539,26 +1558,32 @@ export default {
       // 设置运单信息
       if (data.tmsOrderTransfer) {
         for (const i in this.form.tmsOrderTransfer) {
-          this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
+          this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i] === null ? '' : data.tmsOrderTransfer[i]
         }
         this.form.tmsOrderTransfer.transferTime = parseTime(this.form.tmsOrderTransfer.transferTime)
       }
 
+      
+
       // 处理下回填的多笔付数据
-      if (parseInt(this.form.tmsOrderShip.shipPayWay, 10) === 104) {
-        setTimeout(() => {
-          this.form.tmsOrderShip.shipNowpayFee = data.tmsOrderShipInfo.shipNowpayFee
-          this.form.tmsOrderShip.shipArrivepayFee = data.tmsOrderShipInfo.shipArrivepayFee
-          this.form.tmsOrderShip.shipMonthpayFee = data.tmsOrderShipInfo.shipMonthpayFee
-          this.form.tmsOrderShip.shipReceiptpayFee = data.tmsOrderShipInfo.shipReceiptpayFee
-        }, 300)
-      }
+      // if (parseInt(this.form.tmsOrderShip.shipPayWay, 10) === 104) {
+      setTimeout(() => {
+        this.form.tmsOrderShip.shipNowpayFee = data.tmsOrderShipInfo.shipNowpayFee
+        this.form.tmsOrderShip.shipArrivepayFee = data.tmsOrderShipInfo.shipArrivepayFee
+        this.form.tmsOrderShip.shipMonthpayFee = data.tmsOrderShipInfo.shipMonthpayFee
+        this.form.tmsOrderShip.shipReceiptpayFee = data.tmsOrderShipInfo.shipReceiptpayFee
+      }, 300)
+      // }
     },
     // 回填订单信息
     setPreOrder() {
       // 将数据回填到页面上
       // 网点信息
-      const data = this.form.tmsOrderPre
+      let data = this.form.tmsOrderPre
+      // 格式化下数据
+      for(const i in data){
+        data[i] = data[i] === null ? '' : data[i]
+      }
       this.form.tmsOrderShip.shipFromOrgid = data.orderFromOrgid
       this.form.tmsOrderShip.shipToOrgid = data.orderToOrgid
       // 城市信息
@@ -1599,7 +1624,7 @@ export default {
           cargoData[i] = data.productPrice
         }
         if (i === 'shipFee') {
-          cargoData[i] = data.orderTotalFee
+          cargoData[i] = data.shipFee
         }
       }
       this.$set(this.form.cargoList, 0, cargoData)
@@ -1655,7 +1680,7 @@ export default {
       this.form.cargoList.forEach(el => {
         // 匹配系统设置里的运费合计规则
         for (const i in el) {
-          if (this.config.shipFee[i] === '1') {
+          if (this.config.shipFee[i] === '1' && el[i] !== null) {
             total = tmsMath.add(total, el[i]).result()
           }
         }
@@ -1679,6 +1704,7 @@ export default {
       } else {
         this.getTotalFee()
       }
+      console.log('this.form.tmsOrderShip.shipTotalFee:', this.form.tmsOrderShip.shipTotalFee)
       switch (key) {
         // 现付
         case 76:
@@ -1741,7 +1767,11 @@ export default {
       }
       return obj
     },
-    reset() {
+    reset(shouldReinputDefault) {
+      //缓存不可修改、默认数据
+      let copy = objectMerge2({},this.form)
+      
+
       this.$refs['ruleForm'].resetFields()
       this.form.cargoList = [{}]
       this.form.sender = this.resetObj(this.form.sender)
@@ -1759,6 +1789,28 @@ export default {
       this.form.tmsOrderShip.shipTotalFee = '0.00'
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
 
+      // 回填默认的数据
+      if(shouldReinputDefault){
+        this.form.tmsOrderShip.shipSn = copy.tmsOrderShip.shipSn
+
+        this.form.tmsOrderShip.createTime = copy.tmsOrderShip.createTime
+
+        this.form.tmsOrderShip.shipFromOrgid = copy.tmsOrderShip.shipFromOrgid
+
+        this.form.tmsOrderShip.shipDeliveryMethod = copy.tmsOrderShip.shipDeliveryMethod
+
+        this.form.tmsOrderShip.shipGoodsSn = copy.tmsOrderShip.shipGoodsSn
+
+        this.form.tmsOrderShip.shipPayWay = copy.tmsOrderShip.shipPayWay
+
+        this.form.tmsOrderTransfer.transferTime = copy.tmsOrderTransfer.transferTime
+        this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
+        this.setDefaultValue()
+      }
+      
+
+
+      // 多票相关的数据也需要清空
       this.currentBatch = 1
       this.lastEditBatch = 1
       this.batchSaveList = {}
@@ -1932,7 +1984,7 @@ export default {
     doAction(type) {
       switch (type) {
         case 'cleanKey':
-          this.reset()
+          this.reset(true)
           break
         case 'printLibkey': // 打印标签
           this.$message.info('正在开发中，敬请期待。')
@@ -2089,7 +2141,9 @@ $backgroundcolor: #cbe1f7;
       .el-input__inner{
         color: #f00;
         font-weight: bold;
-
+        border: none;
+        border-radius: 0;
+        border-bottom: 1px solid #ccc;
       }
     }
     .create-num{

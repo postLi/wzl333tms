@@ -77,17 +77,17 @@ service.interceptors.response.use(
       const status = error.response.status
 
       if (status === 403) {
-        Message({
+        /* Message({
           message: '禁止访问',
           type: 'error',
-          duration: 5 * 1000
-        })
+          duration: 1 * 1000
+        }) */
       } else if (status === 404) {
-        Message({
+        /* Message({
           message: '未找到相关信息',
           type: 'error',
-          duration: 5 * 1000
-        })
+          duration: 1 * 1000
+        }) */
       } else if (status === 401) {
         // 401:非法的token;Token 过期了;
         const ifr = document.getElementById('senderIframe')
@@ -115,19 +115,19 @@ service.interceptors.response.use(
           })
         })
       } else {
-        Message({
+        /* Message({
           message: '请求错误：' + status,
           type: 'error',
-          duration: 5 * 1000
-        })
+          duration: 1 * 1000
+        }) */
       }
     } else {
       console.log('response err:', error)// for debug
-      Message({
+      /* Message({
         message: error.message,
         type: 'error',
-        duration: 5 * 1000
-      })
+        duration: 1 * 1000
+      }) */
     }
     return Promise.reject(error)
   }

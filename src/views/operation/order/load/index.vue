@@ -97,10 +97,10 @@
                 </div>
                 <div>
                   <el-form-item label="备注" v-if="loadTypeId !== 38">
-                    <el-input size="mini" v-model="formModel.remark"></el-input>
+                    <el-input maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                   <el-form-item label="备注" v-else>
-                    <el-input size="mini" v-model="formModel.remark"></el-input>
+                    <el-input maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
               </div>
@@ -400,7 +400,7 @@ export default {
     this.setLoadTypeId()
     console.log(this.$route)
   },
-  mounted () {
+  mounted() {
     this.init()
     this.getSystemTime()
   },
@@ -655,7 +655,7 @@ export default {
         this.setDataFinishTruck() // 处理数据
         this.$nextTick(() => {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
-            this.$message({ type: 'success', message: '操作成功' })
+            this.$message({ type: 'success', message: '保存成功' })
             this.resetFieldsForm()
             this.$nextTick(() => {
               this.gotoPage() // 操作成功后跳转到配载列表页面

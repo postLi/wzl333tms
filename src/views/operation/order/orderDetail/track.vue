@@ -177,7 +177,7 @@ export default {
           }
 
           promObj.then(res => {
-            this.$message.success('操作成功')
+            this.$message.success('保存成功')
             this.reset()
             this.getDetail()
           }).catch(err => {

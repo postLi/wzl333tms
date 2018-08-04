@@ -22,7 +22,7 @@
       </div>
       <draggable :move="canDragStart" v-show="!!!query" :list="feeData" class="dragArea" :options="sortOption">
         <div class="list-complete-item" v-for="element in feeData" :key='element.id'>
-          <el-checkbox :true-label="1" :false-label="0" :title="element.fieldName" v-model="element.ischeck">{{ element.fieldName }}</el-checkbox>
+          <el-checkbox :true-label="1" :false-label="0" :title="element.fieldName" :disabled="element.isDisabled" v-model="element.ischeck">{{ element.fieldName }}</el-checkbox>
           <span class="switch-box"><el-switch
             :active-value="1"
             :inactive-value="0"
@@ -34,7 +34,7 @@
       <!-- 当为筛选的字段时，不允许排序拖拉 -->
       <div v-show="!!query" class="searchlist">
         <div class="list-complete-item" v-for="element in searchList" :key='element.id'>
-          <el-checkbox :title="element.fieldName" :true-label="1" :false-label="0" v-model="element.ischeck">{{ element.fieldName }}</el-checkbox>
+          <el-checkbox :title="element.fieldName" :true-label="1" :false-label="0" :disabled="element.isDisabled" v-model="element.ischeck">{{ element.fieldName }}</el-checkbox>
           <span class="switch-box"><el-switch
             :active-value="1"
             :inactive-value="0"
@@ -52,7 +52,7 @@
   </el-dialog>
 </template>
 <script>
-import OrderApi from  '@/api/operation/orderManage'
+import OrderApi from '@/api/operation/orderManage'
 import draggable from 'vuedraggable'
 
 export default {
@@ -67,9 +67,9 @@ export default {
   },
   computed: {
     // 搜索项不参与拖拉排序
-    searchList () {
-      if(this.query){
-        return this.feeData.filter(el=>{
+    searchList() {
+      if (this.query) {
+        return this.feeData.filter(el => {
           return el.name.indexOf(this.query) !== -1
         })
       } else {
@@ -77,24 +77,24 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       feeData: [],
       // 用来搜索项
-      query: "",
+      query: '',
       loading: false,
       sortOption: {
-        group:'item',
+        group: 'item',
         sort: true,
         dataIdAttr: ''
       }
     }
   },
   methods: {
-    close(done){
+    close(done) {
       this.$emit('update:dialogVisible', false)
       this.$emit('close')
-      if(typeof done === 'function'){
+      if (typeof done === 'function') {
         done()
       }
     },
@@ -102,10 +102,18 @@ export default {
     getFeeSetup() {
       this.loading = true
       return OrderApi.getCargoSetting(this.otherinfo.orgid).then(res => {
-        res.sort((a,b) => {
+        res.sort((a, b) => {
           return a.fieldOrder < b.fieldOrder ? -1 : 1
         })
-        this.feeData = res
+        const noChangeField = ['cargoName', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'shipFee']
+        this.feeData = res.map(el => {
+          if (noChangeField.indexOf(el.fieldProperty) !== -1) {
+            el.isDisabled = true
+          } else {
+            el.isDisabled = false
+          }
+          return el
+        })
         this.loading = false
       })
     },
@@ -117,7 +125,7 @@ export default {
       })
       return OrderApi.putCargoSetting(this.feeData).then(res => {
         this.loading = false
-        if(res.status === 200) {
+        if (res.status === 200) {
           this.$message.info('修改成功！')
           this.close()
         } else {
@@ -125,13 +133,16 @@ export default {
         }
       })
     },
-    canDragStart(list){
+    canDragStart(list) {
       return !list.draggedContext.element.isfixed
     }
   }
 }
 </script>
 <style lang="scss">
+.feeSetupDialog{
+  margin-top: 20px !important;
+}
 .feePopSetup{
   .el-dialog__header, .el-dialog__footer{
     background: #eee;

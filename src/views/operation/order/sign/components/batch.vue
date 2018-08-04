@@ -35,7 +35,7 @@
           <el-input maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
-          <el-input maxlength="250" v-model.trim="form.remark" auto-complete="off"></el-input>
+          <el-input maxlength="300" v-model.trim="form.remark" auto-complete="off"></el-input>
         </el-form-item>
       </div>      
     </el-form>

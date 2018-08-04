@@ -138,7 +138,7 @@ export default {
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
       this.searchForm.carrierId = ''
-      this.searchCreatTime = []
+      this.searchCreatTime = this.defaultTime
       this.searchCreatTime2 = []
     }
   }

@@ -328,14 +328,10 @@
               reqPromise = postOrgSaveDate(this.form)
             }
             reqPromise.then(res => {
-              this.$alert('保存成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.loading = false
-                  this.closeMe()
-                  this.$emit('success')
-                }
-              })
+              this.loading = false
+              this.$message.success("保存成功")
+              this.closeMe()
+              this.$emit('success')
             })
           } else {
             return false

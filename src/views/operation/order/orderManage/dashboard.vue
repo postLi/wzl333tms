@@ -211,7 +211,10 @@ export default {
       }, {
         'label': '等通知放货',
         'prop': 'shipIsControll',
-        'width': '150'
+        'width': '150',
+        'slot': function(scope){
+          return scope.row.shipIsControll === 0 ? '未通知' : '已通知'
+        }
       }, {
         'label': '回单要求',
         'prop': 'shipReceiptRequireName',

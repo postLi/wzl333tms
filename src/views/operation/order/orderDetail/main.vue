@@ -1,5 +1,10 @@
 <template>
   <div class="OrderDetail-main" v-loading="loading">
+    <!-- 各种状态显示 -->
+    <div class="order-status-info">
+      <span class="order-status-name">{{form.tmsOrderShipInfo.shipStatusName}}</span><span class="order-status-org">{{form.tmsOrderShipInfo.toOrgName}}</span>
+    </div>
+
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
@@ -24,13 +29,17 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
-            <el-input :value="form.tmsOrderShipInfo.shipFromCityName" disabled size="mini" />
+            <el-form-item >
+              <el-input :value="form.tmsOrderShipInfo.shipFromCityName" disabled size="mini" />
+            </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
-            <el-input :value="form.tmsOrderShipInfo.shipToCityName" disabled size="mini" />
+            <el-form-item >
+              <el-input :value="form.tmsOrderShipInfo.shipToCityName" disabled size="mini" />
+            </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
@@ -349,7 +358,7 @@
               {{ form.tmsOrderTransfer.deliveryExpense }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.codService }}
+              {{ form.tmsOrderTransfer.transferOtherFee }}
             </td>
             <td>
               {{ form.tmsOrderTransfer.totalCost }}
@@ -374,13 +383,13 @@
           <tr>
             <th>短驳批次</th>
             <th>短驳时间</th>
-            <th>接受时间</th>
+            <th>接收时间</th>
             <th>车牌号</th>
             <th>司机</th>
             <th>司机电话</th>
             <th>短驳费</th>
-            <th>短驳接收人</th>
-            <th>接收网点</th>
+            <th>发车网点</th>
+            <th>到达网点</th>
             <th>接收人</th>
           </tr>
         </thead>
@@ -408,7 +417,7 @@
               {{ item.shortFee }}
             </td>
             <td>
-              {{ item.receivedUserName }}
+              {{ item.orgidName }}
             </td>
             <td>
               {{ item.arriveOrgidName }}
@@ -432,8 +441,8 @@
             <th>车牌号</th>
             <th>司机</th>
             <th>司机电话</th>
-            <th>发站</th>
-            <th>到站</th>
+            <th>发车网点</th>
+            <th>到达网点</th>
             <th>发车时间</th>
             <th>到车时间</th>
             <th>配载员</th>
@@ -484,16 +493,12 @@
       <table >
         <thead>
           <tr>
-            <th>发车批次</th>
+            <th>送货批次</th>
             <th>车牌号</th>
             <th>司机</th>
             <th>司机电话</th>
-            <th>发站</th>
-            <th>到站</th>
-            <th>发车时间</th>
-            <th>到车时间</th>
+            <th>送货时间</th>
             <th>配载员</th>
-            <th>到车确定人</th>
           </tr>
         </thead>
         <tbody>
@@ -511,23 +516,12 @@
               {{ item.dirverMobile }}
             </td>
             <td>
-              {{ item.arrivalMobile }}
+              {{ item.departureTime }}
             </td>
             <td>
-              {{ item.transferCharge }}
+              {{ item.loadName }}
             </td>
-            <td>
-              {{ item.createTime }}
-            </td>
-            <td>
-              {{ item.codService }}
-            </td>
-            <td>
-              {{ item.totalCost }}
-            </td>
-            <td>
-              <SelectType disabled size="mini" v-model="item.paymentId" type="payment_type" />
-            </td>
+
             
           </tr>
         </tbody>
@@ -875,7 +869,7 @@ export default {
       // 设置中转信息
       // 设置运单信息
       if (data.tmsOrderTransfer) {
-        for (const i in this.form.tmsOrderTransfer) {
+        for (const i in data.tmsOrderTransfer) {
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
         console.log('setOrderInfo2:', data.tmsOrderTransfer, this.form.tmsOrderTransfer)
@@ -911,18 +905,18 @@ export default {
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
       // this.setOrderDate()
     },
-    doAction (type) {
+    doAction(type) {
       switch (type) {
         case 'printLibkey':
-        getPrintLibItems(this.form.tmsOrderShipInfo.id).then(data => {
-          CreatePrintPage(data)
-        })
-        break
+          getPrintLibItems(this.form.tmsOrderShipInfo.id).then(data => {
+            CreatePrintPage(data)
+          })
+          break
         case 'printShipKey':
           getPrintOrderItems(this.form.tmsOrderShipInfo.id).then(data => {
             CreatePrintPage(data)
           })
-        break
+          break
       }
     }
   }
@@ -1338,6 +1332,25 @@ $backgroundcolor: #cbe1f7;
           font-size: 16px;
           padding: 2px;
         }
+      }
+    }
+    // 各种状态控制显示
+    .order-status-info{
+      position: absolute;
+      top: 0;
+      left: 140px;
+      color: #ef0000;
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+      font-family: "宋体",serif;
+      span{
+        display: block;
+      }
+      .order-status-name{
+        margin-bottom: 5px;
+      }
+      .order-status-org{
       }
     }
   }

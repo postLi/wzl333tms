@@ -328,7 +328,7 @@ export default {
       this.setData(57) //57-送货中
       if (this.isBatch) {
         putCompleteDelivery(this.commonData).then(data => {
-            this.$message({ type: 'success', message: '操作成功' })
+            this.$message({ type: 'success', message: '保存成功' })
             this.fetchData()
           })
           .catch(error => {
@@ -343,7 +343,7 @@ export default {
       this.setData(57)
       if (this.isBatch) {
         putDeliverLoad(this.commonData).then(data => {
-            this.$message({ type: 'success', message: '操作成功' })
+            this.$message({ type: 'success', message: '保存成功' })
             this.fetchData()
           })
           .catch(error => {

@@ -22,7 +22,7 @@
           <el-input maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码"></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
-          <el-input maxlength="250" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
+          <el-input maxlength="300" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
         </el-form-item>
       </div>
     </el-form>
@@ -143,7 +143,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
-          let data = objectMerge2({}, this.form)
+          const data = objectMerge2({}, this.form)
           console.log(data)
           this.$confirm('此操作将签到, 是否继续?', '提示', {
             confirmButtonText: '确定',
@@ -151,11 +151,11 @@ export default {
             type: 'warning'
           }).then(() => {
             postBatchSign(data).then(data => {
-                this.$message({ type: 'success', message: '签收成功' })
-                this.message = true
-                this.closeMe()
-                this.$emit('message', this.message)
-              })
+              this.$message({ type: 'success', message: '签收成功' })
+              this.message = true
+              this.closeMe()
+              this.$emit('message', this.message)
+            })
               .catch(error => {
                 this.$message({ type: 'error', message: '签收失败' })
                 this.message = false
@@ -166,7 +166,7 @@ export default {
         }
       })
     }
-  },
+  }
 }
 
 </script>

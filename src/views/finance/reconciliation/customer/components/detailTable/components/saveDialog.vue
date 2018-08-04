@@ -217,7 +217,7 @@
             promiseObj.then(res => {
               this.loading = false
               this.$message({
-                message: '操作成功~',
+                message: '保存成功~',
                 type: 'success'
               })
 

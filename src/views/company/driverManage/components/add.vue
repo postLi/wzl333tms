@@ -42,7 +42,7 @@
           <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
-          <el-input type="textarea" maxlength="125" v-model.trim="form.driverRemarks"></el-input>
+          <el-input type="textarea" maxlength="300" v-model.trim="form.driverRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <el-form-item class="clearfix uploadcard">
@@ -255,13 +255,9 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            })
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
           }).catch(err => {
             this.loading = false
           })

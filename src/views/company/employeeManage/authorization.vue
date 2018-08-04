@@ -107,13 +107,10 @@ export default {
       }
       putEmployeerAuth(data).then(res => {
         this.loading = false
-        this.$alert('保存成功', '提示', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.closeMe()
-            this.$emit('success')
-          }
-        })
+        this.$message.success("保存成功")
+        this.closeMe()
+        this.$emit('success')
+
       }).catch(err => {
         this.loading = false
       })

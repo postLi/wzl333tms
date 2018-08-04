@@ -43,7 +43,7 @@
             <!--<el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>-->
           <!--</el-form-item>-->
           <el-form-item label="备注" class="iom_textarea">
-            <el-input v-model="form.remark" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
+            <el-input v-model="form.remark" maxlength="300" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
           </el-form-item>
 
         </div>
@@ -64,7 +64,7 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { postAdd , putUpdate} from '@/api/finance/financefinancialway'
+import { postAdd, putUpdate } from '@/api/finance/financefinancialway'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -91,7 +91,7 @@ export default {
     orgid: {
       required: true
     },
-    //isDbclick
+    // isDbclick
     isModify: {
       type: Boolean,
       default: false
@@ -110,102 +110,95 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
+    ...mapGetters([
+        'otherinfo'
       ])
 
   },
-  data () {
-    const validatebankName = function (rule, value, callback) {
-      if(REGEX.ONLY_CHINESE.test(value) || this.form.financialWayId){
+  data() {
+    const validatebankName = function(rule, value, callback) {
+      if (REGEX.ONLY_CHINESE.test(value) || this.form.financialWayId) {
         callback()
-      }
-
-      else {
+      }      else {
         callback(new Error('只能输入中文'))
       }
     }
     return {
       rules: {
-        'financialWayId':[
-          {required: true,validator: this.validateIsEmpty('收支方式不能为空'), trigger: 'blur'},
+        'financialWayId': [
+          { required: true, validator: this.validateIsEmpty('收支方式不能为空'), trigger: 'blur' }
         ],
-        bankName:[
-          {max:20,message:'最多可以输入20个字符~', trigger: 'blur'},
-          {validator: validatebankName, trigger: 'blur'}
+        bankName: [
+          { max: 20, message: '最多可以输入20个字符~', trigger: 'blur' },
+          { validator: validatebankName, trigger: 'blur' }
         ]
       },
       form: {
-        orgId:'',
-        financialWay:'',//收支方式
+        orgId: '',
+        financialWay: '', // 收支方式
         financialWayId: '',
-        bankName:'',//银行名称
-        bankAccount:'',//银行卡号
-        bankAccountName:'',//开户人
-        alipayAccount:'',//支付宝号
-        wechatAccount:'',//微信号
-        remark:'',//
-        agent:'',//
+        bankName: '', // 银行名称
+        bankAccount: '', // 银行卡号
+        bankAccountName: '', // 开户人
+        alipayAccount: '', // 支付宝号
+        wechatAccount: '', // 微信号
+        remark: '', //
+        agent: '' //
       },
       checked: true,
       formLabelWidth: '80px',
       popTitle: '新增收支方式',
       loading: false,
       inited: false,
-      bankPay: false,//银行
-      aliPay: false,//支付宝
-      wPay: false,//微信
-      casyPay: false,//现金
-      chePay: false,//支票
+      bankPay: false, // 银行
+      aliPay: false, // 支付宝
+      wPay: false, // 微信
+      casyPay: false, // 现金
+      chePay: false // 支票
 
     }
   },
-  mounted () {
-    if(!this.inited){
+  mounted() {
+    if (!this.inited) {
       this.inited = true
       this.initInfo()
       this.form.orgId = this.otherinfo.orgid
     }
 
     // this.fetchGetPickUp()
-
   },
   watch: {
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
+    popVisible(newVal, oldVal) {
+      if (!this.inited) {
         this.inited = true
         this.initInfo()
       }
     },
-    orgid (newVal) {
+    orgid(newVal) {
       this.form.orgId = newVal
     },
-    info () {
+    info() {
       if (this.isModify) {
         this.popTitle = '修改收支方式'
         // this.infoData(this.info)
         this.changeInfo(this.info)
-      }
-      else if(this.isDbclick) {
+      }      else if (this.isDbclick) {
         this.popTitle = '查看收支方式'
         this.changeInfo(this.info)
-      }
-      else {
+      }      else {
         this.popTitle = '新增收支方式'
         this.newInfo(this.otherinfo)
       }
     },
-    isModify:{
-      handler () {
+    isModify: {
+      handler() {
         if (this.isModify) {
           this.popTitle = '修改收支方式'
           this.changeInfo(this.info)
-        }
-        else if(this.isDbclick) {
+        }        else if (this.isDbclick) {
           this.popTitle = '查看收支方式'
           this.changeInfo(this.info)
-        }
-        else {
+        }        else {
           this.popTitle = '新增收支方式'
           this.newInfo(this.otherinfo)
         }
@@ -214,7 +207,7 @@ export default {
     }
   },
   methods: {
-    changeInfo(item){
+    changeInfo(item) {
       this.form.orgId = item.orgId
       this.form.financialWay = item.financialWay
       this.form.financialWayId = item.financialWayId
@@ -226,7 +219,7 @@ export default {
       this.form.bankName = item.bankName
       this.financialWayClick(this.form.financialWayId)
     },
-    newInfo(item){
+    newInfo(item) {
       this.form.orgId = item.orgId
       this.form.remark = ''
       this.form.bankAccount = ''
@@ -236,60 +229,53 @@ export default {
       this.form.financialWayId = 280
       this.form.financialWay = ''
 
-
       this.financialWayClick(this.form.financialWayId)
-
     },
-    validateIsEmpty (msg = '不能为空！') {
+    validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
-        if(!value){
+        if (!value) {
           callback(new Error(msg))
-        }else{
+        } else{
           callback()
         }
       }
     },
-    getData(data){
+    getData(data) {
 
     },
-    financialWayClick(item){
+    financialWayClick(item) {
       this.bankPay = false
       this.aliPay = false
       this.wPay = false
       this.casyPay = false
       this.chePay = false
 
-      if(item === 280 || item === '银行卡'){
+      if (item === 280 || item === '银行卡') {
         this.bankPay = true
-
-      }else if(item === 281 || item === '支付宝'){
+      } else if (item === 281 || item === '支付宝') {
         this.aliPay = true
-      }
-      else if(item === 282 || item === '微信'){
+      }      else if (item === 282 || item === '微信') {
         this.wPay = true
-      }
-      else if(item === 283 || item === '现金'){
+      }      else if (item === 283 || item === '现金') {
         this.casyPay = true
-      }
-      else{
+      }      else {
         this.chePay = true
       }
-
     },
-    initInfo () {
+    initInfo() {
       this.loading = false
     },
-    submit(){
+    submit() {
       console.log('保存并打印')
     },
     submitForm(ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = objectMerge2({},this.form)
+          const data = objectMerge2({}, this.form)
           let promiseObj
           // 判断操作，调用对应的函数
-          if(this.isModify){
+          if (this.isModify) {
             data.id = this.info.id
             promiseObj = putUpdate(data)
           } else {
@@ -298,32 +284,29 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.$emit('success')
-                this.closeMe()
-              }
-            });
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
+
           }).catch(err => {
             this.loading = false
           })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
       this.form = ''
       this.form.orgId = this.otherinfo.orgid
     },
-    closeMe (done) {
-      this.$emit('update:popVisible', false);
-      if(typeof done === 'function'){
+    closeMe(done) {
+      this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
         done()
       }
-    },
+    }
   }
 }
 </script>

@@ -344,7 +344,7 @@ export default {
         if (valid) {
           this.setData()
           postLoadSettlement(this.submitData).then(data => {
-              this.$message({ type: 'success', message: '操作成功' })
+              this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
               this.$router.push({ path: './accountsPayable/batch', query:{name: this.currentPage} })
             })

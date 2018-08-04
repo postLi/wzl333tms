@@ -18,7 +18,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="备注" class="remark">
-            <el-input size="mini" disabled :value="form.remark" placeholder="备注">
+            <el-input size="mini" maxlength="300" disabled :value="form.remark" placeholder="备注">
             </el-input>
           </el-form-item>
       </el-form>

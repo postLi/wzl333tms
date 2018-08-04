@@ -353,7 +353,7 @@ export default {
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '操作成功~'
+                    message: '保存成功~'
                   })
                       this.fetchData()
                 }).catch(err => {

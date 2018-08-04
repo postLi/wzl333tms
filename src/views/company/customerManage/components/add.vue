@@ -298,13 +298,10 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            })
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
+
           }).catch(err => {
             this.loading = false
           })

@@ -51,7 +51,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.truckRemarks"></el-input>
+          <el-input type="textarea" maxlength="300" v-model="form.truckRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <div class="hr"></div>
@@ -156,27 +156,27 @@ export default {
     }
     return {
       form: {
-        "dirverMobile": "", // 司机电话 11
-        "driverId": '', // 司机ID
-        "orgid": '', // 所属机构
-        "truckBrand": "", // 车辆品牌 20
-        "truckHeight": '', // 车高
+        'dirverMobile': '', // 司机电话 11
+        'driverId': '', // 司机ID
+        'orgid': '', // 所属机构
+        'truckBrand': '', // 车辆品牌 20
+        'truckHeight': '', // 车高
         // "truckId": 0, // 车辆ID
-        "truckIdNumber": "", // 车牌号码 12
-        "truckLength": '', // 车长
-        "truckLoad": '', // 可载重
-        "truckRegisterDate": "", // 车辆注册时间
-        "truckRemarks": "", // 备注 50
-        "truckScrapDate": "", // 车辆报废时间
-        "truckSource": '', // 车牌来源
-        "truckType": '', // 车型
-        "truckUnit": "", // 车辆单位 50
-        "truckUnitMobile": "", // 单位电话 11
-        "truckVolume": '', // 可载体积
-        "truckWidth": '', // 车宽
-        "drivingLicense": '', //行驶证
-        "operatingLicense": '', //营运执照
-        "vehiclePic": '' //车辆照片
+        'truckIdNumber': '', // 车牌号码 12
+        'truckLength': '', // 车长
+        'truckLoad': '', // 可载重
+        'truckRegisterDate': '', // 车辆注册时间
+        'truckRemarks': '', // 备注 50
+        'truckScrapDate': '', // 车辆报废时间
+        'truckSource': '', // 车牌来源
+        'truckType': '', // 车型
+        'truckUnit': '', // 车辆单位 50
+        'truckUnitMobile': '', // 单位电话 11
+        'truckVolume': '', // 可载体积
+        'truckWidth': '', // 车宽
+        'drivingLicense': '', // 行驶证
+        'operatingLicense': '', // 营运执照
+        'vehiclePic': '' // 车辆照片
       },
       formLabelWidth: '100px',
       tooltip: false,
@@ -247,14 +247,14 @@ export default {
     info() {
       if (this.isModify) {
         this.popTitle = '修改车辆'
-        let data = Object.assign({}, this.info)
-        for (let i in this.form) {
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
           this.form[i] = data[i]
         }
         this.form.truckId = data.truckId
       } else {
         this.popTitle = '新增车辆'
-        for (let i in this.form) {
+        for (const i in this.form) {
           this.form[i] = typeof this.form[i] === 'string' ? '' : ''
         }
         delete this.form.truckId
@@ -278,7 +278,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({}, this.form)
+          const data = Object.assign({}, this.form)
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
@@ -289,27 +289,24 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            });
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
+
           }).catch(err => {
             this.loading = false
           })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
     },
     closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
+      this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
       }
@@ -319,10 +316,10 @@ export default {
         this.DriverList = this.cacheDriverList[orgid]
       } else {
         getAllDriver({
-          "currentPage": 1,
-          "pageSize": 200,
-          "vo": {
-            "orgid": orgid
+          'currentPage': 1,
+          'pageSize': 200,
+          'vo': {
+            'orgid': orgid
           }
         }).then(data => {
           this.DriverList = data.list

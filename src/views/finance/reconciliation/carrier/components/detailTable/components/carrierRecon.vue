@@ -670,7 +670,7 @@
             <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
           <!--</el-form-item>-->
           <el-form-item label="备注">
-            <el-input v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
+            <el-input maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
           </el-form-item>
             <div class="sMessageCont_info">
         <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
@@ -718,14 +718,14 @@
 <script>
   import { pickerOptions2, parseTime } from '@/utils/'
   import { REGEX } from '@/utils/validate'
-  import {postCarrierinitialize,getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
+  import { postCarrierinitialize, getCarrierCarrierdetail } from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
 
-    export default {
-      components:{
+  export default {
+      components: {
         querySelect,
         SaveDialog
       },
@@ -738,27 +738,27 @@
             callback(new Error())
           }
         }
-          return {
+        return {
             tooltip: false,
-            disabledName:true,
-            rules:{
-              "bankAccount":[
+            disabledName: true,
+            rules: {
+              'bankAccount': [
                 // { trigger: 'change', validator: validateOnlyNum}
-                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
               ],
-              "memberPersonPhone":[
-                { trigger: 'change', validator: validateMobile}
+              'memberPersonPhone': [
+                { trigger: 'change', validator: validateMobile }
               ],
-              "financialOfficerPhone":[
-                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
-              ],
+              'financialOfficerPhone': [
+                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+              ]
             },
-            btnRule:{
-              "orgBusinessOfficerPhone": [
-                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            btnRule: {
+              'orgBusinessOfficerPhone': [
+                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
               ],
-              "orgFinancialOfficerPhone": [
-                {  message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+              'orgFinancialOfficerPhone': [
+                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
               ]
             },
             pickerOptions2: {
@@ -766,109 +766,106 @@
             },
             searchCreatTime: [],
             defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
-            searchForm:{},
-            usersArr:[],
-            messageArr:[],
-            checkBillName:'',
-            messageInfo:{
-              orgName:'',
-              memberId:'',
-              orgId:'',
-              companyId:'',
-              memberIdType:'',
-              memberCode:'',
-              memberName:'',
-              memberPersonPhone:'',
-              memberPerson:'',
-              checkBillCode:'',
-              checkStartTime:'',
-              checkEndTime:'',
-              settlementType:'',
-              bankAccount:'',
-              bankName:'',
-              financialOfficer:'',
-              financialOfficerPhone:'',
-              alipayAccount:'',
-              wechatAccount:''
+            searchForm: {},
+            usersArr: [],
+            messageArr: [],
+            checkBillName: '',
+            messageInfo: {
+              orgName: '',
+              memberId: '',
+              orgId: '',
+              companyId: '',
+              memberIdType: '',
+              memberCode: '',
+              memberName: '',
+              memberPersonPhone: '',
+              memberPerson: '',
+              checkBillCode: '',
+              checkStartTime: '',
+              checkEndTime: '',
+              settlementType: '',
+              bankAccount: '',
+              bankName: '',
+              financialOfficer: '',
+              financialOfficerPhone: '',
+              alipayAccount: '',
+              wechatAccount: ''
             },
-            messageButtonInfo:{
-              companyName:'',
-              orgBusinessOfficer:'',//本网点业务负责人
-              orgBusinessOfficerPhone:'',//本网点业务负责人
-              orgFinancialOfficer:'',//本网点财务负责人
-              orgFinancialOfficerPhone:'',//本网点财务负责人
-              createTime:'',
-              remark:'',
-              totalCount:'',
+            messageButtonInfo: {
+              companyName: '',
+              orgBusinessOfficer: '', // 本网点业务负责人
+              orgBusinessOfficerPhone: '', // 本网点业务负责人
+              orgFinancialOfficer: '', // 本网点财务负责人
+              orgFinancialOfficerPhone: '', // 本网点财务负责人
+              createTime: '',
+              remark: '',
+              totalCount: ''
             },
-            dealPayInfo:[],//应付    1-应收 2-应付 3-已收 4-已付
-            dealInfo:[],
-            alreadyPayInfo:[],
-            alreadyInfo:[],
+            dealPayInfo: [], // 应付    1-应收 2-应付 3-已收 4-已付
+            dealInfo: [],
+            alreadyPayInfo: [],
+            alreadyInfo: [],
 
-            form:{
-              tmsFinanceBillCheckDto:{
-                checkBillName:''
+            form: {
+              tmsFinanceBillCheckDto: {
+                checkBillName: ''
               },
-              carrierDetailDtoList:[],
+              carrierDetailDtoList: []
             },
-            //总计
-            tota:{
-              dealtota:[],
-              dealPaytota:[],
-              alreadytota:[],
-              alreadyPaytota:[]
+            // 总计
+            tota: {
+              dealtota: [],
+              dealPaytota: [],
+              alreadytota: [],
+              alreadyPaytota: []
             },
-            dealPayInfoData:[],//应付    1-应收 2-应付 3-已收 4-已付
-            dealInfoData:[],
-            alreadyPayInfoData:[],
-            alreadyInfoData:[],
-            //总计
-            sendId:'',
-            visibleDialog:false,
-            loading:false,
+            dealPayInfoData: [], // 应付    1-应收 2-应付 3-已收 4-已付
+            dealInfoData: [],
+            alreadyPayInfoData: [],
+            alreadyInfoData: [],
+            // 总计
+            sendId: '',
+            visibleDialog: false,
+            loading: false,
             btnsize: 'mini',
 
-            searchTitle:{
-              carrierId:'',//
-              startTime:'',
-              endTime:'',
-            },
-          };
+            searchTitle: {
+              carrierId: '', //
+              startTime: '',
+              endTime: ''
+            }
+          }
 
-      },
+    },
 
       computed: {
         ...mapGetters([
           'otherinfo'
-        ]),
+        ])
       },
-      mounted(){
+      mounted() {
         this.searchCreatTime = this.defaultTime
-          this.onSubmit()
+        this.onSubmit()
       },
-      methods:{
-        fetchList(){
+      methods: {
+        fetchList() {
           this.loading = true
           this.searchTitle.carrierId = this.$route.query.id
           return postCarrierinitialize(this.searchTitle).then(data => {
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
             this.infoList()
-            data.carrierDetailDtoList.forEach((el,val) => {
-              if(el.type === 1){
+            data.carrierDetailDtoList.forEach((el, val) => {
+              if (el.type === 1) {
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
-              }
-              else if(el.type === 2){
+              }            else if (el.type === 2) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)
-              }
-              else if(el.type === 3){
+              }            else if (el.type === 3) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
-              }
-              else{
+              }            else {
                 this.alreadyPayInfo.push(el)
                 this.alreadyPayInfoData.push(el)
               }
@@ -876,28 +873,25 @@
             this.loading = false
           })
         },
-        modifyList(){
+        modifyList() {
           this.loading = true
           this.searchTitle.carrierId = this.$route.query.id
           return getCarrierCarrierdetail(this.searchTitle.carrierId).then(res => {
-            let data = res.data
+            const data = res.data
             this.messageArr = data.tmsFinanceBillCheckDto
             this.infoMessage(this.messageArr)
             this.infoList()
-            data.carrierDetailDtoList.forEach((el,val) => {
-              if(el.type === 1){
+            data.carrierDetailDtoList.forEach((el, val) => {
+              if (el.type === 1) {
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
-              }
-              else if(el.type === 2){
+              }            else if (el.type === 2) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)
-              }
-              else if(el.type === 3){
+              }            else if (el.type === 3) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
-              }
-              else{
+              }            else {
                 this.alreadyPayInfo.push(el)
                 this.alreadyPayInfoData.push(el)
               }
@@ -905,81 +899,78 @@
             this.loading = false
           })
         },
-        onSubmit(){
+        onSubmit() {
           const searchObj = {}
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-          this.infoSearchTime(searchObj.startTime,searchObj.endTime)
+          this.infoSearchTime(searchObj.startTime, searchObj.endTime)
 
-          if(this.$route.query.tab === '承运商对账-创建对账'){
+          if (this.$route.query.tab === '承运商对账-创建对账') {
             this.fetchList()
-          }else{
+          } else{
             this.modifyList()
             this.sendId = this.$route.query.id
           }
         },
-        //保存 /////////////
-        submit(){
-          this.$refs["formName2"].validate((valid) => {
+        // 保存 /////////////
+        submit() {
+          this.$refs['formName2'].validate((valid) => {
             if (valid) {
-              this.$refs["formName3"].validate((valid) => {
+              this.$refs['formName3'].validate((valid) => {
                 if (valid) {
                   this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
-                  for(const i in this.messageInfo){
+                  for (const i in this.messageInfo) {
                     this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
                   }
-                  for(const i in this.messageButtonInfo){
+                  for (const i in this.messageButtonInfo) {
                     this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
                   }
                   this.form.carrierDetailDtoList = []
-                  this.dealInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-                  this.dealPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-                  this.alreadyInfo.map(el=>this.form.carrierDetailDtoList.push(el))
-                  this.alreadyPayInfo.map(el=>this.form.carrierDetailDtoList.push(el))
+                  this.dealInfo.map(el => this.form.carrierDetailDtoList.push(el))
+                  this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
+                  this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
+                  this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
                   //
-                  this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el=>{
+                  this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el => {
                     const a = {}
                     a.totalFee = el.totalFee
 
                     return a
                   }) : []
-                  this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el=>{
+                  this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el => {
                     const a = {}
                     a.totalCost = el.totalCost
                     return a
                   }) : []
-                  this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el=>{
+                  this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el => {
                     const a = {}
                     a.totalFee = el.totalFee
                     return a
                   }) : []
-                  this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el=>{
+                  this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el => {
                     const a = {}
                     a.totalCost = el.totalCost
                     return a
                   }) : []
 
-                  if(!this.form.carrierDetailDtoList.length){
+                  if (!this.form.carrierDetailDtoList.length) {
                     this.$message({
                       message: '各款项不能为空~',
                       type: 'error'
                     })
                     this.closeVisibleDialog()
                     return false
-                  }else{
+                  }else {
                     this.oopenVisibleDialog()
                   }
                 }
               })
-
-
-            } else {
+          } else {
               return false
             }
           })
-
-        },
-        canBtn(){
+      },
+        canBtn() {
           this.$confirm('确定要取消对账单吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -987,12 +978,12 @@
           }).then(() => {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: '保存成功!'
             })
             // this.$router.back(-1)
-            if(this.$route.query.tab === '承运商对账-创建对账'){
+            if (this.$route.query.tab === '承运商对账-创建对账') {
               this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.$route.query.id)
-            }else{
+            } else{
               this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.$route.query.urlId)
             }
           }).catch(() => {
@@ -1006,81 +997,80 @@
           return (rule, value, callback) => {
             if (!value) {
               callback(new Error(msg))
-            }else {
+            } else {
               callback()
             }
           }
         },
-        billNameOver(){
+        billNameOver() {
           this.delCont()
         },
         getSummaries(param) {
-          const { columns, data } = param;
-          const sums = [];
-          columns.forEach((column, index) => {
+          const { columns, data } = param
+        const sums = []
+        columns.forEach((column, index) => {
             if (index === 0) {
-              sums[index] = '合计';
-              return;
+              sums[index] = '合计'
+            return;
             }
-            if (index === 3 || index === 4  || index === 5) {
-              sums[index] = '';
-              return;
+            if (index === 3 || index === 4 || index === 5) {
+              sums[index] = ''
+            return;
             }
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
+            const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
+                const value = Number(curr)
+              if (!isNaN(value)) {
                   // return Math.round((prev + curr) * 100) / 100;
                   // return (prev + curr).toFixed(2);
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += ' ';
+                  return prev + curr
+              } else {
+                  return prev
+              }
+              }, 0)
+            sums[index] += ' '
 
-            } else {
-              sums[index] = '';
-            }
+          } else {
+              sums[index] = ''
+          }
+        })
 
-          });
+        return sums
+      },
 
-          return sums;
-        },
-
-        iconDeleteDeal(index){
-          this.dealInfo = this.dealInfo.filter((el,inx) => {
+        iconDeleteDeal(index) {
+          this.dealInfo = this.dealInfo.filter((el, inx) => {
             return inx !== index
           })
           this.delCont()
         },
-        iconDeleteDealPay(index){
-          this.dealPayInfo = this.dealPayInfo.filter((el,inx) => {
+        iconDeleteDealPay(index) {
+          this.dealPayInfo = this.dealPayInfo.filter((el, inx) => {
             return inx !== index
           })
           this.delCont()
         },
 
-        iconDeleteAlready(index){
-          this.alreadyInfo = this.alreadyInfo.filter((el,inx) => {
+        iconDeleteAlready(index) {
+          this.alreadyInfo = this.alreadyInfo.filter((el, inx) => {
             return inx !== index
           })
           this.delCont()
         },
-        iconDeleteAlreadyPay(index){
-          this.alreadyPayInfo = this.alreadyPayInfo.filter((el,inx) => {
+        iconDeleteAlreadyPay(index) {
+          this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
             return inx !== index
           })
-         this.delCont()
+          this.delCont()
         },
-        delCont(){
+        delCont() {
           this.$message({
             message: '删除成功~',
             type: 'success'
           })
         },
-        infoList(){
+        infoList() {
           this.dealInfo = []
           this.dealInfoData = []
           this.dealPayInfo = []
@@ -1089,13 +1079,13 @@
           this.alreadyInfoData = []
           this.alreadyPayInfoData = []
         },
-        oopenVisibleDialog(){
+        oopenVisibleDialog() {
           this.visibleDialog = true
         },
-        closeVisibleDialog(){
+        closeVisibleDialog() {
           this.visibleDialog = false
         },
-        infoMessage(item){
+        infoMessage(item) {
           this.messageInfo.orgName = item.orgName
           this.messageInfo.memberName = item.memberName
           this.messageInfo.memberPersonPhone = item.memberPersonPhone
@@ -1127,19 +1117,19 @@
           this.messageButtonInfo.totalCount = item.totalCount
           this.checkBillName = item.checkBillName
         },
-        infoSearchTime(startTime,endTime){
+        infoSearchTime(startTime, endTime) {
           this.searchTitle.startTime = startTime
           this.searchTitle.endTime = endTime
         },
-        clickDetails(row, event, column){
+        clickDetails(row, event, column) {
           this.$refs.multipleTable.toggleRowSelection(row)
         },
-        getDbClick(row, event){},
+        getDbClick(row, event) {}
 
       },
-      getSelection (selection) {
+      getSelection(selection) {
         this.selected = selection
-      },
+      }
     }
 </script>
 

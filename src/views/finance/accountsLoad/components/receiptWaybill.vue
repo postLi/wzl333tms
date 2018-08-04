@@ -337,7 +337,7 @@ export default {
           this.setData()
           console.log(this.submitData)
           postCreateloadSettlement(this.getRouteInfo.vo.shipFromOrgid, this.submitData).then(data => {
-              this.$message({ type: 'success', message: '操作成功' })
+              this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
               this.$router.push({ path: './accountsPayable/waybill', query:{name: this.currentPage} })
             })

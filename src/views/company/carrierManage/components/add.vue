@@ -49,7 +49,7 @@
           <el-input v-model.trim="form.carrierAddr" maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="carrierRemarks" label="备注" prop="carrierRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.carrierRemarks"></el-input>
+          <el-input type="textarea" maxlength="300" v-model="form.carrierRemarks"></el-input>
         </el-form-item>
       </el-form>
     </template>
@@ -242,13 +242,9 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            })
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
           }).catch(err => {
             this.loading = false
           })

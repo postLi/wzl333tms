@@ -661,9 +661,11 @@ export const tmsMath = {
     return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) - this._mul(b, e)) / e
   },
   _mul(a, b) {
+    // console.log(a, b)
     var c = 0,
       d = a.toString(),
       e = b.toString()
+
     try {
       c += d.split('.')[1].length
     } catch (f) {}
@@ -686,18 +688,26 @@ export const tmsMath = {
   _calc(type, arg) {
     const len = arg.length
     var i = 0
+    if (!this._isCalc) {
+      this._result = 0
+    }
+
     // 如果第一个是除法或者减法计算，则将第一个参数当做除数/减数
     if ((type === '_div' || type === '_sub') && !this._isCalc) {
       this._result = arg[0]
       i = 1
     }
+
     this._isCalc = true
 
     let total = this._result
 
     for (; i < len; i++) {
+      // console.log('before calc:' + type, total, arg[i])
       total = this[type](total, arg[i])
+      // console.log('calc result:' + type, total)
     }
+
     this._result = total
   },
   result(num = 2) {

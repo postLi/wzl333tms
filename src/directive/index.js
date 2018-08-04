@@ -19,8 +19,12 @@ const VueDirectiveObject = {
   keepNumber: function() {
     var hasPoint = this.hasPoint
     var pointNum = this.pointNum
+    console.log('hasPoint:', hasPoint, pointNum)
     // 如果第一位为小数点，则补0
     this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.').replace(new RegExp('^(\\d+)\\.(\\d{' + Math.abs(pointNum) + '}).*$'), '$1.$2') : this.value.replace(/\D/g, '').replace(/\./g, '')
+  },
+  keepNumberAndLetter() {
+    this.value = this.value.replace(/[\u4E00-\u9FA5]/g, '')
   },
   onkeydown: function(event) {
     // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode),event.key,event.code, /[\d]/.test(String.fromCharCode(event.keyCode)))
@@ -68,6 +72,35 @@ Vue.directive('numberOnly', {
   unbind: function(el) {
     VueDirectiveObject.findInput(el).removeEventListener('input', VueDirectiveObject.keepNumber)
     VueDirectiveObject.findInput(el).removeEventListener('keydown', VueDirectiveObject.onkeydown)
+  }
+})
+// 限制只能输入数字
+Vue.directive('onlyNumberAndLetter', {
+  bind: function(el, binding) {
+    // 判断是否需要小数点
+    const arg = binding.arg || ''
+    const el2 = VueDirectiveObject.findInput(el)
+
+    if (el2) {
+      el2.style.imeMode = 'disabled'
+      el2.addEventListener('input', VueDirectiveObject.keepNumberAndLetter)
+      el2.addEventListener('keyup', VueDirectiveObject.keepNumberAndLetter)
+      el2.addEventListener('change', VueDirectiveObject.keepNumberAndLetter)
+      el2.addEventListener('blur', VueDirectiveObject.keepNumberAndLetter)
+/*       el2.addEventListener('blur', function(event) {
+        // 隔100毫秒后再处理
+        // 因为需要等elementUI回填数据后再处理
+        setTimeout(() => {
+          VueDirectiveObject.keepNumber.call(this, event)
+        }, 100)
+      }) */
+      // 输入法关闭事件
+      el2.addEventListener('compositionstart', VueDirectiveObject.keepNumberAndLetter)
+      el2.addEventListener('compositionend', VueDirectiveObject.keepNumberAndLetter)
+    }
+  },
+  unbind: function(el) {
+    VueDirectiveObject.findInput(el).removeEventListener('input', VueDirectiveObject.keepNumberAndLetter)
   }
 })
 // 展示大图

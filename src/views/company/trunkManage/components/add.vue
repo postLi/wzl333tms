@@ -74,7 +74,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.truckRemarks"></el-input>
+          <el-input type="textarea" maxlength="300" v-model="form.truckRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <div class="hr"></div>
@@ -266,7 +266,7 @@ export default {
     }
   },
   mounted() {
-    this.form.orgid = this.orgid
+    this.form.orgid = this.otherinfo.orgid
     if (!this.inited) {
       this.inited = true
       this.initInfo()
@@ -352,13 +352,9 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            })
+            this.$message.success("保存成功")
+            this.closeMe()
+            this.$emit('success')
           }).catch(err => {
             this.loading = false
           })
