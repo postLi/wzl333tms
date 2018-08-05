@@ -15,7 +15,7 @@ export default {
   }, {
     path: '/operation/index', icon: 'QQ', hidden: true, name: '运营管理', component: _import('operation/index'), meta: { role: ['admin'], title: '运营管理', noCache: false }
   }, {
-    path: '/operation/order/createOrder/', hidden: true, icon: 'yygl0_chuangjian', name: 'createOrder', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
+    path: '/operation/order/createOrder', hidden: true, icon: 'yygl0_chuangjian', name: 'createOrder22', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
   },
   {
     path: '/operation/order/orderManage', icon: 'yygl2_yundan', name: 'orderManage', component: _import('operation/order/orderManage/index'), meta: { role: ['admin'], title: '运单管理', noCache: false }

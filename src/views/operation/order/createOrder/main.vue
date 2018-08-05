@@ -1,5 +1,5 @@
 <template>
-  <div class="createOrder-main" v-loading="loading">
+  <div class="createOrder-main" :class="{'creatBatch-main': output.isbatch}" v-loading="loading">
     <div class="batchlist" v-if="output.isbatch">
       <span class="batchNum" :class="{'on': i === currentBatch}" v-for="i in output.ordernum" @click="changeBatch(i)" :key="i">第{{ i }}票</span>
     </div>
@@ -72,7 +72,7 @@
           <div class="order-form-item showFormInfo">
             <span class="order-form-label">货号</span>
             <el-form-item prop="tmsOrderShip.shipGoodsSn">
-              <el-input size="mini" maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
+              <el-input v-onlyNumberAndLetter size="mini" maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
             </el-form-item>
           </div>
         </el-col>
@@ -158,21 +158,25 @@
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0('货品件数不能小于0！') : '', trigger: 'blur' }">
-                  <el-input size="mini" maxlength="20"
+                  <el-input v-number-only size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.shipFee'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0('请输入运费~') : '', trigger: 'blur' }">
-                  <el-input size="mini" maxlength="20"
+                  <el-input v-number-only:point size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.'+item.fieldProperty" :rules="{ validator: scope.$index === 0 ?  validateWeightAndVolume(item.fieldProperty, scope.$index) : '', trigger: 'blur' }">
-                  <el-input size="mini" maxlength="20"
+                  <el-input v-number-only:point size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index][item.fieldProperty]" />
                   </el-form-item>
+                </template>
+                <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
+                  <el-input size="mini" v-number-only:point maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    />
                 </template>
                 <template v-else>
                   <el-input size="mini" maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
@@ -253,7 +257,7 @@
                 </el-form-item>
               </span>
               <el-form-item prop="tmsOrderShip.shipReceiptSn">
-                <el-input size="mini" maxlength="20"  placeholder="回单号" v-model="form.tmsOrderShip.shipReceiptSn" />
+                <el-input v-onlyNumberAndLetter size="mini" maxlength="20"  placeholder="回单号" v-model="form.tmsOrderShip.shipReceiptSn" />
               </el-form-item>
             </div>
           </el-col>
@@ -261,7 +265,7 @@
             <div class="order-form-item">
               <span class="order-form-label">打印标签</span>
               <el-form-item prop="tmsOrderShip.shipPrintLib">
-                <el-input size="mini" maxlength="3"  v-model="form.tmsOrderShip.shipPrintLib" >
+                <el-input v-number-only size="mini" maxlength="3"  v-model="form.tmsOrderShip.shipPrintLib" >
                   <template slot="append">份</template>
                 </el-input>
               </el-form-item>
@@ -271,7 +275,7 @@
             <div class="order-form-item">
               <span class="order-form-label required">客户单号</span>
               <el-form-item prop="tmsOrderShip.shipCustomerNumber">
-                <el-input size="mini" maxlength="20"  v-model="form.tmsOrderShip.shipCustomerNumber" />
+                <el-input v-onlyNumberAndLetter size="mini" maxlength="20"  v-model="form.tmsOrderShip.shipCustomerNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -384,7 +388,7 @@
                     </el-date-picker>
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="20"
+                    <el-input size="mini" v-onlyNumberAndLetter maxlength="20"
                     @change="setOddNumbers" v-model="form.tmsOrderTransfer.oddNumbers" />
                   </td>
                   <td>
@@ -487,7 +491,7 @@ export default {
       } else {
         _this.detectOrderNum().then(isDulip => {
           if (isDulip) {
-            this.$message.error('重复的订单号')
+            this.showMessage('重复的订单号')
             callback(new Error())
           } else {
             callback()
@@ -500,7 +504,8 @@ export default {
       if (REGEX.MOBILE.test(value)) {
         callback()
       } else {
-        this.$message.error('请输入正确的联系号码~')
+        this.showMessage('请输入正确的联系号码~')
+
         callback(new Error())
       }
     }
@@ -518,16 +523,20 @@ export default {
 
     // REGEX.ONLY_NUMBER_AND_LETTER
     const validateOnlyNumberAndLetter = (rule, value, callback) => {
-      console.log("rule:",rule)
+      console.log('rule:', rule)
       if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
         callback()
       } else {
-        this.$message.error(rule.message || '只能输入数字或者字母')
+        this.showMessage(rule.message || '只能输入数字或者字母')
+
         callback(new Error())
       }
     }
 
     return {
+      // 控制显示提示消息
+      isChecked: false,
+      isCheckedShow: false,
       // 提货批次相关
       currentBatch: 1,
       // 最近编辑的批次，用来返回或者切换到下一个未保存的票
@@ -537,6 +546,9 @@ export default {
 
       activeNames: ['1'],
       rules2: {
+        'tmsOrderShip.shipCustomerNumber': [
+          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '请输入客户单号' }
+        ],
         'tmsOrderShip.shipSn': [
           { validator: this.validateIsEmpty('订单号不能为空！') },
           { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母' },
@@ -550,18 +562,16 @@ export default {
         ],
         'sender.customerMobile': [
           { validator: this.validateIsEmpty('发货人联系电话不能为空') },
-          { validator: validateMobile,trigger: 'blur' }
+          { validator: validateMobile, trigger: 'blur' }
         ],
         'receiver.customerName': [
           { validator: this.validateIsEmpty('收货人不能为空') }
         ],
         'receiver.customerMobile': [
           { validator: this.validateIsEmpty('收货人联系电话不能为空') },
-          { validator: validateMobile,trigger: 'blur' }
-        ],
-        'tmsOrderShip.shipCustomerNumber': [
-          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '请输入客户单号' }
+          { validator: validateMobile, trigger: 'blur' }
         ]
+
       },
       // 用来判断是否有填体积或者重量
       inputWOrV: {},
@@ -823,6 +833,7 @@ export default {
   watch: {
     orderobj: {
       handler(newVal) {
+        console.log('3333333333333333333')
         // 如果是弹窗才响应这个变化
         if (this.ispop) {
           this.initIndex()
@@ -879,8 +890,13 @@ export default {
     },
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/createOrder') !== -1 && !this.ispop) {
-        this.initIndex()
+        // this.initIndex()
       }
+    }
+  },
+  activated() {
+    if (this.ispop) {
+      this.initIndex()
     }
   },
   mounted() {
@@ -890,11 +906,23 @@ export default {
   },
   methods: {
     // 公共工具函数
-    validateIsEmptyOr0(msg = '不能为0'){
+    showMessage(msg) {
+      if (this.isChecked && !this.isCheckedShow) {
+        this.isCheckedShow = true
+      }
+      /* if (!this.isChecked || this.isCheckedShow) {
+        this.$message.error(msg)
+      } */
+      // 控制不提交的时候不做提示
+      if (this.isCheckedShow) {
+        this.$message.error(msg)
+      }
+    },
+    validateIsEmptyOr0(msg = '不能为0') {
       return (rule, value, callback) => {
         const val = value ? parseInt(value, 10) : ''
         if (!val || val < 0) {
-          this.$message.error(msg)
+          this.showMessage(msg)
           callback(new Error())
         } else {
           callback()
@@ -904,7 +932,7 @@ export default {
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
-          this.$message.error(msg)
+          this.showMessage(msg)
           callback(new Error())
         } else {
           callback()
@@ -917,7 +945,7 @@ export default {
           callback()
         } else {
           console.log('index：', this.form.cargoList[index].cargoWeight, this.form.cargoList[index].cargoVolume)
-          this.$message.error('体积跟重量必填其一')
+          this.showMessage('体积跟重量必填其一')
           callback(new Error())
         }
       }
@@ -1563,8 +1591,6 @@ export default {
         this.form.tmsOrderTransfer.transferTime = parseTime(this.form.tmsOrderTransfer.transferTime)
       }
 
-      
-
       // 处理下回填的多笔付数据
       // if (parseInt(this.form.tmsOrderShip.shipPayWay, 10) === 104) {
       setTimeout(() => {
@@ -1579,9 +1605,9 @@ export default {
     setPreOrder() {
       // 将数据回填到页面上
       // 网点信息
-      let data = this.form.tmsOrderPre
+      const data = this.form.tmsOrderPre
       // 格式化下数据
-      for(const i in data){
+      for (const i in data) {
         data[i] = data[i] === null ? '' : data[i]
       }
       this.form.tmsOrderShip.shipFromOrgid = data.orderFromOrgid
@@ -1768,9 +1794,8 @@ export default {
       return obj
     },
     reset(shouldReinputDefault) {
-      //缓存不可修改、默认数据
-      let copy = objectMerge2({},this.form)
-      
+      // 缓存不可修改、默认数据
+      const copy = objectMerge2({}, this.form)
 
       this.$refs['ruleForm'].resetFields()
       this.form.cargoList = [{}]
@@ -1790,7 +1815,7 @@ export default {
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
 
       // 回填默认的数据
-      if(shouldReinputDefault){
+      if (shouldReinputDefault) {
         this.form.tmsOrderShip.shipSn = copy.tmsOrderShip.shipSn
 
         this.form.tmsOrderShip.createTime = copy.tmsOrderShip.createTime
@@ -1807,24 +1832,31 @@ export default {
         this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
         this.setDefaultValue()
       }
-      
-
 
       // 多票相关的数据也需要清空
       this.currentBatch = 1
       this.lastEditBatch = 1
       this.batchSaveList = {}
       // this.setOrderDate()
+
+      this.output = {}
     },
     /** * 提交表单 */
     submitForm() {
+      this.isChecked = true
+      this.isCheckedShow = false
       // 先判断表单必填项是否校验通过
-      this.$refs['ruleForm'].validate((valid) => {
+      this.$refs['ruleForm'].validate((valid, errlist) => {
+        this.isChecked = false
+        this.isCheckedShow = false
+
+        console.log('errlist:', errlist)
+
         if (valid) {
           // 判断运费是否符合总计
           if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result() !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
             console.log(tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result(), this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee, this.form.tmsOrderShip.shipTotalFee)
-            this.$message.error('各付款方式之和与合计运费不等~')
+            this.showMessage('各付款方式之和与合计运费不等~')
           } else {
             // 再提取各个表格项里的数据
             const data = objectMerge2({}, this.form)
@@ -2061,6 +2093,7 @@ $backgroundcolor: #cbe1f7;
     min-width: 1316px;
     display: flex;
     position: relative;
+    flex-flow:row;
 
     .el-dialog__wrapper,.v-modal{
       position: absolute;
@@ -2075,7 +2108,7 @@ $backgroundcolor: #cbe1f7;
     }
 
     .batchlist{
-      width: 60px;
+      flex: 0 0 60px;
       margin-right: 10px;
       margin-top: 38px;
       border-top: 1px solid #999;
@@ -2096,12 +2129,18 @@ $backgroundcolor: #cbe1f7;
       }
     }
 
+    /* &.creatBatch-main{
+      .createOrderWrapper{
+        width:calc(100% - 60px - 10px);
+      }
+    } */
+
     .createOrderWrapper{
-      flex: 1;
       max-height: 100%;
       display: flex;
       flex-direction: column;
-      max-width: 100%;
+      width: 100%;
+      overflow-x: hidden;
       position: relative;
       &>.el-form{
         //height: calc( 100% - 100px);

@@ -228,6 +228,10 @@ export default {
     prefix: {
       type: String,
       default: ''
+    },
+    showlastinput: {
+      type: [Boolean, String],
+      default: 'nonono'
     }
   },
   watch: {
@@ -290,11 +294,25 @@ export default {
 
           fn = getAllUser
           break
+        case 'tocity':
+          this.preFn = orderManageApi.getRecently('5')
+
+        case 'fromcity':
+          if (this.type !== 'tocity') {
+            this.preFn = orderManageApi.getRecently('4')
+          }
         case 'city':
+          if (this.preFn) {
+            this.preFn.then(res => {
+              this.preData = this.formatToCityData(res.data || [])
+            })
+          }
           this.queryParam = ''
           fn = getCityInfo
           this.customCss = 'query-input-city'
           this.showlabel = this.label || 'last'
+          // 判断是否需要显示最近输入的记录
+          this.lastinput = this.showlastinput === 'nonono' ? true : this.showlastinput
           break
         case 'carrier':
           fn = getAllCarrier
@@ -360,7 +378,7 @@ export default {
           this.queryParam = '2'
           fn = orderManageApi.getRecently
           break
-        case 'fromcity':
+        /* case 'fromcity':
           this.canchangeparam = false
           this.lastQuery = ''
           this.queryParam = '4'
@@ -371,7 +389,7 @@ export default {
           this.lastQuery = ''
           this.queryParam = '5'
           fn = orderManageApi.getRecently
-          break
+          break */
         case 'remark':
           this.canchangeparam = false
           this.lastQuery = ''
@@ -407,6 +425,8 @@ export default {
   },
   data() {
     return {
+      preFn: '',
+      preData: [], // 用来组合数据用的
       showlabel: '',
       customCss: '',
       handlevalue: '',
@@ -513,7 +533,7 @@ export default {
       }
     },
     formatList(arr) {
-      if (this.type === 'city') {
+      if (this.type.indexOf('city') !== -1) {
         arr = arr.map(el => {
           const addr = el.longAddr.split(',')
           el.last = addr[2] || addr[1] || addr[0]
@@ -522,17 +542,39 @@ export default {
       }
       return arr
     },
+    formatToCityData(arr) {
+      return arr.map((el, index) => {
+        const arr = el.value.split(',')
+        const obj = {
+          id: index,
+          province: arr[0] || '',
+          city: arr[1] || '',
+          area: arr[2] || '',
+          longAddr: el.value
+        }
+        return obj
+      })
+    },
     fetchFn() {
       return this.remoteFn(this.queryParam).then(res => {
         const data = res.data ? res.data : res
         let list = (data.list ? data.list : data) || []
         list = Array.isArray(list) ? list : []
+        // 针对最近记录输入控件的一些判断
+        if (this.preData && this.preData.length && !this._lastQuery) {
+          // 如果没有输入任何值，则显示最近记录（假如有）
+          list = this.preData
+        }
+        /* if (this.preData && this.preData.length) {
+          list = this.preData.concat(list)
+        } */
         return this.formatList(list)
       })
     },
     querySearch(queryString = '', cb = () => {}) {
       // 缓存最近一次请求数据
       // 如果设定了不修改参数，则不缓存记录
+      this._lastQuery = queryString
       if (queryString === this.lastQuery && this.canchangeparam) {
         cb(this.lastRequest)
       } else {

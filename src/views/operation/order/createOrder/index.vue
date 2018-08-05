@@ -1,13 +1,13 @@
 <template>
   <div class="createOrder-page">
-    <Main />
+      <Main />
   </div>
 </template>
 <script>
 import Main from './main'
 
 export default {
-  name: 'createOrder',
+  name: 'createOrder22',
   components: {
     Main
   },
