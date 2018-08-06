@@ -454,13 +454,14 @@ import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
+import { getSelectType } from '@/api/common'
 // 当前模块子组件
 import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
-import { CreatePrintPage } from '@/utils/lodopFuncs'
-import { getPrintOrderItems } from '@/api/operation/print'
+import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
+import { getPrintOrderItems, getEnableLibSetting } from '@/api/operation/print'
 import { getOrgId } from '@/api/company/groupManage'
 
 export default {
@@ -544,7 +545,7 @@ export default {
       lastEditBatch: 1,
       // 记录batch对应的list保存状态
       batchSaveList: {},
-
+      DELIVERY_METHODS: {}, // 提货方式
       activeNames: ['1'],
       rules2: {
         'tmsOrderShip.shipCustomerNumber': [
@@ -808,7 +809,8 @@ export default {
       // 用来缓存当前页面的一些信息
       dataCache: {},
       tmsOrderShipId: '', // 运单保存后返回的运单ID,
-      isSavePrint: false // false-不保存并打印 true-保存并打印
+      isSavePrint: false, // false-不保存并打印 true-保存并打印,
+      printDataObject: {}
     }
   },
   computed: {
@@ -909,6 +911,7 @@ export default {
     this.loading = true
 
     this.initIndex()
+    this.getSelectType()
   },
   methods: {
     // 公共工具函数
@@ -2035,11 +2038,11 @@ export default {
           this.reset(true)
           break
         case 'printLibkey': // 打印标签
-          this.$message.info('正在开发中，敬请期待。')
+          this.printLibkey()
           break
         case 'printShipKey': // 打印运单
-          this.print()
-          // this.$message.info('正在开发中，敬请期待。')
+          // this.print()
+          this.$message.info('正在开发中，敬请期待。')
           break
         case 'saveShipKey':
           this.submitForm()
@@ -2052,16 +2055,56 @@ export default {
           break
       }
     },
+    printLibkey () {
+      getEnableLibSetting().then(data => {
+        console.log('getEnableLibSetting', data)
+        this.setPrintData() // 设置数据
+        let libData = Object.assign([], data)
+        for (let item in this.printDataObject){
+           libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+             e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        CreatePrintPageEnable(libData) // 调打印接口
+      })
+    },
     print() {
-      if (this.tmsOrderShipId) {
-        const shipId = this.tmsOrderShipId
-        const info = ''
-        getPrintOrderItems(shipId).then(data => {
-          CreatePrintPage(data)
+       getEnableLibSetting().then(data => {
+        console.log('getEnableLibSetting', data)
+        this.setPrintData() // 设置数据
+        CreatePrintPageEnable(data)
+      })
+    },
+    getSelectType () { // 获取提货方式中文
+       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => { // 获取提货方式中文
+        console.log(data, parseInt(this.form.tmsOrderShip.shipDeliveryMethod))
+        data.forEach(e => {
+          this.DELIVERY_METHODS[e.id] = e.dictName 
         })
-      } else {
-        this.$message({ type: 'warning', message: '请先保存运单，成功保存的运单才可以打印！' })
-      }
+      })
+    },
+    setPrintData () { // 设置打印的字段
+     
+      // 标签数据
+      let obj = new Object()
+      this.$set(obj,'goodsSn',this.form.tmsOrderShip.shipGoodsSn )
+      this.$set(obj,'createTime',this.form.tmsOrderShip.createTime )
+      this.$set(obj,'fromCity',this.form.tmsOrderShip.shipFromCityName )
+      this.$set(obj,'toCity',this.form.tmsOrderShip.shipToCityName )
+      this.$set(obj,'toOrgName',this.form.tmsOrderShip.shipToCityName )
+      this.$set(obj,'fromOrgName',this.otherinfo.name)
+      this.$set(obj,'senderUnit',this.form.sender.customerUnit )
+      this.$set(obj,'senderName',this.form.sender.customerName )
+      this.$set(obj,'senderMobile',this.form.sender.customerMobile )
+      this.$set(obj,'cargoPack',this.form.cargoList[0].cargoPack )
+      this.$set(obj,'companyName',this.otherinfo.companyName )
+      // this.$set(obj,'deliveryMethod',this.form.tmsOrderShip.shipDeliveryMethod )
+      this.$set(obj,'deliveryMethod',this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
+        this.printDataObject = Object.assign({}, obj)
+        obj = {}
+      console.log('printDataObject', this.printDataObject)
     },
     // 右下角设置按钮菜单点击操作
     handleCommand(command) {

@@ -213,7 +213,7 @@
    LODOP.PREVIEW();
  };
 
- //创建打印页面    
+ //创建打印页面    【已保存】标签或运单
  export function CreatePrintPage(info) {
    LODOP = getLodop();
    // let info = "LODOP.PRINT_INITA(9,7,2400,1400,\"青春物流流托运单打印\");LODOP.ADD_PRINT_TEXT(41,488,100,19,\"180701404\");LODOP.ADD_PRINT_TEXT(57,47,100,25,\"云南省,\");LODOP.ADD_PRINT_TEXT(63,170,100,20,\"北京市,\");LODOP.ADD_PRINT_TEXT(85,93,81,20,\"发发\");LODOP.ADD_PRINT_TEXT(114,96,82,20,\"收收A\");LODOP.ADD_PRINT_TEXT(90,230,202,20,\"大街上\");LODOP.ADD_PRINT_TEXT(90,485,100,20,\"15920000002\");LODOP.ADD_PRINT_TEXT(116,234,204,20,\"收货address\");LODOP.ADD_PRINT_TEXT(112,486,100,20,\"15932145601\");LODOP.ADD_PRINT_TEXT(165,14,75,20,\"电脑\");LODOP.ADD_PRINT_TEXT(164,104,60,20,\"1807014043\");LODOP.ADD_PRINT_TEXT(163,184,29,20,\"56\");LODOP.ADD_PRINT_TEXT(269,323,58,20,\"34.00\");LODOP.ADD_PRINT_TEXT(324,177,166,20,\"\");LODOP.ADD_PRINT_TEXT(38,366,109,20,\"2018-07-31\" );"
@@ -221,6 +221,22 @@
    info.replace(/[\\]/g, "")
    LODOP.ADD_PRINT_SETUP_BKIMG("D:\\company\\program\\TMS\\print\\运单背景图");
    eval(info)
+   // LODOP.PRINT_SETUP()
+   LODOP.PREVIEW();
+ };
+ //创建打印页面    【未保存】标签或运单
+ export function CreatePrintPageEnable(info) {
+   LODOP = getLodop();
+   let arr = new Array()
+   arr = Object.assign([], info)
+   let str = ''
+   arr.forEach((e, index) => {
+    if (e.filedValue !== 'setting'){
+      str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' +e.filedName +':'+ e.value + '");'
+     // str += 'LODOP.SET_PRINT_STYLEA(' +',"FontSize",'+')'
+    }
+   })
+   eval(str)
    LODOP.PRINT_SETUP()
    // LODOP.PREVIEW();
  };
@@ -242,11 +258,11 @@
    LODOP.SET_SAVE_MODE("CenterVertically", true); //Excel文件的页面设置：页面垂直居中
    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到） 
    if (obj.name) {
-    LODOP.SAVE_TO_FILE(obj.name + ".xls");
-  }else {
-    LODOP.SAVE_TO_FILE("新文件名.xls");
-  }
-   
+     LODOP.SAVE_TO_FILE(obj.name + ".xls");
+   } else {
+     LODOP.SAVE_TO_FILE("新文件名.xls");
+   }
+
  };
 
  //检查当前是否有装lodop插件

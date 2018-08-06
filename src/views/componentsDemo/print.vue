@@ -2,7 +2,7 @@
   <div class="component">
     <h2>打印导出  <el-button @click="downloadFile" icon="el-icon-download" type="success" size="mini">下载插件</el-button></h2>
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="【敲黑板】用打印导出功能的两个个重要前提是：1、下载插件。 2、要做好【表格设置】的功能。elementUI重新封装了table，LODOP打印插件不能识别
+      <el-collapse-item title="【敲黑板】用打印导出功能的两个重要前提是：1、下载插件。 2、要做好【表格设置】的功能。elementUI重新封装了table，LODOP打印插件不能识别
           < el-table>数据，并且根据以下需求完成打印导出功能。" name="1">
         <!-- <p>用打印导出功能的一个重要前提是： 要做好【表格设置】的功能。elementUI重新封装了table，LODOP打印插件不能识别
           < el-table>数据，并且根据以下需求完成打印导出功能。</p> -->

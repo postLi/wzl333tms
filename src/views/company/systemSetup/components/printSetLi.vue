@@ -16,12 +16,12 @@
               <el-switch v-model="item.isshow===1?true:false" :active-text="item.isshow?'显示':'隐藏'" @change="handleSwitch(item)" v-if="item.filedValue!=='setting'"></el-switch>
               <div class="print_aside_content_itemSet">
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.topy" placeholder="X轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.leftx" placeholder="X轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">X</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.leftx" placeholder="Y轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.topy" placeholder="Y轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">Y</template>
                   </el-input>
                 </el-form-item>
@@ -47,7 +47,7 @@
         <!-- <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">临时预览背景图</el-button> -->
       </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey">
-        <div v-for="(item, index) in formModel.labelList" class="previewBlock" :style="{transform: 'translate(' + item.topy+'px,'+item.leftx + 'px)', width:item.width +'px', height:item.height+'px',lineHeight:item.height+'px'}" v-if="item.filedValue !=='setting' && item.isshow === 1" @mousedown="down" @mousemove="move" @mouseup="end">
+        <div v-for="(item, index) in formModel.labelList" class="previewBlock" :style="{transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', width:item.width +'px', height:item.height+'px',lineHeight:item.height+'px'}" v-if="item.filedValue !=='setting' && item.isshow === 1" @mousedown="down" @mousemove="move" @mouseup="end">
           <span>{{item.filedName}}</span>
         </div>
         <!-- </draggable> -->
@@ -107,7 +107,10 @@ export default {
           }
         })
       }
+      console.log(viewWidth/3.78, viewHeight/3.78)
       return {
+        // width: Math.round(viewWidth/3.78) + 'mm',
+        // height: Math.round(viewHeight/3.78) + 'mm'
         width: viewWidth + 'px',
         height: viewHeight + 'px'
       }
