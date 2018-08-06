@@ -49,3 +49,6 @@ export function putSettingCompanyLi (data) {
     return res.data
   })
 }
+/**
+ * 未保存就打印运单或标签
+ */

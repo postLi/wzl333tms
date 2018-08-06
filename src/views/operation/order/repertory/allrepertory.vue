@@ -477,17 +477,14 @@ export default {
   methods: {
     showDetail(order) {
       this.eventBus.$emit('showOrderDetail', order.shipId)
-      console.log(order.shipId)
     },
     initTable() {
       // let strArray = this.$refs.multipleTable.$children
       const strArray = this.$refs.multipleTable.columns
-      console.log(this.$refs.multipleTable)
       this.$refs.multipleTable.columns.forEach((e, index) => {
         if (index > 0) {
           if (e.label === '运单状态') {
             e.fixed = true
-            console.log(index, e.label, e.fixed)
           }
         }
       })
@@ -502,7 +499,6 @@ export default {
       //     }
       //   }
       // })
-      console.log('-----------------')
     },
     tableRowColor({ row, rowIndex }) {
       if (Number(this.selectionColorSetting.sectionOne) < Number(row.hashours) && Number(row.hashours) < Number(this.selectionColorSetting.sectionTwo) + 1) {

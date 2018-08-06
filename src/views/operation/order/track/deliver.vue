@@ -119,14 +119,14 @@ export default {
           prop: "batchTypeName",
           width: "120"
         },
-        {
-          label: "发车时间",
-          prop: "departureTime",
-          width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
+        // {
+        //   label: "发车时间",
+        //   prop: "departureTime",
+        //   width: "180",
+        //   slot: (scope) => {
+        //     return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        //   }
+        // },
         {
           label: "司机",
           prop: "dirverName",
@@ -231,24 +231,24 @@ export default {
         //   prop: "arriveOtherFee",
         //   width: "120"
         // },
-        {
-          label: "配载时间",
-          prop: "loadTime",
-          width: "120",
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "配载人",
-          prop: "username",
-          width: "120"
-        },
-        {
-          label: "发车人",
-          prop: "truckUsername",
-          width: "120"
-        },
+        // {
+        //   label: "配载时间",
+        //   prop: "loadTime",
+        //   width: "120",
+        //   slot: (scope) => {
+        //     return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        //   }
+        // },
+        // {
+        //   label: "配载人",
+        //   prop: "username",
+        //   width: "120"
+        // },
+        // {
+        //   label: "发车人",
+        //   prop: "truckUsername",
+        //   width: "120"
+        // },
         {
           label: "备注",
           prop: "remark",

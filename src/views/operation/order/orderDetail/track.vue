@@ -85,7 +85,7 @@ export default {
         trackInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
       formModel: {
-        'createTime': '',
+        'createTime': '', 
         // 修改时需要带上
         // "id": 0,
         'orgid': '',

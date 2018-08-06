@@ -79,6 +79,11 @@ module.exports = {
         target: 'http://frp.nanedo.com:8080',
         pathRewrite: { '^/home': '' },
         changeOrigin: true
+      },
+      '/fangjian': {
+        target: 'http://192.168.1.25:7010',
+        pathRewrite: { '^/fangjian': '' },
+        changeOrigin: true
       }
     },
     // vue-cli

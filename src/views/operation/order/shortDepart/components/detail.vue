@@ -77,9 +77,9 @@
           <el-table-column fixed width="50" sortable type="selection" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipSn" label="运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-            <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
-            <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
-            <el-table-column sortable width="120" prop="loadVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
+            <el-table-column sortable width="120" prop="actualAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
+            <el-table-column sortable width="120" prop="actualWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
+            <el-table-column sortable width="120" prop="actualVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
               <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
@@ -203,11 +203,14 @@ export default {
       let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
       let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
       let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      let curactualVolume = this.detailList[newVal].actualVolume // 应到体积
+      let curactualWeight = this.detailList[newVal].actualWeight // 应到重量
+      let curactualAmount = this.detailList[newVal].actualAmount // 应到件数
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
+        this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$notify({
           title: '提示',
           message: '实到件数不能为0',
@@ -216,9 +219,9 @@ export default {
       }
       if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
+        this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$notify({
           title: '提示',
           message: '实到重量和实到体积不能同时为0',
@@ -230,9 +233,9 @@ export default {
         console.log(this.selectDetailList.length)
         if (this.selectDetailList.length === 0) {
           this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
-          this.detailList[newVal].actualAmount = curloadAmount
-          this.detailList[newVal].actualWeight = curloadWeight
-          this.detailList[newVal].actualVolume = curloadVolume
+          this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+          this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+          this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         }
         this.$notify({
           title: '提示',
@@ -245,9 +248,9 @@ export default {
           message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
           type: 'warning'
         })
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
+        this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       } else {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
@@ -303,23 +306,7 @@ export default {
       dataLoad.truckVolume = this.info.truckVolume
       dataLoad.updateTime = this.info.updateTime
       dataLoad.userId = this.info.userId
-      // 实到体积/重量/件数
-      // this.detailList.forEach((e, index) => {
-      //   e.actualWeight = e.loadWeight
-      //   e.actualVolume = e.loadVolume
-      //   e.actualAmount = e.loadAmount
-      // })
-      // setData 后台需要的数据结构
-      // this.selectDetailList.forEach(e => {
-      //   if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-      //     console.log('not select')
-      //     this.$refs.multipleTable.toggleRowSelection(e, false)
-      //     let item = this.selectDetailList.indexOf(e)
-      //     if (item !== -1) {
-      //       this.selectDetailList.splice(item, 1)
-      //     }
-      //   }
-      // })
+      
 
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
@@ -358,9 +345,9 @@ export default {
           this.toggleAllRows()
           this.$nextTick(() => { // 默认设置实到数量为配载数量
             this.detailList.forEach(e => {
-              e.actualAmount = e.loadAmount
-              e.actualWeight = e.loadWeight
-              e.actualVolume = e.loadVolume
+              e.actualAmount = e.loadAmount - e.actualAmount
+              e.actualWeight = e.loadWeight - e.actualWeight
+              e.actualVolume = e.loadVolume - e.actualVolume
             })
           })
         }
