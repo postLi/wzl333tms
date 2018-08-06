@@ -3,7 +3,8 @@
   <pop-right :title='popTitle' :isShow="popVisible" @close="closeMe" class='addEmployeerPop'>
     <template class='addEmployeerPop-content' slot="content">
 
-          <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+          
+          <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini" :show-message="checkShowMessage">
             <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName" >
               <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31" maxlength="15" ></el-input>
             </el-form-item>
@@ -41,7 +42,10 @@
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
 
+              
               <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" />
+
+
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
@@ -145,7 +149,9 @@
       }
     },
     watch: {
-      dotInfo(newVal) {
+     
+        this.$refs['ruleForm'].resetFields()
+        this.checkShowMessage = false
         if (this.isModify) {
           this.form = Object.assign({}, this.dotInfo)
         }
@@ -163,6 +169,7 @@
           if (this.form.id) {
             delete this.form.id
           }
+
           delete this.form.createTime
           this.form.orgType = 1
           this.form.status = 32
@@ -215,6 +222,7 @@
         // 多选框
         checked: true,
         loading: false,
+        checkShowMessage: false,
         netWorkType: [],
         manageType: [],
         netWorkStatus: [],
@@ -241,12 +249,18 @@
           accountStatus: 1,
           // id: '',
           parentId: 0,
-          accountName: '' // 管理员账号
+      
+          accountName: '' ,// 管理员账号
+          //验证
+          isChecked : false,
+          isCheckedShow : false
 
         },
         rules: {
           orgName: [
-            { required: true, validator: orgName, trigger: 'blur' }
+        
+            { required: true, validator: this.validateIsEmpty('请输入网点名称') }
+            // { required: true, validator: orgName, trigger: 'blur' }
             // { min: 2, message: '最少2个字符', trigger: 'blur' },
             // { max: 15, message: '不可超过15个字符', trigger: 'blur' }
           ],
@@ -269,12 +283,15 @@
           ],
           // 网点代码
           networkCode: [
-            { required: true, validator: networkCode },
+            
+            { required: true, validator:  this.validateIsEmpty('请输入网点代码')},
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
-            { required: true, validator: city }
+          
+            //请选择城市
+            { required: true,validator:  this.validateIsEmpty('请选择城市')  }
           ]
         },
         dialogVisible: false,
@@ -291,6 +308,26 @@
       })
     },
     methods: {
+      validateIsEmpty(msg = '不能为空！') {
+        return (rule, value, callback) => {
+          if (!value) {
+            this.showMessage(msg)
+            callback(new Error(msg))
+          } else {
+            callback()
+          }
+        }
+      },
+      showMessage(msg){
+        if(this.isChecked && !this.isCheckedShow) {
+          this.isCheckedShow = true
+        }
+        if (this.isCheckedShow) {
+          this.checkShowMessage = true
+        }else{
+          this.checkShowMessage = false
+        }
+      },
       getCity(city) {
         this.form.city = city ? city.longAddr : city
       },
@@ -309,7 +346,12 @@
         }
       },
       submitForm(formName) {
+        this.isChecked = true
+        this.isCheckedShow = false
+        this.checkShowMessage = false
         this.$refs[formName].validate((valid) => {
+          this.isChecked = false
+          this.isCheckedShow = false
           if (valid) {
             this.loading = true
             let reqPromise
@@ -329,6 +371,7 @@
             }
             reqPromise.then(res => {
               this.loading = false
+              
               this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')

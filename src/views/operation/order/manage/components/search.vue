@@ -99,7 +99,7 @@ export default {
     clearForm () {
       this.searchForm.createTime = ''
       this.searchForm.endTime = ''
-      // this.searchCreatTime = []
+      this.searchCreatTime =  [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
       this.searchForm.orderStatus = ''
       this.searchForm.orderSn = ''
     }

@@ -11,94 +11,94 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="80">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="120">
-            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="200"
-            label="网点">
-          </el-table-column>
-          <el-table-column
-            prop="carrierName"
-            width="220"
-            sortable
-            label="承运商">
-          </el-table-column>
-          <el-table-column
-            prop="carrierMobile"
-            sortable
-            width="220"
-            label="承运商电话">
-          </el-table-column>
-          <el-table-column
-            prop="receivableFee"
-            sortable
-            width="220"
-            label="应收账款">
-          </el-table-column>
+        <!--<el-table-->
+          <!--ref="multipleTable"-->
+          <!--:data="usersArr"-->
+          <!--stripe-->
+          <!--border-->
+          <!--@row-dblclick="getDbClick"-->
+          <!--@row-click="clickDetails"-->
+          <!--@selection-change="getSelection"-->
+          <!--height="100%"-->
+          <!--tooltip-effect="dark"-->
+          <!--:default-sort = "{prop: 'id', order: 'ascending'}"-->
+          <!--style="width: 100%">-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--type="selection"-->
+            <!--width="80">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--label="序号"-->
+            <!--width="120">-->
+            <!--<template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--fixed-->
+            <!--sortable-->
+            <!--prop="orgName"-->
+            <!--width="200"-->
+            <!--label="网点">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="carrierName"-->
+            <!--width="220"-->
+            <!--sortable-->
+            <!--label="承运商">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="carrierMobile"-->
+            <!--sortable-->
+            <!--width="220"-->
+            <!--label="承运商电话">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="receivableFee"-->
+            <!--sortable-->
+            <!--width="220"-->
+            <!--label="应收账款">-->
+          <!--</el-table-column>-->
 
-          <el-table-column
-            sortable
-            prop="payableFee"
-            width="220"
-            label="应付账款">
-          </el-table-column>
-          <el-table-column
-            prop="recAndPayFee"
-            label="应收应付对账合计"
-            width="250"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="totalCount"
-            label="总单数"
-            width="200"
-            sortable
-            >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--sortable-->
+            <!--prop="payableFee"-->
+            <!--width="220"-->
+            <!--label="应付账款">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="recAndPayFee"-->
+            <!--label="应收应付对账合计"-->
+            <!--width="250"-->
+            <!--sortable-->
+            <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="totalCount"-->
+            <!--label="总单数"-->
+            <!--width="200"-->
+            <!--sortable-->
+            <!--&gt;-->
+          <!--</el-table-column>-->
 
+        <!--</el-table>-->
+
+
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
 
-
-        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
-          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
-          <!--<template v-for="column in tableColumn">-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">-->
-              <!--<template slot-scope="scope">-->
-                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>-->
-                <!--<span v-else v-html="column.slot(scope)"></span>-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-          <!--</template>-->
-        <!--</el-table>-->
-        <!---->
 
 
 
@@ -117,6 +117,7 @@ import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -135,6 +136,7 @@ export default {
   },
   data () {
     return {
+      tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -157,7 +159,53 @@ export default {
           startTime: '',//
           endTime:''
         }
-      }
+      },
+      tableColumn:[
+        {
+          label:'序号',
+          prop:'id',
+          width:'120',
+          fixed:true,
+          slot:(scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          }
+        },{
+          label:'网点',
+          prop:'orgName',
+          width:'250',
+          fixed:true,
+        },{
+          label:'承运商',
+          prop:'carrierName',
+          width:'200',
+          fixed:true,
+        },{
+          label:'承运商电话',
+          prop:'carrierMobile',
+          width:'220',
+          fixed:false,
+        },{
+          label:'应收账款',
+          prop:'receivableFee',
+          width:'220',
+          fixed:false,
+        },{
+          label:'应付账款',
+          prop:'payableFee',
+          width:'220',
+          fixed:false,
+        },{
+          label:'应收应付对账合计',
+          prop:'recAndPayFee',
+          width:'250',
+          fixed:false,
+        },{
+          label:'总单数',
+          prop:'totalCount',
+          width:'200',
+          fixed:false,
+        },
+      ],
     }
   },
   methods: {

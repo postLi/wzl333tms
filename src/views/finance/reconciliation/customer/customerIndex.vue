@@ -7,7 +7,7 @@
 
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">对账明细</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
 
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -92,20 +92,37 @@
             >
           </el-table-column>
         </el-table>
+
+
+        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
+          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
+          <!--<template v-for="column in tableColumn">-->
+            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>-->
+            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">-->
+              <!--<template slot-scope="scope">-->
+                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>-->
+                <!--<span v-else v-html="column.slot(scope)"></span>-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+          <!--</template>-->
+        <!--</el-table>-->
+
+
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
 
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
 import {  getExportExcel } from '@/api/company/customerManage'
 import {postCustomerdetailList} from '@/api/finance/fin_customer'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -126,6 +143,7 @@ export default {
   },
   data () {
     return {
+      tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -150,7 +168,39 @@ export default {
           startTime: '',//
           endTime:''
         }
-      }
+      },
+      tableColumn:[
+        {
+          label:'序号',
+          prop:'id',
+          width:'120',
+          fixed:true,
+          slot:(scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          }
+        },{
+          label:'网点',
+          prop:'orgName',
+          width:'250',
+          fixed:true,
+        },{
+          label:'发货方',
+          prop:'customerUnit',
+          width:'200',
+          fixed:true,
+        },{
+          label:'发货人',
+          prop:'customerName',
+          width:'200',
+          fixed:false,
+        },{
+          label:'客户电话',
+          prop:'customerMobile',
+          width:'200',
+          fixed:false,
+        }
+      ]
+
     }
   },
   methods: {

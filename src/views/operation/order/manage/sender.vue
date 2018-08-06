@@ -569,12 +569,19 @@ export default {
       }
       switch (type) {
         case 'export':
-          if (this.selected.length === 0) {
-            SaveAsFile(this.usersArr, this.tableColumn)
-          } else {
-            // 筛选选中的项
-            SaveAsFile(this.selected, this.tableColumn)
-          }
+
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '全部库存'
+          })
+          this.$refs.multipleTable.clearSelection()
+          // if (this.selected.length === 0) {
+          //   SaveAsFile(this.usersArr, this.tableColumn)
+          // } else {
+          //   // 筛选选中的项
+          //   SaveAsFile(this.selected, this.tableColumn)
+          // }
           break;
           // 添加客户
           case 'add':
@@ -596,7 +603,6 @@ export default {
               })
             }
             if(this.selected[0].orderStatus === 213){
-              // this.$router.push('/operation/order/createOrder?preId=' + this.selected[0].id)
               this.eventBus.$emit('showCreateOrder',{
                 preid: this.selected[0].id
               })
@@ -640,6 +646,7 @@ export default {
                 message: '未受理才能修改~',
                 type: 'warning'
               })
+              this.$refs.multipleTable.clearSelection()
               this.closeAddCustomer()
             }
 
@@ -689,6 +696,7 @@ export default {
               message: '已作废的订单不可以作废~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
           }
 
           break;
@@ -747,6 +755,7 @@ export default {
                 message: '该订单不可以拒绝~',
                 type: 'warning'
               })
+              this.$refs.multipleTable.clearSelection()
               return false
             }
 
@@ -796,7 +805,9 @@ export default {
                 message: '未受理和已拒绝订单才可以删除~',
                 type: 'warning'
               })
+              this.$refs.multipleTable.clearSelection()
             }
+
               break;
           // 导出数据
           // case 'export':
@@ -833,6 +844,10 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event){
+      if(this.isModify){
+        this.closeSetupTable()
+        this.$refs.multipleTable.clearSelection()
+      }
       this.selectInfo = row
       this.isModify = false
       this.isDbclick = true

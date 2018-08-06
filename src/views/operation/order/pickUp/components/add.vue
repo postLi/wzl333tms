@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addPickUpPop" v-loading="loading">
     <template class="addPickUpPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="90px" :inline="true" label-position="right" size="mini" class="pickup_lrl">
+      <el-form :model="form"  :rules="rules" ref="ruleForm" label-width="90px" :show-message="checkShowMessage" :inline="true" label-position="right" size="mini" class="pickup_lrl">
         <div class="info_date" style="margin-top: 10px;">提货信息</div>
         <div class="pickUp-top">
           <el-form-item label="提货批次" prop="customerUnit">
@@ -106,7 +106,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer" v-if="isDbclick">
-      <el-button @click="closeMe">取 消</el-button>
+      <el-button @click="closeMe">关 闭</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="submit">保存并打印</el-button>
@@ -211,7 +211,7 @@ export default {
           { validator: validatePickupNum, trigger: 'blur' }
         ],
         'tmsOrderPickup.carriage': [
-          { validator: validatePickupNum, mtrigger: 'blur' }
+          { validator: validatetruckFee, mtrigger: 'blur' }
           // { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
         ],
         'tmsOrderPickup.remark': [
@@ -302,13 +302,17 @@ export default {
         }
       },
       checked: true,
+      checkShowMessage: false,
       formLabelWidth: '80px',
       popTitle: '提货派车单',
       loading: false,
       inited: false,
       pickupBatchNumber: '',
 // 用来在提交
-      sender: {}
+      sender: {},
+      //验证
+      isChecked : false,
+      isCheckedShow : false
     }
   },
   mounted() {
@@ -325,6 +329,8 @@ export default {
       }
     },
     info() {
+      this.$refs['ruleForm'].resetFields()
+      this.checkShowMessage = false
       if (this.isModify) {
         this.popTitle = '修改派车单'
         this.infoData(this.info)
@@ -391,10 +397,22 @@ export default {
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
+          this.showMessage(msg)
           callback(new Error(msg))
         } else {
           callback()
         }
+      }
+    },
+    showMessage(msg){
+      if(this.isChecked && !this.isCheckedShow) {
+        this.isCheckedShow = true
+      }
+      if (this.isCheckedShow) {
+        this.checkShowMessage = true
+      }
+      else{
+        this.checkShowMessage = false
       }
     },
     setObject(obj1, obj2) {
@@ -444,7 +462,13 @@ export default {
       console.log('保存并打印')
     },
     submitForm(formName) {
+      this.isChecked = true
+      this.isCheckedShow = false
+      this.checkShowMessage = true
+      //
       this.$refs[formName].validate((valid) => {
+        this.isChecked = false
+        this.isCheckedShow = false
         if (valid) {
           this.loading = true
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
@@ -475,6 +499,7 @@ export default {
             this.loading = false
             this.$message.success('保存成功')
             this.closeMe()
+            this.$refs[formName].resetFields();
             this.$emit('success')
           }).catch(err => {
             this.loading = false
@@ -485,21 +510,14 @@ export default {
       })
     },
     reset() {
-      // this.form.tmsOrderPickup = objectMerge2({}, this.form.tmsOrderPickup)
-      // this.form.tmsTruck = objectMerge2({}, this.form.tmsTruck)
-      // this.form.tmsDriver = objectMerge2({}, this.form.tmsDriver)
-      // this.form.tmsCustomer = objectMerge2({}, this.form.tmsCustomer)
-      // console.log(this.form);
       Object.assign(this.form.tmsOrderPickup)
       Object.assign(this.form.tmsTruck)
       Object.assign(this.form.tmsDriver)
       Object.assign(this.form.tmsCustomer)
-      // this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-      // this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-      // this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-      // this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
+
     },
     closeMe(done) {
+      // this.$refs[formName].resetFields();
       this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {

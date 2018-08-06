@@ -189,8 +189,8 @@ export default {
       this.searchForm.endTime = ''
       this.searchForm.arrivedbeginDate = ''
       this.searchForm.arrivedEndDate = ''
-      // this.searchCreatTime = []
-      // this.searchEndTime = []
+      this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
+      this.searchEndTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
       this.searchForm.dirverName = ''
       this.searchForm.arriveOrgid = this.orgid
       this.searchForm.endOrgid = ''

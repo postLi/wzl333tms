@@ -130,7 +130,7 @@
               <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
               <div class="tab_info">
                 <div class="_btns_box">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isAlFun">{{popTitle}}</el-button >
+                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isAlFun" class="table_poptitle">{{popTitle}}</el-button >
 
 
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
@@ -1001,19 +1001,25 @@ export default {
       padding-top: 17px ;
       margin-bottom: 10px;
       border-top: 2px dotted #c8c8c8;
+      position: relative;
       .el-button {
         margin-right: 0;
+      }
+      .el-button.table_poptitle{
+        position: absolute;
+      }
+      .el-button.table_export{
+        position: absolute;
+        right: 200px;
+      }
+      .el-button.table_import{
+        position: absolute;
+        right: 110px;
       }
       .table_setup {
         float: right;
         margin-right: 0;
       }
-      .table_export {
-        margin-left: 576px;
-      }
-      /*.table_ixport{*/
-      /*margin-left: 400px;*/
-      /*}*/
     }
     .infos_tab {
       width: 100%;

@@ -321,6 +321,9 @@ export default {
   },
   data () {
     return {
+      // 控制显示提示消息
+      isChecked: false,
+      isCheckedShow: false,
       loading: true,
       btnsize: 'mini',
       usersArr: [],

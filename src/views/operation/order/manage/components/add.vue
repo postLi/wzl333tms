@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle +  orderSn" :isShow="popVisible" @close="closeMe" class="addPreOrderPop_lll" v-loading="loading">
     <template class="addPreOrderPop-content" slot="content">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add manage-add_lrl" label-width="100px">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini" class="manage-add manage-add_lrl" label-width="100px" :show-message="checkShowMessage">
         <div class="info_order clearfloat">发货人信息</div>
         <div class="info_send clearfloat">
           <ul>
@@ -102,13 +102,13 @@
               </td>
               <td>
                 <el-form-item label="开单网点">
-                  <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" :disabled="isDbclick"/>
+                  <SelectTree v-model="form.tmsOrderPre.orderFromOrgid" disabled/>
                 </el-form-item>
               </td>
 
               <td>
                 <el-form-item label="目的网点" >
-                  <SelectTree v-model="form.tmsOrderPre.orderToOrgid" :disabled="isDbclick"/>
+                  <SelectTree v-model="form.tmsOrderPre.orderToOrgid" :disabled="isDbclick" @change="changeOrderTo"/>
                 </el-form-item>
               </td>
             </tr>
@@ -407,13 +407,18 @@ export default {
       popTitle: '新增订单',
       orderSn: '',
       loading: false,
-      inited: false
+      inited: false,
+      //验证
+      checkShowMessage: false,
+      isChecked : false,
+      isCheckedShow : false
     }
   },
   mounted() {
     if (!this.inited) {
       this.inited = true
       this.initInfo()
+
     }
     this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
   },
@@ -422,12 +427,35 @@ export default {
       if (!this.inited) {
         this.inited = true
         this.initInfo()
+        this.$refs['ruleForm'].resetFields()
       }
     },
     orgid(newVal) {
     },
-    info() {
+    info: {
+
+      handler() {
+        // this.$refs['ruleForm'].resetFields()
+        this.checkShowMessage = false
+        this.watchData()
+      },
+      immediate: true
+    },
+    isModify: {
+      handler() {
+        this.watchData()
+      },
+      immediate: true
+    },
+  },
+  methods: {
+    changeOrderTo(item){
+      console.log(item);
+    },
+    watchData(){
+
       if (this.isModify) {
+
         this.popTitle = '修改订单'
         this.orderSn = this.info.orderSn
         this.infoData(this.info)
@@ -438,8 +466,6 @@ export default {
       } else {
         this.popTitle = '新增订单'
         this.orderSn = ''
-        // cargoId
-        // this.form.tmsOrderPre = this.setObject(this.form.tmsOrderPre)
         this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
         this.form.customSend = objectMerge2({}, this.customSend)
         this.form.customRece = objectMerge2({}, this.customRece)
@@ -458,9 +484,7 @@ export default {
         this.form.tmsOrderPre.orderEffective = 94
         this.form.tmsOrderPre.orderPayWay = 76
       }
-    }
-  },
-  methods: {
+    },
     infoData(item) {
       this.form.tmsOrderCargoList.cargoName = item.cargoName
       this.form.tmsOrderCargoList.cargoAmount = item.cargoAmount
@@ -493,14 +517,26 @@ export default {
       // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
       this.form.tmsOrderPre.orderEffective = item.orderEffective
       this.form.tmsOrderPre.id = item.id
+      this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
     },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
+          this.showMessage(msg)
           callback(new Error(msg))
         } else {
           callback()
         }
+      }
+    },
+    showMessage(msg){
+      if(this.isChecked && !this.isCheckedShow) {
+        this.isCheckedShow = true
+      }
+      if (this.isCheckedShow) {
+        this.checkShowMessage = true
+      }else{
+        this.checkShowMessage = false
       }
     },
     // 选择出发城市
@@ -549,7 +585,12 @@ export default {
       // this.form.orgid = id
     },
     submitForm(formName) {
+      this.isChecked = true
+      this.isCheckedShow = false
+      this.checkShowMessage = false
       this.$refs[formName].validate((valid) => {
+        this.isChecked = false
+        this.isCheckedShow = false
         if (valid) {
           this.loading = true
           this.form.customerList[0] = this.form.customSend
@@ -678,10 +719,8 @@ export default {
   }
   .el-input.is-disabled{
     .el-input__inner{
-      /*border-color: transparent;*/
       border-radius: 0;
-      /*text-align: center;*/
-      color: #606266;
+      color: #3e9ff1;
     }
   }
 
@@ -775,8 +814,10 @@ display: -ms-flexbox;
     }
     .el-form-item--mini {
       margin-left: 12px;
-      /*margin: 0 8px;*/
     }
+  }
+  .el-textarea.is-disabled .el-textarea__inner{
+    color: #3e9ff1;
   }
 }
 

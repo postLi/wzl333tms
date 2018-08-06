@@ -1143,13 +1143,11 @@
       .sTitle{
         flex: 1;
         text-align: center;
+        /*showBg*/
         .el-tooltip.showBg{
           .el-input__inner{
             border-left-color: #c0c4cc;
             border-right-color: #c0c4cc;
-            /*border-top-color: #c0c4cc;*/
-            /*border-bottom:3px double #c0c4cc;*/
-            /*font-size: 18px;*/
             color: #fff;
             font-weight: 600;
             background: skyblue;
@@ -1165,6 +1163,8 @@
         .el-input.is-disabled .el-input__inner {
           background-color:#fff;
         }
+
+        /*/*showBg*/
         span{
           position: relative;
           top: -20px;
