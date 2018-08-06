@@ -1,4 +1,5 @@
 import { login, logout, getInfo } from '@/api/login'
+import { getAllSetting } from '@/api/company/systemSetup'
 import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername, setUserInfo, removeUserInfo, removeUsername, removeOrgId } from '@/utils/auth'
 
 const user = {
@@ -78,12 +79,40 @@ const user = {
           commit('SET_COMPANY', data.orgName)
           setOrgId(data.orgid)
           commit('SET_AVATAR', require('../../assets/role.png'))
+
+          getAllSetting({
+            orgid: data.orgid,
+            type: '',
+            module: 'order'
+          }).then(res => {
+            data.systemSetup = res
+            commit('SET_OTHERINFO', data)
+            setUserInfo(data)
+            resolve({ data })
+          }).catch(error => {
+            reject(error)
+          })
+        }).catch(error => {
+          reject(error)
+        })
+        /* Promise.all([getInfo(),getAllSetting({})]).then(arr => {
+          let response = arr[0]
+          let systemSetup = arr[1]
+          const data = response.data
+          data.rolesIdList = data.rolesId.split(',')
+          commit('SET_ROLES', data.rolesIdList)
+          commit('SET_NAME', data.username)
+          commit('SET_USERNAME', data.username)
+          setUsername(data.username)
+          commit('SET_COMPANY', data.orgName)
+          setOrgId(data.orgid)
+          commit('SET_AVATAR', require('../../assets/role.png'))
           commit('SET_OTHERINFO', data)
           setUserInfo(data)
           resolve({ data })
         }).catch(error => {
           reject(error)
-        })
+        }) */
       })
     },
 

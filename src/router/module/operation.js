@@ -18,6 +18,9 @@ export default {
     path: '/operation/order/createOrder', hidden: true, icon: 'yygl0_chuangjian', name: 'createOrder22', component: _import('operation/order/createOrder/index'), meta: { role: ['admin'], title: '创建运单', noCache: false }
   },
   {
+    path: '/operation/order/modifyOrder', hidden: true, icon: 'yygl0_chuangjian', name: 'modifyOrder22', component: _import('operation/order/createOrder/modify'), meta: { role: ['admin'], title: '改单', noCache: false }
+  },
+  {
     path: '/operation/order/orderManage', icon: 'yygl2_yundan', name: 'orderManage', component: _import('operation/order/orderManage/index'), meta: { role: ['admin'], title: '运单管理', noCache: false }
   },
   {

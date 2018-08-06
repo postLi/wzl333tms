@@ -480,7 +480,7 @@ export default {
     })
   },
   methods: {
-    initPrinter () {
+    initPrinter() {
       this.printers = Object.assign([], CreatePrinterList())
     },
     doAction(type) {
@@ -490,21 +490,21 @@ export default {
           // this.$message({ type: 'warning', message: '功能尚在开发中' })
           break
         case 'printSetLi': // 打印标签设置
-        this.printSetLi()
+          this.printSetLi()
           // this.$message({ type: 'warning', message: '功能尚在开发中' })
           break
       }
     },
-    printSetOrder () {
+    printSetOrder() {
       this.printSetOrderVisible = true
     },
-    printSetLi () {
+    printSetLi() {
       this.printSetLiVisible = true
     },
     closePrintSetOrder() {
       this.printSetOrderVisible = false
     },
-    closePrintSetLi () {
+    closePrintSetLi() {
       this.printSetLiVisible = false
     },
     getInfo(module, type = '') {
@@ -556,6 +556,7 @@ export default {
     },
     saveData() {
       return putSetting(this.form).then(res => {
+        this.otherinfo.systemSetup = this.form
         this.$message({
           message: '保存成功',
           type: 'success'

@@ -213,7 +213,7 @@ export default {
         'label': '等通知放货',
         'prop': 'shipIsControll',
         'width': '150',
-        'slot': function(scope){
+        'slot': function(scope) {
           return scope.row.shipIsControll === 0 ? '未通知' : '已通知'
         }
       }, {
@@ -457,7 +457,7 @@ export default {
         case 'add':
           this.isModify = false
           this.selectInfo = {}
-          this.$router.push({ path: '/operation/order/createOrder/' })
+          this.$router.push({ path: '/operation/order/createOrder' })
           break
           // 修改运单信息
         case 'modify':
@@ -475,18 +475,29 @@ export default {
               message: '已签收项不能被修改~',
               type: 'warning'
             })
-            return
-          }
-          this.selectInfo = thelist[0]
-          this.$router.push({
-            path: '/operation/order/createOrder',
-            query: {
-              orderid: this.selectInfo.id,
-              type: 'modify',
-                  // tab: '修改' + this.selectInfo.shipSn
-              tab: '改单'
+          } else {
+            this.selectInfo = thelist[0]
+            var canModify = true
+            // 判断是否有权限
+            if (this.otherinfo.systemSetup.shipPermission.onlyUpdateOwnShip === '1') {
+              // 只能修改自己的运单
+              canModify = thelist[0].userid === this.otherinfo.id
             }
-          })
+            if (canModify) {
+              this.$router.push({
+                path: '/operation/order/modifyOrder',
+                query: {
+                  orderid: this.selectInfo.id,
+                  type: 'modify',
+                      // tab: '修改' + this.selectInfo.shipSn
+                  tab: '改单'
+                }
+              })
+            } else {
+              this.$message.warning('只能修改自己的运单~')
+            }
+          }
+
           break
           // 删除运单
         case 'delete':
@@ -504,30 +515,40 @@ export default {
               type: 'info'
             })
           } else {
-            var id = deleteItem[0].id
-            this.$confirm('确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？', '提示', {
-              confirmButtonText: '删除',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              orderManageApi.deleteOrderInfoById(id).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
+            var canDelete = true
+            // 判断是否有权限
+            if (this.otherinfo.systemSetup.shipPermission.onlyDeleteOwnShip === '1') {
+              // 只能删除自己的运单
+              canDelete = deleteItem[0].userid === this.otherinfo.id
+            }
+            if (canDelete) {
+              var id = deleteItem[0].id
+              this.$confirm('确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？', '提示', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                orderManageApi.deleteOrderInfoById(id).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  })
+                  this.fetchData()
+                }).catch(err => {
+                  this.$message({
+                    type: 'info',
+                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  })
                 })
-                this.fetchData()
-              }).catch(err => {
+              }).catch(() => {
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '已取消删除'
                 })
               })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消删除'
-              })
-            })
+            } else {
+              this.$message.warning('只能删除自己的运单~')
+            }
           }
           break
           // 作废运单
@@ -546,31 +567,41 @@ export default {
               type: 'info'
             })
           } else {
-            var theid = cancelItem[0].id
+            var canCancel = true
+            if (this.otherinfo.systemSetup.shipPermission.onlyInvalidOwnShip === '1') {
+              // 只能修改自己的运单
+              canCancel = cancelItem[0].userid === this.otherinfo.id
+            }
 
-            this.$confirm('确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？', '提示', {
-              confirmButtonText: '作废',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              orderManageApi.deleteCancleOrderById(theid).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '作废成功!'
+            if (canCancel) {
+              var theid = cancelItem[0].id
+
+              this.$confirm('确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？', '提示', {
+                confirmButtonText: '作废',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                orderManageApi.deleteCancleOrderById(theid).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '作废成功!'
+                  })
+                  this.fetchData()
+                }).catch(err => {
+                  this.$message({
+                    type: 'info',
+                    message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  })
                 })
-                this.fetchData()
-              }).catch(err => {
+              }).catch(() => {
                 this.$message({
                   type: 'info',
-                  message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '已取消作废'
                 })
               })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消作废'
-              })
-            })
+            } else {
+              this.$message.warning('只能作废自己的运单~')
+            }
           }
 
           break

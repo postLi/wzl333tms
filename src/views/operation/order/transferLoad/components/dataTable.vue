@@ -208,7 +208,7 @@ export default {
           }, 0)
           sums[index] += ''
         } else {
-          sums[index] = 'N/A'
+          sums[index] = '-'
         }
       })
       return sums
@@ -267,6 +267,7 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
+          e.oddNumbers = e.oddNumbers || e.shipSn
           e.paymentId = e.paymentId || 16
           this.rightTable.push(e)
           const item = this.leftTable.indexOf(e)

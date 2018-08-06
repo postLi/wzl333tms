@@ -892,15 +892,18 @@ export default {
       immediate: true
     },
     '$route'(to, from) {
-      if (to.path.indexOf('/operation/order/createOrder') !== -1 && !this.ispop) {
-        // this.initIndex()
+      if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
+        this.initIndex()
       }
     }
   },
   activated() {
-    if (this.ispop) {
-      this.initIndex()
-    }
+    // if (this.ispop) {
+    this.initIndex()
+    // }
+  },
+  deactivated() {
+
   },
   mounted() {
     this.loading = true
