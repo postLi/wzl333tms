@@ -39,16 +39,16 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
-            <el-form-item prop="tmsOrderShip.shipFromCityCode">
-              <querySelect show='select' filterable :getinput="true" search="longAddr" @change="selectFromCity" :name="fromCityName" type="city"  v-model="form.tmsOrderShip.shipFromCityCode" :remote="true" />
+            <el-form-item prop="tmsOrderShip.shipFromCityName">
+              <querySelect show='select' filterable :getinput="true" search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
-            <el-form-item prop="tmsOrderShip.shipToCityCode">
-              <querySelect show='select' filterable :getinput="true" @change="selectToCity" search="longAddr" :name="toCityName" type="city"  v-model="form.tmsOrderShip.shipToCityCode" :remote="true" />
+            <el-form-item prop="tmsOrderShip.shipToCityName">
+              <querySelect show='select' filterable :getinput="true" @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -554,7 +554,7 @@ export default {
           { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母' },
           { validator: validateOrderNum }
         ],
-        'tmsOrderShip.shipToCityCode': [
+        'tmsOrderShip.shipToCityName': [
           { validator: this.validateIsEmpty('到达城市不能为空'), trigger: 'blur' }
         ],
         'sender.customerName': [
@@ -1158,18 +1158,15 @@ export default {
       console.log('selectFromCity:', item, city)
       if (item) {
         this.form.tmsOrderShip.shipFromCityName = item.longAddr
-      } else {
+      }/*  else {
         this.form.tmsOrderShip.shipFromCityCode = city || ''
         this.form.tmsOrderShip.shipFromCityName = city || ''
-      }
+      } */
     },
     // 选择到达城市
     selectToCity(item, city) {
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
-      } else {
-        this.form.tmsOrderShip.shipToCityCode = city || ''
-        this.form.tmsOrderShip.shipToCityName = city || ''
       }
     },
     // 设置费用列

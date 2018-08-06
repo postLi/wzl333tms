@@ -844,8 +844,9 @@ export default {
         this.form.tmsOrderShipInfo[i] = data.tmsOrderShipInfo[i]
       }
       // 设置城市名称
-      this.fromCityName = data.tmsOrderShipInfo.shipFromCityName
-      this.toCityName = data.tmsOrderShipInfo.shipToCityName
+      this.fromCityName = data.tmsOrderShipInfo.shipFromCityName || ''
+      this.toCityName = data.tmsOrderShipInfo.shipToCityName || ''
+      // this.fromCityName = this.fromCityName.replace(/,$/,'')
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
       // 设置收发货人信息
