@@ -1,12 +1,16 @@
 <template>
   <div class="progressContainer">        
-    <div class="progressItem" :class="{'showani':isani}"></div>
+    <div class="progressItem" :class="{'showani':isani, 'cancelAni': cancelAni}"></div>
   </div>
 </template>
 <script>
 export default {
   props: {
     isani: {
+      type: Boolean,
+      default: false
+    },
+    cancelAni: {
       type: Boolean,
       default: false
     }
@@ -28,6 +32,38 @@ export default {
 }
 </script>
 <style lang="scss">
+@keyframes showAni{
+  0%{
+    width: 0;
+  }
+  11%{
+    width: 11%;
+  }
+  22%{
+    width: 22%;
+  }
+  33%{
+    width: 33%;
+  }
+  44%{
+    width: 44%;
+  }
+ 55%{
+    width:55%;
+  }
+  66%{
+    width: 66%;
+  }
+  77%{
+    width: 77%;
+  }
+  88%{
+    width: 88%;
+  }
+  100%{
+    width: 100%;
+  }
+}
 .progressContainer{
       position: relative;
       height: 15px;
@@ -37,13 +73,19 @@ export default {
     .progressItem{
       position: absolute;
       height: 15px;
-      width: 0%;
+      width: 100%;
       background-color: rgba(0, 203, 102, 1);
-      transition: all 10s ease;
+      animation: showAni 10s ease  forwards;
+      animation-play-state: paused;
       &.showani{
-        width: 100%;
+        animation-play-state: running;
+      }
+      &.cancelAni{
+        animation-play-state: paused;
       }
     }
+
+    
 
     .progressLabel{
       position: relative;

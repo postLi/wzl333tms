@@ -563,8 +563,8 @@ export default {
         'vo': {
           'repertoryId': '',
           'signId': '',
-          'signStatus': '226',
-          'shipFromOrgid': 1
+          'signStatus': '226'
+          // 'shipFromOrgid': 1
         }
       },
       tableColumn: [{
