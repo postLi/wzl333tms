@@ -25,7 +25,7 @@
         <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
       </el-collapse-item>
     </el-collapse>
-    <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
+    <el-tabs v-model="activeName2" type="card">
       <el-tab-pane label="打印导出表格设置中的表格" name="first">
         <el-row :gutter="12">
           <el-col :span="12">
@@ -183,12 +183,8 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="打印结算单" name="third">
-        
-      </el-tab-pane>
-      <el-tab-pane label="打印合同" name="fourth">
-        打印合同
-      </el-tab-pane>
+      <el-tab-pane label="打印结算单" name="third">打印结算单</el-tab-pane>
+      <el-tab-pane label="打印合同" name="fourth">打印合同</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -336,3 +332,19 @@ export default {
 }
 
 </script>
+<style lang="scss">
+.component-remark {
+  width: 100%;
+  background-color: #eee;
+  padding: 10px 20px;
+  margin-top: 10px;
+  h5 {
+    margin: 10px;
+  }
+  .component-remark-html{
+    font-size:13px;
+    line-height: 18px;
+  }
+}
+
+</style>
