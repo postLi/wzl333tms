@@ -41,7 +41,7 @@
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
 
-              <querySelect filterable show="select" @change="getCity" search="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" />
+              <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" />
             </el-form-item>
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
@@ -329,7 +329,7 @@
             }
             reqPromise.then(res => {
               this.loading = false
-              this.$message.success("保存成功")
+              this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')
             })

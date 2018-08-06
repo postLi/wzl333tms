@@ -461,6 +461,7 @@ import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
 import { CreatePrintPage } from '@/utils/lodopFuncs'
 import { getPrintOrderItems } from '@/api/operation/print'
+import { getOrgId } from '@/api/company/groupManage'
 
 export default {
   components: {
@@ -787,6 +788,8 @@ export default {
       feeConfig: [],
       // 个人设置
       personConfig: {},
+      // 组织信息
+      orgInfo: {},
       loading: false,
       // 是否允许修改订单号
       canChangeOrderNum: true,
@@ -990,6 +993,12 @@ export default {
         })
       }
     },
+    // 获取网点信息
+    getOrgId() {
+      return getOrgId(this.otherinfo.orgid).then(res => {
+        return res.data || {}
+      })
+    },
     // 获取个人设置
     getPersonSetting() {
       if (this.dataCache['personSeting']) {
@@ -1008,7 +1017,7 @@ export default {
     },
     // 获取基本设置信息
     getBaseSetting() {
-      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate()]).then(dataArr => {
+      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
         // 获取全局设置
         this.config = dataArr[0]
         // 获取费用设置
@@ -1017,7 +1026,13 @@ export default {
         this.personConfig = dataArr[2]
         // 获取后台时间
         this.nowTime = dataArr[3]
+        // 获取网点信息
+        this.orgInfo = dataArr[4]
       })
+    },
+    // 设置出发城市
+    setOrgCity() {
+      this.form.tmsOrderShip.shipFromCityName = this.orgInfo.city
     },
     // 初始化各个表单的情况
     init() {
@@ -1026,6 +1041,7 @@ export default {
       this.setOrderDate()
       this.setOrderFee()
       this.setOrderTransfer()
+      this.setOrgCity()
       // 当为修改运单时，不设置默认值
       if (!this.output.isOrder) {
         this.setDefaultValue()
