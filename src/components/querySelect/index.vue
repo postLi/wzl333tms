@@ -523,6 +523,7 @@ export default {
       }
     },
     setHightLight(str, key) {
+      str = str || ''
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
     highLight(item, key) {
