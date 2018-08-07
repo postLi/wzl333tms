@@ -137,6 +137,7 @@ export default {
       this.searchForm.endTime = ''
       this.searchCreatTime = this.defaultTime
       this.searchForm.shipFromOrgid = ''
+      this.searchForm.ascriptionOrgId = this.otherinfo.orgid
     }
   }
 }

@@ -1634,6 +1634,8 @@ export default {
       // 城市信息
       this.form.tmsOrderShip.shipFromCityCode = data.orderFromCityCode
       this.form.tmsOrderShip.shipToCityCode = data.orderToCityCode
+      this.form.tmsOrderShip.shipFromCityName = data.orderFromCityName
+      this.form.tmsOrderShip.shipToCityName = data.orderToCityName
       this.fromCityName = data.orderFromCityName
       this.toCityName = data.orderToCityName
       // 收发货人信息
@@ -2055,55 +2057,54 @@ export default {
           break
       }
     },
-    printLibkey () {
+    printLibkey() {
       getEnableLibSetting().then(data => {
         console.log('getEnableLibSetting', data)
         this.setPrintData() // 设置数据
-        let libData = Object.assign([], data)
-        for (let item in this.printDataObject){
-           libData.forEach((e, index) => {
+        const libData = Object.assign([], data)
+        for (const item in this.printDataObject) {
+          libData.forEach((e, index) => {
             if (e.filedValue === item) {
-             e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-            }
+               e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+             }
           })
         }
         CreatePrintPageEnable(libData) // 调打印接口
       })
     },
     print() {
-       getEnableLibSetting().then(data => {
+      getEnableLibSetting().then(data => {
         console.log('getEnableLibSetting', data)
         this.setPrintData() // 设置数据
         CreatePrintPageEnable(data)
       })
     },
-    getSelectType () { // 获取提货方式中文
-       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => { // 获取提货方式中文
+    getSelectType() { // 获取提货方式中文
+      getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => { // 获取提货方式中文
         console.log(data, parseInt(this.form.tmsOrderShip.shipDeliveryMethod))
         data.forEach(e => {
-          this.DELIVERY_METHODS[e.id] = e.dictName 
-        })
+           this.DELIVERY_METHODS[e.id] = e.dictName
+         })
       })
     },
-    setPrintData () { // 设置打印的字段
-     
+    setPrintData() { // 设置打印的字段
       // 标签数据
       let obj = new Object()
-      this.$set(obj,'goodsSn',this.form.tmsOrderShip.shipGoodsSn )
-      this.$set(obj,'createTime',this.form.tmsOrderShip.createTime )
-      this.$set(obj,'fromCity',this.form.tmsOrderShip.shipFromCityName )
-      this.$set(obj,'toCity',this.form.tmsOrderShip.shipToCityName )
-      this.$set(obj,'toOrgName',this.form.tmsOrderShip.shipToCityName )
-      this.$set(obj,'fromOrgName',this.otherinfo.name)
-      this.$set(obj,'senderUnit',this.form.sender.customerUnit )
-      this.$set(obj,'senderName',this.form.sender.customerName )
-      this.$set(obj,'senderMobile',this.form.sender.customerMobile )
-      this.$set(obj,'cargoPack',this.form.cargoList[0].cargoPack )
-      this.$set(obj,'companyName',this.otherinfo.companyName )
+      this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn)
+      this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime)
+      this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName)
+      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName)
+      this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName)
+      this.$set(obj, 'fromOrgName', this.otherinfo.name)
+      this.$set(obj, 'senderUnit', this.form.sender.customerUnit)
+      this.$set(obj, 'senderName', this.form.sender.customerName)
+      this.$set(obj, 'senderMobile', this.form.sender.customerMobile)
+      this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
+      this.$set(obj, 'companyName', this.otherinfo.companyName)
       // this.$set(obj,'deliveryMethod',this.form.tmsOrderShip.shipDeliveryMethod )
-      this.$set(obj,'deliveryMethod',this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
-        this.printDataObject = Object.assign({}, obj)
-        obj = {}
+      this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
+      this.printDataObject = Object.assign({}, obj)
+      obj = {}
       console.log('printDataObject', this.printDataObject)
     },
     // 右下角设置按钮菜单点击操作
