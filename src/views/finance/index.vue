@@ -19,9 +19,9 @@
         </el-tooltip>
       </div>
       <div class="fin2-content">
-        <el-tooltip content="提货费" placement="top">
+        <!-- <el-tooltip content="提货费" placement="top">
           <el-button>提货费</el-button>
-        </el-tooltip>
+        </el-tooltip> -->
         <el-tooltip content="实际提货费" placement="top">
           <el-button>实际提货费</el-button>
         </el-tooltip>
@@ -31,9 +31,9 @@
         <el-tooltip content="回扣" placement="top">
           <el-button @click="gotoPage('Kickback', './accountsPayable/waybill')">回扣</el-button>
         </el-tooltip>
-        <el-tooltip content="单票提货费" placement="top">
+        <!-- <el-tooltip content="单票提货费" placement="top">
           <el-button  @click="gotoPage('Ticket', './accountsPayable/waybill')">单票提货费</el-button>
-        </el-tooltip>
+        </el-tooltip> -->
         <el-tooltip content="异动费用" placement="top">
           <el-button  @click="gotoPage('Unusual', './accountsPayable/waybill')">异动费用</el-button>
         </el-tooltip>

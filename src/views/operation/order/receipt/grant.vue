@@ -39,12 +39,12 @@
             <el-table-column
               fixed
               sortable
-              prop="shipFromOrgid"
+              prop="fromOrgName"
               width="120"
               label="开单网点">
             </el-table-column>f
             <el-table-column
-              prop="shipToOrgid"
+              prop="toOrgName"
               width="120"
               sortable
               label="目的网点">
