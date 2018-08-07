@@ -76,7 +76,8 @@ export default {
       searchForm: {
         orgid: '',
         name: '',
-        mobile: ''
+        mobile: '',
+        customerUnit: ''
       },
       rules: {
         mobile: [{

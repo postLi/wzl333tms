@@ -4,50 +4,46 @@
     <div></div>
     <div class="top_content" v-if="type===1">
       <h6>初始化检查：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙你更好的使用系统。</h6>
-      <p class="top_ts">（上次检查还有<span class="top_num">{{dataset.totals}}</span>项基础数据未维护）</p>
+      <p class="top_ts">（上次检查还有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}项</span>基础数据未维护）</p>
     </div>
     <div class="box_top" v-else-if="type===2">
       <div class="top_content2" >
-        <i class="el-icon-warning wzlicon"></i>
+        <i class="wzlicon"></i>
         <h6 v-if="!ischecked" id="oTitle1">初始化检查中<el-button type="primary"  plain @click="doAction('check')" class="btn_qx">{{ cancelAni ? '继续检查' : '取消'}}</el-button></h6>
-        <h6 v-if="ischecked" id="oTitle2">初始化检查已完成，有<span class="top_num">{{dataset.totals}}</span>项基础功能没维护<el-button type="primary"   plain @click="doAction('check')" class="btn_qx">重新检查</el-button></h6>
-        <p class="top_ts">当前检查：<span class="top_num">网点管理</span></p>
+        <h6 v-if="ischecked" id="oTitle2">初始化检查已完成，有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}</span>项基础功能没维护<el-button type="primary"   plain @click="doAction('agane')" class="btn_qx">重新检查</el-button></h6>
+        <p class="top_ts">当前检查：<span class="center_title">网点管理</span></p>
       </div>
       <progressbar :cancelAni="cancelAni" :isani="showani" />
-    </div>
-    <div class="top_content" v-else-if="type===3">
-      <h6>初始化检查已取消</h6>
-      <p class="top_ts">（上次检查还有<span class="top_num">7</span>项基础数据未维护）</p>
     </div>
     <div class="top_content" v-else>
       <h6>初始化检查已完成，有{{dataset.totals}}项基础功能没维护</h6>
     </div>
-    <!-- <el-progress :text-inside="true" :stroke-width="18" :percentage="100" status="success"></el-progress> -->
   </el-header>
   <el-main>
     <div class="main_content" v-if="type===1">
       <el-button type="primary" @click="doAction('init')">初始化检查</el-button>
     </div>
     <div class="main_content2" v-else-if="type===2">
-      <!-- 初始化检查中
-      <el-button type="primary" @click="doAction('check')">初始化检查中 返回</el-button> -->
       <h6>公司管理</h6>
       <div class="company_content">
         <ul  id="oDiv" :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
           <li v-for="(item, index) in countList" :key="index">
             <p v-if="item.value > 0">
-              <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message}}，{{item.message1}}
+              <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message}}，{{item.message2}}
               <el-button type="primary"  plain @click="doAction(item.label)" class="btn_qx1">{{item.button1}}</el-button>
             </p>
             <p v-else-if="item.value < 1 && item.label==='orgCount' && !isParentOrg">
               <i class="el-icon-warning"></i>{{item.title}}：{{item.message1}}。
-              <el-button type="error"   plain @click="addDoTotVisible = true" class="btn_qx">{{item.button2}}</el-button>
+              <el-button type="error"   plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
             <p v-else-if="item.value < 1 && item.label!=='orgCount'">
               <i class="el-icon-warning"></i>{{item.title}}：{{item.message1}}。
-              <el-button type="primary"   plain @click="addDoTotVisible = true" class="btn_qx">{{item.button2}}</el-button>
+              <el-button type="primary" plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
           </li>
+          <div class="btn_content" v-if="flog">
+            <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd">开单</el-button></p>
+          </div>
         </ul>
         <!-- <template v-if="isParentOrg">
           <p v-if="dataset.orgCount > 0"><i :class="dataset.orgCount > 0 ? 'el-icon-success ' : ''"></i>网点管理：网点{{dataset.orgCount}}个，需要增加点击右边增加按钮。<el-button type="primary"   plain @click="addDoTotVisible = true" class="btn_qx1">增加</el-button></p>
@@ -55,17 +51,19 @@
         </template> -->
         
       </div>
-      <div class="btn_content" v-if="flog">
-        <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd">开单</el-button></p>
-      </div>
-      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" @success="addNewSuccess('addorg')"  :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <!-- 网点管理 -->
+      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" @success="addNewSuccess('orgCount')"  :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <!-- 权限管理 -->
+      <Newrole :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  @success="addNewSuccess('addrole')" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" /> 
+      <!-- 员工管理 -->
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  @success="addNewSuccess('adduser')" :popVisible.sync="addDoTotVisible2" />
     </div>
-     <div class="main_content" v-else-if="type===3">
+     <!-- <div class="main_content" v-else-if="type===3">
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
     </div>
      <div class="main_content" v-else-if="type===4">
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
-    </div>
+    </div> -->
      <div class="main_content" v-else>
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
     </div>
@@ -73,17 +71,19 @@
   </el-main>
   
 </el-container>
- 
 </template>
 <script>
 import { getInitializationCheck } from '@/api/common'
 import progressbar from './components/progressbar'
 import NewOrg from '@/views/company/groupManage/addDot'
-
+import Newrole from '@/views/company/permissionManage/addRole'
+import Newuser from '@/views/company/employeeManage/add'
 export default {
   components: {
     progressbar,
-    NewOrg
+    NewOrg,
+    Newrole,
+    Newuser
   },
   data() {
     return {
@@ -95,6 +95,14 @@ export default {
       showani: false,
       viewKey: 0,
       addDoTotVisible: false,
+      addDoTotVisible1: false,
+      addDoTotVisible2: false,
+      addDoTotVisible3: false,
+      addDoTotVisible4: false,
+      addDoTotVisible5: false,
+      addDoTotVisible6: false,
+      addDoTotVisible7: false,
+      addDoTotVisible8: false,
       flog: false,
       countList: [{
         value: 0,
@@ -102,6 +110,7 @@ export default {
         title: '网点管理',
         message: '网点' + this.valueCount + '个',
         message1: '你还没有添加网点，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -110,6 +119,7 @@ export default {
         title: '权限管理',
         message: '系统默认' + this.valueCount + '个角色权限',
         message1: '你还没有添加角色权限，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -118,6 +128,7 @@ export default {
         title: '员工管理',
         message: '已经有' + this.valueCount + '位员工',
         message1: '你还没有添加员工，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -126,6 +137,7 @@ export default {
         title: '客户管理',
         message: '已经有' + this.valueCount + '位发货客户',
         message1: '你还没有添加发货客户，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -134,6 +146,7 @@ export default {
         title: '客户管理',
         message: '已经有' + this.valueCount + '位收货客户',
         message1: '你还没有添加收货客户，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -142,6 +155,7 @@ export default {
         title: '司机管理',
         message: '已经有' + this.valueCount + '位司机',
         message1: '你还没有添加司机，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -150,6 +164,7 @@ export default {
         title: '车辆管理',
         message: '已经有' + this.valueCount + '部车辆',
         message1: '你还没有添加车辆，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
@@ -158,13 +173,15 @@ export default {
         title: '承运商管理',
         message: '已经有' + this.valueCount + '个承运商',
         message1: '你还没有添加承运商，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
       }, {
         value: 0,
         label: 'settingCount',
         title: '系统设置',
-        message: '打印机连接已连接，需要设置点击右边设置按钮',
+        message: '',
+        message2: '打印机连接已连接，需要设置点击右边设置按钮',
         message1: '打印机连接还没连接，请点击右边设置按钮',
         button1: '设置',
         button2: '设置'
@@ -180,6 +197,7 @@ export default {
         if (data[total] === 0 || data[total] === null) {
           totals++
         }
+        console.log(data[total], total, '数量')
       }
       if (totals > 0) {
         this.flog = false
@@ -187,7 +205,6 @@ export default {
         this.flog = true
       }
 
-      console.log(totals, '数量')
       this.$set(this.dataset, 'totals', totals)
     })
   },
@@ -197,12 +214,33 @@ export default {
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
     addNewSuccess(type) {
-      if (type === 'addorg') {
-        // ..
-      }
+      // if (type === 'orgCount') {
+      //   // ..
+      //   this.addDoTotVisible = true
+      // }
+      // if (type === 'addrole') {
+      //   this.addDoTotVisible = true
+      // }
+      // switch (type) {
+      //   case 'orgCount':
+      //     this.addDoTotVisible = true
+      //     break
+      //   case 'aobj
+      //     this.addDoTotVisible = true
+      //     break
+      // }
     },
-    closeAddDot() {
+    closeAddDot(obj) {
+      console.log(obj)
       this.addDoTotVisible = false
+      this.addDoTotVisible1 = false
+      this.addDoTotVisible2 = false
+      this.addDoTotVisible3 = false
+      this.addDoTotVisible4 = false
+      this.addDoTotVisible5 = false
+      this.addDoTotVisible6 = false
+      this.addDoTotVisible7 = false
+      this.addDoTotVisible8 = false
     },
     doAction(type) {
       switch (type) {
@@ -210,12 +248,39 @@ export default {
           this.initSystem()
           break
         case 'check':
-          // this.checkSystem()
-          // this.type = 3
           this.cancelAni = !this.cancelAni
+          break
+        case 'agane':
+          this.type = 3
+          this.ischecked = false
+          this.initSystem()
           break
         case 'orgCount':
           this.addDoTotVisible = true
+          break
+        case 'roleCount':
+          this.addDoTotVisible1 = true
+          break
+        case 'userCount':
+          this.addDoTotVisible2 = true
+          break
+        case 'senderCustomerCount':
+          this.addDoTotVisible3 = true
+          break
+        case 'receiverCustomerCount':
+          this.addDoTotVisible4 = true
+          break
+        case 'driverCount':
+          this.addDoTotVisible5 = true
+          break
+        case 'truckCount':
+          this.addDoTotVisible6 = true
+          break
+        case 'carrierCount':
+          this.addDoTotVisible7 = true
+          break
+        case 'settingCount':
+          this.addDoTotVisible8 = true
           break
       }
     },
@@ -302,9 +367,6 @@ export default {
     checkSystem() {
       this.viewKey = Math.random()
       this.type = 1
-    },
-    stopAnimate() {
-      // this.slideDown()
     }
   }
 }
@@ -347,59 +409,72 @@ export default {
      margin-top:20px;
     .top_content{
         border:1px solid rgba(188, 188, 188, 1);
-        height: 87px;
-        background:rgb(250,245,231);
-        padding: 15px 60px;
+        height: 154px;
+        // background-color: #09abff;
+        background-image: url(../../assets/checkImg/bgo1.png);
+        padding: 45px 54px;
+        // text-align: center;
         h6{
-          font-size: 17px;
-          color:rgba(190, 134, 51, 1);
+          font-size: 22px;
+          // color:rgba(190, 134, 51, 1);
           font-weight: normal;
+          color: #ffffff;
         }
         .top_ts{
           margin-top:8px;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: normal;
-          color: #333333;
+          color: #ffffff;
           .top_num{
             color:#ff0000;
+            margin:0 5px;
+            font-weight: bold
           }
         }
     }
     .box_top{
       .top_content2{
-        height: 75px;
+        height: 154px;
         line-height: 24px;
-        padding: 10px 103px;
+        padding: 45px 126px;
         border: 1px solid #bcbcbc;
-        background: #99ccff;
+        // background-color: #09abff;
+        background-image: url(../../assets/checkImg/bgo1.png);
         position: relative;
         h6{
-          font-size: 17px;
+          font-size: 30px;
           color:#fff;
           font-weight: normal;
           .btn_qx{
             padding: 4px 12px;
             border:1px solid #fff;
-            background:#99ccff;
+            background:#09abff;
             color:#fff;
             margin-left:12px;
+          }
+          .top_num{
+            color:#ff0000;
+            margin:0 5px;
           }
         }
         .top_ts{
           margin-top:8px;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: normal;
           color: #fff;
-          .top_num{
+          .center_title{
             color:#fff;
           }
         }
         .wzlicon{
-          font-size: 40px;
-          color:#fff;
-          position:absolute;
-          left:26px;
-          top:14px;
+          width: 40px;
+          height:45px;
+          background-image: url(../../assets/checkImg/anquan.png);
+          font-size: 45px;
+          color: #fff;
+          position: absolute;
+          left: 62px;
+          top: 35px;
         }
       }
     }
@@ -408,30 +483,43 @@ export default {
   .el-main{
     .btn_qx{
       padding: 3px 10px;
-      margin-left:12px;
-      font-size:12px;
+      margin:14px 0;
+      font-size:14px;
+      width:58px;
+      float:right;
     }
     .btn_qx1{
+      width:58px;
       padding: 3px 10px;
-      margin-left:12px;
-      font-size:12px;
+      margin:14px 0;
+      font-size:14px;
+      float:right;
       border:1px solid rgba(188, 188, 188, 1);
       color:rgba(188, 188, 188, 1);
+      display: block;
     }
-    
+    :hover.btn_qx1{
+      border:1px solid #3e9ff1;
+      background:#fff;
+      color:#3e9ff1;
+    }
     padding:0 20px;
     .main_content{
       text-align: center;
+      margin-top: 60px;
       .el-button{
-        width:300px;
-        height:66px;
-        font-size:20px;
+        // width:300px;
+        // height:66px;
+        width: 260px;
+        height: 60px;
+        background-color: #07a6f9;
+        font-size:30px;
         margin-top:20%;
       }
     }
     .main_content2{
       border:1px solid rgba(188, 188, 188, 1);
-      padding:10px 40px;
+      // padding:10px 40px;
      
       h6{
         height: 46px;
@@ -453,12 +541,13 @@ export default {
       }
       .company_content{
         min-height: 320px;
-        padding:10px 20px;
+        // padding:10px 20px;
         // display:none;
         ul{
           height: 0;
+          margin-top:28px;
           overflow: hidden;
-          animation: showUlAni 10s linear  forwards;
+          animation: showUlAni 1s linear  forwards;
           animation-play-state: paused;
           &.showani{
             animation-play-state: running;
@@ -468,7 +557,10 @@ export default {
           }
 
           li{
-            height: 30px;
+            height: 50px;
+            line-height: 50px;
+            border-bottom:1px solid #ccc;
+            padding:0 60px;
           }
           // li{
           //   width: 100%;
@@ -501,7 +593,7 @@ export default {
       }
       .btn_content{
         text-align: center;
-        //  display:none;
+        margin: 20px 0;
         .btn_kd{
           width:110px;
           font-size: 16px;

@@ -3,7 +3,7 @@
     <template class="addDriverPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="司机姓名" prop="driverName">
-          <el-input v-model="form.driverName" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.driverName" maxlength="10" auto-complete="off" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
           <el-input v-numberOnly v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
@@ -133,15 +133,15 @@ export default {
       callback()
     }
 
-    const validatedriverCardid = function(rule, value, callback) {
-      if (value === '') {
-        callback(new Error('请输入身份证号'))
-      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('身份证号码只能输入英文和数字'))
-      }
-    }
+    // const validatedriverCardid = function(rule, value, callback) {
+    //   if (value === '') {
+    //     callback(new Error('请输入身份证号'))
+    //   } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('身份证号码只能输入英文和数字'))
+    //   }
+    // }
     return {
       form: {
         'bankCardNumber': '', // 银行卡号 20
@@ -175,7 +175,7 @@ export default {
           // { validator: validateFormNumber, trigger: 'change'}
         ],
         driverCardid: [
-          { validator: validatedriverCardid, trigger: 'change' }
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '身份证号码只能输入字母和数字' }
         ]
       },
       popTitle: '新增司机',
@@ -255,7 +255,7 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$message.success("保存成功")
+            this.$message.success('保存成功')
             this.closeMe()
             this.$emit('success')
           }).catch(err => {

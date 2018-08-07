@@ -66,16 +66,18 @@ export default {
 }
 .progressContainer{
       position: relative;
-      height: 15px;
+      height: 8px;
       width: 100%;
+      border-radius: 8px;
       background-color: rgba(0, 0, 102,1);
     }
     .progressItem{
       position: absolute;
-      height: 15px;
+      height: 8px;
       width: 100%;
+      border-radius: 8px;
       background-color: rgba(0, 203, 102, 1);
-      animation: showAni 10s ease  forwards;
+      animation: showAni 1s ease  forwards;
       animation-play-state: paused;
       &.showani{
         animation-play-state: running;

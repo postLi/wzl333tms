@@ -148,25 +148,23 @@ export default {
       }
     }
 
-    const validateFormvipNum = function(rule, value, callback) {
-      if (value === '') {
-        callback(new Error('请输入客户VIP号'))
-      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('客户的VIP号只能输入字母和阿拉伯数字'))
-      }
-    }
+    // const validateFormvipNum = function(rule, value, callback) {
+    //   if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('客户的VIP号只能输入字母和阿拉伯数字'))
+    //   }
+    // }
 
-    const validateidcard = function(rule, value, callback) {
-      if (value === '') {
-        callback(new Error('请输入身份证号'))
-      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('身份证号码只能输入字母和数字'))
-      }
-    }
+    // const validateidcard = function(rule, value, callback) {
+    //   if (value === '') {
+    //     callback(new Error('请输入身份证号'))
+    //   } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('身份证号码只能输入字母和数字'))
+    //   }
+    // }
     // const validateFormNumber = function(rule, value, callback) {
     //   _this.form.customerMobile = value.replace(REGEX.NO_NUMBER, '')
     //   callback()
@@ -217,10 +215,10 @@ export default {
           { max: 30, message: '不能超过30个字符' }
         ],
         vipNum: [
-          { validator: validateFormvipNum, trigger: 'change' }
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '客户的VIP号只能输入字母和阿拉伯数字' }
         ],
         idcard: [
-          { validator: validateidcard, trigger: 'change' }
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '身份证号码只能输入字母和数字' }
         ]
       },
       popTitle: '新增发货人',
@@ -298,10 +296,9 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$message.success("保存成功")
+            this.$message.success('保存成功')
             this.closeMe()
             this.$emit('success')
-
           }).catch(err => {
             this.loading = false
           })
