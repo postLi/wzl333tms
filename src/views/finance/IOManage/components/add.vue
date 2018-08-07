@@ -72,7 +72,7 @@ import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
 import { mapGetters } from 'vuex'
-import { objectMerge2, parseTime, closest } from '@/utils/'
+// import { objectMerge2, parseTime, closest } from '@/utils/'
 
 export default {
   components: {
@@ -116,13 +116,13 @@ export default {
 
   },
   data() {
-    const validatebankName = function(rule, value, callback) {
-      if (REGEX.ONLY_CHINESE.test(value) || this.form.financialWayId) {
-        callback()
-      } else {
-        callback(new Error('只能输入中文'))
-      }
-    }
+    // const validatebankName = function(rule, value, callback) {
+    //   if (REGEX.ONLY_CHINESE.test(value) || this.form.financialWayId) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('只能输入中文'))
+    //   }
+    // }
     return {
       rules: {
         'financialWayId': [
@@ -168,8 +168,6 @@ export default {
       this.initInfo()
       this.form.orgId = this.otherinfo.orgid
     }
-
-    // this.fetchGetPickUp()
   },
   watch: {
     popVisible(newVal, oldVal) {
@@ -295,7 +293,6 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-
             this.$emit('success')
             this.closeMe()
           }).catch(err => {
@@ -307,10 +304,11 @@ export default {
       })
     },
     reset() {
-      this.$refs['ruleForm'].resetFields()
+      // this.$refs['ruleForm'].resetFields()
       this.form = {}
       this.form.orgId = this.otherinfo.orgid
       this.form.financialWayId = 280
+      this.financialWayClick(this.form.financialWayId)
     },
     closeMe(done) {
       this.reset()

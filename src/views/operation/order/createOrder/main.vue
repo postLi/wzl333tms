@@ -323,9 +323,9 @@
           </el-col>
           <el-col :span="4">
             <div class="order-form-item">
-              <span class="order-form-label">制单员</span>
+              <span class="order-form-label">业务员</span>
               <el-form-item prop="tmsOrderShip.shipUserid">
-                <querySelect show="select" filterable  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" />
+                <querySelect show="select" filterable :orgid="otherinfo.orgid "  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" />
               </el-form-item>
             </div>
           </el-col>

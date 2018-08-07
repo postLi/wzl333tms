@@ -278,7 +278,7 @@ export default {
           return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '')
         }
       }, {
-        'label': '制单人',
+        'label': '业务员',
         'prop': 'userName',
         'width': '150'
       }, {

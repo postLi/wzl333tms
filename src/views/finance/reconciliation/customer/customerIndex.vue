@@ -12,7 +12,7 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
+        <!-- <el-table
           ref="multipleTable"
           :data="usersArr"
           stripe
@@ -91,21 +91,21 @@
             sortable
             >
           </el-table-column>
+        </el-table> -->
+
+
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
-
-
-        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
-          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
-          <!--<template v-for="column in tableColumn">-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">-->
-              <!--<template slot-scope="scope">-->
-                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>-->
-                <!--<span v-else v-html="column.slot(scope)"></span>-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-          <!--</template>-->
-        <!--</el-table>-->
 
 
       </div>
@@ -116,8 +116,8 @@
   </div>
 </template>
 <script>
-import {  getExportExcel } from '@/api/company/customerManage'
-import {postCustomerdetailList} from '@/api/finance/fin_customer'
+import { getExportExcel } from '@/api/company/customerManage'
+import { postCustomerdetailList } from '@/api/finance/fin_customer'
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
@@ -130,26 +130,25 @@ export default {
     TableSetup
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ]),
-      orgid () {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
 
-      }
+    }
   },
-  mounted () {
+  mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-
   },
-  data () {
+  data() {
     return {
       tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
-      trackId:'',
-      batchTypeId:'',//批次状态
-      //加载状态
+      trackId: '',
+      batchTypeId: '', // 批次状态
+      // 加载状态
       loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
@@ -159,52 +158,72 @@ export default {
       // 选中的行
       selected: [],
       searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgid":'',
-          customerName: '',//
-          customerMobile: '',//
-          startTime: '',//
-          endTime:''
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
+          'orgid': '',
+          customerName: '', //
+          customerMobile: '', //
+          startTime: '', //
+          endTime: ''
         }
       },
-      tableColumn:[
+      tableColumn: [
         {
-          label:'序号',
-          prop:'id',
-          width:'120',
-          fixed:true,
-          slot:(scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          label: '序号',
+          prop: 'id',
+          width: '120',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
-        },{
-          label:'网点',
-          prop:'orgName',
-          width:'250',
-          fixed:true,
-        },{
-          label:'发货方',
-          prop:'customerUnit',
-          width:'200',
-          fixed:true,
-        },{
-          label:'发货人',
-          prop:'customerName',
-          width:'200',
-          fixed:false,
-        },{
-          label:'客户电话',
-          prop:'customerMobile',
-          width:'200',
-          fixed:false,
+        }, {
+          label: '网点',
+          prop: 'orgName',
+          width: '250',
+          fixed: true
+        }, {
+          label: '发货方',
+          prop: 'customerUnit',
+          width: '200',
+          fixed: true
+        }, {
+          label: '发货人',
+          prop: 'customerName',
+          width: '200',
+          fixed: false
+        }, {
+          label: '客户电话',
+          prop: 'customerMobile',
+          width: '200',
+          fixed: false
+        }, {
+          label: '对账合计',
+          prop: 'totalFee',
+          width: '190',
+          fixed: false
+        }, {
+          label: '应收账款',
+          prop: 'receivableFee',
+          width: '190',
+          fixed: false
+        }, {
+          label: '应付账款',
+          prop: 'payableFee',
+          width: '200',
+          fixed: false
+        }, {
+          label: '总单数',
+          prop: 'totalCount',
+          width: '180',
+          fixed: false
         }
       ]
 
     }
   },
   methods: {
-    fetchAllCustomer () {
+    fetchAllCustomer() {
       this.loading = true
       return postCustomerdetailList(this.searchQuery).then(data => {
         this.usersArr = data.list
@@ -212,83 +231,81 @@ export default {
         this.loading = false
       })
     },
-    fetchData () {
+    fetchData() {
       this.fetchAllCustomer()
     },
-    handlePageChange (obj) {
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    getSearchParam (obj) {
+    getSearchParam(obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
-    showImport () {
+    showImport() {
       // 显示导入窗口
     },
-    doAction (type) {
-      if(type==='import'){
-        this.showImport()
-        return false
-      }
+    doAction(type) {
       // 判断是否有选中项
 
-      if(!this.selected.length){
-          this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-          })
-          return false
+      if (!this.selected.length && type !== 'print' && type !== 'export') {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
       }
 
       switch (type) {
         // 明细
-          case 'storage':
-            this.$router.push({
-              path: '/finance/reconciliation/customer/detailTable',
-              query: {
-                tab: '客户对账-对账明细',
-                id: this.selected[0].shipSenderId
-              }
-            })
+        case 'storage':
+          this.$router.push({
+            path: '/finance/reconciliation/customer/detailTable',
+            query: {
+              tab: '客户对账-对账明细',
+              id: this.selected[0].shipSenderId
+            }
+          })
 
-            break;
+          break
           // 导出数据
-          case 'export':
-              let ids2 = this.selected.map(el => {
-                return el.customerId
-              })
-              getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                    type: 'success',
-                    message: '即将自动下载!'
-                })
-              })
-              break;
+        case 'print': // 打印表格常用方法
+          PrintInFullPage({
+            data: this.usersArr, // 列表中的数据
+            columns: this.tableColumn, // 表格设置好的列
+            name: '全部明细' // 文件名称
+          })
+          break
+        case 'export': // 导出表格常用方法
+          SaveAsFile({
+            data: this.usersArr, // 列表中的数据
+            columns: this.tableColumn, // 表格设置好的列
+            name: '全部明细' // 文件名称
+          })
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-    openAddCustomer () {
+    openAddCustomer() {
       this.AddCustomerVisible = true
     },
-    closeAddCustomer () {
+    closeAddCustomer() {
       this.AddCustomerVisible = false
     },
-    clickDetails(row, event, column){
+    clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection (selection) {
+    getSelection(selection) {
       this.selected = selection
     },
-    getDbClick(row, event){
-
+    getDbClick(row, event) {
       this.$router.push({
         path: '/finance/reconciliation/customer/detailTable',
         query: {
@@ -296,6 +313,10 @@ export default {
           id: row.shipSenderId
         }
       })
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

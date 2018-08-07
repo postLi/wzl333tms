@@ -40,10 +40,10 @@
             <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
-            <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
+            <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city" >
 
 
-              <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" />
+              <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" clearable  />
 
 
             </el-form-item>
@@ -113,7 +113,8 @@
   import SelectCity from '@/components/selectCity/index'
   import querySelect from '@/components/querySelect/index'
   import { REGEX } from '../../../utils/validate'
-
+  import { objectMerge2 } from '@/utils/index'
+  // import {Obj}
   export default {
     components: {
       popRight,
@@ -150,17 +151,11 @@
     },
     watch: {
       dotInfo(newVal) {
-        this.$refs['ruleForm'].resetFields()
         this.checkShowMessage = false
-        if (this.isModify) {
-          this.form = Object.assign({}, this.dotInfo)
-        }
-      },
-      isModify(newVal) {
         if (newVal) {
-          this.popTitle = '修改网点'
-          this.form = Object.assign({}, this.dotInfo)
+          this.form = objectMerge2(this.dotInfo)
           this.form.parentId = this.dotInfo.parentId || this.companyId
+          console.log('打印', this.form)
         } else {
           this.popTitle = '新增网点'
           for (const i in this.form) {
@@ -169,6 +164,33 @@
           if (this.form.id) {
             delete this.form.id
           }
+  
+          delete this.form.createTime
+          this.form.orgType = 1
+          this.form.status = 32
+          this.form.manageType = 3
+          this.form.parentId = this.dotInfo.parentId || this.companyId
+          this.form.accountName = ''
+        }
+      },
+      isModify(newVal) {
+        if (newVal) {
+          this.popTitle = '修改网点'
+
+          this.form = objectMerge2(this.dotInfo)
+          this.form.parentId = this.dotInfo.parentId || this.companyId
+          console.log(this.form)
+        } else {
+          this.popTitle = '新增网点'
+          for (const i in this.form) {
+            this.form[i] = ''
+          }
+          if (this.form.id) {
+            delete this.form.id
+          }
+          // if (this.form.accountStatus === 0) {
+          //   this.form.accountName = ''
+          // }
 
           delete this.form.createTime
           this.form.orgType = 1
@@ -227,9 +249,9 @@
         netWorkType: [],
         manageType: [],
         netWorkStatus: [],
-        //验证
-        isChecked : false,
-        isCheckedShow : false,
+        // 验证
+        isChecked: false,
+        isCheckedShow: false,
         form: {
           orgName: '',
           orgType: 1,
@@ -253,8 +275,7 @@
           accountStatus: 1,
           // id: '',
           parentId: 0,
-          accountName: '' ,// 管理员账号
-
+          accountName: ''  // 管理员账号
 
         },
         rules: {
@@ -285,14 +306,14 @@
           // 网点代码
           networkCode: [
 
-            { required: true, validator:  this.validateIsEmpty('请输入网点代码')},
+            { required: true, validator: this.validateIsEmpty('请输入网点代码') },
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
 
-            //请选择城市
-            { required: true,validator:  this.validateIsEmpty('请选择城市')  }
+            // 请选择城市
+            { required: true, validator: this.validateIsEmpty('请选择城市') }
           ]
         },
         dialogVisible: false,
@@ -319,13 +340,13 @@
           }
         }
       },
-      showMessage(msg){
-        if(this.isChecked && !this.isCheckedShow) {
+      showMessage(msg) {
+        if (this.isChecked && !this.isCheckedShow) {
           this.isCheckedShow = true
         }
         if (this.isCheckedShow) {
           this.checkShowMessage = true
-        }else{
+        } else {
           this.checkShowMessage = false
         }
       },
@@ -376,7 +397,7 @@
               this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')
-            }).catch(err=>{
+            }).catch(err => {
               this.$message({
                 type: 'error',
                 message: '保存失败，原因：' + err.errorInfo ? err.errorInfo : err
