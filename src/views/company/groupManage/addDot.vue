@@ -175,6 +175,7 @@
           this.form.status = 32
           this.form.manageType = 3
           this.form.parentId = this.dotInfo.parentId || this.companyId
+          this.form.accountName = ''
         }
       }
     },
@@ -226,6 +227,9 @@
         netWorkType: [],
         manageType: [],
         netWorkStatus: [],
+        //验证
+        isChecked : false,
+        isCheckedShow : false,
         form: {
           orgName: '',
           orgType: 1,
@@ -249,11 +253,8 @@
           accountStatus: 1,
           // id: '',
           parentId: 0,
-
           accountName: '' ,// 管理员账号
-          //验证
-          isChecked : false,
-          isCheckedShow : false
+
 
         },
         rules: {
@@ -336,7 +337,7 @@
       },
       reset() {
         Object.assign(this.form)
-        // this.$refs['ruleForm'].resetFields()
+        this.$refs['ruleForm'].resetFields()
       },
       closeMe(done) {
         this.$emit('close')
@@ -375,6 +376,11 @@
               this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')
+            }).catch(err=>{
+              this.$message({
+                type: 'error',
+                message: '保存失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
             })
           } else {
             return false

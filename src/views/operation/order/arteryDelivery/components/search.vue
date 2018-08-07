@@ -25,13 +25,13 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="批次状态:">
-      <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" />
+      <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" clearable/>
     </el-form-item>
       <el-form-item label="发车网点:">
-          <SelectTree v-model="searchForm.arriveOrgid" />
+          <SelectTree v-model="searchForm.orgid" clearable/>
       </el-form-item>
     <el-form-item label="目的网点:">
-      <SelectTree v-model="searchForm.endOrgid" />
+      <SelectTree v-model="searchForm.arriveOrgid" clearable/>
     </el-form-item>
       <el-form-item label="发车批次:">
           <el-input
@@ -135,7 +135,7 @@ export default {
         }
       },
       searchForm: {
-        arriveOrgid: '',
+        orgid : '',
         dirverName: '',
         truckIdNumber:'',//车牌号
         batchTypeId: '',//批次状态
@@ -145,7 +145,7 @@ export default {
         beginTime:'',//
         arrivedbeginDate:'',//到达时间(起始时间)
         arrivedEndDate:'',//到达时间(结束时间)
-        endOrgid:'',//
+        arriveOrgid :'',//
       },
       rules: {
         mobile: [{
@@ -160,11 +160,12 @@ export default {
   },
   watch: {
     orgId (newVal){
-      this.searchForm.arriveOrgid = newVal
+      this.searchForm.orgid  = newVal
     }
   },
   mounted () {
-    this.searchForm.arriveOrgid = this.otherinfo.orgid
+    // this.searchForm.orgid  = this.otherinfo.orgid
+     this.searchForm.arriveOrgid  = this.otherinfo.orgid
     this.onSubmit()
   },
   methods: {
@@ -192,8 +193,8 @@ export default {
       this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
       this.searchEndTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
       this.searchForm.dirverName = ''
-      this.searchForm.arriveOrgid = this.orgid
-      this.searchForm.endOrgid = ''
+      this.searchForm.orgid  = ''
+      this.searchForm.arriveOrgid = this.otherinfo.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
     }

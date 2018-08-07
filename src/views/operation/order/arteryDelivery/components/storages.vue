@@ -687,7 +687,6 @@ export default {
       let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
       let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
       let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
-      console.log("实到",curAmount);
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
 
@@ -726,10 +725,10 @@ export default {
           type: 'warning'
         })
       }
-      else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+      else if (curAmount < 0 || curWeight < 0 || curVolume < 0) {
         this.$notify({
           title: '提示',
-          message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+          message: '实到件数/实到重量/实到体积不能小于0,默认为该库存数量',
           type: 'warning'
         })
         this.detailList[newVal].actualAmount = curloadAmount
@@ -737,6 +736,17 @@ export default {
         this.detailList[newVal].actualVolume = curloadVolume
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       }
+      // else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+      //   this.$notify({
+      //     title: '提示',
+      //     message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+      //     type: 'warning'
+      //   })
+      //   this.detailList[newVal].actualAmount = curloadAmount
+      //   this.detailList[newVal].actualWeight = curloadWeight
+      //   this.detailList[newVal].actualVolume = curloadVolume
+      //   this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+      // }
       else {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       }

@@ -196,7 +196,8 @@ export default {
         "vo": {
           "orgId":'',
           financialWay: '',//收支方式名称
-          status:''
+          status:'',
+          financialWayTypeId:''
         }
       },
       tableColumn:[

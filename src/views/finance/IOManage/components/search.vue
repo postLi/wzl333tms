@@ -4,7 +4,7 @@
           <SelectTree v-model="searchForm.orgId" />
       </el-form-item>
       <el-form-item label="收支方式:">
-        <SelectType v-model="searchForm.financialWayTypeId" type="financial_way_type" placeholder="请选择" class="pickup-way" />
+        <SelectType @change="finitem" v-model="searchForm.financialWayTypeId" type="financial_way_type" placeholder="请选择" class="pickup-way" />
       </el-form-item>
     <el-form-item label="状态:">
       <el-select v-model="searchForm.status">
@@ -67,6 +67,9 @@ export default {
     // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
+    finitem(item){
+console.log(typeof item)
+    },
     onSubmit () {
       this.$emit('change', this.searchForm)
     },

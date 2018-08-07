@@ -17,13 +17,13 @@
           </el-select> -->
           <SelectType v-model="form.truckType" type="truck_type" placeholder="请选择" />
         </el-form-item>
-        
+
         <el-form-item label="可载重" prop="truckLoad">
           <el-input v-model.number="form.truckLoad" v-numberOnly maxlength="18" auto-complete="off">
             <template slot="append">吨</template>
           </el-input>
         </el-form-item>
-        
+
         <el-form-item label="可载体积" prop="truckVolume">
           <el-input v-model.number="form.truckVolume" v-numberOnly maxlength="18" auto-complete="off">
             <template slot="append">方</template>
@@ -311,10 +311,12 @@ export default {
           this.form[i] = data[i]
         }
         if (this.form.truckRegisterDate) {
-          this.form.truckRegisterDate = new Date(this.form.truckRegisterDate.replace(/-/g, '/'))
+          this.form.truckRegisterDate = +new Date( this.form.truckRegisterDate )
+          // this.form.truckRegisterDate = new Date(this.form.truckRegisterDate.replace(/-/g, '/'))
         }
         if (this.form.truckScrapDate) {
-          this.form.truckScrapDate = new Date(this.form.truckScrapDate.replace(/-/g, '/'))
+          this.form.truckScrapDate = +new Date(this.form.truckScrapDate)
+          // this.form.truckScrapDate = new Date(this.form.truckScrapDate.replace(/-/g, '/'))
         }
         this.form.truckId = data.truckId
       } else {

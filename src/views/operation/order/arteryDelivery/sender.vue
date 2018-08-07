@@ -316,6 +316,7 @@ export default {
       }
   },
   mounted () {
+    // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
     //this.fetchAllCustomer()
   },
@@ -341,8 +342,8 @@ export default {
         "currentPage": 1,
         "pageSize": 100,
         "vo": {
+          "orgid": '',
           "arriveOrgid": '',
-          "endOrgid": '',
           dirverName: '',
           truckIdNumber:'',//车牌号
           batchTypeId: '',//批次状态

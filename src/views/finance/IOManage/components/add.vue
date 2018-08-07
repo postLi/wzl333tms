@@ -15,10 +15,10 @@
 
           <div v-if="bankPay===true">
             <el-form-item label="银行名称" prop="bankName">
-              <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick" ></el-input>
+              <el-input v-model="form.bankName" auto-complete="off" :disabled="isDbclick"></el-input>
             </el-form-item>
-            <el-form-item label="银行卡号">
-              <el-input v-model="form.bankAccount" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-form-item label="银行卡号" prop="bankAccount">
+              <el-input v-model="form.bankAccount" auto-complete="off" :disabled="isDbclick" v-numberOnly></el-input>
             </el-form-item>
             <el-form-item label="开户人">
               <el-input v-model="form.bankAccountName" auto-complete="off" :disabled="isDbclick"></el-input>
@@ -111,15 +111,15 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ])
+      'otherinfo'
+    ])
 
   },
   data() {
     const validatebankName = function(rule, value, callback) {
       if (REGEX.ONLY_CHINESE.test(value) || this.form.financialWayId) {
         callback()
-      }      else {
+      } else {
         callback(new Error('只能输入中文'))
       }
     }
@@ -128,9 +128,13 @@ export default {
         'financialWayId': [
           { required: true, validator: this.validateIsEmpty('收支方式不能为空'), trigger: 'blur' }
         ],
-        bankName: [
+        'bankName': [
           { max: 20, message: '最多可以输入20个字符~', trigger: 'blur' },
-          { validator: validatebankName, trigger: 'blur' }
+          // { validator: REGEX.ONLY_CHINESE, trigger: 'blur' }
+            { pattern: REGEX.ONLY_CHINESE, trigger: 'blur', message: '只能输入中文' }
+        ],
+        'bankAccount': [
+          //  { pattern: REGEX.ONLY_NUMBER, trigger: 'blur',message: '只能输入数字' }
         ]
       },
       form: {
@@ -182,10 +186,10 @@ export default {
         this.popTitle = '修改收支方式'
         // this.infoData(this.info)
         this.changeInfo(this.info)
-      }      else if (this.isDbclick) {
+      } else if (this.isDbclick) {
         this.popTitle = '查看收支方式'
         this.changeInfo(this.info)
-      }      else {
+      } else {
         this.popTitle = '新增收支方式'
         this.newInfo(this.otherinfo)
       }
@@ -195,10 +199,10 @@ export default {
         if (this.isModify) {
           this.popTitle = '修改收支方式'
           this.changeInfo(this.info)
-        }        else if (this.isDbclick) {
+        } else if (this.isDbclick) {
           this.popTitle = '查看收支方式'
           this.changeInfo(this.info)
-        }        else {
+        } else {
           this.popTitle = '新增收支方式'
           this.newInfo(this.otherinfo)
         }
@@ -235,7 +239,7 @@ export default {
       return (rule, value, callback) => {
         if (!value) {
           callback(new Error(msg))
-        } else{
+        } else {
           callback()
         }
       }
@@ -252,14 +256,19 @@ export default {
 
       if (item === 280 || item === '银行卡') {
         this.bankPay = true
+        this.form.financialWay = '银行卡'
       } else if (item === 281 || item === '支付宝') {
         this.aliPay = true
-      }      else if (item === 282 || item === '微信') {
+        this.form.financialWay = '支付宝'
+      } else if (item === 282 || item === '微信') {
         this.wPay = true
-      }      else if (item === 283 || item === '现金') {
+        this.form.financialWay = '微信'
+      } else if (item === 283 || item === '现金') {
         this.casyPay = true
-      }      else {
+        this.form.financialWay = '现金'
+      } else {
         this.chePay = true
+        this.form.financialWay = '支票'
       }
     },
     initInfo() {
@@ -272,7 +281,8 @@ export default {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
-          const data = objectMerge2({}, this.form)
+          let data = {}
+          data = this.form
           let promiseObj
           // 判断操作，调用对应的函数
           if (this.isModify) {
@@ -284,10 +294,10 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$message.success("保存成功")
-            this.closeMe()
-            this.$emit('success')
+            this.$message.success('保存成功')
 
+            this.$emit('success')
+            this.closeMe()
           }).catch(err => {
             this.loading = false
           })
@@ -298,10 +308,12 @@ export default {
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
-      this.form = ''
+      this.form = {}
       this.form.orgId = this.otherinfo.orgid
+      this.form.financialWayId = 280
     },
     closeMe(done) {
+      this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()

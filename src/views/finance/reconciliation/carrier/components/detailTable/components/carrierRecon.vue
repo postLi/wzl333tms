@@ -208,7 +208,7 @@
           </el-table-column>
           <el-table-column
             prop="agencyFund"
-            label="代收贷款"
+            label="代收货款"
             width="130"
             sortable
           >
@@ -499,7 +499,7 @@
           </el-table-column>
           <el-table-column
             prop="agencyFund"
-            label="代收贷款"
+            label="代收货款"
             width="130"
             sortable
           >

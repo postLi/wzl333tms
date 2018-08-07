@@ -181,7 +181,7 @@ export default {
     ]),
     orgid() {
       console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
-      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify ? this.selectInfo.orgid : this.otherinfo.orgid
     }
   },
   mounted() {

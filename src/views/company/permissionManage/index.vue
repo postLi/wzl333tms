@@ -59,7 +59,8 @@
             </el-table-column>
             <el-table-column
               label="创建时间">
-              <template slot-scope="scope">{{ new Date(scope.row.createTime).toLocaleDateString() }}</template>
+
+              <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d}') }}</template>
             </el-table-column>
             <el-table-column
               prop="remark"
