@@ -82,7 +82,7 @@
          if (conf) {
            window.open(downloadPath)
          }
-         document.body.innerHTML = strCLodopInstall + document.body.innerHTML;
+         // document.body.innerHTML = strCLodopInstall + document.body.innerHTML;
          return false;
        } else {
          if (CLODOP.CVERSION < "3.0.4.3") {
@@ -149,119 +149,169 @@
  // var LODOP; //声明为全局变量   
  //直接打印
  export function lodopPrint() {
-   CreatePrintPage();
-   LODOP.PRINT();
+   try {
+     CreatePrintPage();
+     LODOP.PRINT();
+   } catch (err) {
+     getLodop()
+   }
  };
  //选择打印机
  export function lodopPrinter() {
-   CreatePrintPage();
-   LODOP.PRINTA();
+   try {
+     CreatePrintPage();
+     LODOP.PRINTA();
+   } catch (err) {
+     getLodop()
+   }
  };
  //  打印预览
  export function lodopPreview() {
-   CreatePrintPage();
-   LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 2400, 1400, "");
-   LODOP.PREVIEW();
+   try {
+     CreatePrintPage();
+     LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 2400, 1400, "");
+     LODOP.PREVIEW();
+   } catch (err) {
+     getLodop()
+   }
  };
  //打印维护  
  export function lodopSetup() {
-   CreatePrintPage();
-   LODOP.PRINT_SETUP();
+   try {
+     CreatePrintPage();
+     LODOP.PRINT_SETUP();
+   } catch (err) {
+     getLodop()
+   }
+
  };
  //打印设计  
  export function lodopDesign() {
-   CreatePrintPage();
-   LODOP.PRINT_DESIGN();
+   try {
+     CreatePrintPage();
+     LODOP.PRINT_DESIGN();
+   } catch (err) {
+     getLodop()
+   }
+
  };
  //空白设计  
  export function myBlankDesign() {
-   LODOP = getLodop();
-   LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_空白练习");
-   LODOP.PRINT_DESIGN();
+   try {
+     LODOP = getLodop();
+     LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_空白练习");
+     LODOP.PRINT_DESIGN();
+   } catch (err) {
+     getLodop()
+   }
+
  };
  //打印表格
  export function PrintInFullPage(obj) {
+   try {
+     // let tableId = createTable(data, columns) // 重新创建打印视图table
+     let tableId = createTable(obj) // 重新创建打印视图table
+     LODOP = getLodop();
+     LODOP.PRINT_INIT("订货单");
+     // LODOP.SET_PRINT_STYLE("FontSize", 10);
+     // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+     // LODOP.SET_PRINT_STYLE("Bold", 1);
+     LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
+     // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+     LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
+     // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+     LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
+     LODOP.PREVIEW();
+   } catch (err) {
+     getLodop()
+   }
 
-   // let tableId = createTable(data, columns) // 重新创建打印视图table
-   let tableId = createTable(obj) // 重新创建打印视图table
-   LODOP = getLodop();
-   LODOP.PRINT_INIT("订货单");
-   // LODOP.SET_PRINT_STYLE("FontSize", 10);
-   // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
-   // LODOP.SET_PRINT_STYLE("Bold", 1);
-   LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
-   // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-   LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
-   // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-   LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
-   LODOP.PREVIEW();
  };
  // 打印结算单
  export function PrintSettlement(obj) {
-   let tableId = createSettlement(obj) // 重新创建打印视图table
-   LODOP = getLodop();
-   LODOP.PRINT_INIT("订货单");
-   // LODOP.SET_PRINT_STYLE("FontSize", 10);
-   // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
-   // LODOP.SET_PRINT_STYLE("Bold", 1);
-   LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
-   // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-   // LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
-   LODOP.ADD_PRINT_HTM("5%", "10%", "80%", "95%", document.getElementById(tableId).innerHTML);
-   // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-   LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
-   LODOP.PREVIEW();
+   try {
+     let tableId = createSettlement(obj) // 重新创建打印视图table
+     LODOP = getLodop();
+     LODOP.PRINT_INIT("订货单");
+     // LODOP.SET_PRINT_STYLE("FontSize", 10);
+     // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+     // LODOP.SET_PRINT_STYLE("Bold", 1);
+     LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
+     // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+     // LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
+     LODOP.ADD_PRINT_HTM("5%", "10%", "80%", "95%", document.getElementById(tableId).innerHTML);
+     // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+     LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
+     LODOP.PREVIEW();
+   } catch (err) {
+
+   }
+
  };
 
  //创建打印页面    【已保存】标签或运单
  export function CreatePrintPage(info) {
-   LODOP = getLodop();
-   // let info = "LODOP.PRINT_INITA(9,7,2400,1400,\"青春物流流托运单打印\");LODOP.ADD_PRINT_TEXT(41,488,100,19,\"180701404\");LODOP.ADD_PRINT_TEXT(57,47,100,25,\"云南省,\");LODOP.ADD_PRINT_TEXT(63,170,100,20,\"北京市,\");LODOP.ADD_PRINT_TEXT(85,93,81,20,\"发发\");LODOP.ADD_PRINT_TEXT(114,96,82,20,\"收收A\");LODOP.ADD_PRINT_TEXT(90,230,202,20,\"大街上\");LODOP.ADD_PRINT_TEXT(90,485,100,20,\"15920000002\");LODOP.ADD_PRINT_TEXT(116,234,204,20,\"收货address\");LODOP.ADD_PRINT_TEXT(112,486,100,20,\"15932145601\");LODOP.ADD_PRINT_TEXT(165,14,75,20,\"电脑\");LODOP.ADD_PRINT_TEXT(164,104,60,20,\"1807014043\");LODOP.ADD_PRINT_TEXT(163,184,29,20,\"56\");LODOP.ADD_PRINT_TEXT(269,323,58,20,\"34.00\");LODOP.ADD_PRINT_TEXT(324,177,166,20,\"\");LODOP.ADD_PRINT_TEXT(38,366,109,20,\"2018-07-31\" );"
-   // info.replace(/^\"|\"$/g,"")
-   info.replace(/[\\]/g, "")
-   LODOP.ADD_PRINT_SETUP_BKIMG("D:\\company\\program\\TMS\\print\\运单背景图");
-   eval(info)
-   // LODOP.PRINT_SETUP()
-   LODOP.PREVIEW();
+   try {
+     LODOP = getLodop();
+     // let info = "LODOP.PRINT_INITA(9,7,2400,1400,\"青春物流流托运单打印\");LODOP.ADD_PRINT_TEXT(41,488,100,19,\"180701404\");LODOP.ADD_PRINT_TEXT(57,47,100,25,\"云南省,\");LODOP.ADD_PRINT_TEXT(63,170,100,20,\"北京市,\");LODOP.ADD_PRINT_TEXT(85,93,81,20,\"发发\");LODOP.ADD_PRINT_TEXT(114,96,82,20,\"收收A\");LODOP.ADD_PRINT_TEXT(90,230,202,20,\"大街上\");LODOP.ADD_PRINT_TEXT(90,485,100,20,\"15920000002\");LODOP.ADD_PRINT_TEXT(116,234,204,20,\"收货address\");LODOP.ADD_PRINT_TEXT(112,486,100,20,\"15932145601\");LODOP.ADD_PRINT_TEXT(165,14,75,20,\"电脑\");LODOP.ADD_PRINT_TEXT(164,104,60,20,\"1807014043\");LODOP.ADD_PRINT_TEXT(163,184,29,20,\"56\");LODOP.ADD_PRINT_TEXT(269,323,58,20,\"34.00\");LODOP.ADD_PRINT_TEXT(324,177,166,20,\"\");LODOP.ADD_PRINT_TEXT(38,366,109,20,\"2018-07-31\" );"
+     // info.replace(/^\"|\"$/g,"")
+     info.replace(/[\\]/g, "")
+     LODOP.ADD_PRINT_SETUP_BKIMG("D:\\company\\program\\TMS\\print\\运单背景图");
+     eval(info)
+     // LODOP.PRINT_SETUP()
+     LODOP.PREVIEW();
+   } catch (err) {
+     getLodop()
+   }
+
  };
  //创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info) {
-   LODOP = getLodop();
-   let arr = new Array()
-   arr = Object.assign([], info)
-   let str = ''
-   arr.forEach((e, index) => {
-    if (e.filedValue !== 'setting'){
-      str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' +e.filedName +':'+ e.value + '");'
-     // str += 'LODOP.SET_PRINT_STYLEA(' +',"FontSize",'+')'
-    }
-   })
-   eval(str)
-   LODOP.PRINT_SETUP()
-   // LODOP.PREVIEW();
+   try {
+     LODOP = getLodop();
+     let arr = new Array()
+     arr = Object.assign([], info)
+     let str = ''
+     arr.forEach((e, index) => {
+       if (e.filedValue !== 'setting') {
+         str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.filedName + ':' + e.value + '");'
+         // str += 'LODOP.SET_PRINT_STYLEA(' +',"FontSize",'+')'
+       }
+     })
+     eval(str)
+     LODOP.PRINT_SETUP()
+     // LODOP.PREVIEW();
+   } catch (err) {
+     getLodop()
+   }
+
  };
 
  // 保存为xls文件
  export function SaveAsFile(obj) {
-
-   // let tableId = createTable(data, columns) // 重新创建打印视图table
-   let tableId = createTable(obj) // 重新创建打印视图table
-   LODOP = getLodop();
-   LODOP.PRINT_INIT("数据表格");
-   // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
-   LODOP.ADD_PRINT_TABLE("1%", "1%", "100%", "100%", document.getElementById(tableId).innerHTML);
-   //LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML); 
-   LODOP.SET_SAVE_MODE("Orientation", 2); //Excel文件的页面设置：横向打印   1-纵向,2-横向;
-   LODOP.SET_SAVE_MODE("PaperSize", 9); //Excel文件的页面设置：纸张大小   9-对应A4
-   LODOP.SET_SAVE_MODE("Zoom", 100); //Excel文件的页面设置：缩放比例
-   LODOP.SET_SAVE_MODE("CenterHorizontally", true); //Excel文件的页面设置：页面水平居中
-   LODOP.SET_SAVE_MODE("CenterVertically", true); //Excel文件的页面设置：页面垂直居中
-   //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到） 
-   if (obj.name) {
-     LODOP.SAVE_TO_FILE(obj.name + ".xls");
-   } else {
-     LODOP.SAVE_TO_FILE("新文件名.xls");
+   try {
+     // let tableId = createTable(data, columns) // 重新创建打印视图table
+     let tableId = createTable(obj) // 重新创建打印视图table
+     LODOP = getLodop();
+     LODOP.PRINT_INIT("数据表格");
+     // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+     LODOP.ADD_PRINT_TABLE("1%", "1%", "100%", "100%", document.getElementById(tableId).innerHTML);
+     //LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML); 
+     LODOP.SET_SAVE_MODE("Orientation", 2); //Excel文件的页面设置：横向打印   1-纵向,2-横向;
+     LODOP.SET_SAVE_MODE("PaperSize", 9); //Excel文件的页面设置：纸张大小   9-对应A4
+     LODOP.SET_SAVE_MODE("Zoom", 100); //Excel文件的页面设置：缩放比例
+     LODOP.SET_SAVE_MODE("CenterHorizontally", true); //Excel文件的页面设置：页面水平居中
+     LODOP.SET_SAVE_MODE("CenterVertically", true); //Excel文件的页面设置：页面垂直居中
+     //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到） 
+     if (obj.name) {
+       LODOP.SAVE_TO_FILE(obj.name + ".xls");
+     } else {
+       LODOP.SAVE_TO_FILE("新文件名.xls");
+     }
+   } catch (err) {
+     getLodop()
    }
+
 
  };
 
@@ -276,22 +326,23 @@
          alert("本机已成功安装了Lodop控件！\n 版本号:" + LODOP.VERSION);
 
      };
-   } catch (err) {}
+   } catch (err) {
+     getLodop()
+   }
  };
  // 创建打印机列表
  export function CreatePrinterList() {
-   let iPrinterCount = LODOP.GET_PRINTER_COUNT()
-   let arr = new Array()
-   for (let i = 0; i < iPrinterCount; i++) {
-     // let item = {
-     //   label: LODOP.GET_PRINTER_NAME(i),
-     //   value: String(i)
-     // }
-     // arr.push(item)
-     arr[i] = LODOP.GET_PRINTER_NAME(i)
+   try {
+     let iPrinterCount = LODOP.GET_PRINTER_COUNT()
+     let arr = new Array()
+     for (let i = 0; i < iPrinterCount; i++) {
+       arr[i] = LODOP.GET_PRINTER_NAME(i)
+     }
+     return arr
+   } catch (err) {
+     getLodop()
    }
-   return arr
- }
+ };
 
  function createTable(obj) { // 打印导出创建表格视图
    let data = obj.data // 数据表格

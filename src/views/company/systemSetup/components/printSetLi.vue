@@ -35,6 +35,29 @@
                     <template slot="prepend">高</template>
                   </el-input>
                 </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-input :size="btnsize" v-model="item.fontsize" placeholder="字号" @change="(obj) => {changeValue(obj, item,index)}">
+                    <template slot="prepend">字号</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-select v-model="item.alignment" placeholder="位置" size="mini">
+                     <el-option
+                      v-for="item in alignmentOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <!-- <el-input :size="btnsize" v-model="item.alignment" placeholder="位置" @change="(obj) => {changeValue(obj, item,index)}">
+                    <template slot="prepend">位置</template>
+                  </el-input> -->
+                </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-input :size="btnsize" v-model="item.bold" placeholder="加粗" @change="(obj) => {changeValue(obj, item,index)}">
+                    <template slot="prepend">加粗</template>
+                  </el-input>
+                </el-form-item>
               </div>
             </li>
           </transition-group>
@@ -47,7 +70,21 @@
         <!-- <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">临时预览背景图</el-button> -->
       </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey">
-        <div v-for="(item, index) in formModel.labelList" class="previewBlock" :style="{transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', width:item.width +'px', height:item.height+'px',lineHeight:item.height+'px'}" v-if="item.filedValue !=='setting' && item.isshow === 1" @mousedown="down" @mousemove="move" @mouseup="end">
+        <div 
+        v-for="(item, index) in formModel.labelList" 
+        class="previewBlock" 
+        :style="{
+          transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
+          width:item.width +'px', 
+          height:item.height+'px',
+          lineHeight:item.height+'px', 
+          fontSize: item.fontsize+'px',
+          fontWeight: item.bold * 400,
+          textAlign: item.alignment===2?'center': (item.alignment===1?'right':'left')}" 
+        v-if="item.filedValue !=='setting' && item.isshow === 1"
+        @mousedown="down" 
+        @mousemove="move" 
+        @mouseup="end">
           <span>{{item.filedName}}</span>
         </div>
         <!-- </draggable> -->
@@ -76,7 +113,19 @@ export default {
       },
       rules: {},
       viewKey: 0,
-      flags: false
+      flags: false,
+      alignmentOptions: [{
+        value: 0,
+        label: '靠右'
+      },
+      {
+        value: 1,
+        label: '靠左'
+      },
+      {
+        value: 2,
+        label: '居中'
+      }]
     }
   },
   watch: {
@@ -116,7 +165,6 @@ export default {
       }
     },
     printPreviewPaper() {
-
     }
   },
   mounted() {
@@ -217,6 +265,9 @@ export default {
               e.leftx = 0
               e.width = 0
               e.height = 0
+              e.fontsize = 0
+              e.bold = 0
+              e.alignment = 0
             })
           })
           .catch (error => {

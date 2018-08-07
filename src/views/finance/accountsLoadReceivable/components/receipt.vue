@@ -244,6 +244,9 @@ export default {
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
+        this.formModel.szDtoList.forEach(e => {
+          e.agent = this.otherinfo.name
+        })
       })
     },
     initDetailDtoList() {

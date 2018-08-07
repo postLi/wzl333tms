@@ -57,3 +57,11 @@ export function getEnableLibSetting() {
     return res.data
   })
 }
+/**
+ * 未保存就打印运单
+ */
+export function findEnableOrderSettingByCompanyId() {
+  return fetch.get('/api-order/order/print/v1/findEnableOrderSettingByCompanyId/').then(res => {
+    return res.data
+  })
+}
