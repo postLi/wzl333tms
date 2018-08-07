@@ -40,11 +40,17 @@ export function getOrderShipList(data) {
  * 取消结算
  */
 export function postCancelSettlement(data) {
-  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement', {
+  return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement/', {
     flowId: data.flowId,
     detailFlowId: data.detailFlowId
   })
 }
+// export function postCancelSettlement(data) {
+//   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/cancelSettlement', {
+//     flowId: data.flowId,
+//     detailFlowId: data.detailFlowId
+//   })
+// }
 /**
  * 记收入支出
  */
@@ -69,9 +75,9 @@ export function postDetailList(data) {
 /**
  * 取消结算
  */
-export function postDetailCancel(data) {
-  return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/' + data)
-}
+// export function postDetailCancel(data) {
+//   return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/cancel/' + data)
+// }
 /**
  * 查看结算单
  */

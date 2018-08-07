@@ -7,7 +7,7 @@
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
           <el-tab-pane label="批次详情" name="first">
-            <Detail :info="info" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight"></Detail>
+            <Detail :info="info" :arrivalStatus="info.bathStatusName" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="info_box" v-loading="loading">
@@ -145,7 +145,8 @@ export default {
   },
   watch: {
     id() {},
-    info() {},
+    info() {
+    },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()

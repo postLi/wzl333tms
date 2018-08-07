@@ -76,6 +76,7 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
+import { requestFullScreen } from '@/utils/fullScreen'
 
 export default {
   name: 'login',
@@ -128,6 +129,7 @@ export default {
   },
   methods: {
     handleLogin() {
+      requestFullScreen()
       this.$refs.loginForm.validate(valid => {
         console.log(valid)
         if (valid) {

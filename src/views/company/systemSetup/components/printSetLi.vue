@@ -41,6 +41,16 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-select v-model="item.bold" placeholder="粗细" size="mini">
+                     <el-option
+                      v-for="item in fontWeightOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
                   <el-select v-model="item.alignment" placeholder="位置" size="mini">
                      <el-option
                       v-for="item in alignmentOptions"
@@ -49,14 +59,6 @@
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <!-- <el-input :size="btnsize" v-model="item.alignment" placeholder="位置" @change="(obj) => {changeValue(obj, item,index)}">
-                    <template slot="prepend">位置</template>
-                  </el-input> -->
-                </el-form-item>
-                <el-form-item v-if="item.filedValue!=='setting'">
-                  <el-input :size="btnsize" v-model="item.bold" placeholder="加粗" @change="(obj) => {changeValue(obj, item,index)}">
-                    <template slot="prepend">加粗</template>
-                  </el-input>
                 </el-form-item>
               </div>
             </li>
@@ -79,8 +81,8 @@
           height:item.height+'px',
           lineHeight:item.height+'px', 
           fontSize: item.fontsize+'px',
-          fontWeight: item.bold * 400,
-          textAlign: item.alignment===2?'center': (item.alignment===1?'right':'left')}" 
+          fontWeight: parseInt(item.bold) === 0? 400 : parseInt(item.bold) * 400,
+          textAlign: item.alignment===2?'center': (item.alignment===0?'left':'right')}" 
         v-if="item.filedValue !=='setting' && item.isshow === 1"
         @mousedown="down" 
         @mousemove="move" 
@@ -116,15 +118,23 @@ export default {
       flags: false,
       alignmentOptions: [{
         value: 0,
-        label: '靠右'
+        label: '文字靠左'
       },
       {
         value: 1,
-        label: '靠左'
+        label: '文字靠右'
       },
       {
         value: 2,
-        label: '居中'
+        label: '文字居中'
+      }],
+      fontWeightOptions: [{
+        value: 0,
+        label: '默认粗细'
+      },
+      {
+        value: 2,
+        label: '加粗'
       }]
     }
   },
@@ -265,7 +275,7 @@ export default {
               e.leftx = 0
               e.width = 0
               e.height = 0
-              e.fontsize = 0
+              e.fontsize = 14
               e.bold = 0
               e.alignment = 0
             })

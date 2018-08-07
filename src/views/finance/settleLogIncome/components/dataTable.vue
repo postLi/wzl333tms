@@ -108,6 +108,7 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
 import currentSearch from './currentSearch'
+import { getSummaries } from '@/utils/'
 export default {
   data() {
     return {
@@ -283,80 +284,12 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+      let propsArr = ['shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
-      columns.forEach((column, index) => {
-
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2 || index === 3) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+       let propsArr = ['shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      return getSummaries(param, propsArr)
     }
   }
 }

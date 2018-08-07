@@ -65,7 +65,7 @@
     </el-form>
     <div class="tab_infos">
       <div class="btns_box">
-        <el-button v-if="info.endOrgName" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
+        <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
@@ -77,10 +77,25 @@
           <el-table-column fixed width="50" sortable type="selection" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipSn" label="运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-            <el-table-column sortable width="120" prop="actualAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
-            <el-table-column sortable width="120" prop="actualWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
-            <el-table-column sortable width="120" prop="actualVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
-          <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
+          <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
+          <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
+          <el-table-column sortable width="120" prop="loadVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
+           <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
+            <template slot-scope="scope">
+              <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column sortable width="110" prop="actualWeight" label="实到重量" v-if="!isEditActual">
+            <template slot-scope="scope">
+              <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="actualVolume" sortable label="实到体积" width="110" v-if="!isEditActual">
+            <template slot-scope="scope">
+              <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
+            </template>
+          </el-table-column>
+         <!--  <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
               <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
@@ -94,7 +109,7 @@
             <template slot-scope="scope">
               <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
@@ -125,13 +140,21 @@ export default {
     isShow: {
       type: Boolean,
       default: false
+    },
+    arrivalStatus: {
+      type: String,
+      default: ''
     }
   },
   watch: {
-    info() {}
+    info() {},
+    arrivalStatus() {
+      console.log(this.arrivalStatus)
+    }
   },
   data() {
     return {
+      isNeedArrival: true,
       btnsize: 'mini',
       loadId: '',
       detailList: [],
@@ -160,11 +183,17 @@ export default {
     }
   },
   mounted() {
+    this.getLoadTrack()
     this.toggleAllRows()
   },
   watch: {
     isShow() {
       if (this.isShow) {
+        if (this.arrivalStatus === '已入库') {
+          this.isNeedArrival = false
+        } else {
+          this.isNeedArrival = true
+        }
         this.getLoadTrack()
         this.toggleAllRows()
         if (this.info.arriveOrgName) {
@@ -209,8 +238,8 @@ export default {
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
         this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
-        this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
-        this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
+        // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$notify({
           title: '提示',
           message: '实到件数不能为0',
@@ -219,14 +248,14 @@ export default {
       }
       if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
-        this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
-        this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
-        this.$notify({
-          title: '提示',
-          message: '实到重量和实到体积不能同时为0',
-          type: 'warning'
-        })
+        // this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
+        // this.$notify({
+        //   title: '提示',
+        //   message: '实到重量和实到体积不能同时为0',
+        //   type: 'warning'
+        // })
       }
       if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
@@ -242,15 +271,16 @@ export default {
           message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
           type: 'warning'
         })
-      } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
-        this.$notify({
-          title: '提示',
-          message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
-          type: 'warning'
-        })
-        this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
-        this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
-        this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
+      }
+       else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+        // this.$notify({
+        //   title: '提示',
+        //   message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+        //   type: 'warning'
+        // })
+        // this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       } else {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
@@ -306,7 +336,7 @@ export default {
       dataLoad.truckVolume = this.info.truckVolume
       dataLoad.updateTime = this.info.updateTime
       dataLoad.userId = this.info.userId
-      
+
 
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
@@ -343,13 +373,13 @@ export default {
           this.detailList = data.data
           this.setData()
           this.toggleAllRows()
-          this.$nextTick(() => { // 默认设置实到数量为配载数量
-            this.detailList.forEach(e => {
-              e.actualAmount = e.loadAmount - e.actualAmount
-              e.actualWeight = e.loadWeight - e.actualWeight
-              e.actualVolume = e.loadVolume - e.actualVolume
-            })
-          })
+          // this.$nextTick(() => { // 默认设置实到数量为配载数量
+            // this.detailList.forEach(e => {
+            //   e.actualAmount = e.loadAmount - e.actualAmount
+            //   e.actualWeight = e.loadWeight - e.actualWeight
+            //   e.actualVolume = e.loadVolume - e.actualVolume
+            // })
+          // })
         }
       })
     },

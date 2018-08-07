@@ -47,7 +47,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postDetailList, postDetailCancel } from '@/api/finance/settleLog'
+import { postDetailList, postDetailCancel, postCancelSettlement } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -523,13 +523,18 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        postDetailCancel(this.selectedList[0].id).then(data => {
-            this.$message({ type: 'success', message: '取消结算操作成功' })
-            this.fetchList()
-          })
-          .catch(error => {
-            this.$message({ type: 'error', message: '取消结算操作失败' })
-          })
+        let data = {
+          flowId: this.selectedList[0].flowId,
+          detailFlowId: this.selectedList[0].id
+        }
+        postCancelSettlement(data).then(data => {
+          this.$message({ type: 'success', message: '取消结算操作成功' })
+          this.fetchList()
+        })
+        .catch(error =>{
+          this.$message({ type: 'error', message: '取消结算操作失败' })
+          this.fetchList()
+        })
       })
 
     },

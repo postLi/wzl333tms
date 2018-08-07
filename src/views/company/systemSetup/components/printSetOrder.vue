@@ -35,6 +35,31 @@
                     <template slot="prepend">高</template>
                   </el-input>
                 </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-input :size="btnsize" v-model="item.fontsize" placeholder="字号" @change="(obj) => {changeValue(obj, item,index)}">
+                    <template slot="prepend">字号</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-select v-model="item.bold" placeholder="粗细" size="mini">
+                     <el-option
+                      v-for="item in fontWeightOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item v-if="item.filedValue!=='setting'">
+                  <el-select v-model="item.alignment" placeholder="位置" size="mini">
+                     <el-option
+                      v-for="item in alignmentOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
               </div>
             </li>
           </transition-group>
@@ -47,7 +72,24 @@
         <!-- <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">临时预览背景图</el-button> -->
       </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey">
-        <div v-for="(item, index) in formModel.labelList" class="previewBlock" :style="{transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', width:item.width +'px', height:item.height+'px',lineHeight:item.height+'px'}" v-if="item.filedValue !=='setting' && item.isshow === 1" @mousedown="down" @mousemove="move" @mouseup="end">
+        <!-- <div v-for="(item, index) in formModel.labelList" class="previewBlock" :style="{transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', width:item.width +'px', height:item.height+'px',lineHeight:item.height+'px'}" v-if="item.filedValue !=='setting' && item.isshow === 1" @mousedown="down" @mousemove="move" @mouseup="end">
+          <span>{{item.filedName}}</span>
+        </div> -->
+        <div 
+        v-for="(item, index) in formModel.labelList" 
+        class="previewBlock" 
+        :style="{
+          transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
+          width:item.width +'px', 
+          height:item.height+'px',
+          lineHeight:item.height+'px', 
+          fontSize: item.fontsize+'px',
+          fontWeight: parseInt(item.bold) === 0? 400 : parseInt(item.bold) * 400,
+          textAlign: item.alignment===2?'center': (item.alignment===0?'left':'right')}" 
+        v-if="item.filedValue !=='setting' && item.isshow === 1"
+        @mousedown="down" 
+        @mousemove="move" 
+        @mouseup="end">
           <span>{{item.filedName}}</span>
         </div>
         <!-- </draggable> -->
@@ -76,7 +118,27 @@ export default {
       },
       rules: {},
       viewKey: 0,
-      flags: false
+      flags: false,
+      alignmentOptions: [{
+        value: 0,
+        label: '文字靠左'
+      },
+      {
+        value: 1,
+        label: '文字靠右'
+      },
+      {
+        value: 2,
+        label: '文字居中'
+      }],
+      fontWeightOptions: [{
+        value: 0,
+        label: '默认粗细'
+      },
+      {
+        value: 2,
+        label: '加粗'
+      }]
     }
   },
   watch: {
@@ -187,10 +249,13 @@ export default {
           })
           // this.formModel.labelList.forEach(e => { // 测试随机位置
           //   if (e.filedValue !== 'setting') {
-          //     e.topy = Math.random() * 900
-          //     e.leftx = Math.random() * 700
+          //     e.topy = Math.random() * 500
+          //     e.leftx = Math.random() * 600
           //     e.width = 120
           //     e.height = 30
+          //     e.fontsize = 14
+          //     e.bold = 0
+          //     e.alignment = 0
           //   }
           // })
           putSettingCompanyOrder(this.formModel.labelList).then(data => {
@@ -214,6 +279,9 @@ export default {
               e.leftx = 0
               e.width = 0
               e.height = 0
+              e.fontsize = 14
+              e.bold = 0
+              e.alignment = 0
             })
           })
           .catch (error => {

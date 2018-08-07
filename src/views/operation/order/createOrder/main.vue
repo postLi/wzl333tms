@@ -461,7 +461,7 @@ import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
 import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
-import { getPrintOrderItems, getEnableLibSetting } from '@/api/operation/print'
+import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
 import { getOrgId } from '@/api/company/groupManage'
 
 export default {
@@ -546,6 +546,7 @@ export default {
       // 记录batch对应的list保存状态
       batchSaveList: {},
       DELIVERY_METHODS: {}, // 提货方式
+      PAY_WAY: {}, // 付款方式
       activeNames: ['1'],
       rules2: {
         'tmsOrderShip.shipCustomerNumber': [
@@ -912,6 +913,7 @@ export default {
 
     this.initIndex()
     this.getSelectType()
+    this.getShipPayWay()
   },
   methods: {
     // 公共工具函数
@@ -1634,8 +1636,6 @@ export default {
       // 城市信息
       this.form.tmsOrderShip.shipFromCityCode = data.orderFromCityCode
       this.form.tmsOrderShip.shipToCityCode = data.orderToCityCode
-      this.form.tmsOrderShip.shipFromCityName = data.orderFromCityName
-      this.form.tmsOrderShip.shipToCityName = data.orderToCityName
       this.fromCityName = data.orderFromCityName
       this.toCityName = data.orderToCityName
       // 收发货人信息
@@ -1885,8 +1885,8 @@ export default {
             delete data.receiver
             delete data.cargoList
             // 非订单页面传过来
-            if (!this.output.isPreOrder) {
-              console.log('this.isPreOrder:', this.output.isPreOrder)
+            if (!this.isPreOrder) {
+              console.log('this.isPreOrder:', this.isPreOrder)
               delete data.tmsOrderPre
             }
             console.log('create submit data:', JSON.stringify(data))
@@ -2043,8 +2043,8 @@ export default {
           this.printLibkey()
           break
         case 'printShipKey': // 打印运单
-          // this.print()
-          this.$message.info('正在开发中，敬请期待。')
+          this.print()
+          // this.$message.info('正在开发中，敬请期待。')
           break
         case 'saveShipKey':
           this.submitForm()
@@ -2057,52 +2057,107 @@ export default {
           break
       }
     },
-    printLibkey() {
+    printLibkey () { // 打印标签
       getEnableLibSetting().then(data => {
         console.log('getEnableLibSetting', data)
-        this.setPrintData() // 设置数据
-        const libData = Object.assign([], data)
-        for (const item in this.printDataObject) {
-          libData.forEach((e, index) => {
+        this.setPrintData('lib') // 设置数据
+        let libData = Object.assign([], data)
+        for (let item in this.printDataObject){
+           libData.forEach((e, index) => {
             if (e.filedValue === item) {
-              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+             e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
             }
           })
         }
         CreatePrintPageEnable(libData) // 调打印接口
       })
     },
-    print() {
-      getEnableLibSetting().then(data => {
-        console.log('getEnableLibSetting', data)
-        this.setPrintData() // 设置数据
+    print() { // 打印运单
+       getEnableOrderSetting().then(data => {
+        console.log('getEnableOrderSetting', data)
+        this.setPrintData('order') // 设置数据
+         let libData = Object.assign([], data)
+        for (let item in this.printDataObject){
+           libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+             e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
         CreatePrintPageEnable(data)
       })
     },
-    getSelectType() { // 获取提货方式中文
-      getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => { // 获取提货方式中文
-        console.log(data, parseInt(this.form.tmsOrderShip.shipDeliveryMethod))
+    getSelectType () { // 获取提货方式中文
+       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => {
         data.forEach(e => {
-          this.DELIVERY_METHODS[e.id] = e.dictName
+          this.DELIVERY_METHODS[e.id] = e.dictName 
         })
       })
     },
-    setPrintData() { // 设置打印的字段
+    getShipPayWay () { // 获取付款方式中文
+       getSelectType('ship_pay_way', this.otherinfo.orgid).then(data => {
+        console.log('ship_pay_way',data, parseInt(this.form.tmsOrderShip.shipPayWay))
+        data.forEach(e => {
+          this.PAY_WAY[e.id] = e.dictName 
+        })
+      })
+    },
+    setPrintData (type) { // 设置打印的字段
       // 标签数据
       let obj = new Object()
-      this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn)
-      this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime)
-      this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName)
-      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName)
-      this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName)
-      this.$set(obj, 'fromOrgName', this.otherinfo.name)
-      this.$set(obj, 'senderUnit', this.form.sender.customerUnit)
-      this.$set(obj, 'senderName', this.form.sender.customerName)
-      this.$set(obj, 'senderMobile', this.form.sender.customerMobile)
-      this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
-      this.$set(obj, 'companyName', this.otherinfo.companyName)
-      // this.$set(obj,'deliveryMethod',this.form.tmsOrderShip.shipDeliveryMethod )
-      this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
+      if (type === 'lib') {
+        this.$set(obj,'goodsSn',this.form.tmsOrderShip.shipGoodsSn )
+      this.$set(obj,'createTime',this.form.tmsOrderShip.createTime )
+      this.$set(obj,'fromCity',this.form.tmsOrderShip.shipFromCityName )
+      this.$set(obj,'toCity',this.form.tmsOrderShip.shipToCityName )
+      this.$set(obj,'toOrgName',this.form.tmsOrderShip.shipToCityName )
+      this.$set(obj,'fromOrgName',this.otherinfo.name)
+      this.$set(obj,'senderUnit',this.form.sender.customerUnit )
+      this.$set(obj,'senderName',this.form.sender.customerName )
+      this.$set(obj,'senderMobile',this.form.sender.customerMobile )
+      this.$set(obj,'cargoPack',this.form.cargoList[0].cargoPack )
+      this.$set(obj,'companyName',this.otherinfo.companyName )
+      this.$set(obj,'deliveryMethod',this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
+    }else if (type === 'order'){
+      this.$set(obj,'shipSn',this.form.tmsOrderShip.shipSn ) // 运单号
+      this.$set(obj,'createTime',this.form.tmsOrderShip.createTime ) // 开单时间
+      this.$set(obj,'fromCity',this.form.tmsOrderShip.shipFromCityName ) // 出发城市
+      this.$set(obj,'toCity',this.form.tmsOrderShip.shipToCityName ) // 到达城市
+      this.$set(obj,'deliveryMethod',this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
+      this.$set(obj,'toOrgName',this.form.tmsOrderShip.shipToCityName ) // 到达网点
+      this.$set(obj,'fromOrgName',this.otherinfo.name) // 开单网点
+      this.$set(obj,'goodsSn',this.form.tmsOrderShip.shipGoodsSn ) // 货号
+      this.$set(obj,'senderUnit',this.form.sender.customerUnit ) // 发货单位
+      this.$set(obj,'senderName',this.form.sender.customerName ) // 发货人
+      this.$set(obj,'senderMobile',this.form.sender.customerMobile ) // 发货人手机 
+      this.$set(obj,'senderAddress',this.form.sender.detailedAddress ) // 发货地址
+      this.$set(obj,'receiverUnit',this.form.receiver.customerUnit ) // 收货方
+      this.$set(obj,'receiverName',this.form.receiver.customerName ) // 收货人
+      this.$set(obj,'receiverMobile',this.form.receiver.customerMobile ) // 收货人手机号吗
+      this.$set(obj,'receiverAddress',this.form.receiver.customerAddress ) // 收货地址
+      for(let item in this.form.cargoList[0]) { // 货品信息及其费用项
+        obj[item] = this.form.cargoList[0][item]
+      }
+      console.log('this.form.cargoList[0]', this.form.cargoList[0])
+      this.$set(obj,'description',this.form.cargoList[0]['description']? this.form.cargoList[0]['description']: '') // 品种规格
+      this.$set(obj,'otherfeeOut',this.form.cargoList[0]['otherfeeOut']? this.form.cargoList[0]['otherfeeOut']: '' ) // 其他费用支出
+      this.$set(obj,'otherfeeIn',this.form.cargoList[0]['otherfeeIn']? this.form.cargoList[0]['otherfeeIn']: '' ) // 其他费用收入
+      this.$set(obj,'taxRate', this.form.cargoList[0]['taxRate']? this.form.cargoList[0]['taxRate']: '') // 税率
+      this.$set(obj,'taxes', this.form.cargoList[0]['taxes']? this.form.cargoList[0]['taxes']: '') // 税金
+      this.$set(obj,'housingFee', this.form.cargoList[0]['housingFee']? this.form.cargoList[0]['housingFee']: '') // 入仓费
+      this.$set(obj,'stampTax', this.form.cargoList[0]['stampTax']? this.form.cargoList[0]['stampTax']: '') // 印花税
+      this.$set(obj,'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
+      this.$set(obj,'totalFee', this.form.tmsOrderShip.shipTotalFee) // 运费合计
+      this.$set(obj,'receiptRequire', this.form.tmsOrderShip.shipReceiptRequire) // 回单要求
+      this.$set(obj,'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
+      this.$set(obj,'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
+      this.$set(obj,'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
+      this.$set(obj,'effective', this.form.tmsOrderShip.shipEffective) // 时效
+      this.$set(obj,'userName', this.form.tmsOrderShip.shipUserid) // 制单员
+      this.$set(obj,'controlGoods', this.shipOther) // 控货
+      this.$set(obj,'valuables', this.shipOther) // 贵重物品
+      this.$set(obj,'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
+    }
       this.printDataObject = Object.assign({}, obj)
       obj = {}
       console.log('printDataObject', this.printDataObject)
