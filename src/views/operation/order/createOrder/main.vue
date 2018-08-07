@@ -1885,8 +1885,8 @@ export default {
             delete data.receiver
             delete data.cargoList
             // 非订单页面传过来
-            if (!this.isPreOrder) {
-              console.log('this.isPreOrder:', this.isPreOrder)
+            if (!this.output.isPreOrder) {
+              console.log('this.isPreOrder:', this.output.isPreOrder)
               delete data.tmsOrderPre
             }
             console.log('create submit data:', JSON.stringify(data))
@@ -2065,8 +2065,8 @@ export default {
         for (const item in this.printDataObject) {
           libData.forEach((e, index) => {
             if (e.filedValue === item) {
-               e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-             }
+              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
           })
         }
         CreatePrintPageEnable(libData) // 调打印接口
@@ -2083,8 +2083,8 @@ export default {
       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => { // 获取提货方式中文
         console.log(data, parseInt(this.form.tmsOrderShip.shipDeliveryMethod))
         data.forEach(e => {
-           this.DELIVERY_METHODS[e.id] = e.dictName
-         })
+          this.DELIVERY_METHODS[e.id] = e.dictName
+        })
       })
     },
     setPrintData() { // 设置打印的字段
