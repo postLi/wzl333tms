@@ -45,6 +45,7 @@ export function getGroupName(orgid) {
 } */
 /**
  * 获取所有网点的信息，树形结构
+ * 过滤掉无效的网点
  */
 const LocalAllOrgInfo = {}
 export function getAllOrgInfo(orgId, isRefresh) {
@@ -74,6 +75,14 @@ export function getAllOrgInfo(orgId, isRefresh) {
     }
     return data || []
   }) */
+}
+/** 返回全部的数据 */
+export function postAllOrgInfo(orgId, isRefresh) {
+  return fetch.post('/api-system/system/org/v1/tree/' + orgId).then(res => {
+    const data = res.data || []
+    LocalAllOrgInfo[orgId] = data
+    return data
+  })
 }
 /**
  * 获取指定网点的部门信息

@@ -175,7 +175,7 @@
     import AddDot from './addDot'
     import DepMaintain from './depMaintain'
     import { getOrgId } from '../../../api/company/groupManage'
-    import { getAllOrgInfo, getAllUser, deleteEmployeer } from '../../../api/company/employeeManage'
+    import { getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo } from '../../../api/company/employeeManage'
 
     import { mapGetters } from 'vuex'
     import Pager from '@/components/Pagination/index'
@@ -258,8 +258,8 @@ export default {
                   // 缓存节点数据
           orgInfoCache: {},
           userinfo: {},
-          pageSize:'',
-          pageNum:'',
+          pageSize: '',
+          pageNum: ''
         }
       },
       mounted() {
@@ -274,7 +274,7 @@ export default {
       methods: {
           // 左边树形数据
         fetchOrg() {
-          getAllOrgInfo(this.otherinfo.orgid).then(data => {
+          postAllOrgInfo(this.otherinfo.orgid).then(data => {
             this.dataTree = data
             this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
           })
