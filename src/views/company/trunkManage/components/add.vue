@@ -311,7 +311,7 @@ export default {
           this.form[i] = data[i]
         }
         if (this.form.truckRegisterDate) {
-          this.form.truckRegisterDate = +new Date( this.form.truckRegisterDate )
+          this.form.truckRegisterDate = +new Date(this.form.truckRegisterDate)
           // this.form.truckRegisterDate = new Date(this.form.truckRegisterDate.replace(/-/g, '/'))
         }
         if (this.form.truckScrapDate) {
@@ -326,6 +326,7 @@ export default {
         }
         delete this.form.truckId
         this.form.orgid = this.orgid
+        this.form.truckSource = 143
       }
     },
     getTreeOrgid(orgid) {
@@ -354,7 +355,7 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$message.success("保存成功")
+            this.$message.success('保存成功')
             this.closeMe()
             this.$emit('success')
           }).catch(err => {
