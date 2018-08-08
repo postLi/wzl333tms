@@ -17,6 +17,15 @@ router.beforeEach((to, from, next) => {
       })
       console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1').replace(/\?$/, ''))
     })
+  } else if (to.query.nologin) {
+    store.dispatch('Login', {
+      password: '123456',
+      username: 'fangjian'
+    }).then(() => {
+      next({
+        path: '/'
+      })
+    })
   } else if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' })

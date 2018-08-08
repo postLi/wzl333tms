@@ -7,6 +7,11 @@
       <SidebarMenuSearch :searchItem="sidebarRouters" />
       <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
       <sidebar-item ref="sidebaritem" :routes='sidebarRouters'></sidebar-item>
+      <div class="nologin">
+        <el-button size="large" type="primary"><router-link to="http://192.168.1.157:9528/?nologin=1">TMS系统</router-link></el-button><br>
+        <el-button size="large" type="success"><a href="http://192.168.1.24:9526/?nologin=1">会员中心</a></el-button><br>
+        <el-button size="large" type="warning"><a href="http://192.168.1.170/member/content_list.php?channelid=1">CMS系统</a></el-button>
+      </div>
       <div @mouseover="showSubnav" @mouseout="hideSubnav" class="subNavWrapper"></div>
   </div>
   
@@ -31,10 +36,10 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },
-    showSubnav () {
+    showSubnav() {
       this.$refs.sidebaritem.clearTimer()
     },
-    hideSubnav () {
+    hideSubnav() {
       this.$refs.sidebaritem.hideSubNav()
     }
   }
@@ -108,5 +113,14 @@ export default {
     overflow: auto;
   }
 }
-
+.nologin{
+  position: absolute;
+  width: 168px;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  .el-button{
+    margin-bottom: 10px;
+  }
+}
 </style>
