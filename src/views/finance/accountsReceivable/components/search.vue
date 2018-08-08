@@ -17,7 +17,7 @@
     <el-form-item v-if="filter" label="结算网点:">
       <select-tree v-model="searchForm.ascriptionOrgId" :orgid="otherinfo.orgid" />
     </el-form-item>
-    <el-form-item label="开单网点:">
+    <el-form-item label="开单网点:" v-if="isShow">
       <select-tree v-model="searchForm.shipFromOrgid"/>
     </el-form-item>
     <el-form-item label="发货人:">
@@ -85,6 +85,10 @@ export default {
     filter: {
       type: Boolean,
       default: false
+    },
+    isShow: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

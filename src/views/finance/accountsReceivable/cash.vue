@@ -1,6 +1,6 @@
 <template>
   <div class="tab-content accountsReceivable-summary" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isShow="true" />  
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain>结算</el-button>
@@ -24,7 +24,6 @@
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          
           <el-table-column
             fixed
             sortable

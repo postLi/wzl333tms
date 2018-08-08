@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-      <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+      <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam"  :isAllOrg="true" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
             <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('deal')">处理</el-button>

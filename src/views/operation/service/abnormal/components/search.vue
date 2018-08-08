@@ -34,7 +34,8 @@
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="登记网点">
-            <SelectTree v-model="searchForm.orgId" type="org_id" :orgid="otherinfo.orgid"/>
+            <SelectTree v-model="searchForm.orgId" type="org_id" v-if="isAllOrg"/>
+            <SelectTree v-model="searchForm.orgId" type="org_id" :orgid="otherinfo.orgid" v-else/>
         </el-form-item>
 
         <el-form-item label="异常状态">
@@ -68,6 +69,9 @@ export default {
     issender: {
       type: Boolean,
       dafault: false
+    },
+    isAllOrg: {
+      type: Boolean
     }
   },
   computed: {

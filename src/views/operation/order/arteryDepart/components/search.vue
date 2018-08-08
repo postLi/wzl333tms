@@ -43,7 +43,12 @@
         clearable>
       </el-input>
     </el-form-item>
-
+    <el-form-item label="发车网点">
+      <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+    </el-form-item>
+    <el-form-item label="到车网点">
+      <SelectTree v-model="searchForm.arriveOrgid" clearable></SelectTree>
+    </el-form-item>
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>

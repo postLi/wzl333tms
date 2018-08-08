@@ -141,7 +141,7 @@ export default {
           }
         },
         {
-          label: "目的网点",
+          label: "到达网点",
           prop: "arriveOrgName",
           width: "120"
         },

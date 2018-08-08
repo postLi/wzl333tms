@@ -2,7 +2,7 @@
   <!-- 到站其他费 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :isAllOrg="true" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">

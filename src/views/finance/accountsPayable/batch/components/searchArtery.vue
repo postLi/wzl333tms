@@ -15,9 +15,9 @@
       <SelectTree v-model="searchForm.orgid" clearable>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="结算网点" prop="ascriptionOrgid">
-      <SelectTree v-model="searchForm.ascriptionOrgid"  :orgid="otherinfo.orgid"  clearable>
-      </SelectTree>
+    <el-form-item label="结算网点" prop="ascriptionOrgid"  v-if="isAllOrg">
+      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid"  v-if="isAllOrg"></SelectTree>
+      <SelectTree v-model="searchForm.ascriptionOrgid"  clearable v-else></SelectTree>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
       <el-input placeholder="请输入发车批次" v-model="searchForm.batchNo"></el-input>
@@ -51,6 +51,9 @@ export default {
     },
     orgid: {
       type: Number
+    },
+    isAllOrg: {
+      type: Boolean
     }
   },
   data() {
