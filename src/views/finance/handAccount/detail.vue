@@ -114,7 +114,8 @@ export default {
         'prop': 'userName'
       }, {
         'label': '运单号',
-        'prop': 'shipSn'
+        'prop': 'shipSn',
+        'width': '120'
       }, {
         'label': '费用类别',
         'prop': 'feeName'
@@ -124,17 +125,22 @@ export default {
       }, {
         'label': '交账状态',
         'prop': 'statusValue',
-        'width': '150'
+        'width': '120'
       }, {
         'label': '已交金额',
         'prop': 'finishAccount'
       }, {
         'label': '未交账金额',
-        'prop': 'noSettlementFee'
+        'prop': 'noSettlementFee',
+        'width': '120'
       }, {
         'label': '开单时间',
         'prop': 'createTime',
         'width': '180'
+      }, {
+        'label': '业务员',
+        'prop': 'shipUserName',
+        'width': '100'
       }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
