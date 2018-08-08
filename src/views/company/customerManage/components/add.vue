@@ -51,7 +51,7 @@
           <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" filterable />
+          <SelectTree v-model="form.orgid" filterable :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="客户VIP号" prop="vipNum">
           <el-input v-model="form.vipNum" maxlength="25" auto-complete="off"></el-input>

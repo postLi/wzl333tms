@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm"  class="staff_searchinfo clearfix">
       <el-form-item label="归属网点">
-          <SelectTree v-model="searchForm.orgid" />
+          <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
       </el-form-item>
       <el-form-item label="员工名称">
           <el-input

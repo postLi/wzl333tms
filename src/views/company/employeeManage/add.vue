@@ -27,7 +27,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属网点" :label-width="formLabelWidth" prop="orgid">
-          <SelectTree filterable v-model="form.orgid" />
+          <SelectTree filterable v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
           <el-select filterable  multiple v-model="form.rolesId" placeholder="请选择权限">
