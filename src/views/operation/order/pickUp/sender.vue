@@ -267,7 +267,7 @@
 </template>
 <script>
 import { getExportExcel } from '@/api/company/customerManage'
-import { fetchPostlist , deletebatchDelete } from '@/api/operation/pickup'
+import { fetchPostlist, deletebatchDelete } from '@/api/operation/pickup'
 
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
@@ -276,7 +276,7 @@ import PickupMain from './components/pickupMain'
 import PickupRelevance from './components/pickupRelevance'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
@@ -288,28 +288,28 @@ export default {
     PickupRelevance
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ]),
-      orgid () {
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-      }
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
   },
-  mounted () {
+  mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
   },
-  data () {
+  data() {
     return {
       btnsize: 'mini',
       usersArr: [],
       total: 0,
       tablekey: 0,
-      //加载状态
+      // 加载状态
       loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
-      pickMaintainisible:false,
-      releMaintainisible:false,
+      pickMaintainisible: false,
+      releMaintainisible: false,
       isModify: false,
       isDepMain: false,
       isDbclick: false,
@@ -317,10 +317,10 @@ export default {
       // 选中的行
       selected: [],
       searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgid": 1,
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
+          'orgid': 1,
           pickupStatus: '',
           startTime: '',
           pickupBatchNumber: '',
@@ -341,150 +341,150 @@ export default {
         prop: 'pickupBatchNumber',
         width: '110',
         fixed: true
-      },{
+      }, {
         label: '提货状态',
         prop: 'pickupStatusName',
         width: '110',
         fixed: true
       },
-        //沐沐说去掉 20180802
+        // 沐沐说去掉 20180802
       //   {
       //   label: '运费核销状态',
       //   prop: 'cancelStatus',
       //   width: '150',
       //   fixed: false
       // },
-        {
+      {
         label: '发货人',
         prop: 'customerName',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '手机号',
         prop: 'customerMobile',
         width: '130',
         fixed: false
-      },{
+      }, {
         label: '提货地址',
         prop: 'detailedAddress',
         width: '170',
         fixed: false
-      },{
+      }, {
         label: '货品名',
         prop: 'pickupName',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '件数',
         prop: 'pickupAmount',
         width: '80',
         fixed: false
-      },{
+      }, {
         label: '重量',
         prop: 'pickupWeight',
         width: '80',
         fixed: false
-      },{
+      }, {
         label: '体积',
         prop: 'pickupVolume',
         width: '80',
         fixed: false
-      },{
+      }, {
         label: '实际载重量',
         prop: 'realWeight',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '差额重量',
         prop: 'differWeight',
         width: '110',
         fixed: false
-      },{
+      }, {
         label: '实际载体积',
         prop: 'realVolume',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '关联运单号',
         prop: 'shipSns',
         width: '180',
         fixed: false
-      },{
+      }, {
         label: '关联提货费',
         prop: 'pickupFee',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '到达城市',
         prop: 'toCityName',
         width: '150',
         fixed: false
-      },{
+      }, {
         label: '付款方式',
         prop: 'payMethodName',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '备注',
         prop: 'remark',
         width: '120',
         fixed: false
-      },{
+      }, {
         label: '运费',
         prop: 'carriage',
         width: '80',
         fixed: false
-      },{
+      }, {
         label: '代收费用',
         prop: 'collectionFee',
         width: '110',
         fixed: false
-      },{
+      }, {
         label: '车牌号',
         prop: 'truckIdNumber',
         width: '90',
         fixed: false
-      },{
+      }, {
         label: '车费',
         prop: 'truckFee',
         width: '80',
         fixed: false
-      },{
+      }, {
         label: '车辆单位',
         prop: 'truckUnit',
         width: '110',
         fixed: false
-      },{
+      }, {
         label: '司机姓名',
         prop: 'driverName',
         width: '110',
         fixed: false
-      },{
+      }, {
         label: '司机手机',
         prop: 'driverMobile',
         width: '110',
         fixed: false
-      },{
+      }, {
         label: '车辆类型',
         prop: 'truckTypeName',
         width: '110',
         fixed: false
-      },{
+      }, {
         label: '出车时间',
         prop: 'outTime',
         width: '160',
         fixed: false
-      },{
+      }, {
         label: '要求到达时间',
         prop: 'arriveTime',
         width: '160',
         fixed: false
-      },
-        ]
+      }
+      ]
     }
   },
   methods: {
-    fetchAllCustomer () {
+    fetchAllCustomer() {
       this.loading = true
       return fetchPostlist(this.searchQuery).then(data => {
         this.usersArr = data.list
@@ -492,77 +492,77 @@ export default {
         this.loading = false
       })
     },
-    fetchData () {
+    fetchData() {
       this.fetchAllCustomer()
     },
-    handlePageChange (obj) {
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    getSearchParam (obj) {
+    getSearchParam(obj) {
       this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
-    showImport () {
+    showImport() {
       // 显示导入窗口
     },
-    doAction (type) {
-      if(type==='import'){
+    doAction(type) {
+      if (type === 'import') {
         this.showImport()
         return false
       }
       // 判断是否有选中项
-      if(!this.selected.length && type !== 'add' && type !== 'export'){
-          this.closeAddCustomer()
-          this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-          })
-          return false
+      if (!this.selected.length && type !== 'add' && type !== 'export') {
+        this.closeAddCustomer()
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
       }
       switch (type) {
           // 新增
-          case 'add':
-            this.closeAddCustomer()
-              this.isModify = false
-              this.isDbclick = false
-              this.selectInfo = {}
-              this.openAddCustomer()
-              break;
+        case 'add':
+          this.closeAddCustomer()
+          this.isModify = false
+          this.isDbclick = false
+          this.selectInfo = {}
+          this.openAddCustomer()
+          break
           // 修改
-          case 'modify':
-              this.closeAddCustomer()
-              this.isModify = true
-              this.isDbclick = false
-              if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能修改单条数据~',
-                      type: 'warning'
-                  })
-                return false
-              }
-            if(this.selected[0].pickupStatus === 237){
-              this.$message({
+        case 'modify':
+          this.closeAddCustomer()
+          this.isModify = true
+          this.isDbclick = false
+          if (this.selected.length > 1) {
+            this.$message({
+                  message: '每次只能修改单条数据~',
+                  type: 'warning'
+                })
+            return false
+          }
+          if (this.selected[0].pickupStatus === 237) {
+            this.$message({
                 message: '提货完成不能修改~',
                 type: 'warning'
               })
-              this.$refs.multipleTable.clearSelection()
-              return false
-            }
-              this.selectInfo = this.selected[0]
-              this.openAddCustomer()
-              break;
+            this.$refs.multipleTable.clearSelection()
+            return false
+          }
+          this.selectInfo = this.selected[0]
+          this.openAddCustomer()
+          break
         // 提货完成
         case 'finishPick':
           this.closeAddCustomer()
-          if(this.selected.length > 1){
+          if (this.selected.length > 1) {
             this.$message({
               message: '每次只能生成单条数据~',
               type: 'warning'
             })
             return false
           }
-          if(this.selected[0].pickupStatus === 237){
+          if (this.selected[0].pickupStatus === 237) {
             this.$message({
               message: '已经提货完成了~',
               type: 'warning'
@@ -572,11 +572,11 @@ export default {
           }
           this.selectInfo = this.selected[0]
           this.openpickMaintainisible()
-          break;
-          //关联运单
+          break
+          // 关联运单
         case 'relevance':
           this.closeAddCustomer()
-          if(this.selected.length > 1){
+          if (this.selected.length > 1) {
             this.$message({
               message: '每次只能生成单条数据~',
               type: 'warning'
@@ -585,49 +585,48 @@ export default {
           }
           this.selectInfo = this.selected[0]
           this.openpickReletainisible()
-          break;
+          break
           // 删除客户
-          case 'delete':
-            this.closeAddCustomer()
-                  //=>todo 删除多个
+        case 'delete':
+          this.closeAddCustomer()
+                  // =>todo 删除多个
                   // let ids = this.selected.filter(el=>{
                   //   return el.pickupStatus === 236
                   // }).map(el => {
                   //   return  el.id
                   // })
-            let ids = this.selected.map(el => {
-              return  el.id
-            })
+          let ids = this.selected.map(el => {
+            return el.id
+          })
             // if(!ids.length){
             //   this.$message.warning('提货完成不能删除~')
             // }else {
-              ids = ids.join(',')
-              this.$confirm('确定要删除提货批次吗？', '提示', {
-                          confirmButtonText: '删除',
-                          cancelButtonText: '取消',
-                          type: 'warning'
-                      }).then(() => {
-                        deletebatchDelete(ids).then(res => {
-                              this.$message({
-                                  type: 'success',
-                                  message: '删除成功!'
-                              })
-                              this.fetchData()
-                          }).catch(err=>{
-                              this.$message({
-                                  type: 'info',
-                                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                              })
+          ids = ids.join(',')
+          this.$confirm('确定要删除提货批次吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+                deletebatchDelete(ids).then(res => {
+                          this.$message({
+                            type: 'success',
+                            message: '删除成功!'
                           })
-
-                      }).catch(() => {
+                          this.fetchData()
+                        }).catch(err => {
                           this.$message({
                               type: 'info',
-                              message: '已取消删除'
-                          })
+                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                            })
+                        })
+              }).catch(() => {
+                        this.$message({
+                          type: 'info',
+                          message: '已取消删除'
+                        })
                       })
             // }
-              break;
+          break
           // 导出数据
         case 'export':
 
@@ -637,26 +636,26 @@ export default {
             // 筛选选中的项
             SaveAsFile(this.selected, this.tableColumn)
           }
-          break;
+          break
       //
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-    openAddCustomer () {
+    openAddCustomer() {
       this.AddCustomerVisible = true
     },
 
-    closeAddCustomer () {
+    closeAddCustomer() {
       this.AddCustomerVisible = false
     },
-    openpickMaintainisible(){
+    openpickMaintainisible() {
       this.pickMaintainisible = true
       this.releMaintainisible = false
     },
@@ -664,13 +663,13 @@ export default {
       this.releMaintainisible = true
       this.pickMaintainisible = false
     },
-    clickDetails(row, event, column){
+    clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection (selection) {
+    getSelection(selection) {
       this.selected = selection
     },
-    getDbClick(row, event){
+    getDbClick(row, event) {
       this.selectInfo = row
       this.isModify = false
       this.isDbclick = true
@@ -680,7 +679,7 @@ export default {
     setColumn(obj) {
       this.tableColumn = obj
       this.tablekey = Math.random()
-    },
+    }
   }
 }
 </script>

@@ -25,7 +25,7 @@
                   <el-input v-model="form.orgName" auto-complete="off" disabled ></el-input>
                 </el-form-item>
                 <el-form-item label="网点类型" :label-width="formLabelWidth">
-                  <el-input :value='form.orgType ==="1" ? "营业网点" : "分拨中心"' disabled></el-input>
+                  <el-input :value='form.orgType ===1 ? "营业网点" : "分拨中心"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
                   <el-input :value='form.status ===32 ? "有效" : "无效"' disabled></el-input>
@@ -40,7 +40,7 @@
                   <el-input :value="form.parentName || form.orgName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="经营类型" :label-width="formLabelWidth">
-                  <el-input :value='form.manageType ==="3" ? "自营" : "加盟"' disabled></el-input>
+                  <el-input :value='form.manageType ===4 ? "加盟" : "自营"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" :label-width="formLabelWidth" >
                   <!--<el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>-->
@@ -285,7 +285,6 @@ export default {
         handleOrgInfo(data) {
           this.form = data
           this.getform = Object.assign({}, data)
-          console.log('xxxxx:', JSON.stringify(this.getform))
         },
           // 根据组织id显示列表
         fetchOrgId(id) {
@@ -397,6 +396,7 @@ export default {
         },
         getCheckedKeys() {
           this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)// 根据组织id显示列表
+          this.addDoTotVisible = false
         },
           // 新增网点
         closeAddDot() {

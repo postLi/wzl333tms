@@ -248,6 +248,7 @@
           accountStatus: 1,
           // id: '',
           parentId: 0,
+          createTime: '',
           accountName: ''  // 管理员账号
 
         },
@@ -322,6 +323,8 @@
         this.form.orgType = item.orgType
         this.form.status = item.status
         this.form.accountStatus = item.accountStatus
+        this.form.manageType = item.manageType
+        this.form.createTime = item.createTime
       },
       watchDate() {
         for (const i in this.form) {
@@ -378,6 +381,7 @@
         this.form.parentId = id
       },
       reset() {
+        // this.form = {}
         // this.$refs['ruleForm'].resetFields()
       },
       closeMe(done) {
@@ -402,6 +406,7 @@
               if (this.form.id === this.form.parentId && this.form.parentId === this.otherinfo.companyId) {
                 this.form.parentId = 0
               }
+              this.form.createTime = +new Date(this.form.createTime)
               reqPromise = putOrgData(this.form)
             } else {
               if (this.form.accountStatus === true) {

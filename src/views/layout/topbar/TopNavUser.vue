@@ -12,7 +12,7 @@
           <img class="user-avatar" :src="avatar">
         </el-col>
         <el-col :span="16">
-          {{ name }}
+          {{ otherinfo.name }}
           <br>
           <br>
           <br>
@@ -32,7 +32,7 @@
     </el-popover>
     <div class="avatar-wrapper" v-popover:popoveruser>
       <img class="user-avatar" :src="avatar">
-      <span class="user-name">{{ name }}</span>
+      <span class="user-name">{{ otherinfo.name }}</span>
     </div>
   </div>
 </template>
@@ -43,7 +43,6 @@ export default {
   computed: {
     ...mapGetters([
       'avatar',
-      'name',
       'company'
     ])
   },
@@ -53,7 +52,7 @@ export default {
         location.reload()  // 为了重新实例化vue-router对象 避免bug
       })
     },
-    lockScreen () {
+    lockScreen() {
       this.$store.dispatch('LockScreen')
     }
   }
