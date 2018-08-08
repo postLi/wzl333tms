@@ -213,9 +213,9 @@ export default {
         truckIdNumber: [
           { required: true, message: '请输入车牌号码', trigger: 'blur' }
         ],
-        driverId: [
-          { required: true, message: '司机名称不能为空' }
-        ],
+        // driverId: [
+        //   { required: true, message: '司机名称不能为空' }
+        // ],
         orgid: [
           { required: true, message: '请选择所属机构' }
         ],

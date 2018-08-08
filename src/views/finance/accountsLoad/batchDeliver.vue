@@ -142,11 +142,11 @@ export default {
         },
         {
           label: '送货时间',
-          prop: 'departureTime',
+          prop: 'loadTime',
           width: '180',
           fixed: false,
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -236,11 +236,11 @@ export default {
         },
         {
           label: '送货时间',
-          prop: 'departureTime',
+          prop: 'loadTime',
           width: '180',
           fixed: false,
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

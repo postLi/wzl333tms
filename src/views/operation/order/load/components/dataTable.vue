@@ -119,6 +119,7 @@ import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/loa
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
 import currentSearch from './currentSearch'
+import { getSummaries } from '@/utils/'
 export default {
   data() {
     return {
@@ -344,6 +345,8 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
+      // let propsArr = ['repertoryAmount', 'repertoryWeight', 'repertoryVolume', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      // return getSummaries(param, propsArr)
       const { columns, data } = param
       const sums = []
       columns.forEach((column, index) => {
@@ -381,6 +384,8 @@ export default {
       return sums
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
+      // let propsArr = ['repertoryAmount', 'repertoryWeight', 'repertoryVolume', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      // return getSummaries(param, propsArr)
       const { columns, data } = param
       const sums = []
       let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]

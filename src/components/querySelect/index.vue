@@ -397,7 +397,7 @@ export default {
           fn = orderManageApi.getRemarkList
           break
         case 'payway':
-          this.queryParam.vo.orgid = this.getOrgid
+          this.queryParam.vo.orgId = this.getOrgid
           this.queryParam.vo.status = 0
           fn = postTmsFfinancialwayList
           break

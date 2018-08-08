@@ -37,29 +37,33 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearchTruck" placeholder="司机名称" size="mini" @select="handleSelectTruck">
-                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
+                  <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect">
+                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
-                        <div class="name">{{ item.truckIdNumber }}</div>
-                        <span class="addr">{{ item.driverName }}</span>
-                        <br>
-                        <span class="addr">{{ item.dirverMobile}}</span>
+                        <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
+                          <div class="name">{{ item.truckIdNumber }}</div>
+                          <span class="addr">{{ item.driverName }}</span>
+                          <br>
+                          <span class="addr">{{ item.dirverMobile}}</span>
+                        </div>
+                        <div v-else>
+                          <div class="name">{{ item.driverName }}</div>
+                          <span class="addr">{{ item.driverMobile }}</span>
+                        </div>
                       </template>
                     </el-autocomplete>
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="司机电话" prop="dirverMobile" class="formItemTextDanger">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverMobile" :fetch-suggestions="querySearchTruck" placeholder="司机电话" size="mini" @select="handleSelectTruck">
-                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
+                    <el-input size="mini" v-model.number="formModel.dirverMobile" placeholder="司机电话" clearable></el-input>
+                    <!--  <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverMobile" :fetch-suggestions="querySearch" placeholder="司机电话" size="mini" @select="handleSelect">
                       <template slot-scope="{ item }">
-                        <div class="name">{{ item.truckIdNumber }}</div>
-                        <span class="addr">{{ item.driverName }}</span>
-                        <br>
-                        <span class="addr">{{ item.dirverMobile}}</span>
+                        <div class="name">{{ item.driverName }}</div>
+                        <span class="addr">{{ item.driverMobile }}</span>
                       </template>
-                    </el-autocomplete>
+                    </el-autocomplete> -->
                   </el-form-item>
                 </div>
                 <div>
@@ -188,13 +192,18 @@
       </el-collapse>
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs" v-if="!isEdit">
-        <el-button size="mini" plain type="primary" @click="doAction('precent')"><icon-svg icon-class="btn12_guanlianyd" /> 配载率</el-button>
-        <el-button size="mini" plain type="primary" @click="doAction('finish')"><icon-svg icon-class="btn14_fache" /> 完成配载</el-button>
-        <el-button size="mini" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '><icon-svg icon-class="btn17_daocheqd" /> 完成并发车</el-button>
+        <el-button size="mini" plain type="primary" @click="doAction('precent')">
+          <icon-svg icon-class="btn12_guanlianyd" /> 配载率</el-button>
+        <el-button size="mini" plain type="primary" @click="doAction('finish')">
+          <icon-svg icon-class="btn14_fache" /> 完成配载</el-button>
+        <el-button size="mini" plain type="primary" @click="doAction('finishTruck')" v-if='loadTypeId===40? false:true '>
+          <icon-svg icon-class="btn17_daocheqd" /> 完成并发车</el-button>
       </div>
       <div class="load_btn_boxs" v-if="isEdit">
-        <el-button size="mini" plain type="primary" @click="doAction('precent')"><icon-svg icon-class="btn12_guanlianyd" /> 配载率</el-button>
-        <el-button size="mini" plain type="primary" @click="doAction('finish')"><icon-svg icon-class="btn14_fache" /> 保存</el-button>
+        <el-button size="mini" plain type="primary" @click="doAction('precent')">
+          <icon-svg icon-class="btn12_guanlianyd" /> 配载率</el-button>
+        <el-button size="mini" plain type="primary" @click="doAction('finish')">
+          <icon-svg icon-class="btn14_fache" /> 保存</el-button>
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
@@ -203,9 +212,9 @@
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
       <!-- 添加车辆信息 -->
-      <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
+      <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="otherinfo.orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
-      <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
+      <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
     </div>
   </div>
 </template>
@@ -213,7 +222,7 @@
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
 import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK } from '@/api/operation/load'
-// import { getAllDriver } from '@/api/company/driverManage'
+import { getAllDriver } from '@/api/company/driverManage'
 // import { getAllTrunk } from '@/api/company/trunkManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable'
@@ -274,6 +283,7 @@ export default {
       }
     }
     return {
+      driverKey: 0,
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
@@ -335,17 +345,17 @@ export default {
         dirverMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }]
       },
       formFeeRules: {
-        nowpayCarriage: [{ required: true, trigger: 'change', validator: validateInt }],
-        nowpayOilCard: [{ required: true, trigger: 'change', validator: validateInt }],
-        backpayCarriage: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        backpayOilCard: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        arrivepayCarriage: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        arrivepayOilCard: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        carloadInsuranceFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        leaveHandlingFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        leaveOtherFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        arriveHandlingFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }],
-        arriveOtherFee: [{ required: true, trigger: 'change', validator: validateBigDecimal }]
+        // nowpayCarriage: [{ trigger: 'change', validator: validateInt }],
+        // nowpayOilCard: [{ trigger: 'change', validator: validateInt }],
+        // backpayCarriage: [{ trigger: 'change', validator: validateBigDecimal }],
+        // backpayOilCard: [{ trigger: 'change', validator: validateBigDecimal }],
+        // arrivepayCarriage: [{ trigger: 'change', validator: validateBigDecimal }],
+        // arrivepayOilCard: [{ trigger: 'change', validator: validateBigDecimal }],
+        // carloadInsuranceFee: [{ trigger: 'change', validator: validateBigDecimal }],
+        // leaveHandlingFee: [{ trigger: 'change', validator: validateBigDecimal }],
+        // leaveOtherFee: [{ trigger: 'change', validator: validateBigDecimal }],
+        // arriveHandlingFee: [{ trigger: 'change', validator: validateBigDecimal }],
+        // arriveOtherFee: [{ trigger: 'change', validator: validateBigDecimal }]
       }
     }
   },
@@ -682,7 +692,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
+        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
       } else {}
       this.init()
     },
@@ -786,25 +796,26 @@ export default {
     initInfo() {
       this.loading = false
       // 切换组织了列表时更新司机列表信息
-      // this.getDrivers(this.otherinfo.orgid)
+      this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
     },
-    // getDrivers(orgid) {
-    //   if (this.cacheDriverList[orgid]) {
-    //     this.Drivers = this.cacheDriverList[orgid]
-    //   } else {
-    //     getAllDriver({
-    //       "currentPage": 1,
-    //       "pageSize": 200,
-    //       "vo": {
-    //         "orgid": orgid
-    //       }
-    //     }).then(data => {
-    //       this.Drivers = data.list
-    //       this.cacheDriverList[orgid] = data.list
-    //     })
-    //   }
-    // },
+    getDrivers(orgid) {
+      if (this.cacheDriverList[orgid]) {
+        this.Drivers = this.cacheDriverList[orgid]
+      } else {
+        getAllDriver({
+          "currentPage": 1,
+          "pageSize": 200,
+          "vo": {
+            "orgid": orgid
+          }
+        }).then(data => {
+          this.Drivers = data.list
+          this.cacheDriverList[orgid] = data.list
+          console.log('Drivers', this.Drivers)
+        })
+      }
+    },
     getTrucks(orgid) {
       if (this.cacheTruckList[orgid]) {
         this.Trucks = this.cacheTruckList[orgid]
@@ -819,34 +830,59 @@ export default {
         getTrucK().then(data => {
           this.Trucks = data.data
           this.cacheTruckList[orgid] = data.data
+          console.log('Trucks', this.Trucks)
         })
       }
     },
-    // handleSelect(item) {
-    //   this.formModel.dirverMobile = item.driverMobile
-    //   this.formModel.dirverName = item.driverName
-    // },
-    handleSelectTruck(item) {
-      this.formModel.truckIdNumber = item.truckIdNumber
-      this.formModel.dirverMobile = item.dirverMobile
+    handleSelect(item) {
+        this.driverKey = new Date().getTime()
+
+      if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
+        this.formModel.truckIdNumber = item.truckIdNumber
+        // this.formModel.dirverMobile = item.driverMobile
+        // this.formModel.dirverName = item.driverName
+      }
+      //  else{
+      //   console.log(item)
+      //   this.flag = true
+
+      //   console.log(this.formModel)
+      // }
+      this.formModel.dirverMobile = item.driverMobile
       this.formModel.dirverName = item.driverName
     },
-    // querySearch(queryString, cb) {
-    //   let driverList = this.Drivers
-    //   let results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
-    //   // 调用 callback 返回司机列表的数据
-    //   cb(results)
-    // },
+    handleSelectTruck(item) {
+      // console.log('flag', this.flag)
+      this.formModel.truckIdNumber = item.truckIdNumber
+      // if (!this.flag) {
+        this.formModel.dirverMobile = item.driverMobile
+        this.formModel.dirverName = item.driverName
+      // }
+    },
+    querySearch(queryString, cb) {
+      if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
+        const truckList = this.Trucks
+        const results = queryString ? truckList.filter(this.createFilterTruck(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
+        // 调用 callback 返回车辆列表的数据
+        cb(results)
+      } else {
+        let driverList = this.Drivers
+        let results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, "gi"), 'driverName')) : driverList
+        // 调用 callback 返回司机列表的数据
+        cb(results)
+      }
+    },
     querySearchTruck(queryString, cb) {
       const truckList = this.Trucks
-      const results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
+      const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
       // 调用 callback 返回车辆列表的数据
       cb(results)
     },
-    createFilter(queryString) {
+    createFilter(queryString, prop) {
       return (data) => {
-        // return this.DriverList
-        return this.TruckList
+        if (data[prop]) {
+          return (queryString.test(data[prop]))
+        }
       }
     }
   }
@@ -860,16 +896,16 @@ export default {
   flex-direction: column;
   flex: 1;
   position: relative;
-  .load_btn_transferTable{
-    display:flex;
+  .load_btn_transferTable {
+    display: flex;
     flex-direction: column;
     flex: 1;
-    height:100%;
+    height: 100%;
   }
   .load_btn_boxs {
     position: relative;
     top: 18px;
-    right:10px;
+    right: 10px;
     z-index: 33;
     text-align: right;
     height: 0;
@@ -885,28 +921,28 @@ export default {
     flex-direction: column;
 
     .loadFrom {
-      margin-bottom:10px;
+      margin-bottom: 10px;
       .loadFrom-type {
         position: absolute;
         z-index: 33;
         right: 40px;
         top: 20px;
       }
-      .formItemTextDanger{
-        .el-form-item__label{
-          color:#ef0000;
+      .formItemTextDanger {
+        .el-form-item__label {
+          color: #ef0000;
         }
       }
     }
     .el-collapse {
       border: 2px solid #cdf;
     }
-    .el-collapse-item__content{
-      padding:0;
+    .el-collapse-item__content {
+      padding: 0;
     }
     .el-collapse-item__header {
-      border-bottom:2px solid #cdf;
-      background-color:#FFFFFF;
+      border-bottom: 2px solid #cdf;
+      background-color: #FFFFFF;
       padding: 0 0 0 20px;
       height: 40px;
       line-height: 40px;
@@ -921,16 +957,17 @@ export default {
       left: 20px;
       top: 5px;
     }
-    .loadFrom-type-baseInfo{
+    .loadFrom-type-baseInfo {
       display: flex;
       flex-direction: row;
       margin-bottom: -10px;
-      .el-input{
-        width:220px;
+      .el-input {
+        width: 220px;
       }
     }
   }
 }
+
 .my-autocomplete {
   li {
     line-height: normal;
@@ -942,7 +979,7 @@ export default {
     }
     .addr {
       font-size: 12px;
-      color: #b4b4b4;
+      color: #999;
     }
     .highlighted .addr {
       color: #ddd;
@@ -951,29 +988,29 @@ export default {
 }
 
 ul.feeList {
-  margin:10px;
-  border:1px solid #d0d7e5;
+  margin: 10px;
+  border: 1px solid #d0d7e5;
   display: flex;
   li {
-    text-align:center;
-    height:70px;
-    border-right:1px solid #d0d7e5;
-    p{
-      background-color:#eaf0ff;
-      line-height:36px;
-      margin-bottom:-5px;
+    text-align: center;
+    height: 70px;
+    border-right: 1px solid #d0d7e5;
+    p {
+      background-color: #eaf0ff;
+      line-height: 36px;
+      margin-bottom: -5px;
     }
-    .el-input__inner{
-      margin-top:-5px;
-      height:33px;
+    .el-input__inner {
+      margin-top: -5px;
+      height: 33px;
       border: none;
     }
     .el-input__inner:focus {
-      background-color:#d0d7e5;
+      background-color: #d0d7e5;
       border-radius: 0px;
     }
-    .el-form-item__error{
-      margin-top:-6px;
+    .el-form-item__error {
+      margin-top: -6px;
     }
   }
 }

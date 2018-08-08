@@ -460,6 +460,13 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
+      .el-input.is-disabled .el-input__inner{
+        background-color: #fff;
+        color: #222;
+        text-align: center;
+        border:none;
+        font-size:13px;
+      }
     }
   }
 }

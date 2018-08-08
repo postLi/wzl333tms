@@ -37,7 +37,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" @change="getTreeOrgid" />
+          <SelectTree v-model="form.orgid" @change="getTreeOrgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="车辆品牌" prop="truckBrand">
           <el-input maxlength="20" v-model="form.truckBrand" auto-complete="off"></el-input>
@@ -233,6 +233,7 @@ export default {
   },
   watch: {
     popVisible(newVal, oldVal) {
+      this.form.orgid = this.orgid
       if (!this.inited) {
         this.inited = true
         this.initInfo()
