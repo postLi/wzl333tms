@@ -1,5 +1,5 @@
 <template>
-<el-container :key="viewKey">
+<el-container :key="viewKey" v-loading="loading">
   <el-header style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
@@ -42,21 +42,37 @@
             </p>
           </li>
           <div class="btn_content" v-if="flog">
-            <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd">开单</el-button></p>
+            <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button></p>
           </div>
         </ul>
         <!-- <template v-if="isParentOrg">
           <p v-if="dataset.orgCount > 0"><i :class="dataset.orgCount > 0 ? 'el-icon-success ' : ''"></i>网点管理：网点{{dataset.orgCount}}个，需要增加点击右边增加按钮。<el-button type="primary"   plain @click="addDoTotVisible = true" class="btn_qx1">增加</el-button></p>
           <p v-else><i class="el-icon-warning"></i>网点管理：你还没有增加网点，请点击右边添加按钮。<el-button type="primary"   plain @click="addDoTotVisible = true" class="btn_qx">添加</el-button></p>
         </template> -->
-        
       </div>
       <!-- 网点管理 -->
-      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" @success="addNewSuccess('orgCount')"  :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" />
       <!-- 权限管理 -->
-      <Newrole :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  @success="addNewSuccess('addrole')" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" /> 
+      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')"/> 
       <!-- 员工管理 -->
-      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  @success="addNewSuccess('adduser')" :popVisible.sync="addDoTotVisible2" />
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  :popVisible.sync="addDoTotVisible2" />
+      <!-- 发货客户 -->
+      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" />
+      <!-- 收货客户 -->
+      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" />
+      <!-- 司机管理 -->
+      <Newdriver :companyId="otherinfo.companyId" :isModify="true" :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')"/>
+      <!-- 车辆管理 -->
+      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')"  />
+      <!-- 承运商管理 -->
+      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')"/>
+      <!-- 开单页面创建运单 -->
+      <!-- 底部按钮操作部分 -->
+      <!-- <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" /> -->
+      <!-- 弹窗 -->
+      <!-- <FeeDialog :dialogVisible.sync="dialogVisible" />
+      <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
+      <ManageRemarks @success="setRemark" :popVisible.sync="popVisible" /> -->
     </div>
      <!-- <div class="main_content" v-else-if="type===3">
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
@@ -78,15 +94,34 @@ import progressbar from './components/progressbar'
 import NewOrg from '@/views/company/groupManage/addDot'
 import Newrole from '@/views/company/permissionManage/addRole'
 import Newuser from '@/views/company/employeeManage/add'
+import AddCustomer from '@/views/company/customerManage/components/add'
+import Newdriver from '@/views/company/driverManage/components/add'
+import Newtruck from '@/views/company/trunkManage/components/add'
+import Newcarrier from '@/views/company/carrierManage/components/add'
+// 创建运单页面
+// import FooterBtns from '@/views/operation/order/createOrder/components/btns'
+// import FeeDialog from '@/views/operation/order/createOrder/feePop'
+// import PersonDialog from '@/views/operation/order/createOrder/personSetup'
+// import ManageRemarks from '@/views/operation/order/createOrder/remarks'
 export default {
   components: {
     progressbar,
     NewOrg,
     Newrole,
-    Newuser
+    Newuser,
+    AddCustomer,
+    Newdriver,
+    Newtruck,
+    Newcarrier
+    // FooterBtns,
+    // FeeDialog,
+    // PersonDialog,
+    // ManageRemarks
   },
   data() {
     return {
+      loading: true,
+      info: {},
       ischecked: false,
       showAni: false,
       cancelAni: false,
@@ -103,6 +138,10 @@ export default {
       addDoTotVisible6: false,
       addDoTotVisible7: false,
       addDoTotVisible8: false,
+      dialogVisible: false,
+      dialogVisiblePerson: false,
+      popVisible: false,
+      // printSetOrderVisible: false,
       flog: false,
       countList: [{
         value: 0,
@@ -190,8 +229,10 @@ export default {
   },
   mounted() {
     this.isParentOrg()
+    this.loading = true
     getInitializationCheck().then(data => {
       this.dataset = data
+      this.loading = false
       var totals = 0
       for (const total in data) {
         if (data[total] === 0 || data[total] === null) {
@@ -213,22 +254,48 @@ export default {
       console.log('asdasd', this.otherinfo.orgid === this.otherinfo.companyId)
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
-    addNewSuccess(type) {
-      // if (type === 'orgCount') {
-      //   // ..
-      //   this.addDoTotVisible = true
-      // }
-      // if (type === 'addrole') {
-      //   this.addDoTotVisible = true
-      // }
-      // switch (type) {
-      //   case 'orgCount':
-      //     this.addDoTotVisible = true
-      //     break
-      //   case 'aobj
-      //     this.addDoTotVisible = true
-      //     break
-      // }
+    fetchData(type) {
+      this.loading = true
+      if (type === 'addOrg') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addRole') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addReciveCustomer') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addSendCustomer') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addDiver') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addTruck') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addCarrier') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
+      if (type === 'addSetting') {
+        this.initSystem()
+        this.closeAddDot()
+        this.loading = false
+      }
     },
     closeAddDot(obj) {
       console.log(obj)
@@ -241,6 +308,10 @@ export default {
       this.addDoTotVisible6 = false
       this.addDoTotVisible7 = false
       this.addDoTotVisible8 = false
+      this.dialogVisible = false
+      this.dialogVisiblePerson = false
+      this.popVisible = false
+      // this.printSetOrderVisible = false
     },
     doAction(type) {
       switch (type) {
@@ -254,6 +325,15 @@ export default {
           this.type = 3
           this.ischecked = false
           this.initSystem()
+          break
+        case 'order':
+          // this.dialogVisible = true
+          // this.dialogVisiblePerson = true
+          // this.popVisible = true
+          // this.$router.push({ path: '../../operation/order/orderManage' })
+          // this.eventBus.$emit('showCreateOrder', {
+          // })
+          this.$router.push({ path: '../../operation/order/createOrder' })
           break
         case 'orgCount':
           this.addDoTotVisible = true
@@ -280,48 +360,33 @@ export default {
           this.addDoTotVisible7 = true
           break
         case 'settingCount':
-          this.addDoTotVisible8 = true
+          // this.addDoTotVisible8 = true
+          this.$router.push({ path: '../../company/systemSetup' })
           break
       }
     },
     initSystem() {
-      this.viewKey = Math.random()
+      this.viewKey = new Date().getTime()
       this.type = 2
-
+      this.loading = true
+      this.dataset = {}
+      // options获取原来的数据
+      this.countList = this.$options.data().countList
       getInitializationCheck().then(data => {
+        this.loading = false
         this.showani = true
         this.dataset = data
         for (const item in this.countList) {
           this.countList[item].value = data[ this.countList[item].label]
           this.countList[item].message = this.countList[item].message.replace(/undefined/, String(this.countList[item].value))
         }
-        var resuct = 0
+        let resuct = 0
         for (const total in data) {
           if (data[total] === 0 || data[total] === null) {
             resuct++
           }
         }
         this.$set(this.dataset, 'totals', resuct)
-        // console.log(resuct, '数量0000')
-        /* const oDiv = document.getElementById('oDiv')
-        const liList = oDiv.querySelectorAll('li')
-        const oTitle1 = document.getElementById('oTitle1')
-        const oTitle2 = document.getElementById('oTitle2')
-        oTitle2.style.display = 'none'
-        var idx = 0
-        function slideDown() {
-          var t = setInterval(function() {
-            if (idx < liList.length) {
-              liList[idx].style.display = 'block'
-              // oTitle1.style.display = 'none'
-              // oTitle2.style.display = 'block'
-              idx++
-            } else {
-              clearInterval(t)
-            }
-          }, 100)
-        }
-        slideDown() */
       })
     },
    /*  initSystem() {
@@ -409,9 +474,11 @@ export default {
      margin-top:20px;
     .top_content{
         border:1px solid rgba(188, 188, 188, 1);
-        height: 154px;
+        height: 148px;
         // background-color: #09abff;
         background-image: url(../../assets/checkImg/bgo1.png);
+        background-repeat:no-repeat;
+        background-size: 100%;
         padding: 45px 54px;
         // text-align: center;
         h6{
@@ -434,12 +501,15 @@ export default {
     }
     .box_top{
       .top_content2{
-        height: 154px;
+        height: 148px;
         line-height: 24px;
         padding: 45px 126px;
         border: 1px solid #bcbcbc;
         // background-color: #09abff;
         background-image: url(../../assets/checkImg/bgo1.png);
+        background-image: url(../../assets/checkImg/bgo1.png);
+        background-repeat:no-repeat;
+        background-size: 100%;
         position: relative;
         h6{
           font-size: 30px;

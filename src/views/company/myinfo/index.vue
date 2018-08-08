@@ -57,18 +57,18 @@
         {{ otherinfo.orgName }}
       </el-col>
 
-      <el-col :span="4">
-        <div class="label">所属部门：</div>
+      <el-col :span="20">
+        <div class="label" style="text-align: left;margin-left:99px;">所属部门：<span class="wzloooo">{{ otherinfo.departmentName || otherinfo.departmentId }}</span></div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.departmentName || otherinfo.departmentId }}
+        <!-- {{ otherinfo.departmentName || otherinfo.departmentId }} -->
       </el-col>
 
-      <el-col :span="4">
-        <div class="label">职位：</div>
+      <el-col :span="20">
+        <div class="label" style="text-align: left;margin-left:130px;">职位：<span  class="wzloooo">{{ otherinfo.position }}</span></div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.position }}
+        <!-- {{ otherinfo.position }} -->
       </el-col>
     </el-row>
     <ChangePwPop :isShow.sync="showPop" @close="close" />
@@ -138,7 +138,10 @@ export default {
     padding-bottom: 20px;
     background: #fff;
   }
-
+  .wzloooo{
+    margin-left:23px;
+    color: #333;
+  }
   .info-title{
     font-size: 16px;
     color: #333;

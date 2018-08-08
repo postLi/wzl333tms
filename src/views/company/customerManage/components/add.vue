@@ -239,6 +239,8 @@ export default {
       this.inited = true
       this.initInfo()
     }
+    console.log(this.issender)
+    console.log(this.popTitle)
   },
   watch: {
     popVisible(newVal, oldVal) {
@@ -246,6 +248,10 @@ export default {
         this.inited = true
         this.initInfo()
       }
+      if (newVal) {
+        this.setTitle()
+      }
+      console.log(this.popTitle)
     },
     orgid(newVal) {
       this.form.orgid = newVal
@@ -261,6 +267,7 @@ export default {
         console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
         this.fixPhone = this.form.fixPhone
       } else {
+        console.log(this.issender)
         this.popTitle = '新增' + (this.issender ? '发' : '收') + '货人'
         for (const i in this.form) {
           this.form[i] = ''
@@ -274,6 +281,29 @@ export default {
     }
   },
   methods: {
+    setTitle() {
+      if (this.isModify) {
+        this.popTitle = '修改' + (this.issender ? '发' : '收') + '货人'
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
+          this.form[i] = data[i]
+        }
+        this.form.customerId = data.customerId
+        console.log('this.fixphone', this.fixPhone, this.form.fixPhone, data)
+        this.fixPhone = this.form.fixPhone
+      } else {
+        console.log(this.issender)
+        this.popTitle = '新增' + (this.issender ? '发' : '收') + '货人'
+        for (const i in this.form) {
+          this.form[i] = ''
+        }
+        delete this.form.customerId
+        this.form.companyType = 2 // 重置为选中公司
+        this.form.customerType = this.issender ? 1 : 2 // 重置为发货人
+        this.form.orgid = this.orgid
+        this.fixPhone = ''
+      }
+    },
     initInfo() {
       this.loading = false
     },
@@ -315,6 +345,7 @@ export default {
     },
     closeMe(done) {
       this.reset()
+      // this.$emit('close')
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()

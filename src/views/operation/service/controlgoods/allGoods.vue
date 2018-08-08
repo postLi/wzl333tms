@@ -548,7 +548,14 @@ export default {
         prop: 'status',
         width: '120',
         slot: (scope) => {
-          return scope.row.status === 1 ? '未放货' : '已放货'
+          // return scope.row.status === 1 ? '未放货' : '已放货'
+          if (scope.row.status === 1) {
+            return '未放货'
+          } else if (scope.row.status === 2) {
+            return '已放货'
+          } else {
+            return '未控货'
+          }
         },
         fixed: false
       }, {
@@ -908,8 +915,8 @@ export default {
               message: '一次只能选择一条运单',
               type: 'warning'
             })
-          } else if (this.selected[0].shipIsControll == 1) {
-            this.$message.warning('选择的订单已为控货！')
+          } else if (this.selected[0].shipStatus == 67) {
+            this.$message.warning('选择的运单已签收不能控货！')
           } else {
             const id = this.selected[0].id
             console.log(id)

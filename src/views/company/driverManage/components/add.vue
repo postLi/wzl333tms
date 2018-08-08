@@ -269,6 +269,7 @@ export default {
     reset() {
       this.$refs['ruleForm'].resetFields()
       this.form.driverMobile = ''
+      this.form.idcardPicture = ''
     },
     closeMe(done) {
       this.reset()
