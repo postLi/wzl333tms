@@ -2,7 +2,7 @@
   <div class="OrderDetail-main" v-loading="loading">
     <!-- 各种状态显示 -->
     <div class="order-status-info">
-      <span class="order-status-name">{{form.tmsOrderShipInfo.shipStatusName}}</span><span class="order-status-org">{{form.tmsOrderShipInfo.toOrgName}}</span>
+      <span class="order-status-name">{{ form.tmsOrderShipInfo.shipIsSeparate !== 1 ? form.tmsOrderShipInfo.shipStatusName : '已拆单' }}</span><span class="order-status-org" v-if="form.tmsOrderShipInfo.shipIsSeparate !== 1">{{form.tmsOrderShipInfo.shipOrgidName}}</span>
     </div>
 
     <div class="createOrder-title"><span>收发货凭证</span></div>
