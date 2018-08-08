@@ -148,57 +148,30 @@
 
         }
       }
+  
     },
     watch: {
-      dotInfo(newVal) {
-        this.checkShowMessage = false
-        if (newVal) {
-          this.form = objectMerge2(this.dotInfo)
-          this.form.parentId = this.dotInfo.parentId || this.companyId
-          console.log('打印', this.form)
-        } else {
-          this.popTitle = '新增网点'
-          for (const i in this.form) {
-            this.form[i] = ''
-          }
-          if (this.form.id) {
-            delete this.form.id
-          }
-  
-          delete this.form.createTime
-          this.form.orgType = 1
-          this.form.status = 32
-          this.form.manageType = 3
-          this.form.parentId = this.dotInfo.parentId || this.companyId
-          this.form.accountName = ''
+      popVisible(val) {
+        if (val) {
+          console.log(JSON.stringify(this.doInfo))
         }
+        this.watchDate(this.doInfo)
       },
-      isModify(newVal) {
-        if (newVal) {
-          this.popTitle = '修改网点'
+      doInfo: {
+        handler() {
+          this.checkShowMessage = false
+  
+          this.watchDate(this.doInfo)
+        },
+        immediate: true,
+        deep: true
+      },
 
-          this.form = objectMerge2(this.dotInfo)
-          this.form.parentId = this.dotInfo.parentId || this.companyId
-          console.log(this.form)
-        } else {
-          this.popTitle = '新增网点'
-          for (const i in this.form) {
-            this.form[i] = ''
-          }
-          if (this.form.id) {
-            delete this.form.id
-          }
-          // if (this.form.accountStatus === 0) {
-          //   this.form.accountName = ''
-          // }
-
-          delete this.form.createTime
-          this.form.orgType = 1
-          this.form.status = 32
-          this.form.manageType = 3
-          this.form.parentId = this.dotInfo.parentId || this.companyId
-          this.form.accountName = ''
-        }
+      isModify: {
+        handler() {
+          this.watchDate()
+        },
+        immediate: true
       }
     },
     data() {
@@ -321,6 +294,7 @@
       }
     },
     mounted() {
+      this.watchDate()
       this.form.parentId = this.orgid || this.companyId
       Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
         this.loading = false
@@ -330,6 +304,53 @@
       })
     },
     methods: {
+      changeDate(item) {
+        this.form.orgName = item.orgName
+        this.form.responsibleTelephone = item.responsibleTelephone
+        this.form.responsibleName = item.responsibleName
+        this.form.city = item.city
+        this.form.serviceName = item.serviceName
+        this.form.parentName = item.parentName
+        this.form.servicePhone = item.servicePhone
+        this.form.detailedAddr = item.detailedAddr
+        this.form.networkCode = item.networkCode
+        this.form.collectionFee = item.collectionFee
+        this.form.benchmark = item.benchmark
+        this.form.warningQuota = item.warningQuota
+        this.form.lockMachineQuota = item.lockMachineQuota
+        this.form.remarks = item.remarks
+        this.form.orgType = item.orgType
+        this.form.status = item.status
+        this.form.accountStatus = item.accountStatus
+      },
+      watchDate() {
+        for (const i in this.form) {
+          this.form[i] = ''
+        }
+        if (this.isModify) {
+          this.popTitle = '修改网点'
+          // const data = Object.assice({}, this.form)
+          // for (var i in data) {
+          //   this.form[i] = this.data[i]
+          // }
+          // this.form = objectMerge2(this.dotInfo)
+          this.changeDate(this.dotInfo)
+          this.form.parentId = this.dotInfo.parentId || this.companyId
+          console.log(2)
+        } else {
+          this.popTitle = '新增网点'
+  
+          if (this.form.id) {
+            delete this.form.id
+          }
+          delete this.form.createTime
+          this.form.orgType = 1
+          this.form.status = 32
+          this.form.manageType = 3
+          this.form.parentId = this.dotInfo.parentId || this.companyId
+          this.form.accountName = ''
+        }
+      },
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
           if (!value) {
@@ -357,8 +378,7 @@
         this.form.parentId = id
       },
       reset() {
-        Object.assign(this.form)
-        this.$refs['ruleForm'].resetFields()
+        // this.$refs['ruleForm'].resetFields()
       },
       closeMe(done) {
         this.$emit('close')
@@ -393,10 +413,9 @@
             }
             reqPromise.then(res => {
               this.loading = false
-
-              this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')
+              this.$message.success('保存成功')
             }).catch(err => {
               this.$message({
                 type: 'error',

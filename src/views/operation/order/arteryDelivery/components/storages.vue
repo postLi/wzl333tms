@@ -476,25 +476,25 @@ import SelectTree from '@/components/selectTree/index'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 export default {
   data() {
-    const validateNum = function (rule,value,callback) {
-      if(!REGEX.ONLY_NUMBER.test(value)){
+    const validateNum = function(rule, value, callback) {
+      if (!REGEX.ONLY_NUMBER.test(value)) {
         callback(new Error('请输入数字~'))
-      }else if(REGEX.KONGE.test(value)){
+      } else if (REGEX.KONGE.test(value)) {
         // this.$message.error('不能输入空格~')
         callback(new Error('不能输入空格~'))
-      }else{
+      } else {
         callback()
       }
     }
 
     return {
-      ruleData:{
-        arriveHandlingFee:[
-          {validator: validateNum, trigger: 'blur'},
-        ],//
-        arriveOtherFee:[
-          {validator: validateNum, trigger: 'blur'}
-        ],
+      ruleData: {
+        arriveHandlingFee: [
+          { validator: validateNum, trigger: 'blur' }
+        ], //
+        arriveOtherFee: [
+          { validator: validateNum, trigger: 'blur' }
+        ]
       },
       tablekey: '1',
       // titleIcon:"到车确定",
@@ -527,23 +527,23 @@ export default {
       detailList: [],
       selectDetailList: [],
       selected: [],
-      //加载状态
+      // 加载状态
       loading: true,
       // setupTableVisible: false,
       // AddCustomerVisible: false,
       formMode1: {
       },
       sendTypeId: {
-        typeId: 54, //等于54为干线到车确认
+        typeId: 54 // 等于54为干线到车确认
       },
       sendModel: {
-        "tmsOrderLoad": {
-          "id": ""
+        'tmsOrderLoad': {
+          'id': ''
         },
         tmsOrderLoadFee: {
-          "id": "",
-          "arriveHandlingFee": "",
-          "arriveOtherFee": ""
+          'id': '',
+          'arriveHandlingFee': '',
+          'arriveOtherFee': ''
         },
         tmsOrderLoadDetailsList: [
           // {
@@ -555,10 +555,10 @@ export default {
         ]
       },
       searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "loadId": 1
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
+          'loadId': 1
         }
       }
     }
@@ -587,7 +587,7 @@ export default {
     isModify: {
       type: Boolean,
       default: false
-      },
+    },
     isAlFun: {
       type: Boolean,
       default: false
@@ -607,11 +607,11 @@ export default {
     }
   },
   watch: {
-    validateIsEmpty (msg = '不能为空！') {
+    validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
-        if(!value){
+        if (!value) {
           callback(new Error(msg))
-        }else{
+        } else {
           callback()
         }
       }
@@ -621,13 +621,9 @@ export default {
     info(newVal) {
       if (this.isModify) {
         this.popTitle = '到车确定'
-
-      }
-      else if(this.isAlFun){
+      } else if (this.isAlFun) {
         this.popTitle = '查看详情'
-
-      }
-      else {
+      } else {
         this.popTitle = '到车入库'
       }
       this.getBatchNo = this.info.batchNo
@@ -636,16 +632,13 @@ export default {
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
     },
-    isAlFun(newVal){
+    isAlFun(newVal) {
       this.tablekey = +new Date()
       if (this.isModify) {
         this.popTitle = '到车确定'
-      }
-      else if(this.isAlFun){
+      } else if (this.isAlFun) {
         this.popTitle = '查看详情'
-
-      }
-      else {
+      } else {
         this.popTitle = '到车入库'
       }
     },
@@ -653,12 +646,9 @@ export default {
       this.tablekey = +new Date()
       if (this.isModify) {
         this.popTitle = '到车确定'
-      }
-      else if(this.isAlFun){
+      } else if (this.isAlFun) {
         this.popTitle = '查看详情'
-
-      }
-      else {
+      } else {
         this.popTitle = '到车入库'
       }
     },
@@ -667,26 +657,24 @@ export default {
         this.inited = true
         this.initInfo()
       }
-    },
+    }
   },
   mounted() {
-
     this.propsId = this.info.id
     if (this.popVisible) {
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
-
     }
   },
   methods: {
     changeData(newVal) { // 判断当行
-      let curAmount = this.detailList[newVal].actualAmount // 实到件数
-      let curWeight = this.detailList[newVal].actualWeight // 实到重量
-      let curVolume = this.detailList[newVal].actualVolume // 实到体积
-      let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
-      let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
-      let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      const curAmount = this.detailList[newVal].actualAmount // 实到件数
+      const curWeight = this.detailList[newVal].actualWeight // 实到重量
+      const curVolume = this.detailList[newVal].actualVolume // 实到体积
+      const curloadAmount = this.detailList[newVal].loadAmount // 配载件数
+      const curloadWeight = this.detailList[newVal].loadWeight // 配载重量
+      const curloadVolume = this.detailList[newVal].loadVolume // 配载体积
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
 
@@ -699,17 +687,17 @@ export default {
           type: 'warning'
         })
       }
-      if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$notify({
-          title: '提示',
-          message: '实到重量和实到体积不能同时为0',
-          type: 'warning'
-        })
-      }
+      // if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
+      //   console.log(this.selectDetailList.length, this.detailList.length)
+      //   this.detailList[newVal].actualAmount = curloadAmount
+      //   this.detailList[newVal].actualWeight = curloadWeight
+      //   this.detailList[newVal].actualVolume = curloadVolume
+      //   this.$notify({
+      //     title: '提示',
+      //     message: '实到重量和实到体积不能同时为0',
+      //     type: 'warning'
+      //   })
+      // }
       if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
         console.log(this.selectDetailList.length)
@@ -724,8 +712,7 @@ export default {
           message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
           type: 'warning'
         })
-      }
-      else if (curAmount < 0 || curWeight < 0 || curVolume < 0) {
+      } else if (curAmount < 0 || curWeight < 0 || curVolume < 0) {
         this.$notify({
           title: '提示',
           message: '实到件数/实到重量/实到体积不能小于0,默认为该库存数量',
@@ -754,17 +741,16 @@ export default {
     },
     fetchSelectLoadMainInfoList() {
       this.loading = true
-      let selectMainId = this.propsId
+      const selectMainId = this.propsId
       this.searchQuery.vo.loadId = selectMainId
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.formModel = data.list[0]
         this.loading = false
       })
-
     },
     fetchAllCustomer() {
       this.loading = true
-      let _id = this.propsId
+      const _id = this.propsId
       // console.log(_id);
       return getSelectLoadList(_id).then(data => {
         this.detailList = data
@@ -772,17 +758,18 @@ export default {
         this.loading = false
         this.$nextTick(() => { // 默认设置实到数量为配载数量
           this.detailList.forEach(e => {
-            e.actualAmount = e.loadAmount - e.actualAmount
-            e.actualWeight = e.loadWeight - e.actualWeight
-            e.actualVolume = e.loadVolume - e.actualVolume
-
+            e.actualAmount = e.actualAmount
+            e.actualWeight = e.actualWeight
+            e.actualVolume = e.actualVolume
+            // e.actualAmount = e.loadAmount - e.actualAmount
+            // e.actualWeight = e.loadWeight - e.actualWeight
+            // e.actualVolume = e.loadVolume - e.actualVolume
           })
         })
       })
-
     },
     getDetail() {
-      let id = this.propsId
+      const id = this.propsId
       return getLoadDetail(id).then(data => {
         this.trackDetail = Object.assign([], data)
       })
@@ -828,7 +815,7 @@ export default {
     reset() {},
     closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
+      this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
       }
@@ -901,47 +888,57 @@ export default {
                 type: 'success',
                 message: '到车确定成功'
               })
-              this.$emit("update:isModify", false)
+              this.$emit('update:isModify', false)
               this.$emit('success')
               this.loading = false
               // this.isHiddenBtn = false
             })
             // this.closeMe()
           } else {
-            if(this.isAlFun){
+            if (this.isAlFun) {
               this.$message({
                 type: 'info',
                 message: '不能再次到车入库'
               })
               return false
             }
-            this.sendModel.tmsOrderLoad.id = this.formModel.id
-            this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
-            this.sendModel.tmsOrderLoadFee.arriveHandlingFee = this.formModel.arriveHandlingFee
-            this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
-            this.sendModel.tmsOrderLoadDetailsList = []
             this.selected.forEach((value, index, array) => {
-              this.sendModel.tmsOrderLoadDetailsList.push({
-                id: value.id,
-                actualAmount: value.actualAmount,
-                actualWeight: value.actualWeight,
-                actualVolume: value.actualVolume
-              })
-            })
-            data = this.sendModel
-              postAddRepertory(55, data).then(res => {
+              if (value.actualAmount === 0 && value.actualWeight === 0 && value.actualVolume === 0) {
                 this.$message({
-                  type: 'success',
-                  message: '到车入库成功'
+                  type: 'info',
+                  message: '实到件数/实到重量/实到体积不能小于0'
                 })
-                this.$emit('success')
-              })
-              this.closeMe()
+                return false
+              } else {
+                this.sendModel.tmsOrderLoad.id = this.formModel.id
+                this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
+                this.sendModel.tmsOrderLoadFee.arriveHandlingFee = this.formModel.arriveHandlingFee
+                this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
+                this.sendModel.tmsOrderLoadDetailsList = []
+                this.selected.forEach((value, index, array) => {
+                  this.sendModel.tmsOrderLoadDetailsList.push({
+                    id: value.id,
+                    actualAmount: value.actualAmount,
+                    actualWeight: value.actualWeight,
+                    actualVolume: value.actualVolume
+                  })
+                })
+                data = this.sendModel
+                postAddRepertory(55, data).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '到车入库成功'
+                  })
+                  this.$emit('success')
+                })
+                this.closeMe()
+              }
+            })
           }
-          break;
+          break
           // 导出数据
         case 'export':
-          let ids2 = this.selected.map(el => {
+          const ids2 = this.selected.map(el => {
             return el.customerId
           })
           getExportExcel(ids2.join(',')).then(res => {
@@ -950,7 +947,7 @@ export default {
               message: '即将自动下载!'
             })
           })
-          break;
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -975,16 +972,16 @@ export default {
     },
     // 取消高亮样式
     offThisActive(e) {
-      let p = closest(e.target, ".el-step")
+      const p = closest(e.target, '.el-step')
       if (p) {
-        p.classList.remove("trackactive")
+        p.classList.remove('trackactive')
       }
     },
     // 设置高亮样式
     setThisActive(e) {
-      let p = closest(e.target, ".el-step")
+      const p = closest(e.target, '.el-step')
       if (p) {
-        p.classList.add("trackactive")
+        p.classList.add('trackactive')
       }
     }
   }

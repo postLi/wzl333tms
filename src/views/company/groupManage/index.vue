@@ -161,7 +161,7 @@
 
         </div>
       </div>
-      <AddDot :dotInfo="form" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
+      <AddDot :dotInfo="getform" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="isModify" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot" />
        <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid" @success="fetchOrgId(getOrgId)" />
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep" :createrId ="otherinfo.orgid"></DepMaintain>
     </div>
@@ -259,9 +259,11 @@ export default {
           orgInfoCache: {},
           userinfo: {},
           pageSize: '',
-          pageNum: ''
+          pageNum: '',
+          getform: {}
         }
       },
+
       mounted() {
         this.fetchOrg()// 左边树形数据
           // 部门维护
@@ -282,6 +284,8 @@ export default {
           // 处理返回的节点数据
         handleOrgInfo(data) {
           this.form = data
+          this.getform = Object.assign({}, data)
+          console.log('xxxxx:', JSON.stringify(this.getform))
         },
           // 根据组织id显示列表
         fetchOrgId(id) {

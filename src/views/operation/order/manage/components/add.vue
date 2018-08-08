@@ -257,8 +257,7 @@ export default {
       }
       if (!value && !hasOne) {
         callback(new Error('体积或重量必填其中一项'))
-      }
-      else {
+      } else {
         hasOne = true
         callback()
       }
@@ -273,18 +272,18 @@ export default {
     return {
       rules: {
         'tmsOrderPre.orderToCityName': [
-          { required: true,validator: this.validateIsEmpty('到达城市不能为空')}
+          { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
         ],
         'customSend.customerName': [
           // { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' },
-          {required: true, validator: validcustomerName }
+          { required: true, validator: validcustomerName }
         ],
         'customSend.customerMobile': [
           { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') },
           { validator: validateMobile, trigger: 'blur' }
         ],
         'customRece.customerName': [
-          { required: true, validator: this.validateIsEmpty('收货人不能为空')}
+          { required: true, validator: this.validateIsEmpty('收货人不能为空') }
         ],
         'customRece.customerMobile': [
           { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') },
@@ -301,27 +300,27 @@ export default {
         'tmsOrderCargoList.cargoVolume': [{
           validator: validateVolumnWeight, trigger: 'blur'
         },
-          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}],
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }],
         'tmsOrderCargoList.cargoWeight':
-          [{
+        [{
           validator: validateVolumnWeight, trigger: 'blur'
         },
-            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
         ],
         'tmsOrderCargoList.description': [
           { validator: validateOnlyNumberAndLetter, trigger: ['change'] }
         ],
-        'tmsOrderCargoList.agencyFund':[
-          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        'tmsOrderCargoList.agencyFund': [
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
         ],
-        'tmsOrderCargoList.commissionFee':[
-          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        'tmsOrderCargoList.commissionFee': [
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
         ],
-        'tmsOrderCargoList.shipFee':[
-          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        'tmsOrderCargoList.shipFee': [
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
         ],
-        'tmsOrderCargoList.productPrice':[
-          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+        'tmsOrderCargoList.productPrice': [
+          { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
         ]
       },
       btnsize: 'mini',
@@ -383,8 +382,8 @@ export default {
           // commissionFee:'',//代收款手续费
           // agencyFund:'',//代收款
           // productPrice:'',//声明价值
-          orderRemarks: '',//
-          id:''
+          orderRemarks: '', //
+          id: ''
           // cargoId,senderId,receiverId
         }
       },
@@ -408,17 +407,16 @@ export default {
       orderSn: '',
       loading: false,
       inited: false,
-      //验证
+      // 验证
       checkShowMessage: false,
-      isChecked : false,
-      isCheckedShow : false
+      isChecked: false,
+      isCheckedShow: false
     }
   },
   mounted() {
     if (!this.inited) {
       this.inited = true
       this.initInfo()
-
     }
     this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
   },
@@ -446,16 +444,14 @@ export default {
         this.watchData()
       },
       immediate: true
-    },
+    }
   },
   methods: {
-    changeOrderTo(item){
-      console.log(item);
+    changeOrderTo(item) {
+      // console.log(item)
     },
-    watchData(){
-
+    watchData() {
       if (this.isModify) {
-
         this.popTitle = '修改订单'
         this.orderSn = this.info.orderSn
         this.infoData(this.info)
@@ -529,13 +525,13 @@ export default {
         }
       }
     },
-    showMessage(msg){
-      if(this.isChecked && !this.isCheckedShow) {
+    showMessage(msg) {
+      if (this.isChecked && !this.isCheckedShow) {
         this.isCheckedShow = true
       }
       if (this.isCheckedShow) {
         this.checkShowMessage = true
-      }else{
+      } else {
         this.checkShowMessage = false
       }
     },
@@ -615,10 +611,9 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$message.success("保存成功")
+            this.$message.success('保存成功')
             this.closeMe()
             this.$emit('success')
-
           }).catch(err => {
             this.loading = false
           })
