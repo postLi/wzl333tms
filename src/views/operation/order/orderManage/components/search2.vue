@@ -16,7 +16,7 @@
         </div>
       </el-form-item>
       <el-form-item label="开单网点:">
-        <select-tree v-model="searchForm.orgid" />
+        <select-tree v-model="searchForm.orgid"  :orgid="otherinfo.orgid" />
       </el-form-item>
       <el-form-item label="运单号" class="searchinfo--order">
         <el-input

@@ -21,7 +21,7 @@ export default {
           path: '/finance/accountsPayable/waybill', icon: 'QQ', name: '运单结算', component: _import('finance/accountsPayable/waybill/index'), meta: { role: ['admin'], title: '运单结算', noCache: false }
         },
         {
-          path: '/finance/accountsPayable/batch', icon: 'QQ', name: '批次结算', component: _import('finance/accountsPayable/batch/index'), meta: { role: ['admin'], title: '批次结算', noCache: false }
+          path: '/finance/accountsPayable/batch', icon: 'QQ', name: '车费结算', component: _import('finance/accountsPayable/batch/index'), meta: { role: ['admin'], title: '车费结算', noCache: false }
         },
         {
           path: '/finance/accountsLoad', icon: 'QQ', hidden: true, name: '账款结算', component: _import('finance/accountsLoad/index'), meta: { role: ['admin'], title: '账款结算', noCache: false }

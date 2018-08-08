@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <el-form-item label="所属网点:">
-          <SelectTree v-model="searchForm.orgId" />
+          <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" />
       </el-form-item>
       <el-form-item label="收支方式:">
         <SelectType @change="finitem" v-model="searchForm.financialWayTypeId" type="financial_way_type" placeholder="请选择" class="pickup-way" />

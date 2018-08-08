@@ -13,7 +13,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="中转网点:">
-          <SelectTree v-model="searchForm.orgid" />
+          <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
       </el-form-item>
       <el-form-item label="对账状态
 :">

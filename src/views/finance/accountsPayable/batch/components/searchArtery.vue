@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="100px" class="staff_searchinfo clearfix">
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <el-form-item label="发车时间">
       <el-date-picker
             v-model="searchTime"
@@ -15,7 +15,7 @@
       <SelectTree v-model="searchForm.orgid" clearable>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="所属结算网点" prop="ascriptionOrgid">
+    <el-form-item label="结算网点" prop="ascriptionOrgid">
       <SelectTree v-model="searchForm.ascriptionOrgid"  :orgid="otherinfo.orgid"  clearable>
       </SelectTree>
     </el-form-item>

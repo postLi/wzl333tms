@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="carrier_searchinfo clearfix">
       <el-form-item label="网点">
-          <SelectTree v-model="searchForm.orgid" />
+          <SelectTree v-model="searchForm.orgid"  :orgid="otherinfo.orgid" />
       </el-form-item>
       <el-form-item label="承运商">
           <el-input

@@ -31,7 +31,7 @@
           <SelectTree v-model="searchForm.orgid" clearable/>
       </el-form-item>
     <el-form-item label="目的网点:">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable/>
+      <SelectTree v-model="searchForm.arriveOrgid" clearable  :orgid="otherinfo.orgid" />
     </el-form-item>
       <el-form-item label="发车批次:">
           <el-input

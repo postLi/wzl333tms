@@ -13,7 +13,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item :label="title+'网点:'">
-          <SelectTree v-model="searchForm.orgId" />
+          <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" />
       </el-form-item>
     <el-form-item label="车牌号码:">
       <el-input v-model="searchForm.memberName" auto-complete="off" maxlength="8"></el-input>

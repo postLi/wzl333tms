@@ -15,7 +15,7 @@
           </div>
         </el-form-item>
         <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.shipFromOrgid" />
+            <SelectTree v-model="searchForm.shipFromOrgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="运单号" prop="shipSn">
             <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" clearable></el-input>
@@ -111,6 +111,7 @@ export default {
   },
   mounted() {
     this.searchForm.shipFromOrgid = this.orgid
+    this.onSubmit()
   },
   methods: {
     // getFromCity(city) {

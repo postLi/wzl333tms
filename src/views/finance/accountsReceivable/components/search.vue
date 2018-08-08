@@ -14,11 +14,11 @@
         </el-date-picker>
       </div>
     </el-form-item>
-    <el-form-item v-if="filter" label="网点:">
-      <select-tree v-model="searchForm.ascriptionOrgId" />
+    <el-form-item v-if="filter" label="结算网点:">
+      <select-tree v-model="searchForm.ascriptionOrgId" :orgid="otherinfo.orgid" />
     </el-form-item>
     <el-form-item label="开单网点:">
-      <select-tree v-model="searchForm.shipFromOrgid" />
+      <select-tree v-model="searchForm.shipFromOrgid"/>
     </el-form-item>
     <el-form-item label="发货人:">
       <el-input

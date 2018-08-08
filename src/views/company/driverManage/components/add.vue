@@ -9,7 +9,7 @@
           <el-input v-numberOnly v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid"  />
+          <SelectTree v-model="form.orgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="身份证号" prop="driverCardid">
           <el-input v-model="form.driverCardid" maxlength="18" auto-complete="off"></el-input>

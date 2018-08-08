@@ -29,7 +29,7 @@
       <!-- <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable /> -->
     </el-form-item>
     <el-form-item label="发车网点">
-      <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+      <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>

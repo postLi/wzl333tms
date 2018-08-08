@@ -13,7 +13,7 @@
         </div>
         </el-form-item>
         <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.shipFromOrgid" type="org_id"/>
+            <SelectTree v-model="searchForm.shipFromOrgid" type="org_id" :orgid="otherinfo.orgid"/>
         </el-form-item>
         <el-form-item label="结算状态:" prop="statusName">
           <el-select v-model="searchForm.statusName">

@@ -3,7 +3,7 @@
     <template class="addCarrierPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
+          <SelectTree v-model="form.orgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="承运商编码" prop="carrierSn">
           <el-input v-model="form.carrierSn" maxlength="11" auto-complete="off"></el-input>

@@ -45,7 +45,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree :disabled="isModify" v-model="form.orgid" @change="getTreeOrgid" />
+          <SelectTree :disabled="isModify" v-model="form.orgid" @change="getTreeOrgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
 
         <el-form-item label="车辆品牌" prop="truckBrand">

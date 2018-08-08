@@ -6,7 +6,7 @@
 
         <div class="iommanage-bottom">
           <el-form-item label="所属网点">
-            <SelectTree v-model="form.orgId" :disabled="isDbclick" />
+            <SelectTree v-model="form.orgId" :disabled="isDbclick" :orgid="otherinfo.orgid" />
           </el-form-item>
           <el-form-item label="收支方式" prop="financialWayId">
             <SelectType v-model="form.financialWayId" type="financial_way_type" placeholder="请选择"  @change="financialWayClick" @mounted="getData" :disabled="isDbclick ? isDbclick : isModify"/>

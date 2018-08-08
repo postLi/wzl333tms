@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
+      <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
       </SelectTree>
     </el-form-item>
     <el-form-item label="费用项目" prop="typeIds">

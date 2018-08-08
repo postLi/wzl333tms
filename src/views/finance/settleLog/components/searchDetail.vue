@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="结算网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId">
+      <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid">
       </SelectTree>
     </el-form-item>
     <el-form-item label="费用类型" prop="feeId">

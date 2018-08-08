@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="shipFromOrgid">
-      <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
+      <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
       </SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">

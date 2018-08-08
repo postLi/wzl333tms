@@ -22,7 +22,7 @@
       </SelectTree>
     </el-form-item>
     <el-form-item label="目的网点">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable @keyup.enter.native="onSubmit">
+      <SelectTree v-model="searchForm.arriveOrgid" clearable @keyup.enter.native="onSubmit"  :orgid="otherinfo.orgid">
       </SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
