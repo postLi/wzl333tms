@@ -848,11 +848,6 @@
     mounted() {
       // this.searchCreatTime = this.defaultTime
       this.onSubmit()
-      if (this.$route.query.tab === '承运商对账-创建对账') {
-  
-      } else {
-  
-      }
     },
     methods: {
       fetchList() {

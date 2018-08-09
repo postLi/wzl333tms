@@ -564,20 +564,20 @@ export default {
             if (this.selected[0].checkStatus === 0) {
               const id = this.selected[0].id
               deleteCarShort(id).then(res => {
-                  this.loading = false
-                  this.$message({
-                    type: 'success',
-                    message: '保存成功~'
-                  })
-                  this.fetchData()
-                }).catch(err => {
-                  this.loading = false
+                this.loading = false
+                this.$message({
+                  type: 'success',
+                  message: '保存成功~'
                 })
+                this.fetchData()
+              }).catch(err => {
+                this.loading = false
+              })
             } else {
               this.$message({
-                  type: 'info',
-                  message: '该对账单已完成对账不可以删除~'
-                })
+                type: 'info',
+                message: '该对账单已完成对账不可以删除~'
+              })
             }
           }
 

@@ -11,10 +11,15 @@
 }
 /*左侧栏*/
 .side_left{
-  flex: 0 0 200px;
+  flex: 0 0 208px;
   padding-top:10px;
-  /* border-right: 2px solid #ccc; */
+  height: 100%;
+  overflow-x: hidden;
+  flex-direction: column;
   
+}
+.side_left .el-tree{
+  margin-bottom: 30px;
 }
 .side_left .el-tree .el-tree-node{
   width: 200px;
@@ -53,10 +58,7 @@ background-color: rgb(195,232,255);
 .side_left .add-role-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
   background: lightpink;
 }
-.side_left .el-tree{
-  margin-bottom: 50px;
-  border-right: 1px solid #ccc;
-}
+
 
 /*右侧栏*/
 .side_right_top.currActive .el-input.is-disabled  .el-input__inner{

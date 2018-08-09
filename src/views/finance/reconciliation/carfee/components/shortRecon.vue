@@ -346,466 +346,491 @@
   import SaveDialog from './saveDialog'
 
   export default {
-      components: {
-        querySelect,
-        SaveDialog
-      },
-      data() {
-        const _this = this
-        return {
-            pickOption: {
-              firstDayOfWeek: 1,
-              disabledDate(time) {
-                // 小于终止日
-                return _this.messageInfo.checkEndTime ? time.getTime() > _this.messageInfo.checkEndTime : false
-              }
-            },
-            pickOption2: {
-              firstDayOfWeek: 1,
-              disabledDate(time) {
-                // 大于起始日
-                return _this.messageInfo.checkStartTime ? time.getTime() < _this.messageInfo.checkStartTime : false
-              }
-            },
-            pickerOptions2: {
-              shortcuts: pickerOptions2
-            },
-
-            searchCreatTime: [],
-            // changeCreateTime: [],
-            defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
-            messageArr: [],
-            checkBillName: '',
-            messageInfo: {
-              checkStartTime: '',
-              checkEndTime: '',
-              orgName: '',
-              memberIdType: 3,
-              memberName: '',
-              memberPerson: '',
-              memberPersonPhone: '',
-              checkBillCode: '',
-              bankAccount: '',
-              bankName: '',
-              alipayAccount: '',
-              wechatAccount: ''
-            },
-            messageButtonInfo: {
-              companyName: '',
-              orgBusinessOfficer: '', // 本网点业务负责人
-              orgBusinessOfficerPhone: '', // 本网点业务负责人
-              orgFinancialOfficer: '', // 本网点财务负责人
-              orgFinancialOfficerPhone: '', // 本网点财务负责人
-              createTime: '',
-              remark: '',
-              totalCount: ''
-            },
-            dealPayInfo: [],
-            alreadyPayInfo: [],
-            form: { 'orgId': '',
-              'checkBillCode': '',
-              'payDetailList': [],
-              'hadPayDetailList': []
-            },
-            // 总计
-            tota: {
-              alreadyPaytota: [],
-              dealPaytota: []
-            },
-            // 保存总计数据
-            alreadyPaytota: [],
-            dealPaytota: [],
-            sendId: '',
-            visibleDialog: false,
-            loading: false,
-            isShort: false,
-            deliver: false,
-            isArtery: false,
-            btnsize: 'mini',
-            searchTitle: {
-              orgId: '',
-              memberName: '', //
-              startTime: '',
-              endTime: ''
-            },
-            searchDealPay: {
-              orgId: '',
-              memberType: '3',
-              loadTypeId: 38,
-              payTypeStatus: 'pay',
-              memberName: '',
-              startTime: '',
-              endTime: ''
-            },
-            searchAlReadyPay: {
-              orgId: '',
-              memberType: '3',
-              loadTypeId: 38,
-              payTypeStatus: 'hadPay',
-              memberName: '',
-              startTime: '',
-              endTime: ''
-            },
-            moiffyDealPay: {
-              loadTypeId: 38,
-              orgId: '',
-              payTypeStatus: 'pay',
-              checkId: '1'
-            },
-            moiffyAlReadyPay: {
-              loadTypeId: 38,
-              orgId: '',
-              payTypeStatus: 'hadPay',
-              checkId: '1'
-            },
-            rules: {
-              'bankAccount': [
-                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
-              ]
-            },
-            btnRule: {
-              'orgBusinessOfficerPhone': [
-                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-              ],
-              'orgFinancialOfficerPhone': [
-                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-              ]
-            }
-          }
-
+    components: {
+      querySelect,
+      SaveDialog
     },
-      computed: {
-        ...mapGetters([
-          'otherinfo'
-        ])
-      },
-      mounted() {
+    data() {
+      const _this = this
+      return {
+        pickOption: {
+          firstDayOfWeek: 1,
+          disabledDate(time) {
+                // 小于终止日
+            return _this.messageInfo.checkEndTime ? time.getTime() > _this.messageInfo.checkEndTime : false
+          }
+        },
+        pickOption2: {
+          firstDayOfWeek: 1,
+          disabledDate(time) {
+                // 大于起始日
+            return _this.messageInfo.checkStartTime ? time.getTime() < _this.messageInfo.checkStartTime : false
+          }
+        },
+        pickerOptions2: {
+          shortcuts: pickerOptions2
+        },
+
+        searchCreatTime: [],
+            // changeCreateTime: [],
+        defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
+        messageArr: [],
+        checkBillName: '',
+        messageInfo: {
+          checkStartTime: '',
+          checkEndTime: '',
+          orgName: '',
+          memberIdType: 3,
+          memberName: '',
+          memberPerson: '',
+          memberPersonPhone: '',
+          checkBillCode: '',
+          bankAccount: '',
+          bankName: '',
+          alipayAccount: '',
+          wechatAccount: ''
+        },
+        messageButtonInfo: {
+          companyName: '',
+          orgBusinessOfficer: '', // 本网点业务负责人
+          orgBusinessOfficerPhone: '', // 本网点业务负责人
+          orgFinancialOfficer: '', // 本网点财务负责人
+          orgFinancialOfficerPhone: '', // 本网点财务负责人
+          createTime: '',
+          remark: '',
+          totalCount: ''
+        },
+        dealPayInfo: [],
+        alreadyPayInfo: [],
+        form: { 'orgId': '',
+          'checkBillCode': '',
+          'payDetailList': [],
+          'hadPayDetailList': []
+        },
+            // 总计
+        tota: {
+          alreadyPaytota: [],
+          dealPaytota: []
+        },
+            // 保存总计数据
+        alreadyPaytota: [],
+        dealPaytota: [],
+        sendId: '',
+        visibleDialog: false,
+        loading: false,
+        isShort: false,
+        deliver: false,
+        isArtery: false,
+        btnsize: 'mini',
+        searchTitle: {
+          orgId: '',
+          memberName: '', //
+          startTime: '',
+          endTime: ''
+        },
+        searchDealPay: {
+          orgId: '',
+          memberType: '3',
+          loadTypeId: 38,
+          payTypeStatus: 'pay',
+          memberName: '',
+          startTime: '',
+          endTime: ''
+        },
+        searchAlReadyPay: {
+          orgId: '',
+          memberType: '3',
+          loadTypeId: 38,
+          payTypeStatus: 'hadPay',
+          memberName: '',
+          startTime: '',
+          endTime: ''
+        },
+        moiffyDealPay: {
+          loadTypeId: 38,
+          orgId: '',
+          payTypeStatus: 'pay',
+          checkId: '1'
+        },
+        moiffyAlReadyPay: {
+          loadTypeId: 38,
+          orgId: '',
+          payTypeStatus: 'hadPay',
+          checkId: '1'
+        },
+        rules: {
+          'bankAccount': [
+                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
+          ]
+        },
+        btnRule: {
+          'orgBusinessOfficerPhone': [
+                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          ],
+          'orgFinancialOfficerPhone': [
+                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+          ]
+        }
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'otherinfo'
+      ])
+    },
+    mounted() {
+      // this.searchCreatTime = this.defaultTime
+      this.messageButtonInfo.createTime = new Date()
+      this.changeOrgid(this.otherinfo, this.$route.query.id)
+      if (this.$route.query.id) {
+        this.sendId = this.$route.query.id
+        this.changeId(this.$route.query.id)
+
+        this.moodifyList().then(() => {
+          this.searchDealPay.memberName = this.searchTitle.memberName
+          this.searchAlReadyPay.memberName = this.searchTitle.memberName
+        })
+        this.moodifyDealPay()
+        this.moodifyReadyPay()
+      } else {
+        this.onSubmit()
         this.searchCreatTime = this.defaultTime
-        this.messageButtonInfo.createTime = new Date()
-        this.changeOrgid(this.otherinfo, this.$route.query.id)
-        if (this.$route.query.id) {
-          this.sendId = this.$route.query.id
-          this.changeId(this.$route.query.id)
+      }
+    },
+    methods: {
 
-          this.moodifyList().then(() => {
-            this.searchDealPay.memberName = this.searchTitle.memberName
-            this.searchAlReadyPay.memberName = this.searchTitle.memberName
-          })
-          this.moodifyDealPay()
-          this.moodifyReadyPay()
-        }else {
+      fetchList() {
+        this.loading = true
+        return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
+          this.messageArr = data
+          this.infoMessageData(this.messageArr)
+          this.loading = false
+        })
+      },
+      fetchDealPay() {
+        this.loading = true
+        return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
+          this.dealPayInfo = []
+          this.dealPaytota = []
+          this.dealPayInfo = data
+          this.dealPaytota = data
 
+          this.loading = false
+        })
+      },
+      fetchReadyPay() {
+        this.loading = true
+        return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
+          this.alreadyPayInfo = []
+          this.alreadyPaytota = []
+          this.alreadyPayInfo = data
+          this.alreadyPaytota = data
+          this.loading = false
+        })
+      },
+        // 修改
+      moodifyList() {
+        this.loading = true
+        this.sendId = this.$route.query.id
+        return postCarfDtoById(this.sendId).then(data => {
+          this.messageArr = data.data
+          this.infoMessageData(this.messageArr)
+          this.loading = false
+        })
+      },
+      moodifyDealPay() {
+        this.loading = true
+        return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
+          this.dealPayInfo = []
+          this.dealPaytota = []
+          this.dealPayInfo = data
+          this.dealPaytota = data
+          this.loading = false
+        })
+      },
+      moodifyReadyPay() {
+        this.loading = true
+        return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
+          this.alreadyPayInfo = []
+          this.alreadyPaytota = []
+          this.alreadyPayInfo = data
+          this.alreadyPaytota = data
+          this.loading = false
+        })
+      },
+      changeOrgid(item, checkId) {
+        this.searchTitle.orgId = item.orgid
+        this.searchDealPay.orgId = item.orgid
+        this.searchAlReadyPay.orgId = item.orgid
+        this.moiffyDealPay.orgId = item.orgid
+        this.moiffyAlReadyPay.orgId = item.orgid
+        this.moiffyDealPay.checkId = checkId
+        this.moiffyAlReadyPay.checkId = checkId
+      },
+      changeId(id) {
+        this.searchTitle.id = id
+        this.searchDealPay.id = id
+        this.searchAlReadyPay.id = id
+      },
+      getTrunkName(trunk) {
+        if (trunk) {
+          this.searchTitle.memberName = trunk.truckIdNumber
+          this.searchDealPay.memberName = trunk.truckIdNumber
+          this.searchAlReadyPay.memberName = trunk.truckIdNumber
         }
       },
-      methods: {
-
-        fetchList() {
-          this.loading = true
-          return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
-            this.messageArr = data
-            this.infoMessageData(this.messageArr)
-            this.loading = false
-          })
-        },
-        fetchDealPay() {
-          this.loading = true
-          return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
-            this.dealPayInfo = []
-            this.dealPaytota = []
-            this.dealPayInfo = data
-            this.dealPaytota = data
-
-            this.loading = false
-          })
-        },
-        fetchReadyPay() {
-          this.loading = true
-          return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
-            this.alreadyPayInfo = []
-            this.alreadyPaytota = []
-            this.alreadyPayInfo = data
-            this.alreadyPaytota = data
-            this.loading = false
-          })
-        },
-        // 修改
-        moodifyList() {
-          this.loading = true
-          this.sendId = this.$route.query.id
-          return postCarfDtoById(this.sendId).then(data => {
-            this.messageArr = data.data
-            this.infoMessageData(this.messageArr)
-            this.loading = false
-          })
-        },
-        moodifyDealPay() {
-          this.loading = true
-          return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
-            this.dealPayInfo = []
-            this.dealPaytota = []
-            this.dealPayInfo = data
-            this.dealPaytota = data
-            this.loading = false
-          })
-        },
-        moodifyReadyPay() {
-          this.loading = true
-          return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
-            this.alreadyPayInfo = []
-            this.alreadyPaytota = []
-            this.alreadyPayInfo = data
-            this.alreadyPaytota = data
-            this.loading = false
-          })
-        },
-        changeOrgid(item, checkId) {
-          this.searchTitle.orgId = item.orgid
-          this.searchDealPay.orgId = item.orgid
-          this.searchAlReadyPay.orgId = item.orgid
-          this.moiffyDealPay.orgId = item.orgid
-          this.moiffyAlReadyPay.orgId = item.orgid
-          this.moiffyDealPay.checkId = checkId
-          this.moiffyAlReadyPay.checkId = checkId
-        },
-        changeId(id) {
-          this.searchTitle.id = id
-          this.searchDealPay.id = id
-          this.searchAlReadyPay.id = id
-      },
-        getTrunkName(trunk) {
-          if (trunk) {
-            this.searchTitle.memberName = trunk.truckIdNumber
-            this.searchDealPay.memberName = trunk.truckIdNumber
-            this.searchAlReadyPay.memberName = trunk.truckIdNumber
-          }
-        },
         // 查询
-        onSubmit() {
-          if (this.searchTitle.memberName) {
-                  this.fetchList()
-                  this.fetchDealPay()
-                  this.fetchReadyPay()
-                } else{
-                  this.$message({
-                    message: '车牌号不能为空~',
-                    type: 'error'
-                  })
-                  return false
-                }
+
+      onSubmit() { 
+        if (this.searchTitle.memberName) {
+          if (!this.searchCreatTime[0]) {
+            this.searchCreatTime = this.defaultTime
+          }
           const searchObj = {}
+          this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
-        },
-        closeMe() {
-
-        },
-        // 保存
-        submit() {
-          this.$refs['formName2'].validate((valid) => {
-            if (valid) {
-              this.$refs['formName3'].validate((valid) => {
-                if (valid) {
-                  for (const i in this.messageInfo) {
-                    this.form[i] = this.messageInfo[i]
-                  }
-                  for (const i in this.messageButtonInfo) {
-                    this.form[i] = this.messageButtonInfo[i]
-                  }
-                  this.form.orgId = this.otherinfo.orgid
-                  this.form.checkBillName = this.checkBillName
-                  this.form.payDetailList = []
-                  this.form.hadPayDetailList = []
-                  this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                    const a = {}
-                    a.shipOrderId = el.shipOrderId
-                    a.shortPay = el.shortPay
-                    a.remark = el.remark
-                    a.departureTime = el.departureTime
-                    a.batchNo = el.batchNo
-                    a.orgName = el.orgName
-                    a.arriveOrgName = el.arriveOrgName
-                    a.loadAmount = el.loadAmount
-                    a.loadWeight = el.loadWeight
-                    a.loadVolume = el.loadVolume
-                    a.driverName = el.driverName
-                    return a
-                  }) : []
-                  this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                    const a = {}
-                    a.shipOrderId = el.shipOrderId
-                    a.shortPay = el.shortPay
-                    a.remark = el.remark
-                    a.departureTime = el.departureTime
-                    a.batchNo = el.batchNo
-                    a.orgName = el.orgName
-                    a.arriveOrgName = el.arriveOrgName
-                    a.loadAmount = el.loadAmount
-                    a.loadWeight = el.loadWeight
-                    a.loadVolume = el.loadVolume
-                    a.driverName = el.driverName
-                    return a
-                  }) : []
-                  // 总计
-                  this.tota.dealPaytota = this.dealPaytota ? this.dealPaytota.map(el => {
-                    const a = {}
-                    a.totalPay = el.totalPay
-                    return a
-                  }) : []
-                  this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el => {
-                    const a = {}
-                    a.totalPay = el.totalPay
-                    return a
-                  }) : []
-
-                  if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
-                    this.$message({
-                      message: '各款项不能为空~',
-                      type: 'error'
-                    })
-                    this.closeVisibleDialog()
-                    return false
-                  }else {
-                    this.oopenVisibleDialog()
-                    this.isShort = true
-                    this.deliver = false
-                    this.isArtery = false
-                  }
-                }
-              })
-            } else {
-              return false
-            }
+          this.fetchList()
+          this.fetchDealPay()
+          this.fetchReadyPay()
+        } else {
+          this.$message({
+            message: '车牌号不能为空~',
+            type: 'error'
           })
+          return false
+        }
       },
-        canBtn() {
-          this.$confirm('确定要取消对账单吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$message({
-              type: 'success',
-              message: '保存成功!'
+      // onSubmit() {
+      //   if (this.searchTitle.memberName) {
+      //     this.fetchList()
+      //     this.fetchDealPay()
+      //     this.fetchReadyPay()
+      //   } else {
+      //     this.$message({
+      //       message: '车牌号不能为空~',
+      //       type: 'error'
+      //     })
+      //     return false
+      //   }
+      //   const searchObj = {}
+      //   this.searchCreatTime = this.defaultTime
+      //   searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
+      //   searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+      //   this.infoSearchTime(searchObj.startTime, searchObj.endTime)
+      // },
+      closeMe() {
+
+      },
+        // 保存
+      submit() {
+        this.$refs['formName2'].validate((valid) => {
+          if (valid) {
+            this.$refs['formName3'].validate((valid) => {
+              if (valid) {
+                for (const i in this.messageInfo) {
+                  this.form[i] = this.messageInfo[i]
+                }
+                for (const i in this.messageButtonInfo) {
+                  this.form[i] = this.messageButtonInfo[i]
+                }
+                this.form.orgId = this.otherinfo.orgid
+                this.form.checkBillName = this.checkBillName
+                this.form.payDetailList = []
+                this.form.hadPayDetailList = []
+                this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
+                  const a = {}
+                  a.shipOrderId = el.shipOrderId
+                  a.shortPay = el.shortPay
+                  a.remark = el.remark
+                  a.departureTime = el.departureTime
+                  a.batchNo = el.batchNo
+                  a.orgName = el.orgName
+                  a.arriveOrgName = el.arriveOrgName
+                  a.loadAmount = el.loadAmount
+                  a.loadWeight = el.loadWeight
+                  a.loadVolume = el.loadVolume
+                  a.driverName = el.driverName
+                  return a
+                }) : []
+                this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
+                  const a = {}
+                  a.shipOrderId = el.shipOrderId
+                  a.shortPay = el.shortPay
+                  a.remark = el.remark
+                  a.departureTime = el.departureTime
+                  a.batchNo = el.batchNo
+                  a.orgName = el.orgName
+                  a.arriveOrgName = el.arriveOrgName
+                  a.loadAmount = el.loadAmount
+                  a.loadWeight = el.loadWeight
+                  a.loadVolume = el.loadVolume
+                  a.driverName = el.driverName
+                  return a
+                }) : []
+                  // 总计
+                this.tota.dealPaytota = this.dealPaytota ? this.dealPaytota.map(el => {
+                  const a = {}
+                  a.totalPay = el.totalPay
+                  return a
+                }) : []
+                this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el => {
+                  const a = {}
+                  a.totalPay = el.totalPay
+                  return a
+                }) : []
+
+                if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
+                  this.$message({
+                    message: '各款项不能为空~',
+                    type: 'error'
+                  })
+                  this.closeVisibleDialog()
+                  return false
+                } else {
+                  this.oopenVisibleDialog()
+                  this.isShort = true
+                  this.deliver = false
+                  this.isArtery = false
+                }
+              }
             })
-            // this.$router.back(-1)
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
-        }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消操作'
-            })
-          })
-        },
-        validateIsEmpty(msg = '不能为空！') {
-          return (rule, value, callback) => {
-            if (!value) {
-              callback(new Error(msg))
-            }
-            if (this.$route.query.id && !value) {
-              callback()
-            }          else {
-              callback()
-            }
+          } else {
+            return false
           }
-        },
-        getSummaries(param) {
-          const { columns, data } = param
+        })
+      },
+      canBtn() {
+        this.$confirm('确定要取消对账单吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '保存成功!'
+          })
+            // this.$router.back(-1)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+      },
+      validateIsEmpty(msg = '不能为空！') {
+        return (rule, value, callback) => {
+          if (!value) {
+            callback(new Error(msg))
+          }
+          if (this.$route.query.id && !value) {
+            callback()
+          } else {
+            callback()
+          }
+        }
+      },
+      getSummaries(param) {
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
-            if (index === 0) {
-              sums[index] = '合计'
-            return;
-            }
-            if (index === 3 || index === 4 || index === 5) {
-              sums[index] = ''
-            return;
-            }
-            const values = data.map(item => Number(item[column.property]))
+          if (index === 0) {
+            sums[index] = '合计'
+            return
+          }
+          if (index === 3 || index === 4 || index === 5) {
+            sums[index] = ''
+            return
+          }
+          const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr)
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
               if (!isNaN(value)) {
-                  return prev + curr
+                return prev + curr
               } else {
-                  return prev
+                return prev
               }
-              }, 0)
+            }, 0)
             sums[index] += ' '
-
           } else {
-              sums[index] = ''
+            sums[index] = ''
           }
         })
 
         return sums
       },
-        iconDelete(index) {
-          this.dealPayInfo = this.dealPayInfo.filter((el, inx) => {
-            return inx !== index
-          })
-          this.delCont()
-        },
-        //
-        iconDeleteAl(index) {
-          this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
-            return inx !== index
-          })
-          this.delCont()
-        },
-        delCont() {
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
-        },
-        oopenVisibleDialog() {
-          this.visibleDialog = true
-        },
-        closeVisibleDialog() {
-          this.visibleDialog = false
-        },
-        infoMessageData(item) {
-          this.searchTitle.memberName = item.memberName
-          this.messageInfo.memberName = item.memberName
-          this.messageInfo.memberPerson = item.memberPerson
-          this.messageInfo.memberPersonPhone = item.memberPersonPhone
-          this.messageInfo.checkBillCode = item.checkBillCode
-          this.messageInfo.bankAccount = item.bankAccount
-          this.messageInfo.bankName = item.bankName
-          this.messageInfo.alipayAccount = item.alipayAccount
-          this.messageInfo.wechatAccount = item.wechatAccount
-          this.messageInfo.checkStartTime = item.checkStartTime
-          this.messageInfo.checkEndTime = item.checkEndTime
-          this.messageInfo.orgName = item.orgName
-          this.messageButtonInfo.companyName = item.companyName
-          this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
-          this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
-          this.messageButtonInfo.orgFinancialOfficer = item.orgFinancialOfficer
-          this.messageButtonInfo.orgFinancialOfficerPhone = item.orgFinancialOfficerPhone
-          this.messageButtonInfo.createTime = item.createTime
-          this.messageButtonInfo.remark = item.remark
-          this.messageButtonInfo.totalCount = item.totalCount
-          this.checkBillName = item.checkBillName
-        },
-        infoSearchTime(startTime, endTime) {
-          this.searchTitle.startTime = startTime
-          this.searchDealPay.startTime = startTime
-          this.searchAlReadyPay.startTime = startTime
-          this.searchTitle.endTime = endTime
-          this.searchDealPay.endTime = endTime
-          this.searchAlReadyPay.endTime = endTime
-        },
-        clickDetails(row, event, column) {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getDbClick(row, event) {}
-
+      iconDelete(index) {
+        this.dealPayInfo = this.dealPayInfo.filter((el, inx) => {
+          return inx !== index
+        })
+        this.delCont()
       },
-      getSelection(selection) {
-        this.selected = selection
-      }
+        //
+      iconDeleteAl(index) {
+        this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
+          return inx !== index
+        })
+        this.delCont()
+      },
+      delCont() {
+        this.$message({
+          message: '删除成功~',
+          type: 'success'
+        })
+      },
+      oopenVisibleDialog() {
+        this.visibleDialog = true
+      },
+      closeVisibleDialog() {
+        this.visibleDialog = false
+      },
+      infoMessageData(item) {
+        this.searchTitle.memberName = item.memberName
+        this.messageInfo.memberName = item.memberName
+        this.messageInfo.memberPerson = item.memberPerson
+        this.messageInfo.memberPersonPhone = item.memberPersonPhone
+        this.messageInfo.checkBillCode = item.checkBillCode
+        this.messageInfo.bankAccount = item.bankAccount
+        this.messageInfo.bankName = item.bankName
+        this.messageInfo.alipayAccount = item.alipayAccount
+        this.messageInfo.wechatAccount = item.wechatAccount
+        this.messageInfo.checkStartTime = item.checkStartTime
+        this.messageInfo.checkEndTime = item.checkEndTime
+        this.messageInfo.orgName = item.orgName
+        this.messageButtonInfo.companyName = item.companyName
+        this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
+        this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
+        this.messageButtonInfo.orgFinancialOfficer = item.orgFinancialOfficer
+        this.messageButtonInfo.orgFinancialOfficerPhone = item.orgFinancialOfficerPhone
+        this.messageButtonInfo.createTime = item.createTime
+        this.messageButtonInfo.remark = item.remark
+        this.messageButtonInfo.totalCount = item.totalCount
+        this.checkBillName = item.checkBillName
+        this.searchCreatTime = this.defaultTime
+        this.searchCreatTime[0] = item.checkStartTime
+        this.searchCreatTime[1] = item.checkEndTime
+      },
+      infoSearchTime(startTime, endTime) {
+        this.searchTitle.startTime = startTime
+        this.searchDealPay.startTime = startTime
+        this.searchAlReadyPay.startTime = startTime
+        this.searchTitle.endTime = endTime
+        this.searchDealPay.endTime = endTime
+        this.searchAlReadyPay.endTime = endTime
+      },
+      clickDetails(row, event, column) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      },
+      getDbClick(row, event) {}
+
+    },
+    getSelection(selection) {
+      this.selected = selection
     }
+  }
 </script>
 
 <style lang="scss">

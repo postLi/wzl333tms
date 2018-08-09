@@ -57,9 +57,9 @@
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import {postCSaveCustomerDetail} from '@/api/finance/fin_customer'
-  //parseTime
-  import {parseTime} from '@/utils'
+  import { postCSaveCustomerDetail } from '@/api/finance/fin_customer'
+  // parseTime
+  import { parseTime } from '@/utils'
   export default {
     components: {
       PopFrame,
@@ -75,151 +75,155 @@
         default: false
       },
       tota: {
-        type: [Object,Array],
-        default: false
-        },
-      dotInfo: {
-        type: [Object,Array],
+        type: [Object, Array],
         default: false
       },
-      sendId: [Number,String],
-      memberId: [Number,String],
-      urlId: [Number,String]
+      dotInfo: {
+        type: [Object, Array],
+        default: false
+      },
+      sendId: [Number, String],
+      memberId: [Number, String],
+      urlId: [Number, String]
     },
     data() {
       return {
         selected: [],
 
-        formLabelWidth:'90',
-        dialogInfo:[
+        formLabelWidth: '90',
+        dialogInfo: [
           {
-            toPay:0,
-            date:"应收清单"
+            toPay: 0,
+            date: '应收清单'
           },
           {
-            toPay:0,
-            date:"应付清单"
+            toPay: 0,
+            date: '应付清单'
           },
           {
-            toPay:0,
-            date:"已收清单"
+            toPay: 0,
+            date: '已收清单'
           },
           {
-            toPay:0,
-            date:"已付清单"
+            toPay: 0,
+            date: '已付清单'
           }
         ],
-        dialogData:{},
+        dialogData: {},
         checked1: true,
         popTitle: '',
         totaMoney: '',
-        loading:false,
+        loading: false
       }
     },
     computed: {
       isShow: {
-        get(){
+        get() {
           return this.popVisible
         },
-        set(){
+        set() {
         }
       }
     },
     watch: {
-      tota:{
-        handler(newVal){
-          this.dialogInfo[0].toPay = 0
-          this.dialogInfo[1].toPay = 0
-          this.dialogInfo[2].toPay = 0
-          this.dialogInfo[3].toPay = 0
-          this.dialogData = this.tota
-          this.dialogData.dealtota.map(el=>{
-            this.$set(this.dialogInfo, 0, {
-              date:"应收清单",
-              toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
-            })
-            //this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-          })
-          this.dialogData.dealPaytota.map(el=>{
-            this.$set(this.dialogInfo, 1, {
-              date:"应付清单",
-              toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
-            })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-          })
-          this.dialogData.alreadytota.map(el=>{
-            this.$set(this.dialogInfo, 2, {
-              date:"已收清单",
-              toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
-            })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-          })
-          this.dialogData.alreadyPaytota.map(el=>{
-            this.$set(this.dialogInfo, 3, {
-              date:"已付清单",
-              toPay: this.dialogInfo[3].toPay + (el.totalFee ? +el.totalFee : 0)
-            })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-          })
-          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay+ this.dialogInfo[2].toPay+ this.dialogInfo[3].toPay
+      tota: {
+        handler(newVal) {
+          this.watchDate()
         },
         deep: true
       },
-      dotInfo :{
+      dotInfo: {
         handler(newVal) {
           this.popTitle = this.dotInfo.tmsFinanceBillCheckDto.checkBillName
+          this.watchDate()
         },
         deep: true
       },
-      popVisible (newVal) {
+      popVisible(newVal) {
 
       },
-      sendId(newVal){
+      sendId(newVal) {
 
       },
-      memberId(newVal){
+      memberId(newVal) {
       },
 
-      urlId(){
+      urlId() {
       }
     },
 
     mounted() {
     },
     methods: {
-      closeMe (done) {
+      watchDate() {
+        this.dialogInfo[0].toPay = 0
+        this.dialogInfo[1].toPay = 0
+        this.dialogInfo[2].toPay = 0
+        this.dialogInfo[3].toPay = 0
+        this.dialogData = this.tota
+        this.dialogData.dealtota.map(el => {
+          this.$set(this.dialogInfo, 0, {
+            date: '应收清单',
+            toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
+          })
+            // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        })
+        this.dialogData.dealPaytota.map(el => {
+          this.$set(this.dialogInfo, 1, {
+            date: '应付清单',
+            toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
+          })
+            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        })
+        this.dialogData.alreadytota.map(el => {
+          this.$set(this.dialogInfo, 2, {
+            date: '已收清单',
+            toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
+          })
+            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        })
+        this.dialogData.alreadyPaytota.map(el => {
+          this.$set(this.dialogInfo, 3, {
+            date: '已付清单',
+            toPay: this.dialogInfo[3].toPay + (el.totalFee ? +el.totalFee : 0)
+          })
+            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        })
+        this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
+      },
+      closeMe(done) {
         this.reset()
-        this.$emit('update:popVisible', false);
-        if(typeof done === 'function'){
+        this.$emit('update:popVisible', false)
+        if (typeof done === 'function') {
           done()
         }
       },
-      reset(){
+      reset() {
       },
 
       submitForm(formName) {
-            this.loading = true
-            let promiseObj
-            let data = {}
-            for(const i in this.dotInfo){
-              data[i] = this.dotInfo[i]
-            }
+        this.loading = true
+        let promiseObj
+        const data = {}
+        for (const i in this.dotInfo) {
+          data[i] = this.dotInfo[i]
+        }
         data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
-            if(this.sendId){
-              data.tmsFinanceBillCheckDto.id = this.sendId
-              promiseObj = postCSaveCustomerDetail(data)
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.urlId)
-            }else{
-              promiseObj = postCSaveCustomerDetail(data)
-              this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.memberId)
-            }
+        if (this.sendId) {
+          data.tmsFinanceBillCheckDto.id = this.sendId
+          promiseObj = postCSaveCustomerDetail(data)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.urlId)
+        } else {
+          promiseObj = postCSaveCustomerDetail(data)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.memberId)
+        }
 
-            promiseObj.then(res => {
-              this.loading = false
-              this.$message({
-                message: '保存成功~',
-                type: 'success'
-              })
+        promiseObj.then(res => {
+          this.loading = false
+          this.$message({
+            message: '保存成功~',
+            type: 'success'
+          })
 
               this.closeMe()
             }).catch(err => {

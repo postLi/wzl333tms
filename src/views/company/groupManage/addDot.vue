@@ -4,7 +4,7 @@
     <template class='addEmployeerPop-content' slot="content">
 
 
-          <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini" :show-message="checkShowMessage">
+          <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini" :show-message="checkShowMessage" :key="formKey">
             <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName" >
               <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31" maxlength="15" ></el-input>
             </el-form-item>
@@ -151,8 +151,14 @@
   
     },
     watch: {
+      'form.accountStatus': {
+        handler() {
+          this.form.accountName = ''
+        }
+      },
       popVisible(val) {
         if (val) {
+          this.formKey = Math.random()
           console.log(JSON.stringify(this.doInfo))
         }
         this.watchDate(this.doInfo)
@@ -175,45 +181,11 @@
       }
     },
     data() {
-      // REGEX
-      var orgName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入网点名称'))
-        } else {
-          callback()
-        }
-      }
       var callBackName = (rule, value, callback) => {
         callback()
       }
-
-      var benchmark = (rule, value, callback) => {
-        if (!value) {
-          callback()
-        } else if (REGEX.NUM_POINT2.test(value) || REGEX.NUM_PERCENTAGE.test(value)) {
-          return callback()
-        } else {
-          return callback(new Error('请输入百分比或两位小数'))
-        }
-      }
-      var networkCode = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入网点代码'))
-        } else {
-          callback()
-        }
-      }
-      var remarks = (rule, value, callback) => {
-        callback()
-      }
-      var city = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请选择城市~'))
-        } else {
-          callback()
-        }
-      }
       return {
+        formKey: 'lll',
         popTitle: '新增网点',
         // 多选框
         checked: true,
@@ -254,11 +226,7 @@
         },
         rules: {
           orgName: [
-
             { required: true, validator: this.validateIsEmpty('请输入网点名称') }
-            // { required: true, validator: orgName, trigger: 'blur' }
-            // { min: 2, message: '最少2个字符', trigger: 'blur' },
-            // { max: 15, message: '不可超过15个字符', trigger: 'blur' }
           ],
           responsibleName: [
             { validator: callBackName, trigger: 'blur' },
@@ -275,17 +243,14 @@
           ],
           servicePhone: [
             { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话', trigger: ['blur', 'change'] }
-
           ],
           // 网点代码
           networkCode: [
-
             { required: true, validator: this.validateIsEmpty('请输入网点代码') },
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
-
             // 请选择城市
             { required: true, validator: this.validateIsEmpty('请选择城市') }
           ]
@@ -305,43 +270,16 @@
       })
     },
     methods: {
-      changeDate(item) {
-        this.form.orgName = item.orgName
-        this.form.responsibleTelephone = item.responsibleTelephone
-        this.form.responsibleName = item.responsibleName
-        this.form.city = item.city
-        this.form.serviceName = item.serviceName
-        this.form.parentName = item.parentName
-        this.form.servicePhone = item.servicePhone
-        this.form.detailedAddr = item.detailedAddr
-        this.form.networkCode = item.networkCode
-        this.form.collectionFee = item.collectionFee
-        this.form.benchmark = item.benchmark
-        this.form.warningQuota = item.warningQuota
-        this.form.lockMachineQuota = item.lockMachineQuota
-        this.form.remarks = item.remarks
-        this.form.orgType = item.orgType
-        this.form.status = item.status
-        this.form.accountStatus = item.accountStatus
-        this.form.manageType = item.manageType
-        this.form.createTime = item.createTime
-      },
       watchDate() {
         for (const i in this.form) {
           this.form[i] = ''
         }
         if (this.isModify) {
           this.popTitle = '修改网点'
-          // const data = Object.assice({}, this.form)
-          // for (var i in data) {
-          //   this.form[i] = this.data[i]
-          // }
-          // this.form = objectMerge2(this.dotInfo)
           this.changeDate(this.dotInfo)
           this.form.parentId = this.dotInfo.parentId || this.companyId
         } else {
           this.popTitle = '新增网点'
-  
           if (this.form.id) {
             delete this.form.id
           }
@@ -350,7 +288,6 @@
           this.form.status = 32
           this.form.manageType = 3
           this.form.parentId = this.companyId
-          this.form.accountName = ''
         }
       },
       validateIsEmpty(msg = '不能为空！') {
@@ -380,8 +317,7 @@
         this.form.parentId = id
       },
       reset() {
-        // this.form = {}
-        // this.$refs['ruleForm'].resetFields()
+        this.$refs['ruleForm'].resetFields()
       },
       closeMe(done) {
         this.$emit('close')
@@ -423,13 +359,38 @@
             }).catch(err => {
               this.$message({
                 type: 'error',
-                message: '保存失败，原因：' + err.errorInfo ? err.errorInfo : err
+                message: '保存失败，原因：' + err.text ? err.text : err
               })
             })
           } else {
+            this.$message({
+              type: 'error',
+              message: '保存失败'
+            })
             return false
           }
         })
+      },
+      changeDate(item) {
+        this.form.orgName = item.orgName
+        this.form.responsibleTelephone = item.responsibleTelephone
+        this.form.responsibleName = item.responsibleName
+        this.form.city = item.city
+        this.form.serviceName = item.serviceName
+        this.form.parentName = item.parentName
+        this.form.servicePhone = item.servicePhone
+        this.form.detailedAddr = item.detailedAddr
+        this.form.networkCode = item.networkCode
+        this.form.collectionFee = item.collectionFee
+        this.form.benchmark = item.benchmark
+        this.form.warningQuota = item.warningQuota
+        this.form.lockMachineQuota = item.lockMachineQuota
+        this.form.remarks = item.remarks
+        this.form.orgType = item.orgType
+        this.form.status = item.status
+        this.form.accountStatus = item.accountStatus
+        this.form.manageType = item.manageType
+        this.form.createTime = item.createTime
       }
     }
   }

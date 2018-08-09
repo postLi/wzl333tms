@@ -105,7 +105,7 @@
               <el-table-column
                 fixed
                 prop="id"
-                width="60"
+                width="100"
                 label="序号">
                 <template slot-scope="scope">{{ ((pageNum - 1)*pageSize) + scope.$index + 1 }}</template>
               </el-table-column>
@@ -117,7 +117,7 @@
               </el-table-column>
               <el-table-column
                 prop="orgName"
-                width="150"
+                width="230"
                 label="归属网点">
               </el-table-column>
               <el-table-column
@@ -132,11 +132,11 @@
               </el-table-column>
               <el-table-column
                 prop="username"
-                width="150"
+                width="200"
                 label="登录账号">
               </el-table-column>
               <el-table-column
-                width="200"
+                width="220"
                 label="权限角色">
                 <template slot-scope="scope">
                   <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
@@ -145,7 +145,7 @@
               </el-table-column>
               <el-table-column
                 label="性别"
-                width="80">
+                width="100">
                 <template slot-scope="scope">
                   {{ scope.row.sexFlag === "0" ? "男" : "女" }}
                 </template>
