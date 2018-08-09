@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return {
-      popTitle: '在途跟踪',
+      popTitle: '查看详情',
       loading: false,
       isModify: false,
       infoId: {},

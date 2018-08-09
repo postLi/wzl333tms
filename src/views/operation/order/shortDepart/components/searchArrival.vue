@@ -21,7 +21,7 @@
         <el-option slot="head" label="全部" value=""></el-option>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="目的网点">
+    <el-form-item label="到车网点">
       <SelectTree v-model="searchForm.arriveOrgid" clearable @keyup.enter.native="onSubmit"  :orgid="otherinfo.orgid">
       </SelectTree>
     </el-form-item>

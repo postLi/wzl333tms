@@ -254,7 +254,7 @@ export default {
       },
       {
         label: '交接方式',
-        prop: 'shipDeliveryMethod',
+        prop: 'shipDeliveryMethodName',
         width: '150',
         fixed: false
       },

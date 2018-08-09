@@ -32,7 +32,7 @@
       <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
     </el-form-item>
     <el-form-item label="网点">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable></SelectTree>
+      <SelectTree v-model="searchForm.arriveOrgid" clearable  :orgid="otherinfo.orgid"></SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>

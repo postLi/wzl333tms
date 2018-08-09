@@ -57,13 +57,14 @@ Vue.directive('numberOnly', {
       el2.addEventListener('keyup', VueDirectiveObject.keepNumber)
       el2.addEventListener('change', VueDirectiveObject.keepNumber)
       el2.addEventListener('blur', VueDirectiveObject.keepNumber)
-/*       el2.addEventListener('blur', function(event) {
-        // 隔100毫秒后再处理
-        // 因为需要等elementUI回填数据后再处理
-        setTimeout(() => {
-          VueDirectiveObject.keepNumber.call(this, event)
-        }, 100)
-      }) */
+      el2.addEventListener('onkeyup', VueDirectiveObject.keepNumber) // 20180809 lyy add
+      /*       el2.addEventListener('blur', function(event) {
+              // 隔100毫秒后再处理
+              // 因为需要等elementUI回填数据后再处理
+              setTimeout(() => {
+                VueDirectiveObject.keepNumber.call(this, event)
+              }, 100)
+            }) */
       // 输入法关闭事件
       el2.addEventListener('compositionstart', VueDirectiveObject.keepNumber)
       el2.addEventListener('compositionend', VueDirectiveObject.keepNumber)
@@ -87,13 +88,13 @@ Vue.directive('onlyNumberAndLetter', {
       el2.addEventListener('keyup', VueDirectiveObject.keepNumberAndLetter)
       el2.addEventListener('change', VueDirectiveObject.keepNumberAndLetter)
       el2.addEventListener('blur', VueDirectiveObject.keepNumberAndLetter)
-/*       el2.addEventListener('blur', function(event) {
-        // 隔100毫秒后再处理
-        // 因为需要等elementUI回填数据后再处理
-        setTimeout(() => {
-          VueDirectiveObject.keepNumber.call(this, event)
-        }, 100)
-      }) */
+      /*       el2.addEventListener('blur', function(event) {
+              // 隔100毫秒后再处理
+              // 因为需要等elementUI回填数据后再处理
+              setTimeout(() => {
+                VueDirectiveObject.keepNumber.call(this, event)
+              }, 100)
+            }) */
       // 输入法关闭事件
       el2.addEventListener('compositionstart', VueDirectiveObject.keepNumberAndLetter)
       el2.addEventListener('compositionend', VueDirectiveObject.keepNumberAndLetter)

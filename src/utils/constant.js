@@ -1,6 +1,7 @@
 /**
  * 常量
  */
+export const REMARK_MAX_LENGTH = 300 // 所有的备注框都统一只能输入300个字符，输入300个字符后就不能再输入
 
 // 运单状态 shipStatus
 export const SHIP_STATUS = {

@@ -56,7 +56,8 @@ export const constantRouterMap = [
     redirect: '/dashboard',
     noDropdown: true,
     icon: 'shouye',
-    name: '首页',
+    // name: '首页',
+    name: 'dashboard',
     hidden: true,
     children: [{
       path: 'dashboard', name: 'dashboard', icon: 'shouye', component: _import('dashboard/index'),
