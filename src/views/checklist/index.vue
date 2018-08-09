@@ -478,7 +478,9 @@ export default {
         // background-color: #09abff;
         background-image: url(../../assets/checkImg/bgo1.png);
         background-repeat:no-repeat;
-        background-size: 100%;
+        background-position: center;
+        background-size:cover;
+        // background-size: 100%;
         padding: 45px 54px;
         // text-align: center;
         h6{

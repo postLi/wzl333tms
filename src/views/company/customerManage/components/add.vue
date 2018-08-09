@@ -30,10 +30,10 @@
         <!-- 个人信息 -->
         <el-form-item class="clearfix">
           <div class="idcard-pos">
-            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idCardPositive" />
+            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idcardPositive" />
           </div>
           <div class="idcard-ver">
-            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idCardVerso" />
+            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idcardVerso" />
           </div>
         </el-form-item>
 
@@ -187,8 +187,8 @@ export default {
         'customerUnit': '', // 客户单位 50
         'detailedAddress': '', // 详细地址 50
         'fixPhone': '', // 固话 11
-        'idCardPositive': '', // 身份证正面图片地址
-        'idCardVerso': '', // 身份证反面图片地址
+        'idcardPositive': '', // 身份证正面图片地址
+        'idcardVerso': '', // 身份证反面图片地址
         'idcard': '', // 身份证号码 18
         'legalPersonname': '', // 公司法人 25
         'licensePicture': '', // 营业执照图片地址
@@ -340,8 +340,8 @@ export default {
     reset() {
       this.$refs['ruleForm'].resetFields()
       this.form.licensePicture = ''
-      this.form.idCardPositive = ''
-      this.form.idCardVerso = ''
+      this.form.idcardPositive = ''
+      this.form.idcardVerso = ''
     },
     closeMe(done) {
       this.reset()
