@@ -183,7 +183,7 @@ export default {
     }
   },
   mounted() {
-    this.getLoadTrack()
+    // this.getLoadTrack()
     this.toggleAllRows()
   },
   watch: {
