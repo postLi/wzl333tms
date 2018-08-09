@@ -150,11 +150,12 @@ export default {
   methods: {
     makefilter(query){
       this.query = query
+      let REG = new RegExp(query, 'i')
       let filterfn = (el)=>{
         console.log(el.dictName, REG, REG.test(el.dictName))
         return REG.test(el.dictName)
       }
-      let REG = new RegExp(query, 'i')
+      
 
       if(query===''){
         filterfn = (el)=>el

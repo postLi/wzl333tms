@@ -23,7 +23,8 @@ export function getSummaries(param, propsArr) {
       sums[index] = values.reduce((prev, curr) => {
         const value = Number(curr)
         if (!isNaN(value)) {
-          return prev + curr
+          // return prev + curr
+          return tmsMath._add(prev, curr)
         } else {
           return prev
         }

@@ -20,7 +20,7 @@
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
       <template v-if="type === 'sender' || type === 'receiver'">
-        <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+        <span class="query-input-customer-org" :title="item.customerUnit" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" :title="item.customerName" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" :title="item.detailedAddress" v-html="highLight(item,'detailedAddress')"></span>
       </template>
       <template v-else-if="type === 'city'">
         <div class="query-input-city-info">
@@ -671,7 +671,8 @@ export default {
     
   }
   .query-input-customer-org{
-    width: 60px;
+    min-width: 60px;
+    max-width: 120px;
     border-right: 1px solid #ddd;
   }
   .query-input-customer-name{

@@ -9,7 +9,7 @@
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">
         <el-form-item prop="tmsOrderShip.shipSn">
-          <el-input v-onlyNumberAndLetter size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+          <el-input ref="tmsOrderShipshipSn" v-onlyNumberAndLetter size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
         </el-form-item>
         </span></div>
       <div class="create-num">开单日期： <span class="create-num-info">
@@ -48,7 +48,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
             <el-form-item prop="tmsOrderShip.shipToCityName">
-              <querySelect show='select' filterable :getinput="true" @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
+              <querySelect show='select' ref="tmsOrderShipshipToCityName" filterable :getinput="true" @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -140,7 +140,7 @@
       </div>
       <!-- 货物费用 -->
       <div class="order-cargo-form">
-        <el-table ref="cargoListTable" :data="form.cargoList" border tooltip-effect="dark" triped width="100%" style="width: 100%">
+        <el-table ref="cargoListTable" :key="cargoKey" :data="form.cargoList" border tooltip-effect="dark" triped width="100%" style="width: 100%">
           <el-table-column class="addButtonTh" fixed :render-header="setHeader" width="50">
             <template slot-scope="scope">
               <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
@@ -163,7 +163,7 @@
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
-                  <el-form-item :prop="'cargoList.'+scope.$index + '.shipFee'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0('请输入运费~') : '', trigger: 'blur' }">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.shipFee'" >
                   <el-input v-number-only:point size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
@@ -273,7 +273,7 @@
           </el-col>
           <el-col :span="4">
             <div class="order-form-item">
-              <span class="order-form-label required">客户单号</span>
+              <span class="order-form-label ">客户单号</span>
               <el-form-item prop="tmsOrderShip.shipCustomerNumber">
                 <el-input v-onlyNumberAndLetter size="mini" maxlength="20"  v-model="form.tmsOrderShip.shipCustomerNumber" />
               </el-form-item>
@@ -525,8 +525,8 @@ export default {
 
     // REGEX.ONLY_NUMBER_AND_LETTER
     const validateOnlyNumberAndLetter = (rule, value, callback) => {
-      console.log('rule:', rule)
-      if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+      console.log("rule:",rule)
+      if (REGEX.ONLY_NUMBER_AND_LETTER.test(value) || (rule.field === "tmsOrderShip.shipCustomerNumber" && !value)) {
         callback()
       } else {
         this.showMessage(rule.message || '只能输入数字或者字母')
@@ -811,7 +811,8 @@ export default {
       dataCache: {},
       tmsOrderShipId: '', // 运单保存后返回的运单ID,
       isSavePrint: false, // false-不保存并打印 true-保存并打印,
-      printDataObject: {}
+      printDataObject: {},
+      cargoKey: 'init'
     }
   },
   computed: {
@@ -837,6 +838,20 @@ export default {
     }
   },
   watch: {
+    // 控制第一个填写的焦点位置
+    canChangeOrderNum:{
+      handler(newVal){ 
+        /* console.log("this.$refs['tmsOrderShipshipSn'].focus()",this.config.shipNo.manualInput)
+        if(this.config.shipNo.manualInput !== '1'){
+          // 否则在到达城市位置
+          this.$refs['tmsOrderShipshipToCityName'].$refs['myautocomplete'].focus()
+        } else {
+           // 允许修改单号，则在运单号位置
+          this.$refs['tmsOrderShipshipSn'].focus()
+          
+        } */
+      }
+    },
     orderobj: {
       handler(newVal) {
         console.log('3333333333333333333')
@@ -914,6 +929,7 @@ export default {
     this.initIndex()
     this.getSelectType()
     this.getShipPayWay()
+    this.form.tmsOrderTransfer.paymentId = 16
   },
   methods: {
     // 公共工具函数
@@ -1116,6 +1132,7 @@ export default {
     setOrderNum() {
       // 允许手动输入
       if (this.config.shipNo.manualInput !== '1') {
+        this.$refs['tmsOrderShipshipToCityName'].$refs['myautocomplete'].focus()
         // 不允许修改系统生成的单号
         if (this.config.shipNo.systemNumberImmutable === '1') {
           this.canChangeOrderNum = false
@@ -1126,6 +1143,8 @@ export default {
             this.form.tmsOrderShip.shipSn = res.data
           })
         }
+      } else {
+        this.$refs['tmsOrderShipshipSn'].focus()
       }
     },
     // 设置货号规则
@@ -1820,6 +1839,7 @@ export default {
 
       this.$refs['ruleForm'].resetFields()
       this.form.cargoList = [{}]
+      this.cargoList = [{}]
       this.form.sender = this.resetObj(this.form.sender)
       this.form.receiver = this.resetObj(this.form.receiver)
       this.form.customerList = []
@@ -1850,7 +1870,9 @@ export default {
         this.form.tmsOrderShip.shipPayWay = copy.tmsOrderShip.shipPayWay
 
         this.form.tmsOrderTransfer.transferTime = copy.tmsOrderTransfer.transferTime
-        this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
+        // this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
+        this.$set(this.form.cargoList, 0, objectMerge2({}, this.cargoObject))
+        this.cargoKey = Math.random()
         this.setDefaultValue()
       }
 
@@ -1867,6 +1889,7 @@ export default {
       this.isChecked = true
       this.isCheckedShow = false
       // 先判断表单必填项是否校验通过
+      console.log('提交前数据：', this.form)
       this.$refs['ruleForm'].validate((valid, errlist) => {
         this.isChecked = false
         this.isCheckedShow = false
@@ -2220,6 +2243,10 @@ $backgroundcolor: #cbe1f7;
 
     .el-form-item--mini.el-form-item{
       margin: 0;
+    }
+
+    .el-input.is-disabled .el-input__inner{
+      color: #666;
     }
 
     .batchlist{

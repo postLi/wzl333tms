@@ -244,15 +244,19 @@ export default {
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
-        this.formModel.szDtoList.forEach(e => {
-          e.agent = this.otherinfo.name
-        })
+        if(this.formModel.szDtoList.length){
+          this.formModel.szDtoList.forEach(e => {
+            e.agent = this.otherinfo.name
+          })
+        } else {
+          this.plusItem()
+        }
+        
       })
     },
     initDetailDtoList() {
       this.formModel.amount = 0
       this.formModel.detailDtoList = Object.assign([], this.info)
-      console.log('this.info', this.info)
       const obj = {}
       this.formModel.detailDtoList.map(el => {
         if (obj[el.dataName]) {
@@ -332,6 +336,8 @@ export default {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
             this.$router.push({ path: '/finance/accountsReceivable' })
+            // 当添加结算时更新列表
+            this.eventBus.$emit('updateAccountsReceivableList')
           })
             .catch(error => {
               this.$message({ type: 'error', message: '操作失败' })

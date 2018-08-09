@@ -17,7 +17,7 @@
     </div>
     <div class="setup-info-remark">
       <div class="addNew" v-if="isAdd">
-        <el-input size="mini" v-model.trim="newItem" /><el-button size="mini" icon="el-icon-check" @click="addItem" class="add-btn"></el-button><el-button @click="reset" size="mini" icon="el-icon-close" class="delete-btn"></el-button>
+        <el-input size="mini" ref="newItem" v-model.trim="newItem" /><el-button size="mini" icon="el-icon-check" @click="addItem" class="add-btn"></el-button><el-button @click="reset" size="mini" icon="el-icon-close" class="delete-btn"></el-button>
       </div>
       <el-checkbox-group v-model="checkList">
       <ul>
@@ -28,10 +28,10 @@
             <!-- 输入编辑框 -->
             <el-input size="mini" :title="item.value" v-if="item.isedit" :value="item.value" @change="(val)=>{changeItem(item.id, val)}" />
             <!-- 操作按钮 -->
-            <el-button size="mini" class="toeditbtn" icon="el-icon-edit" @click="item.isedit = true" v-if="!item.isedit" ></el-button>
+            <el-button size="mini" class="toeditbtn" icon="el-icon-edit" @click="setEdit(item)" v-if="!item.isedit" ></el-button>
             <el-button @click="deleteItem(item.id)" v-if="!item.isedit" size="mini" icon="el-icon-delete" class="toeditbtn"></el-button>
             <!-- 编辑操作按钮框 -->
-            <el-button size="mini" v-if="item.isedit" icon="el-icon-check" @click="modifyItem(item.id)" class="add-btn"></el-button>
+            <el-button size="mini" v-if="item.isedit" icon="el-icon-check" @click="modifyItem(item)" class="add-btn"></el-button>
             <el-button @click="item.isedit = false" v-if="item.isedit" size="mini" icon="el-icon-close" class="delete-btn"></el-button>
           </div>
         </li>
@@ -107,7 +107,8 @@ export default {
           value: this.newItem
         }).then(res => {
           this.newItem = ''
-          this.$message.success('添加成功~')
+          //this.$message.success('添加成功~')
+          this.isAdd = false
           this.getRemarkSetup()
         }).catch(err => {
           this.$message.error('出错了：' + err.text)
@@ -120,12 +121,14 @@ export default {
     changeItem(id, val) {
       this.modifyObj[id] = val
     },
-    modifyItem(id) {
+    modifyItem(item) {
+      let id = item.id
       if (this.modifyObj[id]) {
         OrderApi.putRemark(id, {
           value: this.modifyObj[id]
         }).then(res => {
-          this.$message.success('修改成功')
+          item.isedit = false
+          //this.$message.success('修改成功')
         }).catch(err => {
           this.$message.error('修改失败：' + err.text)
         })
@@ -178,6 +181,15 @@ export default {
       this.$emit('success', item.join(','))
       this.close()
     },
+    setEdit(item){
+      let isEdit = this.remarksData.some(el=>el.isedit)
+      if(isEdit){
+        this.$message.info('只能同时编辑一条数据~')
+      } else {
+        item.isedit = true
+      }
+      
+    },
     canEdit() {
       this.isedit = true
       this.isAdd = false
@@ -185,6 +197,9 @@ export default {
     canAdd() {
       this.isAdd = true
       this.isedit = false
+      setTimeout(()=>{
+        this.$refs['newItem'].focus()
+      },100)
     }
   }
 }

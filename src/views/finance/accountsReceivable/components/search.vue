@@ -119,6 +119,10 @@ export default {
     this.searchForm.ascriptionOrgId = this.otherinfo.orgid
     // this.searchForm.status = 'NOSETTLEMENT'
     this.onSubmit()
+    // 当添加结算时更新列表
+    this.eventBus.$on('updateAccountsReceivableList',()=>{
+      this.onSubmit()
+    })
   },
   methods: {
     onSubmit() {
