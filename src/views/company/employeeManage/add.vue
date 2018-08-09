@@ -30,8 +30,8 @@
           <SelectTree filterable v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth">
-          <el-select filterable  multiple v-model="form.rolesId" placeholder="请选择权限">
-            <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+          <el-select collapse-tags filterable  multiple v-model="form.rolesId" :filter-method="makefilter" placeholder="请选择权限">
+            <el-option v-for="item in roleslist" :key="item.id" :label="item.roleName" :value="item.id"><span class="query-input-myautocomplete" v-html="highLight(item,'roleName')"> </span></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="归属部门" :label-width="formLabelWidth" prop="departmentId">
@@ -158,7 +158,9 @@ export default {
       roles: [],
       departments: [],
       groups: [],
-      inited: false
+      inited: false,
+      query: '',
+      roleslist: []
 
     }
   },
@@ -197,11 +199,29 @@ export default {
     }
   },
   methods: {
+    highLight(item, key) {
+      if (this.query !== '') {
+        return this.setHightLight(item[key], this.query)
+      } else {
+        return item[key]
+      }
+    },
+    setHightLight(str, key) {
+      return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
+    },
+    makefilter(query){
+      this.query = query
+      let REG = new RegExp(query, 'i')
+      this.roleslist = this.roles.filter((el)=>{
+        return REG.test(el.roleName)
+      })
+    },
     initInfo() {
       this.loading = true
       return Promise.all([getAuthInfo(this.otherinfo.companyId), getDepartmentInfo(this.otherinfo.companyId)]).then(resArr => {
         this.loading = false
         this.roles = resArr[0].list
+        this.roleslist = this.roles
         this.departments = resArr[1]
       }).catch(err => {
         this.loading = false
@@ -278,5 +298,9 @@ export default {
     padding-right: 15px;
   }
 }
+.highlight{
+    font-style: normal;
+    color: #f00;
+  }
 </style>
 

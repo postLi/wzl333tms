@@ -1,11 +1,13 @@
 <template>
-  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" :filterable="filterable" v-bind="$attrs" @focus="focus" @blur="blur">
+  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" :filterable="filterable" :filter-method="makefilter" v-bind="$attrs" @focus="focus" @blur="blur">
     <slot name="head"></slot>
     <template v-for="item in listdata">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
       <slot v-bind:item="item">
         <!-- 回退的内容 -->
-        <el-option :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+        <el-option :key="item.id" :label="item.dictName" :value="item.id">
+          <span class="query-input-myautocomplete" v-html="highLight(item,'dictName')"> </span>
+        </el-option>
       </slot>
     </template>
     <slot name="foot"></slot>
@@ -96,28 +98,21 @@ export default {
       default: false
     },
     filterfn: {
-      type: Function,
-      default: (el) => el
+      type: Function
     },
     filterable: {
       type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'otherinfo'
-    ]),
-    listdata() {
-      return this.types.filter(this.filterfn)
+      default: true
     }
   },
   data() {
     return {
       val: '',
+      listdata: [],
       types: [],
       dataCache: {
-      }
+      },
+      query: ''
     }
   },
   watch: {
@@ -144,6 +139,7 @@ export default {
         this.fetchData()
       } else {
         this.types = data
+        this.listdata = data
       }
     }
     eventBus.$on('closepopbox', () => {
@@ -152,9 +148,27 @@ export default {
     })
   },
   methods: {
+    makefilter(query){
+      this.query = query
+      let filterfn = (el)=>{
+        console.log(el.dictName, REG, REG.test(el.dictName))
+        return REG.test(el.dictName)
+      }
+      let REG = new RegExp(query, 'i')
+
+      if(query===''){
+        filterfn = (el)=>el
+      } 
+       if(typeof this.filterfn === 'function'){
+        filterfn = this.filterfn
+      }
+      
+      this.listdata = this.types.filter(filterfn)
+    },
     fetchData() {
       var cb = (data) => {
         this.types = data
+        this.listdata = data
         // debugger
         CACHE.set(this.type, data)
       }
@@ -162,6 +176,13 @@ export default {
         cb(DICT[this.type])
       } else {
         getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(cb)
+      }
+    },
+    highLight(item, key) {
+      if (this.query !== '') {
+        return this.setHightLight(item[key], this.query)
+      } else {
+        return item[key]
       }
     },
     setHightLight(str, key) {

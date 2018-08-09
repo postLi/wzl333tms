@@ -1,13 +1,23 @@
 <template>
-  <el-select  ref="myautocomplete" :filterable="filterable" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+  <el-select  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
+        v-if="!listdata.length"
         v-for="item in openGroups"
         :key="item.id"
         :label="item.name"
         :value="item.id"
         
         >
-        <div :class="'indent indent'+item.index">{{ item.name }}</div>
+        <div :class="'indent indent'+item.index"><span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span></div>
+        </el-option>
+        <el-option
+        v-if="listdata.length"
+        v-for="item in listdata"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+        >
+        <span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span>
         </el-option>
     </el-select>
 </template>
@@ -26,6 +36,25 @@ function expandGroups(data, i) {
     res.push(el)
     if (el.children) {
       res = res.concat(expandGroups(el.children, i + 1))
+    }
+  })
+  return res
+}
+/**
+ * 将多层级树结构展开未扁平数组
+ */
+function expandGroups2(data) {
+  let res = []
+  data.map(el => {
+    let ell = {
+      id: el.id,
+      index: el.index,
+      name: el.name,
+      parentId: el.parentId
+    }
+    res.push(ell)
+    if (el.children && el.children.length) {
+      res = res.concat(expandGroups2(el.children))
     }
   })
   return res
@@ -50,11 +79,14 @@ export default {
     },
     filterable: {
       type: Boolean,
-      default: false
+      default: true
     },
     orgid:{
       type: [String, Number],
       default: ''
+    },
+    filterfn: {
+      type: Function
     }
   },
   watch: {
@@ -86,7 +118,9 @@ export default {
   data() {
     return {
       groups: [],
-      aid: ''
+      aid: '',
+      query: '',
+      listdata: []
     }
   },
   methods: {
@@ -95,10 +129,42 @@ export default {
         this.inited = true
         getAllOrgInfo(this.orgid || this.otherinfo.companyId).then(data => {
           this.groups = data
+          this.listdata = []
         }).catch(err => {
           this.inited = false
         })
       }
+    },
+    makefilter(query){
+      this.query = query
+      let REG = new RegExp(query, 'i')
+      let filterfn = (el)=>{
+        console.log(el.name, REG, REG.test(el.name))
+        return REG.test(el.name)
+      }
+      
+
+      if(query===''){
+        this.listdata = []
+        return this.listdata
+      } 
+       if(typeof this.filterfn === 'function'){
+        filterfn = this.filterfn
+      }
+      // this.listdata = this.groups.filter(filterfn)
+      this.listdata = expandGroups2(this.groups).filter(filterfn)
+      console.log('this.groups:',this.listdata,expandGroups2(this.groups).filter(filterfn))
+      
+    },
+    highLight(item, key) {
+      if (this.query !== '') {
+        return this.setHightLight(item[key], this.query)
+      } else {
+        return item[key]
+      }
+    },
+    setHightLight(str, key) {
+      return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
     change(val) {
       this.$emit('change', val)
@@ -109,6 +175,10 @@ export default {
 </script>
 
 <style lang="scss">
+.highlight{
+    font-style: normal;
+    color: #f00;
+  }
   .indent{
     border-left: 1px dashed #aaa;
     padding-left: 5px;
