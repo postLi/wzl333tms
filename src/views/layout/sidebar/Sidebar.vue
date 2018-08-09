@@ -121,6 +121,7 @@ export default {
   text-align: center;
   .el-button{
     margin-bottom: 10px;
+    width: 150px;
   }
 }
 </style>
