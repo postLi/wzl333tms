@@ -183,7 +183,7 @@ export default {
     }
   },
   mounted() {
-    this.getLoadTrack()
+    // this.getLoadTrack()
     this.toggleAllRows()
   },
   watch: {
@@ -368,7 +368,7 @@ export default {
     },
     getLoadTrack() {
       this.loadId = this.info.id
-      getSelectLoadDetailList(this.loadId).then(data => {
+      getSelectLoadDetailList().then(data => {
         if (data) {
           this.detailList = data.data
           this.setData()
@@ -381,6 +381,9 @@ export default {
             // })
           // })
         }
+      })
+      .catch(error =>{
+         // this.$message.error(error.e);
       })
     },
     clickDetails(row) {

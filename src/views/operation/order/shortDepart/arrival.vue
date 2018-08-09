@@ -35,7 +35,7 @@
           <Pager :total="total" @change="handlePageChange" />
         </div>
       </div>
-      <!-- 在途跟踪 -->
+      <!-- 批次详情 -->
       <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
