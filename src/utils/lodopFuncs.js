@@ -276,12 +276,12 @@
      arr.forEach((e, index) => {
        if (e.filedValue !== 'setting') {
          str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.filedName + ':' + e.value + '");'
-         // str += 'LODOP.SET_PRINT_STYLEA(' +',"FontSize",'+')'
+         str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",'+e.fontsize+');'
        }
      })
      eval(str)
-     LODOP.PRINT_SETUP()
-     // LODOP.PREVIEW();
+     // LODOP.PRINT_SETUP()
+     LODOP.PREVIEW();
    } catch (err) {
      getLodop()
    }
