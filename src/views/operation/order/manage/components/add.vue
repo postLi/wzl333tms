@@ -615,8 +615,12 @@ export default {
             this.closeMe()
             this.$emit('success')
           }).catch(err => {
-            this.loading = false
+            this.$message({
+              type: 'info',
+              message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+            })
           })
+          this.loading = false
         } else {
           return false
         }

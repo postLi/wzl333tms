@@ -339,7 +339,6 @@
           // this.form = objectMerge2(this.dotInfo)
           this.changeDate(this.dotInfo)
           this.form.parentId = this.dotInfo.parentId || this.companyId
-          console.log(2)
         } else {
           this.popTitle = '新增网点'
   
@@ -350,7 +349,7 @@
           this.form.orgType = 1
           this.form.status = 32
           this.form.manageType = 3
-          this.form.parentId = this.dotInfo.parentId || this.companyId
+          this.form.parentId = this.companyId
           this.form.accountName = ''
         }
       },
