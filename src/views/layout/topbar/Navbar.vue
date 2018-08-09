@@ -70,8 +70,8 @@ export default {
       }
       
       img{
-        height: 36px;
-        width: 99px;
+        height: 37px;
+        width: 112px;
         vertical-align: middle;
       }
     }
