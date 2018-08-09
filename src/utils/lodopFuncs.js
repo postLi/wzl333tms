@@ -269,12 +269,15 @@
  //创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info) {
    try {
+     LODOP.SET_PRINT_MODE("WINDOW_DEFPRINTER","KZDesigner GK888t (EPL)");
      LODOP = getLodop();
      let arr = new Array()
      arr = Object.assign([], info)
      let str = ''
      arr.forEach((e, index) => {
-       if (e.filedValue !== 'setting') {
+      if (e.filedValue === 'setting') {
+        str += 'LODOP.PRINT_INIT('+e.topy+','+e.leftx+','+e.width+','+e.height+',"青春物流流托运单打印");'
+      } else {
          str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.filedName + ':' + e.value + '");'
          str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",'+e.fontsize+');'
        }
