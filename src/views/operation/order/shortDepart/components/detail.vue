@@ -183,7 +183,7 @@ export default {
     }
   },
   mounted() {
-    // this.getLoadTrack()
+    this.getLoadTrack()
     this.toggleAllRows()
   },
   watch: {
@@ -337,7 +337,6 @@ export default {
       dataLoad.updateTime = this.info.updateTime
       dataLoad.userId = this.info.userId
 
-
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
       this.newData.tmsOrderLoadDetailsList = Object.assign([], this.selectDetailList)
@@ -367,8 +366,9 @@ export default {
       }
     },
     getLoadTrack() {
+      console.log('infow3234', this.info.id)
       this.loadId = this.info.id
-      getSelectLoadDetailList().then(data => {
+      getSelectLoadDetailList(this.loadId).then(data => {
         if (data) {
           this.detailList = data.data
           this.setData()
@@ -383,7 +383,7 @@ export default {
         }
       })
       .catch(error =>{
-         // this.$message.error(error.e);
+        this.$message({type: 'danger', message: error.errorInfo})
       })
     },
     clickDetails(row) {
