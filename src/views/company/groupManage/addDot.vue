@@ -221,6 +221,7 @@
           // id: '',
           parentId: 0,
           createTime: '',
+          id: '',
           accountName: ''  // 管理员账号
 
         },
@@ -278,6 +279,7 @@
           this.popTitle = '修改网点'
           this.changeDate(this.dotInfo)
           this.form.parentId = this.dotInfo.parentId || this.companyId
+          console.log(this.dotInfo)
         } else {
           this.popTitle = '新增网点'
           if (this.form.id) {
@@ -341,6 +343,7 @@
               if (this.form.id === this.form.parentId && this.form.parentId === this.otherinfo.companyId) {
                 this.form.parentId = 0
               }
+              this.form.id = this.dotInfo.id
               this.form.createTime = +new Date(this.form.createTime)
               reqPromise = putOrgData(this.form)
             } else {
@@ -353,9 +356,9 @@
             }
             reqPromise.then(res => {
               this.loading = false
-              this.closeMe()
               this.$emit('success')
               this.$message.success('保存成功')
+              this.closeMe()
             }).catch(err => {
               this.$message({
                 type: 'error',
