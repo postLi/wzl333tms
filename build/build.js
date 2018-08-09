@@ -66,10 +66,30 @@ rm(path.join(config.build.assetsRootTemp, config.build.assetsSubDirectory), err 
             chunkModules: false
           }) + '\n\n')
       
-          console.log('编译完成，准备从临时目录复制到dist目录，编译花费：', (copyTime.getTime() - startTime.getTime())/1000 + ' 秒')
+          let buildTime =  (endTime.getTime() - startTime.getTime())/1000
+          console.log('编译完成，编译花费：', (copyTime.getTime() - startTime.getTime())/1000 + ' 秒')
+          console.log('')
+          console.log('准备从临时目录复制到dist目录：')
           console.log('复制迁移完成，复制花费：', (endTime.getTime() - copyTime.getTime())/1000 + ' 秒')
+          console.log('')
           console.log('完成打包：', endTime.toLocaleString())
-          console.log('整个打包花费：', (endTime.getTime() - startTime.getTime())/1000 + ' 秒')
+          console.log('整个打包花费：',buildTime + ' 秒')
+
+          console.log('')
+          console.log('此次编译评分：')
+          if(buildTime < 20){
+            console.log('100分，恭喜您击败了全国90%的webpack编译速度~')
+          } else if(buildTime < 60){
+            console.log('90分，1分钟都不用，这个速度还是不错的。')
+          } else if(buildTime < 120){
+            console.log('70分，超过1分钟就是罪~')
+          } else if(buildTime < 300){
+            console.log('59分，这样的速度只能说差强人意~')
+          } else{
+            console.log('0分，就这龟速，咋不上天呢~')
+          }
+
+          console.log('')
 
           console.log(chalk.cyan('  Build complete.\n'))
           console.log(chalk.yellow(
