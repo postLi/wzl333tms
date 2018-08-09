@@ -507,6 +507,7 @@ import Addsign from './components/add'
 import Addbatch from './components/batch'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   name: 'tab-content',
   components: {
@@ -911,15 +912,15 @@ export default {
       }]
     }
   },
-        // props:{
-        //   type: { // 可以有confirm, 和inform两个类型
-        //   type: String,
-        //   default: 'confirm',
-        //   validator(value) {
-        //       return value === 'confirm' || value === 'inform';
-        //     },
-        //   },
-        // },
+    // props:{
+    //   type: { // 可以有confirm, 和inform两个类型
+    //   type: String,
+    //   default: 'confirm',
+    //   validator(value) {
+    //       return value === 'confirm' || value === 'inform';
+    //     },
+    //   },
+    // },
   methods: {
     parseShipStatus(id) {
       return parseShipStatus(id)
@@ -957,7 +958,8 @@ export default {
         return false
       }
           // 判断是否有选中项
-      if (!this.selected.length) {
+
+      if (!this.selected.length && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -966,6 +968,14 @@ export default {
       }
 
       switch (type) {
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单寄出'
+          })
+          break
               // 签收
         case 'pick':
               // let idss = this.selected

@@ -398,17 +398,8 @@ export default {
       this.fetchData()
     },
     doAction(type) {
-      if (type !== 'export') {
-        // 默认选择全部
-        if (this.selected.length === 0) {
-          SaveAsFile({
-            data: this.selected.length ? this.selected : this.dataset,
-            columns: this.tableColumn
-          })
-        }
-      }
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'reg' && type !== 'export') {
+      if (this.selected.length === 0 && type !== 'reg' && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -416,6 +407,13 @@ export default {
         return false
       }
       switch (type) {
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn
+          })
+          break
         // 登记
         case 'reg':
           this.isModify = false
@@ -439,7 +437,7 @@ export default {
             this.selectInfo = Object.assign({}, this.selected[0])
             this.openAddAbnormal()
           } else if (this.selected[0].abnormalStatus === 119) {
-            this.$message.warning('异常已经处理，不允许删除~')
+            this.$message.warning('异常已经处理，不允许修改~')
           }
           break
         // 查看明细

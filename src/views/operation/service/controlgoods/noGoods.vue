@@ -495,10 +495,10 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 // import TableSetup from './components/tableSetup'
 import TableSetup from '@/components/tableSetup'
-import { objectMerge2 } from '@/utils/index'
-import { parseShipStatus, parseTime } from '@/utils/dict'
+import { parseShipStatus } from '@/utils/dict'
 import dataTableVue from '@/views/operation/order/transferLoad/components/dataTable.vue'
-
+import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -908,7 +908,15 @@ export default {
         return false
       }
       switch (type) {
-              // 放货
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单发放'
+          })
+          break
+          // 放货
         case 'haveGoods':
           if (this.selected.length > 1) {
             this.$message({

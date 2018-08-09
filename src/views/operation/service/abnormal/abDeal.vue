@@ -211,6 +211,7 @@ import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
+import { SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -407,12 +408,12 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     doAction(type) {
-      if (type === 'export') {
-        this.showImport()
-        return false
-      }
+      // if (type === 'export') {
+      //   this.showImport()
+      //   return false
+      // }
           // 判断是否有选中项
-      if (!this.selected.length && type !== 'reg') {
+      if (!this.selected.length && type !== 'reg' && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -420,7 +421,15 @@ export default {
         return false
       }
       switch (type) {
-              // 异常处理
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单接收'
+          })
+          break
+        // 异常处理
         case 'deal':
           if (this.selected.length > 1) {
             this.$message({
@@ -436,7 +445,7 @@ export default {
             this.openAddAbnormal()
           }
           break
-                // 查看明细
+          // 查看明细
         case 'check':
           if (this.selected.length > 1) {
             this.$message({
@@ -454,11 +463,15 @@ export default {
           }
           break
       }
-          // 清除选中状态，避免影响下个操作
+      // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
     openAddAbnormal() {
       this.AddAbnormalVisible = true
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     closeAddAbnormal() {
       this.AddAbnormalVisible = false

@@ -13,7 +13,7 @@
           <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
+        <!-- <el-table
           ref="multipleTable"
           :data="dataset"
           stripe
@@ -38,7 +38,7 @@
             label="序号"
             width="200">
           </el-table-column>
-          <!-- 没有返回字段名 -->
+         
           <el-table-column
             label="开单网点"
             width="180"
@@ -78,7 +78,7 @@
             width="120"
             label="到达城市">
           </el-table-column>
-           <!-- 没有返回字段名 -->
+         
           <el-table-column
             prop="statusValue"
             label="结算状态"
@@ -93,7 +93,7 @@
             sortable
             >
           </el-table-column>
-           <!-- 没有返回字段名 -->
+         
           <el-table-column
             prop="incomePayTypeValue"
             label="费用类型"
@@ -153,13 +153,7 @@
             sortable
             >
           </el-table-column>
-          <!-- <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
-            width="120"
-            sortable
-            >
-          </el-table-column> -->
+         
           <el-table-column
             prop="cargoName"
             label="货品名"
@@ -266,12 +260,24 @@
             sortable
             >
           </el-table-column>
+        </el-table> -->
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
       <Addunusual :issender="true" :isModify="isModify" :isDbClick="isDbClick" :isCheck="isCheck" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
-      <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
 </div>
 </template>
@@ -282,7 +288,8 @@ import { mapGetters } from 'vuex'
 import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addunusual from './components/add'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
+import { SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   name: 'financeunusual',
   components: {
@@ -301,12 +308,6 @@ export default {
     }
   },
   mounted() {
-    // this.searchQuery.vo.orgId = this.otherinfo.orgid
-    // this.fetchAllreceipt()
-    // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      // this.loading = false
-            // this.licenseTypes = resArr[1]
-    // })
   },
   data() {
     return {
@@ -322,24 +323,202 @@ export default {
       licenseTypes: [],
       selected: [],
       loading: false,
+      total: 0,
+      tablekey: 0,
+      id: '',
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
         'vo': {
         }
       },
-      total: 0,
-      id: ''
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '开单网点',
+        prop: 'orgidName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '开单日期',
+        prop: 'shipCreateTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.shipCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      }, {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '结算状态',
+        prop: 'statusValue',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异动费用',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '费用类型',
+        prop: 'incomePayTypeValue',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异动费用',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '异动时间',
+        prop: 'createTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '异动备注',
+        prop: 'remark',
+        width: '120',
+        fixed: false
+      }, {
+        label: '运单状态',
+        prop: 'shipStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'senderCustomerMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'receiverCustomerName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'receiverCustomerMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }, {
+        label: '付款方式',
+        prop: 'shipPayWay',
+        width: '120',
+        fixed: false
+      }, {
+        label: '现付',
+        prop: 'nowPayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到付',
+        prop: 'arrivePayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单付',
+        prop: 'receiptPayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '月结',
+        prop: 'monthPayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达省',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        },
+        fixed: false
+      }, {
+        label: '到达市',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        },
+        fixed: false
+      }, {
+        label: '到达区',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        },
+        fixed: false
+      }, {
+        label: '发货地址',
+        prop: 'senderDetailedAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货地址',
+        prop: 'receiverDetailedAddress',
+        width: '120',
+        fixed: false
+      }]
     }
   },
   methods: {
-        // getLicenType(id){
-        //   let info = this.licenseTypes.filter(item => {
-        //     console.log(item,id)
-        //     return parseInt(item.id, 10) === id
-        //     })
-        //   return info[0] ? info[0].dictName : id
-        // },
     fetchAllreceipt() {
       this.loading = true
       return postAbnormalUnusual(this.searchQuery).then(data => {
@@ -366,25 +545,34 @@ export default {
       this.fetchData()
     },
     doAction(type) {
-      if (type === 'export') {
-        this.showImport()
-        return false
-      }
+      // if (type !== 'export') {
+      //   SaveAsFile({
+      //     data: this.selected.length ? this.selected : this.dataset,
+      //     columns: this.tableColumn
+      //   })
+      // }
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'reg') {
+      if (this.selected.length === 0 && type !== 'reg' && type !== 'export') {
         this.$message({
-          message: '请选择要操作的项~',
+          message: '请选择要操作的项1~',
           type: 'warning'
         })
         return false
       }
       switch (type) {
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '异动登记'
+          })
+          break
         // 登记
         case 'reg':
           this.isModify = false
           this.isCheck = false
           this.isDbClick = false
-          // this.isDbclick = false
           console.log(this.isModify)
           this.selectInfo = {}
           this.openAddAbnormal()
@@ -404,10 +592,6 @@ export default {
             })
           } else {
             this.isCheck = false
-            // this.selectInfo = {}
-            //  this.isDbclick = false
-            // this.id = this.selected[0].id
-            // this.selectInfo = this.selected[0]
             this.selectInfo = Object.assign({}, this.selected[0])
             this.isModify = true
             this.isDbClick = false
@@ -417,7 +601,7 @@ export default {
         // 删除
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
-                    // =>todo 删除多个
+          // =>todo 删除多个
           let ids = this.selected.map(item => {
             return item.id
           })
@@ -448,11 +632,15 @@ export default {
           })
           break
       }
-          // 清除选中状态，避免影响下个操作
+      // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
     openAddAbnormal() {
       this.AddAbnormalVisible = true
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     closeAddAbnormal() {
       this.AddAbnormalVisible = false

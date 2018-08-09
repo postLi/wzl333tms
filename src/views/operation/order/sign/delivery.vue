@@ -508,6 +508,7 @@ import Addsign from './components/add'
 import Addbatch from './components/batch'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -945,7 +946,7 @@ export default {
         return false
       }
       // 判断是否有选中项
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -954,6 +955,14 @@ export default {
       }
 
       switch (type) {
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单寄出'
+          })
+          break
         // 签收
         case 'pick':
           const ids = this.selected.filter(el => {

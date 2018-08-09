@@ -8,7 +8,7 @@
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消回收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -312,6 +312,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from './components/tableSetup'
 import AddMark from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -348,8 +349,8 @@ export default {
       isAccept: false,
       tablekey: 0,
       total: 0,
-                // rec_status:113,
-                // loading:false,
+      // rec_status:113,
+      // loading:false,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10000,
@@ -584,7 +585,7 @@ export default {
     doAction(type) {
           // 判断是否有选中项
       console.log(this.selected)
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'exprot' && type !== 'print') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -592,7 +593,23 @@ export default {
         return false
       }
       switch (type) {
-              // 回单回收
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单回收'
+          })
+          break
+          // 打印
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单回收'
+          })
+          break
+          // 回单回收
         case 'recycle':
           const ids = this.selected.filter(el => {
             return el.recStatus === 105

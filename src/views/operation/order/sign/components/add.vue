@@ -50,7 +50,7 @@
           <el-input maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false"></el-input>
+          <el-input maxlength="10" v-model="form.receiver_customer_name" auto-complete="off" :disabled="isDbclick ? true :false"></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>

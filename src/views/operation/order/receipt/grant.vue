@@ -8,7 +8,7 @@
             <!-- <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消发放</el-button> -->
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('import')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('print')" plain>打印</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -284,7 +284,7 @@
             </el-table-column>
 
           </el-table> -->
-          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table ref="multipleTable" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -299,7 +299,7 @@
         </div>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-      <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -307,9 +307,10 @@
 import SearchForm from './components/search'
 import { postReceipt, putUpdateReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -565,7 +566,7 @@ export default {
         return false
       }
           // 判断是否有选中项
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'print' && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -574,7 +575,23 @@ export default {
       }
 
       switch (type) {
-              // 回单发放
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单发放'
+          })
+          break
+          // 打印
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单发放'
+          })
+          break
+          // 回单发放
         case 'grant':
           const ids = this.selected.filter(el => {
             return el.giveoutStatus === 111

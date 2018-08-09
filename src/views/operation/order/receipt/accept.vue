@@ -8,11 +8,11 @@
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消接收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('import')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('print')" plain>打印</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
-          <el-table
+          <!-- <el-table
             ref="multipleTable"
             :data="dataset"
             stripe
@@ -97,7 +97,7 @@
               sortable
               >
             </el-table-column>
-            <!-- 没有返回字段名 -->
+            
             <el-table-column
               prop="shipReceiptRequireName"
               label="回单类型"
@@ -196,7 +196,7 @@
               sortable
               >
             </el-table-column>
-            <!-- 这里没有找到对应的字段 -->
+         
             <el-table-column
               prop=""
               label="多笔付"
@@ -226,7 +226,6 @@
               sortable
               >
             </el-table-column>
-            <!-- 这里没有找到对应的字段 -->
             <el-table-column
               label="到达省"
               width="120"
@@ -276,23 +275,7 @@
               sortable
               >
             </el-table-column>
-            <!-- <el-table-column
-              prop="sendTime"
-              label="寄出日期"
-              width="120"
-              sortable
-              >
-              <template slot-scope="scope">{{ scope.row.sendTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-            </el-table-column> -->
             
-            <!-- <el-table-column
-              prop="giveoutTime"
-              label="发放日期"
-              width="120"
-              sortable
-              >
-              <template slot-scope="scope">{{ scope.row.giveoutTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-            </el-table-column> -->
             <el-table-column
               prop="recRemark"
               label="回收备注"
@@ -307,13 +290,13 @@
               sortable
               >
             </el-table-column>
-          </el-table>
+          </el-table> -->
         </div> 
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery" @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept" />    
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -323,7 +306,8 @@ import { mapGetters } from 'vuex'
 import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import AddMark from './components/add'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -358,8 +342,10 @@ export default {
       popVisible: false,
       setupTableVisible: false,
       isModify: false,
-                // acceptStatus:115,
-                // loading:false,
+      tablekey: 0,
+      total: 0,
+      // acceptStatus:115,
+      // loading:false,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10000,
@@ -369,7 +355,198 @@ export default {
           'acceptStatus': 109
         }
       },
-      total: 0
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '开单网点',
+        prop: 'fromOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '目的网点',
+        prop: 'toOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '开单日期',
+        prop: 'createTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '接收状态',
+        prop: 'acceptStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '接收日期',
+        prop: 'acceptTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.acceptTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '回单状态',
+        prop: 'backStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单类型',
+        prop: 'shipReceiptRequireName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单数量',
+        prop: 'shipReceiptNum',
+        width: '120',
+        fixed: false
+      }, {
+        label: '接收备注',
+        prop: 'acceptRemark',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'sendName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'recName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '付款方式',
+        prop: 'shipPayWay',
+        width: '120',
+        fixed: false
+      }, {
+        label: '现付',
+        prop: 'shipNowpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到付',
+        prop: 'shipArrivepayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单付',
+        prop: 'shipReceiptpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '月结',
+        prop: 'shipMonthpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '中转承运商',
+        prop: 'carrierName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '中转日期',
+        prop: 'transferTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '中转单号',
+        prop: 'oddNumbers',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'sendMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货地址',
+        prop: 'sendAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'recMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货地址',
+        prop: 'recAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达省',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        },
+        fixed: false
+      }, {
+        label: '到达市',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        },
+        fixed: false
+      }, {
+        label: '到达县',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        },
+        fixed: false
+      }]
     }
   },
   methods: {
@@ -400,7 +577,7 @@ export default {
     doAction(type) {
           // 判断是否有选中项
       console.log(this.selected)
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'print' && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -408,6 +585,22 @@ export default {
         return false
       }
       switch (type) {
+        // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单接收'
+          })
+          break
+          // 打印
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单接收'
+          })
+          break
               // 回单接收
         case 'accept':
           const ids = this.selected.filter(el => {
@@ -458,6 +651,13 @@ export default {
       }
           // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
+    },
+    closeSetupTable() {
+      this.setupTableVisible = false
     },
     closeAddDot() {
       this.popVisible = false

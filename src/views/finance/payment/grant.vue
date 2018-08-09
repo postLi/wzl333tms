@@ -12,7 +12,7 @@
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
-            <el-table
+            <!-- <el-table
               ref="multipleTable"
               :data="dataset"
               stripe
@@ -228,7 +228,7 @@
                 sortable
                 >
               </el-table-column>
-              <!-- 这里没有找到对应的字段 -->
+
               <el-table-column
                 prop=""
                 label="多笔付"
@@ -257,13 +257,19 @@
                 >
                 <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
               </el-table-column>
-              
-              
-       
-               
-           
-          
-            </el-table>
+            </el-table> -->
+          <el-table ref="multipleTable" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
         </div>  
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
@@ -279,7 +285,8 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import TableSetup from './components/tableSetup'
 import AddPayment from './components/add'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -314,6 +321,8 @@ export default {
       popVisible: false,
       setupTableVisible: false,
       isAccept: false,
+      total: 0,
+      tablekey: 0,
       // rec_status:113,
       loading: false,
       searchQuery: {
@@ -324,7 +333,175 @@ export default {
           'fundsGiveoutStatus': '263'
         }
       },
-      total: 0
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '开单网点',
+        prop: 'fromOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '目的网点',
+        prop: 'toOrgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '开单日期',
+        prop: 'createTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发放状态',
+        prop: 'fundsGiveoutStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货款状态',
+        prop: 'fundsGoodsStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发放日期',
+        prop: 'giveoutTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.giveoutTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }, {
+        label: '代收货款',
+        prop: 'agencyFund',
+        width: '120',
+        fixed: false
+      }, {
+        label: '代收货款手续费',
+        prop: 'agencyFund',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'senderName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货地址',
+        prop: 'senderAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'receiptName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货地址',
+        prop: 'receiptAddress',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }, {
+        label: '付款方式',
+        prop: 'shipPayWayName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '现付',
+        prop: 'shipNowpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到付',
+        prop: 'shipArrivepayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '回单付',
+        prop: 'shipReceiptpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '月结',
+        prop: 'shipMonthpayFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到达省',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        },
+        fixed: false
+      }, {
+        label: '到达市',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        },
+        fixed: false
+      }, {
+        label: '到达县',
+        prop: 'shipToCityName',
+        width: '120',
+        slot: (scope) => {
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        },
+        fixed: false
+      }]
 
     }
   },
@@ -360,7 +537,7 @@ export default {
     doAction(type) {
           // 判断是否有选中项
       // console.log(this.selected)
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -368,6 +545,14 @@ export default {
         return false
       }
       switch (type) {
+         // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '货款汇款'
+          })
+          break
           // 汇款
         case 'send':
           const ids = this.selected.filter(el => {
@@ -391,6 +576,10 @@ export default {
     closeAddDot() {
       this.popVisible = false
             // this.addDoTotVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

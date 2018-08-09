@@ -154,7 +154,7 @@ export default {
           { required: true, message: '请输入承运商电话' }
         ],
         liablePhone: [
-          { required: true, message: '请输入负责人手机号码' }
+          // { required: true, message: '请输入负责人手机号码' }
           // { validator: validateFormNumber, trigger: 'change'}
         ]
       },
@@ -242,7 +242,7 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$message.success("保存成功")
+            this.$message.success('保存成功')
             this.closeMe()
             this.$emit('success')
           }).catch(err => {

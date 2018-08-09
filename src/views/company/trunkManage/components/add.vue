@@ -25,22 +25,22 @@
         </el-form-item>
 
         <el-form-item label="可载体积" prop="truckVolume">
-          <el-input v-model.number="form.truckVolume" v-numberOnly maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckVolume" v-number-only:point maxlength="18" auto-complete="off">
             <template slot="append">方</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车长" prop="truckLength">
-          <el-input v-model.number="form.truckLength" v-numberOnly maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLength" v-number-only:point maxlength="18" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车宽" prop="truckWidth">
-          <el-input v-model.number="form.truckWidth" v-numberOnly maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckWidth" v-number-only:point maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车高" prop="truckHeight">
-          <el-input v-model.number="form.truckHeight" v-numberOnly maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckHeight" v-number-only:point maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>

@@ -9,7 +9,7 @@
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline"  @click="doAction('cancel')" plain>取消寄出</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('import')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('print')" plain>打印</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -297,6 +297,7 @@ import { mapGetters } from 'vuex'
 import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -552,7 +553,7 @@ export default {
         return false
       }
           // 判断是否有选中项
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'print' && type !== 'export') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -561,7 +562,23 @@ export default {
       }
 
       switch (type) {
-              // 回单寄出
+          // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单寄出'
+          })
+          break
+          // 打印
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn,
+            name: '回单寄出'
+          })
+          break
+          // 回单寄出
         case 'send':
           const ids = this.selected.filter(el => {
             return el.sendStatus === 107
