@@ -14,6 +14,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
+        <el-tooltip content="双击查看批次详情" placement="top"  effect="light" :hide-after="4000">
         <el-table ref="multipleTable" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark" :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
@@ -28,6 +29,7 @@
             </el-table-column>
           </template>
         </el-table>
+      </el-tooltip>
       </div>
       <div class="info_tab_footer">
         共计:{{ total }}

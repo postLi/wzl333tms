@@ -16,7 +16,7 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
-                    <el-input size="mini" v-model="formModel.deliveryFee" clearable></el-input>
+                    <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point></el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
@@ -24,8 +24,8 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck">
+                  <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger" :key="truckKey">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -38,7 +38,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" @blur="blurDriver">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
                         <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
@@ -57,13 +57,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机电话" prop="dirverMobile" class="formItemTextDanger">
-                    <el-input size="mini" v-model.number="formModel.dirverMobile" placeholder="司机电话" clearable></el-input>
-                    <!--  <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverMobile" :fetch-suggestions="querySearch" placeholder="司机电话" size="mini" @select="handleSelect">
-                      <template slot-scope="{ item }">
-                        <div class="name">{{ item.driverName }}</div>
-                        <span class="addr">{{ item.driverMobile }}</span>
-                      </template>
-                    </el-autocomplete> -->
+                    <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话" clearable v-numberOnly></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -75,12 +69,12 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable v-number-only:point></el-input>
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -118,71 +112,71 @@
             </el-form>
             <!-- 费用参数 -->
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
-              <ul class="feeList">
+              <ul class="feeList_lyy">
                 <li>
                   <p>现付运费</p>
                   <el-form-item prop="nowpayCarriage">
-                    <el-input v-model="formFee.nowpayCarriage" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.nowpayCarriage" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>现付油卡</p>
                   <el-form-item prop="nowpayOilCard">
-                    <el-input v-model="formFee.nowpayOilCard" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.nowpayOilCard" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付运费</p>
                   <el-form-item prop="backpayCarriage">
-                    <el-input v-model="formFee.backpayCarriage" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.backpayCarriage" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付油卡</p>
                   <el-form-item prop="backpayOilCard">
-                    <el-input v-model="formFee.backpayOilCard" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.backpayOilCard" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付运费</p>
                   <el-form-item prop="arrivepayCarriage">
-                    <el-input v-model="formFee.arrivepayCarriage" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.arrivepayCarriage" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付油卡</p>
                   <el-form-item prop="arrivepayOilCard">
-                    <el-input v-model="formFee.arrivepayOilCard" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.arrivepayOilCard" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>整车保险费</p>
                   <el-form-item prop="carloadInsuranceFee">
-                    <el-input v-model="formFee.carloadInsuranceFee" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.carloadInsuranceFee" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站装卸费</p>
                   <el-form-item prop="leaveHandlingFee">
-                    <el-input v-model="formFee.leaveHandlingFee" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.leaveHandlingFee" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站其他费</p>
                   <el-form-item prop="leaveOtherFee">
-                    <el-input v-model="formFee.leaveOtherFee" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.leaveOtherFee" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站装卸费</p>
                   <el-form-item prop="arriveHandlingFee">
-                    <el-input v-model="formFee.arriveHandlingFee" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.arriveHandlingFee" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站其他费</p>
                   <el-form-item prop="arriveOtherFee">
-                    <el-input v-model="formFee.arriveOtherFee" maxlength="10" :size="mini"></el-input>
+                    <el-input v-model="formFee.arriveOtherFee" maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
               </ul>
@@ -227,8 +221,10 @@ import { getAllDriver } from '@/api/company/driverManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable'
 import SelectTree from '@/components/selectTree/index'
-import addTruckInfo from './components/addTruckInfo'
-import addDriverInfo from './components/addDriverInfo'
+// import addTruckInfo from './components/addTruckInfo'
+// import addDriverInfo from './components/addDriverInfo'
+import addTruckInfo from '@/views/company/trunkManage/components/add'
+import addDriverInfo from '@/views/company/driverManage/components/add'
 import loadChart from './components/loadChart'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
@@ -284,14 +280,15 @@ export default {
     }
     return {
       driverKey: 0,
+      truckKey: 0,
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
       contractNo: '',
       formModel: {
         loadTime: parseTime(new Date()),
-        requireArrivedTime: parseTime(new Date()),
-        planArrivedTime: parseTime(new Date()),
+        requireArrivedTime: '',
+        planArrivedTime: '',
         orgid: ''
       },
       isDirectDelivery: false,
@@ -338,7 +335,7 @@ export default {
       batchTypeIdFinishTruck: 48,
       inited: false,
       formModelRules: {
-        // arriveOrgid: [{ required: true, trigger: 'change', message: '非直送不能为空' }],
+        arriveOrgid: [{ required: true, trigger: 'change', message: '不能为空' }],
         apportionTypeName: [{ required: true, trigger: 'change', message: '必选' }],
         truckIdNumber: [{ required: true, trigger: 'change', validator: validateStringEight }],
         dirverName: [{ required: true, trigger: 'change', validator: validateStringTen }],
@@ -531,8 +528,8 @@ export default {
       if (!this.isEdit) {
         getSystemTime().then(data => {
           // this.formModel.requireArrivedTime = parseTime(data, '{y}-{m}-{d} ') + '23:59:59'
-          this.formModel.requireArrivedTime = data.trim()
-          this.formModel.planArrivedTime = data.trim()
+          // this.formModel.requireArrivedTime = data.trim()
+          // this.formModel.planArrivedTime = data.trim()
           // this.formModel.loadTime = parseTime(new Date(data))
           this.formModel.loadTime = data.trim()
         })
@@ -563,22 +560,22 @@ export default {
           this.showPercent()
           break
         case 'finish': // 完成配载
-          this.$confirm('此操作将完成配载, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.finishLoadInfo()
-          })
+          // this.$confirm('此操作将完成配载, 是否继续?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          this.finishLoadInfo()
+          // })
           break
         case 'finishTruck': // 完成并发车
-          this.$confirm('此操作将完成并发车, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.finishTruckInfo()
-          })
+          // this.$confirm('此操作将完成并发车, 是否继续?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          this.finishTruckInfo()
+          // })
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -619,15 +616,15 @@ export default {
     gotoPage() { // 操作成功后跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart' })
+          this.$router.push({ path: '././shortDepart', query: {pageKey: new Date().getTime()} })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart')
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart' })
+          this.$router.push({ path: '././arteryDepart', query: {pageKey: new Date().getTime()}  })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage' })
+          this.$router.push({ path: '././deliverManage', query: {pageKey: new Date().getTime()}  })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/deliverManage')
           break
       }
@@ -786,7 +783,9 @@ export default {
       this.infoDriver = {}
       this.addDriverVisible = true
     },
-    fetchData() {},
+    fetchData() {
+      this.initInfo() // 添加完司机或车辆之后，刷新下拉数据
+    },
     closeAddDriver() {
       this.addDriverVisible = false
     },
@@ -795,9 +794,16 @@ export default {
     },
     initInfo() {
       this.loading = false
+      this.truckKey = new Date().getTime()
+      this.driverKey = new Date().getTime()
+      this.Drivers = this.$options.data().Drivers
+      this.Trucks = this.$options.data().Trucks
+      this.cacheDriverList = this.$options.data().cacheDriverList
+      this.cacheTruckList = this.$options.data().cacheTruckList
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
+      console.log('刷新了下拉数据')
     },
     getDrivers(orgid) {
       if (this.cacheDriverList[orgid]) {
@@ -835,28 +841,21 @@ export default {
       }
     },
     handleSelect(item) {
-        this.driverKey = new Date().getTime()
-
+      this.driverKey = new Date().getTime()
       if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
         this.formModel.truckIdNumber = item.truckIdNumber
-        // this.formModel.dirverMobile = item.driverMobile
-        // this.formModel.dirverName = item.driverName
       }
-      //  else{
-      //   console.log(item)
-      //   this.flag = true
-
-      //   console.log(this.formModel)
-      // }
       this.formModel.dirverMobile = item.driverMobile
       this.formModel.dirverName = item.driverName
+      this.isDriverSelect = true
     },
     handleSelectTruck(item) {
+      this.truckKey = new Date().getTime()
       // console.log('flag', this.flag)
       this.formModel.truckIdNumber = item.truckIdNumber
       // if (!this.flag) {
-        this.formModel.dirverMobile = item.driverMobile
-        this.formModel.dirverName = item.driverName
+      this.formModel.dirverMobile = item.driverMobile
+      this.formModel.dirverName = item.driverName
       // }
     },
     querySearch(queryString, cb) {
@@ -884,6 +883,30 @@ export default {
           return (queryString.test(data[prop]))
         }
       }
+    },
+    blurTruck() { // 车牌输入框失去响应时
+      let data = ''
+      // this.Trucks.find(el => {
+      //   if (this.formModel.truckIdNumber === el.truckIdNumber) {
+      //     this.formModel.truckIdNumber = el.truckIdNumber
+      //   } else {
+      //     this.formModel.truckIdNumber = undefined
+      //   }
+      // })
+    },
+    blurDriver() { // 司机输入框失去响应时
+      this.Drivers.forEach(el => {
+        console.log(this.formModel.dirverName, el.driverName, this.isDriverSelect)
+        if (this.formModel.dirverName === el.driverName) {
+          this.formModel.dirverName = el.driverName
+        } else {
+          if (!this.isDriverSelect) {
+            this.isDriverSelect = false
+            this.formModel.dirverName = ''
+            this.formModel.dirverMobile = ''
+          }
+        }
+      })
     }
   }
 }
@@ -987,7 +1010,7 @@ export default {
   }
 }
 
-ul.feeList {
+ul.feeList_lyy {
   margin: 10px;
   border: 1px solid #d0d7e5;
   display: flex;

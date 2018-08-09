@@ -16,20 +16,22 @@
       <div class="info_tab">
         <!-- 完成并发车：有发车时间和配载时间
             完成配载：只有配载时间 -->
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
-          <el-table-column fixed sortable type="selection" width="50">
-          </el-table-column>
-          <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+        <el-tooltip content="双击查看批次详情" placement="top"  effect="light" :hide-after="4000">
+          <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
+            <el-table-column fixed sortable type="selection" width="50">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-              <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
-              </template>
-            </el-table-column>
-          </template>
-        </el-table>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+        </el-tooltip>
       </div>
       <div class="info_tab_footer">
         共计:{{ total }}
@@ -354,7 +356,7 @@ export default {
       if (!data.loadIds) { // 如果id为空，即请求状态不对，拦截请求
         this.isBatch = false
       }
-      console.log('data',data)
+      console.log('data', data)
       this.commonTruck = Object.assign({}, data)
       data = {}
     },
@@ -366,7 +368,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log('发车',this.commonTruck)
+          console.log('发车', this.commonTruck)
           putTruckDepart(this.commonTruck).then(data => {
               if (data) {
                 this.$message({ type: 'success', message: '发车成功！' })
@@ -392,7 +394,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log('取消发车',this.commonTruck)
+          console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
               if (data) {
                 this.$message({ type: 'success', message: '取消发车操作成功！' })
@@ -419,7 +421,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log('取消装车',this.commonTruck)
+          console.log('取消装车', this.commonTruck)
           putTruckLoad(this.commonTruck).then(data => {
               if (data) {
                 this.$message({ type: 'success', message: '取消装车操作成功！' })
