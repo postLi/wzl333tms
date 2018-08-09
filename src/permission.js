@@ -38,7 +38,8 @@ router.beforeEach((to, from, next) => {
             router.addRoutes(store.getters.addRouters)
             next({ ...to, replace: true })
           })
-        }).catch(() => {
+        }).catch((err) => {
+          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           next({ path: '/login', query: {
             // 删除tmstoken，避免重复循环
