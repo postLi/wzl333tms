@@ -253,6 +253,7 @@
               this.reset()
               this.$emit('success')
             }).catch(err => {
+              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false
             })
           } else {
@@ -282,6 +283,7 @@
               this.fetchData()
               this.$emit('success')
           }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false
             })
           }

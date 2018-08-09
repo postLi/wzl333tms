@@ -543,9 +543,10 @@ export default {
             })
             this.closeMe()
             this.$emit('success')
-          }).catch(res => {
+          }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
-            this.$message.warning(res.text)
+            this.$message.warning(err.text)
             // this.closeMe()
           })
         } else {

@@ -501,6 +501,7 @@ export default {
             this.$refs[formName].resetFields()
             this.$emit('success')
           }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
           })
         } else {
