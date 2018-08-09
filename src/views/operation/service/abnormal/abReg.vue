@@ -374,13 +374,6 @@ export default {
     }
   },
   methods: {
-        // getLicenType(id){
-        //   let info = this.licenseTypes.filter(item => {
-        //     console.log(item,id)
-        //     return parseInt(item.id, 10) === id
-        //     })
-        //   return info[0] ? info[0].dictName : id
-        // },
     fetchAllreceipt() {
       this.loading = true
       return PostGetAbnormalList(this.searchQuery).then(data => {
@@ -405,17 +398,14 @@ export default {
       this.fetchData()
     },
     doAction(type) {
-      if (type === 'export') {
+      if (type !== 'export') {
         // 默认选择全部
         if (this.selected.length === 0) {
-          SaveAsFile(this.dataset, this.tableColumn)
-        } else {
-        // 筛选选中的项
-          SaveAsFile(this.selected, this.tableColumn)
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.dataset,
+            columns: this.tableColumn
+          })
         }
-
-        // this.showImport()
-        // return false
       }
       // 判断是否有选中项
       if (!this.selected.length && type !== 'reg' && type !== 'export') {
@@ -426,16 +416,16 @@ export default {
         return false
       }
       switch (type) {
-              // 登记
+        // 登记
         case 'reg':
           this.isModify = false
           this.isCheck = false
-                // this.isDbclick = false
+          // this.isDbclick = false
           console.log(this.isModify)
           this.selectInfo = {}
           this.openAddAbnormal()
           break
-              // 修改
+        // 修改
         case 'xiugai':
           if (this.selected.length > 1) {
             this.$message({
@@ -446,16 +436,13 @@ export default {
             this.selectInfo = {}
             this.isModify = true
             this.isCheck = false
-                  //  this.isDbclick = false
             this.selectInfo = Object.assign({}, this.selected[0])
-            // console.log(this.id)
-
             this.openAddAbnormal()
           } else if (this.selected[0].abnormalStatus === 119) {
             this.$message.warning('异常已经处理，不允许删除~')
           }
           break
-          // 查看明细
+        // 查看明细
         case 'check':
           if (this.selected.length > 1) {
             this.$message({
@@ -463,30 +450,25 @@ export default {
               type: 'warning'
             })
           } else {
-                    // this.isDbclick = false
             this.isModify = false
             this.isCheck = true
-            // this.id = this.selected[0].id
             this.selectInfo = Object.assign({}, this.selected[0])
             this.openAddAbnormal()
-            // console.log(this.selectInfo, this.id + 'xz')
           }
           break
         // 删除
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
-                    // =>todo 删除多个
-                    // ids = ids.join(',')
+          // =>todo 删除多个
+          // ids = ids.join(',')
           // const ids = this.selected.filter(el => {
           //   return el.abnormalStatus === 118
           // }).map(el => {
           //   return el.id
           // })
-
           const ids = this.selected.map(item => {
             return item.id
           })
-
           // console.log(ids)
           if (this.selected[0].abnormalStatus === 118) {
             this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
@@ -572,6 +554,14 @@ export default {
           //   this.$message.warning('异常已经处理，不允许删除~')
           // }
           break
+        // case 'export':
+        //   SaveAsFile({
+        //     data: this.selected.length ? this.selected : this.dataset,
+        //     columns: this.tableColumn
+        //     // name: '短驳发车'
+        //   })
+        //   break
+
       }
           // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
