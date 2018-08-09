@@ -310,9 +310,9 @@ export default {
       pickupBatchNumber: '',
 // 用来在提交
       sender: {},
-      //验证
-      isChecked : false,
-      isCheckedShow : false
+      // 验证
+      isChecked: false,
+      isCheckedShow: false
     }
   },
   mounted() {
@@ -404,14 +404,13 @@ export default {
         }
       }
     },
-    showMessage(msg){
-      if(this.isChecked && !this.isCheckedShow) {
+    showMessage(msg) {
+      if (this.isChecked && !this.isCheckedShow) {
         this.isCheckedShow = true
       }
       if (this.isCheckedShow) {
         this.checkShowMessage = true
-      }
-      else{
+      }      else {
         this.checkShowMessage = false
       }
     },
@@ -499,7 +498,7 @@ export default {
             this.loading = false
             this.$message.success('保存成功')
             this.closeMe()
-            this.$refs[formName].resetFields();
+            this.$refs[formName].resetFields()
             this.$emit('success')
           }).catch(err => {
             this.loading = false
@@ -514,7 +513,6 @@ export default {
       Object.assign(this.form.tmsTruck)
       Object.assign(this.form.tmsDriver)
       Object.assign(this.form.tmsCustomer)
-
     },
     closeMe(done) {
       // this.$refs[formName].resetFields();

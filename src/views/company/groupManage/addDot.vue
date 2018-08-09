@@ -393,7 +393,7 @@
       submitForm(formName) {
         this.isChecked = true
         this.isCheckedShow = false
-        this.checkShowMessage = false
+        this.checkShowMessage = true
         this.$refs[formName].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
