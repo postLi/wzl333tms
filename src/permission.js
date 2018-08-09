@@ -3,6 +3,7 @@ import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { getToken, removeToken, setToken } from '@/utils/auth' // 验权
+import { Message, MessageBox } from 'element-ui'
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
@@ -39,7 +40,7 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true })
           })
         }).catch((err) => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           next({ path: '/login', query: {
             // 删除tmstoken，避免重复循环
