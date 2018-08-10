@@ -248,7 +248,7 @@
       popVisible(val) {
         if (val) {
           this.formKey = Math.random()
-          console.log(JSON.stringify(this.doInfo))
+          // console.log(JSON.stringify(this.doInfo))
         }
         this.watchDate(this.doInfo)
       },
