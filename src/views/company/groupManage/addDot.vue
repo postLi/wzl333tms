@@ -8,20 +8,19 @@
             <el-form-item label="公司名称" :label-width="formLabelWidth" prop="orgName" >
               <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 " maxlength="15" ></el-input>
             </el-form-item>
-            <el-form-item label="总公司" :label-width="formLabelWidth">
-              <el-select v-model="form.orgType" >
-                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id" :disabled="form.status===31" ></el-option>
+            <el-form-item label="总公司" :label-width="formLabelWidth" >
+              <el-select v-model="form.orgType" :disabled="companyId === form.id || form.status===31">
+                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"  ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="公司状态" :label-width="formLabelWidth" disabled="disabled">
-              <el-select v-model="form.status" :disabled="isModify ? false : true"  >
-                <!--<el-option v-for="item in netWorkStatus" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
+              <el-select v-model="form.status" :disabled="!isModify && companyId === form.id || form.status===31 ? false : true"  >
                 <el-option label="有效" :value="32"></el-option>
                 <el-option label="无效" :value="31"></el-option>
               </el-select>
             </el-form-item>
               <el-form-item label="公司代码" :label-width="formLabelWidth" prop="networkCode" >
-              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" maxlength="10" clearable></el-input>
+              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31 || companyId === form.id" maxlength="10" clearable></el-input>
             </el-form-item>
 
             <!-- <el-form-item label="上级网点" :label-width="formLabelWidth">
@@ -53,7 +52,7 @@
             <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city" >
 
 
-              <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"  :disabled="form.status===31" type="city"  v-model="form.city" :remote="true" clearable  />
+              <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"  :disabled="companyId === form.id || form.status===31" type="city"  v-model="form.city" :remote="true" clearable  />
 
 
             </el-form-item>
