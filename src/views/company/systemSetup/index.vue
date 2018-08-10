@@ -71,9 +71,9 @@
               <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.brokerageFee">回扣</el-checkbox>
               </el-form-item>
-              <el-form-item>
+           <!--    <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.productPrice">声明价值</el-checkbox>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.deliveryFee">送货费</el-checkbox>
               </el-form-item>
@@ -110,7 +110,7 @@
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.stampTax">印花税</el-checkbox>
               </el-form-item>
               <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.otherfeeOut">其他费用</el-checkbox>
+                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.otherfeeIn">其他费用收入</el-checkbox>
               </el-form-item>
             </div>
           </div>
@@ -331,11 +331,11 @@ export default {
           name: '送货费'
         },
 
-        {
+/*         {
           key: 'productPrice',
           value: '0',
           name: '声明价值'
-        },
+        }, */
         {
           key: 'insuranceFee',
           value: '0',
@@ -420,7 +420,7 @@ export default {
           'customsFee': '0',
           'commissionFee': '0',
           'handlingFee': '1',
-          'otherfeeOut': '0',
+          'otherfeeIn': '0',
           'brokerageFee': '1',
           'goupstairsFee': '0',
           'taxes': '0',
@@ -431,7 +431,7 @@ export default {
           'forkliftFee': '1',
           'pickupFee': '1',
           'stampTax': '0',
-          'productPrice': '0',
+          //'productPrice': '0',
           'packageFee': '0'
         },
         'shipPageFunc': {
