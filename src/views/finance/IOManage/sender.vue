@@ -143,9 +143,9 @@
   </div>
 </template>
 <script>
-import {  getExportExcel } from '@/api/company/customerManage'
-import { postArtList ,postCancelLoad ,postCancelPut } from '@/api/operation/arteryDelivery'
-import {postTmsFfinancialwayList,putStop} from '@/api/finance/financefinancialway'
+import { getExportExcel } from '@/api/company/customerManage'
+import { postArtList, postCancelLoad, postCancelPut } from '@/api/operation/arteryDelivery'
+import { postTmsFfinancialwayList, putStop } from '@/api/finance/financefinancialway'
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
@@ -162,26 +162,26 @@ export default {
     AddCustomer
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ]),
-      orgid () {
-      }
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
+    }
   },
-  mounted () {
+  mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchAllCustomer()
   },
-  data () {
+  data() {
     return {
       loading: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
       tablekey: 0,
-      trackId:'',
-      batchTypeId:'',//批次状态
-      //加载状态
+      trackId: '',
+      batchTypeId: '', // 批次状态
+      // 加载状态
       // loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
@@ -191,70 +191,70 @@ export default {
       // 选中的行
       selected: [],
       searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgId":'',
-          financialWay: '',//收支方式名称
-          status:'',
-          financialWayTypeId:''
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
+          'orgId': '',
+          financialWay: '', // 收支方式名称
+          status: '',
+          financialWayTypeId: ''
         }
       },
-      tableColumn:[
+      tableColumn: [
         {
-          label:'序号',
-          prop:'id',
-          width:'160',
-          fixed:true,
-          slot:(scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          label: '序号',
+          prop: 'id',
+          width: '160',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
-        },{
-          label:'所属网点',
-          prop:'orgName',
-          width:'120',
-          fixed:true,
-        },{
-          label:'收支方式',
-          prop:'financialWay',
-          width:'110',
-          fixed:true,
-        },{
-          label:'银行名称',
-          prop:'bankName',
-          width:'140',
-          fixed:false,
-        },{
-          label:'银行卡号',
-          prop:'bankAccount',
-          width:'180',
-          fixed:false,
-        },{
-          label:'开户人',
-          prop:'bankAccountName',
-          width:'130',
-          fixed:false,
-        },{
-          label:'支付宝账号',
-          prop:'alipayAccount',
-          width:'160',
-          fixed:false,
-        },{
-          label:'微信号',
-          prop:'wechatAccount',
-          width:'150',
-          fixed:false,
-        },{
-          label:'状态',
-          prop:'statusStr',
-          width:'110',
-          fixed:false,
-        },{
-          label:'创建人',
-          prop:'createBy',
-          width:'110',
-          fixed:false,
-        },{
+        }, {
+          label: '所属网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: true
+        }, {
+          label: '收支方式',
+          prop: 'financialWay',
+          width: '110',
+          fixed: true
+        }, {
+          label: '银行名称',
+          prop: 'bankName',
+          width: '140',
+          fixed: false
+        }, {
+          label: '银行卡号',
+          prop: 'bankAccount',
+          width: '180',
+          fixed: false
+        }, {
+          label: '开户人',
+          prop: 'bankAccountName',
+          width: '130',
+          fixed: false
+        }, {
+          label: '支付宝账号',
+          prop: 'alipayAccount',
+          width: '160',
+          fixed: false
+        }, {
+          label: '微信号',
+          prop: 'wechatAccount',
+          width: '150',
+          fixed: false
+        }, {
+          label: '状态',
+          prop: 'statusStr',
+          width: '110',
+          fixed: false
+        }, {
+          label: '创建人',
+          prop: 'createBy',
+          width: '110',
+          fixed: false
+        }, {
           label: '创建时间',
           prop: 'createTime',
           width: '160',
@@ -262,17 +262,17 @@ export default {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}')}`
           },
           fixed: false
-        },{
-          label:'备注',
-          prop:'remark',
-          width:'150',
-          fixed:false,
+        }, {
+          label: '备注',
+          prop: 'remark',
+          width: '150',
+          fixed: false
         }
       ]
     }
   },
   methods: {
-    fetchAllCustomer () {
+    fetchAllCustomer() {
       this.loading = true
       return postTmsFfinancialwayList(this.searchQuery).then(data => {
         this.usersArr = data.list
@@ -280,130 +280,129 @@ export default {
         this.loading = false
       })
     },
-    fetchData () {
+    fetchData() {
       this.fetchAllCustomer()
     },
-    handlePageChange (obj) {
+    handlePageChange(obj) {
       // Object.assign(this.searchQuery, obj)
       // this.fetchData()
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    getSearchParam (obj) {
+    getSearchParam(obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
-    showImport () {
+    showImport() {
       // 显示导入窗口
     },
-    doAction (type) {
-      if(type==='import'){
+    doAction(type) {
+      if (type === 'import') {
         this.showImport()
         return false
       }
       // 判断是否有选中项
 
-      if(!this.selected.length && type !== "storage"){
+      if (!this.selected.length && type !== 'storage') {
           // this.closeAddCustomer()
-          this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-          })
-          return false
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
       }
 
       switch (type) {
         // 新增
-          case 'storage':
-            this.isModify = false
-            this.isDbclick = false
-            this.openAddCustomer()
-            break;
+        case 'storage':
+          this.selectInfo = {}
+          this.isModify = false
+          this.isDbclick = false
+          this.openAddCustomer()
+          break
           //  修改
-          case 'modify':
-            this.closeAddCustomer()
-          if(this.selected.length > 1){
+        case 'modify':
+          this.closeAddCustomer()
+          if (this.selected.length > 1) {
             this.$message({
               message: '只能选择单条数据进行跟踪设置~',
               type: 'warning'
             })
             return false
-
-          }else{
+          } else {
             this.selectInfo = this.selected[0]
             this.isModify = true
             this.isDbclick = false
             this.openAddCustomer()
           }
 
-            break;
+          break
           // 停用
-          case 'stop':
-            this.closeAddCustomer()
-            if(this.selected.length > 1){
-              this.$message({
-                message: '只能选择一条数据进行跟踪设置~',
-                type: 'warning'
-              })
-              return false
-
-            }else{
-              if(this.selected[0].statusStr === '启用'){
-                let id = this.selected[0].id
-                putStop(id).then(res => {
-                  this.loading = false
-                  this.$message({
+        case 'stop':
+          this.closeAddCustomer()
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '只能选择一条数据进行跟踪设置~',
+              type: 'warning'
+            })
+            return false
+          } else {
+            if (this.selected[0].statusStr === '启用') {
+              const id = this.selected[0].id
+              putStop(id).then(res => {
+                this.loading = false
+                this.$message({
                     type: 'success',
                     message: '保存成功~'
                   })
-                      this.fetchData()
-                }).catch(err => {
+                this.fetchData()
+              }).catch(err => {
                   this.loading = false
                 })
-              }else{
-                this.$message({
-                 type: 'info',
-                 message: '当前收支方式已经在停用状态~'
-                })
-              }
+            } else {
+              this.$message({
+                type: 'info',
+                message: '当前收支方式已经在停用状态~'
+              })
             }
+          }
 
-              break;
+          break
           // 导出数据
-          case 'export':
-              let ids2 = this.selected.map(el => {
-                return el.customerId
-              })
-              getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                    type: 'success',
-                    message: '即将自动下载!'
-                })
-              })
-              break;
+        case 'export':
+          const ids2 = this.selected.map(el => {
+            return el.customerId
+          })
+          getExportExcel(ids2.join(',')).then(res => {
+            this.$message({
+              type: 'success',
+              message: '即将自动下载!'
+            })
+          })
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-    openAddCustomer () {
+    openAddCustomer() {
       this.AddCustomerVisible = true
     },
-    closeAddCustomer () {
+    closeAddCustomer() {
       this.AddCustomerVisible = false
     },
-    clickDetails(row, event, column){
+    clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection (selection) {
+    getSelection(selection) {
       this.selected = selection
     },
-    getDbClick(row, event){
+    getDbClick(row, event) {
       this.selectInfo = row
       this.isModify = false
       this.isDbclick = true

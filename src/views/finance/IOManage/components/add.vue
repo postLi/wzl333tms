@@ -306,10 +306,10 @@ export default {
     },
     reset() {
       // this.$refs['ruleForm'].resetFields()
-      // this.form = {}
-      // this.form.orgId = this.otherinfo.orgid
-      // this.form.financialWayId = 280
-      // this.financialWayClick(this.form.financialWayId)
+      this.form = {}
+      this.form.orgId = this.otherinfo.orgid
+      this.form.financialWayId = 280
+      this.financialWayClick(this.form.financialWayId)
     },
     closeMe(done) {
       this.reset()

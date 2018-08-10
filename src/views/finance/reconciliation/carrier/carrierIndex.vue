@@ -111,8 +111,8 @@
   </div>
 </template>
 <script>
-import {  getExportExcel } from '@/api/company/customerManage'
-import {postCarrierCarrierList} from '@/api/finance/fin_carrier'
+import { getExportExcel } from '@/api/company/customerManage'
+import { postCarrierCarrierList } from '@/api/finance/fin_carrier'
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
@@ -125,23 +125,23 @@ export default {
     TableSetup
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ]),
-      orgid () {
-      }
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
+    }
   },
-  mounted () {
+  mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
   },
-  data () {
+  data() {
     return {
       tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
-      trackId:'',
-      //加载状态
+      trackId: '',
+      // 加载状态
       loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
@@ -151,65 +151,65 @@ export default {
       // 选中的行
       selected: [],
       searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "orgid":'',
-          carrierId: '',//
-          startTime: '',//
-          endTime:''
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
+          'orgid': '',
+          carrierId: '', //
+          startTime: '', //
+          endTime: ''
         }
       },
-      tableColumn:[
+      tableColumn: [
         {
-          label:'序号',
-          prop:'id',
-          width:'120',
-          fixed:true,
-          slot:(scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          label: '序号',
+          prop: 'id',
+          width: '120',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
-        },{
-          label:'网点',
-          prop:'orgName',
-          width:'250',
-          fixed:true,
-        },{
-          label:'承运商',
-          prop:'carrierName',
-          width:'200',
-          fixed:true,
-        },{
-          label:'承运商电话',
-          prop:'carrierMobile',
-          width:'220',
-          fixed:false,
-        },{
-          label:'应收账款',
-          prop:'receivableFee',
-          width:'220',
-          fixed:false,
-        },{
-          label:'应付账款',
-          prop:'payableFee',
-          width:'220',
-          fixed:false,
-        },{
-          label:'应收应付对账合计',
-          prop:'recAndPayFee',
-          width:'250',
-          fixed:false,
-        },{
-          label:'总单数',
-          prop:'totalCount',
-          width:'200',
-          fixed:false,
-        },
-      ],
+        }, {
+          label: '网点',
+          prop: 'orgName',
+          width: '250',
+          fixed: true
+        }, {
+          label: '承运商',
+          prop: 'carrierName',
+          width: '200',
+          fixed: true
+        }, {
+          label: '承运商电话',
+          prop: 'carrierMobile',
+          width: '220',
+          fixed: false
+        }, {
+          label: '应收账款',
+          prop: 'receivableFee',
+          width: '220',
+          fixed: false
+        }, {
+          label: '应付账款',
+          prop: 'payableFee',
+          width: '220',
+          fixed: false
+        }, {
+          label: '应收应付对账合计',
+          prop: 'recAndPayFee',
+          width: '250',
+          fixed: false
+        }, {
+          label: '总单数',
+          prop: 'totalCount',
+          width: '200',
+          fixed: false
+        }
+      ]
     }
   },
   methods: {
-    fetchAllCustomer () {
+    fetchAllCustomer() {
       this.loading = true
       return postCarrierCarrierList(this.searchQuery).then(data => {
         this.usersArr = data.list
@@ -217,87 +217,84 @@ export default {
         this.loading = false
       })
     },
-    fetchData () {
+    fetchData() {
       this.fetchAllCustomer()
     },
-    handlePageChange (obj) {
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    getSearchParam (obj) {
+    getSearchParam(obj) {
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
 
       this.fetchData()
     },
-    showImport () {
+    showImport() {
       // 显示导入窗口
     },
-    doAction (type) {
-      if(type==='import'){
+    doAction(type) {
+      if (type === 'import') {
         this.showImport()
         return false
       }
       // 判断是否有选中项
 
-      if(!this.selected.length){
-
-          this.$message({
-              message: '请选择要操作的项~',
-              type: 'warning'
-          })
-          return false
+      if (!this.selected.length) {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
       }
 
       switch (type) {
         // 明细
-          case 'storage':
+        case 'storage':
 
-            this.$router.push({
-              path: '/finance/reconciliation/carrier/detailTable',
-              query: {
+          this.$router.push({
+            path: '/finance/reconciliation/carrier/detailTable',
+            query: {
                 tab: '承运商对账-对账明细',
                 id: this.selected[0].carrierId
               }
-            })
+          })
 
-            break;
-
-              break;
+          break
           // 导出数据
-          case 'export':
-              let ids2 = this.selected.map(el => {
-                return el.customerId
-              })
-              getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                    type: 'success',
-                    message: '即将自动下载!'
+        case 'export':
+          const ids2 = this.selected.map(el => {
+            return el.customerId
+          })
+          getExportExcel(ids2.join(',')).then(res => {
+            this.$message({
+                  type: 'success',
+                  message: '即将自动下载!'
                 })
-              })
-              break;
+          })
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-    openAddCustomer () {
+    openAddCustomer() {
       this.AddCustomerVisible = true
     },
-    closeAddCustomer () {
+    closeAddCustomer() {
       this.AddCustomerVisible = false
     },
-    clickDetails(row, event, column){
+    clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection (selection) {
+    getSelection(selection) {
       this.selected = selection
     },
-    getDbClick(row, event){
+    getDbClick(row, event) {
       this.$router.push({
         path: '/finance/reconciliation/carrier/detailTable',
         query: {

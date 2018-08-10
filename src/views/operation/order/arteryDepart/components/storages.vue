@@ -158,14 +158,14 @@
                     <el-table-column prop="loadVolume" label="配载体积" width="100" sortable>
                     </el-table-column>
                     <!--actualAmount-->
-                    <el-table-column prop="loadAmount" sortable width="100" label="库存件数">
+                    <!-- <el-table-column prop="loadAmount" sortable width="100" label="库存件数">
                     </el-table-column>
-                    <!--actualWeight-->
+                   
                     <el-table-column sortable prop="loadWeight" width="100" label="库存重量">
                     </el-table-column>
-                    <!--actualVolume-->
+                   
                     <el-table-column label="库存体积" width="100" prop="loadVolume" sortable>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column prop="loadAmount" sortable width="100" label="运单件数">
                     </el-table-column>
                     <!--actualWeight-->

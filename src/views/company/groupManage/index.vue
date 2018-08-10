@@ -31,13 +31,13 @@
           <el-collapse-item title="公司信息:" v-if="form.parentId === 0">
             <div class="side_right_top" :class="{currActive:form.status ===31}">
               <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-                <el-form-item label="网点名称" :label-width="formLabelWidth" >
+                <el-form-item label="公司名称" :label-width="formLabelWidth" >
                   <el-input v-model="form.orgName" auto-complete="off" disabled ></el-input>
                 </el-form-item>
-                <el-form-item label="网点类型" :label-width="formLabelWidth">
+                <el-form-item label="总公司" :label-width="formLabelWidth">
                   <el-input :value='form.orgType ===1 ? "营业网点" : "分拨中心"' disabled></el-input>
                 </el-form-item>
-                <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
+                <el-form-item label="公司状态" :label-width="formLabelWidth" disabled="disabled">
                   <el-input :value='form.status ===32 ? "有效" : "无效"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="客服人员" :label-width="formLabelWidth" >
@@ -46,22 +46,22 @@
                 <el-form-item label="客服电话" :label-width="formLabelWidth" >
                   <el-input v-model="form.servicePhone" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="上级网点" :label-width="formLabelWidth">
+                <!-- <el-form-item label="上级网点" :label-width="formLabelWidth">
                   <el-input :value="form.parentName || form.orgName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="经营类型" :label-width="formLabelWidth">
                   <el-input :value='form.manageType ===4 ? "加盟" : "自营"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" :label-width="formLabelWidth" >
-                  <!--<el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>-->
+                  <!--<el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
                  <el-input :value=" form.createTime| parseTime('{y}/{m}/{d}')" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="网点代码" :label-width="formLabelWidth" >
+                </el-form-item> -->
+                <el-form-item label="公司代码" :label-width="formLabelWidth" >
                   <el-input v-model="form.networkCode" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="代收款限额" :label-width="formLabelWidth">
+                <!-- <el-form-item label="代收款限额" :label-width="formLabelWidth">
                   <el-input v-model="form.collectionFee" auto-complete="off" disabled></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="负责人" :label-width="formLabelWidth" >
                   <el-input v-model="form.responsibleName" auto-complete="off" disabled></el-input>
                 </el-form-item>
@@ -71,13 +71,16 @@
                 <el-form-item label="所在城市" :label-width="formLabelWidth">
                   <el-input v-model="form.city" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="锁机额度" :label-width="formLabelWidth">
+                <!-- <el-form-item label="锁机额度" :label-width="formLabelWidth">
                   <el-input v-model="form.lockMachineQuota" auto-complete="off" disabled></el-input>
                 </el-form-item>
 
                 <el-form-item label="预警额度" :label-width="formLabelWidth">
                   <el-input v-model="form.warningQuota" auto-complete="off" disabled ></el-input>
-                </el-form-item>
+                </el-form-item> -->
+                 <el-form-item label="详情地址" :label-width="formLabelWidth">
+                  <el-input v-model="form.detailedAddr" auto-complete="off" disabled ></el-input>
+                </el-form-item> 
 
 
               </el-form>
@@ -315,6 +318,7 @@ export default {
             benchmark: '',
             warningQuota: '',
             lockMachineQuota: '',
+            detailedAddr: '',
             manageType: 3,
             remarks: '',
                   // 默认值
@@ -343,10 +347,11 @@ export default {
       methods: {
           // 左边树形数据
         fetchOrg() {
+          this.loading = true
           postAllOrgInfo(this.otherinfo.orgid).then(data => {
             this.dataTree = data
-            console.log(this.dataTree)
             this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
+            this.loading = false
           })
         },
           // 处理返回的节点数据

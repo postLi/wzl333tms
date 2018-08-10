@@ -6,7 +6,7 @@
 
           <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini" :show-message="checkShowMessage" :key="formKey">
             <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName" >
-              <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31" maxlength="15" ></el-input>
+              <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 " maxlength="15" ></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
               <el-select v-model="form.orgType" >
@@ -278,8 +278,10 @@
         if (this.isModify) {
           this.popTitle = '修改网点'
           this.changeDate(this.dotInfo)
+          console.log(this.form)
+          console.log(this.companyId)
+          this.form.id = this.dotInfo.id
           this.form.parentId = this.dotInfo.parentId || this.companyId
-          console.log(this.dotInfo)
         } else {
           this.popTitle = '新增网点'
           if (this.form.id) {

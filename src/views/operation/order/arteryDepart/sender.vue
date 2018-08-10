@@ -319,11 +319,16 @@ export default {
 
     }
   },
+  actived() {
+    this.fetchAllCustomer()
+  },
   mounted() {
     this.fetchAllCustomer()
+    this.tablekey = Math.random()
   },
   data() {
     return {
+      watchKey: 'lll',
       tablekey: 0,
       loading: true,
       btnsize: 'mini',
@@ -353,145 +358,145 @@ export default {
           departureEndTime: ''
         }
       },
-      tableColumn:[
+      tableColumn: [
         {
-          label:'序号',
-          prop:'id',
-          width:'60',
-          fixed:true,
-          slot:(scope) => {
-            return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) +scope.$index + 1
+          label: '序号',
+          prop: 'id',
+          width: '60',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
-        },{
-          label:'发车批次',
-          prop:'batchNo',
-          width:'120',
-          fixed:true,
-        },{
-          label:'车牌号',
-          prop:'truckIdNumber',
-          width:'110',
-          fixed:true,
-        },{
-          label:'发车网点',
-          prop:'orgName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'目的网点',
-          prop:'arriveOrgName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'批次状态',
-          prop:'batchTypeName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'发车时间',
-          prop:'createTime',
-          width:'160',
-          fixed:false,
-        },{
-          label:'司机名称',
-          prop:'dirverName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'配载总件数',
-          prop:'loadAmountall',
-          width:'120',
-          fixed:false,
-        },{
-          label:'配载总重量',
-          prop:'loadWeightall',
-          width:'120',
-          fixed:false,
-        },{
-          label:'配载总体积',
-          prop:'loadVolumeall',
-          width:'120',
-          fixed:false,
-        },{
-          label:'重量装载率',
-          prop:'weightLoadRate',
-          width:'120',
-          fixed:false,
-        },{
-          label:'体积装载率',
-          prop:'volumeLoadRate',
-          width:'120',
-          fixed:false,
-        },{
-          label:'现付运费',
-          prop:'nowpayCarriage',
-          width:'110',
-          fixed:false,
-        },{
-          label:'现付油卡',
-          prop:'nowpayOilCard',
-          width:'110',
-          fixed:false,
-        },{
-          label:'到付运费',
-          prop:'arrivepayCarriage',
-          width:'110',
-          fixed:false,
-        },{
-          label:'到付油卡',
-          prop:'arrivepayOilCard',
-          width:'110',
-          fixed:false,
-        },{
-          label:'回付运费',
-          prop:'backpayCarriage',
-          width:'110',
-          fixed:false,
-        },{
-          label:'回付油卡',
-          prop:'backpayOilCard',
-          width:'110',
-          fixed:false,
-        },{
-          label:'运费合计',
-          prop:'shipFeeAmount',
-          width:'110',
-          fixed:false,
-        },{
-          label:'整车保险费',
-          prop:'carloadInsuranceFee',
-          width:'120',
-          fixed:false,
-        },{
-          label:'发站装卸费',
-          prop:'leaveHandlingFee',
-          width:'120',
-          fixed:false,
-        },{
-          label:'发站其他费',
-          prop:'leaveOtherFee',
-          width:'120',
-          fixed:false,
-        },{
-          label:'配载时间',
-          prop:'loadTime',
-          width:'160',
-          fixed:false,
-        },{
-          label:'配载人',
-          prop:'userName',
-          width:'90',
-          fixed:false,
-        },{
-          label:'发车人',
-          prop:'truckUserName',
-          width:'120',
-          fixed:false,
-        },{
-          label:'备注',
-          prop:'remark',
-          width:'150',
-          fixed:false,
+        }, {
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        }, {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '110',
+          fixed: true
+        }, {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '目的网点',
+          prop: 'arriveOrgName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '批次状态',
+          prop: 'batchTypeName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '发车时间',
+          prop: 'createTime',
+          width: '160',
+          fixed: false
+        }, {
+          label: '司机名称',
+          prop: 'dirverName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '配载总件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载总重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载总体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        }, {
+          label: '重量装载率',
+          prop: 'weightLoadRate',
+          width: '120',
+          fixed: false
+        }, {
+          label: '体积装载率',
+          prop: 'volumeLoadRate',
+          width: '120',
+          fixed: false
+        }, {
+          label: '现付运费',
+          prop: 'nowpayCarriage',
+          width: '110',
+          fixed: false
+        }, {
+          label: '现付油卡',
+          prop: 'nowpayOilCard',
+          width: '110',
+          fixed: false
+        }, {
+          label: '到付运费',
+          prop: 'arrivepayCarriage',
+          width: '110',
+          fixed: false
+        }, {
+          label: '到付油卡',
+          prop: 'arrivepayOilCard',
+          width: '110',
+          fixed: false
+        }, {
+          label: '回付运费',
+          prop: 'backpayCarriage',
+          width: '110',
+          fixed: false
+        }, {
+          label: '回付油卡',
+          prop: 'backpayOilCard',
+          width: '110',
+          fixed: false
+        }, {
+          label: '运费合计',
+          prop: 'shipFeeAmount',
+          width: '110',
+          fixed: false
+        }, {
+          label: '整车保险费',
+          prop: 'carloadInsuranceFee',
+          width: '120',
+          fixed: false
+        }, {
+          label: '发站装卸费',
+          prop: 'leaveHandlingFee',
+          width: '120',
+          fixed: false
+        }, {
+          label: '发站其他费',
+          prop: 'leaveOtherFee',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载时间',
+          prop: 'loadTime',
+          width: '160',
+          fixed: false
+        }, {
+          label: '配载人',
+          prop: 'userName',
+          width: '90',
+          fixed: false
+        }, {
+          label: '发车人',
+          prop: 'truckUserName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '备注',
+          prop: 'remark',
+          width: '150',
+          fixed: false
         }
       ]
     }
@@ -537,7 +542,7 @@ export default {
       switch (type) {
         // 新增配载
         case 'add':
-          this.$router.push({ path: '././load', query: { loadTypeId: 39, tab:'新增配载' }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '././load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
           break
         // 添加客户
         case 'storage':
@@ -590,23 +595,23 @@ export default {
               type: 'warning'
             }).then(() => {
               putLoadDepart(loadIds, 39).then(res => {
-                    this.$message({
-                        type: 'success',
-                        message: '发车成功!'
-                      })
-                    this.fetchData()
-                  }).catch(err => {
-                      this.$message({
-                        type: 'error',
-                        message: '发车失败，原因：' + err.text ? err.text : err
-                      })
-                    })
-            }).catch(() => {
-                  this.$message({
-                      type: 'info',
-                      message: '已取消'
-                    })
+                this.$message({
+                  type: 'success',
+                  message: '发车成功!'
                 })
+                this.fetchData()
+              }).catch(err => {
+                this.$message({
+                  type: 'error',
+                  message: '发车失败，原因：' + err.text ? err.text : err
+                })
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消'
+              })
+            })
           }
 
           break
@@ -634,23 +639,23 @@ export default {
               type: 'warning'
             }).then(() => {
               putCancelLoadDepart(ids, 39).then(res => {
-                    this.$message({
-                      type: 'success',
-                      message: '取消装车成功!'
-                    })
-                    this.fetchData()
-                  }).catch(err => {
-                    this.$message({
-                      type: 'info',
-                      message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
-                    })
-                  })
-            }).catch(() => {
-                  this.$message({
-                    type: 'info',
-                    message: '已取消'
-                  })
+                this.$message({
+                  type: 'success',
+                  message: '取消装车成功!'
                 })
+                this.fetchData()
+              }).catch(err => {
+                this.$message({
+                  type: 'info',
+                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消'
+              })
+            })
           }
           break
         //  取消装车(批量)

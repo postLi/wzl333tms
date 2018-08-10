@@ -61,9 +61,6 @@ background-color: rgb(195,232,255);
 
 
 /*右侧栏*/
-.side_right_top.currActive .el-input.is-disabled  .el-input__inner{
-  color: #606266;
-  }
 
 .side_right {
   flex: 1;
