@@ -17,7 +17,7 @@
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号">
+        <el-table-column prop="shipSn" width="120" label="运单号">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>

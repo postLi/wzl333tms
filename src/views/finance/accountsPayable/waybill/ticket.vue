@@ -1,5 +1,5 @@
 <template>
-  <!-- 单票提货费 -->
+  <!-- 实际提货费 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>

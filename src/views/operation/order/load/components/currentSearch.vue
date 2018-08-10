@@ -7,9 +7,9 @@
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)" 
       placeholder="到达城市搜索" 
       @select="handleSelect">
-        <template slot-scope="{ item }">
+        <!-- <template slot-scope="{ item }">
           <div class="name">{{ item.shipToCityName }}</div>
-        </template>
+        </template> -->
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="运单号">
@@ -19,9 +19,9 @@
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       @select="handleSelect">
-        <template slot-scope="{ item }">
+       <!--  <template slot-scope="{ item }">
           <div class="name">{{ item.shipSn }}</div>
-        </template>
+        </template> -->
       </el-autocomplete>
     </el-form-item>
   </el-form>
