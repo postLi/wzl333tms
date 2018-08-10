@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import { parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
@@ -80,32 +80,32 @@ export default {
     }
   },
   computed: {
-    title () {
+    title() {
       // return this.issender ? '发' : '收'
     }
   },
-  data () {
-    let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
+  data() {
+    const _this = this
+    const validateFormMobile = function(rule, value, callback) {
+      if (validateMobile(value)) {
         callback()
       } else {
         callback(new Error('请输入有效的手机号码'))
       }
     }
 
-    const validateFormEmployeer = function (rule, value, callback) {
+    const validateFormEmployeer = function(rule, value, callback) {
       callback()
     }
-    //dirverName
-    const validateDriverName = function (rule,value,callback) {
-      if(REGEX.ONLY_NUMBER_AND_LETTER(value)){
+    // dirverName
+    const validateDriverName = function(rule, value, callback) {
+      if (REGEX.ONLY_NUMBER_AND_LETTER(value)) {
         callback()
-      }else{
+      }else {
         callback(new Error('请输入有效的发车批次'))
       }
     }
-    const validateFormNumber = function (rule, value, callback) {
+    const validateFormNumber = function(rule, value, callback) {
       _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
@@ -114,14 +114,14 @@ export default {
       // searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       pickOption: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           // 小于终止日
           return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
         }
       },
       pickOption2: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           // 大于起始日
           return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
@@ -130,45 +130,44 @@ export default {
       searchForm: {
         orgId: '',
         dirverName: '',
-        truckIdNumber:'',//车牌号
-        batchTypeId: '',//批次状态
-        batchNo:'',//发车批次
-        loadTypeId:39,//配载类型
-        loadEndTime:'',//结束时间
-        loadStartTime:''
+        truckIdNumber: '', // 车牌号
+        batchTypeId: 51, // 批次状态
+        batchNo: '', // 发车批次
+        loadTypeId: 39, // 配载类型
+        loadEndTime: '', // 结束时间
+        loadStartTime: ''
       },
       rules: {
         mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
+          // validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }],
         dirverName: [{
-          //validator: validateFormMobile, trigger: 'blur'
+          // validator: validateFormMobile, trigger: 'blur'
           validator: validateDriverName, trigger: 'change'
         }]
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       // this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgId = this.orgid
     this.onSubmit()
   },
   methods: {
-    onSubmit () {
+    onSubmit() {
       // this.searchForm.loadStartTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
       // this.searchForm.loadEndTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
-      //parseTime初始化为字符串
+      // parseTime初始化为字符串
       this.searchForm.loadStartTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
       this.searchForm.loadEndTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
       this.$emit('change', this.searchForm)
-
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.loadStartTime = ''
       this.searchForm.loadEndTime = ''
       this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
@@ -176,7 +175,6 @@ export default {
       this.searchForm.orgId = this.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
-
     }
   }
 }
