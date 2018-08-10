@@ -36,4 +36,12 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.viewtip{
+  font-size: 12px;
+  color: #999;
+  margin-left: 10px;
+  line-height: 30px;
+}
+</style>
 

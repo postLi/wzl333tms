@@ -21,6 +21,9 @@
   left: 500px;
   font-size: 16px;
 }
+.el-table__fixed{
+  height: calc( 100% - 10px) !important;
+}
 /** 表格样式覆盖 ***/
 $bodercolor: #d0d7e5;
 .el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,.el-table--border, .el-table--group,.el-table td, .el-table th.is-leaf{

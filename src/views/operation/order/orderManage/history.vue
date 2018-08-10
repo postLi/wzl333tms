@@ -5,10 +5,13 @@
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+          <span class="viewtip">
+            双击查看详情
+          </span>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
-      <el-tooltip placement="top" v-model="showtip" :manual="true">
-        <div slot="content">双击查看运单详情</div>
+      <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
+        <div slot="content">双击查看运单详情</div> -->
       <div @mouseover="showtip = true"
           @mouseout="showtip = false" class="info_tab">
         <el-table
@@ -54,7 +57,7 @@
           </template>
         </el-table>
       </div>
-      </el-tooltip>
+      <!-- </el-tooltip> -->
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
