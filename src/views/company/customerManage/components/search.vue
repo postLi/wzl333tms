@@ -20,6 +20,7 @@
               clearable>
           </el-input>
       </el-form-item>
+      
       <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>

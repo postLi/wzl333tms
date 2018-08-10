@@ -220,7 +220,7 @@ export default {
   },
   methods: {
     getLabelName(id, data) {
-      console.log('data:', data)
+      // console.log('data:', data)
       const info = data.filter(item => {
         return parseInt(item.id, 10) === id
       })
@@ -272,7 +272,7 @@ export default {
         return false
       }
 
-      console.log('this.selected:', this.selected)
+      // console.log('this.selected:', this.selected)
 
       switch (type) {
           // 添加客户

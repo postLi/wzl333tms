@@ -27,13 +27,13 @@
           </selectType>
         </el-form-item>
         <el-form-item label="运单号" prop="shipSn">
-            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" clearable></el-input>
+            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
-          <el-input v-model="searchForm.shipFromCityName" maxlength="20" auto-complete="off" clearable></el-input>
+          <el-input v-model="searchForm.shipFromCityName" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="到达城市">
-            <el-input v-model="searchForm.shipToCityName" maxlength="20" auto-complete="off" clearable></el-input>
+            <el-input v-model="searchForm.shipToCityName" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -159,6 +159,19 @@ export default {
   .el-form-item{
     margin:0 10px;
   }
+  .el-form-item:nth-of-type(6){
+    // margin:0 10px;
+    margin-left: 13px;
+  }
 }
-
+.staff_searchinfo .el-form-item--mini .staff_searchinfo--btn{
+ 
+}
+.staff_searchinfo{
+  .staff_searchinfo--btn{
+    .el-form-item__content{
+      top:-25px;
+    }
+  }
+}
 </style>

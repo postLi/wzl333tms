@@ -180,7 +180,7 @@ export default {
   methods: {
     getLicenType(id) {
       const info = this.licenseTypes.filter(item => {
-        console.log(item, id)
+        // console.log(item, id)
         return parseInt(item.id, 10) === id
       })
       return info[0] ? info[0].dictName : id

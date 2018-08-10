@@ -20,7 +20,6 @@
     </el-form-item>
     <el-form-item label="订单号:" prop="orderSn">
       <el-input
-
         placeholder=""
         maxlength="11"
         v-model="searchForm.orderSn"
@@ -59,36 +58,36 @@ export default {
   },
   computed: {
   },
-  data () {
+  data() {
     return {
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
         orderStatus: '',
         orderSn: ''
       },
-      rules:{
-        orderSn:[
+      rules: {
+        orderSn: [
           // { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
-        ],
-      },
+        ]
+      }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       // this.searchForm.orgid = newVal
-    },
+    }
 
   },
-  mounted (){
+  mounted() {
     this.loading = true
     this.searchForm.orgid = this.orgid
     this.onSubmit()
   },
   methods: {
-    getOrgid (id){
+    getOrgid(id) {
       this.searchForm.orgid = id
     },
-    onSubmit () {
+    onSubmit() {
       // this.searchForm.createTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
       // this.searchForm.endTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
       this.searchForm.createTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
@@ -96,10 +95,10 @@ export default {
       this.$emit('change', this.searchForm)
       // console.log(this.searchForm);
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.createTime = ''
       this.searchForm.endTime = ''
-      this.searchCreatTime =  [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
+      this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
       this.searchForm.orderStatus = ''
       this.searchForm.orderSn = ''
     }

@@ -270,6 +270,7 @@ export default {
     if (!this.inited) {
       this.inited = true
       this.initInfo()
+      this.getDriverPhone()
     }
     if (this.isModify) {
       this.initPanel()
@@ -280,12 +281,12 @@ export default {
       if (!this.inited) {
         this.inited = true
         this.initInfo()
+        this.getDriverPhone()
       }
     },
     orgid(newVal, oldVal) {
       this.form.orgid = newVal
       if (oldVal !== newVal) {
-
       }
     },
     info: {
@@ -340,8 +341,8 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
           const data = Object.assign({}, this.form)
@@ -384,6 +385,7 @@ export default {
       if (this.cacheDriverList[orgid]) {
         this.DriverList = this.cacheDriverList[orgid]
       } else {
+        this.loading = true
         getAllDriver({
           'currentPage': 1,
           'pageSize': 200,
@@ -392,7 +394,9 @@ export default {
           }
         }).then(data => {
           this.DriverList = data.list
+
           this.cacheDriverList[orgid] = data.list
+          this.loading = false
         })
       }
     }

@@ -221,6 +221,9 @@ export default {
         for (const i in this.form) {
           this.form[i] = data[i]
         }
+        if (this.form.validityDate) {
+          this.form.validityDate = +new Date(this.form.validityDate)
+        }
         this.form.id = data.id
       } else {
         this.popTitle = '新增司机'
@@ -252,7 +255,6 @@ export default {
           } else {
             promiseObj = postDriver(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')

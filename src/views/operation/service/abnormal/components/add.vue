@@ -93,7 +93,7 @@
         <div class="box1 control" v-if="isDeal" style="height:400px">
           <div class="titles">
               <h4>异常处理</h4>
-              <el-form-item label="处理结果：" prop="disposeResult" class="result">
+              <el-form-item label="处理结果：" prop="disposeResult" class="result label">
                 <SelectType v-model="form.disposeResult" type="dispose_result" :disabled="isCheck ? true : false"/>
               </el-form-item>
           </div>
@@ -274,26 +274,29 @@ export default {
           { required: true, validator: validateNameSn }
         ],
         abnormalType: [
-          { required: true, message: '必选', trigger: 'blur' }
+          { required: true, message: '必选' }
         ],
         registerFee: [
-          { required: true, trigger: 'blur', validator: validatereg }
+          { required: true, validator: validatereg }
         ],
         abnormalDescribe: [
-          { required: true, message: '必填', trigger: 'blur' }
+          { required: true, message: '必填' }
         ],
         dutyOrgId: [
-          { required: true, message: '请选择责任网点', trigger: 'blur' }
+          { required: true, message: '请选择责任网点' }
         ],
         disposeOrgId: [
-          { required: true, message: '请选择处理网点', trigger: 'blur' }
+          { required: true, message: '请选择处理网点' }
         ],
         disposeOpinion: [
-          { required: true, message: '必填', trigger: 'blur' }
+          { required: true, message: '必填' }
         ],
         shipSn: [
           // { required: true, trigger: 'blur', validator: validateshipSn}
-          { required: true, message: '请输入运单号', trigger: 'change' }
+          { required: true, message: '请输入运单号' }
+        ],
+        disposeResult: [
+          { required: true, message: '必填项不能为空' }
         ]
       },
       // fileList2:[],
@@ -700,7 +703,7 @@ export default {
       padding-left:15px;
       border-top:2px solid #333333;
       border-bottom:1px solid #C6E2FF;
-      margin-bottom:5px;
+      margin-bottom:13px;
       color:black;
       position: relative;
       background: #e9f3fa;
@@ -710,12 +713,19 @@ export default {
         float:left;
        
       }
+      .el-form-item__label{
+        width:44px;
+      }
       .result{
         position:absolute;
         top:0px;
         right:0px;
         margin:0px;
         margin-right: 48px;
+        color: red;
+        label{
+          width: 83px;
+        }
       }
     }
     .el-input--prefix .el-input__inner {

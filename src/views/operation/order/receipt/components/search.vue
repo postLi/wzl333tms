@@ -24,20 +24,22 @@
           </selectType>
         </el-form-item>
         <el-form-item label="运单号">
-            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
-            <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName"/>
+            <!-- <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName"/> -->
+             <el-input v-model="searchForm.shipFromCityName" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="到达城市">
             <!-- <el-input v-model="searchForm.shipToCityCode" maxlength="20" auto-complete="off"></el-input> -->
-            <SelectCity @change="getToCity" v-model="searchForm.shipToCityName"/>
+            <!-- <SelectCity @change="getToCity" v-model="searchForm.shipToCityName"/> -->
+            <el-input v-model="searchForm.shipToCityName" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="发货人">
-            <el-input v-model="searchForm.shipSenderId" maxlength="15" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipSenderId" maxlength="15" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="收货人">
-            <el-input v-model="searchForm.shipReceiverId" maxlength="15" auto-complete="off"></el-input>
+            <el-input v-model="searchForm.shipReceiverId" maxlength="15" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item class="receipt_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -139,14 +141,14 @@ export default {
     getOrgid(id) {
       this.searchForm.orgid = id
     },
-    getFromCity(city) {
-      this.searchForm.shipFromCityCode = city.id.toString()
-      this.searchForm.shipFromCityName = city.longAddr
-    },
-    getToCity(city) {
-      this.searchForm.shipToCityCode = city.id.toString()
-      this.searchForm.shipToCityName = city.longAddr
-    },
+    // getFromCity(city) {
+    //   this.searchForm.shipFromCityCode = city.id.toString()
+    //   this.searchForm.shipFromCityName = city.longAddr
+    // },
+    // getToCity(city) {
+    //   this.searchForm.shipToCityCode = city.id.toString()
+    //   this.searchForm.shipToCityName = city.longAddr
+    // },
     onSubmit() {
       // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
       // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
