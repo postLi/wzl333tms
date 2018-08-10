@@ -322,6 +322,8 @@ export default {
           break
           //  修改
         case 'modify':
+
+        
           this.closeAddCustomer()
           if (this.selected.length > 1) {
             this.$message({
