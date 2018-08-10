@@ -15,8 +15,8 @@
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
+       <el-tooltip content="双击查看批次详情" placement="top"  effect="light" :hide-after="4000">
       <div class="info_tab">
-        <el-tooltip content="双击查看批次详情" placement="top"  effect="light" :hide-after="4000">
         <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
@@ -31,8 +31,8 @@
             </el-table-column>
           </template>
         </el-table>
-      </el-tooltip>
       </div>
+       </el-tooltip>
       <div class="info_tab_footer">共计:{{ total }}
         <div class="show_pager">
           <Pager :total="total" @change="handlePageChange" />

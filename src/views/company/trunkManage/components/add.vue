@@ -85,13 +85,13 @@
           <el-input v-numberOnly v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机" prop="driverId">
-          <el-select  @change="getDriverPhone" v-model="form.driverId" filterable placeholder="请选择司机">
+          <el-select  @change="getDriverPhone" v-model="form.driverId" filterable placeholder="请选择司机" clearable>
             <el-option v-for="item in DriverList" :key="item.id" :label="item.driverName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="司机电话" prop="dirverMobile">
-          <el-input maxlength="20" v-numberOnly v-model="form.dirverMobile" auto-complete="off"></el-input>
+          <el-input maxlength="20" v-numberOnly v-model="form.dirverMobile" auto-complete="off" disabled></el-input>
         </el-form-item>
         <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">

@@ -14,7 +14,7 @@
                   <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></querySelect>
                 </el-form-item>
                 <el-form-item label="收入金额" prop="amount">
-                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled></el-input>
+                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled v-number-only:point></el-input>
                 </el-form-item>
                 <el-form-item label="发生时间" prop="settlementTime">
                   <el-date-picker size="mini" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="发生时间">
@@ -29,7 +29,7 @@
                   <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
-                  <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable></el-input>
+                  <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable v-numberOnly></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wechatAccount">
                   <el-input :size="btnsize" v-model="formModel.wechatAccount" placeholder="微信号" clearable></el-input>
@@ -79,17 +79,20 @@ export default {
   data() {
     return {
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
-      loading: false,
+      loading: true,
       feeInfo: 'feeInfoOne',
       settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       btnsize: 'mini',
       formModel: {
+        bankAccount: '',
         settlementTime: '',
         wechatAccount: '',
         alipayAccount: '',
         financialWay: '',
         financialWayId: '',
-        amount: 0
+        amount: 0,
+        agent: '',
+        remark: ''
       },
       formModelRules: {},
       setLoadTableList: {},
@@ -114,18 +117,23 @@ export default {
       })
     },
     getFeeInfo() {
-      getFeeInfo(this.otherinfo.orgid, this.paymentsType).then(data => {
+      getFeeInfo(this.$route.query.orgId, this.paymentsType).then(data => {
+        this.loading = false
         this.formModel.amount = data.amount
         this.formModel.settlementSn = data.settlementSn
         this.formModel.agent = data.settlementBy
-        if (data.szDtoList.length > 0) {
-          this.formModel.wechatAccount = data.szDtoList[0].wechatAccount ? data.szDtoList[0].wechatAccount : ''
-          this.formModel.alipayAccount = data.szDtoList[0].alipayAccount ? data.szDtoList[0].alipayAccount : ''
-          this.formModel.financialWay = data.szDtoList[0].financialWay ? this.$const.FINANCE_WAY[data.szDtoList[0].financialWay] : ''
-        }
+        this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
+        this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
+        this.formModel.financialWay = data.szDtoList[0].financialWay
+        this.formModel.bankAccount = data.szDtoList[0].bankAccount
         this.formModel.remark = data.remark
         this.getSystemTime()
+
       })
+      .catch(error => {
+
+      })
+
     },
     doAction(type) {
       switch (type) {

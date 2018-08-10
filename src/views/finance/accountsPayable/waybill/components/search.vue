@@ -16,15 +16,17 @@
     <el-form-item label="运单号" prop="shipSn">
       <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
     </el-form-item>
-    <el-form-item label="发货方" prop="customerName">
-      <querySelect v-model="searchForm.customerNames" valuekey="customerName" search="customerName" type="sender" label="customerName" :remote="true" />
+    <el-form-item label="发货方" prop="senderUnit">
+      <el-input  v-model="searchForm.senderUnit" clearable></el-input>
+      <!-- <querySelect v-model="searchForm.senderUnit" search="customerUnit" valuekey="customerUnit" type="sender" label="customerUnit" :remote="true" /> -->
     </el-form-item>
-    <el-form-item label="收货人" prop="customerName">
-      <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName" clearable>
-        <template slot-scope="{item}">
-          {{ item.customerName }} : {{ item.customerMobile }}
-        </template>
-      </querySelect>
+    <el-form-item label="发货人" prop="senderName" >
+      <el-input  v-model="searchForm.senderName" clearable></el-input>
+      <!-- <querySelect v-model="searchForm.senderName" search="customerName" type="sender" label="customerName" valuekey="customerName" clearable> -->
+        <!-- <template slot-scope="{item}">
+          {{ item.senderName }} : {{ item.senderMobile }}
+        </template> -->
+      <!-- </querySelect> -->
     </el-form-item>
     <el-form-item label="出发城市">
       <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />

@@ -104,7 +104,7 @@ export default {
       },
       {
         label: '库存时长',
-        prop: 'hashours',
+        prop: 'hashour',
         width: '120'
       },
       {
@@ -417,7 +417,7 @@ export default {
   },
   methods: {
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.shipId)
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipId, true)
       console.log(order.shipId)
     },
     tableRowColor({ row, rowIndex }) {

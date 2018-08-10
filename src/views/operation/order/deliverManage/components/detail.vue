@@ -118,6 +118,7 @@ export default {
       message: false,
       signData: {
         shipIds: [],
+        orgIds: [],
         childShipIds: [],
         signTime: '',
         signName: '',
@@ -192,7 +193,11 @@ export default {
           if (!e.childShipIds || e.childShipIds === '') {
             e.childShipIds = null
           }
+          if (!e.orgid || e.orgid === '') {
+            e.orgid = null
+          }
           data.childShipIds.push(e.childShipIds)
+          data.orgIds.push(e.orgid)
         })
         // data.shipIds = data.shipIds.join(',')
         // data.childShipIds = data.childShipIds.join(',')
@@ -201,6 +206,7 @@ export default {
       }
       this.signData.shipIds = data.shipIds
       this.signData.childShipIds = data.childShipIds
+      this.signData.orgIds = data.orgIds
       data = {}
       console.log('select', this.signData)
     },

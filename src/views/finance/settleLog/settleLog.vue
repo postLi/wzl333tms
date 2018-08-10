@@ -77,7 +77,9 @@ export default {
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
-        vo: {}
+        vo: {
+          orgId: ''
+        }
       },
       tablekey: 0,
       total: 0,
@@ -252,11 +254,17 @@ export default {
     income() {
       this.$router.push({
         path: './settleLogIncome',
+        query: {
+          orgId: this.searchQuery.vo.orgId
+        }
       })
     },
     expandtiure() {
       this.$router.push({
         path: './settleLogExpandtiure',
+        query: {
+          orgId: this.searchQuery.vo.orgId
+        }
       })
     },
     cancelCount() {

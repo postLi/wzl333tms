@@ -549,9 +549,7 @@ export default {
     },
     showDetail(order) {
       // 当为草稿时，双击表示查看并可修改创建
-      this.eventBus.$emit('showCreateOrder', {
-        orderid: order.id
-      })
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
     }
   }
 }

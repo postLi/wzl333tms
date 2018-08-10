@@ -109,7 +109,7 @@ export default {
         },
         {
           label: '库存时长',
-          prop: 'hashours',
+          prop: 'hashour',
           width: '150',
           fixed: false
         },
@@ -476,7 +476,7 @@ export default {
   },
   methods: {
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.shipId)
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipId, true)
     },
     initTable() {
       // let strArray = this.$refs.multipleTable.$children

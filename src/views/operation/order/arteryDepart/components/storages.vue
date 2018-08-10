@@ -293,9 +293,12 @@
             </div> -->
           </el-tab-pane>
           <el-tab-pane label="运输合同" name="third">
-            <div class="pact">
-              <el-form :model="formModel">
+            <div class="pact" id="contract"  >
+
+              <el-form :model="formModel" >
+
                 <div class="pact_top">
+
                   <h3>货物运输合同</h3>
                   <!--<div class="top_num">-->
                   <!--<el-form-item label="合同模板">-->
@@ -437,6 +440,7 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
+      <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'">打印合同</el-button>
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -451,6 +455,7 @@ import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
 import { objectMerge2, parseTime, closest } from '@/utils/'
+import { PrintContract } from '@/utils/lodopFuncs'
 export default {
   data() {
     return {
@@ -770,6 +775,17 @@ export default {
       if (p) {
         p.classList.add("trackactive")
       }
+    },
+    print () { // 打印合同
+       let str = '?'
+      for (let item in this.formModel) {
+        str += item + '=' + this.formModel[item] + '&'
+      }
+      // JSON.stringify(this.formModel)
+      let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html'+ str + new Date().getTime()
+      console.log('path', encodeURI(path))
+      // PrintContract(path)
+      PrintContract(encodeURI(path))
     }
   }
   // }

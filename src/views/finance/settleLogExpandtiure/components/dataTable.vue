@@ -1,6 +1,6 @@
 <template>
   <!-- 批次支出 -->
-  <transferTable>
+  <transferTable v-loading="loading">
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <!-- 搜索左边表格 -->
       <currentSearch :info="orgLeftTable" @change="getSearch" @setSettlementId="setSettlementId"></currentSearch>
@@ -109,6 +109,7 @@ import { getSummaries } from '@/utils/'
 export default {
   data() {
     return {
+      loading: true,
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       tablekey: '',
       truckMessage: '',
@@ -188,6 +189,7 @@ export default {
         this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         getOrderShipList(obj).then(data => {
+          this.loading = false
           this.leftTable = data
           this.orgLeftTable = data
           this.$emit('loadTable', this.rightTable)

@@ -88,6 +88,7 @@ export default {
       form: {
         shipIds: [],
         childShipIds: [],
+        orgIds: [],
         signTime: '',
         signName: '',
         signCocumentTypeId: 0,
@@ -106,7 +107,7 @@ export default {
     dotInfo(newVal) {
       if (newVal) {
         this.form = newVal
-        this.form.signTime = +new Date()
+        this.form.signTime = new Date()
         this.orderNum = newVal.shipIds.length
         if (this.orderNum === 0) {
           this.orderNum = newVal.childShipIds.length
@@ -145,24 +146,24 @@ export default {
           this.loading = true
           const data = objectMerge2({}, this.form)
           console.log(data)
-          this.$confirm('此操作将签到, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            postBatchSign(data).then(data => {
-              this.$message({ type: 'success', message: '签收成功' })
-              this.message = true
-              this.closeMe()
-              this.$emit('message', this.message)
-            })
-              .catch(error => {
-                this.$message({ type: 'error', message: '签收失败' })
-                this.message = false
-                this.closeMe()
-                this.$emit('message', this.message)
-              })
-          })
+          // this.$confirm('此操作将签到, 是否继续?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+            // postBatchSign(data).then(data => {
+            //   this.$message({ type: 'success', message: '签收成功' })
+            //   this.message = true
+            //   this.closeMe()
+            //   this.$emit('message', this.message)
+            // })
+            //   .catch(error => {
+            //     this.$message({ type: 'error', message: '签收失败' })
+            //     this.message = false
+            //     this.closeMe()
+            //     this.$emit('message', this.message)
+            //   })
+          // })
         }
       })
     }

@@ -227,6 +227,26 @@
    }
 
  };
+  //打印合同
+ export function PrintContract(obj) {
+   try {
+    let tableId = obj
+     LODOP = getLodop();
+     LODOP.PRINT_INIT("合同");
+     LODOP.SET_PRINT_STYLE("FontSize", 14);
+     // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+     LODOP.SET_PRINT_STYLE("Bold", 1);
+     LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4");
+     // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+     LODOP.ADD_PRINT_HTM("1%", "1%", "98%", "100%", "URL:"+obj);
+     // LODOP.ADD_PRINT_HTM("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
+     // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+     LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 1); //横向时的正向显示
+     LODOP.PREVIEW();
+   } catch (err) {
+     getLodop()
+   }
+ };
  // 打印结算单
  export function PrintSettlement(obj) {
    try {

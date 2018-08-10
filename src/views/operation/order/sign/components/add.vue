@@ -157,11 +157,13 @@ export default {
       }
     }
     const validateNameSn = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('请输入签收人'))
-      } else if (value.length > 10) {
-        callback(new Error('最多可以输入10位字符'))
-      } else if (REGEX.USERNAME.test(value)) {
+      // if (value === '' || value === null || !value || value === undefined) {
+      //   callback(new Error('请输入签收人'))
+      // } else
+      //  if (value.length > 10) {
+      //   callback(new Error('最多可以输入10位字符'))
+      // } else 
+      if (REGEX.USERNAME.test(value)) {
         callback()
       } else {
         callback(new Error('不可以输入特殊字符和空格'))

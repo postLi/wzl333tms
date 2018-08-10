@@ -76,6 +76,7 @@
           </el-table-column>
           <el-table-column fixed width="50" sortable type="selection" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipSn" label="运单号" fixed></el-table-column>
+          <el-table-column sortable width="120" prop="childShipSn" label="子运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
@@ -113,6 +114,9 @@
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
+          <el-table-column sortable width="120" prop="cargoAmount" label="运单件数"></el-table-column>
+          <el-table-column sortable width="120" prop="cargoWeight" label="运单重量"></el-table-column>
+          <el-table-column sortable width="120" prop="cargoVolume" label="运单体积"></el-table-column>
           <el-table-column sortable width="160" prop="shipFromCityName" label="出发城市"></el-table-column>
           <el-table-column sortable width="160" prop="shipToCityName" label="到达城市"></el-table-column>
           <el-table-column sortable width="120" prop="shipSenderName" label="发货人"></el-table-column>
@@ -237,7 +241,7 @@ export default {
       let curactualAmount = this.detailList[newVal].actualAmount // 应到件数
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        this.detailList[newVal].actualAmount = curloadAmount
         // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
         // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$notify({
@@ -262,9 +266,9 @@ export default {
         console.log(this.selectDetailList.length)
         if (this.selectDetailList.length === 0) {
           this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
-          this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
-          this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
-          this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
+          this.detailList[newVal].actualAmount = curloadAmount
+          this.detailList[newVal].actualWeight = curloadWeight
+          this.detailList[newVal].actualVolume = curloadVolume
         }
         this.$notify({
           title: '提示',
@@ -373,13 +377,13 @@ export default {
           this.detailList = data.data
           this.setData()
           this.toggleAllRows()
-          // this.$nextTick(() => { // 默认设置实到数量为配载数量
-            // this.detailList.forEach(e => {
-            //   e.actualAmount = e.loadAmount - e.actualAmount
-            //   e.actualWeight = e.loadWeight - e.actualWeight
-            //   e.actualVolume = e.loadVolume - e.actualVolume
-            // })
-          // })
+          this.$nextTick(() => { // 默认设置实到数量为配载数量
+            this.detailList.forEach(e => {
+              e.actualAmount = e.loadAmount
+              e.actualWeight = e.loadWeight
+              e.actualVolume = e.loadVolume
+            })
+          })
         }
       })
       .catch(error =>{

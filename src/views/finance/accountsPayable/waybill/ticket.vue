@@ -136,8 +136,20 @@ export default {
         fixed: false
       },
       {
-        label: '单票提货费',
+        label: '实际提货费',
         prop: 'fee',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已结实际提货费',
+        prop: 'closeFee',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '未结实际提货费',
+        prop: 'unpaidFee',
         width: '150',
         fixed: false
       },
@@ -152,7 +164,7 @@ export default {
       },
       {
         label: '发货方',
-        prop: 'senderCompanyName',
+        prop: 'senderUnit',
         width: '150',
         fixed: false
       },
@@ -164,7 +176,7 @@ export default {
       },
       {
         label: '收货方',
-        prop: 'receiverCompanyName',
+        prop: 'receiverUnit',
         width: '150',
         fixed: false
       },

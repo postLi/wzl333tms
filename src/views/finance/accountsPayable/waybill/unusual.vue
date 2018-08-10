@@ -13,7 +13,7 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail" stripe border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -162,7 +162,7 @@ export default {
       },
       {
         label: '发货方',
-        prop: 'senderCompanyName',
+        prop: 'senderUnit',
         width: '150',
         fixed: false
       },
@@ -174,7 +174,7 @@ export default {
       },
       {
         label: '收货方',
-        prop: 'receiverCompanyName',
+        prop: 'receiverUnit',
         width: '150',
         fixed: false
       },
@@ -341,7 +341,7 @@ export default {
       })
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
     },
     setTable() {
       this.setupTableVisible = true
