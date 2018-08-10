@@ -159,19 +159,19 @@ export default {
   .el-form-item{
     margin:0 10px;
   }
-  .el-form-item:nth-of-type(6){
-    // margin:0 10px;
-    margin-left: 13px;
-  }
+  // .el-form-item:nth-of-type(6){
+  //   // margin:0 10px;
+  //   margin-left: 13px;
+  // }
 }
 .staff_searchinfo .el-form-item--mini .staff_searchinfo--btn{
  
 }
-.staff_searchinfo{
-  .staff_searchinfo--btn{
-    .el-form-item__content{
-      top:-25px;
-    }
-  }
-}
+// .staff_searchinfo{
+//   .staff_searchinfo--btn{
+//     .el-form-item__content{
+//       top:-25px;
+//     }
+//   }
+// }
 </style>
