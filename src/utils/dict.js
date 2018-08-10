@@ -19,7 +19,7 @@ for (const i in $const) {
   TMS_DICT_OBJECT[(i + '').toLocaleLowerCase()] = Object.entries($const[i]).map(el => {
     let obj = {}
     obj = {
-      id: el[0],
+      id: /\d+/.test(el[0]) ? (parseInt(el[0], 10) || el[0]) : el[0],
       dictName: el[1]
     }
     return obj

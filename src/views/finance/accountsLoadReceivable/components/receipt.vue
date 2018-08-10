@@ -335,7 +335,7 @@ export default {
           accountApi.postCreateFee(this.$route.query.searchQuery.vo.ascriptionOrgId, this.submitData).then(data => {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
-            this.$router.push({ path: '/finance/accountsReceivable' })
+            this.eventBus.$emit('replaceCurrentView','/finance/accountsReceivable')
             // 当添加结算时更新列表
             this.eventBus.$emit('updateAccountsReceivableList')
           })

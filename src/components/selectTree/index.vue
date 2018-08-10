@@ -91,12 +91,12 @@ export default {
   },
   watch: {
     value(newVal) {
-      this.aid = newVal
+      this.aid = parseInt(newVal,10) || ''
       this.init()
     }
   },
   mounted() {
-    this.aid = this.value
+    this.aid = parseInt(this.value,10) || ''
     this.init()
     eventBus.$on('closepopbox', () => {
       console.log('closepopbox selectTree:')

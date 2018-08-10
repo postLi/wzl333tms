@@ -11,7 +11,11 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
-      <div class="info_tab">
+      <el-tooltip placement="top" v-model="showtip" :manual="true">
+        <div slot="content">双击查看运单详情</div>
+      
+      <div @mouseover="showtip = true"
+          @mouseout="showtip = false" class="info_tab">
         <el-table
           ref="multipleTable"
           :data="usersArr"
@@ -55,6 +59,7 @@
           </template>
         </el-table>
       </div>
+      </el-tooltip>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
@@ -401,7 +406,8 @@ export default {
         'label': '印花税',
         'prop': 'stampTax',
         'width': '150'
-      }]
+      }],
+      showtip: false
     }
   },
   methods: {

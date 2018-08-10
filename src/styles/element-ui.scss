@@ -16,6 +16,11 @@
   position: relative;
   margin: 0 auto;
 }
+/** 空白信息提示调整 **/
+.el-table__empty-text{
+  left: 500px;
+  font-size: 16px;
+}
 /** 表格样式覆盖 ***/
 $bodercolor: #d0d7e5;
 .el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,.el-table--border, .el-table--group,.el-table td, .el-table th.is-leaf{

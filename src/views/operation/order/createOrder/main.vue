@@ -432,7 +432,7 @@
     <!-- 底部按钮操作部分 -->
     <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
     <!-- 弹窗 -->
-    <FeeDialog :dialogVisible.sync="dialogVisible" />
+    <FeeDialog @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
     <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
     <ManageRemarks @success="setRemark" :popVisible.sync="popVisible" />
     </div>
@@ -1007,15 +1007,15 @@ export default {
     },
     // 获取公司全部设置
     getAllSetting() {
-      if (this.dataCache['allSeting']) {
+      /* if (this.dataCache['allSeting']) {
         return Promise.resolve(this.dataCache['allSeting'])
-      } else {
+      } else { */
         return getAllSetting({
           orgid: this.otherinfo.orgid,
           type: '',
           module: 'order'
         })
-      }
+      //}
     },
     // 获取网点信息
     getOrgId() {
@@ -1024,20 +1024,20 @@ export default {
       })
     },
     // 获取个人设置
-    getPersonSetting() {
-      if (this.dataCache['personSeting']) {
+    getPersonSetting(nocache) {
+      /* if (!nocache && this.dataCache['personSeting']) {
         return Promise.resolve(this.dataCache['personSeting'])
-      } else {
+      } else { */
         return orderManage.getPersonalSetup(this.otherinfo.id)
-      }
+      //}
     },
     // 获取货物设置
     getCargoSetting() {
-      if (this.dataCache['cargoSeting']) {
+      /* if (this.dataCache['cargoSeting']) {
         return Promise.resolve(this.dataCache['cargoSeting'])
-      } else {
+      } else { */
         return orderManage.getCargoSetting(this.otherinfo.orgid)
-      }
+      //}
     },
     // 获取基本设置信息
     getBaseSetting() {
@@ -1233,6 +1233,9 @@ export default {
         this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
         // this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
         console.log('theFeeConfig:', this.cargoObject, this.cargoList)
+      }else{
+        // 如果是本身有数据
+
       }
     },
     // 从弹窗设置备注
@@ -2204,6 +2207,13 @@ export default {
     },
     getKeySetup() {
       this.changeFlag = Math.random()
+      this.getPersonSetting(true).then(data=>{
+        this.personConfig = data
+        this.setOrderTransfer()
+        if (!this.output.isOrder) {
+          this.setDefaultValue()
+        }
+      })
     }
   }, // 路由更新时触发，用来切换渲染数据
   // 需要对应router-view的组件才能触发
@@ -2338,7 +2348,7 @@ $backgroundcolor: #cbe1f7;
       }
     }
     .order-main{
-      min-height: 400px;
+      min-height: 366px;
       border: solid 2px #000827;
       margin-top: 8px;
       // max-height: calc(100% - 38px);

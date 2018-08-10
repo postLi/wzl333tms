@@ -126,6 +126,7 @@ export default {
       return OrderApi.putCargoSetting(this.feeData).then(res => {
         this.loading = false
         if (res.status === 200) {
+          this.$emit('success', this.feeData)
           this.$message.info('修改成功！')
           this.close()
         } else {

@@ -671,22 +671,21 @@ export default {
     
   }
   .query-input-customer-org{
-    min-width: 60px;
-    max-width: 120px;
+    width: 100px;
     border-right: 1px solid #ddd;
   }
   .query-input-customer-name{
-    width: 80px;
+    width: 100px;
     border-right: 1px solid #ddd;
     padding-left: 5px;
   }
   .query-input-customer-mobile{
-    width: 85px;
+    width: 100px;
     border-right: 1px solid #ddd;
     padding-left: 5px;
   }
   .query-input-customer-addr{
-    min-width: 137px;
+    min-width: 200px;
     padding-left: 5px;
   }
 }
