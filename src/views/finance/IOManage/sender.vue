@@ -322,8 +322,6 @@ export default {
           break
           //  修改
         case 'modify':
-
-        
           this.closeAddCustomer()
           if (this.selected.length > 1) {
             this.$message({
@@ -354,13 +352,13 @@ export default {
               putStop(id).then(res => {
                 this.loading = false
                 this.$message({
-                    type: 'success',
-                    message: '保存成功~'
-                  })
+                  type: 'success',
+                  message: '保存成功~'
+                })
                 this.fetchData()
               }).catch(err => {
-                  this.loading = false
-                })
+                this.loading = false
+              })
             } else {
               this.$message({
                 type: 'info',
