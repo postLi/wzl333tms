@@ -50,7 +50,7 @@
           <el-input maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input maxlength="10" v-model="form.receiver_customer_name" auto-complete="off" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>
@@ -196,10 +196,10 @@ export default {
         'repertoryId': '',
         'signTime': '',
         'signName': '',
-        'signCocumentTypeId': '96',
+        'signCocumentTypeId': 96,
         'shipsignNameSn': '',
         'documentNum': '',
-        'signTypeId': '99',
+        'signTypeId': 99,
         'remark': '',
         // 'signRemark': '',
         'signPic': ''
@@ -363,6 +363,8 @@ export default {
       this.obj.remark = this.repertoryId.remark
       this.obj.signPic = this.repertoryId.signPic
       this.form.remark = this.repertoryId.signRemark
+
+      this.form.signName = this.repertoryId.receiver_customer_name
     },
     reset() {
       this.$refs['ruleForm'].resetFields()

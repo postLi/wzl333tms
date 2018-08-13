@@ -285,7 +285,7 @@
 import SearchForm from './components/search'
 import { postAbnormalUnusual, Delete } from '@/api/finance/unusual'
 import { mapGetters } from 'vuex'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addunusual from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'

@@ -267,7 +267,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款汇款" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
-       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
 </div>
 </template>
@@ -275,7 +275,7 @@
 import SearchForm from './components/search'
 import { postGoodsfundsList, putUpdateCancelReceipt } from '@/api/finance/payment'
 import { mapGetters } from 'vuex'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import AddPayment from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'

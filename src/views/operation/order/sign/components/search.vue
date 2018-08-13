@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo wzl clearfix">
       <el-form-item label="开单时间:">
         <div class="block">
           <el-date-picker
@@ -111,7 +111,7 @@ export default {
     // }
   },
   mounted() {
-    this.searchForm.shipFromOrgid = this.otherinfo.orgid
+    // this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
     // getOrgid (id){
@@ -159,19 +159,19 @@ export default {
   .el-form-item{
     margin:0 10px;
   }
-  // .el-form-item:nth-of-type(6){
-  //   // margin:0 10px;
-  //   margin-left: 13px;
-  // }
+  .el-form-item:nth-of-type(6){
+    margin:0 10px;
+    margin-left: 13px;
+  }
 }
-.staff_searchinfo .el-form-item--mini .staff_searchinfo--btn{
- 
+.el-input--suffix .el-input__inner{
+  padding-right: 4px;
 }
-// .staff_searchinfo{
-//   .staff_searchinfo--btn{
-//     .el-form-item__content{
-//       top:-25px;
-//     }
-//   }
-// }
+.wzl{
+  .staff_searchinfo--btn{
+    .el-form-item__content{
+      top:-29px;
+    }
+  }
+}
 </style>

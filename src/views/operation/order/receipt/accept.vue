@@ -291,19 +291,31 @@
               >
             </el-table-column>
           </el-table> -->
+          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
         </div> 
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery" @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept" />    
-    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
 import SearchForm from './components/search'
 import { postReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import AddMark from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
@@ -327,7 +339,7 @@ export default {
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-                // this.loading = false
+    // this.loading = false
     })
   },
   data() {
@@ -661,7 +673,7 @@ export default {
     },
     closeAddDot() {
       this.popVisible = false
-            // this.addDoTotVisible = false
+      // this.addDoTotVisible = false
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
@@ -669,9 +681,7 @@ export default {
     setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable() {
-      this.setupTableVisible = false
-    }
+    getDbClick() {}
   }
 }
 </script>

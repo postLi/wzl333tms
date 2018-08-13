@@ -686,11 +686,6 @@ export default {
         },
         fixed: false
       }, {
-        label: '签收状态',
-        prop: 'signStatusName',
-        width: '120',
-        fixed: false
-      }, {
         label: '签收类型',
         prop: 'signTypeName',
         width: '120',

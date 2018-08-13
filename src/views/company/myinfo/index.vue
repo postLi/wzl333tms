@@ -58,14 +58,14 @@
       </el-col>
 
       <el-col :span="20">
-        <div class="label" style="text-align: left;margin-left:99px;">所属部门：<span class="wzloooo">{{ otherinfo.departmentName || otherinfo.departmentId }}</span></div>
+        <div class="label" style="text-align: left;margin-left:178px;">所属部门：<span class="wzloooo">{{ otherinfo.departmentName || otherinfo.departmentId }}</span></div>
       </el-col>
       <el-col :span="20">
         <!-- {{ otherinfo.departmentName || otherinfo.departmentId }} -->
       </el-col>
 
       <el-col :span="20">
-        <div class="label" style="text-align: left;margin-left:130px;">职位：<span  class="wzloooo">{{ otherinfo.position }}</span></div>
+        <div class="label" style="text-align: left;margin-left:209px;">职位：<span  class="wzloooo">{{ otherinfo.position }}</span></div>
       </el-col>
       <el-col :span="20">
         <!-- {{ otherinfo.position }} -->
@@ -139,7 +139,7 @@ export default {
     background: #fff;
   }
   .wzloooo{
-    margin-left:23px;
+    margin-left:30px;
     color: #333;
   }
   .info-title{

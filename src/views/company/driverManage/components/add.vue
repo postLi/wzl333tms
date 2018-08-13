@@ -171,8 +171,8 @@ export default {
           { required: true, message: '请选择所属机构', trigger: 'blur' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码' }
-          // { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
+          // { validator: validateFormNumber, trigger: 'change' }
         ],
         driverCardid: [
           { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '身份证号码只能输入字母和数字' }
