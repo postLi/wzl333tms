@@ -55,7 +55,7 @@
                 <el-input :disabled="cargoNo !== '3'" v-model="form.cargoNo.orgIdAndShipNoAndNumberOfUnitsValue" placeholder=""></el-input>位+件数
               </el-form-item>
               <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.cargoNo.systemNumberNotAllowUpdate">不允许修改系统生成的单号</el-checkbox>
+                <el-checkbox true-label="1" false-label="0" v-model="form.cargoNo.systemNumberNotAllowUpdate">不允许修改系统生成的货号</el-checkbox>
               </el-form-item>
             </div>
           </div>
@@ -431,7 +431,7 @@ export default {
           'forkliftFee': '1',
           'pickupFee': '1',
           'stampTax': '0',
-          //'productPrice': '0',
+          // 'productPrice': '0',
           'packageFee': '0'
         },
         'shipPageFunc': {
