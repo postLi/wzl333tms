@@ -5,6 +5,8 @@
       <span class="order-status-name">{{ form.tmsOrderShipInfo.shipIsSeparate !== 1 ? form.tmsOrderShipInfo.shipStatusName : '已拆单' }}</span><span class="order-status-org" v-if="form.tmsOrderShipInfo.shipIsSeparate !== 1">{{form.tmsOrderShipInfo.shipOrgidName}}</span>
     </div>
 
+    <div class="shipstatus" :class="[shipStatus]"></div>
+
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
@@ -736,8 +738,19 @@ export default {
         tmsOrderShipSign: {},
         tmsShLoadsList: [],
         tmsGxLoadsList: [],
-        tmsDbLoadsList: []
+        tmsDbLoadsList: [],
+        shipFeeStatusDto: {
+          agencyFundStatus: false,
+          brokerageFeeStatus: false,
+          otherfeeOutStatus: false,
+          realityhandlingFeeStatus: false,
+          shipReceivableFeeStatus: 'NOSETTLEMENT',
+          shipTotalFeeStatus: false,
+          transferTotalFeeStatus: false
+        }
       },
+      // 运单结算样式
+      shipStatus: 'ship-yunfeiweijie',
       // 系统设置
       config: {},
       // 费用设置
@@ -768,6 +781,22 @@ export default {
       console.log('watch orderdata:', newVal)
       if (newVal) {
         this.initIndex()
+      }
+    },
+    'form.shipFeeStatusDto.shipReceivableFeeStatus'(newVal) {
+      switch (newVal) {
+        case 'NOSETTLEMENT':
+          this.shipStatus = 'ship-yunfeiweijie'
+          break
+        case 'PARTSETTLEMENT':
+          this.shipStatus = 'ship-bufenjiesuan'
+          break
+        case 'ALLSETTLEMENT':
+          this.shipStatus = 'ship-yunfeiyijie'
+          break
+        default:
+          this.shipStatus = ''
+          break
       }
     }
   },
@@ -860,6 +889,8 @@ export default {
           this.form.receiver[i] = data.customerList[1][i]
         }
       }
+
+      this.form.shipFeeStatusDto = data.shipFeeStatusDto
 
       // 回显控货
       this.shipOther = this.form.tmsOrderShipInfo.shipOther.split(',') || []

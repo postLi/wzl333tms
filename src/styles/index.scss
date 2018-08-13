@@ -159,6 +159,31 @@ table{
 .ship-yi{
   background: url("./assets/icom/shipStatus/yi.png") no-repeat;;
 }
+// 运单费用状态
+.shipstatus{
+  position: absolute;
+  width: 166px;
+  height: 91px;
+  top: 120px;
+  right: 110px;
+  display: none;
+  vertical-align: middle;
+  z-index: 999;
+  pointer-events: none;
+}
+.ship-bufenjiesuan{
+  display: block;
+  background: url("./assets/icom/shipFeeStatus/bufenjiesuan.png") no-repeat;;
+}
+.ship-yunfeiweijie{
+  display: block;
+  background: url("./assets/icom/shipFeeStatus/yunfeiweijie.png") no-repeat;;
+}
+.ship-yunfeiyijie{
+  display: block;
+  background: url("./assets/icom/shipFeeStatus/yunfeiyijie.png") no-repeat;;
+}
+
 // 弹窗大图样式
 .showPictureWrapper{
   width: auto;
