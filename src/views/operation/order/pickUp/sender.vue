@@ -507,12 +507,9 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
+
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'export') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -521,6 +518,25 @@ export default {
         return false
       }
       switch (type) {
+                case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn
+          })
+          this.$refs.multipleTable.clearSelection()
+          // if (this.selected.length === 0) {
+          //   SaveAsFile(this.usersArr, this.tableColumn)
+          // } else {
+          //   // 筛选选中的项
+          //   SaveAsFile(this.selected, this.tableColumn)
+          // }
+          break;
+          case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn
+          })
+          break
           // 新增
         case 'add':
           this.closeAddCustomer()
@@ -627,17 +643,6 @@ export default {
                       })
             // }
           break
-          // 导出数据
-        case 'export':
-
-          if (!this.selected.length) {
-            SaveAsFile(this.usersArr, this.tableColumn)
-          } else {
-            // 筛选选中的项
-            SaveAsFile(this.selected, this.tableColumn)
-          }
-          break
-      //
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()

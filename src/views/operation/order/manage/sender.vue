@@ -569,11 +569,9 @@ export default {
       }
       switch (type) {
         case 'export':
-
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn,
-            name: '全部库存'
+            columns: this.tableColumn
           })
           this.$refs.multipleTable.clearSelection()
           // if (this.selected.length === 0) {
