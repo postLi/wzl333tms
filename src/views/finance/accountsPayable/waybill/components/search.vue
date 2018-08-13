@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="shipFromOrgid">
-      <SelectTree v-model="searchForm.shipFromOrgid" clearable :orgid="otherinfo.orgid" >
+      <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" >
       </SelectTree>
     </el-form-item>
     <el-form-item label="结算状态" prop="status">
@@ -14,14 +14,15 @@
       </el-select>
     </el-form-item>
     <el-form-item label="运单号" prop="shipSn">
-      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect>
+      <el-input v-model="searchForm.shipSn" :maxlength="maxlength"></el-input>
+      <!-- <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect> -->
     </el-form-item>
     <el-form-item label="发货方" prop="senderUnit">
-      <el-input  v-model="searchForm.senderUnit" clearable></el-input>
+      <el-input  v-model="searchForm.senderUnit" clearable  :maxlength="maxlength"></el-input>
       <!-- <querySelect v-model="searchForm.senderUnit" search="customerUnit" valuekey="customerUnit" type="sender" label="customerUnit" :remote="true" /> -->
     </el-form-item>
     <el-form-item label="发货人" prop="senderName" >
-      <el-input  v-model="searchForm.senderName" clearable></el-input>
+      <el-input  v-model="searchForm.senderName" clearable  :maxlength="maxlength"></el-input>
       <!-- <querySelect v-model="searchForm.senderName" search="customerName" type="sender" label="customerName" valuekey="customerName" clearable> -->
         <!-- <template slot-scope="{item}">
           {{ item.senderName }} : {{ item.senderMobile }}
@@ -29,10 +30,12 @@
       <!-- </querySelect> -->
     </el-form-item>
     <el-form-item label="出发城市">
-      <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
+      <el-input v-model="searchForm.shipFromCityName" clearable  :maxlength="maxlength"></el-input>
+      <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
     </el-form-item>
     <el-form-item label="到达城市">
-      <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" />
+      <el-input v-model="searchForm.shipToCityName" clearable  :maxlength="maxlength"></el-input>
+      <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" ></querySelect> -->
     </el-form-item>
     
     <el-form-item class="staff_searchinfo--btn">
@@ -72,6 +75,7 @@ export default {
       }
     }
     return {
+      maxlength: 25,
       searchForm: {
         shipFromOrgid: '',
         // feeType: 8, // 8-应付回扣 10-实际提货费 13-其他费用支出

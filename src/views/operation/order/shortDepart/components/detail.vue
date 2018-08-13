@@ -81,7 +81,7 @@
           <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
-           <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
+          <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
               <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
@@ -96,7 +96,7 @@
               <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
-         <!--  <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
+          <!--  <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
               <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
@@ -158,7 +158,7 @@ export default {
   },
   data() {
     return {
-      isNeedArrival: true,
+      isNeedArrival: true, // true-未入库状态  false-已入库状态
       btnsize: 'mini',
       loadId: '',
       detailList: [],
@@ -275,8 +275,7 @@ export default {
           message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
           type: 'warning'
         })
-      }
-       else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+      } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
         // this.$notify({
         //   title: '提示',
         //   message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
@@ -373,22 +372,26 @@ export default {
       console.log('infow3234', this.info.id)
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-        if (data) {
-          this.detailList = data.data
-          this.setData()
-          this.toggleAllRows()
-          this.$nextTick(() => { // 默认设置实到数量为配载数量
-            this.detailList.forEach(e => {
-              e.actualAmount = e.loadAmount
-              e.actualWeight = e.loadWeight
-              e.actualVolume = e.loadVolume
+          if (data) {
+            this.detailList = data.data
+            this.setData()
+            this.toggleAllRows()
+            this.$nextTick(() => { 
+              this.detailList.forEach(e => {
+                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                  e.actualAmount = e.loadAmount
+                  e.actualWeight = e.loadWeight
+                  e.actualVolume = e.loadVolume
+                }else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+                  
+                }
+              })
             })
-          })
-        }
-      })
-      .catch(error =>{
-        this.$message({type: 'danger', message: error.errorInfo})
-      })
+          }
+        })
+        .catch(error => {
+          this.$message({ type: 'danger', message: error.errorInfo })
+        })
     },
     clickDetails(row) {
       // this.$refs.multipleTable.toggleRowSelection(row)
@@ -467,12 +470,12 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
-      .el-input.is-disabled .el-input__inner{
+      .el-input.is-disabled .el-input__inner {
         background-color: #fff;
         color: #222;
         text-align: center;
-        border:none;
-        font-size:13px;
+        border: none;
+        font-size: 13px;
       }
     }
   }

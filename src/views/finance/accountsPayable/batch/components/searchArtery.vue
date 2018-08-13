@@ -12,15 +12,15 @@
           </el-date-picker>
     </el-form-item>
     <el-form-item label="发车网点" prop="orgid">
-      <SelectTree v-model="searchForm.orgid" clearable v-if="!isAllOrg"  :orgid="otherinfo.orgid"></SelectTree>
-      <SelectTree v-model="searchForm.orgid" clearable v-else>
+      <SelectTree v-model="searchForm.orgid" v-if="!isAllOrg"  :orgid="otherinfo.orgid"></SelectTree>
+      <SelectTree v-model="searchForm.orgid"  v-else>
       </SelectTree>
     </el-form-item>
     <el-form-item label="结算网点" prop="ascriptionOrgid"  v-if="isAllOrg">
-      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid"></SelectTree>
+      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid" clearable></SelectTree>
     </el-form-item>
-    <el-form-item label="到车网点" prop="ascriptionOrgid"  v-if="!isAllOrg && isArrivalSel">
-      <SelectTree v-model="searchForm.ascriptionOrgid"  clearable></SelectTree>
+    <el-form-item label="到车网点" prop="arriveOrgid"  v-if="!isAllOrg && isArrivalSel">
+      <SelectTree v-model="searchForm.arriveOrgid"  clearable></SelectTree>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
       <el-input placeholder="请输入发车批次" v-model="searchForm.batchNo"></el-input>
@@ -78,6 +78,7 @@ export default {
         // sign: 2,
         orgid: '',
         ascriptionOrgid: '',
+        arriveOrgid: '',
         status: 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT',
         // loadStartTime: '',
         // loadEndTime: '',

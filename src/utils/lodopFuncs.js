@@ -367,6 +367,14 @@
      getLodop()
    }
  };
+ 
+ function createTables (obj) { // obj-页面数据 对象
+  let id = ''
+  for(let item in obj) {
+    id += createTable(obj[item])
+  }
+  return id 
+ }
 
  function createTable(obj) { // 打印导出创建表格视图
    let data = obj.data // 数据表格
