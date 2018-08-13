@@ -274,6 +274,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+      
   </div>
 </div>
 </template>
