@@ -34,11 +34,11 @@ Vue.use(Router)
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
-  {
+/*   {
     component: Layout,
     redirect: '/checklist/index',
     noDropdown: true,
-    hidden: true,
+    hidden: false,
     path: '/checklist',
     children: [{
       path: '/checklist/index',
@@ -49,7 +49,7 @@ export const constantRouterMap = [
         noCache: false
       }
     }]
-  },
+  }, */
   {
     path: '/',
     component: Layout,
@@ -62,6 +62,15 @@ export const constantRouterMap = [
     children: [{
       path: 'dashboard', name: 'dashboard', icon: 'shouye', component: _import('dashboard/index'),
       meta: { title: '首页', noCache: true }
+    }, {
+      path: '/checklist/index',
+      component: _import('checklist/index'),
+      name: 'checklistpage',
+      icon: 'btn9_huidanhs',
+      meta: {
+        title: '初始化',
+        noCache: false
+      }
     }]
   }
 ]

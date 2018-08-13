@@ -5,6 +5,8 @@
       placement="bottom-end"
       :popper-options="{'preventOverflow.padding': 0}"
       width="360"
+      @show="hideIframe"
+      @hide="showIframe"
       popper-class="popoveruser"
       trigger="hover">
       <el-row>
@@ -54,6 +56,18 @@ export default {
     },
     lockScreen() {
       this.$store.dispatch('LockScreen')
+    },
+    hideIframe() {
+      if (document.getElementById('senderIframe')) {
+        console.log('iframe:', document.getElementById('senderIframe').contentWindow)
+        document.getElementById('senderIframe').contentWindow.hideChart(true)
+      }
+    },
+    showIframe() {
+      if (document.getElementById('senderIframe')) {
+        console.log('iframe:', document.getElementById('senderIframe').contentWindow)
+        document.getElementById('senderIframe').contentWindow.hideChart(false)
+      }
     }
   }
 }

@@ -74,7 +74,7 @@
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
-          <el-table-column fixed width="50" sortable type="selection" fixed></el-table-column>
+          <el-table-column fixed width="50" sortable type="selection" ></el-table-column>
           <el-table-column sortable width="120" prop="shipSn" label="运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="childShipSn" label="子运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
@@ -230,15 +230,15 @@ export default {
       }
     },
     changeData(newVal) { // 判断当行
-      let curAmount = this.detailList[newVal].actualAmount // 实到件数
-      let curWeight = this.detailList[newVal].actualWeight // 实到重量
-      let curVolume = this.detailList[newVal].actualVolume // 实到体积
-      let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
-      let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
-      let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
-      let curactualVolume = this.detailList[newVal].actualVolume // 应到体积
-      let curactualWeight = this.detailList[newVal].actualWeight // 应到重量
-      let curactualAmount = this.detailList[newVal].actualAmount // 应到件数
+      const curAmount = this.detailList[newVal].actualAmount // 实到件数
+      const curWeight = this.detailList[newVal].actualWeight // 实到重量
+      const curVolume = this.detailList[newVal].actualVolume // 实到体积
+      const curloadAmount = this.detailList[newVal].loadAmount // 配载件数
+      const curloadWeight = this.detailList[newVal].loadWeight // 配载重量
+      const curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      const curactualVolume = this.detailList[newVal].actualVolume // 应到体积
+      const curactualWeight = this.detailList[newVal].actualWeight // 应到重量
+      const curactualAmount = this.detailList[newVal].actualAmount // 应到件数
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         console.log(this.selectDetailList.length, this.detailList.length)
         this.detailList[newVal].actualAmount = curloadAmount
@@ -292,7 +292,7 @@ export default {
     },
     setData() {
       console.log('info', this.info)
-      let dataFee = {} // 配载费用
+      const dataFee = {} // 配载费用
       dataFee.arriveHandlingFee = this.info.arriveHandlingFee
       dataFee.arriveOtherFee = this.info.arriveOtherFee
       dataFee.arrivepayCarriage = this.info.arrivepayCarriage
@@ -308,7 +308,7 @@ export default {
       dataFee.nowpayCarriage = this.info.nowpayCarriage
       dataFee.nowpayOilCard = this.info.nowpayOilCard
       dataFee.shortFee = this.info.shortFee
-      let dataLoad = {} // 配载信息
+      const dataLoad = {} // 配载信息
       dataLoad.actualAmountall = this.info.loadAmount
       dataLoad.actualVolumeall = this.info.loadVolume
       dataLoad.actualWeigntall = this.info.loadWeight
@@ -352,19 +352,18 @@ export default {
         return false
       } else {
         postAddRepertory(50, this.newData).then(data => {
-            if (data.status === 200) {
-              this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
-              this.$message({ type: 'success', message: '短驳入库操作成功' })
-              this.message = true
-            } else {
-              this.message = false
-            }
-            this.$emit('isSuccess', this.message)
-          })
+          if (data.status === 200) {
+            this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() }})
+            this.$message({ type: 'success', message: '短驳入库操作成功' })
+            this.message = true
+          } else {
+            this.message = false
+          }
+          this.$emit('isSuccess', this.message)
+        })
           .catch(error => {
             this.message = false
             this.$emit('isSuccess', this.message)
-
           })
       }
     },
@@ -372,23 +371,23 @@ export default {
       console.log('infow3234', this.info.id)
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-          if (data) {
-            this.detailList = data.data
-            this.setData()
-            this.toggleAllRows()
-            this.$nextTick(() => { 
-              this.detailList.forEach(e => {
-                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  e.actualAmount = e.loadAmount
-                  e.actualWeight = e.loadWeight
-                  e.actualVolume = e.loadVolume
-                }else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
-                  
-                }
-              })
+        if (data) {
+          this.detailList = data.data
+          this.setData()
+          this.toggleAllRows()
+          this.$nextTick(() => {
+            this.detailList.forEach(e => {
+              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                e.actualAmount = e.loadAmount
+                e.actualWeight = e.loadWeight
+                e.actualVolume = e.loadVolume
+              } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+
+              }
             })
-          }
-        })
+          })
+        }
+      })
         .catch(error => {
           this.$message({ type: 'danger', message: error.errorInfo })
         })

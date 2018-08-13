@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-container">
-    <router-link to="/checklist">初始化</router-link>
     <div class="index-flow">
       <!-- 第一块 -->
         <!-- <h3 class="thetitle">发货网点</h3> -->

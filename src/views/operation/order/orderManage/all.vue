@@ -222,7 +222,7 @@ export default {
         'prop': 'status',
         'width': '150',
         'slot': function(scope) {
-          return scope.row.status === 1 ? '未通知' : scope.row.status === 2 ? '已通知' : '未控货'
+          return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'
         }
       }, {
         'label': '回单要求',

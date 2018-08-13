@@ -22,7 +22,7 @@
       <template v-if="type === 'sender' || type === 'receiver'">
         <span class="query-input-customer-org" :title="item.customerUnit" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" :title="item.customerName" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" :title="item.detailedAddress" v-html="highLight(item,'detailedAddress')"></span>
       </template>
-      <template v-else-if="type === 'city'">
+      <template v-else-if="type === 'city' || type === 'fromcity' || type === 'tocity'">
         <div class="query-input-city-info">
           <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
         </div>
@@ -60,7 +60,7 @@
           <template v-if="type === 'sender' || type === 'receiver'">
             <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
           </template>
-          <template v-else-if="type === 'city'">
+          <template v-else-if="type === 'city' || type === 'fromcity' || type === 'tocity'">
             <div class="query-input-city-info">
               <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
             </div>
@@ -94,7 +94,7 @@
           <template v-if="type === 'sender' || type === 'receiver'">
             <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
           </template>
-          <template v-else-if="type === 'city'">
+          <template v-else-if="type === 'city' || type === 'fromcity' || type === 'tocity'">
             <div class="query-input-city-info">
               <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
             </div>

@@ -211,7 +211,7 @@
             </div>
           </div>
           <div class="clearfix setup-table">
-            <div class="setup-left">打印内容设置</div>
+            <div class="setup-left">打印模板设置</div>
             <div class="setup-right">
               <el-form-item>
                 <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
