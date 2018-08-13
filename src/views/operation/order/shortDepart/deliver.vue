@@ -5,15 +5,15 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" plain @click="doAction('add')">新增短驳</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">发车</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消发车</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消装车</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">发车</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消发车</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消装车</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn">修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <span class="dbclickTips">双击查看详情</span>
       </div>
-       <el-tooltip content="双击查看批次详情" placement="top"  effect="light" :hide-after="4000">
       <div class="info_tab">
         <!-- 完成并发车：有发车时间和配载时间
             完成配载：只有配载时间 -->
@@ -32,7 +32,7 @@
             </template>
           </el-table>
         
-      </div></el-tooltip>
+      </div>
       <div class="info_tab_footer">
         共计:{{ total }}
         <div class="show_pager">

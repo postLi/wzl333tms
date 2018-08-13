@@ -13,8 +13,8 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>打印合同</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+          <span class="dbclickTips">双击查看详情</span>
       </div>
-      <el-tooltip content="双击查看批次详情" placement="top"  effect="light" :hide-after="4000">
       <div class="info_tab">
         <!--<el-table-->
           <!--ref="multipleTable"-->
@@ -284,7 +284,6 @@
           </template>
         </el-table>
       </div>
-      </el-tooltip>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
