@@ -299,7 +299,8 @@ import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
-import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
+// import { PrintContract } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -521,10 +522,6 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
       // 判断是否有选中项
       if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.closeAddCustomer()
@@ -549,6 +546,20 @@ export default {
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn
           })
+          break
+          // import
+        case 'import':
+               let str = '?'
+      for (let item in this.selected[0]) {
+        str += item + '=' + this.selected[0][item] + '&'
+      }
+      // JSON.stringify(this.formModel)
+      let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html'+ str + new Date().getTime()
+      PrintContract(encodeURI(path))
+          // PrintInFullPage({
+          //   data: this.selected.length ? this.selected : this.usersArr,
+          //   columns: this.tableColumn
+          // })
           break
         // 新增配载
         case 'add':

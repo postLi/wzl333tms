@@ -10,8 +10,8 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deleteStor')" plain>取消入库</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>-->
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导出批次</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导出配载</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>打印配载清单</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出配载</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印配载清单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -300,6 +300,7 @@ import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -552,12 +553,8 @@ export default {
       // 显示导入窗口
     },
     doAction (type) {
-      if(type==='import'){
-        this.showImport()
-        return false
-      }
       // 判断是否有选中项
-        if(!this.selected.length){
+        if(!this.selected.length && type !== 'import'){
             this.closeAddCustomer()
             this.$message({
                 message: '请选择要操作的项~',
@@ -567,6 +564,21 @@ export default {
         }
 
       switch (type) {
+                // 导出
+        case 'import':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn
+          })
+          break
+          // 打印
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '回单回收'
+          })
+          break
           // ruku
           case 'storage':
             if(this.selected.length > 1){
@@ -735,17 +747,7 @@ export default {
 
             break;
           // 导出数据
-          case 'export':
-              let ids2 = this.selected.map(el => {
-                return el.customerId
-              })
-              getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                    type: 'success',
-                    message: '即将自动下载!'
-                })
-              })
-              break;
+ 
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()

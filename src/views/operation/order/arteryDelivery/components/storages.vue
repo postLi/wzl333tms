@@ -536,6 +536,7 @@ export default {
       sendTypeId: {
         typeId: 54 // 等于54为干线到车确认
       },
+      batchTypeName: '',
       sendModel: {
         'tmsOrderLoad': {
           'id': ''
@@ -745,6 +746,7 @@ export default {
       this.searchQuery.vo.loadId = selectMainId
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.formModel = data.list[0]
+        this.batchTypeName = this.formModel.batchTypeName
         this.loading = false
       })
     },
@@ -758,7 +760,9 @@ export default {
         this.loading = false
         this.$nextTick(() => { // 默认设置实到数量为配载数量
           this.detailList.forEach(e => {
-            if (this.isAlFun || this.isModify) {
+            // 入库前
+            console.log(this.batchTypeName)
+            if (!this.isAlFun) {
               e.actualAmount = e.loadAmount
               e.actualWeight = e.loadWeight
               e.actualVolume = e.loadVolume

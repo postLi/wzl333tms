@@ -130,12 +130,12 @@
               </div>
               <div class="tab_info">
                 <div class="btns_box_send">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_print" >打印清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain class="table_import">导出清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" >
+                  <!-- <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" >
                     <el-table-column fixed sortable type="selection" width="50">
                     </el-table-column>
                     <el-table-column
@@ -165,13 +165,10 @@
                     </el-table-column>
                    
                     <el-table-column label="库存体积" width="100" prop="loadVolume" sortable>
-                    </el-table-column> -->
                     <el-table-column prop="loadAmount" sortable width="100" label="运单件数">
                     </el-table-column>
-                    <!--actualWeight-->
                     <el-table-column sortable prop="loadWeight" width="100" label="运单重量">
                     </el-table-column>
-                    <!--actualVolume-->
                     <el-table-column label="运单体积" width="100" prop="loadVolume" sortable>
                     </el-table-column>
                     <el-table-column prop="shipFromCityName" label="出发城市" width="120" sortable>
@@ -193,6 +190,23 @@
                     <el-table-column prop="shipRemarks" label="运单备注" width="120" sortable>
                     </el-table-column>
                   </el-table>
+ -->
+
+
+ <el-table ref="multipleTable"  :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table> 
+
+          
                 </div>
               </div>
             </div>
@@ -442,6 +456,7 @@
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'">打印合同</el-button>
       <el-button @click="closeMe">关闭</el-button>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </pop-right>
 </template>
@@ -454,11 +469,14 @@ import {postSelectLoadMainInfoList } from '@/api/operation/arteryDelivery'
 import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
+import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 import { PrintContract } from '@/utils/lodopFuncs'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   data() {
     return {
+      tablekey: 0,
       getBatchNo: '',
       popTitle: '查看详情',
       activeName: 'first',
@@ -540,13 +558,120 @@ export default {
         "vo": {
           "loadId": 1
         }
+      },
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      }, {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '150',
+        fixed: true
+      },{
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      },{
+        label: '子运单号',
+        prop: 'childShipId',
+        width: '180',
+        fixed: false
+      },{
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      },{
+        label: '配载重量',
+        prop: 'loadWeight',
+        width: '100',
+        fixed: false
+      },{
+        label: '配载体积',
+        prop: 'loadVolume',
+        width: '100',
+        fixed: false
+      },{
+        label: '运单件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      },{
+        label: '运单重量',
+        prop: 'loadWeight',
+        width: '100',
+        fixed: false
+      },{
+        label: '运单体积',
+        prop: 'loadVolume',
+        width: '100',
+        fixed: false
+      },{
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },{
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },{
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },{
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '100',
+        fixed: false
+      },{
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '110',
+        fixed: false
+      },{
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      },{
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      },{
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100',
+        fixed: false
+      },{
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '130',
+        fixed: false
+      },{
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
       }
+      ]
+
     }
   },
   components: {
     popRight,
     SelectTree,
-    selectType
+    selectType,
+    TableSetup
 
   },
   computed: {
@@ -714,32 +839,23 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
-      // 判断是否有选中项
-      if (!this.selected.length) {
-        this.closeAddCustomer()
-        this.$message({
-          message: '请选择要操作的项~',
-          type: 'warning'
-        })
-        return false
-      }
+
       switch (type) {
-          // 导出数据
+          // 导出数据table_import
+        // 导出
         case 'export':
-          let ids2 = this.selected.map(el => {
-            return el.customerId
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn
           })
-          getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          break
+          // 打印
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn
           })
-          break;
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -783,10 +899,12 @@ export default {
       }
       // JSON.stringify(this.formModel)
       let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html'+ str + new Date().getTime()
-      console.log('path', encodeURI(path))
-      // PrintContract(path)
       PrintContract(encodeURI(path))
-    }
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
+    },
   }
   // }
 }
@@ -811,6 +929,16 @@ export default {
       border-top: 2px dotted #dcdfe6;
       padding-top: 10px;
       margin-bottom: 10px;
+      position:relative;
+
+      .el-button.table_print{
+        position: absolute;
+        right: 220px;
+      }
+      .el-button.table_import{
+        position: absolute;
+        right: 110px;
+      }
       .el-button {
         margin-right: 0;
       }
@@ -818,9 +946,7 @@ export default {
         float: right;
         margin-right: 0;
       }
-      .table_export {
-        margin-left: 650px;
-      }
+     
     }
     .infos_tab {
       width: 100%;

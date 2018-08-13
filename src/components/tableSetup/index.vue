@@ -36,7 +36,7 @@
         }
      }
   -->
-  <el-dialog title="表格设置" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
+  <el-dialog title="表格设置" :visible.sync="isShow" append-to-body :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
     <div class="tableSetup_warp">
       <!-- 左边列表 -->
       <div class="tableSetup_list">
