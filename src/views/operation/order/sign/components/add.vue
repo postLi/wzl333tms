@@ -162,7 +162,7 @@ export default {
       // } else
       //  if (value.length > 10) {
       //   callback(new Error('最多可以输入10位字符'))
-      // } else 
+      // } else
       if (REGEX.USERNAME.test(value)) {
         callback()
       } else {
@@ -225,15 +225,15 @@ export default {
           // { required: true, trigger: 'blur', validator: validateNameSn }
           { pattern: REGEX.USERNAME, message: '不能超过十个字符', trigger: 'blur' }
         ],
-        signCocumentTypeId: [
-          { required: true, message: '请选择签收证件', trigger: 'blur' }
-        ],
-        documentNum: [
-          { required: true, trigger: 'blur', validator: validateNum }
-        ],
-        signTypeId: [
-          { required: true, message: '请选择签收类型', trigger: 'blur' }
-        ],
+        // signCocumentTypeId: [
+        //   { required: true, message: '请选择签收证件', trigger: 'blur' }
+        // ],
+        // documentNum: [
+        //   { required: true, trigger: 'blur', validator: validateNum }
+        // ],
+        // signTypeId: [
+        //   { required: true, message: '请选择签收类型', trigger: 'blur' }
+        // ],
         // remark: [
         //   // { required: true, message: '请输入签收备注', trigger: 'blur' },
         //    { required: true, trigger: 'blur', validator: validateremark }
@@ -333,12 +333,28 @@ export default {
       // 查看信息1
       if (this.isDbclick) {
         this.popTitle = '查看信息'
+
+        // if (this.repertoryId.signTypeId) {
+        //   this.form.signTypeId = this.repertoryId.signTypeId
+        // } else {
+        //   this.form.signTypeId = 99
+        // }
         // this.form.remark = this.repertoryId.signRemark
       } else if (this.isPick) {
         this.popTitle = '修改签收'
+        // if (this.repertoryId.signTypeId) {
+        //   this.form.signTypeId = this.repertoryId.signTypeId
+        // } else {
+        //   this.form.signTypeId = 99
+        // }
         // this.form.remark = this.repertoryId.signRemark
       } else {
         this.popTitle = '签收录入'
+        // if (this.repertoryId.signTypeId) {
+        //   this.form.signTypeId = this.repertoryId.signTypeId
+        // } else {
+        //   this.form.signTypeId = 99
+        // }
       }
     },
     DelModfiy() {
@@ -359,10 +375,17 @@ export default {
       this.obj.signCocumentTypeId = this.repertoryId.signCocumentTypeId
       this.obj.shipsignNameSn = this.repertoryId.shipsignNameSn
       this.obj.documentNum = this.repertoryId.documentNum
-      this.obj.signTypeId = this.repertoryId.signTypeId
       this.obj.remark = this.repertoryId.remark
       this.obj.signPic = this.repertoryId.signPic
       this.form.remark = this.repertoryId.signRemark
+      console.log(this.obj.signTypeId)
+      if (this.repertoryId.signTypeId) {
+        this.form.signTypeId = this.repertoryId.signTypeId
+        this.form.signCocumentTypeId = this.repertoryId.signCocumentTypeId
+      } else {
+        this.form.signTypeId = 99
+        this.form.signCocumentTypeId = 96
+      }
 
       this.form.signName = this.repertoryId.receiver_customer_name
     },

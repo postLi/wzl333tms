@@ -527,7 +527,7 @@ export default {
     }
   },
   mounted() {
-        // this.searchQuery.vo.orgId = this.otherinfo.orgid
+    this.searchQuery.vo.signOrgid = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       this.loading = false
             // this.licenseTypes = resArr[1]
@@ -564,7 +564,8 @@ export default {
         'vo': {
           'repertoryId': '',
           'signId': '',
-          'signStatus': '226'
+          'signStatus': '226',
+          'signOrgid': ''
           // 'shipFromOrgid': 1
         }
       },

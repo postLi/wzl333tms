@@ -15,7 +15,9 @@
         <el-form-item label="开单网点">
             <SelectTree v-model="searchForm.shipFromOrgid" />
         </el-form-item>
-        
+        <el-form-item label="签收网点">
+            <SelectTree v-model="searchForm.signOrgid" :orgid="otherinfo.orgid"/>
+        </el-form-item>
         <el-form-item label="签收状态"  prop="signStatus">
           <selectType v-model="searchForm.signStatus"  type="sign_status">
             <el-option slot="head" label="全部" value="" ></el-option>
@@ -86,7 +88,7 @@ export default {
       thestatus: '',
       searchForm: {
         shipFromOrgid: '',
-        // number:'',
+        signOrgid: '',
         shipSn: '',
         // shipFromCityCode: '',
         shipFromCityName: '',
@@ -112,6 +114,7 @@ export default {
   },
   mounted() {
     // this.searchForm.shipFromOrgid = this.otherinfo.orgid
+    this.searchForm.signOrgid = this.otherinfo.orgid
   },
   methods: {
     // getOrgid (id){
@@ -135,8 +138,8 @@ export default {
       this.$emit('change', data)
     },
     clearForm() {
-      // this.searchForm.shipFromOrgid = ''
-      // this.searchForm.signStatus = ''
+      this.searchForm.shipFromOrgid = ''
+      this.searchForm.signStatus = ''
       // this.searchForm.signCertificate = ''
       this.searchForm.shipSn = ''
       this.searchForm.shipFromCityName = ''
