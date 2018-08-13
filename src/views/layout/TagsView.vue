@@ -3,11 +3,11 @@
     <div class="tags-view-scroll">
       <div class="scroll-container tags-view-wrapper" ref="scrollContainer" @wheel.prevent="handleScroll">
         <div class="scroll-wrapper" ref="scrollWrapper" :style="{left: left + 'px'}">
-          <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard" >
-          首页
-          </router-link><router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
-            :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span>
-            {{generateTitle(tag.title)}}<span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
+          <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard">
+            首页
+          </router-link>
+          <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span> {{generateTitle(tag.title)}}
+            <span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
           </router-link>
         </div>
       </div>
@@ -15,7 +15,7 @@
     <div class="tags-view-more">
       <i class="el-icon-arrow-down el-icon--right"></i>
       <div class="contextmenu-box" v-show="visible">
-        <ul class='contextmenu' >
+        <ul class='contextmenu'>
           <li v-if="!hideCloseCurrentMenu" @click="closeSelectedTag(selectedTag)">关闭</li>
           <li @click="closeOthersTags">关闭其他</li>
           <li @click="closeAllTags">关闭全部</li>
@@ -23,21 +23,16 @@
         <div class="menu-line"></div>
         <ul class="contextmenu contextmenu-list">
           <router-link tag="li" :class="isActive(indexTag)?'active-menu':''" to="/dashboard">
-            <i class="el-icon-check"></i>
-            首页
+            <i class="el-icon-check"></i> 首页
           </router-link>
-          <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)"
-          :to="tag.fullPath" :key="tag.fullPath">
-          <i class="el-icon-check"></i>
-          {{generateTitle(tag.title)}}
+          <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath">
+            <i class="el-icon-check"></i> {{generateTitle(tag.title)}}
           </router-link>
         </ul>
       </div>
     </div>
-    
   </div>
 </template>
-
 <script>
 const padding = 0
 
@@ -98,7 +93,7 @@ export default {
     },
     // 判断是否为非首页
     generateRoute() {
-      if (this.$route.name && this.$route.name !== '首页') {
+      if (this.$route.name && this.$route.name !== 'dashboard') {
         return this.$route
       }
       return false
@@ -118,7 +113,7 @@ export default {
       }
     },
     addViewTags() {
-      const route = this.generateRoute()
+      let route = this.generateRoute()
 
       if (!route) {
         return false
@@ -127,7 +122,7 @@ export default {
     },
     moveToCurrentTag() {
       // 针对首页特殊处理
-      if (this.$route.path == this.indexTag.path) {
+      if (this.$route.path === this.indexTag.path) {
         this.moveToTarget(this.$refs.tagIndex.$el)
         return
       }
@@ -218,10 +213,10 @@ export default {
     }
   }
 }
-</script>
 
-<style rel="stylesheet/scss" lang="scss" >
- @import "src/styles/variate.scss";
+</script>
+<style rel="stylesheet/scss" lang="scss">
+@import "src/styles/variate.scss";
 
 .tags-view-container {
   position: absolute;
@@ -229,16 +224,14 @@ export default {
   top: $topNavHeight;
   background: #e6e6e6;
   z-index: 999;
-  
+
   left: 0;
   width: 100%;
 
-  .tags-view-scroll{
-    .scroll-wrapper{
-      
-    }
+  .tags-view-scroll {
+    .scroll-wrapper {}
   }
-  .tags-view-more{
+  .tags-view-more {
     width: 50px;
     height: $tabsHeight;
     text-align: center;
@@ -248,15 +241,15 @@ export default {
     z-index: 2;
     background: #E6E6E6;
 
-    .el-icon-arrow-down{
+    .el-icon-arrow-down {
       cursor: pointer;
       line-height: $tabsHeight;
     }
 
-    &:hover{
+    &:hover {
       background: #eee;
 
-      .contextmenu-box{
+      .contextmenu-box {
         display: block;
       }
     }
@@ -264,9 +257,9 @@ export default {
 
   .tags-view-wrapper {
     height: $tabsHeight + 1px;
-    
+
     font-size: 0;
-    
+
     .tags-view-item {
       display: inline-block;
       position: relative;
@@ -288,7 +281,7 @@ export default {
       }
     }
   }
-  .contextmenu-box{
+  .contextmenu-box {
     margin: 0;
     background: #fff;
     z-index: 100;
@@ -303,17 +296,17 @@ export default {
 
     display: none;
 
-    .el-icon-check{
+    .el-icon-check {
       font-size: 6px;
       position: absolute;
       top: 9px;
       left: 5px;
       display: none;
     }
-    .active-menu{
+    .active-menu {
       color: #2887e0;
 
-      .el-icon-check{
+      .el-icon-check {
         display: block;
       }
     }
@@ -336,14 +329,13 @@ export default {
         background: #eee;
       }
     }
-    
   }
-  .menu-line{
+  .menu-line {
     padding: 0;
     height: 1px;
     background: #eee;
   }
-  .contextmenu-list{
+  .contextmenu-list {
     max-height: 350px;
     overflow: auto;
   }
@@ -352,24 +344,24 @@ export default {
 //reset element css of el-icon-close
 .tags-view-wrapper {
   .tags-view-item {
-    &.active:hover{
-      .el-icon-refresh{
+    &.active:hover {
+      .el-icon-refresh {
         display: block;
       }
     }
-    &:hover{
+    &:hover {
       .el-icon-close {
         color: #f00;
         font-weight: bold;
       }
     }
-    .el-icon-refresh{
+    .el-icon-refresh {
       position: absolute;
       top: 8px;
       left: 10px;
       display: none;
 
-      &:hover{
+      &:hover {
         color: #2887e0;
         font-weight: bold;
       }
@@ -385,21 +377,22 @@ export default {
     }
   }
 }
+
 .scroll-container {
   white-space: nowrap;
   position: relative;
   overflow-x: hidden;
   overflow-y: visible;
   width: 100%;
-  &:after{
-      content:'';
-      width: 100%;
-      height: 1px;
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      background: #DCDCDC;
-    }
+  &:after {
+    content: '';
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: #DCDCDC;
+  }
 
   .scroll-wrapper {
     position: absolute;
@@ -407,4 +400,5 @@ export default {
     height: $tabsHeight;
   }
 }
+
 </style>
