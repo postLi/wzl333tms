@@ -183,6 +183,7 @@ export default {
     getSelection(list) {
       let data = {}
       this.$set(data, 'shipIds', [])
+      this.$set(data, 'orgIds', [])
       this.$set(data, 'childShipIds', [])
       if (list.length > 0) {
         this.selectDetailList = objectMerge2([], list)

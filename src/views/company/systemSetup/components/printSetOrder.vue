@@ -85,7 +85,7 @@
           lineHeight:item.height+'px', 
           fontSize: item.fontsize+'px',
           fontWeight: parseInt(item.bold) === 0? 400 : parseInt(item.bold) * 400,
-          textAlign: item.alignment===2?'center': (item.alignment===0?'left':'right')}" 
+          textAlign: item.alignment===2?'center': (item.alignment===0?'right':'left')}" 
         v-if="item.filedValue !=='setting' && item.isshow === 1"
         @mousedown="down" 
         @mousemove="move" 
@@ -121,11 +121,11 @@ export default {
       flags: false,
       alignmentOptions: [{
         value: 0,
-        label: '文字靠左'
+        label: '文字靠右'
       },
       {
         value: 1,
-        label: '文字靠右'
+        label: '文字靠左'
       },
       {
         value: 2,

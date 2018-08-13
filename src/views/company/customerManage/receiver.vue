@@ -119,6 +119,7 @@
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <ImportDialog :popVisible="importDialogVisible" @close="closeImportDialog" @success="fetchData" :info="importInfo"></ImportDialog>
   </div>
 </template>
 <script>
@@ -128,13 +129,15 @@ import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import ImportDialog from '@/components/importDialog'
 
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    ImportDialog
   },
   computed: {
     ...mapGetters([
@@ -153,6 +156,8 @@ export default {
   },
   data() {
     return {
+      importDialogVisible: false,
+      importInfo: {},
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -202,12 +207,9 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
+      
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'import') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -282,6 +284,9 @@ export default {
             })
           })
           break
+        case 'import':
+          this.showImport()
+        break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -303,6 +308,14 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
+    },
+    showImport() {
+      // 显示导入窗口
+      this.$set(this.importInfo, 'download', this.$const.CUSTOMER_RECEIVER_EXCEL) // 下载链接 $const 常量
+      this.importDialogVisible = true
+    },
+    closeImportDialog () {
+      this.importDialogVisible = false
     }
   }
 }

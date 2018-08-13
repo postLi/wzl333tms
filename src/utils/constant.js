@@ -2,7 +2,16 @@
  * 常量
  */
 export const REMARK_MAX_LENGTH = 300 // 所有的备注框都统一只能输入300个字符，输入300个字符后就不能再输入
-
+// 1、发货人导入模板.xlsx
+export const CUSTOMER_SENDER_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E5%8F%91%E8%B4%A7%E4%BA%BA%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
+//2、司机导入模板.xlsx
+export const DRIVER_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E5%8F%B8%E6%9C%BA%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
+// 3、承运商导入模板.xlsx
+export const CARRIER_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E6%89%BF%E8%BF%90%E5%95%86%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
+// 4、收货人导入模板.xlsx
+export const CUSTOMER_RECEIVER_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E6%94%B6%E8%B4%A7%E4%BA%BA%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
+// 5、车辆导入模板.xlsx
+export const TRUCK_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E8%BD%A6%E8%BE%86%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
 // 运单状态 shipStatus
 export const SHIP_STATUS = {
   1: '已入库',

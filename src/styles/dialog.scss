@@ -37,7 +37,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     padding: 0;
     height: calc(100% - 60px);
     width: 100%;
-    background-color:#f9f9f9;
+    background-color: #f9f9f9;
   }
   .el-dialog__footer {
     background-color: $dialogHeader_bgcolor;
@@ -89,18 +89,19 @@ $dialogHeader_bgcolor: #e6e6e6;
             z-index: 2;
           }
         }
-        .print_aside_content_itemSet{
-          position:flex;
+        .print_aside_content_itemSet {
+          position: flex;
           flex-direction: row;
           justify-content: space-around;
-          width:100%;
-          .el-form-item{
-           margin-bottom: 0;
-           width:24%;
-           display:inline-block;
+          width: 100%;
+          .el-form-item {
+            margin-bottom: 0;
+            width: 24%;
+            display: inline-block;
           }
-          .el-input{
-            .el-input-group__append, .el-input-group__prepend{
+          .el-input {
+            .el-input-group__append,
+            .el-input-group__prepend {
               padding: 0 5px;
             }
           }
@@ -118,40 +119,78 @@ $dialogHeader_bgcolor: #e6e6e6;
     height: calc(100%);
     overflow: auto;
     position: relative;
-    text-align:center;
-    background-color:#eee;
-    .print_main_head{
+    text-align: center;
+    background-color: #eee;
+    .print_main_head {
       position: fixed;
       top: 54px;
       left: 510px;
       padding: 0 20px;
-      line-height: 48px;
-      // background-color: #ffffff;
+      line-height: 48px; // background-color: #ffffff;
       display: block;
-      width:calc(100% - 520px);
+      width: calc(100% - 520px);
       height: 48px;
       box-shadow: 1px 3px 10px #eee;
     }
-    .print_main_content{
-      margin:20px auto 0;
-      background-color:#fff;
+    .print_main_content {
+      margin: 20px auto 0;
+      background-color: #fff;
       box-shadow: 1px 1px 20px #ddd;
-      display:block;
-      position:relative;
-      .previewBlock{
-        padding:0;
-        display:block;
-        position:absolute;
-        background-color:rgba(64,158,255,0.2);
+      display: block;
+      position: relative;
+      .previewBlock {
+        padding: 0;
+        display: block;
+        position: absolute;
+        background-color: rgba(64, 158, 255, 0.2);
         border-radius: 3px;
-        color:#666;
+        color: #666;
         box-shadow: 1px 1px 10px #87CEFA;
-        font-size:14px;
+        font-size: 14px;
       }
     }
   }
   .sortable-ghost {
     border: 1px dashed #f00;
     background: #ffe;
+  }
+}
+
+.tms_dialog_import {
+  .bigIconBtn_primary {
+    padding:40px 0;
+    cursor: pointer;
+    text-align: center;
+    i {
+      font-size: 56px;
+      color: #409EFF;
+      margin-bottom:10px;
+    }
+  }
+
+  .bigIconBtn_success {
+    padding:40px 0;
+    cursor: pointer;
+    text-align: center;
+    i {
+      font-size: 56px;
+      color: #67C23A;
+      margin-bottom:10px;
+    }
+  }
+  ul.importTips {
+    li {
+      text-align: left;
+      position:relative;
+      color:#999;
+      padding:3px 0 3px 30px;
+      font-size: 14px;
+    }
+    li:nth-child(1):before{
+      content: '注：';
+      position:absolute;
+      left:0px;
+      top:3px;
+    }
   }
 }

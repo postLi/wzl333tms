@@ -84,3 +84,9 @@ export function getInitializationCheck() {
     return res.data
   })
 }
+
+export function postImportExcel(data) {
+  return fetch.post('/api-system/system/excel/v1/importExcel/',data).then(res => {
+    return res.data
+  })
+}

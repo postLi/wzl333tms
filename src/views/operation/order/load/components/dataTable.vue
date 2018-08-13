@@ -17,7 +17,7 @@
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" width="120" label="运单号">
+        <el-table-column prop="shipSn" width="130" label="运单号">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -31,9 +31,9 @@
         </el-table-column>
         <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
         </el-table-column>
-        <el-table-column prop="cargoName" sortable label="货品名" width="120">
+        <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
@@ -64,7 +64,7 @@
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号" width="120">
+        <el-table-column prop="shipSn" label="运单号" width="130">
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
@@ -105,9 +105,9 @@
         </el-table-column>
         <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
         </el-table-column>
-        <el-table-column prop="cargoName" sortable label="货品名" width="120">
+        <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
       </el-table>
     </div>

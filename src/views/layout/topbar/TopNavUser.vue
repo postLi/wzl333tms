@@ -5,8 +5,6 @@
       placement="bottom-end"
       :popper-options="{'preventOverflow.padding': 0}"
       width="360"
-      @show="hideIframe"
-      @hide="showIframe"
       popper-class="popoveruser"
       trigger="hover">
       <el-row>
@@ -14,12 +12,11 @@
           <img class="user-avatar" :src="avatar">
         </el-col>
         <el-col :span="16">
-          {{ otherinfo.name }}
-          <br>
-          <br>
-          <br>
-          <br>
-          {{ company }}
+          <div class="popoveruser_info_lyy">
+            <p>{{ otherinfo.name }}</p>
+            <p>{{ company }}</p>
+            <p>当前环境： <el-button type="primary" @click="changeView" size="mini" plain>切换</el-button></p>
+          </div>
         </el-col>
         <el-col class="popover-btns" :span="24">
           <el-button-group>
@@ -48,6 +45,9 @@ export default {
       'company'
     ])
   },
+  mounted () {
+    console.log(this.otherinfo)
+  },
   methods: {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
@@ -57,17 +57,9 @@ export default {
     lockScreen() {
       this.$store.dispatch('LockScreen')
     },
-    hideIframe() {
-      if (document.getElementById('senderIframe')) {
-        console.log('iframe:', document.getElementById('senderIframe').contentWindow)
-        document.getElementById('senderIframe').contentWindow.hideChart(true)
-      }
-    },
-    showIframe() {
-      if (document.getElementById('senderIframe')) {
-        console.log('iframe:', document.getElementById('senderIframe').contentWindow)
-        document.getElementById('senderIframe').contentWindow.hideChart(false)
-      }
+    changeView () {
+      console.log('切换环境', this.otherinfo)
+      this.$message({type: 'warning', message: '暂无此功能'})
     }
   }
 }
@@ -125,6 +117,12 @@ export default {
   }
   .popoveruser{
     padding: 10px 0 0;
+    .popoveruser_info_lyy{
+      p {
+        line-height:32px;
+        font-size: 16px;
+      }
+    }
   }
   .popoveruser-avatar{
     text-align: center;

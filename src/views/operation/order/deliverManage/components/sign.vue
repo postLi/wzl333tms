@@ -36,7 +36,7 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { REGEX } from '@/utils/validate'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import { postBatchSign } from '@/api/operation/deliverManage'
 import { getSystemTime } from '@/api/common'
 export default {
@@ -144,26 +144,26 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
+          // this.form.signTime = parseTime(this.form.signTime, '{y}-{m}-{d}')
           const data = objectMerge2({}, this.form)
-          console.log(data)
-          // this.$confirm('此操作将签到, 是否继续?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-            // postBatchSign(data).then(data => {
-            //   this.$message({ type: 'success', message: '签收成功' })
-            //   this.message = true
-            //   this.closeMe()
-            //   this.$emit('message', this.message)
-            // })
-            //   .catch(error => {
-            //     this.$message({ type: 'error', message: '签收失败' })
-            //     this.message = false
-            //     this.closeMe()
-            //     this.$emit('message', this.message)
-            //   })
-          // })
+          this.$confirm('此操作将签到, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            postBatchSign(data).then(data => {
+              this.$message({ type: 'success', message: '签收成功' })
+              this.message = true
+              this.closeMe()
+              this.$emit('message', this.message)
+            })
+              .catch(error => {
+                this.$message({ type: 'error', message: '签收失败' })
+                this.message = false
+                this.closeMe()
+                this.$emit('message', this.message)
+              })
+          })
         }
       })
     }

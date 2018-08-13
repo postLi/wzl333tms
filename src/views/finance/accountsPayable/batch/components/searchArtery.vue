@@ -104,6 +104,11 @@ export default {
   },
   methods: {
     onSubmit() {
+      /**
+       * 发车网点orgid
+         到车网点arriveOrgid
+         结算网点ascriptionOrgid
+       */
       let searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'loadStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')

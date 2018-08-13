@@ -61,7 +61,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="scope.row.amount" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -174,13 +174,13 @@ export default {
         },
         {
           label: '发货方',
-          prop: 'senderCompanyName',
+          prop: 'senderUnit',
           width: '120',
           fixed: false
         },
         {
           label: '收货方',
-          prop: 'receiverCompanyName',
+          prop: 'receiverUnit',
           width: '120',
           fixed: false
         },
@@ -302,13 +302,13 @@ export default {
         },
         {
           label: '发货方',
-          prop: 'senderCompanyName',
+          prop: 'senderUnit',
           width: '120',
           fixed: false
         },
         {
           label: '收货方',
-          prop: 'receiverCompanyName',
+          prop: 'receiverUnit',
           width: '120',
           fixed: false
         },
@@ -432,11 +432,11 @@ export default {
             this.isGoReceipt = false
           }
           this.rightTable.forEach(e => { // 左边表格减去右边的数据
+            e.inputAbnormalFee = e.unpaidFee
             let item = this.leftTable.indexOf(e)
             if (item !== -1) {
               this.leftTable.splice(item, 1)
             }
-            e.inputAbnormalFee = e.unpaidFee
           })
           this.orgLeftTable = objectMerge2([], this.leftTable)
         })

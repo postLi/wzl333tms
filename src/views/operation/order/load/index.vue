@@ -729,8 +729,8 @@ export default {
       // 时间处理
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
-      this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
-      this.formModel.planArrivedTime = parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
+      this.formModel.requireArrivedTime = this.formModel.requireArrivedTime?parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59': ''
+      this.formModel.planArrivedTime = this.formModel.planArrivedTime? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
@@ -750,8 +750,8 @@ export default {
       // 时间处理
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
-      this.formModel.requireArrivedTime = parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
-      this.formModel.planArrivedTime = parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59'
+      this.formModel.requireArrivedTime =this.formModel.requireArrivedTime? parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.formModel.planArrivedTime =this.formModel.planArrivedTime? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表

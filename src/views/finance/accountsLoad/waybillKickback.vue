@@ -176,13 +176,13 @@ export default {
         },
         {
           label: '发货方',
-          prop: 'senderCompanyName',
+          prop: 'senderUnit',
           width: '120',
           fixed: false
         },
         {
           label: '收货方',
-          prop: 'receiverCompanyName',
+          prop: 'receiverUnit',
           width: '120',
           fixed: false
         },
@@ -304,13 +304,13 @@ export default {
         },
         {
           label: '发货方',
-          prop: 'senderCompanyName',
+          prop: 'senderUnit',
           width: '120',
           fixed: false
         },
         {
           label: '收货方',
-          prop: 'receiverCompanyName',
+          prop: 'receiverUnit',
           width: '120',
           fixed: false
         },
