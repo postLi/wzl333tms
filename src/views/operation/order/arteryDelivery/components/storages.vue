@@ -758,9 +758,15 @@ export default {
         this.loading = false
         this.$nextTick(() => { // 默认设置实到数量为配载数量
           this.detailList.forEach(e => {
-            e.actualAmount = e.actualAmount
-            e.actualWeight = e.actualWeight
-            e.actualVolume = e.actualVolume
+            if (this.isAlFun || this.isModify) {
+              e.actualAmount = e.loadAmount
+              e.actualWeight = e.loadWeight
+              e.actualVolume = e.loadVolume
+            } else {
+              e.actualAmount = e.actualAmount
+              e.actualWeight = e.actualWeight
+              e.actualVolume = e.actualVolume
+            }
             // e.actualAmount = e.loadAmount - e.actualAmount
             // e.actualWeight = e.loadWeight - e.actualWeight
             // e.actualVolume = e.loadVolume - e.actualVolume

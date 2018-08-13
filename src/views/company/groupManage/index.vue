@@ -16,8 +16,7 @@
 
 
         <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span :class="node.label">{{ node.label }}</span>
-
+        <span v-bind:class="[data.status === 31 ? 'treeClass' : 'treeAct'] ">{{ node.label }}</span>
       </span>
 
         </el-tree>
@@ -266,6 +265,13 @@ export default {
       },
       data() {
         return {
+          // treeClass: {
+          //   background: '#c0c4cc'
+          // },
+          // treeAct: {
+          //   background: '#c0c4cc'
+          // },
+    
           btnsize: 'mini',
               // 加载状态
           loading: true,

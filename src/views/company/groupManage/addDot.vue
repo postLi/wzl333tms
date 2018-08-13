@@ -42,7 +42,7 @@
             <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
               <el-input  v-model="form.responsibleTelephone"  auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
-            
+
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
@@ -59,7 +59,7 @@
             <el-form-item label="详细地址" :label-width="formLabelWidth">
               <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
-          
+
             <!-- <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
               <el-input v-model="form.collectionFee" auto-complete="off" maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
@@ -138,8 +138,8 @@
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" maxlength="13" clearable>
-              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"></el-input>
+            <el-form-item label="客服电话" :label-width="formLabelWidth" prop=""  clearable>
+              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" v-number-only maxlength="13"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
               <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" ></el-input>
@@ -236,7 +236,7 @@
 
         }
       }
-  
+
     },
     watch: {
       'form.accountStatus': {
@@ -254,7 +254,7 @@
       doInfo: {
         handler() {
           this.checkShowMessage = false
-  
+
           this.watchDate(this.doInfo)
         },
         immediate: true,
@@ -366,8 +366,6 @@
         if (this.isModify) {
           this.popTitle = '修改网点'
           this.changeDate(this.dotInfo)
-          console.log(this.form)
-          console.log(this.companyId)
           this.form.id = this.dotInfo.id
           this.form.parentId = this.dotInfo.parentId || this.companyId
         } else {

@@ -15,7 +15,11 @@
             <div class="add-fixed">
               <el-input
                 placeholder="请输入内容"
+
+
+                
                 v-model="dictName"
+                ref="dictNameInput"
               >
               </el-input>
               <div class="dep-img">
