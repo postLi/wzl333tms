@@ -4,14 +4,14 @@
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')">到车确定</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">到货入库</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('storage')">到货入库</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>取消到车</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deleteStor')" plain>取消入库</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deselectCar')" plain>取消到车</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deleteStor')" plain>取消入库</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>-->
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导出批次</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出配载</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印配载清单</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('import')" plain>导出批次</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出配载</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印配载清单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">

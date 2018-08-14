@@ -421,7 +421,7 @@
     </div>
     <div class="sBottomBut">
       <div>
-        <el-button >打印</el-button>
+        <!-- <el-button >打印</el-button> -->
         <el-button >导出</el-button>
         <el-button @click="canBtn()">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>

@@ -370,6 +370,7 @@ export default {
       this.form.tmsOrderPickup.pickupName = item.pickupName
       this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
       this.form.tmsOrderPickup.pickupWeight = item.pickupWeight
+      this.form.tmsOrderPickup.pickupVolume = item.pickupVolume
       this.form.tmsOrderPickup.carriage = item.carriage
       this.form.tmsOrderPickup.collectionFee = item.collectionFee
       this.form.tmsOrderPickup.payMethod = item.payMethod
@@ -410,7 +411,7 @@ export default {
       }
       if (this.isCheckedShow) {
         this.checkShowMessage = true
-      }      else {
+      } else {
         this.checkShowMessage = false
       }
     },

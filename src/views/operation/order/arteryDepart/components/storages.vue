@@ -130,8 +130,8 @@
               </div>
               <div class="tab_info">
                 <div class="btns_box_send">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_print" >打印清单</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain class="table_import">导出清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_print" >打印清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">

@@ -5,13 +5,15 @@
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增配载</el-button>
 
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('depart')">发车</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deselectCar')" plain>取消发车</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('depart')">发车</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline
+" @click="doAction('deselectCar')" plain>取消发车</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('sure')">修改</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deleteStor')" plain>取消装车</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>打印合同</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline
+" @click="doAction('deleteStor')" plain>取消装车</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印合同</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
           <span class="dbclickTips">双击查看详情</span>
       </div>

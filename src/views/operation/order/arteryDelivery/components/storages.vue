@@ -133,8 +133,8 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isAlFun" class="table_poptitle">{{popTitle}}</el-button >
 
 
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">打印清单</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">导出</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printer')" plain class="table_export">打印清单</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
@@ -215,6 +215,24 @@
                     <el-table-column prop="shipRemarks" label="运单备注" width="110" sortable>
                     </el-table-column>
                   </el-table>
+
+
+
+
+
+                   <!-- <el-table ref="multipleTable"  :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table> -->
+
                 </div>
               </div>
             </div>
@@ -462,7 +480,9 @@
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
+     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </pop-right>
+ 
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
@@ -474,6 +494,8 @@ import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
 import { objectMerge2, parseTime, closest } from '@/utils/'
+import TableSetup from '@/components/tableSetup'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   data() {
     const validateNum = function(rule, value, callback) {
@@ -529,7 +551,7 @@ export default {
       selected: [],
       // 加载状态
       loading: true,
-      // setupTableVisible: false,
+      setupTableVisible: false,
       // AddCustomerVisible: false,
       formMode1: {
       },
@@ -561,13 +583,154 @@ export default {
         'vo': {
           'loadId': 1
         }
+      },
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      }, {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '150',
+        fixed: true
+      }, {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '120',
+        fixed: false
+      }, {
+        label: '应到件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '应到重量',
+        prop: 'loadWeight',
+        width: '100',
+        fixed: false
+      }, {
+        label: '应到体积',
+        prop: 'loadVolume',
+        width: '100',
+        fixed: false
+      },
+      // v-if="isAlFun"   入库后的
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        fixed: false,
+
+        // slot: (scope) => {
+        //   return isAlFun = isAlFun ? isAlFun : ''
+        // }
+      }, {
+        label: '实到重量',
+        prop: 'actualWeight',
+        width: '100',
+        fixed: false
+      }, {
+        label: '实到体积',
+        prop: 'actualVolume',
+        width: '100',
+        fixed: false
+      },
+      // v-if="!isAlFun"  入库前的
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '实到重量',
+        prop: 'actualWeight',
+        width: '100',
+        fixed: false
+      }, {
+        label: '实到体积',
+        prop: 'actualVolume',
+        width: '100',
+        fixed: false
+      },
+      //
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载重量',
+        prop: 'loadWeight',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载体积',
+        prop: 'loadVolume',
+        width: '100',
+        fixed: false
+      }, {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '100',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '100',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '130',
+        fixed: false
+      }, {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '110',
+        fixed: false
       }
+      ]
     }
   },
   components: {
     popRight,
     SelectTree,
-    selectType
+    selectType,
+    TableSetup
 
   },
   computed: {
@@ -874,12 +1037,8 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
       // 判断是否有选中项
-      if (!this.selected.length) {
+      if (!this.selected.length && type !== 'export' && type !== 'printer') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -888,6 +1047,22 @@ export default {
         return false
       }
       switch (type) {
+                // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.detailList,
+            columns: this.tableColumn,
+            name: '批次详情'
+          })
+          break
+          // 打印
+        case 'printer':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.detailList,
+            columns: this.tableColumn,
+            name: '批次详情'
+          })
+          break
         // 添加客户
         case 'sure':
           let data
@@ -908,7 +1083,7 @@ export default {
             if (this.isAlFun) {
               this.$message({
                 type: 'info',
-                message: '不能再次到车入库'
+                message: ' 不能再次到车入库'
               })
               return false
             }
@@ -946,18 +1121,6 @@ export default {
             })
           }
           break
-          // 导出数据
-        case 'export':
-          const ids2 = this.selected.map(el => {
-            return el.customerId
-          })
-          getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
-          })
-          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -993,6 +1156,10 @@ export default {
       if (p) {
         p.classList.add('trackactive')
       }
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
   // }

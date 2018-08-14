@@ -5,18 +5,18 @@
     <div class="tab_info">
       <div class="btns_box">
 
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('storage')">创建对账单</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('completion')">对账完成</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('cancelCom')">取消完成</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-plus" plain @click="doAction('storage')">创建对账单</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-tickets" plain @click="doAction('completion')">对账完成</el-button>
+        <el-button type="info" :size="btnsize" icon="el-icon-error" plain @click="doAction('cancelCom')">取消完成</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')">修改查看</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')">删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
 
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
+        <!-- <el-table
           ref="multipleTable"
           :data="usersArr"
           stripe
@@ -215,22 +215,22 @@
         >
         </el-table-column>
 
+        </el-table> -->
+
+
+
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+         <template v-for="column in tableColumn">
+           <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
-
-
-
-        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
-          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
-          <!--<template v-for="column in tableColumn">-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">-->
-              <!--<template slot-scope="scope">-->
-                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>-->
-                <!--<span v-else v-html="column.slot(scope)"></span>-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-          <!--</template>-->
-        <!--</el-table>-->
 
 
       </div>
@@ -458,13 +458,10 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      // if(type==='import'){
-      //   this.showImport()
-      //   return false
-      // }
+    
       // 判断是否有选中项
 
-      if (!this.selected.length && type !== 'storage') {
+      if (!this.selected.length && type !== 'storage'  && type !== 'print'  && type !== 'export' ) {
         this.$message({
             message: '请选择要操作的对账单~',
             type: 'warning'
@@ -598,6 +595,13 @@ export default {
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
             name: '承运商全部明细'
+          })
+          break;
+                          // 导出
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn
           })
           break
       }
