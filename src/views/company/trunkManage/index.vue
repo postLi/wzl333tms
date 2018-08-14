@@ -157,6 +157,7 @@
     </div>
     <AddCustomer :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'truck'"></ImportDialog>
   </div>
 </template>
 <script>
@@ -166,6 +167,7 @@ import TableSetup from './components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import ImportDialog from '@/components/importDialog'
 
 export default {
   name: 'trunkManage',
@@ -173,7 +175,8 @@ export default {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    ImportDialog
   },
   computed: {
     ...mapGetters([
@@ -199,6 +202,7 @@ export default {
       total: 0,
       // 加载状态
       loading: true,
+      importDialogVisible: false,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -258,12 +262,9 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
+      
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'import') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -338,6 +339,9 @@ export default {
             })
           })
           break
+        case 'import':
+        this.importDialogVisible = true
+        break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()

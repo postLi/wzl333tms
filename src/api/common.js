@@ -89,4 +89,7 @@ export function postImportExcel(data) {
   return fetch.post('/api-system/system/excel/v1/importExcel/',data).then(res => {
     return res.data
   })
+  .catch(error => {
+    return error.data
+  })
 }

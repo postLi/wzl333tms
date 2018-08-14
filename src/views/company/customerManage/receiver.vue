@@ -119,7 +119,7 @@
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
-    <ImportDialog :popVisible="importDialogVisible" @close="closeImportDialog" @success="fetchData" :info="importInfo"></ImportDialog>
+    <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'sender'"></ImportDialog>
   </div>
 </template>
 <script>
@@ -285,7 +285,7 @@ export default {
           })
           break
         case 'import':
-          this.showImport()
+          this.importDialogVisible = true
         break
       }
       // 清除选中状态，避免影响下个操作
@@ -308,14 +308,6 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
-    },
-    showImport() {
-      // 显示导入窗口
-      this.$set(this.importInfo, 'download', this.$const.CUSTOMER_RECEIVER_EXCEL) // 下载链接 $const 常量
-      this.importDialogVisible = true
-    },
-    closeImportDialog () {
-      this.importDialogVisible = false
     }
   }
 }

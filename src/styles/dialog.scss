@@ -157,40 +157,100 @@ $dialogHeader_bgcolor: #e6e6e6;
 }
 
 .tms_dialog_import {
-  .bigIconBtn_primary {
-    padding:40px 0;
-    cursor: pointer;
-    text-align: center;
-    i {
-      font-size: 56px;
-      color: #409EFF;
-      margin-bottom:10px;
+  .el-dialog__body {
+    min-height:350px;
+    max-height:500px;
+    height:100%;
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .import_result{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction: column;
+    overflow:auto;
+    p{
+      // padding:0 0 10px 0 ;
     }
   }
-
-  .bigIconBtn_success {
-    padding:40px 0;
+  .bigIconBtn_success,
+  .bigIconBtn_primary {
+    padding: 40px 0;
     cursor: pointer;
     text-align: center;
     i {
-      font-size: 56px;
-      color: #67C23A;
-      margin-bottom:10px;
+      margin:10px auto;
     }
+  }
+  .icon-export-btn,
+  .icon-import-btn {
+    display: block;
+    width: 70px;
+    height: 70px;
+  }
+  .icon-import-btn {
+    background-image: url('./assets/png/img-import.png');
+    background-repeat: no-repeat;
+  }
+  .icon-export-btn {
+    background-image: url('./assets/png/img-export.png');
+    background-repeat: no-repeat;
   }
   ul.importTips {
     li {
       text-align: left;
-      position:relative;
-      color:#999;
-      padding:3px 0 3px 30px;
+      position: relative;
+      color: #999;
+      padding: 3px 0 3px 30px;
       font-size: 14px;
     }
-    li:nth-child(1):before{
+    li:nth-child(1):before {
       content: '注：';
-      position:absolute;
-      left:0px;
-      top:3px;
+      position: absolute;
+      left: 0px;
+      top: 3px;
     }
   }
+}
+
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
 }
