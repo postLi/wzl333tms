@@ -281,13 +281,13 @@
 </template>
 <script>
 import { getExportExcel } from '@/api/company/customerManage'
-import { getPostlist,putRefuse,deletebatchDelete,putCancel,putAccept } from '../../../../api/operation/manage'
+import { getPostlist, putRefuse, deletebatchDelete, putCancel, putAccept } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import {objectMerge2} from '@/utils/index'
+import { objectMerge2 } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
@@ -297,23 +297,23 @@ export default {
     AddCustomer
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ]),
-      orgid () {
-        return this.isModify ? this.selectInfo.orgid : this.searchForms.vo.orgid || this.otherinfo.orgid
-      }
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    orgid() {
+      return this.isModify ? this.selectInfo.orgid : this.searchForms.vo.orgid || this.otherinfo.orgid
+    }
   },
-  mounted () {
+  mounted() {
     this.searchForms.vo.orgid = this.otherinfo.orgid
   },
-  data () {
+  data() {
     return {
       tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
-      //加载状态
+      // 加载状态
       loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
@@ -324,184 +324,184 @@ export default {
       selected: [],
 
       searchForms: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
           orderStatus: '',
           orderSn: '',
           createTime: '',
           endTime: ''
         }
       },
-      tableColumn:[
+      tableColumn: [
         {
-          label:'序号',
-          prop:'id',
-          width:'50',
-          fixed:true,
-          slot:(scope) => {
-            return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) +scope.$index + 1
+          label: '序号',
+          prop: 'id',
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) + scope.$index + 1
           }
-        },{
-          label:'订单号',
-          prop:'orderSn',
-          width:'130',
-          fixed:true,
-        },{
-          label:'订单状态',
-          prop:'orerStatusName',
-          width:'110',
-          fixed:true,
-        },{
-          label:'关联运单号',
-          prop:'shipSn',
-          width:'130',
-          fixed:false,
-        },{
-          label:'订单类型',
-          prop:'orderTypeName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'紧急度',
-          prop:'orderEffectiveName',
-          width:'100',
-          fixed:false,
-        },{
-          label:'提货方式',
-          prop:'orderPickupMethodName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'货品名',
-          prop:'cargoName',
-          width:'90',
-          fixed:false,
-        },{
-          label:'件数',
-          prop:'cargoAmount',
-          width:'80',
-          fixed:false,
-        },{
-          label:'重量',
-          prop:'cargoWeight',
-          width:'90',
-          fixed:false,
-        },{
-          label:'体积',
-          prop:'cargoVolume',
-          width:'80',
-          fixed:false,
-        },{
-          label:'包装',
-          prop:'cargoPack',
-          width:'80',
-          fixed:false,
-        },{
-          label:'品种规格',
-          prop:'description',
-          width:'110',
-          fixed:false,
-        },{
-          label:'运费',
-          prop:'shipFee',
-          width:'80',
-          fixed:false,
-        },{
-          label:'付款方式',
-          prop:'orderPayWayName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'创建时间',
-          prop:'createTime',
-          width:'160',
-          fixed:false,
-        },{
-          label:'发货人',
-          prop:'senderName',
-          width:'150',
-          fixed:false,
-        },{
-          label:'发货人电话',
-          prop:'senderMobile',
-          width:'130',
-          fixed:false,
-        },{
-          label:'收货人',
-          prop:'receiverName',
-          width:'150',
-          fixed:false,
-        },{
-          label:'收货人电话',
-          prop:'receiverMobile',
-          width:'130',
-          fixed:false,
-        },{
-          label:'拒绝原因',
-          prop:'refuseReason',
-          width:'150',
-          fixed:false,
-        },{
-          label:'备注',
-          prop:'orderRemarks',
-          width:'120',
-          fixed:false,
-        },{
-          label:'出发城市',
-          prop:'orderFromCityName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'目的城市',
-          prop:'orderToCityName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'开单网点',
-          prop:'orderFromOrgName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'目的网点',
-          prop:'orderToOrgName',
-          width:'110',
-          fixed:false,
-        },{
-          label:'声明价值',
-          prop:'productPrice',
-          width:'110',
-          fixed:false,
-        },{
-          label:'代收款',
-          prop:'agencyFund',
-          width:'90',
-          fixed:false,
-        },{
-          label:'代收款手续费',
-          prop:'commissionFee',
-          width:'130',
-          fixed:false,
-        },{
-          label:'件数单价',
-          prop:'cargoAmount',
-          width:'110',
-          fixed:false,
-        },{
-          label:'重量单价',
-          prop:'weightFee',
-          width:'110',
-          fixed:false,
-        },{
-          label:'体积单价',
-          prop:'volumeFee',
-          width:'110',
-          fixed:false,
+        }, {
+          label: '订单号',
+          prop: 'orderSn',
+          width: '130',
+          fixed: true
+        }, {
+          label: '订单状态',
+          prop: 'orerStatusName',
+          width: '110',
+          fixed: true
+        }, {
+          label: '关联运单号',
+          prop: 'shipSn',
+          width: '130',
+          fixed: false
+        }, {
+          label: '订单类型',
+          prop: 'orderTypeName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '紧急度',
+          prop: 'orderEffectiveName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '提货方式',
+          prop: 'orderPickupMethodName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '90',
+          fixed: false
+        }, {
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '80',
+          fixed: false
+        }, {
+          label: '重量',
+          prop: 'cargoWeight',
+          width: '90',
+          fixed: false
+        }, {
+          label: '体积',
+          prop: 'cargoVolume',
+          width: '80',
+          fixed: false
+        }, {
+          label: '包装',
+          prop: 'cargoPack',
+          width: '80',
+          fixed: false
+        }, {
+          label: '品种规格',
+          prop: 'description',
+          width: '110',
+          fixed: false
+        }, {
+          label: '运费',
+          prop: 'shipFee',
+          width: '80',
+          fixed: false
+        }, {
+          label: '付款方式',
+          prop: 'orderPayWayName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '创建时间',
+          prop: 'createTime',
+          width: '160',
+          fixed: false
+        }, {
+          label: '发货人',
+          prop: 'senderName',
+          width: '150',
+          fixed: false
+        }, {
+          label: '发货人电话',
+          prop: 'senderMobile',
+          width: '130',
+          fixed: false
+        }, {
+          label: '收货人',
+          prop: 'receiverName',
+          width: '150',
+          fixed: false
+        }, {
+          label: '收货人电话',
+          prop: 'receiverMobile',
+          width: '130',
+          fixed: false
+        }, {
+          label: '拒绝原因',
+          prop: 'refuseReason',
+          width: '150',
+          fixed: false
+        }, {
+          label: '备注',
+          prop: 'orderRemarks',
+          width: '120',
+          fixed: false
+        }, {
+          label: '出发城市',
+          prop: 'orderFromCityName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '目的城市',
+          prop: 'orderToCityName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '开单网点',
+          prop: 'orderFromOrgName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '目的网点',
+          prop: 'orderToOrgName',
+          width: '110',
+          fixed: false
+        }, {
+          label: '声明价值',
+          prop: 'productPrice',
+          width: '110',
+          fixed: false
+        }, {
+          label: '代收款',
+          prop: 'agencyFund',
+          width: '90',
+          fixed: false
+        }, {
+          label: '代收款手续费',
+          prop: 'commissionFee',
+          width: '130',
+          fixed: false
+        }, {
+          label: '件数单价',
+          prop: 'cargoAmount',
+          width: '110',
+          fixed: false
+        }, {
+          label: '重量单价',
+          prop: 'weightFee',
+          width: '110',
+          fixed: false
+        }, {
+          label: '体积单价',
+          prop: 'volumeFee',
+          width: '110',
+          fixed: false
         }
       ]
     }
   },
-  mounted(){
+  mounted() {
     this.eventBus.$on('putAcceptOrder', (_ids) => {
       putAccept(_ids).then(res => {
         this.$message({
@@ -509,7 +509,7 @@ export default {
           message: '保存成功!'
         })
         this.fetchData()
-      }).catch(err=>{
+      }).catch(err => {
         this.$message({
           type: 'info',
           message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
@@ -526,47 +526,37 @@ export default {
         this.loading = false
       })
     },
-    fetchData () {
+    fetchData() {
       this.fetchAllList()
     },
-    handlePageChange (obj) {
+    handlePageChange(obj) {
       this.searchForms.currentPage = obj.pageNum
       this.searchForms.pageSize = obj.pageSize
     },
-    getSearchParam (obj) {
+    getSearchParam(obj) {
       this.searchForms.vo = objectMerge2(this.searchForms.vo, obj)
       this.fetchAllList()
     },
-    showImport () {
+    showImport() {
       // 显示导入窗口
     },
-    doAction (type) {
-      // if(type==='export'){
-      //   // 默认选择全部
-      //   // if (this.selected.length === 0) {
-      //   //   SaveAsFile(this.usersArr, this.tableColumn)
-      //   // } else {
-      //   //   // 筛选选中的项
-      //   //   SaveAsFile(this.selected, this.tableColumn)
-      //   // }
-      // }
+    doAction(type) {
       // 判断是否有选中项
-       if(!this.selected.length && type !== 'add' && type !== 'export' && type !== 'acceptance'){
-          this.closeAddCustomer()
-          this.$message({
-              message: '请选择要操作的订单~',
-              type: 'warning'
-          })
-          return false
-      }
-      else if(!this.selected.length && type === 'acceptance' ){
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'acceptance') {
         this.closeAddCustomer()
         this.$message({
+           message: '请选择要操作的订单~',
+           type: 'warning'
+         })
+        return false
+      } else if (!this.selected.length && type === 'acceptance') {
+         this.closeAddCustomer()
+         this.$message({
           message: '请选择要受理的订单~',
           type: 'warning'
         })
-        return false
-      }
+         return false
+       }
       switch (type) {
         case 'export':
           SaveAsFile({
@@ -580,66 +570,64 @@ export default {
           //   // 筛选选中的项
           //   SaveAsFile(this.selected, this.tableColumn)
           // }
-          break;
+          break
           // 添加客户
-          case 'add':
-              this.isModify = false
-              this.isDbclick = false
-            this.selectInfo = {}
-              this.openAddCustomer()
-              break;
-              //受理  acceptance
-          case 'acceptance':
-            this.isModify = false
-            this.isDbclick = false
-            this.closeAddCustomer()
-            this.selectInfo = this.selected[0]
-            if(this.selected.length > 1){
-              this.$message({
+        case 'add':
+          this.isModify = false
+          this.isDbclick = false
+          this.selectInfo = {}
+          this.openAddCustomer()
+          break
+              // 受理  acceptance
+        case 'acceptance':
+          this.isModify = false
+          this.isDbclick = false
+          this.closeAddCustomer()
+          this.selectInfo = this.selected[0]
+          if (this.selected.length > 1) {
+            this.$message({
                 message: '每次只能修改单条数据~',
                 type: 'warning'
               })
-            }
-            if(this.selected[0].orderStatus === 213){
-              this.eventBus.$emit('showCreateOrder',{
+          }
+          if (this.selected[0].orderStatus === 213) {
+            this.eventBus.$emit('showCreateOrder', {
                 preid: this.selected[0].id
               })
 
             //  订单至少需要一个预订单，点击受理跳转到开单页面
-            }else if(this.selected[0].orerStatusName === "已受理" ) {
+          } else if (this.selected[0].orerStatusName === '已受理') {
               this.$message({
                 message: '订单已经受理了~',
                 type: 'warning'
               })
               return false
-            }
-            else if(this.selected[0].orderStatus === 216 ) {
+            } else if (this.selected[0].orderStatus === 216) {
               this.$message({
                 message: '已作废的运单不可以受理~',
                 type: 'warning'
               })
               return false
-            }else{
+            } else {
               return false
             }
-            break;
+          break
           // 修改
-          case 'modify':
+        case 'modify':
 
-          if(this.selected.length > 1){
-                  this.$message({
-                      message: '每次只能修改单条数据~',
-                      type: 'warning'
-                  })
-              }
-            else {
-            if(this.selected[0].orderStatus === 213){
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          } else {
+            if (this.selected[0].orderStatus === 213) {
               this.openAddCustomer()
 
               this.isModify = true
               this.isDbclick = false
               this.selectInfo = this.selected[0]
-            }else{
+            } else {
               this.$message({
                 message: '未受理才能修改~',
                 type: 'warning'
@@ -647,15 +635,14 @@ export default {
               this.$refs.multipleTable.clearSelection()
               this.closeAddCustomer()
             }
-
           }
 
-              break;
+          break
         // 作废
         case 'cancel':
           this.closeAddCustomer()
-          if(this.selected[0].orderStatus == 213){
-            let _deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
+          if (this.selected[0].orderStatus == 213) {
+            const _deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
             let _ids = this.selected.map(item => {
               return item.id
             })
@@ -671,25 +658,24 @@ export default {
                   message: '保存成功!'
                 })
                 this.fetchData()
-              }).catch(err=>{
+              }).catch(err => {
                 this.$message({
                   type: 'info',
                   message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
                 })
               })
-
             }).catch(() => {
               this.$message({
                 type: 'info',
                 message: '已取消操作'
               })
             })
-          }else if(this.selected[0].orderStatus === 214){
+          } else if (this.selected[0].orderStatus === 214) {
             this.$message({
               message: '已受理的订单不可以作废~',
               type: 'warning'
             })
-          }else{
+          } else {
             this.$message({
               message: '已作废的订单不可以作废~',
               type: 'warning'
@@ -697,29 +683,29 @@ export default {
             this.$refs.multipleTable.clearSelection()
           }
 
-          break;
+          break
         // 拒绝 'refuse':
-          case 'refuse':
+        case 'refuse':
 
-            this.closeAddCustomer()
-            if(this.selected[0].orderStatus == 213){
-              //=>todo 删除多个
-              let ids = this.selected.map(item => {
+          this.closeAddCustomer()
+          if (this.selected[0].orderStatus == 213) {
+              // =>todo 删除多个
+            let ids = this.selected.map(item => {
                 return item.id
               })
-              ids = ids.splice(',')
-              this.$prompt('拒绝原因', '拒绝订单', {
+            ids = ids.splice(',')
+            this.$prompt('拒绝原因', '拒绝订单', {
 
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-              }).then((value ) => {
-                let refuseReason = value.value
-                let data = {
-                    ids ,
-                    refuseReason
-                  }
-                 data.ids = ids
+              }).then((value) => {
+                const refuseReason = value.value
+                const data = {
+                  ids,
+                  refuseReason
+                }
+                data.ids = ids
                 data.refuseReason = refuseReason
                 putRefuse(data).then(res => {
                   this.loading = false
@@ -728,13 +714,12 @@ export default {
                     message: '保存成功!'
                   })
                   this.fetchData()
-                }).catch(err=>{
+                }).catch(err => {
                   this.$message({
                     type: 'info',
                     message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
                   })
                 })
-
               }).catch(() => {
                 this.$message({
                   type: 'info',
@@ -742,13 +727,13 @@ export default {
                 })
                 this.loading = false
               })
-            }else if(this.selected[0].orderStatus === 214){
+          } else if (this.selected[0].orderStatus === 214) {
               this.$message({
                 message: '已受理的订单不可以拒绝~',
                 type: 'warning'
               })
               return false
-            }else{
+            } else {
               this.$message({
                 message: '该订单不可以拒绝~',
                 type: 'warning'
@@ -757,18 +742,17 @@ export default {
               return false
             }
 
-            break;
+          break
           // 删除
-          case 'delete':
-            this.closeAddCustomer()
-            if(this.selected[0].orderStatus === 213 || this.selected[0].orderStatus === 215 || this.selected[0].orderStatus === 216){
-
-              let deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
-              let ids = this.selected.map(item => {
+        case 'delete':
+          this.closeAddCustomer()
+          if (this.selected[0].orderStatus === 213 || this.selected[0].orderStatus === 215 || this.selected[0].orderStatus === 216) {
+            const deleteIt = this.selected.length > 1 ? this.selected.length + '条' : this.selected[0].orderSn
+            let ids = this.selected.map(item => {
                 return item.id
               })
-              ids = ids.length > 1 ? ids.join(',') : ids
-              this.$confirm('确定要删除 ' + deleteIt + ' 订单号吗？', '提示', {
+            ids = ids.length > 1 ? ids.join(',') : ids
+            this.$confirm('确定要删除 ' + deleteIt + ' 订单号吗？', '提示', {
                 confirmButtonText: '删除',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -779,26 +763,24 @@ export default {
                     message: '删除成功!'
                   })
                   this.fetchData()
-                }).catch(err=>{
+                }).catch(err => {
                   this.$message({
                     type: 'info',
                     message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
                   })
                 })
-
               }).catch(() => {
                 this.$message({
                   type: 'info',
                   message: '已取消删除'
                 })
               })
-            }else if(this.selected[0].orderStatus === 214){
+          } else if (this.selected[0].orderStatus === 214) {
               this.$message({
                 message: '已受理的订单不可以删除~',
                 type: 'warning'
               })
-            }
-            else{
+            } else {
               this.$message({
                 message: '未受理和已拒绝订单才可以删除~',
                 type: 'warning'
@@ -806,7 +788,7 @@ export default {
               this.$refs.multipleTable.clearSelection()
             }
 
-              break;
+          break
           // 导出数据
           // case 'export':
           //     let ids2 = this.selected.map(el => {
@@ -823,26 +805,26 @@ export default {
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable () {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-    openAddCustomer () {
+    openAddCustomer() {
       this.AddCustomerVisible = true
     },
-    closeAddCustomer () {
+    closeAddCustomer() {
       this.AddCustomerVisible = false
     },
-    clickDetails(row, event, column){
+    clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection (selection) {
+    getSelection(selection) {
       this.selected = selection
     },
-    getDbClick(row, event){
-      if(this.isModify){
+    getDbClick(row, event) {
+      if (this.isModify) {
         this.closeSetupTable()
         this.$refs.multipleTable.clearSelection()
       }

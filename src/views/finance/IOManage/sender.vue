@@ -316,12 +316,6 @@ export default {
 
           })
           this.$refs.multipleTable.clearSelection()
-          // if (this.selected.length === 0) {
-          //   SaveAsFile(this.usersArr, this.tableColumn)
-          // } else {
-          //   // 筛选选中的项
-          //   SaveAsFile(this.selected, this.tableColumn)
-          // }
           break
         // 新增
         case 'storage':
