@@ -149,15 +149,15 @@
           <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 'auto'" class="addButtonTh" :fixed="item.isfixed !== 0" :class="{'required': item.fieldProperty.indexOf('cargoName')!==-1 ||  item.fieldProperty.indexOf('cargoAmount')!==-1}" :label="item.fieldName">
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
-                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoName'" :required="scope.$index === 0 ? true : false" :rules="{ validator: scope.$index === 0 ? validateIsEmpty('货品名不能为空！') : '', trigger: 'blur' }">
-                    <querySelect size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoName'" :rules="{ validator: scope.$index === 0 ? validateIsEmpty2(item.fieldProperty, scope.$index,'货品名不能为空！') : '' }">
+                    <querySelect getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
                   <querySelect size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
-                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0('货品件数不能小于0！') : '', trigger: 'blur' }">
+                  <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0(item.fieldProperty, scope.$index,'货品件数不能小于0！') : '' }">
                   <el-input v-number-only size="mini" maxlength="20"
                   v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
                   </el-form-item>
@@ -942,13 +942,25 @@ export default {
       } */
       // 控制不提交的时候不做提示
       if (this.isCheckedShow) {
-        this.$message.error(msg)
+        // this.$message.error(msg)
       }
     },
-    validateIsEmptyOr0(msg = '不能为0') {
+    validateIsEmptyOr0(prop, index, msg = '不能为0') {
       return (rule, value, callback) => {
+        value = this.form.cargoList[index][prop]
         const val = value ? parseInt(value, 10) : ''
         if (!val || val < 0) {
+          this.showMessage(msg)
+          callback(new Error())
+        } else {
+          callback()
+        }
+      }
+    },
+    validateIsEmpty2(prop, index, msg = '不能为空！') {
+      return (rule, value, callback) => {
+        value = this.form.cargoList[index][prop]
+        if (!value) {
           this.showMessage(msg)
           callback(new Error())
         } else {

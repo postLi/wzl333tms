@@ -110,7 +110,7 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree remote @change="canadd" v-model="form.parentId"  :disabled="isModify || form.status===31" />
+              <SelectTree @change="canadd" v-model="form.parentId"  :disabled="isModify || form.status===31" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType" :disabled="form.status===31" >
@@ -363,6 +363,7 @@
         console.log('item.index:', item.index)
         if (item && item.index && item.index === 5) {
           this.$message.info('添加的层级数不能超过5层，请重新选择~')
+          this.form.parentId = this.otherinfo.companyId
         }
       },
       watchDate() {

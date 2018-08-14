@@ -1,5 +1,5 @@
 <template>
-  <el-select  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+  <el-select @visible-change="getData"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
         v-if="!listdata.length"
         v-for="item in openGroups"
@@ -87,6 +87,10 @@ export default {
     },
     filterfn: {
       type: Function
+    },
+    remote: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -127,12 +131,20 @@ export default {
     init() {
       if (!this.inited) {
         this.inited = true
-        getAllOrgInfo(this.orgid || this.otherinfo.companyId).then(data => {
-          this.groups = data
-          this.listdata = []
-        }).catch(err => {
-          this.inited = false
-        })
+        this.fetchData()
+      }
+    },
+    fetchData() {
+      getAllOrgInfo(this.orgid || this.otherinfo.companyId).then(data => {
+        this.groups = data
+        this.listdata = []
+      }).catch(err => {
+        this.inited = false
+      })
+    },
+    getData() {
+      if (this.remote) {
+        this.fetchData()
       }
     },
     makefilter(query) {

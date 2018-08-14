@@ -120,9 +120,9 @@
           <div class="clearfix setup-table">
             <div class="setup-left">运单页面</div>
             <div class="setup-right">
-              <el-form-item>
+              <!-- <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.toCityByAdministrativeRegion">到达城市必须选择到行政区</el-checkbox>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox>
                 <!-- <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="value" multiple placeholder="请选择">
@@ -213,7 +213,7 @@
         </el-collapse-item>
         <el-collapse-item name="setup4" title="打印模板设置">
           <div class="clearfix setup-table">
-            <div class="setup-left">运单、标签</div>
+            <div class="setup-left">运单标签设置</div>
             <div class="setup-right">
               <el-form-item>
                 <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
