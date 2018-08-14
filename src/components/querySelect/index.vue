@@ -397,13 +397,16 @@ export default {
           fn = orderManageApi.getRemarkList
           break
         case 'payway':
-          this.queryParam.vo.orgId = this.getOrgid
+          this.canchangeparam = false
+          this.queryParam = {}
+          this.queryParam.orgId = this.getOrgid
+          // this.queryParam.vo.orgId = this.getOrgid
           // this.queryParam.vo.status = 0
           fn = postTmsFfinancialwayList2
           break
       }
       // 设定pageSize参数
-      if (typeof this.queryParam === 'object') {
+      if (typeof this.queryParam === 'object' && this.canchangeparam) {
         this.queryParam.pageSize = this.count
         // 处理传过来的额外参数
         if (typeof this.queryParam.vo === 'object') {
