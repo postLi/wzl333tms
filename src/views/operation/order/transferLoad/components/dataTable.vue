@@ -129,7 +129,7 @@
 <script>
 import transferTable from '@/components/transferTable'
 import selectType from '@/components/selectType/index'
-import { getTotal } from '@/utils/'
+import { getTotal, getSummaries } from '@/utils/'
 
 export default {
   props: {
@@ -169,49 +169,8 @@ export default {
   },
   methods: {
     getSum(param, type) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (type !== 'left') {
-          if (index === 1 || index === 2 || index === 10) {
-            sums[index] = data.length + '单'
-            return
-          }
-          if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9) {
-            sums[index] = ''
-            return
-          }
-        } else {
-          if (index === 1 || index === 2) {
-            sums[index] = data.length + '单'
-            return
-          }
-          if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19) {
-            sums[index] = ''
-            return
-          }
-        }
-
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = '-'
-        }
-      })
-      return sums
+      const propsArr = ['_index|1|单', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
+      return getSummaries(param, propsArr)
     },
     getSumRight(param) { // 右边表格合计-自定义显示
       return this.getSum(param, 'right')

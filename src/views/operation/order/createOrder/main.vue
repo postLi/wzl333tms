@@ -1011,10 +1011,10 @@ export default {
         return Promise.resolve(this.dataCache['allSeting'])
       } else { */
       return getAllSetting({
-          orgid: this.otherinfo.orgid,
-          type: '',
-          module: 'order'
-        })
+        orgid: this.otherinfo.orgid,
+        type: '',
+        module: 'order'
+      })
       // }
     },
     // 获取网点信息
@@ -1233,7 +1233,7 @@ export default {
         this.$set(this.form.cargoList, 0, objectMerge2(this.cargoList[0], this.cargoObject))
         // this.$set(this.form.cargoList, 1, objectMerge2(this.cargoList[1], this.cargoObject))
         console.log('theFeeConfig:', this.cargoObject, this.cargoList)
-      } else{
+      } else {
         // 如果是本身有数据
 
       }
@@ -1658,8 +1658,8 @@ export default {
       // 城市信息
       this.form.tmsOrderShip.shipFromCityCode = data.orderFromCityCode
       this.form.tmsOrderShip.shipToCityCode = data.orderToCityCode
-      this.fromCityName = data.orderFromCityName
-      this.toCityName = data.orderToCityName
+      this.form.tmsOrderShip.shipFromCityName = data.orderFromCityName
+      this.form.tmsOrderShip.shipToCityName = data.orderToCityName
       // 收发货人信息
       this.form.sender.customerUnit = data.senderUnit
       this.form.sender.customerType = 1
@@ -1684,16 +1684,19 @@ export default {
           cargoData[i] = this.cargoObject[i]
         }
         if (i === 'agencyFund') {
-          cargoData[i] = data.orderAgencyFund
+          cargoData[i] = data.agencyFund
         }
         if (i === 'commissionFee') {
-          cargoData[i] = data.orderProcedureFee
+          cargoData[i] = data.commissionFee
         }
         if (i === 'productPrice') {
           cargoData[i] = data.productPrice
         }
         if (i === 'shipFee') {
           cargoData[i] = data.shipFee
+        }
+        if (i === 'description') {
+          cargoData[i] = data.description
         }
       }
       this.$set(this.form.cargoList, 0, cargoData)
@@ -2091,8 +2094,8 @@ export default {
         for (const item in this.printDataObject) {
           libData.forEach((e, index) => {
             if (e.filedValue === item) {
-               e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-             }
+              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
           })
         }
         CreatePrintPageEnable(libData) // 调打印接口
@@ -2104,28 +2107,28 @@ export default {
         this.setPrintData('order') // 设置数据
         const libData = Object.assign([], data)
         for (const item in this.printDataObject) {
-           libData.forEach((e, index) => {
+          libData.forEach((e, index) => {
             if (e.filedValue === item) {
                e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
              }
           })
-         }
+        }
         CreatePrintPageEnable(data)
       })
     },
     getSelectType() { // 获取提货方式中文
       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => {
         data.forEach(e => {
-           this.DELIVERY_METHODS[e.id] = e.dictName
-         })
+          this.DELIVERY_METHODS[e.id] = e.dictName
+        })
       })
     },
     getShipPayWay() { // 获取付款方式中文
       getSelectType('ship_pay_way', this.otherinfo.orgid).then(data => {
         console.log('ship_pay_way', data, parseInt(this.form.tmsOrderShip.shipPayWay))
         data.forEach(e => {
-           this.PAY_WAY[e.id] = e.dictName
-         })
+          this.PAY_WAY[e.id] = e.dictName
+        })
       })
     },
     setPrintData(type) { // 设置打印的字段
@@ -2162,8 +2165,8 @@ export default {
         this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号吗
         this.$set(obj, 'receiverAddress', this.form.receiver.customerAddress) // 收货地址
         for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
-        obj[item] = this.form.cargoList[0][item]
-      }
+          obj[item] = this.form.cargoList[0][item]
+        }
         console.log('this.form.cargoList[0]', this.form.cargoList[0])
         this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
         this.$set(obj, 'otherfeeOut', this.form.cargoList[0]['otherfeeOut'] ? this.form.cargoList[0]['otherfeeOut'] : '') // 其他费用支出

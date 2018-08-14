@@ -6,20 +6,75 @@ const shouldCalcProperty = ['nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arr
 /**
  * 根据列表数据计算合计值
  * @param {*} param 列表数据
+ * 计算的语法
+ * 属性名 单位为元
+ * 属性名|单位
+ * _index|索引（|单位）
  */
 export function getSummaries(param, propsArr) {
   const { columns, data } = param
   const sums = []
+  // 获取需要计算的属性值列表
+  propsArr = propsArr || shouldCalcProperty
+
   // console.log(columns, data)
   columns.forEach((column, index) => {
     if (index === 0) {
       sums[index] = '总计'
       return
     }
-    const values = data.map(item => Number(item[column.property]))
+    let prop = ''
+
+    let unit = '元'
+    const find = propsArr.filter(el => {
+      // 完全等于属性名
+      if (el === column.property) {
+        prop = el
+        return true
+      }
+
+      const propArr = el.split('|')
+      if (propArr.length > 1) {
+        // 前缀等于属性名
+        if (propArr[0] === column.property) {
+          prop = column.property
+          unit = propArr[1] || ''
+          return true
+        }
+        // 索引位置相等
+        if (propArr[0] === '_index' && parseInt(propArr[1], 10) === index) {
+          prop = '_index'
+          unit = propArr[2] || ''
+          return true
+        }
+      } else {
+        // 没有匹配
+        return false
+      }
+    })
+
     // if (!values.every(value => isNaN(value))) {
-    propsArr = propsArr || shouldCalcProperty
-    if (propsArr.indexOf(column.property) !== -1) {
+    if (find.length) {
+      if (prop === '_index') {
+        sums[index] = data.length + unit
+      } else {
+        const values = data.map(item => Number(item[prop]))
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            // return prev + curr
+            return tmsMath._add(prev, curr)
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] += ' ' + unit
+      }
+    } else {
+      sums[index] = ' - '
+    }
+
+    /* if (propsArr.indexOf(column.property) !== -1) {
       sums[index] = values.reduce((prev, curr) => {
         const value = Number(curr)
         if (!isNaN(value)) {
@@ -29,10 +84,10 @@ export function getSummaries(param, propsArr) {
           return prev
         }
       }, 0)
-      sums[index] += ' 元'
+      sums[index] += ' ' + unit
     } else {
       sums[index] = ' - '
-    }
+    } */
   })
 
   return sums
