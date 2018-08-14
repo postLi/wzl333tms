@@ -18,7 +18,7 @@
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
                     <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point></el-input>
                   </el-form-item>
-                  <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger">
+                  <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
                     </SelectTree>
                   </el-form-item>
@@ -335,7 +335,7 @@ export default {
       batchTypeIdFinishTruck: 48,
       inited: false,
       formModelRules: {
-        arriveOrgid: [{ required: true, trigger: 'change', message: '不能为空' }],
+        // arriveOrgid: [{ required: true, trigger: 'change', message: '不能为空' }],
         apportionTypeName: [{ required: true, trigger: 'change', message: '必选' }],
         truckIdNumber: [{ required: true, trigger: 'change', validator: validateStringEight }],
         dirverName: [{ required: true, trigger: 'change', validator: validateStringTen }],
