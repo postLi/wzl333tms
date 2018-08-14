@@ -579,7 +579,7 @@ export default {
         fixed: true
       },{
         label: '子运单号',
-        prop: 'childShipId',
+        prop: 'childShipSn',
         width: '180',
         fixed: false
       },{

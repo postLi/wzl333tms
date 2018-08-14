@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!DOCTYPE border-collapse>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    table, td, th {
+      border: 1px solid black;
+    }
+    tbody{
+
+    }
+    tbody tr td:nth-of-type(odd){
+      width: 100px;
+      text-align: center;
+   }
+    tbody tr td:nth-of-type(even){
+      width: 150px;
+
+    }
+  </style>
+</head>
+<body>
+    <h3 style="border-bottom: 2px solid #333;margin-left:calc(50% - 350px );margin-right:calc(50% - 200px );font-size:1.6rem;">顺丰2018年07月01日-2018年07月01日对账表</h3>
+    <div style="text-align: right;margin-right:calc(10% );">
+        <span>2018-01-01 &nbsp;&nbsp;</span>
+        <span>2018-08-06</span>
+    </div>
+  <table cellspacing="0">
+    <!--<thead>-->
+    <!--<tr>-->
+      <!--<th>星期一</th>-->
+      <!--<th>星期二</th>-->
+      <!--<th>星期三</th>-->
+      <!--<th>星期四</th>-->
+      <!--<th>星期五</th>-->
+    <!--</tr>-->
+    <!--</thead>-->
+    <tbody>
+        <tr>
+          <td >承运商名称 </td>
+          <td></td>
+          <td>业务负责人</td>
+          <td></td>
+          <td>联系方式</td>
+          <td></td>
+          <td >对账单编号 </td>
+          <td></td>
+          <td>客户编号</td>
+          <td></td>
+          <td>开始时间</td>
+          <td></td>
+        </tr>
+        <tr>
+
+          <td >结束时间 </td>
+          <td></td>
+          <td>结算方式</td>
+          <td></td>
+          <td>账户账号</td>
+          <td></td>
+          <td >账户开户行 </td>
+          <td></td>
+          <td>财务负责人</td>
+          <td></td>
+          <td>联系方式</td>
+          <td></td>
+        </tr>
+        <tr>
+            <td >支付宝 </td>
+            <td></td>
+            <td>微信</td>
+            <td colspan="9"></td>
+        </tr>
+
+    </tbody>
+</table>
+</body>
+<script>
+    function createRec(params) {
+        const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+        const div = document.createElement('div')
+        const h3 = document.createElement('b') // 标题【结算收款单】
+        const infoDiv = document.createElement('div')
+        const table = document.createElement('table')
+        const thead = document.createElement('thead')
+        const tbody = document.createElement('tbody')
+        // 标题
+        const tbodyStr =` <tr>
+          <td >承运商名称 </td>
+          <td>${params.memberName}</td>
+          <td>业务负责人</td>
+          <td>${params.memberName}</td>
+          <td>联系方式</td>
+          <td>${params.memberPersonPhone}</td>
+          <td >对账单编号 </td>
+          <td>${params.checkBillCode}</td>
+          <td>客户编号</td>
+          <td>${params.memberCode}</td>
+          <td>开始时间</td>
+          <td>${params.checkStartTime}</td>
+        </tr>
+        <tr>
+          <td >结束时间 </td>
+          <td>${params.checkEndTime}</td>
+          <td>结算方式</td>
+          <td>${params.settlementType}</td>
+          <td>账户账号</td>
+          <td>${params.bankAccount}</td>
+          <td >账户开户行 </td>
+          <td>${params.bankName}</td>
+          <td>财务负责人</td>
+          <td>${params.financialOfficer}</td>
+          <td>联系方式</td>
+          <td>${params.financialOfficerPhone}</td>
+        </tr>
+        <tr>
+            <td >支付宝 </td>
+            <td>${params.alipayAccount}</td>
+            <td>微信</td>
+            <td colspan="9">${params.wechatAccount}</td>
+        </tr>`
+        h3.innerHTML = '顺丰2018年07月01日-2018年07月01日对账表'
+        let tbodyStr = ''
+
+
+    }
+</script>
+</html>

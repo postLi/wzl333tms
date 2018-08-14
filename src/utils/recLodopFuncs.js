@@ -461,3 +461,63 @@
    document.body.appendChild(div)
    return tableId
  }
+
+ function createRec(params) {
+   console.log(params)
+   const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+   const div = document.createElement('div')
+   const h3 = document.createElement('b') // 标题【结算收款单】
+   const infoDiv = document.createElement('div')
+   const table = document.createElement('table')
+   const thead = document.createElement('thead')
+   const tbody = document.createElement('tbody')
+  // 标题
+   const tbodyStr = ` <tr>
+    <td >承运商名称 </td>
+    <td>${params.memberName}</td>
+    <td>业务负责人</td>
+    <td>${params.memberName}</td>
+    <td>联系方式</td>
+    <td>${params.memberPersonPhone}</td>
+    <td >对账单编号 </td>
+    <td>${params.checkBillCode}</td>
+    <td>客户编号</td>
+    <td>${params.memberCode}</td>
+    <td>开始时间</td>
+    <td>${params.checkStartTime}</td>
+  </tr>
+  <tr>
+    <td >结束时间 </td>
+    <td>${params.checkEndTime}</td>
+    <td>结算方式</td>
+    <td>${params.settlementType}</td>
+    <td>账户账号</td>
+    <td>${params.bankAccount}</td>
+    <td >账户开户行 </td>
+    <td>${params.bankName}</td>
+    <td>财务负责人</td>
+    <td>${params.financialOfficer}</td>
+    <td>联系方式</td>
+    <td>${params.financialOfficerPhone}</td>
+  </tr>
+  <tr>
+      <td >支付宝 </td>
+      <td>${params.alipayAccount}</td>
+      <td>微信</td>
+      <td colspan="9">${params.wechatAccount}</td>
+  </tr>`
+   h3.innerHTML = '顺丰2018年07月01日-2018年07月01日对账表'
+  // let tbodyStr = ''
+
+  // thead.innerHTML = theadStr
+   tbody.innerHTML = tbodyStr
+  //  infoDiv.innerHTML = infoStr
+   div.appendChild(h3)
+   div.appendChild(infoDiv)
+   table.appendChild(thead)
+   table.appendChild(tbody)
+   div.appendChild(table)
+
+   document.body.appendChild(div)
+   return tableId
+ }

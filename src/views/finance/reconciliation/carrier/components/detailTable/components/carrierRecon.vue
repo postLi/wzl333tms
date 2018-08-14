@@ -706,7 +706,7 @@
     <div class="sBottomBut">
       <div>
         <!-- <el-button >打印</el-button> -->
-        <el-button >导出</el-button>
+        <el-button @click="export1">导出</el-button>
         <el-button @click="canBtn">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
@@ -723,6 +723,7 @@
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
+  import { createRec } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -850,6 +851,13 @@
       this.onSubmit()
     },
     methods: {
+      // export1() {
+      //   alert('111')
+      //   createRec({
+      //     data: this.messageInfo
+      //     //  columns: this.tableColumn
+      //   })
+      // },
       fetchList() {
         this.loading = true
         this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
