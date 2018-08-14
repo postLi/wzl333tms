@@ -108,7 +108,8 @@ export default {
   data() {
     return {
       val: '',
-      listdata: [],
+      queryFn: (el)=>el,
+      // listdata: [],
       types: [],
       dataCache: {
       },
@@ -139,13 +140,23 @@ export default {
         this.fetchData()
       } else {
         this.types = data
-        this.listdata = data
+        // this.listdata = data
       }
     }
+    if(typeof this.filterfn === 'function'){
+      this.queryFn = this.filterfn
+    }
+      
     eventBus.$on('closepopbox', () => {
       console.log('closepopbox selectType:')
       this.$refs.myautocomplete.handleClose()
     })
+  },
+  computed:{
+    listdata(){
+      console.log('this.queryFn',this.queryFn)
+      return this.types.filter(this.queryFn)
+    }
   },
   methods: {
     makefilter(query){
@@ -160,16 +171,17 @@ export default {
       if(query===''){
         filterfn = (el)=>el
       } 
+      console.log('typeof this.filterfn',typeof this.filterfn)
        if(typeof this.filterfn === 'function'){
         filterfn = this.filterfn
       }
-      
-      this.listdata = this.types.filter(filterfn)
+      this.queryFn = filterfn
+      // this.listdata = this.types.filter(filterfn)
     },
     fetchData() {
       var cb = (data) => {
         this.types = data
-        this.listdata = data
+        // this.listdata = data
         // debugger
         CACHE.set(this.type, data)
       }

@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
      <el-form-item label="批次状态" prop="batchTypeId">
-      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit"></selectBatchType>
+      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit" :filterable="false" :filterfn="filterfn"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
       <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
@@ -113,6 +113,9 @@ export default {
       // this.$set(this.searchForm, 'arriveOrgid', this.orgid)
       this.$emit('change', this.searchForm)
       // this.searchForm = Object.assign({}, this.$options.data().searchForm)
+    },
+    filterfn (obj) {
+     return obj.id !== 49
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()
