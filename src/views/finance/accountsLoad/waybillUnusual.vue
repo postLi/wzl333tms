@@ -1,7 +1,7 @@
 <template>
-  <!-- 异动费用结算页面 -->
+  <!-- 中转费结算页面 -->
   <div class="accountsLoad_table">
-     <!-- 搜索框 -->
+    <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
     </div>
@@ -27,7 +27,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -81,6 +81,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+// import { postFindTransferList } from '@/api/finance/accountsPayable'
 import { postFindChangeList } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
@@ -111,8 +112,8 @@ export default {
       selectedRight: [],
       selectedLeft: [],
       isGoReceipt: true,
-      leftTable: [],
       orgLeftTable: [],
+      leftTable: [],
       rightTable: [],
       orgData: {
         left: [],
@@ -402,12 +403,13 @@ export default {
       } else {
         // this.$set(this.searchQuery.vo, 'feeType', this.feeType)
         this.searchQuery = Object.assign({} ,this.getRouteInfo)
+        console.log('this.searchQuery', this.searchQuery)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false
       }
     },
     getList() {
-      let selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
+      let selectListShipSns = Object.assign([], this.$route.query.selectListShipSns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -439,9 +441,9 @@ export default {
             if (item !== -1) {
               this.leftTable.splice(item, 1)
             }
-            e.inputTotalCost = e.unpaidFee
+            e.inputChangeFee = e.unpaidFee
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.orgLeftTable = Object.assign([], this.leftTable)
         })
 
       }
@@ -456,7 +458,7 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      // console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -489,7 +491,7 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
-          e.inputTotalCost = e.unpaidFee
+          e.inputChangeFee = e.unpaidFee
           this.rightTable.push(e)
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 源数据减去被穿梭的数据
@@ -566,12 +568,12 @@ export default {
         this.rightTable.forEach((e, index) => {
           let item = {
             shipId: e.shipId,
-            amount: e.inputTotalCost,
-            inputTotalCost: e.inputTotalCost,
+            amount: e.inputChangeFee,
+            inputChangeFee: e.inputChangeFee,
             shipSn: e.shipSn,
-            dataName: '异动费用'
+            dataName: '中转费'
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+           if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
             this.tableReceiptInfo.push(item)
           }
           item = {}

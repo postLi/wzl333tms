@@ -30,7 +30,8 @@ export function getOrderShipList(data) {
       incomePayType: data.incomePayType,
       settlementId: data.settlementId,
       startTime: data.startTime,
-      endTime: data.endTime
+      endTime: data.endTime,
+      autoTotalAmount: data.autoTotalAmount
     })
     .then(res => {
       return res.data

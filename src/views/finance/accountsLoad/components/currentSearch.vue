@@ -28,7 +28,7 @@ export default {
       this.currentSearch = queryString
       if (queryString.shipSn === undefined || queryString.batchNo) {
         if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
-          this.$emit('change', objectMerge2([], this.info))
+          this.$emit('change', Object.assign([], this.info))
         }
       }
       let leftTable = this.info

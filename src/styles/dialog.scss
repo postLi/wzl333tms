@@ -254,3 +254,14 @@ $dialogHeader_bgcolor: #e6e6e6;
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
+
+
+.tms_dialog_count{
+  .el-range-editor--mini.el-input__inner{
+    width:180px;
+  }
+  p{
+    margin-top:20px;
+    color:#999;
+  }
+}

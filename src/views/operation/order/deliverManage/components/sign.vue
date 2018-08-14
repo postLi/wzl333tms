@@ -9,7 +9,7 @@
           <el-input maxlength="250" v-model.trim="form.signName" auto-complete="off" placeholder="签收人"></el-input>
         </el-form-item>
         <el-form-item label="签收时间:" prop="signTime">
-          <el-date-picker v-model="form.signTime" align="right" type="date" placeholder="选择日期" value-format="timestamp">
+          <el-date-picker v-model="form.signTime" align="right" type="date" placeholder="选择日期" value-format="timestamp" format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="签收类型:" prop="signTypeId">
@@ -89,7 +89,7 @@ export default {
         shipIds: [],
         childShipIds: [],
         orgIds: [],
-        signTime: '',
+        signTime: new Date(),
         signName: '',
         signCocumentTypeId: 0,
         documentNum: '',
@@ -107,6 +107,7 @@ export default {
     dotInfo(newVal) {
       if (newVal) {
         this.form = newVal
+        // this.setSystemTime()
         this.form.signTime = new Date()
         this.orderNum = newVal.shipIds.length
         if (this.orderNum === 0) {
@@ -145,12 +146,12 @@ export default {
         if (valid) {
           this.loading = true
           // this.form.signTime = parseTime(this.form.signTime, '{y}-{m}-{d}')
-          const data = objectMerge2({}, this.form)
-          this.$confirm('此操作将签到, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
+          const data = Object.assign({}, this.form)
+          // this.$confirm('此操作将签到, 是否继续?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
             postBatchSign(data).then(data => {
               this.$message({ type: 'success', message: '签收成功' })
               this.message = true
@@ -158,12 +159,12 @@ export default {
               this.$emit('message', this.message)
             })
               .catch(error => {
-                this.$message({ type: 'error', message: '签收失败' })
+                this.$message({ type: 'error', message: error.text })
                 this.message = false
                 this.closeMe()
                 this.$emit('message', this.message)
               })
-          })
+          // })
         }
       })
     }

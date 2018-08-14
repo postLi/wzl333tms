@@ -643,6 +643,9 @@ export default {
                 this.gotoPage() // 操作成功后跳转到配载列表页面
               })
             })
+            .catch(error => {
+              this.$message({ type: 'error', message: error.errorInfo })
+            })
           } else {
             console.log('这里是添加完成配载', this.loadInfo)
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
@@ -651,6 +654,9 @@ export default {
               this.$nextTick(() => {
                 this.gotoPage()
               })
+            })
+            .catch(error => {
+              this.$message({ type: 'error', message: error.errorInfo })
             })
           }
         })

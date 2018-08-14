@@ -49,11 +49,13 @@
       <div class="fee_btn_transferTable tableItem">
         <!-- 操作按钮区 -->
         <div class="fee_btn_boxs">
+          <el-button :size="btnsize" plain type="primary" @click="doAction('count')" icon="el-icon-printer">智能结算</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit"></dataTable>
+        <Count :popVisible="countVisible" @close="countVisible = false"></Count>
       </div>
     </div>
   </div>
@@ -68,18 +70,21 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
 import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
+import Count from './components/count'
 export default {
   name: 'settleLogIncome',
   components: {
     SelectTree,
     selectType,
     querySelect,
-    dataTable
+    dataTable,
+    Count
   },
   data() {
     return {
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
       loading: true,
+      countVisible: false, // 弹出框默认隐藏
       feeInfo: 'feeInfoOne',
       settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       btnsize: 'mini',
@@ -145,6 +150,9 @@ export default {
           break
         case 'savePrint': // 保存并打印
           break
+        case 'count':
+        this.countVisible = true
+        break
       }
     },
     setFinanceWay(obj) {

@@ -416,6 +416,7 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
+      console.log('this.searchQuery', this.searchQuery)
       if (!this.isFresh) {
         postFindAbnormalList(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
