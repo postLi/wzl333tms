@@ -220,6 +220,7 @@ export default {
       devobj: {
         'childShipId': '' // 子运单id
       },
+      
       rules: {
         signName: [
           // { required: true, trigger: 'blur', validator: validateNameSn }
