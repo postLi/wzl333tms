@@ -823,17 +823,12 @@ export default {
         fixed: false
       }, {
         label: '实际提货费',
-        prop: 'shipFee',
+        prop: 'realityhandlingFee',
         width: '120',
         fixed: false
       }, {
         label: '叉车费',
         prop: 'forkliftFee',
-        width: '120',
-        fixed: false
-      }, {
-        label: '实际装卸费',
-        prop: 'realityhandlingFee',
         width: '120',
         fixed: false
       }, {

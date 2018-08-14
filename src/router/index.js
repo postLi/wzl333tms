@@ -23,33 +23,33 @@ import Components from './module/componentsDemo'
 
 Vue.use(Router)
 
-/**
- * icon : the icon show in the sidebar
- * hidden : if `hidden:true` will not show in the sidebar
- * redirect : if `redirect:noredirect` will not redirct in the levelbar
- * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
- * meta : `{ role: ['admin'] }`  will control the page role
- * noCache 设定是否被缓存默认为 true
- **/
+ /**
+  * icon : the icon show in the sidebar
+  * hidden : if `hidden:true` will not show in the sidebar
+  * redirect : if `redirect:noredirect` will not redirct in the levelbar
+  * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
+  * meta : `{ role: ['admin'] }`  will control the page role
+  * noCache 设定是否被缓存默认为 true
+  **/
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
-  /*   {
-      component: Layout,
-      redirect: '/checklist/index',
-      noDropdown: true,
-      hidden: false,
-      path: '/checklist',
-      children: [{
-        path: '/checklist/index',
-        component: _import('checklist/index'),
-        name: 'checklistpage',
-        meta: {
-          title: '初始化',
-          noCache: false
-        }
-      }]
-    }, */
+/*   {
+    component: Layout,
+    redirect: '/checklist/index',
+    noDropdown: true,
+    hidden: false,
+    path: '/checklist',
+    children: [{
+      path: '/checklist/index',
+      component: _import('checklist/index'),
+      name: 'checklistpage',
+      meta: {
+        title: '初始化',
+        noCache: false
+      }
+    }]
+  }, */
   {
     path: '/',
     component: Layout,
@@ -60,17 +60,17 @@ export const constantRouterMap = [
     name: 'dashboard',
     hidden: true,
     children: [{
-      path: '/dashboard',
-      name: 'dashboard',
-      icon: 'shouye',
-      component: _import('dashboard/index'),
+      path: 'dashboard', name: 'dashboard', icon: 'shouye', component: _import('dashboard/index'),
       meta: { title: '首页', noCache: true }
     }, {
       path: '/checklist/index',
       component: _import('checklist/index'),
       name: 'checklistpage',
       icon: 'btn9_huidanhs',
-      meta: { title: '初始化', noCache: false }
+      meta: {
+        title: '系统体检',
+        noCache: false
+      }
     }]
   }
 ]
@@ -91,8 +91,8 @@ export const asyncRouterMap = [
   Report,
   Company,
   Service,
-  /*   {
-      path: '/createOrder', hidden: true, icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/pop'), meta: { role: ['admin'], title: '创建运单', noCache: true }
-    }, */
+/*   {
+    path: '/createOrder', hidden: true, icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/pop'), meta: { role: ['admin'], title: '创建运单', noCache: true }
+  }, */
   { path: '*', redirect: '/404', hidden: true }
 ]

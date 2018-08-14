@@ -827,17 +827,12 @@ export default {
         fixed: false
       }, {
         label: '实际提货费',
-        prop: 'shipFee',
+        prop: 'realityhandlingFee',
         width: '120',
         fixed: false
       }, {
         label: '叉车费',
         prop: 'forkliftFee',
-        width: '120',
-        fixed: false
-      }, {
-        label: '实际装卸费',
-        prop: 'realityhandlingFee',
         width: '120',
         fixed: false
       }, {
@@ -974,47 +969,41 @@ export default {
           break
               // 签收
         case 'pick':
-              // let idss = this.selected
           const ids = this.selected.filter(el => {
             return el.signStatus !== 227
           })
-              // console.log(ids.length)
           if (ids.length > 1) {
             this.dotInfo = ids
-            // console.log(this.dotInfo)
             this.isModify = true
             this.openAddBatch()
             this.isPick = false
-                // this.show = true
           } else if (ids.length) {
             this.repertoryId = this.selected[0]
             this.isDbclick = false
             this.isPick = false
-                // this.selectInfo = this.selected[0]
             this.openAddSign()
           } else {
-            this.$message({
+            this.$warning({
               message: '不可重复签收',
               type: 'warning'
             })
           }
           break
         case 'amend':
-              // this.repertoryId = this.selected[0]
-              // this.openAddSign()
           if (this.selected.length > 1) {
             this.$message({
-              message: '每次只能修改单条数据',
+              warning: '每次只能修改单条数据',
               type: 'warning'
             })
-          } else {
+          } else if (this.selected[0].signStatus === 227) {
             this.isPick = true
             this.isDbclick = false
             this.repertoryId = this.selected[0]
-                  // this.selectInfo = this.selected[0]
             this.id = this.selected[0].signId
-            console.log(this.id)
+            console.log(this.selected[0].signStatus, 7777)
             this.openAddSign()
+          } else {
+            this.$message.warning('未签收不可修改')
           }
           break
         case 'cancel':

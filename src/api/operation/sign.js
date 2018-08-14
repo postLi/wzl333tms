@@ -48,7 +48,7 @@ export function postPickupSign(id) {
  * 根据ID修改运单签收信息
  */
 export function putXiugai(id, params) {
-  return fetch.put('/api-order/order/sign/v1/?id=' + id, params)
+  return fetch.put('/api-order/order/sign/v1/' + id, params)
 }
 
 /**

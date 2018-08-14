@@ -3,15 +3,21 @@
   <el-header style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
-      <h6>初始化检查：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙你更好的使用系统。</h6>
+      <h6>系统体检：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙您更好的使用系统。</h6>
       <p class="top_ts">（上次检查还有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}项</span>基础数据未维护）</p>
     </div>
     <div class="box_top" v-else-if="type===2">
       <div class="top_content2" >
         <i class="wzlicon"></i>
-        <h6 v-if="!ischecked" id="oTitle1">初始化检查中<el-button type="primary"  plain @click="doAction('check')" class="btn_qx">{{ cancelAni ? '继续检查' : '取消'}}</el-button></h6>
-        <h6 v-if="ischecked" id="oTitle2">初始化检查已完成，有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}</span>项基础功能没维护<el-button type="primary"   plain @click="doAction('agane')" class="btn_qx">重新检查</el-button></h6>
-        <p class="top_ts">当前检查：<span class="center_title">网点管理</span></p>
+        <h6 v-if="!ischecked">初始化检查中<el-button type="primary"  plain @click="doAction('check')" class="btn_qx">{{ cancelAni ? '继续检查' : '取消'}}</el-button></h6>
+        <h6 v-if="ischecked">初始化检查已完成，有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}</span>项基础功能没维护<el-button type="primary"   plain @click="doAction('agane')" class="btn_qx">重新检查</el-button></h6>
+        <div class="top_ts" id="oTitle">
+          <!-- <span class="center_title"  v-for="(item,index) in countList" :key="index" >当前检查：{{item.title}}</span> -->
+          <ul >
+            <!-- <li v-for="(item,index) in countList" :key="index" >当前检查：{{item.title}}</li> -->
+            <li>{{contTitle}}</li>
+          </ul>
+        </div>
       </div>
       <progressbar :cancelAni="cancelAni" :isani="showani" />
     </div>
@@ -26,7 +32,7 @@
     <div class="main_content2" v-else-if="type===2">
       <h6>公司管理</h6>
       <div class="company_content">
-        <ul  id="oDiv" :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
+        <ul :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
           <li v-for="(item, index) in countList" :key="index">
             <p v-if="item.value > 0">
               <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message}}，{{item.message2}}
@@ -141,6 +147,7 @@ export default {
       dialogVisible: false,
       dialogVisiblePerson: false,
       popVisible: false,
+      contTitle: [],
       // printSetOrderVisible: false,
       flog: false,
       countList: [{
@@ -365,6 +372,10 @@ export default {
           break
       }
     },
+    changeTitle(item) {
+      console.log(item + 'uuuuu')
+      this.initSystem()
+    },
     initSystem() {
       this.viewKey = new Date().getTime()
       this.type = 2
@@ -386,6 +397,35 @@ export default {
             resuct++
           }
         }
+        // const oTitle = document.getElementById('oTitle')
+        // const oList = oTitle.querySelectorAll('span')
+        // console.log(oTitle.offsetHeight)
+        // var idx = 0
+        // var len = this.countList.length
+
+        for (var i = 0; i < this.countList.length; i++) {
+          var j = 0
+          var arr = this.countList
+          setTimeout(() => {
+            this.contTitle = arr[j++].title
+            console.log(this.contTitle, 8888)
+          }, i * 100)
+        }
+        // var idx = 0
+        // function slideDown() {
+        //   var t = setInterval(function() {
+        //     if (idx < oList.length) {
+        //       oTitle.offsetHeight += oTitle.offsetHeight
+        //       // oList[idx].style.display = 'block'
+        //       // oTitle1.style.display = 'none'
+        //       // oTitle2.style.display = 'block'
+        //       idx++
+        //     } else {
+        //       clearInterval(t)
+        //     }
+        //   }, 100)
+        // }
+        // slideDown()
         this.$set(this.dataset, 'totals', resuct)
       })
     },
@@ -520,9 +560,13 @@ export default {
           .btn_qx{
             padding: 4px 12px;
             border:1px solid #fff;
-            background:#09abff;
+            background:#409EFF;
             color:#fff;
             margin-left:12px;
+          }
+          .btn_qx:hover{
+            background:#fff;
+            color:#409EFF;
           }
           .top_num{
             color:#ff0000;
@@ -530,10 +574,13 @@ export default {
           }
         }
         .top_ts{
-          margin-top:8px;
+          width: 144px;
+          height: 20px;
           font-size: 16px;
           font-weight: normal;
           color: #fff;
+          overflow: hidden;
+          margin-top: 10px;
           .center_title{
             color:#fff;
           }

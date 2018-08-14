@@ -4,10 +4,6 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <div class="box1">
           <div class="titles">运单信息</div>
-
-
-
-          
           <!-- <el-form-item label="运单号" prop="shipSn" class="label">
             <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item> -->
@@ -216,15 +212,15 @@ export default {
         callback(new Error('只能输入数字从1开始'))
       }
     }
-    const validatereg = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback()
-      } else if (REGEX.ONLY_NUMBER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('只能输入数字'))
-      }
-    }
+    // const validatereg = function(rule, value, callback) {
+    //   if (value === '' || value === null || !value || value === undefined) {
+    //     callback()
+    //   } else if (REGEX.ONLY_NUMBER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('只能输入数字'))
+    //   }
+    // }
     // const validateshipSn = function(rule, value, callback) {
     //   if (value === '' || value === null || !value || value === undefined) {
     //     callback(new Error('请输入运单号'))
@@ -276,8 +272,11 @@ export default {
         abnormalType: [
           { required: true, message: '必选' }
         ],
+        // registerFee: [
+        //   { required: true, validator: validatereg }
+        // ],
         registerFee: [
-          { required: true, validator: validatereg }
+          { required: true, message: '请输入异常金额' }
         ],
         abnormalDescribe: [
           { required: true, message: '必填' }

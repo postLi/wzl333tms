@@ -220,7 +220,7 @@ export default {
       devobj: {
         'childShipId': '' // 子运单id
       },
-      
+
       rules: {
         signName: [
           // { required: true, trigger: 'blur', validator: validateNameSn }
@@ -334,28 +334,10 @@ export default {
       // 查看信息1
       if (this.isDbclick) {
         this.popTitle = '查看信息'
-
-        // if (this.repertoryId.signTypeId) {
-        //   this.form.signTypeId = this.repertoryId.signTypeId
-        // } else {
-        //   this.form.signTypeId = 99
-        // }
-        // this.form.remark = this.repertoryId.signRemark
       } else if (this.isPick) {
         this.popTitle = '修改签收'
-        // if (this.repertoryId.signTypeId) {
-        //   this.form.signTypeId = this.repertoryId.signTypeId
-        // } else {
-        //   this.form.signTypeId = 99
-        // }
-        // this.form.remark = this.repertoryId.signRemark
       } else {
         this.popTitle = '签收录入'
-        // if (this.repertoryId.signTypeId) {
-        //   this.form.signTypeId = this.repertoryId.signTypeId
-        // } else {
-        //   this.form.signTypeId = 99
-        // }
       }
     },
     DelModfiy() {
@@ -464,7 +446,7 @@ export default {
           promiseObj.then(res => {
             // console.log(res);
             this.$message({
-              message: '签收成功~',
+              message: '保存成功~',
               type: 'success'
             })
             this.closeMe()
