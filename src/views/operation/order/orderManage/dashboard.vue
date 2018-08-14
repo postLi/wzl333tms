@@ -23,6 +23,8 @@
           @row-dblclick="showDetail"
           @selection-change="getSelection"
           height="100%"
+          :summary-method="getSumLeft"
+          show-summary
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -70,7 +72,7 @@ import TableSetup from './components/tableSetup'
 import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { parseTime } from '@/utils/index'
+import { parseTime, getSummaries } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 
 export default {
@@ -391,6 +393,10 @@ export default {
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      const propsArr = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
+      return getSummaries(param, propsArr)
+    },
     fetchAllOrder() {
       this.loading = true
       return orderManageApi.getAllShip(this.searchQuery).then(data => {

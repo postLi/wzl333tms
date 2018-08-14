@@ -40,7 +40,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
             <el-form-item prop="tmsOrderShip.shipFromCityName">
-              <querySelect show='select' filterable :getinput="true" search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
+              <querySelect show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -48,7 +48,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
             <el-form-item prop="tmsOrderShip.shipToCityName">
-              <querySelect show='select' ref="tmsOrderShipshipToCityName" filterable :getinput="true" @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
+              <querySelect show='select' ref="tmsOrderShipshipToCityName" filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>

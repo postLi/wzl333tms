@@ -28,6 +28,8 @@
           @row-dblclick="showDetail"
           @selection-change="getSelection"
           height="100%"
+          :summary-method="getSumLeft"
+          show-summary
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
@@ -36,7 +38,7 @@
             fixed
             sortable
             type="selection"
-            width="50">
+            width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column
@@ -74,7 +76,7 @@ import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { parseTime } from '@/utils/index'
+import { parseTime, getSummaries } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 
 export default {
@@ -124,7 +126,7 @@ export default {
       tableColumn: [{
         'label': '运单号',
         'prop': 'shipSn',
-        'width': '100',
+        'width': '150',
         'fixed': true
       }, {
         'label': '运单状态',
@@ -414,6 +416,10 @@ export default {
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      const propsArr = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
+      return getSummaries(param, propsArr)
+    },
     viewDetails(row) {
       this.$router.push({
         path: '/operation/order/createOrder',

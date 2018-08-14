@@ -254,15 +254,15 @@ export default {
           console.log('handkler: ', newVal)
         }
         console.log('handkler2: ', newVal) */
-        // if (!this.inited) {
-        this.findValue(newVal)
-        // }
+        if (!this.inited) {
+          this.findValue(newVal)
+        }
       },
       immediate: false
     },
     handlevalue(newVal) {
-      console.log('handkler3: ', newVal, this.search === this.valuekey, this.search, this.valuekey)
       if (this.search === this.valuekey) {
+        console.log('handlevalue:', this.handlevalue)
         this.$emit('input', this.handlevalue)
       }
       if (this.getinput) {
@@ -451,7 +451,6 @@ export default {
     this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
 
-    console.log('init value:', this.value)
     if (this.value || this.name) {
       this.initFindItem()
     }
@@ -461,13 +460,11 @@ export default {
   methods: {
     initEvent() {
       eventBus.$on('closepopbox', () => {
-        console.log('closepopbox querySelect:')
         this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
       })
     },
     initFindItem() {
       this.initData().then(res => {
-        console.log('get dATA:', this.allData)
         if (this.value) {
           // 遍历已有的数据
           // 假如请求的数据没有包含这个数据呢？
@@ -483,7 +480,6 @@ export default {
         let isfind = false
         this.allData.map(el => {
           if (el[name] === value) {
-            console.log('find name:', value, this.showkey)
             this.handlevalue = el[this.showkey]
             isfind = true
           }
@@ -507,7 +503,6 @@ export default {
         return this.fetchFn().then(data => {
           this.allData = data
           this.searchData = data
-          console.log('this.allData:', this.allData)
         })
       }
       return Promise.resolve([])
@@ -622,7 +617,6 @@ export default {
             this.lastRequest = this.allData.filter(searchFunction)
           }
 
-          console.log('this.allData, this.lastRequest:', this.allData, this.lastRequest)
           cb(this.lastRequest)
         }
       }
