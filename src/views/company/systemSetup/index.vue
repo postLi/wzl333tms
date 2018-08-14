@@ -210,8 +210,10 @@
               </el-form-item>
             </div>
           </div>
+        </el-collapse-item>
+        <el-collapse-item name="setup4" title="打印模板设置">
           <div class="clearfix setup-table">
-            <div class="setup-left">打印模板设置</div>
+            <div class="setup-left">运单、标签</div>
             <div class="setup-right">
               <el-form-item>
                 <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>

@@ -135,6 +135,24 @@ export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage
 }
 
 /**
+ * 获取当前网点的全部用户
+ * @param {*} name 姓名
+ * @param {*} orgid 组织ID
+ */
+export function getAllOrgUser(orgid, name, mobilephone, pageSize = 100, currentPage = 1) {
+  let params = orgid
+  if (typeof orgid !== 'object') {
+    params = { pageSize, currentPage, vo: {
+      name, orgid, mobilephone
+    }
+    }
+  }
+  return fetch.post('/api-system/system/user/v1/findAllInfoByOrgId', params).then(res => {
+    return res.data || { total: 0, list: [] }
+  })
+}
+
+/**
  * 获取指定组织的信息
  * @param {*} orgid 组织id
  */

@@ -119,7 +119,7 @@ import { getAllCustomer } from '@/api/company/customerManage'
 // 获取司机信息
 import { getAllDriver } from '@/api/company/driverManage'
 // 获取员工信息
-import { getAllUser } from '@/api/company/employeeManage'
+import { getAllUser, getAllOrgUser } from '@/api/company/employeeManage'
 // 获取车辆信息
 import { getAllTrunk } from '@/api/company/trunkManage'
 // 获取异常列表、控货列表信息
@@ -292,7 +292,7 @@ export default {
           this.queryParam.vo.mobilephone = ''
           this.queryParam.vo.name = ''
 
-          fn = getAllUser
+          fn = getAllOrgUser
           break
         case 'tocity':
           this.preFn = orderManageApi.getRecently('5')

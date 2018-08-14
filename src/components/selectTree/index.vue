@@ -27,7 +27,7 @@ import { eventBus } from '@/eventBus'
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 /**
- * 将多层级树结构展开未扁平数组，并对每个元素添加层级值index
+ * 将多层级树结构展开为扁平数组，并对每个元素添加层级值index
  */
 function expandGroups(data, i) {
   let res = []
@@ -41,12 +41,12 @@ function expandGroups(data, i) {
   return res
 }
 /**
- * 将多层级树结构展开未扁平数组
+ * 将多层级树结构展开为扁平数组
  */
 function expandGroups2(data) {
   let res = []
   data.map(el => {
-    let ell = {
+    const ell = {
       id: el.id,
       index: el.index,
       name: el.name,
@@ -81,7 +81,7 @@ export default {
       type: Boolean,
       default: true
     },
-    orgid:{
+    orgid: {
       type: [String, Number],
       default: ''
     },
@@ -91,12 +91,12 @@ export default {
   },
   watch: {
     value(newVal) {
-      this.aid = parseInt(newVal,10) || ''
+      this.aid = parseInt(newVal, 10) || ''
       this.init()
     }
   },
   mounted() {
-    this.aid = parseInt(this.value,10) || ''
+    this.aid = parseInt(this.value, 10) || ''
     this.init()
     eventBus.$on('closepopbox', () => {
       console.log('closepopbox selectTree:')
@@ -135,26 +135,23 @@ export default {
         })
       }
     },
-    makefilter(query){
+    makefilter(query) {
       this.query = query
-      let REG = new RegExp(query, 'i')
-      let filterfn = (el)=>{
+      const REG = new RegExp(query, 'i')
+      let filterfn = (el) => {
         console.log(el.name, REG, REG.test(el.name))
         return REG.test(el.name)
       }
-      
 
-      if(query===''){
+      if (query === '') {
         this.listdata = []
         return this.listdata
-      } 
-       if(typeof this.filterfn === 'function'){
+      }
+      if (typeof this.filterfn === 'function') {
         filterfn = this.filterfn
       }
       // this.listdata = this.groups.filter(filterfn)
       this.listdata = expandGroups2(this.groups).filter(filterfn)
-      console.log('this.groups:',this.listdata,expandGroups2(this.groups).filter(filterfn))
-      
     },
     highLight(item, key) {
       if (this.query !== '') {
@@ -167,7 +164,8 @@ export default {
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
     change(val) {
-      this.$emit('change', val)
+      const find = this.openGroups.filter(el => el.id === val)
+      this.$emit('change', find.length ? find[0] : val)
       this.$emit('input', val)
     }
   }
