@@ -209,7 +209,7 @@
             <div class="order-form-item">
               <span class="order-form-label">现付</span>
               <el-form-item prop="tmsOrderShip.shipNowpayFee">
-                <el-input size="mini" maxlength="20" :disabled="shipNowpayFeeDisabled"  v-model="form.tmsOrderShip.shipNowpayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipNowpayFee')" size="mini" maxlength="20" :disabled="shipNowpayFeeDisabled"  v-model="form.tmsOrderShip.shipNowpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -217,7 +217,7 @@
             <div class="order-form-item">
               <span class="order-form-label">到付</span>
               <el-form-item prop="tmsOrderShip.shipArrivepayFee">
-                <el-input size="mini" maxlength="20" :disabled="shipArrivepayFeeDisabled"  v-model="form.tmsOrderShip.shipArrivepayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipArrivepayFee')" size="mini" maxlength="20" :disabled="shipArrivepayFeeDisabled"  v-model="form.tmsOrderShip.shipArrivepayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -225,7 +225,7 @@
             <div class="order-form-item">
               <span class="order-form-label">回单付</span>
               <el-form-item prop="tmsOrderShip.shipReceiptpayFee">
-                <el-input size="mini" maxlength="20" :disabled="shipReceiptpayFeeDisabled"  v-model="form.tmsOrderShip.shipReceiptpayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipReceiptpayFee')" size="mini" maxlength="20" :disabled="shipReceiptpayFeeDisabled"  v-model="form.tmsOrderShip.shipReceiptpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -233,7 +233,7 @@
             <div class="order-form-item">
               <span class="order-form-label">月结</span>
               <el-form-item prop="tmsOrderShip.shipMonthpayFee">
-                <el-input size="mini" maxlength="20" :disabled="shipMonthpayFeeDisabled"  v-model="form.tmsOrderShip.shipMonthpayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipMonthpayFee')" size="mini" maxlength="20" :disabled="shipMonthpayFeeDisabled"  v-model="form.tmsOrderShip.shipMonthpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -1759,6 +1759,26 @@ export default {
       })
       this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
     },
+    // 格式化运费输入框
+    formatShipFee() {
+      this.form.tmsOrderShip.shipNowpayFee = parseFloat(this.form.tmsOrderShip.shipNowpayFee, 10) ? parseFloat(this.form.tmsOrderShip.shipNowpayFee, 10).toFixed(2) : '0.00'
+      this.form.tmsOrderShip.shipArrivepayFee = parseFloat(this.form.tmsOrderShip.shipArrivepayFee, 10) ? parseFloat(this.form.tmsOrderShip.shipArrivepayFee, 10).toFixed(2) : '0.00'
+      this.form.tmsOrderShip.shipMonthpayFee = parseFloat(this.form.tmsOrderShip.shipMonthpayFee, 10) ? parseFloat(this.form.tmsOrderShip.shipMonthpayFee, 10).toFixed(2) : '0.00'
+      this.form.tmsOrderShip.shipReceiptpayFee = parseFloat(this.form.tmsOrderShip.shipReceiptpayFee, 10) ? parseFloat(this.form.tmsOrderShip.shipReceiptpayFee, 10).toFixed(2) : '0.00'
+    },
+    // 智能填充运费
+    setOtherFee(type) {
+      const oldVal = parseFloat(this.form.tmsOrderShip[type], 10) || 0
+      // form.tmsOrderShip.shipMonthpayFee
+      // 如果本身已经有值了，则不参与计算
+      if ((oldVal === 0 || oldVal === '') && this.form.tmsOrderShip.shipTotalFee > 0) {
+        const otherShipFee = tmsMath.sub(this.form.tmsOrderShip.shipTotalFee, this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result()
+
+        if (otherShipFee > 0) {
+          this.form.tmsOrderShip[type] = otherShipFee
+        }
+      }
+    },
     setShipFee(flag) {
       const key = parseInt(this.form.tmsOrderShip.shipPayWay, 10)
       this.shipNowpayFeeDisabled = true
@@ -1810,16 +1830,15 @@ export default {
           this.shipReceiptpayFeeDisabled = false
           this.shipMonthpayFeeDisabled = false
 
-          // this.form.tmsOrderShip.shipNowpayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
+          this.form.tmsOrderShip.shipNowpayFee = this.form.tmsOrderShip.shipTotalFee
 
-          // this.form.tmsOrderShip.shipArrivepayFee = parseFloat(this.form.tmsOrderShip.shipTotalFee / 2, 10).toFixed(2)
-          this.form.tmsOrderShip.shipNowpayFee = tmsMath.div(this.form.tmsOrderShip.shipTotalFee, 2).result()
+          /* this.form.tmsOrderShip.shipNowpayFee = tmsMath.div(this.form.tmsOrderShip.shipTotalFee, 2).result()
 
           this.form.tmsOrderShip.shipArrivepayFee = tmsMath.div(this.form.tmsOrderShip.shipTotalFee, 2).result()
 
           if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee).result() > this.form.tmsOrderShip.shipTotalFee) {
             this.form.tmsOrderShip.shipNowpayFee = tmsMath.sub(this.form.tmsOrderShip.shipNowpayFee, 0.01).result()
-          }
+          } */
 
           break
       }
@@ -2109,8 +2128,8 @@ export default {
         for (const item in this.printDataObject) {
           libData.forEach((e, index) => {
             if (e.filedValue === item) {
-               e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-             }
+              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
           })
         }
         CreatePrintPageEnable(data)
