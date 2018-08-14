@@ -458,7 +458,6 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

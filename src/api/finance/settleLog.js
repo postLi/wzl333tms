@@ -31,7 +31,9 @@ export function getOrderShipList(data) {
       settlementId: data.settlementId,
       startTime: data.startTime,
       endTime: data.endTime,
-      autoTotalAmount: data.autoTotalAmount
+      autoTotalAmount: data.autoTotalAmount,
+      shipSenderName: data.shipSenderName,
+      feeId: data.feeId
     })
     .then(res => {
       return res.data

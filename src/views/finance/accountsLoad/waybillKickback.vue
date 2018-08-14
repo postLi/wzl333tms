@@ -409,7 +409,7 @@ export default {
       }
     },
     getList() {
-      let selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
+      let selectListShipSns = Object.assign([], this.$route.query.selectListShipSns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -422,7 +422,6 @@ export default {
       this.initLeftParams() // 设置searchQuery
 
       if (!this.isFresh) {
-        console.log(this.searchQuery)
         postFindListByFeeType(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListShipSns.forEach(e => {
@@ -444,7 +443,7 @@ export default {
               this.leftTable.splice(item, 1)
             }
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.orgLeftTable = Object.assign([], this.leftTable)
         })
 
       }
@@ -494,6 +493,10 @@ export default {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
           this.rightTable.push(e)
+          // this.leftTable = this.leftTable.filter(el => {
+          //   console.log(el)
+          //   return true
+          // })
           let item = this.leftTable.indexOf(e)
           if (item !== -1) { // 左边表格源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)

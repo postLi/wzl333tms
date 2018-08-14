@@ -120,6 +120,7 @@ export default {
         shipIds: [],
         orgIds: [],
         childShipIds: [],
+        loadIds: [],
         signTime: '',
         signName: '',
         signCocumentTypeId: 0,
@@ -185,6 +186,7 @@ export default {
       this.$set(data, 'shipIds', [])
       this.$set(data, 'orgIds', [])
       this.$set(data, 'childShipIds', [])
+      this.$set(data, 'loadIds', [])
       if (list.length > 0) {
         this.selectDetailList = objectMerge2([], list)
         this.selectDetailList.forEach(e => {
@@ -197,8 +199,12 @@ export default {
           if (!e.orgid || e.orgid === '') {
             e.orgid = null
           }
+          if (!e.loadId || e.loadId === '') {
+            e.loadId = null
+          }
           data.childShipIds.push(e.childShipIds)
           data.orgIds.push(e.orgid)
+          data.loadIds.push(e.loadId)
         })
         // data.shipIds = data.shipIds.join(',')
         // data.childShipIds = data.childShipIds.join(',')

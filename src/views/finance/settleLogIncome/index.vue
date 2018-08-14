@@ -136,7 +136,7 @@ export default {
 
       })
       .catch(error => {
-
+        this.$message({type:'error', message:error.errorInfo || error.text})
       })
 
     },
@@ -183,9 +183,12 @@ export default {
         this.$message({ type: 'success', message: '保存成功！' })
         this.$router.push({ path: './settleLog' })
       })
-        .catch(error => {
-          this.$message({ type: 'error', message: '保存失败！' })
-        })
+      .catch(error => {
+        this.$message({type:'error', message:error.errorInfo || error.text})
+      })
+        // .catch(error => {
+        //   this.$message({ type: 'error', message: '保存失败！' })
+        // })
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
