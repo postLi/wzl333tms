@@ -65,6 +65,11 @@ export default {
       path: '/components/print',
       name: '打印导出',
       component: _import('componentsDemo/print')
+    },
+    {
+      path: '/components/import',
+      name: '批量导入',
+      component: _import('componentsDemo/import')
     }
   ]
 }
