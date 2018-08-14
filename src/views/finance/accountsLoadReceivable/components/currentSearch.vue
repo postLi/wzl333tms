@@ -53,7 +53,10 @@ export default {
       }
       const array = []
       array.push(obj)
-      this.$emit('change', array)
+
+      this.currentSearch = ''
+      this.$emit('change', obj, this.info.indexOf(obj))
+      // this.$emit('change', array)
     }
   }
 }

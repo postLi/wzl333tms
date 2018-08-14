@@ -135,7 +135,7 @@ import { postReceipt } from '@/api/operation/receipt'
 // 获取库存列表
 import { postAllOrderRepertory } from '@/api/operation/repertory'
 // 获取收支方式列表
-import { postTmsFfinancialwayList } from '@/api/finance/financefinancialway'
+import { postTmsFfinancialwayList2 } from '@/api/finance/financefinancialway'
 
 export default {
   props: {
@@ -398,8 +398,8 @@ export default {
           break
         case 'payway':
           this.queryParam.vo.orgId = this.getOrgid
-          this.queryParam.vo.status = 0
-          fn = postTmsFfinancialwayList
+          // this.queryParam.vo.status = 0
+          fn = postTmsFfinancialwayList2
           break
       }
       // 设定pageSize参数

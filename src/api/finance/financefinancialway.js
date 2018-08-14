@@ -13,6 +13,18 @@ export function postTmsFfinancialwayList(params) {
 }
 
 /**
+ * /finance/tmsfinancefinancialway/v1/list2
+ 查询收支方式管理分页信息2
+ * @param params
+ * @returns {*|PromiseLike<T>|Promise<T>}
+ */
+export function postTmsFfinancialwayList2(params) {
+  return fetch.post('/api-finance/finance/tmsfinancefinancialway/v1/getEachOrgFirstFinancialWay/', params).then(res => {
+    return res.data || { list: [], totalCount: 0 }
+  })
+}
+
+/**
  * 插入收支方式管理信息
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
@@ -42,6 +54,6 @@ export function putUpdate(params) {
  * @returns {*}
  */
 export function putStop(id) {
-  return fetch.put('/api-finance/finance/tmsfinancefinancialway/v1/stop/' + id )
+  return fetch.put('/api-finance/finance/tmsfinancefinancialway/v1/stop/' + id)
 }
 

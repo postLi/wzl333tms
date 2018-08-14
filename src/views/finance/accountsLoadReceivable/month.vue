@@ -384,13 +384,20 @@ export default {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-          const item = this.leftTable.indexOf(e)
+          let item = -1
+          this.leftTable.map((el, index) => {
+            if (el.shipSn === e.shipSn) {
+              item = index
+            }
+          })
           if (item !== -1) { // 左边表格源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
-          }
-          const orgItem = this.orgLeftTable.indexOf(e)
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
             this.orgLeftTable.splice(item, 1)
+          }
+          // const orgItem = this.orgLeftTable.indexOf(e)
+
+          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+
           }
         })
         this.selectedRight = [] // 清空选择列表
@@ -423,8 +430,9 @@ export default {
       }
     },
     // 选中的行
-    selectCurrent(obj) {
-      this.leftTable = Object.assign([], obj)
+    selectCurrent(obj, index) {
+      // this.leftTable = Object.assign([], obj)
+      this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []
