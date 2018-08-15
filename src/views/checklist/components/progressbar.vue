@@ -77,7 +77,7 @@ export default {
       width: 100%;
       border-radius: 8px;
       background-color: rgba(0, 203, 102, 1);
-      animation: showAni 1s ease  forwards;
+      animation: showAni 1.2s ease  forwards;
       animation-play-state: paused;
       &.showani{
         animation-play-state: running;

@@ -4,13 +4,13 @@
     <div></div>
     <div class="top_content" v-if="type===1">
       <h6>系统体检：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙您更好的使用系统。</h6>
-      <p class="top_ts">（上次检查还有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}项</span>基础数据未维护）</p>
+      <p class="top_ts">（上次检查还有<span class="top_num">{{ dataset.totals}}项</span>基础数据未维护）</p>
     </div>
     <div class="box_top" v-else-if="type===2">
       <div class="top_content2" >
         <i class="wzlicon"></i>
         <h6 v-if="!ischecked">初始化检查中<el-button type="primary"  plain @click="doAction('check')" class="btn_qx">{{ cancelAni ? '继续检查' : '取消'}}</el-button></h6>
-        <h6 v-if="ischecked">初始化检查已完成，有<span class="top_num">{{flog ? dataset.totals : dataset.totals-1}}</span>项基础功能没维护<el-button type="primary"   plain @click="doAction('agane')" class="btn_qx">重新检查</el-button></h6>
+        <h6 v-if="ischecked">初始化检查已完成，有<span class="top_num">{{dataset.totals}}</span>项基础功能没维护<el-button type="primary"   plain @click="doAction('agane')" class="btn_qx">重新检查</el-button></h6>
         <div class="top_ts" id="oTitle">
           <!-- <span class="center_title"  v-for="(item,index) in countList" :key="index" >当前检查：{{item.title}}</span> -->
           <ul >
@@ -124,7 +124,6 @@ export default {
     // PersonDialog,
     // ManageRemarks
   },
-
   data() {
     return {
       loading: true,
@@ -243,11 +242,12 @@ export default {
       this.loading = false
       var totals = 0
       for (const total in data) {
-        if (data[total] === 0 || data[total] === null) {
+        if (data[total] === 0) {
           totals++
         }
         console.log(data[total], total, '数量')
       }
+      // console.log(totals, 2222)
       if (totals > 0) {
         this.flog = false
       } else {
@@ -377,6 +377,7 @@ export default {
       console.log(item + 'uuuuu')
       this.initSystem()
     },
+
     initSystem() {
       this.viewKey = new Date().getTime()
       this.type = 2
@@ -394,15 +395,10 @@ export default {
         }
         let resuct = 0
         for (const total in data) {
-          if (data[total] === 0 || data[total] === null) {
+          if (data[total] === 0) {
             resuct++
           }
         }
-        // const oTitle = document.getElementById('oTitle')
-        // const oList = oTitle.querySelectorAll('span')
-        // console.log(oTitle.offsetHeight)
-        // var idx = 0
-        // var len = this.countList.length
 
         // for (var i = 0; i < this.countList.length; i++) {
         //   var j = 0
@@ -410,17 +406,24 @@ export default {
         //   setTimeout(() => {
         //     this.contTitle = arr[j++].title
         //     console.log(this.contTitle, 8888)
-        //   }, i * 500)
+        //   }, i * 1000)
         // }
         var idx = 0
+        var arr = this.countList
+        var len = this.countList.length
+        var j = 0
+        const self = this
         function slideDown() {
-          var t = setInterval(function() {
-            if (idx < this.countList.length) {
+          var t = setInterval(() => {
+            if (idx < len) {
+              // console.log(idx, len, arr[j].title, 666666)
+              self.contTitle = arr[j++].title
               idx++
             } else {
               clearInterval(t)
+              idx = 0
             }
-          }, idx * 100)
+          }, 150)
         }
         slideDown()
         this.$set(this.dataset, 'totals', resuct)
@@ -511,7 +514,7 @@ export default {
      margin-top:20px;
     .top_content{
         border:1px solid rgba(188, 188, 188, 1);
-        height: 148px;
+        height: 143px;
         // background-color: #09abff;
         background-image: url(../../assets/checkImg/bgo1.png);
         background-repeat:no-repeat;
@@ -659,11 +662,12 @@ export default {
         min-height: 320px;
         // padding:10px 20px;
         // display:none;
+        margin-top:-11px;
         ul{
           height: 0;
           margin-top:28px;
           overflow: hidden;
-          animation: showUlAni 1s linear  forwards;
+          animation: showUlAni 1.2s linear  forwards;
           animation-play-state: paused;
           &.showani{
             animation-play-state: running;
@@ -673,7 +677,7 @@ export default {
           }
 
           li{
-            height: 50px;
+            // height: 50px;
             line-height: 50px;
             border-bottom:1px solid #ccc;
             padding:0 60px;

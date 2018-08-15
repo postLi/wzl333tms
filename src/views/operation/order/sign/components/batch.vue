@@ -102,17 +102,17 @@ export default {
   },
 
   data() {
-    const validateNum = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
-        callback(new Error('请输入证件号码'))
-      } else if (value.length > 20) {
-        callback(new Error('最多可输入20位'))
-      } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
-        callback()
-      } else {
-        callback(new Error('只能输入字母和数字'))
-      }
-    }
+    // const validateNum = function(rule, value, callback) {
+    //   if (value === '' || value === null || !value || value === undefined) {
+    //     callback(new Error('请输入证件号码'))
+    //   } else if (value.length > 20) {
+    //     callback(new Error('最多可输入20位'))
+    //   } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('只能输入字母和数字'))
+    //   }
+    // }
     return {
       searchCreatTime: +new Date(),
       pickOption2: '',
@@ -141,7 +141,8 @@ export default {
       disabled: false,
       rules: {
         documentNum: [
-          { required: true, trigger: 'blur', validator: validateNum }
+          // { required: true, trigger: 'blur', validator: validateNum }
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, required: true, trigger: 'blur', message: '只能输入字母和数字' }
         ]
       }
     }

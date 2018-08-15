@@ -600,7 +600,7 @@ export default {
           break
         // 删除
         case 'delete':
-          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].shipSn
           // =>todo 删除多个
           let ids = this.selected.map(item => {
             return item.id

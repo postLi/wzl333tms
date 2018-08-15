@@ -270,7 +270,7 @@ export default {
           { required: true, validator: validateNameSn }
         ],
         abnormalType: [
-          { required: true, message: '必选' }
+          { required: true, message: '请选择异常类型', trigger: 'change' }
         ],
         // registerFee: [
         //   { required: true, validator: validatereg }

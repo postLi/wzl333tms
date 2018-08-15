@@ -17,7 +17,7 @@
         <template v-if="form.companyType === 2">
           <div class="info info-require">公司名称</div>
           <el-form-item prop="companyName">
-            <el-input v-model="form.companyName" :maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
+            <el-input v-model.trim="form.companyName" :maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item >
             <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
@@ -200,7 +200,7 @@ export default {
       tooltip: false,
       rules: {
         companyName: [
-          { required: true, message: '请输入公司名称' },
+          // { required: true, message: '请输入公司名称' },
           { min: 2, max: 25, message: '长度在 2 到 25 个字符' }
         ],
         orgid: [
