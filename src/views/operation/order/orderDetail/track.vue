@@ -10,7 +10,7 @@
     </el-row>
     <div class="stepinfo">
       <el-steps direction="vertical">
-      <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" v-for="(item, index) in trackDetail" :key="index">
+      <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
         <span slot="icon" class="location" ></span>
         <template slot="description">
           <el-row class="stepItem">
@@ -285,7 +285,7 @@ export default {
     }
   }
   /* 鼠标划过样式 */
-  .trackactive{
+  .trackactive,.firstactive{
     .modifybtn, .deletebtn{
       display: inline-block;
     }

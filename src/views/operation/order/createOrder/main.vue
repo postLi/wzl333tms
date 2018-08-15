@@ -1640,6 +1640,9 @@ export default {
       // 设置城市名称
       this.fromCityName = data.tmsOrderShip.shipFromCityName
       this.toCityName = data.tmsOrderShip.shipToCityName
+      this.form.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName
+      this.form.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName
+      console.log('data.tmsOrderShip:::', data.tmsOrderShip, this.form.tmsOrderShip)
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
       // this.$set(this.form.cargoList, data.tmsOrderCargoList)
@@ -2500,6 +2503,10 @@ $backgroundcolor: #cbe1f7;
         }
       }
       
+    }
+
+    .el-checkbox__label{
+      font-size: 12px;
     }
     
     /* 收发货表单 */
