@@ -40,7 +40,7 @@
         </router-link>
       </el-tooltip>
       <el-tooltip placement="top">
-        <div slot="content">功能：发货方，承运方之间凭证。
+        <div slot="content"><!-- 功能：发货方，承运方之间凭证。 -->功能：将运单转给第三方承运商
           <!-- <br/>操作：首页，运单列表，创建运单。 -->
         </div>
         <router-link to="/operation/order/transfer" class="flowitem send-04zhongzhuan">
@@ -49,7 +49,7 @@
         </router-link>
       </el-tooltip>
       <el-tooltip placement="top">
-        <div slot="content">功能：开单，网点接货，并未配载出库。
+        <div slot="content">功能：将运单转给第三方承运商
           <!-- <br/>操作：运营管理-库存管理。 -->
         </div>
         <router-link to="/operation/order/repertory" class="flowitem send-06fahuokc">
@@ -66,7 +66,7 @@
           <p>短驳接收</p>
         </router-link>
       </el-tooltip>
-      <el-tooltip content="配载发车" placement="top">
+      <el-tooltip content="功能：在公司网点间走货运输" placement="top">
         <router-link to="/operation/order/arteryDepart" class="flowitem send-08peizai">
           <i class="flowicon peizai"></i>
           <p>配载发车</p>
@@ -93,7 +93,7 @@
           <p>中转外发</p>
         </router-link>
       </el-tooltip>
-      <el-tooltip content="功能：开单收货，网点到货形成库存" placement="top">
+      <el-tooltip content="功能：开单,网点接货,并未配载出库" placement="top">
         <router-link to="/operation/order/repertory" class="flowitem receive-10kucun">
           <i class="flowicon kucun"></i>
           <p>到货库存</p>
