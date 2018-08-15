@@ -404,29 +404,25 @@ export default {
         // var idx = 0
         // var len = this.countList.length
 
-        for (var i = 0; i < this.countList.length; i++) {
-          var j = 0
-          var arr = this.countList
-          setTimeout(() => {
-            this.contTitle = arr[j++].title
-            console.log(this.contTitle, 8888)
-          }, i * 100)
-        }
-        // var idx = 0
-        // function slideDown() {
-        //   var t = setInterval(function() {
-        //     if (idx < oList.length) {
-        //       oTitle.offsetHeight += oTitle.offsetHeight
-        //       // oList[idx].style.display = 'block'
-        //       // oTitle1.style.display = 'none'
-        //       // oTitle2.style.display = 'block'
-        //       idx++
-        //     } else {
-        //       clearInterval(t)
-        //     }
-        //   }, 100)
+        // for (var i = 0; i < this.countList.length; i++) {
+        //   var j = 0
+        //   var arr = this.countList
+        //   setTimeout(() => {
+        //     this.contTitle = arr[j++].title
+        //     console.log(this.contTitle, 8888)
+        //   }, i * 500)
         // }
-        // slideDown()
+        var idx = 0
+        function slideDown() {
+          var t = setInterval(function() {
+            if (idx < this.countList.length) {
+              idx++
+            } else {
+              clearInterval(t)
+            }
+          }, idx * 100)
+        }
+        slideDown()
         this.$set(this.dataset, 'totals', resuct)
       })
     },
@@ -544,7 +540,7 @@ export default {
     }
     .box_top{
       .top_content2{
-        height: 148px;
+        height: 143px;
         line-height: 24px;
         padding: 45px 126px;
         border: 1px solid #bcbcbc;
