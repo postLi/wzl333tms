@@ -24,7 +24,7 @@ export default {
     path: '/operation/order/modifyOrder', hidden: true, icon: 'yygl0_chuangjian', name: 'modifyOrder22', component: _import('operation/order/createOrder/modify'), meta: { role: ['admin'], title: '改单', noCache: false }
   },
   {
-    path: '/operation/order/orderManage', icon: 'yygl2_yundan', name: 'orderManage', component: _import('operation/order/orderManage/index'), meta: { role: ['admin'], title: '运单管理', noCache: false }
+    path: '/operation/order/orderManage', icon: 'yygl2_yundan', name: 'orderManage', component: _import('operation/order/orderManage/index'), meta: { role: ['admin'], title: '运单管理', noCache: true }
   },
   {
     path: '/operation/order/shortDepart', icon: 'yygl5_duanbo', name: 'shortDepart', component: _import('operation/order/shortDepart/index'), meta: { role: ['admin'], title: '短驳管理', noCache: false }
@@ -36,7 +36,7 @@ export default {
   }, {
     path: '/operation/order/deliverManage', icon: 'yygl8_songhuo', name: 'deliverManage', component: _import('operation/order/deliverManage/index'), meta: { role: ['admin'], title: '送货管理', noCache: false }
   }, {
-    path: '/operation/order/repertory', icon: 'yygl3_kucun', name: 'orderrepertory', component: _import('operation/order/repertory/index'), meta: { role: ['admin'], title: '库存管理', noCache: false }
+    path: '/operation/order/repertory', icon: 'yygl3_kucun', name: 'orderrepertory', component: _import('operation/order/repertory/index'), meta: { role: ['admin'], title: '库存管理', noCache: true }
   }, {
     path: '/operation/order/sign', icon: 'yygl10_qianshou', name: 'ordersign', component: _import('operation/order/sign/index'), meta: { role: ['admin'], title: '签收管理', noCache: false }
   }, {

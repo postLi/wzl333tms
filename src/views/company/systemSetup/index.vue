@@ -124,7 +124,7 @@
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.toCityByAdministrativeRegion">到达城市必须选择到行政区</el-checkbox>
               </el-form-item> -->
               <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox>
+                <!-- <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox> -->
                 <!-- <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="value" multiple placeholder="请选择">
                   <el-option
                     v-for="(item, index) in shipField"
@@ -140,7 +140,8 @@
                     </span>
                   </el-option>
                 </el-select> -->
-                <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="fieldSetup" collapse-tags multiple placeholder="请选择">
+                运单字段设置
+                <el-select v-model="fieldSetup" collapse-tags multiple placeholder="请选择">
                   <el-option
                     v-for="(item, index) in shipField"
                     :key="item.key"
@@ -307,7 +308,7 @@ export default {
           value: '0',
           name: '收货地址'
         },
-        {
+/*         {
           key: 'cargoWeight',
           value: '0',
           name: '重量'
@@ -316,7 +317,7 @@ export default {
           key: 'cargoVolume',
           value: '0',
           name: '体积'
-        },
+        }, */
         {
           key: 'cargoPack',
           value: '0',
@@ -448,7 +449,7 @@ export default {
             'volumeFee': '0',
             'weightFee': '0',
             'shipFromCityName': '0',
-            'cargoVolume': '0',
+            // 'cargoVolume': '0',
             'shipCustomerNumber': '0',
             'shipSenderId': '0',
             'shipSenderAddress': '0',
@@ -456,16 +457,16 @@ export default {
             'deliveryFee': '0',
             'insuranceFee': '0',
             'shipReceiverId': '0',
-            'cargoWeight': '0',
+            // 'cargoWeight': '0',
             'pickupFee': '0',
             'shipReceiverAddress': '0',
-            'productPrice': '0',
+            // 'productPrice': '0',
             'packageFee': '0'
           },
           'toCityByAdministrativeRegion': '0',
           'notifyCargoRule': '',
           'shipTimeRule': '',
-          'shipFieldSign': '0'
+          'shipFieldSign': '1'
         },
         'orgid': 1
       }

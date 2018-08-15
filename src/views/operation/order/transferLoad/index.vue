@@ -243,8 +243,8 @@ export default {
               }
 
               this.$message.success('保存成功！')
-              this.$router.push({ path: '././transfer', query: {pageKey: new Date().getTime()} })
-              this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
+              
+              this.goTransferList()
             }).catch(err => {
               this.$message.error(err.text || '未知错误')
             })

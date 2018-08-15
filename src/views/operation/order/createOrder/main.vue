@@ -39,7 +39,7 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
-            <el-form-item prop="tmsOrderShip.shipFromCityName">
+            <el-form-item prop="tmsOrderShip.shipFromCityName" >
               <querySelect show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
             </el-form-item>
           </div>
@@ -1945,8 +1945,8 @@ export default {
             delete data.receiver
             delete data.cargoList
             // 非订单页面传过来
-            if (!this.isPreOrder) {
-              console.log('this.isPreOrder:', this.isPreOrder)
+            if (!this.output.isPreOrder) {
+              console.log('this.output.isPreOrder:', this.output.isPreOrder)
               delete data.tmsOrderPre
             }
             console.log('create submit data:', JSON.stringify(data))
@@ -2032,6 +2032,7 @@ export default {
               console.log('change Order:', data)
               orderManage.putChangeOrder(data).then(res => {
                 this.$message.success('成功修改运单！')
+                this.eventBus.$emit('saveOrderSuccess')
 
                 if (!this.output.isbatch) {
                   if (this.ispop) {
@@ -2064,6 +2065,7 @@ export default {
                 return */
               orderManage.postNewOrder(data).then(res => {
                 this.$message.success('成功创建运单！')
+                this.eventBus.$emit('saveOrderSuccess')
                 data.tmsOrderShip.id = res.data
                 this.tmsOrderShipId = res.data
                 // 当为批次列表过来的，不作处理
