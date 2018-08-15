@@ -21,11 +21,11 @@
       <el-input v-model="searchForm.batchNo" :maxlength="15" auto-complete="off" placeholder="发车批次" clearable></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-       <el-input v-model="searchForm.truckIdNumber" :maxlength="15" auto-complete="off" placeholder="车牌号" clearable></el-input>
+       <el-input v-model="searchForm.truckIdNumber" :maxlength="8" auto-complete="off" placeholder="车牌号" clearable></el-input>
      <!--  <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect> -->
     </el-form-item>
     <el-form-item label="司机名称">
-       <el-input v-model="searchForm.dirverName" :maxlength="15" auto-complete="off" placeholder="司机名称"  clearable></el-input>
+       <el-input v-model="searchForm.dirverName" :maxlength="10" auto-complete="off" placeholder="司机名称"  clearable></el-input>
       <!-- <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable /> -->
     </el-form-item>
     <el-form-item label="到达网点">

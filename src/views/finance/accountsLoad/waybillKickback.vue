@@ -497,18 +497,24 @@ export default {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
           this.rightTable.push(e)
-          // this.leftTable = this.leftTable.filter(el => {
-          //   console.log(el)
-          //   return true
-          // })
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          let item = -1
+          this.leftTable.map((el, index) => {
+            if (el.shipSn === e.shipSn) {
+              item = index
+            }
+          })
+          if (item !== -1) {
             this.leftTable.splice(item, 1)
-          }
-          let orgItem = this.orgLeftTable.indexOf(e)
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
             this.orgLeftTable.splice(item, 1)
           }
+          // let item = this.leftTable.indexOf(e)
+          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          // }
+          // let orgItem = this.orgLeftTable.indexOf(e)
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          //   this.orgLeftTable.splice(item, 1)
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }

@@ -11,10 +11,10 @@
       <el-input v-model="searchForm.batchNo" :maxlength="15" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-     <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable @keyup.enter.native="onSubmit"></querySelect>
+     <querySelect search="truckIdNumber" :remote="true"  :maxlength="8" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable @keyup.enter.native="onSubmit"></querySelect>
     </el-form-item>
     <el-form-item label="司机名称">
-       <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName"  label="driverName" :remote="true" clearable @keyup.enter.native="onSubmit" />
+       <querySelect search="driverName" type="driver"  :maxlength="10" v-model="searchForm.dirverName" valuekey="driverName"  label="driverName" :remote="true" clearable @keyup.enter.native="onSubmit" />
     </el-form-item>
     <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgid" clearable @keyup.enter.native="onSubmit">

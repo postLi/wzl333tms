@@ -16,7 +16,7 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
-                    <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point></el-input>
+                    <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point :maxlength="8"></el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
@@ -25,7 +25,7 @@
                 </div>
                 <div>
                   <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger" :key="truckKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck"  :maxlength="8">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -38,7 +38,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" @blur="blurDriver">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" @blur="blurDriver"  :maxlength="10">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
                         <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
@@ -57,7 +57,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机电话" prop="dirverMobile" class="formItemTextDanger">
-                    <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话" clearable v-numberOnly></el-input>
+                    <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话" disabled></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -69,12 +69,13 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable v-number-only:point></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable v-number-only:point  :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point 
+                     :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -105,7 +106,7 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
-                    <el-input size="mini" v-model="formModel.shortFee" clearable></el-input>
+                    <el-input size="mini" v-model="formModel.shortFee" clearable  :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
               </div>
