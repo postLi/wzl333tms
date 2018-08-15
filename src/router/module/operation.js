@@ -8,7 +8,7 @@ export default {
   icon: 'yunyingguanli',
   name: '运营管理首页',
   meta:{
-    title: '报表管理'
+    title: '运营管理'
   },
   noDropdown: true,
   children: [{

@@ -7,7 +7,7 @@ export default {
   redirect: '/finance/index',
   name: '财务管理首页',
   meta:{
-    title: '报表管理'
+    title: '财务管理'
   },
   icon: 'caiwu',
   children: [
