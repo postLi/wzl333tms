@@ -146,7 +146,7 @@ export default {
       }
     },
     goTransferList() {
-      this.$router.push({ path: '././transfer', query: {pageKey: new Date().getTime()} })
+      // this.$router.push({ path: '././transfer', query: {pageKey: new Date().getTime()} })
       // 跳转到中转管理页面
       this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
     },

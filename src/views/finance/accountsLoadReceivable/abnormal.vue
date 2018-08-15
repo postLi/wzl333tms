@@ -337,7 +337,11 @@ export default {
       }
     },
     changLoadData(index, prop, newVal) {
-      this.rightTable[index][prop] = Number(newVal)
+      // this.rightTable[index][prop] = Number(newVal)
+
+      this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
+        [prop]: Number(newVal)
+      }))
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名
