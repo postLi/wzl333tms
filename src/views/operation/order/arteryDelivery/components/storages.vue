@@ -220,7 +220,7 @@
 
 
 
-                   <el-table ref="multipleTable"  :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                   <el-table ref="multipleTable"  :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                      <!--显示id-->
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
@@ -230,16 +230,16 @@
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
                 <!--有数据的时候各种状态的判断-->
                 <template slot-scope="scope">
-                  <!--入库前  有输入框-->
+                  <!---->
                   <div v-if="column.expand">
-
-                    <!--<el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>-->
-
-                    <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="column.slot(scope)" @change="changeData(scope.$index)" required></el-input>
-
+                    <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+                  </div>
+                  <div v-if="column.expand === false">
+                    <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                    <!--<el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>-->
                   </div>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <!--<span v-else v-html="column.slot(scope)"></span>-->
+                  <span v-else v-html="column.slot(scope)"></span>
                 </template>
                 <!--有数据的时候各种状态的判断-->
               </el-table-column>
@@ -600,7 +600,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '60',
+        width: '100',
         fixed: true,
         slot: (scope) => {
           return scope.$index + 1
@@ -643,49 +643,40 @@ export default {
         width: '100',
         expand: true,
         fixed: false,
-        slot: (scope) => {
-          return scope.row.actualAmount
-        }
       }, {
         label: '实到重量',
         prop: 'actualWeight',
         width: '100',
         fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.actualWeight
-        }
+        expand: true
       }, {
         label: '实到体积',
         prop: 'actualVolume',
         width: '100',
         fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.actualVolume
-        }
+        expand: true
       },
-      // // v-if="!isAlFun"  入库前的
-      // {
-      //   label: '实到件数',
-      //   prop: 'actualAmount',
-      //   width: '100',
-      //   fixed: false,
-      //   expand: false
-      // }, {
-      //   label: '实到重量',
-      //   prop: 'actualWeight',
-      //   width: '100',
-      //   fixed: false,
-      //     expand: false
-      // }, {
-      //   label: '实到体积',
-      //   prop: 'actualVolume',
-      //   width: '100',
-      //   fixed: false,
-      //     expand: false
-      // },
-      // //
+      // v-if="!isAlFun"  入库前的
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        fixed: false,
+        expand: false
+      }, {
+        label: '实到重量',
+        prop: 'actualWeight',
+        width: '100',
+        fixed: false,
+          expand: false
+      }, {
+        label: '实到体积',
+        prop: 'actualVolume',
+        width: '100',
+        fixed: false,
+          expand: false
+      },
+      //
       {
         label: '配载件数',
         prop: 'loadAmount',
@@ -719,7 +710,7 @@ export default {
       }, {
         label: '发货人电话',
         prop: 'shipSenderMobile',
-        width: '120',
+        width: '100',
         fixed: false
       }, {
         label: '收货人',
@@ -729,7 +720,7 @@ export default {
       }, {
         label: '收货人电话',
         prop: 'shipReceiverMobile',
-        width: '120',
+        width: '100',
         fixed: false
       }, {
         label: '货品名',
@@ -857,7 +848,6 @@ export default {
   },
   methods: {
     changeData(newVal) { // 判断当行
-
       const curAmount = this.detailList[newVal].actualAmount // 实到件数
       const curWeight = this.detailList[newVal].actualWeight // 实到重量
       const curVolume = this.detailList[newVal].actualVolume // 实到体积
@@ -865,19 +855,6 @@ export default {
       const curloadWeight = this.detailList[newVal].loadWeight // 配载重量
       const curloadVolume = this.detailList[newVal].loadVolume // 配载体积
       if (this.selectDetailList.length === 1 && curAmount === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
-
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$notify({
-          title: '提示',
-          message: '实到件数不能为0',
-          type: 'warning'
-        })
-      }
-      if (this.selectDetailList.length === 1 && curloadAmount === 0) {
-
         console.log(this.selectDetailList.length, this.detailList.length)
 
         this.detailList[newVal].actualAmount = curloadAmount
@@ -962,6 +939,7 @@ export default {
         this.$nextTick(() => { // 默认设置实到数量为配载数量
           this.detailList.forEach(e => {
             // 入库前
+            console.log(this.batchTypeName)
             if (!this.isAlFun) {
               e.actualAmount = e.loadAmount
               e.actualWeight = e.loadWeight
