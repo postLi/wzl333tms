@@ -5,12 +5,12 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" plain @click="doAction('add')">新增短驳</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">发车</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消发车</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消装车</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn">修改</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">发车</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消发车</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消装车</el-button>
+        <el-button :type="isDisBtn?'info':'primary'" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn">修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>
@@ -136,18 +136,18 @@ export default {
         },
         {
           label: "短驳时间",
-          prop: "loadTime",
-          width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "发车时间",
           prop: "departureTime",
           width: "180",
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: "配载时间",
+          prop: "loadTime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

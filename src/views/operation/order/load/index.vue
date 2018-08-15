@@ -85,12 +85,12 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="预计到达日期" v-if="loadTypeId===39">
-                    <el-date-picker size="mini" v-model="formModel.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达日期">
+                  <el-form-item label="预计到达时间" v-if="loadTypeId===39">
+                    <el-date-picker size="mini" v-model="formModel.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                     </el-date-picker>
                   </el-form-item>
-                  <el-form-item label="要求到达日期" v-else>
-                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="要求到达日期">
+                  <el-form-item label="要求到达时间" v-else>
+                    <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="要求到达时间">
                     </el-date-picker>
                   </el-form-item>
                 </div>
@@ -380,7 +380,7 @@ export default {
       return data
     },
     loadTimeFormName() {
-      return (this.loadTypeId === 38 ? '短驳' : (this.loadTypeId === 39 ? '配载' : '送货')) + '日期'
+      return (this.loadTypeId === 38 ? '配载' : (this.loadTypeId === 39 ? '配载' : '送货')) + '时间'
     },
     typeid() {
       return Number(this.$route.query.loadTypeId)

@@ -88,7 +88,7 @@ import querySelect from '@/components/querySelect/'
 import Receipt from './components/receiptWaybill'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
-import { getSummaries } from '@/utils/'
+import { getSummaries, uniqueArray } from '@/utils/'
 export default {
   components: {
     transferTable,
@@ -491,7 +491,7 @@ export default {
     },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
-        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
+        // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
@@ -516,6 +516,7 @@ export default {
           //   this.orgLeftTable.splice(item, 1)
           // }
         })
+        // this.rightTable = uniqueArray(objectMerge2(this.rightTable, 'shipSn'))
         this.selectedRight = [] // 清空选择列表
       }
       if (this.rightTable.length < 1) {
@@ -537,6 +538,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
+        // this.leftTable = uniqueArray(objectMerge2(this.leftTable, 'shipSn'))
         this.selectedLeft = [] // 清空选择列表
       }
       if (this.rightTable.length < 1) {
@@ -545,8 +547,8 @@ export default {
         this.isGoReceipt = false
       }
     },
-    selectCurrent (obj) {
-      this.leftTable = Object.assign([], obj)
+    selectCurrent (obj, index) {
+      this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []

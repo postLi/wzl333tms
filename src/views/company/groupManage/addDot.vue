@@ -110,7 +110,7 @@
             </el-form-item>
 
             <el-form-item label="上级网点" :label-width="formLabelWidth">
-              <SelectTree @change="canadd" v-model="form.parentId"  :disabled="isModify || form.status===31" />
+              <SelectTree @change="canadd" v-model="form.parentId"  :disabled="isModify || form.status===31" :orgid="otherinfo.orgid" />
             </el-form-item>
             <el-form-item label="经营类型" :label-width="formLabelWidth">
               <el-select v-model="form.manageType" :disabled="form.status===31" >

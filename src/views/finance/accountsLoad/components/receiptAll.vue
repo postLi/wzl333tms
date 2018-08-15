@@ -314,7 +314,7 @@ export default {
               this.$router.push({ path: './accountsPayable/batch', query: { name: this.currentPage } })
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message({ type: 'error', message: error.errorInfo || error.text })
             })
         }
       })

@@ -49,13 +49,13 @@
       <div class="fee_btn_transferTable tableItem">
         <!-- 操作按钮区 -->
         <div class="fee_btn_boxs">
-          <el-button :size="btnsize" plain type="primary" @click="doAction('count')" icon="el-icon-printer">智能结算</el-button>
+          <el-button :size="btnsize" plain type="success" @click="doAction('count')" icon="el-icon-printer">智能结算</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
-          <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
+          <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit"></dataTable>
-        <Count :popVisible="countVisible" @close="countVisible = false"></Count>
+        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
+        <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
     </div>
   </div>
@@ -95,15 +95,18 @@ export default {
         alipayAccount: '',
         financialWay: '',
         financialWayId: '',
+        settlementSn: '',
         amount: 0,
         agent: '',
         remark: ''
       },
       formModelRules: {},
       setLoadTableList: {},
+      countSuccessList: [],
       isEdit: false,
       loadTable: [],
-      addIncomeInfo: {}
+      addIncomeInfo: {},
+      countNum: 0
     }
   },
   computed: {
@@ -133,7 +136,7 @@ export default {
         this.formModel.bankAccount = data.szDtoList[0].bankAccount
         this.formModel.remark = data.remark
         this.getSystemTime()
-
+        console.log('getFeeInfo',this.formModel, data)
       })
       .catch(error => {
         this.$message({type:'error', message:error.errorInfo || error.text})
@@ -158,7 +161,6 @@ export default {
     setFinanceWay(obj) {
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
-      console.log(obj, this.formModel.financialWay, this.$const.FINANCE_WAY[this.formModel.financialWay])
     },
     setData() { // 设置传给后台的数据结构
       this.formModel.financialWayId = this.formModel.financialWay
@@ -178,7 +180,6 @@ export default {
         return false
       }
       this.setData()
-      console.log(this.addIncomeInfo)
       postAddIncome(this.addIncomeInfo).then(data => {
         this.$message({ type: 'success', message: '保存成功！' })
         this.$router.push({ path: './settleLog' })
@@ -208,7 +209,11 @@ export default {
         amount += e.shipFeeTotal
       })
       this.formModel.amount = amount
-      console.log(this.formModel.amount)
+    },
+    countSuccess (list) {
+      this.countSuccessList = Object.assign([], list.info)
+      this.countNum = list.count
+      console.log('countSuccessList',list)
     }
   }
 }
@@ -258,6 +263,10 @@ export default {
         .el-form-item__label {
           color: #ef0000;
         }
+      }
+      .el-input.is-disabled .el-input__inner{
+        background-color:#fff;
+        color:#222;
       }
     }
     .el-collapse {

@@ -12,7 +12,7 @@ function activeShuoZhengCheck() {
         {window.open("install_chrome.htm");}
       else {
         var ofrm = document.getElementById('frm')
-        ofrm.height = 700
+        // ofrm.height = 700
         ofrm.contentWindow.location.href = 'http://www.supcan.cn/download/clientinstall.htm?110'
         olbl.innerHTML = '下载 Chrome 浏览器插件安装包'
       }

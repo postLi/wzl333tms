@@ -237,12 +237,13 @@ export default {
       } else {
         this.isShow = false
       }
-    },
-    info(newVal) {
-      if (newVal) {
-        return this.info
-      }
     }
+    // info(newVal) {
+    //   if (newVal) {
+    //     console.log('sdfsdfsd',this.info)
+    //     return this.info
+    //   }
+    // }
   },
   mounted() {
     this.$nextTick(() => {
@@ -251,7 +252,7 @@ export default {
   },
   methods: {
     print () {
-      let data = Object.assign(this.formModel)
+      let data = Object.assign({}, this.formModel)
       this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
       PrintSettlement(data)
       this.submitForm('formModel')
@@ -274,11 +275,15 @@ export default {
       })
     },
     initDetailDtoList() {
+
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([],this.info)
+      this.formModel.detailDtoList = objectMerge2([],this.info)
+      console.log(this.formModel.detailDtoList)
+      console.log('info',this.info)
 
       // 设置费用项
-      const obj = {}
+      
+      let obj = {}
       this.formModel.detailDtoList.map(el => {
         if (obj[el.dataName]) {
           obj[el.dataName].amount += el.amount
@@ -286,9 +291,10 @@ export default {
           obj[el.dataName] = el
         }
       })
-      for (const i in obj) {
+      for (let i in obj) {
         this.formModel.detailDtoList2.push(obj[i])
       }
+      obj = {}
 
       this.formModel.detailDtoList2.forEach((e, index) => {
         e.dataName = this.dataName
@@ -337,7 +343,7 @@ export default {
       this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
       this.$set(this.submitData, 'settlementTime', this.formModel.settlementTime)
       this.$set(this.submitData, 'remark', this.formModel.remark)
-      this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
+      this.$set(this.submitData, 'tmsFinanceSettlementList', Object.assign([], this.info))
       this.$set(this.submitData, 'tmsFinanceFinancialWayLogList', this.formModel.szDtoList)
     },
     submitForm(formName) {
@@ -350,7 +356,7 @@ export default {
               this.$router.push({ path: './accountsPayable/batch', query:{name: this.currentPage} })
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message({ type: 'error', message: error.errorInfo || error.text })
             })
         }
       })

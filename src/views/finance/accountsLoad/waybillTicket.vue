@@ -484,20 +484,30 @@ export default {
     },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
-        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
+        // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
           e.inputPickupFee = e.unpaidFee
           this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 源数据减去被穿梭的数据
+          let item = -1
+          this.leftTable.map((el, index) => {
+            if (el.shipSn === e.shipSn) {
+              item = index
+            }
+          })
+          if (item !== -1) {
             this.leftTable.splice(item, 1)
-          }
-          let orgItem = this.orgLeftTable.indexOf(e)
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
             this.orgLeftTable.splice(item, 1)
           }
+          // let item = this.leftTable.indexOf(e)
+          // if (item !== -1) { // 源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          // }
+          // let orgItem = this.orgLeftTable.indexOf(e)
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          //   this.orgLeftTable.splice(item, 1)
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -529,8 +539,8 @@ export default {
       }
 
     },
-    selectCurrent (obj) {
-      this.leftTable = Object.assign([], obj)
+    selectCurrent (obj, index) {
+      this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []

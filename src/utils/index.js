@@ -774,3 +774,25 @@ export const tmsMath = {
     return this
   }
 }
+/**
+ * json 数组去重 合计fee
+ * @param  {[type]} array [description]
+ * @param  {[type]} key   [description]
+ */
+export const uniqueArray = (array, key) =>{
+      let result = [array[0]]
+      for (let i = 1; i < array.length; i++) {
+        let item = array[i]
+        let repeat = false
+        for (let j = 0; j < result.length; j++) {
+          if (item[key] === result[j][key]) {
+            repeat = true
+            break
+          }
+        }
+        if (!repeat) {
+          result.push(item)
+        }
+      }
+      return result
+    }

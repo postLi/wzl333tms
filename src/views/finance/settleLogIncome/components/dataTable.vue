@@ -1,7 +1,7 @@
 <template>
   <transferTable v-loading='loading'>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
-     <!-- 搜索左边表格 -->
+      <!-- 搜索左边表格 -->
       <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
     </div>
     <!-- 左边表格区 -->
@@ -108,7 +108,7 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
 import currentSearch from './currentSearch'
-import { getSummaries } from '@/utils/'
+import { getSummaries, tmsMath, uniqueArray } from '@/utils/'
 export default {
   data() {
     return {
@@ -142,6 +142,14 @@ export default {
     isModify: {
       type: Boolean,
       default: false
+    },
+    countSuccessList: {
+      type: Array,
+      default: []
+    },
+    countNum: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
@@ -165,8 +173,13 @@ export default {
       handler(cval, oval) {
         if (cval) {
           this.orgData = Object.assign({}, cval)
-          // this.getList()
         }
+      },
+      deep: true
+    },
+    countSuccessList: {
+      handler(cval, oval) {
+        this.initCount(cval, oval) // 智能结算返回的数据
       },
       deep: true
     }
@@ -175,6 +188,48 @@ export default {
     this.getList()
   },
   methods: {
+    initCount(cval, oval) { // 对智能结算返回的数据进行操作
+      this.leftTable = Object.assign([], this.orgLeftTable) // 左边表格显示最原始的数据
+      this.rightTable = objectMerge2([], cval) // 右边表格显示的数据 
+      this.$emit('loadTable', this.rightTable) // 方便费用信息处显示计算总额
+      this.leftTable = objectMerge2([], this.orgLeftTable.filter((el, index) => { // 左边表格显示的数据
+        if (this.rightTable[index]) {
+          return el.shipSn !== this.rightTable[index].shipSn
+        } else {
+          return true
+        }
+      }))
+
+      // 判断右边表格的数据 合计是否为智能结算中输入的值
+      let listCount = 0
+      let countDifference = 0
+
+      this.rightTable.forEach(e => {
+        listCount += Number(e.shipFeeTotal)
+      })
+      let lastShipFeeTotal = Number(this.rightTable[this.rightTable.length - 1].shipFeeTotal)
+
+
+      if (this.rightTable.length > 1) { // 右边表格不只一条数据的时候
+        if (this.countNum < listCount) {
+          let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
+          this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
+
+          this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+          this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          console.log('leftTable', this.leftTable, cval[cval.length - 1], this.selectedRight)
+        }
+      }
+      // else if (this.rightTable.length === 1){ // 当右边表格只有一条数据的时候
+      //   if (this.countNum < listCount) {
+      //     this.$set(this.rightTable, 0, Object.assign(this.rightTable[0], { 'shipFeeTotal': this.countNum }))
+      //     this.leftTable = this.leftTable.push(this.rightTable[0])
+
+      //   }
+      // }
+       this.orgLeftTable = objectMerge2(this.leftTable)
+
+    },
     getList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
@@ -202,8 +257,8 @@ export default {
         obj = {}
       }
     },
-    getSearch (obj) { // 搜索
-     this.leftTable = obj
+    getSearch(obj) { // 搜索
+      this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -230,6 +285,24 @@ export default {
           break
       }
     },
+    uniqueArray(array, key) {
+      let result = [array[0]]
+      for (let i = 1; i < array.length; i++) {
+        let item = array[i]
+        let repeat = false
+        for (let j = 0; j < result.length; j++) {
+          if (item[key] === result[j][key]) {
+            result[j].shipFeeTotal = tmsMath._add(item.shipFeeTotal,result[j].shipFeeTotal)
+            repeat = true
+            break
+          }
+        }
+        if (!repeat) {
+          result.push(item)
+        }
+      }
+      return result
+    },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
@@ -245,6 +318,7 @@ export default {
             this.orgLeftTable.splice(orgItem, 1)
           }
         })
+        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn')
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
@@ -263,6 +337,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
+        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn')
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
@@ -291,7 +366,7 @@ export default {
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      let propsArr = ['shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
       return getSummaries(param, propsArr)
     }
   }
@@ -299,8 +374,6 @@ export default {
 
 </script>
 <style lang="scss">
-
-
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
@@ -349,7 +422,6 @@ export default {
   .showAllTable {
     width: calc(100% - 100px);
   }
-  
 }
 
 </style>

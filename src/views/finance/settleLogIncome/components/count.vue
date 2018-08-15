@@ -111,6 +111,8 @@ export default {
           this.formModel.autoTotalAmount = Number(this.formModel.autoTotalAmount)
           let info = Object.assign({}, this.formModel)
           getOrderShipList(info).then(data => {
+            this.$emit('success', {info:data, count: this.formModel.autoTotalAmount})
+            this.closeMe()
             this.$message({type: 'success', message: '智能结算搜索运单操作成功'})
           })
           .catch(error => {

@@ -28,20 +28,20 @@ export default {
       this.currentSearch = queryString
       if (queryString.shipSn === undefined || queryString.batchNo) {
         if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
-          this.$emit('change', Object.assign([], this.info))
+          this.$emit('change', objectMerge2([], this.info))
         }
       }
-      let leftTable = this.info
-      let results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
+      const leftTable = this.info
+      const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
     createFilter(queryString) {
       return (res) => {
         if (res.shipSn) {
-          return (res.shipSn.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+          return (res.shipSn.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
         } else if (res.batchNo) {
-          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
         }
       }
     },
@@ -51,9 +51,14 @@ export default {
       } else if (obj.batchNo) {
         this.currentSearch = obj.batchNo
       }
-      let array = []
+      const array = []
       array.push(obj)
-      this.$emit('change', array)
+
+      this.currentSearch = ''
+      this.$emit('change', obj, this.info.indexOf(obj))
+      // let array = []
+      // array.push(obj)
+      // this.$emit('change', array)
     }
   }
 }
