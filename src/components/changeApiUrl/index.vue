@@ -3,12 +3,14 @@
     <el-option
       v-for="item in options"
       :key="item.value"
+      :disabled="!item.online"
       :label="item.label"
       :value="item.value">
     </el-option>
   </el-select>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -17,39 +19,53 @@ export default {
       options: [
         {
           value: 'api',
-          label: '157服务器'
+          label: '157服务器',
+          online: true
         },
         {
           value: 'localapi',
-          label: '黄衍沐'
+          label: '黄衍沐',
+          online: true
         },
         {
           value: 'wukunzhi',
-          label: '吴坤智'
+          label: '吴坤智',
+          online: true
         },
         {
           value: 'huangyuwen',
-          label: '黄宇文'
+          label: '黄宇文',
+          online: true
         },
         {
           value: 'dingfei',
-          label: '丁飞'
+          label: '丁飞',
+          online: true
         },
         {
           value: 'chenrongtao',
-          label: '陈荣涛'
+          label: '陈荣涛',
+          online: true
         },
         {
           value: 'fangjian',
-          label: '方坚'
+          label: '方坚',
+          online: true
         },
         {
           value: 'aliyun',
-          label: '阿里云'
+          label: '阿里云',
+          online: true
         },
         {
           value: 'ceshi',
-          label: '78服务器'
+          label: '78服务器',
+          online: true
+        },
+        {
+          value: 'home',
+          label: '157-2',
+          online: true
         }
       ]
     }
@@ -60,12 +76,27 @@ export default {
       this.showapi = true
       this.apiurl = localStorage.tms_testapiurl || 'api'
       window.tms_testapiurl = this.apiurl
+      this.checkUrl()
     }
   },
   methods: {
     setApiurl(url) {
       window.tms_testapiurl = url
       localStorage.tms_testapiurl = url
+    },
+    // 检测在线的服务器
+    // 超过3秒没有返回的就当不在线
+    checkUrl() {
+      this.options.map(el => {
+        axios.get('/' + el.value + '/api-order/order/v1/orderCreateDate/', {
+          timeout: 3000
+        }).catch((err) => {
+          const status = err.response ? err.response.status : 'unconnect'
+          if (status === 500 || status === 'unconnect') {
+            el.online = false
+          }
+        })
+      })
     }
   }
 }

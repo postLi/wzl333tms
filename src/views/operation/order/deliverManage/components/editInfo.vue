@@ -15,8 +15,8 @@
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
                 <el-col :span="3">操作网点</el-col>
-                <el-col :span="2">操作人</el-col>
-                <el-col :span="6">操作信息</el-col>
+                <el-col :span="4">操作人</el-col>
+                <el-col :span="8">操作信息</el-col>
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
@@ -31,11 +31,11 @@
                             <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
                           </template>
                         </el-col>
-                        <el-col :span="4" class="textcenter">
+                        <el-col :span="4" class="">
                           <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p> -->
                           <p>{{item.operatorTime }}</p>
                         </el-col>
-                        <el-col :span="3" class="textcenter">
+                        <el-col :span="3" class="">
                           <p>{{item.orgName}}</p>
                         </el-col>
                         <el-col :span="4">
@@ -63,14 +63,14 @@
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootEdit">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
         <el-form-item label="类型" prop="trackNode">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
+          <el-input :maxlength="10" v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="createTime">
           <el-date-picker v-model.trim="formModel.operatorTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="trackInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+          <el-input :maxlength="250" v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
@@ -422,10 +422,10 @@ export default {
     .stepItem_title {
       color: #333;
       margin-top: 10px;
-      padding-left: 34px;
+      padding-left: 28px;
       height: 34px;
       .el-col {
-        text-align: center;
+        text-align: left;
       }
       .tracktype {
         text-align: left;

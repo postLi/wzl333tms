@@ -21,16 +21,16 @@
                 <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
               </template>
             </el-col>
-            <el-col :span="4" class="textcenter">
+            <el-col :span="4" class="">
               <p>{{item.createTime | parseTime }}</p>
             </el-col>
-            <el-col :span="3" class="textcenter">
+            <el-col :span="3" class="">
               <p>{{item.orgName}}</p>
             </el-col>
             <el-col :span="6">
               <p>{{item.trackInfo}}</p>
             </el-col>
-            <el-col :span="5" :offset="1">
+            <el-col :span="6">
               <p>
                 <span class="track-human"  v-if="item.trackType===1" ></span>
                  {{item.trackDetailed}}
@@ -47,13 +47,13 @@
     <div class="stepinfo-footer">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel" label-width="80px">
         <el-form-item label="类型" prop="trackNode">
-          <el-input v-model="formModel.trackNode" placeholder="类型" size="mini"></el-input>
+          <el-input :maxlength="10" v-model="formModel.trackNode" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="createTime">
           <el-date-picker v-model.trim="formModel.createTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="操作信息" prop="trackInfo">
+        <el-form-item :maxlength="250" label="操作信息" prop="trackInfo">
           <el-input v-model="formModel.trackInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
@@ -312,10 +312,10 @@ export default {
   }
   .stepItem_title{
     color: #666;
-    padding-left: 34px;
+    padding-left: 28px;
     height: 34px;
     .el-col{
-      text-align: center;
+      text-align: left;
     }
     .tracktype{
       text-align: left;
