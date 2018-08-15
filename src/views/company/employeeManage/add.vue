@@ -6,7 +6,7 @@
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" :label-width="formLabelWidth" prop="mobilephone">
-          <el-input v-numberOnly v-model="form.mobilephone" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.mobilephone" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
@@ -209,10 +209,10 @@ export default {
     setHightLight(str, key) {
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
-    makefilter(query){
+    makefilter(query) {
       this.query = query
-      let REG = new RegExp(query, 'i')
-      this.roleslist = this.roles.filter((el)=>{
+      const REG = new RegExp(query, 'i')
+      this.roleslist = this.roles.filter((el) => {
         return REG.test(el.roleName)
       })
     },

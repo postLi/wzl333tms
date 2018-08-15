@@ -4,15 +4,15 @@
       <div class="batch">
         <el-form-item label="签收单数:" prop="num">
           <!-- <p class="tp">{{this.form.num}}单</p> -->
-          <el-input maxlength="20" :placeholder=" form.num +'单'" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" :placeholder=" form.num +'单'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="到付合计:" prop="shipArrivepayFee">
           <!-- <p class="tp">{{this.form.shipArrivepayFee}}元</p> -->
-          <el-input maxlength="20" :placeholder=" form.shipArrivepayFee +'元'" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" :placeholder=" form.shipArrivepayFee +'元'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="代收款合计:" prop="agencyFund">
           <!-- <p class="tp">{{this.form.agencyFund}}元</p> -->
-          <el-input maxlength="20" :placeholder=" form.agencyFund +'元'" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" :placeholder=" form.agencyFund +'元'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="签收时间:" prop="signTime">
           <el-date-picker
@@ -32,10 +32,10 @@
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type"/>
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
+          <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
-          <el-input maxlength="300" v-model.trim="form.remark" auto-complete="off"></el-input>
+          <el-input :maxlength="300" v-model.trim="form.remark" auto-complete="off"></el-input>
         </el-form-item>
       </div>      
     </el-form>

@@ -3,7 +3,7 @@
     <template class="addTruckPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="车牌号码" prop="truckIdNumber">
-          <el-input v-model="form.truckIdNumber" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model="form.truckIdNumber" :maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="车辆来源" prop="truckSource">
           <SelectType v-model="form.truckSource" type="truck_source" placeholder="请选择" />
@@ -12,27 +12,27 @@
           <SelectType v-model="form.truckType" type="truck_type" placeholder="请选择" />
         </el-form-item>
         <el-form-item label="可载重" prop="truckLoad">
-          <el-input v-model.number="form.truckLoad" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLoad" :maxlength="18" auto-complete="off">
             <template slot="append">吨</template>
           </el-input>
         </el-form-item>
         <el-form-item label="可载体积" prop="truckVolume">
-          <el-input v-model.number="form.truckVolume" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckVolume" :maxlength="18" auto-complete="off">
             <template slot="append">方</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车长" prop="truckLength">
-          <el-input v-model.number="form.truckLength" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLength" :maxlength="18" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车宽" prop="truckWidth">
-          <el-input v-model.number="form.truckWidth" maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckWidth" :maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车高" prop="truckHeight">
-          <el-input v-model.number="form.truckHeight" maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckHeight" :maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
@@ -40,7 +40,7 @@
           <SelectTree v-model="form.orgid" @change="getTreeOrgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="车辆品牌" prop="truckBrand">
-          <el-input maxlength="20" v-model="form.truckBrand" auto-complete="off"></el-input>
+          <el-input :maxlength="20" v-model="form.truckBrand" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="车辆注册时间" prop="truckRegisterDate">
           <el-date-picker v-model="form.truckRegisterDate" align="right" type="date" :picker-options="pickOption2" placeholder="选择日期" value-format="timestamp">
@@ -51,15 +51,15 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
-          <el-input type="textarea" maxlength="300" v-model="form.truckRemarks"></el-input>
+          <el-input type="textarea" :maxlength="300" v-model="form.truckRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <div class="hr"></div>
         <el-form-item label="车辆单位" prop="truckUnit">
-          <el-input v-model="form.truckUnit" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.truckUnit" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="单位电话" prop="truckUnitMobile">
-          <el-input v-numberOnly v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.truckUnitMobile" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机" prop="driverId">
           <el-select v-model="form.driverId" filterable placeholder="请选择">
@@ -67,7 +67,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="司机电话" prop="driverMobile">
-          <el-input maxlength="20" v-numberOnly v-model="form.dirverMobile" auto-complete="off"></el-input>
+          <el-input :maxlength="20" v-numberOnly v-model="form.dirverMobile" auto-complete="off"></el-input>
         </el-form-item>
         <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">

@@ -43,7 +43,7 @@
             <!--<el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>-->
           <!--</el-form-item>-->
           <el-form-item label="备注" class="iom_textarea">
-            <el-input v-model="form.remark" maxlength="300" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
+            <el-input v-model="form.remark" :maxlength="300" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
           </el-form-item>
 
         </div>

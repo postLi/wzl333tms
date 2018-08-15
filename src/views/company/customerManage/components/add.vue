@@ -17,14 +17,14 @@
         <template v-if="form.companyType === 2">
           <div class="info info-require">公司名称</div>
           <el-form-item prop="companyName">
-            <el-input v-model="form.companyName" maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
+            <el-input v-model="form.companyName" :maxlength="25" placeholder="公司全称" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item >
             <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
           </el-form-item>
           <div class="info" >公司法人信息</div>
           <el-form-item prop="legalPersonname" >
-            <el-input v-model.trim="form.legalPersonname" maxlength="25" placeholder="公司法人名称" auto-complete="off"></el-input>
+            <el-input v-model.trim="form.legalPersonname" :maxlength="25" placeholder="公司法人名称" auto-complete="off"></el-input>
           </el-form-item>
         </template>
         <!-- 个人信息 -->
@@ -39,37 +39,37 @@
 
         <div class="info">{{ issender ? '发' : '收'}}货信息</div>
         <el-form-item :label="(issender ? '发' : '收')+'货方'" prop="customerUnit">
-          <el-input v-model="form.customerUnit" maxlength="25" auto-complete="off"></el-input>
+          <el-input v-model="form.customerUnit" :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="联系人" prop="customerName">
-          <el-input v-model="form.customerName" maxlength="25" auto-complete="off"></el-input>
+          <el-input v-model="form.customerName" :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
-          <el-input v-numberOnly v-model.trim="form.customerMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话" class="customerPhone" prop="customerPhone">
-          <el-input v-numberOnly v-model="phoneshort" class="phoneshort" maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" maxlength="8" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="phoneshort" class="phoneshort" :maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" :maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
           <SelectTree v-model="form.orgid" filterable :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="客户VIP号" prop="vipNum">
-          <el-input v-model="form.vipNum" maxlength="25" auto-complete="off"></el-input>
+          <el-input v-model="form.vipNum" :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
-          <el-input v-model="form.idcard" maxlength="18" auto-complete="off"></el-input>
+          <el-input v-model="form.idcard" :maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开户行" prop="openBank">
-          <el-input v-model="form.openBank" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.openBank" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行名称" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.bankName" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model.trim="form.bankCardNumber" v-numberOnly maxlength="25" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.bankCardNumber" v-numberOnly :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="detailedAddress">
-          <el-input type="textarea" v-model="form.detailedAddress" placeholder="最多输入50个字符" maxlength="50" auto-complete="off"></el-input>
+          <el-input type="textarea" v-model="form.detailedAddress" placeholder="最多输入50个字符" :maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
     </template>

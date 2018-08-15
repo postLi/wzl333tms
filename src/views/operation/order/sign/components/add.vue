@@ -4,28 +4,28 @@
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini" class="manage-add">
       <div class="content_top">
         <el-form-item label="运单号:" prop="shipSn">
-          <el-input maxlength="20" v-model="form.shipSn" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.shipSn" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="开单日期:" prop="createTime">
-          <el-input maxlength="20" v-model="form.createTime" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.createTime" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="回单号:" prop="shipReceiptSn">
-          <el-input maxlength="20" v-model="form.shipReceiptSn" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.shipReceiptSn" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="回单数:" prop="shipReceiptNum">
-          <el-input maxlength="20" v-model="form.shipReceiptNum" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.shipReceiptNum" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="发货人:" prop="sender_customer_name">
-          <el-input maxlength="20" v-model="form.sender_customer_name" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.sender_customer_name" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="发货人电话:" prop="sender_customer_mobile">
-          <el-input maxlength="20" v-model="form.sender_customer_mobile" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.sender_customer_mobile" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="收货人:" prop="receiver_customer_name"> 
-          <el-input maxlength="20" v-model="form.receiver_customer_name" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.receiver_customer_name" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="收货人电话:" prop="receiver_customer_mobile">
-          <el-input maxlength="20" v-model="form.receiver_customer_mobile" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.receiver_customer_mobile" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收时间:" prop="signTime" >
           <el-date-picker
@@ -44,13 +44,13 @@
           <el-input v-model="form.shipDeliveryMethodName" type="ship_delivery_method" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="到付款:" prop="shipArrivepayFee">
-          <el-input maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="代收货款:" prop="agencyFund">
-          <el-input maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input :maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>
@@ -64,7 +64,7 @@
         <el-form-item class="driverRemarks ms" label="备注" prop="remark" >
           <input class="bz" maxlength="300" v-model.trim="form.remark" v-if="isDbclick" disabled="isDbclick"  placeholder="最多可输入300个字符"/>
           <input class="bz1" maxlength="300" v-model.trim="form.remark" v-else  placeholder="最多可输入300个字符"/>
-            <!-- <el-input type="textarea" maxlength="200" v-model="form.remark" :disabled="isDbclick"></el-input> -->
+            <!-- <el-input type="textarea" :maxlength="200" v-model="form.remark" :disabled="isDbclick"></el-input> -->
         </el-form-item>
       </div>
         <div class="content_bot imgshow mark">

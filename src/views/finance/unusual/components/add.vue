@@ -7,49 +7,49 @@
             <!-- <el-select v-model="form.shipSn" filterable multiple  placeholder="请输入关键词">
             </el-select> -->
           <el-form-item label="运单号" prop="shipSn">
-            <!-- <el-input v-if="this.isDbClick" v-model="form.shipSn"  maxlength="20" auto-complete="off" :disabled="true"></el-input> -->
+            <!-- <el-input v-if="this.isDbClick" v-model="form.shipSn"  :maxlength="20" auto-complete="off" :disabled="true"></el-input> -->
               <querySelect valuekey="shipSn" :param="{'shipFromOrgid': otherinfo.orgid}" search="shipSn" :disabled="this.isDbClick"  type="order" :key="querykey"  @change="fetchShipInfo2"  placeholder="请输入运单号" v-model="form.shipSn">
               </querySelect>
               <!-- <querySelect valuekey="shipSn" search="shipSn" type="order"  @change="fetchShipInfo"  v-model="form.shipSn" :disabled="isDbClick ? true : false" /> -->
           </el-form-item>
           <el-form-item label="开单时间" prop="shipcreateTime">
-            <el-input :value="form.shipcreateTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.shipcreateTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="出发城市" prop="shipFromCityName">
-            <el-input v-model="form.shipFromCityName"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipFromCityName"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="到达城市" prop="shipToCityName">
-            <el-input v-model="form.shipToCityName"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipToCityName"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="货品名" prop="cargoName">
-            <el-input v-model="form.cargoName" maxlength="18" auto-complete="off" :disabled="true" ></el-input>
+            <el-input v-model="form.cargoName" :maxlength="18" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="件数" prop="cargoAmount">
-            <el-input v-model="form.cargoAmount" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
+            <el-input v-model="form.cargoAmount" :maxlength="20" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="重量" prop="cargoWeight">
-            <el-input v-model="form.cargoWeight"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.cargoWeight"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="体积" prop="cargoVolume">
-            <el-input v-model="form.cargoVolume"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.cargoVolume"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="运费合计" prop="shipFee">
-            <el-input v-model="form.shipFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipFee"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="付款方式" prop="shipPayWayName">
-            <el-input v-model="form.shipPayWayName"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipPayWayName"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="现付" prop="shipNowpayFee">
-            <el-input v-model="form.shipNowpayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipNowpayFee"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="到付" prop="shipArrivepayFee">
-            <el-input v-model="form.shipArrivepayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipArrivepayFee"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="月结" prop="shipMonthpayFee">
-            <el-input v-model="form.shipMonthpayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipMonthpayFee"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="回单付" prop="shipReceiptpayFee">
-            <el-input v-model="form.shipReceiptpayFee"  maxlength="20" auto-complete="off" :disabled="true"></el-input>
+            <el-input v-model="form.shipReceiptpayFee"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
   
         </div>
@@ -57,7 +57,7 @@
         <div class="box1">
           <div class="titles">异动费用</div>
           <el-form-item label="异动费用" prop="fee" >
-            <el-input v-model="form.fee" v-number-only:point maxlength="6" auto-complete="off" placeholder="请输入异动费用" :disabled="isDbClick ? true : false"></el-input>
+            <el-input v-model="form.fee" v-number-only:point :maxlength="6" auto-complete="off" placeholder="请输入异动费用" :disabled="isDbClick ? true : false"></el-input>
           </el-form-item>
           <!-- <el-form-item label="费用类型" prop="value">
             <el-select v-model="form.feeTypeId" placeholder="请选择费用类型">
@@ -76,7 +76,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="异动时间:" prop="createTime">
-            <el-input v-if="isDbClick" maxlength="200" v-model="form.createTime" :disabled="true"></el-input>
+            <el-input v-if="isDbClick" :maxlength="200" v-model="form.createTime" :disabled="true"></el-input>
             <el-date-picker
               v-else
               v-model="form.createTime"
@@ -90,7 +90,7 @@
             </el-date-picker>
           </el-form-item> 
           <el-form-item class="driverRemarks ms" label="异动备注" prop="remark" >
-            <el-input type="textarea" maxlength="300" v-model="form.remark" placeholder="注：最多可输入300个字符" :disabled="isDbClick ? true : false"></el-input>
+            <el-input type="textarea" :maxlength="300" v-model="form.remark" placeholder="注：最多可输入300个字符" :disabled="isDbClick ? true : false"></el-input>
           </el-form-item>
         </div>
       </el-form>

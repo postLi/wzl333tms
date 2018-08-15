@@ -46,7 +46,7 @@
           <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off"  maxlength="12" v-numberOnly disabled></el-input>
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off"  :maxlength="12" v-numberOnly disabled></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
           <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
@@ -61,25 +61,25 @@
           <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="结算方式">
-          <el-input v-model="messageInfo.settlementType" auto-complete="off" maxlength="8" clearable></el-input>
+          <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
         </el-form-item>
         <el-form-item label="账户账号" prop="bankAccount">
-          <el-input v-model="messageInfo.bankAccount" auto-complete="off" maxlength="20"  clearable></el-input>
+          <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20"  clearable></el-input>
         </el-form-item>
         <el-form-item label="账户开户行">
-          <el-input v-model="messageInfo.bankName" auto-complete="off" maxlength="15" clearable></el-input>
+          <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
         </el-form-item>
         <el-form-item label="财务负责人">
-          <el-input v-model="messageInfo.financialOfficer" auto-complete="off" maxlength="10" clearable></el-input>
+          <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
         </el-form-item>
         <el-form-item label="联系方式" prop="financialOfficerPhone">
-          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off"  maxlength="11" clearable></el-input>
+          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off"  :maxlength="11" clearable></el-input>
         </el-form-item>
         <el-form-item label="支付宝">
-          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" maxlength="30" clearable></el-input>
+          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>
         </el-form-item>
         <el-form-item label="微信" class="sWetPay">
-          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" maxlength="30" clearable></el-input>
+          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -235,7 +235,7 @@
             sortable
           >
             <template slot-scope="scope">
-              <el-input v-model="dealInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+              <el-input v-model="dealInfo[scope.$index].remark" auto-complete="off"  :maxlength="30"></el-input>
             </template>
           </el-table-column>
 
@@ -391,7 +391,7 @@
             sortable
           >
             <template slot-scope="scope">
-              <el-input v-model="dealPayInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+              <el-input v-model="dealPayInfo[scope.$index].remark" auto-complete="off"  :maxlength="30"></el-input>
             </template>
           </el-table-column>
 
@@ -548,7 +548,7 @@
             sortable
           >
             <template slot-scope="scope">
-              <el-input v-model="alreadyInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+              <el-input v-model="alreadyInfo[scope.$index].remark" auto-complete="off"  :maxlength="30"></el-input>
             </template>
           </el-table-column>
 
@@ -710,7 +710,7 @@
             sortable
           >
             <template slot-scope="scope">
-              <el-input v-model="alreadyPayInfo[scope.$index].remark" auto-complete="off"  maxlength="30"></el-input>
+              <el-input v-model="alreadyPayInfo[scope.$index].remark" auto-complete="off"  :maxlength="30"></el-input>
             </template>
           </el-table-column>
 
@@ -722,7 +722,7 @@
       <div class="sMessageBut">
         <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
           <el-form-item label="备注">
-            <el-input maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
+            <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
           </el-form-item>
             <div class="sMessageCont_info">
         <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
@@ -736,13 +736,13 @@
             <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
           </el-form-item>
           <el-form-item label="联系方式" prop="orgBusinessOfficerPhone">
-            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable maxlength="11"></el-input>
+            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable :maxlength="11"></el-input>
           </el-form-item>
           <el-form-item label="财务负责人">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" maxlength="10" clearable></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
           </el-form-item>
           <el-form-item label="联系方式" prop="orgFinancialOfficerPhone">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" maxlength="11"  clearable></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"  clearable></el-input>
           </el-form-item>
           <el-form-item label="时间">
             <el-date-picker
@@ -750,7 +750,7 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
-            <!--<el-input v-model="messageButtonInfo.createTime" auto-complete="off" maxlength="8"></el-input>-->
+            <!--<el-input v-model="messageButtonInfo.createTime" auto-complete="off" :maxlength="8"></el-input>-->
           </el-form-item>
         </el-form>
       </div>

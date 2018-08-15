@@ -24,11 +24,11 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="到站电话" prop="arrivalMobile">
-                <el-input size="mini" maxlength="13" v-model="formModel.arrivalMobile" v-number-only placeholder="到站电话">
+                <el-input size="mini" :maxlength="13" v-model="formModel.arrivalMobile" v-number-only placeholder="到站电话">
                 </el-input>
               </el-form-item>
               <el-form-item label="备注" prop="remark">
-                <el-input size="mini" maxlength="300" v-model="formModel.remark" placeholder="备注">
+                <el-input size="mini" :maxlength="300" v-model="formModel.remark" placeholder="备注">
                 </el-input>
               </el-form-item>
             </el-form>

@@ -6,7 +6,7 @@
 <!-- 本网点是父级时显示 -->
           <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini" :show-message="checkShowMessage" :key="formKey" v-if="companyId === form.id">
             <el-form-item label="公司名称" :label-width="formLabelWidth" prop="orgName" >
-              <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 " maxlength="15" ></el-input>
+              <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 " :maxlength="15" ></el-input>
             </el-form-item>
             <el-form-item label="总公司" :label-width="formLabelWidth" >
               <el-select v-model="form.orgType" :disabled="companyId === form.id || form.status===31">
@@ -20,7 +20,7 @@
               </el-select>
             </el-form-item>
               <el-form-item label="公司代码" :label-width="formLabelWidth" prop="networkCode" >
-              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31 || companyId === form.id" maxlength="10" clearable></el-input>
+              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31 || companyId === form.id" :maxlength="10" clearable></el-input>
             </el-form-item>
 
             <!-- <el-form-item label="上级网点" :label-width="formLabelWidth">
@@ -61,16 +61,16 @@
             </el-form-item>
 
             <!-- <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
-              <el-input v-model="form.collectionFee" auto-complete="off" maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
+              <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
             <el-form-item label="提现基准" :label-width="formLabelWidth" prop="">
               <el-input v-model="form.benchmark"  auto-complete="off" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth" prop="">
-              <el-input v-model="form.warningQuota" auto-complete="off" maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
+              <el-input v-model="form.warningQuota" auto-complete="off" :maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
             <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
-              <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only maxlength="9" :disabled="form.status===31" ></el-input>
+              <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9" :disabled="form.status===31" ></el-input>
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
@@ -78,7 +78,7 @@
               <p> 密码：123456</p>
             </div>
             <el-form-item v-if="form.accountStatus === 0 && !isModify" :label-width="formLabelWidth" prop="">
-              <el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" maxlength="20" ></el-input>
+              <el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>
             </el-form-item>
 
             <div class="rem-add-dot">
@@ -94,7 +94,7 @@
           </el-form>
                     <el-form :model="form" :rules="rules"  ref="ruleForm"  class="demo-ruleForm" :inline="true" label-position="right" size="mini" :show-message="checkShowMessage" :key="formKey" v-else>
             <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName" >
-              <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 " maxlength="15" ></el-input>
+              <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 " :maxlength="15" ></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
               <el-select v-model="form.orgType" >
@@ -139,25 +139,25 @@
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
             <el-form-item label="客服电话" :label-width="formLabelWidth" prop=""  clearable>
-              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" v-number-only maxlength="13"></el-input>
+              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" v-number-only :maxlength="13"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
               <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
             <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode" >
-              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" maxlength="10" clearable></el-input>
+              <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" :maxlength="10" clearable></el-input>
             </el-form-item>
             <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
-              <el-input v-model="form.collectionFee" auto-complete="off" maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
+              <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
             <el-form-item label="提现基准" :label-width="formLabelWidth" prop="">
               <el-input v-model="form.benchmark"  auto-complete="off" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
             <el-form-item label="预警额度" :label-width="formLabelWidth" prop="">
-              <el-input v-model="form.warningQuota" auto-complete="off" maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
+              <el-input v-model="form.warningQuota" auto-complete="off" :maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
             </el-form-item>
             <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
-              <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only maxlength="9" :disabled="form.status===31" ></el-input>
+              <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9" :disabled="form.status===31" ></el-input>
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
@@ -165,7 +165,7 @@
               <p> 密码：123456</p>
             </div>
             <el-form-item v-if="form.accountStatus === 0 && !isModify" :label-width="formLabelWidth" prop="">
-              <el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" maxlength="20" ></el-input>
+              <el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>
             </el-form-item>
 
             <div class="rem-add-dot">

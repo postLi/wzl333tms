@@ -16,10 +16,10 @@
           <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" />
       </el-form-item>
     <el-form-item label="车牌号码:">
-      <el-input v-model="searchForm.memberName" auto-complete="off" maxlength="8"></el-input>
+      <el-input v-model="searchForm.memberName" auto-complete="off" :maxlength="8"></el-input>
     </el-form-item>
     <el-form-item label="司机名称:">
-      <el-input v-model="searchForm.memberPerson" auto-complete="off" maxlength="8"></el-input>
+      <el-input v-model="searchForm.memberPerson" auto-complete="off" :maxlength="8"></el-input>
     </el-form-item>
       <el-form-item label="对账状态
 :">

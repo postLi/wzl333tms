@@ -5,7 +5,7 @@
         <div class="box1">
           <div class="titles">运单信息</div>
           <!-- <el-form-item label="运单号" prop="shipSn" class="label">
-            <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item> -->
           <el-form-item label="运单号" prop="shipSn">
               <!--<el-input v-model="formInline.shipSn"></el-input>-->
@@ -13,30 +13,30 @@
             </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
             <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" :key="querykey"  type="order"  @change="getShipSn"  v-model="form.shipGoodsSn" :disabled="isCheck || isDeal ? true : false"/>
-            <!-- <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input> -->
+            <!-- <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input> -->
           </el-form-item>
   
           <el-form-item label="开单时间" prop="createTime">
-            <el-input :value="form.createTime" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.createTime" :maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="货品名" prop="cargoName">
-            <el-input v-model="form.cargoName" maxlength="18" auto-complete="off" :disabled="true" ></el-input>
+            <el-input v-model="form.cargoName" :maxlength="18" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="包装" prop="cargoPack">
-            <el-input v-model="form.cargoPack" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
+            <el-input v-model="form.cargoPack" :maxlength="20" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="件数" prop="cargoAmount">
-            <el-input v-model="form.cargoAmount" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
+            <el-input v-model="form.cargoAmount" :maxlength="20" auto-complete="off" :disabled="true" ></el-input>
           </el-form-item>
         </div>
         <!--异常登记-->
         <div class="box1">
           <div class="titles">异常登记</div>
           <el-form-item label="异常编号" prop="abnormalNo">
-          <el-input maxlength="20" v-model="form.abnormalNo" auto-complete="off"  :disabled="true" ></el-input>
+          <el-input :maxlength="20" v-model="form.abnormalNo" auto-complete="off"  :disabled="true" ></el-input>
           </el-form-item>
           <el-form-item label="登记时间" prop="registerTime">
-            <el-input :value="form.registerTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off" :disabled="true" ></el-input>
+            <el-input :value="form.registerTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :maxlength="20" auto-complete="off" :disabled="true" ></el-input>
             <!-- <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}{m}{d}') }}</template> -->
           </el-form-item>
           <el-form-item label="登记网点" prop="orgId"  >
@@ -55,7 +55,7 @@
           </el-form-item> -->
            <el-form-item label="登记人" prop="registerName"  >
             
-             <el-input maxlength="10"  v-model="form.registerName" :disabled="true"></el-input>
+             <el-input :maxlength="10"  v-model="form.registerName" :disabled="true"></el-input>
            
             <!-- <querySelect search="name" label="name"  v-else @change="getUser" v-model="form.registerName" /> -->
             
@@ -64,19 +64,19 @@
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常件数"  prop="abnormalAmount" >
-            <el-input v-model="form.abnormalAmount" v-numberOnly maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input v-model="form.abnormalAmount" v-numberOnly :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="处理网点" prop="disposeOrgId" class="label">
             <SelectTree v-model="form.disposeOrgId" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常金额" prop="registerFee" >
-            <el-input v-model="form.registerFee"  v-number-only:point maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input v-model="form.registerFee"  v-number-only:point :maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="责任网点" prop="dutyOrgId" >
             <SelectTree v-model="form.dutyOrgId" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item class="driverRemarks label ms" label="异常描述" prop="abnormalDescribe" >
-            <el-input type="textarea" maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input type="textarea" :maxlength="200" v-model.trim="form.abnormalDescribe" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
@@ -94,7 +94,7 @@
               </el-form-item>
           </div>
           <el-form-item label="处理时间" prop="disposeTime">
-            <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{i}:{s}')" maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
+            <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
           <el-form-item label="处理网点" prop="disposeOrgId" >
             <SelectTree v-model="form.disposeOrgId" :disabled=" true"/>
@@ -109,10 +109,10 @@
                 <div class="name">{{ item.name }}</div>
               </template>
             </el-autocomplete> -->
-            <el-input maxlength="10"  v-model="form.disposeName"  :disabled="true"></el-input>
+            <el-input :maxlength="10"  v-model="form.disposeName"  :disabled="true"></el-input>
           </el-form-item>
           <el-form-item class="driverRemarks ms" label="处理意见" prop="disposeOpinion" >
-            <el-input type="textarea" maxlength="125" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
+            <el-input type="textarea" :maxlength="125" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
           </el-form-item>
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>

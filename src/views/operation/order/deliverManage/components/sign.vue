@@ -6,7 +6,7 @@
           <p class="tp">{{orderNum}}单</p>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input maxlength="250" v-model.trim="form.signName" auto-complete="off" placeholder="签收人"></el-input>
+          <el-input :maxlength="250" v-model.trim="form.signName" auto-complete="off" placeholder="签收人"></el-input>
         </el-form-item>
         <el-form-item label="签收时间:" prop="signTime">
           <el-date-picker v-model="form.signTime" align="right" type="date" placeholder="选择日期" value-format="timestamp" format="yyyy-MM-dd">
@@ -19,10 +19,10 @@
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" />
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码"></el-input>
+          <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码"></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
-          <el-input maxlength="300" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
+          <el-input :maxlength="300" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
         </el-form-item>
       </div>
     </el-form>

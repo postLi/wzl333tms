@@ -95,10 +95,10 @@
                 </div>
                 <div>
                   <el-form-item label="备注" v-if="loadTypeId !== 38">
-                    <el-input maxlength="300" size="mini" v-model="formModel.remark"></el-input>
+                    <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                   <el-form-item label="备注" v-else>
-                    <el-input maxlength="300" size="mini" v-model="formModel.remark"></el-input>
+                    <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
               </div>
@@ -116,67 +116,67 @@
                 <li>
                   <p>现付运费</p>
                   <el-form-item prop="nowpayCarriage">
-                    <el-input v-model="formFee.nowpayCarriage" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.nowpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>现付油卡</p>
                   <el-form-item prop="nowpayOilCard">
-                    <el-input v-model="formFee.nowpayOilCard" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.nowpayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付运费</p>
                   <el-form-item prop="backpayCarriage">
-                    <el-input v-model="formFee.backpayCarriage" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.backpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付油卡</p>
                   <el-form-item prop="backpayOilCard">
-                    <el-input v-model="formFee.backpayOilCard" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.backpayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付运费</p>
                   <el-form-item prop="arrivepayCarriage">
-                    <el-input v-model="formFee.arrivepayCarriage" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.arrivepayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付油卡</p>
                   <el-form-item prop="arrivepayOilCard">
-                    <el-input v-model="formFee.arrivepayOilCard" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.arrivepayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>整车保险费</p>
                   <el-form-item prop="carloadInsuranceFee">
-                    <el-input v-model="formFee.carloadInsuranceFee" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.carloadInsuranceFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站装卸费</p>
                   <el-form-item prop="leaveHandlingFee">
-                    <el-input v-model="formFee.leaveHandlingFee" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.leaveHandlingFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站其他费</p>
                   <el-form-item prop="leaveOtherFee">
-                    <el-input v-model="formFee.leaveOtherFee" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.leaveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站装卸费</p>
                   <el-form-item prop="arriveHandlingFee">
-                    <el-input v-model="formFee.arriveHandlingFee" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.arriveHandlingFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站其他费</p>
                   <el-form-item prop="arriveOtherFee">
-                    <el-input v-model="formFee.arriveOtherFee" maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model="formFee.arriveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
               </ul>

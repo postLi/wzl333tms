@@ -18,14 +18,14 @@
             <SelectTree v-model="searchForm.shipFromOrgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="运单号" prop="shipSn">
-            <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
        
         <el-form-item label="出发城市">
-          <el-input v-model="searchForm.shipFromCityName" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="到达城市">
-            <el-input v-model="searchForm.shipToCityName" maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>

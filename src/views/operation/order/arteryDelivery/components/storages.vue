@@ -14,43 +14,43 @@
                 <!--</el-form-item>-->
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="sta_searchinfo clearfix" :model="formModel">
                   <el-form-item label="到达网点:">
-                    <el-input v-model="formModel.arriveOrgName" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.arriveOrgName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="车牌号码:">
-                    <el-input v-model="formModel.truckIdNumber" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.truckIdNumber" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="司机姓名:">
-                    <el-input v-model="formModel.dirverName" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.dirverName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="司机电话:">
-                    <el-input v-model="formModel.dirverMobile" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.dirverMobile" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="可载体积:">
-                    <el-input v-model="formModel.truckVolume" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.truckVolume" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="可载重量:">
-                    <el-input v-model="formModel.truckLoad" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.truckLoad" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="分摊方式:">
-                    <el-input v-model="formModel.apportionTypeName" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.apportionTypeName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
-                    <el-input :value="formModel.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="15" clearable disabled>
+                    <el-input :value="formModel.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
-                    <el-input maxlength="15" clearable disabled :value="formModel.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')">
+                    <el-input :maxlength="15" clearable disabled :value="formModel.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')">
                     </el-input>
                   </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
-                    <el-input v-model="formModel.remark" clearable maxlength="300" auto-complete="off" type="textarea" disabled>
+                    <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea" disabled>
                     </el-input>
                   </el-form-item>
                 </el-form>
@@ -61,67 +61,67 @@
                     <li>
                       <p>现付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>现付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayOilCard" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.nowpayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>回付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>回付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.backpayOilCard" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.backpayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayOilCard" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arrivepayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>整车保险费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.carloadInsuranceFee" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.carloadInsuranceFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>发站装卸费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveHandlingFee" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.leaveHandlingFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>发站其他费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveOtherFee" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.leaveOtherFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p><i>*</i> 到站装卸费</p>
                       <el-form-item prop="arriveHandlingFee">
-                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify" ></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify" ></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p><i>*</i> 到站其他费</p>
                       <el-form-item prop="arriveOtherFee">
-                        <el-input maxlength="10" v-model="formModel.arriveOtherFee" :disabled="isModify" v-numberOnly></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arriveOtherFee" :disabled="isModify" v-numberOnly></el-input>
                       </el-form-item>
                     </li>
                   </ul>

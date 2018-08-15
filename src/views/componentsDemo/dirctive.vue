@@ -19,7 +19,7 @@
     <p>带校检的输入框</p>
     <el-form>
     <el-form-item label="账户账号" >
-      <el-input  auto-complete="off" maxlength="20" v-numberOnly clearable></el-input>
+      <el-input  auto-complete="off" :maxlength="20" v-numberOnly clearable></el-input>
     </el-form-item>
     </el-form>
 

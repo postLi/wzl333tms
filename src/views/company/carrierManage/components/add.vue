@@ -6,19 +6,19 @@
           <SelectTree v-model="form.orgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="承运商编码" prop="carrierSn">
-          <el-input v-model="form.carrierSn" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model="form.carrierSn" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商" prop="carrierName">
-          <el-input v-model.trim="form.carrierName" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierName" :maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
-          <el-input v-numberOnly v-model="form.carrierMobile"  maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.carrierMobile"  :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="liableName">
-          <el-input v-model="form.liableName" maxlength="25" auto-complete="off"></el-input>
+          <el-input v-model="form.liableName" :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="负责人手机" prop="liablePhone">
-          <el-input v-numberOnly v-model="form.liablePhone" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.liablePhone" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="合同起始日" prop="contractStarttime">
           <el-date-picker
@@ -43,13 +43,13 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="客服电话" prop="customerServicePhone">
-          <el-input v-numberOnly maxlength="11" v-model="form.customerServicePhone" auto-complete="off"></el-input>
+          <el-input v-numberOnly :maxlength="11" v-model="form.customerServicePhone" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="地址" prop="carrierAddr">
-          <el-input v-model.trim="form.carrierAddr" maxlength="50" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierAddr" :maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="carrierRemarks" label="备注" prop="carrierRemarks">
-          <el-input type="textarea" maxlength="300" v-model="form.carrierRemarks"></el-input>
+          <el-input type="textarea" :maxlength="300" v-model="form.carrierRemarks"></el-input>
         </el-form-item>
       </el-form>
     </template>

@@ -54,19 +54,19 @@
               <li>
                 <p><i>*</i> 件数</p>
                 <el-form-item prop="tmsOrderCargoList.cargoAmount">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>重量</p>
                 <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
                 <p>体积</p>
                 <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                  <el-input maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
@@ -78,7 +78,7 @@
               <li>
                 <p>品种规格</p>
                 <el-form-item prop="tmsOrderCargoList.description">
-                  <el-input maxlength="20" v-model="form.tmsOrderCargoList.description" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="20" v-model="form.tmsOrderCargoList.description" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
             </ul>
@@ -126,12 +126,12 @@
 
               <td>
                 <el-form-item label="代收款" prop="tmsOrderCargoList.agencyFund">
-                  <el-input  v-model="form.tmsOrderCargoList.agencyFund" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                  <el-input  v-model="form.tmsOrderCargoList.agencyFund" :maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="代收款手续费" prop="tmsOrderCargoList.commissionFee">
-                  <el-input  v-model="form.tmsOrderCargoList.commissionFee" maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
+                  <el-input  v-model="form.tmsOrderCargoList.commissionFee" :maxlength="8" auto-complete="off" clearable class="order_com" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
             </tr>
@@ -144,19 +144,19 @@
 
               <td>
                 <el-form-item label="运费" prop="tmsOrderCargoList.shipFee">
-                  <el-input v-model="form.tmsOrderCargoList.shipFee" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                  <el-input v-model="form.tmsOrderCargoList.shipFee" :maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="声明价值" prop="tmsOrderCargoList.productPrice">
-                  <el-input v-model="form.tmsOrderCargoList.productPrice" maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                  <el-input v-model="form.tmsOrderCargoList.productPrice" :maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
             </tr>
             <tr>
               <td>
                 <el-form-item label="备注">
-                  <el-input v-model="form.tmsOrderPre.orderRemarks" maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea" placeholder="少于300字" :disabled="isDbclick"></el-input>
+                  <el-input v-model="form.tmsOrderPre.orderRemarks" :maxlength="300" auto-complete="off" type="textarea" clearable class="add-textarea" placeholder="少于300字" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </td>
             </tr>

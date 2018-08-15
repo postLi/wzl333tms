@@ -3,16 +3,16 @@
     <template class="addDriverPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="司机姓名" prop="driverName">
-          <el-input v-model="form.driverName" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model="form.driverName" :maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
-          <el-input v-numberOnly v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.driverMobile" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
           <SelectTree v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="身份证号" prop="driverCardid">
-          <el-input v-model="form.driverCardid" maxlength="18" auto-complete="off"></el-input>
+          <el-input v-model="form.driverCardid" :maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="驾驶证类型" prop="licenseType">
           <SelectType v-model="form.licenseType" type="driving_type" placeholder="驾驶证类型" />
@@ -22,19 +22,19 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.bankCardNumber" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行名称" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.bankName" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开户行" prop="openBank">
-          <el-input maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
+          <el-input :maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机地址" prop="driverAddress">
-          <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
+          <el-input v-model="form.driverAddress" :maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
-          <el-input type="textarea" maxlength="300" v-model="form.driverRemarks"></el-input>
+          <el-input type="textarea" :maxlength="300" v-model="form.driverRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <el-form-item class="clearfix uploadcard">

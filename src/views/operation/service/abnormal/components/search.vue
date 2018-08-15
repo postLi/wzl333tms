@@ -31,7 +31,7 @@
 
 
         <el-form-item label="运单号">
-          <el-input v-model="searchForm.shipSn" maxlength="20" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
+          <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="登记网点">
             <SelectTree v-model="searchForm.orgId" type="org_id" v-if="isAllOrg"/>

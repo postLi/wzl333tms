@@ -8,7 +8,7 @@
       <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit" :filterable="false" :filterfn="filterfn"></selectBatchType>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
-      <el-input v-model="searchForm.batchNo" maxlength="15" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+      <el-input v-model="searchForm.batchNo" :maxlength="15" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
     </el-form-item>
     <el-form-item label="车牌号">
      <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable @keyup.enter.native="onSubmit"></querySelect>

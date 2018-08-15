@@ -63,7 +63,7 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label">货号</span>
-            <el-input size="mini" maxlength="20" disabled :value="form.tmsOrderShipInfo.shipGoodsSn" />
+            <el-input size="mini" :maxlength="20" disabled :value="form.tmsOrderShipInfo.shipGoodsSn" />
           </div>
         </el-col>
       </el-row>

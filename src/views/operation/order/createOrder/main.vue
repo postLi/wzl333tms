@@ -9,7 +9,7 @@
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">
         <el-form-item prop="tmsOrderShip.shipSn">
-          <el-input ref="tmsOrderShipshipSn" v-onlyNumberAndLetter size="mini" maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+          <el-input ref="tmsOrderShipshipSn" v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
         </el-form-item>
         </span></div>
       <div class="create-num">开单日期： <span class="create-num-info">
@@ -72,7 +72,7 @@
           <div class="order-form-item showFormInfo">
             <span class="order-form-label">货号</span>
             <el-form-item prop="tmsOrderShip.shipGoodsSn">
-              <el-input v-onlyNumberAndLetter size="mini" maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
+              <el-input v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
             </el-form-item>
           </div>
         </el-col>
@@ -158,28 +158,28 @@
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.cargoAmount'" :rules="{ validator: scope.$index === 0 ?  validateIsEmptyOr0(item.fieldProperty, scope.$index,'货品件数不能小于0！') : '' }">
-                  <el-input v-number-only size="mini" maxlength="20"
+                  <el-input v-number-only size="mini" :maxlength="20"
                   v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.shipFee'" >
-                  <el-input v-number-only:point size="mini" maxlength="20"
+                  <el-input v-number-only:point size="mini" :maxlength="20"
                   v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item :prop="'cargoList.'+scope.$index + '.'+item.fieldProperty" :rules="{ validator: scope.$index === 0 ?  validateWeightAndVolume(item.fieldProperty, scope.$index) : '', trigger: 'blur' }">
-                  <el-input v-number-only:point size="mini" maxlength="20"
+                  <el-input v-number-only:point size="mini" :maxlength="20"
                   v-model="form.cargoList[scope.$index][item.fieldProperty]" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
-                  <el-input size="mini" v-number-only:point maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                  <el-input size="mini" v-number-only:point :maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                 </template>
                 <template v-else>
-                  <el-input size="mini" maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                  <el-input size="mini" :maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                 </template>
               </template>
@@ -193,7 +193,7 @@
             <div class="order-form-item">
               <span class="order-form-label">运费合计</span>
               <el-form-item prop="tmsOrderShip.shipTotalFee">
-                <el-input size="mini" maxlength="20" disabled v-model="form.tmsOrderShip.shipTotalFee" />
+                <el-input size="mini" :maxlength="20" disabled v-model="form.tmsOrderShip.shipTotalFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -209,7 +209,7 @@
             <div class="order-form-item">
               <span class="order-form-label">现付</span>
               <el-form-item prop="tmsOrderShip.shipNowpayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipNowpayFee')" size="mini" maxlength="20" :disabled="shipNowpayFeeDisabled"  v-model="form.tmsOrderShip.shipNowpayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipNowpayFee')" size="mini" :maxlength="20" :disabled="shipNowpayFeeDisabled"  v-model="form.tmsOrderShip.shipNowpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -217,7 +217,7 @@
             <div class="order-form-item">
               <span class="order-form-label">到付</span>
               <el-form-item prop="tmsOrderShip.shipArrivepayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipArrivepayFee')" size="mini" maxlength="20" :disabled="shipArrivepayFeeDisabled"  v-model="form.tmsOrderShip.shipArrivepayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipArrivepayFee')" size="mini" :maxlength="20" :disabled="shipArrivepayFeeDisabled"  v-model="form.tmsOrderShip.shipArrivepayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -225,7 +225,7 @@
             <div class="order-form-item">
               <span class="order-form-label">回单付</span>
               <el-form-item prop="tmsOrderShip.shipReceiptpayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipReceiptpayFee')" size="mini" maxlength="20" :disabled="shipReceiptpayFeeDisabled"  v-model="form.tmsOrderShip.shipReceiptpayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipReceiptpayFee')" size="mini" :maxlength="20" :disabled="shipReceiptpayFeeDisabled"  v-model="form.tmsOrderShip.shipReceiptpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -233,7 +233,7 @@
             <div class="order-form-item">
               <span class="order-form-label">月结</span>
               <el-form-item prop="tmsOrderShip.shipMonthpayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipMonthpayFee')" size="mini" maxlength="20" :disabled="shipMonthpayFeeDisabled"  v-model="form.tmsOrderShip.shipMonthpayFee" />
+                <el-input @blur="formatShipFee" @focus="setOtherFee('shipMonthpayFee')" size="mini" :maxlength="20" :disabled="shipMonthpayFeeDisabled"  v-model="form.tmsOrderShip.shipMonthpayFee" />
               </el-form-item>
             </div>
           </el-col>
@@ -251,13 +251,13 @@
             <div class="order-form-item">
               <span class="order-form-label other-form-shipReceiptNum">
                 <el-form-item prop="tmsOrderShip.shipReceiptNum">
-                  <el-input v-number-only size="mini" maxlength="3"  v-model="form.tmsOrderShip.shipReceiptNum" >
+                  <el-input v-number-only size="mini" :maxlength="3"  v-model="form.tmsOrderShip.shipReceiptNum" >
                     <template slot="append">份</template>
                   </el-input>
                 </el-form-item>
               </span>
               <el-form-item prop="tmsOrderShip.shipReceiptSn">
-                <el-input v-onlyNumberAndLetter size="mini" maxlength="20"  placeholder="回单号" v-model="form.tmsOrderShip.shipReceiptSn" />
+                <el-input v-onlyNumberAndLetter size="mini" :maxlength="20"  placeholder="回单号" v-model="form.tmsOrderShip.shipReceiptSn" />
               </el-form-item>
             </div>
           </el-col>
@@ -265,7 +265,7 @@
             <div class="order-form-item">
               <span class="order-form-label">打印标签</span>
               <el-form-item prop="tmsOrderShip.shipPrintLib">
-                <el-input v-number-only size="mini" maxlength="3"  v-model="form.tmsOrderShip.shipPrintLib" >
+                <el-input v-number-only size="mini" :maxlength="3"  v-model="form.tmsOrderShip.shipPrintLib" >
                   <template slot="append">份</template>
                 </el-input>
               </el-form-item>
@@ -275,7 +275,7 @@
             <div class="order-form-item">
               <span class="order-form-label ">客户单号</span>
               <el-form-item prop="tmsOrderShip.shipCustomerNumber">
-                <el-input v-onlyNumberAndLetter size="mini" maxlength="20"  v-model="form.tmsOrderShip.shipCustomerNumber" />
+                <el-input v-onlyNumberAndLetter size="mini" :maxlength="20"  v-model="form.tmsOrderShip.shipCustomerNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -317,7 +317,7 @@
             <div class="order-form-item">
               <span class="order-form-label">车牌号</span>
               <el-form-item prop="tmsOrderShip.shipTruckIdNumber">
-                <el-input size="mini" maxlength="20" disabled v-model="form.tmsOrderShip.shipTruckIdNumber" />
+                <el-input size="mini" :maxlength="20" disabled v-model="form.tmsOrderShip.shipTruckIdNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -388,7 +388,7 @@
                     </el-date-picker>
                   </td>
                   <td>
-                    <el-input size="mini" v-onlyNumberAndLetter maxlength="20"
+                    <el-input size="mini" v-onlyNumberAndLetter :maxlength="20"
                     @change="setOddNumbers" v-model="form.tmsOrderTransfer.oddNumbers" />
                   </td>
                   <td>
@@ -396,29 +396,29 @@
                     :filterable="true" show="select" v-model="form.tmsOrderTransfer.carrierId" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="20"  v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
+                    <el-input size="mini" :maxlength="20"  v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="13"  v-numberOnly v-model="form.tmsOrderTransfer.arrivalMobile" />
+                    <el-input size="mini" :maxlength="13"  v-numberOnly v-model="form.tmsOrderTransfer.arrivalMobile" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.transferCharge" />
+                    <el-input size="mini" :maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.transferCharge" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.deliveryExpense" />
+                    <el-input size="mini" :maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.deliveryExpense" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="20"
+                    <el-input size="mini" :maxlength="20"
                     v-numberOnly:point   v-model="form.tmsOrderTransfer.codService" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="8" disabled v-model="form.tmsOrderTransfer.totalCost" />
+                    <el-input size="mini" :maxlength="8" disabled v-model="form.tmsOrderTransfer.totalCost" />
                   </td>
                   <td>
                     <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
                   </td>
                   <td>
-                    <el-input size="mini" maxlength="250"  v-model="form.tmsOrderTransfer.remark" />
+                    <el-input size="mini" :maxlength="250"  v-model="form.tmsOrderTransfer.remark" />
                   </td>
                 </tr>
               </tbody>

@@ -16,16 +16,16 @@
       <SelectType v-model="searchForm.batchTypeId" type="delivery_batch_type" placeholder="请选择" class="pickup-way" />
     </el-form-item>
     <el-form-item label="送货批次:">
-      <el-input v-model="searchForm.batchNo" maxlength="15" clearable>
+      <el-input v-model="searchForm.batchNo" :maxlength="15" clearable>
       </el-input>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-input v-model="searchForm.truckIdNumber" maxlength="15" clearable>
+      <el-input v-model="searchForm.truckIdNumber" :maxlength="15" clearable>
       </el-input>
       <!-- <querySelect search="truckIdNumber" :remote="true" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable></querySelect> -->
     </el-form-item>
     <el-form-item label="司机名称">
-      <el-input v-model="searchForm.dirverName" maxlength="15" clearable>
+      <el-input v-model="searchForm.dirverName" :maxlength="15" clearable>
       </el-input>
       <!-- <querySelect search="driverName" type="driver" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable /> -->
     </el-form-item>
