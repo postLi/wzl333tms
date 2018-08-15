@@ -20,6 +20,7 @@
         <CreateOrder :ispop="true" :orderobj="orderobj" />
     </el-dialog>
     <!-- <iframe src="http://192.168.1.170/member/autologin.php" frameborder="0" style="width:0;height:0;"></iframe> -->
+    <setApiUrl />
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import LockScreen from '@/components/LockScreen/index'
 import OrderDetail from '@/views/operation/order/orderDetail/index'
 import CreateOrder from '@/views/operation/order/createOrder/main'
 import { Navbar, Sidebar, AppMain, TagsView } from '@/views/layout'
+import setApiUrl from '@/components/changeApiUrl/index'
 
 export default {
   name: 'layout',
@@ -40,7 +42,8 @@ export default {
     TagsView,
     LockScreen,
     CreateOrder,
-    OrderDetail
+    OrderDetail,
+    setApiUrl
   },
   data() {
     return {
@@ -103,6 +106,7 @@ export default {
     refreshKey() {
       this.theRefreshKey = Math.random()
     }
+    
   }
 }
 </script>

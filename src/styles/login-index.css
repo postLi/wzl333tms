@@ -29,12 +29,12 @@
   overflow: auto;
 }
 
-.login-container input:-webkit-autofill {
+.container-right input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px #293444 inset !important;
   -webkit-text-fill-color: #fff !important;
 }
 
-.login-container input {
+.container-right input {
   background: transparent;
   border: 0px;
   -webkit-appearance: none;

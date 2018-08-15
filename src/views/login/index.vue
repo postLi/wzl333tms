@@ -70,16 +70,20 @@
         <p>扫描二维码下载app</p>
       </div>
     </div>
-
+    <setApiUrl />
   </div>
 </template>
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
 import { requestFullScreen } from '@/utils/fullScreen'
+import setApiUrl from '@/components/changeApiUrl/index'
 
 export default {
   name: 'login',
+  components:{
+    setApiUrl
+  },
   data() {
     // const validateUsername = (rule, value, callback) => {
     //   if (!isvalidUsername(value)) {
