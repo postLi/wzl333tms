@@ -1,6 +1,6 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="发车时间:">
+    <el-form-item label="配载时间:">
       <el-date-picker
         v-model="searchCreatTime"
         type="daterange"

@@ -18,7 +18,7 @@
           <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
-        
+
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
@@ -128,7 +128,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '目的网点',
+          label: '到达网点',
           prop: 'arriveOrgName',
           width: '110',
           fixed: false
@@ -138,14 +138,19 @@ export default {
           width: '110',
           fixed: false
         }, {
+          label: '配载时间',
+          prop: 'loadTime',
+          width: '160',
+          fixed: false
+        }, {
           label: '发车时间',
-          prop: 'createTime',
+          prop: 'departureTime',
           width: '160',
           fixed: false
         }, {
           label: '司机名称',
           prop: 'dirverName',
-          width: '110',
+          width: '150',
           fixed: false
         }, {
           label: '配载总件数',
@@ -337,8 +342,16 @@ export default {
             })
             return false
           } else {
-            this.selectInfo = this.selected[0]
-            this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
+              if(this.selected[0].batchTypeName === '已入库'){
+                this.$message({
+                  message: '已入库不能修改~',
+                  type: 'warning'
+                })
+                return false
+              }else{
+                this.selectInfo = this.selected[0]
+                this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
+              }
           }
           break
         //    发车

@@ -135,65 +135,10 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
                 <div class="infos_tab">
-                  <!-- <el-table ref="multipleTable" :data="usersArr" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" >
-                    <el-table-column fixed sortable type="selection" width="50">
-                    </el-table-column>
-                    <el-table-column
-                    fixed
-                    sortable
-                    label="序号"
-                    width="60">
-                      <template slot-scope="scope">{{  scope.$index + 1 }}</template>
-                    </el-table-column>
-                    <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点" >
-                    </el-table-column>
-                    <el-table-column prop="shipSn" width="150" sortable label="运单号">
-                    </el-table-column>
-                    <el-table-column prop="childShipId" sortable width="120" label="子运单号">
-                    </el-table-column>
-                    <el-table-column prop="loadAmount" label="配载件数" width="100" sortable>
-                    </el-table-column>
-                    <el-table-column sortable prop="loadWeight" width="100" label="配载重量">
-                    </el-table-column>
-                    <el-table-column prop="loadVolume" label="配载体积" width="100" sortable>
-                    </el-table-column>
-                    <!--actualAmount-->
-                    <!-- <el-table-column prop="loadAmount" sortable width="100" label="库存件数">
-                    </el-table-column>
-                   
-                    <el-table-column sortable prop="loadWeight" width="100" label="库存重量">
-                    </el-table-column>
-                   
-                    <el-table-column label="库存体积" width="100" prop="loadVolume" sortable>
-                    <el-table-column prop="loadAmount" sortable width="100" label="运单件数">
-                    </el-table-column>
-                    <el-table-column sortable prop="loadWeight" width="100" label="运单重量">
-                    </el-table-column>
-                    <el-table-column label="运单体积" width="100" prop="loadVolume" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipFromCityName" label="出发城市" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipToCityName" label="到达城市" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipSenderName" label="发货人" width="100" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipSenderMobile" label="发货人电话" width="110" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipReceiverName" label="收货人" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipReceiverMobile" label="收货人电话" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="cargoName" label="货品名" width="100" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipGoodsSn" label="货号" width="130" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipRemarks" label="运单备注" width="120" sortable>
-                    </el-table-column>
-                  </el-table>
- -->
 
 
- <el-table ref="multipleTable"  :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+
+ <el-table ref="multipleTable"  :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -204,9 +149,9 @@
                 </template>
               </el-table-column>
             </template>
-          </el-table> 
+          </el-table>
 
-          
+
                 </div>
               </div>
             </div>
@@ -416,23 +361,7 @@
         </el-tabs>
       </div>
     </template>
-    <!--  <div slot="footer" class="dialog-footer stepFrom" v-if="isFootSecond">
-      <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
-        <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
+
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootSecond">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
         <el-form-item label="类型" prop="loadStatus">
@@ -748,6 +677,7 @@ export default {
         this.usersArr = data
         this.loading = false
         this.toggleAllRows()
+        // this.$refs.multipleTable.toggleRowSelection(e, true)
       })
 
     },
@@ -946,7 +876,7 @@ export default {
         float: right;
         margin-right: 0;
       }
-     
+
     }
     .infos_tab {
       width: 100%;

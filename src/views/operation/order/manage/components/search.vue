@@ -62,7 +62,7 @@ export default {
     return {
       searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       searchForm: {
-        orderStatus: '',
+        orderStatus: 213,
         orderSn: ''
       },
       rules: {
@@ -82,6 +82,7 @@ export default {
     this.loading = true
     this.searchForm.orgid = this.orgid
     this.onSubmit()
+
   },
   methods: {
     getOrgid(id) {

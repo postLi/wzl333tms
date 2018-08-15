@@ -137,7 +137,7 @@
                   <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                 </div>
-                <div class="infos_tab">
+                <el-table class="infos_tab">
                   <!--<el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">-->
                     <!--<el-table-column fixed sortable type="selection" width="40">-->
                     <!--</el-table-column>-->
@@ -164,7 +164,7 @@
                     <!--</el-table-column>-->
 
 
-                      <!--&lt;!&ndash;actualAmount  loadAmount   !isAlFun&ndash;&gt;-->
+                      <!--actualAmount  loadAmount   !isAlFun-->
                       <!--<el-table-column prop="actualAmount" sortable width="100" label="实到件数" v-if="isAlFun">-->
                       <!--</el-table-column>-->
                       <!--&lt;!&ndash;actualWeight   loadWeight&ndash;&gt;-->
@@ -219,36 +219,42 @@
 
 
 
-
-                   <el-table ref="multipleTable"  :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-                     <!--显示id-->
+                   <el-table-column ref="multipleTable"  :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+
             <template v-for="column in tableColumn">
-              <!--如果没有数据显示-->
+              <!--数据为空-->
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <!--如果没有数据显示-->
+              <!--数据为空-->
+              <!--有数据-->
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-                <!--有数据的时候各种状态的判断-->
+                <!--三种状态-->
                 <template slot-scope="scope">
-                  <!---->
+                  <!--第一张input输入的框-->
                   <div v-if="column.expand">
-                    <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+                    <el-input v-number-only v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changeData(scope.$index, column.prop, val)"></el-input>
                   </div>
-                  <div v-if="column.expand === false">
-                    <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                    <!--<el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>-->
+                  <!--第2中input不输入的框-->
+                  <div v-else-if="column.expand === false">
+                    <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :width="column.width">
+                    </el-table-column>
                   </div>
+                  <!--第2张input输入的框-->
+                  <!--第3张时间什么的问题-->
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
+                  <!--第3张时间什么的问题-->
+                  <!--<span v-else v-html="column.slot(scope)"></span>-->
                 </template>
-                <!--有数据的时候各种状态的判断-->
+                <!--三种状态-->
               </el-table-column>
+              <!--有数据-->
             </template>
+                   </el-table-column>
           </el-table>
 
                 </div>
               </div>
-            </div>
+
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="deliveryinfo_box" v-loading="loading">
@@ -582,12 +588,6 @@ export default {
           'arriveOtherFee': ''
         },
         tmsOrderLoadDetailsList: [
-          // {
-          //   id:'',
-          //   actualAmount:'',
-          //   actualWeight:'',
-          //   actualVolume:''
-          // }
         ]
       },
       searchQuery: {
@@ -636,45 +636,55 @@ export default {
         width: '100',
         fixed: false
       },
-      // v-if="isAlFun"   入库后的
+      // v-if="isAlFun"   入库前的
       {
         label: '实到件数',
         prop: 'actualAmount',
         width: '100',
         expand: true,
         fixed: false,
+        isAlFun:true,
+        slot: (scope) => {
+          return scope.row.actualAmount
+        }
       }, {
         label: '实到重量',
         prop: 'actualWeight',
         width: '100',
         fixed: false,
-        expand: true
+        expand: true,
+        slot: (scope) => {
+          return scope.row.actualWeight
+        }
       }, {
         label: '实到体积',
         prop: 'actualVolume',
         width: '100',
         fixed: false,
-        expand: true
+          expand: true,
+         slot: (scope) => {
+           return scope.row.actualVolume
+         }
       },
-      // v-if="!isAlFun"  入库前的
+      // v-if="!isAlFun"  入库后的
       {
         label: '实到件数',
         prop: 'actualAmount',
         width: '100',
-        fixed: false,
-        expand: false
+        isAlFun:false,
+        fixed: false
       }, {
         label: '实到重量',
         prop: 'actualWeight',
         width: '100',
-        fixed: false,
-          expand: false
+        expand: false,
+        fixed: false
       }, {
         label: '实到体积',
         prop: 'actualVolume',
         width: '100',
-        fixed: false,
-          expand: false
+        expand: false,
+        fixed: false
       },
       //
       {
@@ -746,16 +756,12 @@ export default {
     SelectTree,
     selectType,
     TableSetup
-
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
     orgid() {
-      // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-
-      // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   props: {
@@ -835,6 +841,7 @@ export default {
       if (!this.inited) {
         this.inited = true
         this.initInfo()
+
       }
     }
   },
@@ -844,22 +851,25 @@ export default {
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
+
     }
   },
   methods: {
-    changeData(newVal) { // 判断当行
-      const curAmount = this.detailList[newVal].actualAmount // 实到件数
-      const curWeight = this.detailList[newVal].actualWeight // 实到重量
-      const curVolume = this.detailList[newVal].actualVolume // 实到体积
-      const curloadAmount = this.detailList[newVal].loadAmount // 配载件数
-      const curloadWeight = this.detailList[newVal].loadWeight // 配载重量
-      const curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+    changeData(index, prop, newVal) { // 判断当行
+      this.detailList[index][prop] = Number(newVal)
+      console.log(this.detailList[index].actualAmount, newVal)
+      const curAmount = this.detailList[index].actualAmount // 实到件数
+      const curWeight = this.detailList[index].actualWeight // 实到重量
+      const curVolume = this.detailList[index].actualVolume // 实到体积
+      const curloadAmount = this.detailList[index].loadAmount // 配载件数
+      const curloadWeight = this.detailList[index].loadWeight // 配载重量
+      const curloadVolume = this.detailList[index].loadVolume // 配载体积
       if (this.selectDetailList.length === 1 && curAmount === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
+        // console.log(this.selectDetailList.length, this.detailList.length)
 
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
+        this.detailList[index].actualAmount = curloadAmount
+        this.detailList[index].actualWeight = curloadWeight
+        this.detailList[index].actualVolume = curloadVolume
         this.$notify({
           title: '提示',
           message: '实到件数不能为0',
@@ -878,13 +888,13 @@ export default {
       //   })
       // }
       if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[index], false)
         console.log(this.selectDetailList.length)
         if (this.selectDetailList.length === 0) {
-          this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
-          this.detailList[newVal].actualAmount = curloadAmount
-          this.detailList[newVal].actualWeight = curloadWeight
-          this.detailList[newVal].actualVolume = curloadVolume
+          this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
+          this.detailList[index].actualAmount = curloadAmount
+          this.detailList[index].actualWeight = curloadWeight
+          this.detailList[index].actualVolume = curloadVolume
         }
         this.$notify({
           title: '提示',
@@ -897,10 +907,10 @@ export default {
           message: '实到件数/实到重量/实到体积不能小于0,默认为该库存数量',
           type: 'warning'
         })
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+        this.detailList[index].actualAmount = curloadAmount
+        this.detailList[index].actualWeight = curloadWeight
+        this.detailList[index].actualVolume = curloadVolume
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
       }
       // else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
       //   this.$notify({
@@ -914,9 +924,9 @@ export default {
       //   this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       // }
       else {
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+        this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
       }
-      return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
+      return this.detailList[index].actualAmount && this.detailList[index].actualWeight && this.detailList[index].actualVolume
     },
     fetchSelectLoadMainInfoList() {
       this.loading = true
@@ -939,7 +949,6 @@ export default {
         this.$nextTick(() => { // 默认设置实到数量为配载数量
           this.detailList.forEach(e => {
             // 入库前
-            console.log(this.batchTypeName)
             if (!this.isAlFun) {
               e.actualAmount = e.loadAmount
               e.actualWeight = e.loadWeight
@@ -953,6 +962,15 @@ export default {
             // e.actualWeight = e.loadWeight - e.actualWeight
             // e.actualVolume = e.loadVolume - e.actualVolume
           })
+        })
+        this.detailList.filter(el => {
+          if(el.expand === true){
+            el.expand = this.isAlFun
+            console.log("首先",el.expand)
+          }else{
+            el.expand = !this.isAlFun
+            console.log("最好",el.expand)
+          }
         })
       })
     },
@@ -1108,8 +1126,19 @@ export default {
                   type: 'info',
                   message: '实到件数/实到重量/实到体积不能小于0'
                 })
+                this.$refs.multipleTable.clearSelection()
                 return false
-              } else {
+              }
+              if(!this.formModel.arriveOtherFee || !this.formModel.arriveHandlingFee){
+                this.$message({
+                  type: 'info',
+                  message: '到站装卸费/到站其他费不能为空'
+                })
+                this.$refs.multipleTable.clearSelection()
+                return false
+              }
+
+              else {
                 this.sendModel.tmsOrderLoad.id = this.formModel.id
                 this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
                 this.sendModel.tmsOrderLoadFee.arriveHandlingFee = this.formModel.arriveHandlingFee
