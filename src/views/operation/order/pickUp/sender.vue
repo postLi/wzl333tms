@@ -380,13 +380,13 @@ export default {
           // 删除客户
         case 'delete':
           const ids = this.selected.filter(el => {
-            return el.pickupStatusName === '提货完成'
+            return el.pickupStatusName === '提货中'
           }).map(el => {
             return el.id
           })
           if (!ids.length) {
             this.$message({
-              type: 'error',
+              type: 'info',
               message: '提货完成的提货单不能删除!'
             })
             return false
@@ -406,41 +406,12 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '删除失败，原因：' + err.text ? err.text : err
                 })
               })
             })
           }
-          // this.closeAddCustomer()
-
-          // let ids = this.selected.map(el => {
-          //   return el.id
-          // })
-          // ids = ids.join(',')
-          // this.$confirm('确定要删除提货批次吗？', '提示', {
-          //   confirmButtonText: '删除',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-          //   deletebatchDelete(ids).then(res => {
-          //     this.$message({
-          //       type: 'success',
-          //       message: '删除成功!'
-          //     })
-          //     this.fetchData()
-          //   }).catch(err => {
-          //     this.$message({
-          //       type: 'info',
-          //       message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-          //     })
-          //   })
-          // }).catch(() => {
-          //   this.$message({
-          //     type: 'info',
-          //     message: '已取消删除'
-          //   })
-          // })
-          // break
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
