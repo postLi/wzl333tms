@@ -12,6 +12,9 @@ export default {
   component: Layout,
   redirect: '/company/groupManage',
   name: '公司管理首页',
+  meta:{
+    title: '公司管理'
+  },
   icon: 'gongsiguanli',
   children: [
     { path: '/company/index', icon: 'information', hidden: true, name: '公司管理', component: _import('company/index'), meta: { title: '公司管理', stitle: '公司', noCache: true }},

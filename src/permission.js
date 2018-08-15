@@ -40,7 +40,8 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true })
           })
         }).catch((err) => {
-          Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          //Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           next({ path: '/login', query: {
             // 删除tmstoken，避免重复循环

@@ -6,6 +6,9 @@ export default {
   component: Layout,
   redirect: '/finance/index',
   name: '财务管理首页',
+  meta:{
+    title: '报表管理'
+  },
   icon: 'caiwu',
   children: [
     {

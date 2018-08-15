@@ -9,7 +9,7 @@
       </el-menu-item>
       <template v-for="(menu, index) in permission_routers">
          <el-menu-item :key="index" :index="menu.path" v-if="!menu.hidden">
-          <icon-svg v-if="menu.icon" :icon-class="menu.icon" /> {{menu.name}}
+          <icon-svg v-if="menu.icon" :icon-class="menu.icon" /> {{menu.meta.title}}
         </el-menu-item>
       </template>
       </el-menu>

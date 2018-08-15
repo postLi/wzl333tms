@@ -8,6 +8,9 @@ export default {
   icon: 'baobiao',
   name: '报表管理首页',
   noDropdown: false,
+  meta:{
+    title: '报表管理'
+  },
   children: [{
     path: '/report/settleRecordTotal',
     icon: 'baobiao1_yingshouyfhzb',
