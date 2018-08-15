@@ -34,7 +34,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       topSearch: '',
       searchListArr: [],
@@ -46,22 +46,22 @@ export default {
         },
         {
           name: '发货人手机',
-          key: 'senderCustomerMobile',
+          key: 'shipSenderMobile',
           value: ''
         },
         {
           name: '收货人手机',
-          key: 'receiverCustomerMobile',
+          key: 'shipReceiverMobile',
           value: ''
         },
         {
           name: '发货人',
-          key: 'senderCustomerName',
+          key: 'shipSenderName',
           value: ''
         },
         {
           name: '收货人',
-          key: 'receiverCustomerName',
+          key: 'shipReceiverName',
           value: ''
         },
         {
@@ -73,52 +73,54 @@ export default {
           name: '货号',
           key: 'shipGoodsSn',
           value: ''
-        },
+        }
       ]
     }
   },
   methods: {
     // 显示小搜素框
-    showmini () {
+    showmini() {
       this.$refs['topNavSearch'].classList.toggle('showMiniSearchBox')
     },
-    addLong () {
+    addLong() {
       this.$refs['topNavSearch'].classList.add('longSearchBox')
     },
-    setShort () {
+    setShort() {
       this.$refs['topNavSearch'].classList.remove('longSearchBox')
       // this.$refs['topNavSearch'].classList.remove('showMiniSearchBox')
     },
-    querySearch (query, cb) {
-      let data = this.searchListArr
+    querySearch(query, cb) {
+      const data = this.searchListArr
       cb(data)
     },
-    handleEnter(){
+    handleEnter() {
       this.handleSelect({
         key: 'shipSn',
         value: this.topSearch
       })
       // this.$refs.topNavSearchComplete.blur()
     },
-    handleSelect (index) {
-      console.log('Top nav search List:', index)
-      this.$router.push({path: '/operation/order/orderManage', query: {
+    handleSelect(index) {
+      this.$router.push({ path: '/operation/order/orderManage', query: {
         key: index.key,
         value: index.value
       }})
+      if (this.$refs['topNavSearchComplete'].$refs['input'] && this.$refs['topNavSearchComplete'].$refs['input'].blur) {
+        this.$refs['topNavSearchComplete'].$refs['input'].blur()
+      }
     },
-    clearinput () {
+    clearinput() {
       this.topSearch = ''
       // 调用组件内部方法
       // 清除数据
-      if(typeof this.$refs['topNavSearchComplete'].handleChange === 'function'){
+      if (typeof this.$refs['topNavSearchComplete'].handleChange === 'function') {
         typeof this.$refs['topNavSearchComplete'].handleChange('')
       }
     }
   },
   watch: {
-    topSearch(newVal){
-      if(newVal.trim()!==''){
+    topSearch(newVal) {
+      if (newVal.trim() !== '') {
         this.searchListArr = this.searchList.map(el => {
           el.value = newVal
           return el
@@ -126,7 +128,6 @@ export default {
       } else {
         this.searchListArr = []
       }
-      
     }
   }
 }

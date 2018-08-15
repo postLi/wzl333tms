@@ -13,7 +13,7 @@ export const CUSTOMER_RECEIVER_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com
 // 5、车辆导入模板.xlsx
 export const TRUCK_EXCEL= 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E8%BD%A6%E8%BE%86%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
 // 运单状态 shipStatus
-export const SHIP_STATUS = {
+export const SHIPSTATUS = {
   1: '已入库',
   2: '短驳中',
   3: '已装车',

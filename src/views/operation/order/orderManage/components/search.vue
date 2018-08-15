@@ -20,10 +20,10 @@
       <el-form-item class="searchinfo--order">
         <el-select v-model="searchForm.type">
           <el-option label="运单号" value="shipSn"></el-option>
-          <el-option label="发货人" value="senderCustomerName"></el-option>
-          <el-option label="发货人手机" value="senderCustomerMobile"></el-option>
-          <el-option label="收货人" value="receiverCustomerName"></el-option>
-          <el-option label="收货人手机" value="receiverCustomerMobile"></el-option>
+          <el-option label="发货人" value="shipSenderName"></el-option>
+          <el-option label="发货人手机" value="shipSenderMobile"></el-option>
+          <el-option label="收货人" value="shipReceiverName"></el-option>
+          <el-option label="收货人手机" value="shipReceiverMobile"></el-option>
           <el-option label="货物名称" value="cargoName"></el-option>
           <el-option label="货号" value="shipGoodsSn"></el-option>
         </el-select>
@@ -94,24 +94,31 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.orgid = newVal
+    },
+    $route(newVal){
+      if(this.$route.path.indexOf('operation/order/orderManage') !== -1){
+        this.setSearch()
+        this.onSubmit()
+      }
     }
   },
   mounted() {
     this.searchForm.orgid = this.orgid
-    const key = this.$route.query.key
-    const value = this.$route.query.value
-    if (key && value) {
-      console.log('search ship list:', key, value)
-      this.searchForm.type = key
-      this.searchForm.value = value
-    }
+    this.setSearch()
     this.searchCreatTime = this.defaultTime
     this.onSubmit()
   },
   methods: {
+    setSearch(){
+      const key = this.$route.query.key
+      const value = this.$route.query.value
+      if (key && value) {
+        this.searchForm.type = key
+        this.searchForm.value = value
+      }
+    },
     onSubmit() {
       const searchObj = {}
-      console.log('this.searchCreatTime:', this.searchCreatTime)
       searchObj.shipFromOrgid = this.searchForm.orgid
       searchObj.shipStatus = this.searchForm.shipStatus
       searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''

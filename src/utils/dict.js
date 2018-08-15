@@ -2,7 +2,6 @@ import * as $const from '@/utils/constant'
 
 const TMS_DICT_OBJECT = {
   'fee_status': [],
-  'ship_status': [],
   'ship_shipIdentifying': {
     '转': '<i class="ship-zhuan"></i>',
     '拆': '<i class="ship-chai"></i>',

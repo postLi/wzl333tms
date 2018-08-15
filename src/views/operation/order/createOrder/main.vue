@@ -548,6 +548,31 @@ export default {
       DELIVERY_METHODS: {}, // 提货方式
       PAY_WAY: {}, // 付款方式
       activeNames: ['1'],
+      'shipFieldValue': {
+        'amountFee': false,
+        'brokerageFee': false,
+        'cargoPack': false,
+        // "cargoVolume": "0",
+        // "cargoWeight": "0",
+        'deliveryFee': false,
+        'handlingFee': false,
+        'insuranceFee': false,
+        'packageFee': false,
+        'pickupFee': false,
+        // "productPrice": "0",
+        'shipCustomerNumber': false,
+        'shipFromCityName': false,
+        'shipGoodsSn': false,
+        'shipReceiptSn': false,
+        'shipReceiverAddress': false,
+        'shipReceiverId': false,
+        'shipSenderAddress': false,
+        'shipSenderId': false,
+        'shipToOrgid': false,
+        'shipUserid': false,
+        'volumeFee': false,
+        'weightFee': false
+      },
       rules2: {
         'tmsOrderShip.shipCustomerNumber': [
           { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '请输入客户单号' }
