@@ -723,7 +723,7 @@
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
-  import { createRec } from '@/utils/recLodopFuncs'
+  import { createReconciliation } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -851,13 +851,13 @@
       this.onSubmit()
     },
     methods: {
-      // export1() {
-      //   alert('111')
-      //   createRec({
-      //     data: this.messageInfo
-      //     //  columns: this.tableColumn
-      //   })
-      // },
+      export1() {
+        alert('111')
+        createReconciliation({
+          data: this.messageInfo
+          //  columns: this.tableColumn
+        })
+      },
       fetchList() {
         this.loading = true
         this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id

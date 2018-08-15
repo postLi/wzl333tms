@@ -462,7 +462,7 @@
    return tableId
  }
 
- function createRec(params) {
+ function createReconciliation(params) {
    console.log(params)
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
    const div = document.createElement('div')

@@ -27,7 +27,6 @@
       </el-form-item>
     <el-form-item label="车牌号:">
       <el-input
-        v-numberOnly
         placeholder=""
         maxlength="8"
         v-model="searchForm.truckIdNumber"

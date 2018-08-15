@@ -14,231 +14,7 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <!--<el-table-->
-          <!--ref="multipleTable"-->
-          <!--:data="usersArr"-->
-          <!--stripe-->
-          <!--border-->
-          <!--@row-dblclick="getDbClick"-->
-          <!--@row-click="clickDetails"-->
-          <!--@selection-change="getSelection"-->
-          <!--height="100%"-->
-          <!--tooltip-effect="dark"-->
-          <!--:default-sort = "{prop: 'id', order: 'ascending'}"-->
-          <!--style="width: 100%">-->
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--type="selection"-->
-            <!--width="50">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--label="序号"-->
-            <!--width="100">-->
-            <!--<template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--prop="pickupBatchNumber"-->
-            <!--width="110"-->
-            <!--label="提货批次">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="pickupStatusName"-->
-            <!--width="110"-->
-            <!--sortable-->
-            <!--label="提货状态">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="cancelStatus"-->
-            <!--sortable-->
-            <!--width="150"-->
-            <!--label="运费核销状态">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="customerName"-->
-            <!--sortable-->
-            <!--width="120"-->
-            <!--label="发货人">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--sortable-->
-            <!--prop="customerMobile"-->
-            <!--width="130"-->
-            <!--label="手机号">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--label="提货地址"-->
-            <!--width="170"-->
-            <!--prop="detailedAddress"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="pickupName"-->
-            <!--label="货品名"-->
-            <!--width="120"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--sortable-->
-            <!--prop="pickupAmount"-->
-            <!--width="80"-->
-            <!--label="件数">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="pickupWeight"-->
-            <!--label="重量"-->
-            <!--width="80"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="pickupVolume"-->
-            <!--label="体积"-->
-            <!--width="80"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="realWeight"-->
-            <!--label="实际载重量"-->
-            <!--width="120"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="differWeight"-->
-            <!--label="差额重量"-->
-            <!--width="110"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="realVolume"-->
-            <!--label="实际载体积"-->
-            <!--width="120"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="differVolume"-->
-            <!--label="差额体积"-->
-            <!--width="120"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="shipSns"-->
-            <!--label="关联运单号"-->
-            <!--width="120"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="pickupFee"-->
-            <!--label="关联提货费"-->
-            <!--width="120"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="toCityName"-->
-            <!--label="到达城市"-->
-            <!--width="150"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-          <!--prop="payMethodName"-->
-          <!--label="付款方式"-->
-          <!--width="120"-->
-          <!--sortable-->
-        <!--&gt;-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-          <!--prop="remark"-->
-          <!--label="备注"-->
-          <!--width="120"-->
-          <!--sortable-->
-        <!--&gt;-->
-        <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="carriage"-->
-            <!--label="运费"-->
-            <!--width="80"-->
-            <!--sortable-->
-          <!--&gt;-->
 
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-          <!--prop="collectionFee"-->
-          <!--label="代收费用"-->
-          <!--width="110"-->
-          <!--sortable-->
-        <!--&gt;-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-          <!--prop="truckIdNumber"-->
-          <!--label="车牌号"-->
-          <!--width="90"-->
-          <!--sortable-->
-        <!--&gt;-->
-        <!--</el-table-column>-->
-          <!--<el-table-column-->
-          <!--prop="truckFee"-->
-          <!--label="车费"-->
-          <!--width="80"-->
-          <!--sortable-->
-        <!--&gt;-->
-        <!--</el-table-column>-->
-         <!--<el-table-column-->
-          <!--prop="truckUnit"-->
-          <!--label="车辆单位"-->
-          <!--width="110"-->
-          <!--sortable-->
-        <!--&gt;-->
-        <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="driverName"-->
-            <!--label="司机姓名"-->
-            <!--width="110"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="driverMobile"-->
-            <!--label="司机手机"-->
-            <!--width="110"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="truckTypeName"-->
-            <!--label="车辆类型"-->
-            <!--width="110"-->
-            <!--sortable>-->
-
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="outTime"-->
-            <!--label="出车时间"-->
-            <!--width="160"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="arriveTime"-->
-            <!--label="要求到达时间"-->
-            <!--width="160"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-        <!--</el-table>-->
 
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
@@ -507,7 +283,6 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-
       // 判断是否有选中项
       if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.closeAddCustomer()
@@ -518,7 +293,7 @@ export default {
         return false
       }
       switch (type) {
-                case 'export':
+        case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn
@@ -530,8 +305,8 @@ export default {
           //   // 筛选选中的项
           //   SaveAsFile(this.selected, this.tableColumn)
           // }
-          break;
-          case 'print':
+          break
+        case 'print':
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn
@@ -552,16 +327,16 @@ export default {
           this.isDbclick = false
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能修改单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
             return false
           }
           if (this.selected[0].pickupStatus === 237) {
             this.$message({
-                message: '提货完成不能修改~',
-                type: 'warning'
-              })
+              message: '提货完成不能修改~',
+              type: 'warning'
+            })
             this.$refs.multipleTable.clearSelection()
             return false
           }
@@ -604,45 +379,68 @@ export default {
           break
           // 删除客户
         case 'delete':
-          this.closeAddCustomer()
-                  // =>todo 删除多个
-                  // let ids = this.selected.filter(el=>{
-                  //   return el.pickupStatus === 236
-                  // }).map(el => {
-                  //   return  el.id
-                  // })
-          let ids = this.selected.map(el => {
+          const ids = this.selected.filter(el => {
+            return el.pickupStatusName === '提货完成'
+          }).map(el => {
             return el.id
           })
-            // if(!ids.length){
-            //   this.$message.warning('提货完成不能删除~')
-            // }else {
-          ids = ids.join(',')
-          this.$confirm('确定要删除提货批次吗？', '提示', {
-            confirmButtonText: '删除',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-                deletebatchDelete(ids).then(res => {
-                          this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                          })
-                          this.fetchData()
-                        }).catch(err => {
-                          this.$message({
-                              type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                            })
-                        })
-              }).catch(() => {
-                        this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                        })
-                      })
-            // }
-          break
+          if (!ids.length) {
+            this.$message({
+              type: 'error',
+              message: '提货完成的提货单不能删除!'
+            })
+            return false
+          } else {
+            ids = ids.join(',')
+            this.$confirm('确定要删除提货批次吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              deletebatchDelete(ids).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this.$message({
+                  type: 'info',
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                })
+              })
+            })
+          }
+          // this.closeAddCustomer()
+
+          // let ids = this.selected.map(el => {
+          //   return el.id
+          // })
+          // ids = ids.join(',')
+          // this.$confirm('确定要删除提货批次吗？', '提示', {
+          //   confirmButtonText: '删除',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   deletebatchDelete(ids).then(res => {
+          //     this.$message({
+          //       type: 'success',
+          //       message: '删除成功!'
+          //     })
+          //     this.fetchData()
+          //   }).catch(err => {
+          //     this.$message({
+          //       type: 'info',
+          //       message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+          //     })
+          //   })
+          // }).catch(() => {
+          //   this.$message({
+          //     type: 'info',
+          //     message: '已取消删除'
+          //   })
+          // })
+          // break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()

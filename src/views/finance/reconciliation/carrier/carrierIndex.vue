@@ -300,6 +300,10 @@ export default {
           id: row.carrierId
         }
       })
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
