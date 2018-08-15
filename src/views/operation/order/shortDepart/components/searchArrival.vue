@@ -115,7 +115,7 @@ export default {
       // this.searchForm = Object.assign({}, this.$options.data().searchForm)
     },
     filterfn (obj) {
-     return obj.id !== 49
+     return obj.id !== 47
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

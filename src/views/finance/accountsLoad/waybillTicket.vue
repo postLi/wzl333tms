@@ -583,11 +583,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['fee', 'unpaidFee', 'closeFee','cargoAmount', 'cargoWeight', 'cargoVolume']
+      let propsArr = ['_index|2|单','fee', 'unpaidFee', 'closeFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['fee', 'unpaidFee', 'closeFee', 'inputPickupFee','cargoAmount', 'cargoWeight', 'cargoVolume']
+       let propsArr = ['_index|2|单','fee', 'unpaidFee', 'closeFee', 'inputPickupFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     }
   }

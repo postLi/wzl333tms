@@ -41,7 +41,7 @@ service.interceptors.request.use(config => {
       config.url = '/chenrongtao' + config.url
       // config.url = '/home' + config.url
       // config.url = '/fangjian' + config.url
-      config.url = '/aliyun' + config.url
+      // config.url = '/aliyun' + config.url
     }
   }
 

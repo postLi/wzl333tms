@@ -263,8 +263,8 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'sign', this.sign)
-      this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
-      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
+      // this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
+      // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
       return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total

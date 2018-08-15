@@ -714,11 +714,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-     let propsArr = ['arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee','unpaidArriveOtherFee', 'loadAmountall', 'loadWeightall', 'loadVolumeall']
+     let propsArr = ['_index|2|单','arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee','unpaidArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'amountArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'amountArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee','amountArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'amountArriveOtherFee','loadAmountall', 'loadWeightall', 'loadVolumeall']
+      let propsArr = ['_index|2|单','arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'amountArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'amountArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee','amountArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'amountArriveOtherFee','loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     }
   }

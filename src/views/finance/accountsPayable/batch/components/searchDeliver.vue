@@ -19,7 +19,8 @@
       <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
     </el-form-item>
     <el-form-item label="司机">
-      <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" />
+      <el-input v-model="searchForm.dirverName" clearable :maxlength="10"  placeholder="司机名称"></el-input>
+      <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -68,8 +69,8 @@ export default {
         // departureStartTime: '',
         // departureEndTime: '',
         // batchNo: '',
-        truckIdNumber: ''
-        // dirverName: ''
+        truckIdNumber: '',
+        dirverName: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]

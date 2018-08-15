@@ -1,6 +1,6 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="100px" class="staff_searchinfo clearfix">
-    <el-form-item label="短驳时间">
+    <el-form-item label="发车时间">
       <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
@@ -19,7 +19,8 @@
       <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
     </el-form-item>
     <el-form-item label="司机">
-      <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" />
+      <el-input v-model="searchForm.dirverName" clearable :maxlength="10" placeholder="司机名称"></el-input>
+      <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -68,8 +69,8 @@ export default {
         // departureStartTime: '',
         // departureEndTime: '',
         // batchNo: '',
-        truckIdNumber: ''
-        // dirverName: ''
+        truckIdNumber: '',
+        dirverName: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]

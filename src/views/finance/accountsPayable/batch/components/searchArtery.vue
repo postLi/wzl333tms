@@ -11,15 +11,15 @@
             end-placeholder="结束日期">
           </el-date-picker>
     </el-form-item>
-    <el-form-item label="发车网点" prop="orgid">
+    <el-form-item label="发车网点">
       <SelectTree v-model="searchForm.orgid" v-if="!isAllOrg"  :orgid="otherinfo.orgid"></SelectTree>
       <SelectTree v-model="searchForm.orgid"  v-else>
       </SelectTree>
     </el-form-item>
-    <el-form-item label="结算网点" prop="ascriptionOrgid"  v-if="isAllOrg">
+    <el-form-item label="结算网点"  v-if="isAllOrg">
       <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid" clearable></SelectTree>
     </el-form-item>
-    <el-form-item label="到车网点" prop="arriveOrgid"  v-if="!isAllOrg && isArrivalSel">
+    <el-form-item label="到车网点"  v-if="!isAllOrg && isArrivalSel">
       <SelectTree v-model="searchForm.arriveOrgid"  clearable></SelectTree>
     </el-form-item>
     <el-form-item label="发车批次" prop="batchNo">
@@ -29,7 +29,8 @@
       <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
     </el-form-item>
     <el-form-item label="司机">
-      <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" />
+      <el-input v-model="searchForm.dirverName" clearable :maxlength="10" placeholder="司机名称"></el-input>
+      <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -85,8 +86,8 @@ export default {
         // departureStartTime: '',
         // departureEndTime: '',
         // batchNo: '',
-        truckIdNumber: ''
-        // dirverName: ''
+        truckIdNumber: '',
+        dirverName: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
@@ -111,8 +112,8 @@ export default {
        */
       let searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'loadStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-        this.$set(searchObj, 'loadEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        this.$set(searchObj, 'departureStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(searchObj, 'departureEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
     },

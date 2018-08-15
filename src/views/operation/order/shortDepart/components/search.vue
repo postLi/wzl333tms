@@ -1,6 +1,6 @@
 <template>
   <el-form ref="searchForm" :inline="true" size="mini" label-position="right" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
-    <el-form-item label="短驳时间">
+    <el-form-item label="发车时间">
       <!-- <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
       </el-date-picker> -->
       <el-date-picker
@@ -32,7 +32,7 @@
       <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
     </el-form-item>
     <el-form-item label="网点">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable  :orgid="otherinfo.orgid"></SelectTree>
+      <SelectTree v-model="searchForm.arriveOrgid" clearable :orgid="otherinfo.orgid"></SelectTree>
     </el-form-item>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -103,8 +103,8 @@ export default {
   methods: {
     onSubmit() {
       if (this.searchTime) {
-        this.searchForm.loadStartTime = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
-        this.searchForm.loadEndTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
+        this.searchForm.departureStartTime = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
+        this.searchForm.departureEndTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
       // if (this.searchForm.batchTypeId === 46) {
       //   this.searchForm.batchTypeId = undefined

@@ -874,11 +874,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['fee', 'unpaidFee', 'paidFee', 'loadAmountall', 'loadWeightall', 'loadVolumeall']
+     let propsArr = ['_index|2|单','nowpayCarriage', 'paidNowpayCarriage', 'unpaidNowpayCarriage', 'nowpayOilCard', 'paidNowpayOilCard', 'unpaidNowpayOilCard', 'backpayCarriage', 'paidBackpayCarriage', 'unpaidBackpayCarriage', 'backpayOilCard', 'paidBackpayOilCard','unpaidBackpayOilCard', 'carloadInsuranceFee', 'unpaidCarloadInsuranceFee','leaveHandlingFee','paidLeaveHandlingFee','unpaidLeaveHandlingFee','leaveOtherFee','paidLeaveOtherFee','unpaidLeaveOtherFee','paidCarloadInsuranceFee','loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['fee', 'unpaidFee', 'paidFee', 'loadAmountall','amount', 'loadWeightall', 'loadVolumeall']
+       let propsArr = ['_index|2|单','nowpayCarriage', 'paidNowpayCarriage', 'unpaidNowpayCarriage', 'nowpayOilCard', 'paidNowpayOilCard', 'unpaidNowpayOilCard', 'backpayCarriage', 'paidBackpayCarriage', 'unpaidBackpayCarriage', 'backpayOilCard', 'paidBackpayOilCard','unpaidBackpayOilCard', 'carloadInsuranceFee', 'unpaidCarloadInsuranceFee','leaveHandlingFee','paidLeaveHandlingFee','unpaidLeaveHandlingFee','leaveOtherFee','paidLeaveOtherFee','unpaidLeaveOtherFee','paidCarloadInsuranceFee','amountNowpayCarriage','amountCarloadInsuranceFee','amountBackpayOilCard','amountBackpayCarriage','amountLeaveOtherFee','amountLeaveHandlingFee','amountNowpayOilCard','loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     }
   }
