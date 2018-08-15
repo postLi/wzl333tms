@@ -6,7 +6,7 @@ export default {
   component: Layout,
   redirect: '/operation/index',
   icon: 'yunyingguanli',
-  name: '运营管理',
+  name: '运营管理首页',
   noDropdown: true,
   children: [{
     path: '/operation/order/manage', icon: 'yygl1_dingdan', name: 'ordermanage', component: _import('operation/order/manage/index'), meta: { role: ['admin'], title: '订单管理', noCache: false }

@@ -6,7 +6,7 @@ export default {
   component: Layout,
   redirect: '/report/settleRecordTotal',
   icon: 'baobiao',
-  name: '报表管理',
+  name: '报表管理首页',
   noDropdown: false,
   children: [{
     path: '/report/settleRecordTotal',

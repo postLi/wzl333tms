@@ -5,7 +5,7 @@ export default {
   path: '/finance',
   component: Layout,
   redirect: '/finance/index',
-  name: '财务管理',
+  name: '财务管理首页',
   icon: 'caiwu',
   children: [
     {
@@ -76,10 +76,10 @@ export default {
       path: '/finance/IOManage', icon: 'caiwugl3_shouzhifs', name: 'IOManage', component: _import('finance/IOManage/index'), meta: { role: ['admin'], title: '收支方式管理', noCache: false }
     },
     {
-      path: '/finance/reconciliation/carrier/detailTable', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/carrier/components/detailTable/index'), meta: { role: ['admin'], title: '承运商对账', noCache: false }
+      path: '/finance/reconciliation/carrier/detailTable', icon: 'QQ', hidden: true, name: '承运商对账明细', component: _import('finance/reconciliation/carrier/components/detailTable/index'), meta: { role: ['admin'], title: '承运商对账', noCache: false }
     },
     {
-      path: '/finance/reconciliation/customer/detailTable', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/customer/components/detailTable/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
+      path: '/finance/reconciliation/customer/detailTable', icon: 'QQ', hidden: true, name: '客户对账明细', component: _import('finance/reconciliation/customer/components/detailTable/index'), meta: { role: ['admin'], title: '客户对账', noCache: false }
     },
     // 承运商对账-创建对账
     {
@@ -87,19 +87,19 @@ export default {
     },
     // //客户对账-创建对账 customerRecon
     {
-      path: '/finance/reconciliation/customer/detailTable/customerRecon', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/customer/components/detailTable/components/customerRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
+      path: '/finance/reconciliation/customer/detailTable/customerRecon', icon: 'QQ', hidden: true, name: '创建对账明细', component: _import('finance/reconciliation/customer/components/detailTable/components/customerRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
     },
     // 车辆-干线
     {
-      path: '/finance/reconciliation/carfee/components/arteryRecon', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/carfee/components/arteryRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
+      path: '/finance/reconciliation/carfee/components/arteryRecon', icon: 'QQ', hidden: true, name: '干线对账明细', component: _import('finance/reconciliation/carfee/components/arteryRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
     },
     // 车辆-短驳
     {
-      path: '/finance/reconciliation/carfee/components/shortRecon', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/carfee/components/shortRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
+      path: '/finance/reconciliation/carfee/components/shortRecon', icon: 'QQ', hidden: true, name: '短驳对账明细', component: _import('finance/reconciliation/carfee/components/shortRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
     },
     // 车辆-送货
     {
-      path: '/finance/reconciliation/carfee/components/deliverRecon', icon: 'QQ', hidden: true, name: '对账明细', component: _import('finance/reconciliation/carfee/components/deliverRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
+      path: '/finance/reconciliation/carfee/components/deliverRecon', icon: 'QQ', hidden: true, name: '送货对账明细', component: _import('finance/reconciliation/carfee/components/deliverRecon'), meta: { role: ['admin'], title: '创建对账单', noCache: false }
     }
   ]
 }
