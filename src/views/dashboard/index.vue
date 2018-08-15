@@ -31,7 +31,7 @@
         </router-link>
       </el-tooltip>
       <el-tooltip placement="top">
-        <div slot="content">功能：创建并打印标签和快速运单
+        <div slot="content">功能：发货方，承运方之间的凭证
           <!-- <br/>操作：订单管理-预开单 -->
         </div>
         <router-link to="/operation/order/orderManage" class="flowitem send-04yundan">
@@ -49,7 +49,7 @@
         </router-link>
       </el-tooltip>
       <el-tooltip placement="top">
-        <div slot="content">功能：将运单转给第三方承运商
+        <div slot="content">功能：开单收货，网点到货形成库存
           <!-- <br/>操作：运营管理-库存管理。 -->
         </div>
         <router-link to="/operation/order/repertory" class="flowitem send-06fahuokc">
@@ -99,13 +99,13 @@
           <p>到货库存</p>
         </router-link>
       </el-tooltip>
-      <el-tooltip content="功能：把货物转运给分拨中心" placement="top">
+      <el-tooltip content="功能：通过短驳把货物运输到配送网点" placement="top">
         <router-link to="/operation/order/shortDepart" class="flowitem receive-11duobofache">
           <i class="flowicon duobofache"></i>
           <p>短驳发车</p>
         </router-link>
       </el-tooltip>
-      <el-tooltip content="自提" placement="top">
+      <el-tooltip content="功能：对自提运单进行签收" placement="top">
         <router-link to="/operation/order/pickUp" class="flowitem receive-12ziti">
           <i class="flowicon ziti"></i>
           <p>自提</p>

@@ -103,15 +103,15 @@ export default {
         },
         {
           label: "送货时间",
-          prop: "departureTime",
+          prop: "loadTime",
           width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
           label: "完成时间",
-          prop: "arriveOrgName",
+          prop: "departureTime",
           width: "120"
         },
         {

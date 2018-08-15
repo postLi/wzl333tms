@@ -192,7 +192,7 @@ export default {
         this.$set(obj, 'settlementId', this.settlementId)
         this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
-        this.$set(obj, 'autoTotalAmount', 0)
+        this.$set(obj, 'autoTotalAmount', '')
         getOrderShipList(obj).then(data => {
           this.loading = false
           this.leftTable = data
