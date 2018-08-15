@@ -35,7 +35,7 @@
     </el-form-item>
     <el-form-item label="司机姓名:">
       <el-input
-        v-numberOnly
+        
         placeholder=""
         maxlength="8"
         v-model="searchForm.driverName"

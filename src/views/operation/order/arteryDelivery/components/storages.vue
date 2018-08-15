@@ -628,7 +628,8 @@ export default {
         label: '实到件数',
         prop: 'actualAmount',
         width: '100',
-        fixed: false,
+        isAlFun: true,
+        fixed: false
 
         // slot: (scope) => {
         //   return isAlFun = isAlFun ? isAlFun : ''

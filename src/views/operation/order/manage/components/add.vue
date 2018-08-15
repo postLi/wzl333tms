@@ -148,8 +148,8 @@
                 </el-form-item>
               </td>
               <td>
-                <el-form-item label="声明价值" prop="tmsOrderCargoList.productPrice">
-                  <el-input v-model="form.tmsOrderCargoList.productPrice" :maxlength="8" auto-complete="off" clearable :disabled="isDbclick"></el-input>
+                <el-form-item label="声明价值" prop="">
+                  <el-input v-model="form.tmsOrderCargoList.productPrice" :maxlength="8" auto-complete="off" clearable :disabled="isDbclick" v-number-only></el-input>
                 </el-form-item>
               </td>
             </tr>
