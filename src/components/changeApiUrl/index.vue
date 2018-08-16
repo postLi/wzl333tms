@@ -87,12 +87,14 @@ export default {
     // 检测在线的服务器
     // 超过3秒没有返回的就当不在线
     checkUrl() {
+      console.log("11111111111")
       this.options.map(el => {
+        console.log("2222222222222222",el)
         axios.get('/' + el.value + '/api-order/order/v1/orderCreateDate/', {
           timeout: 3000
         }).catch((err) => {
           const status = err.response ? err.response.status : 'unconnect'
-          if (status === 500 || status === 'unconnect') {
+          if (status === 504 ||status === 500 || status === 'unconnect') {
             el.online = false
           }
         })
