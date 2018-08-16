@@ -202,8 +202,8 @@ export default {
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
     change(item) {
-      this.$emit('change', item)
       this.$emit('input', this.val)
+      this.$emit('change', item)
     }
   }
 }

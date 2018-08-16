@@ -49,8 +49,8 @@ export default {
       console.log('printers' ,this.printers) 
     },
     change (item) {
-      this.$emit('change', item)
       this.$emit('input', this.val)
+      this.$emit('change', item)
     }
   }
 }

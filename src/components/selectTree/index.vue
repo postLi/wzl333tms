@@ -96,6 +96,7 @@ export default {
   watch: {
     value(newVal) {
       this.aid = parseInt(newVal, 10) || ''
+
       this.init()
     }
   },
@@ -103,7 +104,6 @@ export default {
     this.aid = parseInt(this.value, 10) || ''
     this.init()
     eventBus.$on('closepopbox', () => {
-      console.log('closepopbox selectTree:')
       this.$refs.myautocomplete.handleClose()
     })
   },
@@ -177,8 +177,10 @@ export default {
     },
     change(val) {
       const find = this.openGroups.filter(el => el.id === val)
-      this.$emit('change', find.length ? find[0] : val)
       this.$emit('input', val)
+      setTimeout(() => {
+        this.$emit('change', val, find.length ? find[0] : '')
+      }, 100)
     }
   }
 }
@@ -200,15 +202,27 @@ export default {
 
   }
   .indent2{
-    margin-left: 1em;
+    margin-left: 0.5em;
   }
   .indent3{
-    margin-left: 2em;
+    margin-left: 1em;
   }
   .indent4{
-    margin-left: 3em;
+    margin-left: 1.5em;
   }
   .indent5{
+    margin-left: 2em;
+  }
+  .indent6{
+    margin-left: 2.5em;
+  }
+  .indent7{
+    margin-left: 3em;
+  }
+  .indent8{
+    margin-left: 3.5em;
+  }
+  .indent9{
     margin-left: 4em;
   }
 

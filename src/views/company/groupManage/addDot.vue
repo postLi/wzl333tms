@@ -359,9 +359,8 @@
       })
     },
     methods: {
-      canadd(item) {
-        console.log('item.index:', item.index)
-        if (item && item.index && item.index === 5) {
+      canadd(val, item) {
+        if (item && item.index && item.index >= 5) {
           this.$message.info('添加的层级数不能超过5层，请重新选择~')
           this.form.parentId = this.otherinfo.companyId
         }
