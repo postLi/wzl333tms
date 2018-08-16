@@ -1,6 +1,6 @@
 <template>
   <div class="tab-wrapper tab-wrapper-100">
-    <div class="tab-content" @success="fetchAllreceipt">
+    <div class="tab-content" @success="fetchAllreceipt"  v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
@@ -529,7 +529,7 @@ export default {
   mounted() {
     this.searchQuery.vo.signOrgid = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
+      // this.loading = false
             // this.licenseTypes = resArr[1]
     })
   },
@@ -554,7 +554,7 @@ export default {
       disabled: false,
       isDbclick: false,
       signStatus: '',
-      // loading:false,
+      loading: true,
       total: 0,
       id: '',
       tablekey: 0,
@@ -923,6 +923,7 @@ export default {
         this.total = data.total
         this.signId = data.signId
         this.signStatus = data.signStatus
+        this.loading = false
       })
     },
     fetchData() {
@@ -1026,7 +1027,7 @@ export default {
               this.fetchAllreceipt()
               return false
             }).catch(res => {
-                  // this.loading = false
+              this.loading = false
               this.$message.warning(res.text)
                   // this.closeMe()
             })

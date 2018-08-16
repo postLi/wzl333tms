@@ -218,7 +218,7 @@ export default {
     }
   }
   .el-dialog__body{
-    padding: 32px 20px;
+    padding: 0px 20px;
   }
   .el-dialog__footer{
     background: #e9e9e9;

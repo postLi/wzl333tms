@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100">
+  <div class="tab-wrapper tab-wrapper-100" v-loading="loading">
     <div class="tab-content" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -528,7 +528,7 @@ export default {
   mounted() {
         // this.searchQuery.vo.orgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
+      // this.loading = false
             // this.licenseTypes = resArr[1]
     })
   },
@@ -554,7 +554,7 @@ export default {
       tablekey: 0,
       total: 0,
       id: '',
-      // loading:false,
+      loading: true,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10000,

@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content">
+    <div class="tab-content" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" :allId="allId" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -513,7 +513,7 @@ export default {
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
     Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
+      // this.loading = false
             // this.licenseTypes = resArr[1]
     })
   },
@@ -523,7 +523,7 @@ export default {
       component: 'Send',
       selectInfo: {},
       dataset: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       selected: [],
       total: 0,
@@ -862,7 +862,7 @@ export default {
     },
           // PutFh
     fetchAllPutFh() {
-            // this.loading = true
+      this.loading = true
       return PostControlgoods(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total

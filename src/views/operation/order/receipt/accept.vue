@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100">
+  <div class="tab-wrapper tab-wrapper-100" v-loading="loading">
     <div class="tab-content" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -357,7 +357,7 @@ export default {
       tablekey: 0,
       total: 0,
       // acceptStatus:115,
-      // loading:false,
+      loading: true,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10000,

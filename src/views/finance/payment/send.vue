@@ -1,6 +1,6 @@
 <template>
 <div class="tab-wrapper tab-wrapper-100">
-  <div class="tab-content">
+  <div class="tab-content" @success="featchAllpayment"  v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" type="funds_remittance_status" title="汇款" status="fundsRemittanceStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -299,7 +299,7 @@ export default {
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.featchAllpayment(this.otherinfo.orgid).then(res => {
-      this.loading = false
+      // this.loading = false
     })
   },
   data() {
@@ -317,7 +317,7 @@ export default {
       // rec_status:113,
       total: 0,
       tablekey: 0,
-      loading: false,
+      loading: true,
       searchQuery: {
         'currentPage': 1,
         'pageSize': 10,
@@ -342,7 +342,7 @@ export default {
       }, {
         label: '货号',
         prop: 'shipGoodsSn',
-        width: '120',
+        width: '200',
         fixed: true
       }, {
         label: '开单网点',
@@ -499,11 +499,11 @@ export default {
   },
   methods: {
     featchAllpayment() {
-            // this.loading = true
+      this.loading = true
       return postGoodsfundsList(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
-        // this.loading = false
+        this.loading = false
         // console.log(data);
       })
     },

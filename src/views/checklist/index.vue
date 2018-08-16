@@ -408,6 +408,7 @@ export default {
         //     console.log(this.contTitle, 8888)
         //   }, i * 1000)
         // }
+
         var idx = 0
         var arr = this.countList
         var len = this.countList.length
@@ -543,7 +544,7 @@ export default {
     }
     .box_top{
       .top_content2{
-        height: 143px;
+        height: 140px;
         line-height: 24px;
         padding: 45px 126px;
         border: 1px solid #bcbcbc;
@@ -665,7 +666,7 @@ export default {
         margin-top:-11px;
         ul{
           height: 0;
-          margin-top:28px;
+          margin-top:25px;
           overflow: hidden;
           animation: showUlAni 1.2s linear  forwards;
           animation-play-state: paused;

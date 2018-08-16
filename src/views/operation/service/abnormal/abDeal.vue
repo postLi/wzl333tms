@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content">
+    <div class="tab-content" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam"  :isAllOrg="true" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -231,7 +231,7 @@ export default {
   mounted() {
     this.searchQuery.vo.disposeOrgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
+      // this.loading = false
       this.licenseTypes = resArr[1]
     })
   },
@@ -249,7 +249,7 @@ export default {
       setupTableVisible: false,
       licenseTypes: [],
       selected: [],
-      loading: false,
+      loading: true,
       total: 0,
       id: '',
       searchQuery: {
@@ -385,11 +385,11 @@ export default {
   },
   methods: {
     fetchAllreceipt() {
-            // this.loading = true
+      this.loading = true
       return PostGetAbnormalList(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
-                // this.loading = false
+        this.loading = false
         console.log(data)
       })
     },
@@ -431,11 +431,14 @@ export default {
           break
         // 异常处理
         case 'deal':
+          console.log(this.selected[0].abnormalStatus)
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能处理单条数据',
               type: 'warning'
             })
+          } else if (this.selected[0].abnormalStatus === 119) {
+            this.$message.warning('异常已处理,不能重复操作！')
           } else {
             this.isModify = false
             this.isCheck = false

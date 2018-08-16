@@ -322,7 +322,7 @@ export default {
       isDbClick: false,
       licenseTypes: [],
       selected: [],
-      loading: false,
+      loading: true,
       total: 0,
       tablekey: 0,
       id: '',

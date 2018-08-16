@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content">
+    <div class="tab-content" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" :allId="allId"  @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -518,7 +518,7 @@ export default {
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
     Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
+      // this.loading = false
             // this.licenseTypes = resArr[1]
     })
   },
@@ -540,7 +540,7 @@ export default {
       dataset: [],
       selected: [],
       setupTableVisible: false,
-      loading: false,
+      loading: true,
       tablekey: 0,
       searchQuery: {
         'currentPage': 1,

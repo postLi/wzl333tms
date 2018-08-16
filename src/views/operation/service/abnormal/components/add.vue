@@ -393,11 +393,11 @@ export default {
         })
       } else if (this.isDeal) {
         this.popTitle = '异常处理'
-
         GetLook(this.info.id).then(res => {
           this.form = res
           this.form.disposeTime = new Date()
           this.form.disposeName = this.otherinfo.name
+          this.form.disposeResult = 228
         })
       } else {
         this.dengji()
@@ -627,6 +627,9 @@ export default {
         margin-right: -17px;
       }
     }
+    .el-textarea__inner{
+        color:#3e9ff1;
+      }
     .ms{
       min-width: 723px;
       width:100%;
@@ -651,6 +654,7 @@ export default {
 
     .el-form-item__label{
       font-size: 12px;
+          padding: 0 10px 0 0;
     }
 
     .el-form-item__content{
@@ -691,9 +695,15 @@ export default {
       padding: 20px 10px 0;
       box-sizing: border-box;
     }
-
+    .el-input--mini .el-input__inner{
+      color:#3e9ff1;
+    }
+    .el-input.is-disabled .el-input__inner{
+      color:#3e9ff1;
+    }
     .el-select .el-input__inner{
       padding-right: 15px;
+      
     }
     .titles{
       font-size: 14px;
@@ -723,7 +733,7 @@ export default {
         margin-right: 48px;
         color: red;
         label{
-          width: 83px;
+          // width: 83px;
         }
       }
     }
@@ -745,6 +755,7 @@ export default {
   .label{
     label{
       color:red;
+      // width:83px;
     }
     
   }

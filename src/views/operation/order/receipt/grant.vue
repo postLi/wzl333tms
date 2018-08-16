@@ -329,7 +329,7 @@ export default {
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
-      this.loading = false
+      // this.loading = false
     })
   },
   data() {
@@ -339,7 +339,7 @@ export default {
       selectInfo: {},
       selected: [],
       dataset: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tablekey: 0,
       total: 0,
