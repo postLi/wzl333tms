@@ -74,6 +74,15 @@ export const constantRouterMap = [
         title: '系统体检',
         noCache: false
       }
+    }, {
+      path: '/html5/index',
+      component: _import('html5/html5index'),
+      name: 'html5page',
+      icon: 'btn9_huidanhs',
+      meta: {
+        title: 'H5',
+        noCache: false
+      }
     }]
   }
 ]

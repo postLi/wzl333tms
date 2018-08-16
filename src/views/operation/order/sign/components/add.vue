@@ -414,7 +414,7 @@ export default {
 
     },
     initInfo() {
-      this.loading = false
+      // this.loading = false
       // getAllUser(this.orgid, '', '').then(res=>{
       //   this.resInfo = res.list
       // })
@@ -423,6 +423,7 @@ export default {
     //   this.form.orgid = id
     // },
     submitForm(ruleForm) {
+      this.loading = true
       this.form.signTime = this.searchCreatTime
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
@@ -453,6 +454,7 @@ export default {
             })
             this.closeMe()
             this.$emit('success')
+            this.loading = false
             // this.$alert('保存成功', '提示', {
               //   confirmButtonText: '确定',
               //   callback: action => {

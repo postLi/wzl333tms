@@ -910,6 +910,7 @@ export default {
         this.dataset = data.list
         this.total = data.total
         this.signId = data.signId
+        this.loading = false
       })
     },
     fetchData() {

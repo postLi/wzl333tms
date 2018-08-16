@@ -626,7 +626,7 @@ export default {
     padding:0 20px;
     .main_content{
       text-align: center;
-      margin-top: 100px;
+      margin-top: 50px;
       .el-button{
         // width:300px;
         // height:66px;

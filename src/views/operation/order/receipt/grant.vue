@@ -543,10 +543,11 @@ export default {
   },
   methods: {
     fetchAllreceipt() {
-      // this.loading = true
+      this.loading = true
       return postReceipt(this.searchQuery).then(data => {
         this.dataset = data.list
         this.total = data.total
+        this.loading = false
       })
     },
     fetchData() {
