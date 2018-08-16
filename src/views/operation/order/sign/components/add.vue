@@ -225,7 +225,8 @@ export default {
       rules: {
         signName: [
           // { required: true, trigger: 'blur', validator: validateNameSn }
-          { pattern: REGEX.USERNAME, message: '不能超过十个字符', trigger: 'blur' }
+          // { pattern: REGEX.USERNAME, message: '不能超过十个字符', trigger: 'blur' }
+          { required: true, message: '请输入签收人', trigger: 'blur' }
         ],
         // signCocumentTypeId: [
         //   { required: true, message: '请选择签收证件', trigger: 'blur' }
