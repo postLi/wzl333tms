@@ -37,6 +37,7 @@
               value-format="timestamp"
               :disabled="isDbclick"
               >
+              
           </el-date-picker>
         </el-form-item>
         <el-form-item label="交接方式:" prop="shipDeliveryMethodName" >
