@@ -16,7 +16,10 @@
 
 
         <el-form-item label="车牌号" prop="memberName" v-else>
-          <querySelect search="truckIdNumber" :orgid = "otherinfo.companyId" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />
+          <el-select v-model="searchTitle.memberName" clearable>
+            <el-option v-for="item in memberNameType"  :label="item.truckIdNumber" :value="item.id" ></el-option>
+          </el-select>
+          <!--<querySelect search="truckIdNumber"  show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />-->
 
         </el-form-item>
 
@@ -348,6 +351,7 @@
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
+  import {getTrucK } from '@/api/operation/load'
 
   export default {
     components: {
@@ -357,6 +361,7 @@
     data() {
       const _this = this
       return {
+        memberNameType:[],
         truckKey:0,
         pickOption: {
           firstDayOfWeek: 1,
@@ -484,6 +489,7 @@
       ])
     },
     mounted() {
+
       // this.searchCreatTime = this.defaultTime
       this.messageButtonInfo.createTime = new Date()
       this.changeOrgid(this.otherinfo, this.$route.query.id)
@@ -500,11 +506,18 @@
         this.moodifyReadyPay()
       } else {
         // this.onSubmit()
+        this.truckName()
         this.searchCreatTime = this.defaultTime
       }
     },
     methods: {
-
+      truckName(){
+        this.loading = true
+        return getTrucK().then(data => {
+          this.memberNameType = data.data
+          this.loading = false
+        })
+      },
       fetchList() {
         this.loading = true
         return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {

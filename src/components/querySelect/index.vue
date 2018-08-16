@@ -665,7 +665,7 @@ export default {
       text-overflow: ellipsis;
       min-height: 28px;
     }
-    
+
   }
   .query-input-customer-org{
     width: 100px;

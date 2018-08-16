@@ -118,13 +118,13 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p><i>*</i> 到站装卸费</p>
-                      <el-form-item prop="arriveHandlingFee">
+                      <p> 到站装卸费</p>
+                      <el-form-item prop="">
                         <el-input :maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify" v-number-only:point></el-input>
                       </el-form-item>
                     </li>
                     <li>
-                      <p><i>*</i> 到站其他费</p>
+                      <p> 到站其他费</p>
                       <el-form-item prop="">
                         <el-input :maxlength="10" v-model="formModel.arriveOtherFee" :disabled="isModify"
                                   v-number-only:point></el-input>
@@ -1146,6 +1146,10 @@
                   return false
                 }
                 else {
+                  if(this.formModel.arriveHandlingFee || this.formModel.arriveOtherFee){
+                    this.formModel.arriveHandlingFee = 0
+                    this.formModel.arriveOtherFee = 0
+                  }
                   this.sendModel.tmsOrderLoad.id = this.formModel.id
                   this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
                   this.sendModel.tmsOrderLoadFee.arriveHandlingFee = this.formModel.arriveHandlingFee
