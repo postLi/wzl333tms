@@ -11,7 +11,7 @@
           ref="tree"
           default-expand-all
           @node-click="getCheckedKeys"
-          
+
         >
 
 
@@ -79,7 +79,7 @@
                 </el-form-item> -->
                  <el-form-item label="详情地址" :label-width="formLabelWidth">
                   <el-input v-model="form.detailedAddr" auto-complete="off" disabled ></el-input>
-                </el-form-item> 
+                </el-form-item>
 
 
               </el-form>
@@ -271,7 +271,7 @@ export default {
           // treeAct: {
           //   background: '#c0c4cc'
           // },
-    
+
           btnsize: 'mini',
               // 加载状态
           loading: true,
@@ -455,7 +455,7 @@ export default {
                 }).catch(err => {
                   this.$message({
                     type: 'info',
-                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                    message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                   })
                 })
               }).catch(() => {

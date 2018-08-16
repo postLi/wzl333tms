@@ -13,7 +13,7 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-       
+
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
@@ -270,7 +270,7 @@ export default {
       }).catch(err => {
         this.$message({
           type: 'info',
-          message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+          message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err.text
         })
       })
     })
@@ -419,7 +419,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {
@@ -475,7 +475,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {
@@ -524,7 +524,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {

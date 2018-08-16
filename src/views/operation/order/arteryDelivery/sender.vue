@@ -15,7 +15,7 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        
+
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
@@ -320,8 +320,8 @@ export default {
         case 'print':
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn,
-            name: '回单回收'
+            columns: this.tableColumn
+            // name: '回单回收'
           })
           break
           // ruku
@@ -333,7 +333,7 @@ export default {
             })
             return false
           } else {
-            if (this.selected[0].bathStatusName === '已到车' || this.selected[0].bathStatusName === '在途中') {
+            if (this.selected[0].bathStatusName === '已到车' || this.selected[0].bathStatusName === '在途中' || this.selected[0].bathStatusName === '部分入库') {
               this.selectInfo = this.selected[0]
               this.isModify = false
               this.isAlFun = false
@@ -344,6 +344,7 @@ export default {
                 //   message: '已到车的批次才可以做到货入库~',
                 //   type: 'warning'
                 // })
+              this.$refs.multipleTable.clearSelection()
               return false
             }
           }
@@ -371,7 +372,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '到车失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '到车失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             } else {
@@ -419,7 +420,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {
@@ -447,7 +448,7 @@ export default {
             })
             _ids = _ids.join(',')
 
-            if (this.selected[0].bathStatusName === '已入库') {
+            if (this.selected[0].bathStatusName === '已入库' || this.selected[0].bathStatusName === '部分入库') {
               this.$confirm('确定要取消发车批次 ' + deleteItemName + ' 入库吗？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -462,7 +463,7 @@ export default {
                 }).catch(err => {
                   this.$message({
                     type: 'info',
-                    message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                    message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                   })
                 })
               }).catch(() => {

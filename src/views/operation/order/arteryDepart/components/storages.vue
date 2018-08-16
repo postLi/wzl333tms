@@ -528,17 +528,17 @@ export default {
         fixed: false
       },{
         label: '运单件数',
-        prop: 'loadAmount',
+        prop: 'cargoAmount',
         width: '100',
         fixed: false
       },{
         label: '运单重量',
-        prop: 'loadWeight',
+        prop: 'cargoWeight',
         width: '100',
         fixed: false
       },{
         label: '运单体积',
-        prop: 'loadVolume',
+        prop: 'cargoVolume',
         width: '100',
         fixed: false
       },{
@@ -690,11 +690,12 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.usersArr.forEach((e, index) => {
-          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-            this.$refs.multipleTable.toggleRowSelection(e, false)
-          } else {
-            this.$refs.multipleTable.toggleRowSelection(e, true)
-          }
+          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+          //   this.$refs.multipleTable.toggleRowSelection(e, false)
+          // } else {
+          //   this.$refs.multipleTable.toggleRowSelection(e, true)
+          // }
+          this.$refs.multipleTable.toggleRowSelection(e, true)
         })
       })
     },
@@ -774,15 +775,15 @@ export default {
           // 导出数据table_import
         // 导出
         case 'export':
-          SaveAsFile({
-            data: this.selected.length ? this.selected : this.usersArr,
+          PrintInFullPage({
+            data: this.usersArr,
             columns: this.tableColumn
           })
           break
           // 打印
         case 'print':
-          PrintInFullPage({
-            data: this.selected.length ? this.selected : this.usersArr,
+           SaveAsFile({
+            data:  this.usersArr,
             columns: this.tableColumn
           })
           break

@@ -78,7 +78,8 @@ export default {
         orgid: '',
         carrierId: '',///
         startTime: '',//
-        endTime:''
+        endTime:'',
+
       },
       rules: {
 
@@ -98,6 +99,7 @@ export default {
   methods: {
     getCarrier(item) {
       if (item) {
+        console.log(item)
         this.searchForm.carrierId = item.carrierId
       }
     },

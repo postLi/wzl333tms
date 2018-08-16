@@ -267,7 +267,7 @@
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {

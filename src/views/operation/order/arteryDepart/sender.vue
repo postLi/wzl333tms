@@ -385,7 +385,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'error',
-                  message: '发车失败，原因：' + err.text ? err.text : err
+                  message: '发车失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {
@@ -429,7 +429,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {
@@ -472,7 +472,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                 })
               })
             }).catch(() => {

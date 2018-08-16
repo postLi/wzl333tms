@@ -1,6 +1,6 @@
 <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
@@ -115,7 +115,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange"  /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange"  /></div> </div>
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
@@ -207,7 +207,7 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      
+
       // 判断是否有选中项
       if (!this.selected.length && type !== 'add' && type !== 'import') {
         this.closeAddCustomer()
@@ -262,7 +262,7 @@ export default {
             }).catch(err => {
               this.$message({
                         type: 'info',
-                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
                       })
             })
           }).catch(() => {

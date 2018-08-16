@@ -10,13 +10,17 @@
       </el-form-item>
       </div>
       <div class="sDate">
-          <el-form-item label="车牌号" v-if="$route.query.id">
+          <el-form-item label="车牌号" v-if="$route.query.id" :key="truckKey">
             <el-input v-model="searchTitle.memberName" auto-complete="off" disabled></el-input>
           </el-form-item>
+
+
         <el-form-item label="车牌号" prop="memberName" v-else>
-          <querySelect search="truckIdNumber" :orgid = "otherinfo.orgId" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />
+          <querySelect search="truckIdNumber" :orgid = "otherinfo.companyId" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />
 
         </el-form-item>
+
+
         <el-date-picker
           v-model="searchCreatTime"
           :default-value="defaultTime"
@@ -353,6 +357,7 @@
     data() {
       const _this = this
       return {
+        truckKey:0,
         pickOption: {
           firstDayOfWeek: 1,
           disabledDate(time) {
@@ -487,13 +492,14 @@
         this.changeId(this.$route.query.id)
 
         this.moodifyList().then(() => {
+          this.truckKey = new Date().getTime()
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
         })
         this.moodifyDealPay()
         this.moodifyReadyPay()
       } else {
-        this.onSubmit()
+        // this.onSubmit()
         this.searchCreatTime = this.defaultTime
       }
     },

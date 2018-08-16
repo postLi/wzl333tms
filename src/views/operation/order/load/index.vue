@@ -74,7 +74,7 @@
                 </div>
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point 
+                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point
                      :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
@@ -832,6 +832,7 @@ export default {
     getTrucks(orgid) {
       if (this.cacheTruckList[orgid]) {
         this.Trucks = this.cacheTruckList[orgid]
+        console.log(this.Trucks,"【我在11111")
       } else {
         // getAllTrunk({
         //   "currentPage": 1,
@@ -842,6 +843,7 @@ export default {
         // })
         getTrucK().then(data => {
           this.Trucks = data.data
+          console.log(this.Trucks,"【我在")
           this.cacheTruckList[orgid] = data.data
           console.log('Trucks', this.Trucks)
         })

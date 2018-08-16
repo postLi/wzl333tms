@@ -96,7 +96,7 @@
                   </el-table>
             </div>
 
-            <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+            <div class="info_news_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
         </div>
         <transition name="slideInRight">
             <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData"  />
@@ -238,7 +238,7 @@ export default{
             }).catch(err => {
               this.$message({
                 type: 'info',
-                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
               })
             })
           }).catch(() => {
@@ -311,7 +311,7 @@ export default{
 
 
 <style type="text/css" lang="scss">
-    
+
 .staff_manage{
     height: 100%;
     display: flex;
@@ -338,7 +338,7 @@ export default{
             width: 100%;
             height: calc(100% - 90px);
             flex-grow: 1;
-            
+
             .el-table{
                 table{
                     th,td{
