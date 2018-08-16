@@ -9,28 +9,28 @@
       </el-select>
     </el-form-item>
     <el-form-item v-if="senderSearch==='short'">
-      <el-autocomplete v-model="searchForm.shortBatchNo" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect">
+      <el-autocomplete v-model="searchForm.shortBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.shortBatchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='load'">
-      <el-autocomplete v-model="searchForm.mainBatchNo" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect">
+      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.mainBatchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='deliver'">
-      <el-autocomplete v-model="searchForm.sendBatchNo" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect">
+      <el-autocomplete v-model="searchForm.sendBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.sendBatchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-autocomplete clearable v-model="searchForm.truckIdNumber" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect">
+      <el-autocomplete clearable v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.truckIdNumber }}</div>
         </template>
@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      senderSearch: 'short',
+      senderSearch: 'load',
       searchForm: {
         shortBatchNo: '',
         mainBatchNo: '',
@@ -56,32 +56,55 @@ export default {
       },
       btnsize: 'mini',
       selectVal: '',
-      settlementId: ''
+      settlementId: '',
+      isSender: false,
+      SETTLEMENT_TYPE: {
+        short: 180,
+        load: 179,
+        deliver: 181
+      }
     }
   },
   props: {
     info: {
       type: Array,
       default: []
+    },
+    getSettlementId: {
+      type: [Number, String]
+    }
+  },
+  watch: {
+    getSettlementId: {
+      handler(cval, oval) {
+        if (cval) {
+          this.isSender = true
+          this.settlementId = cval // 弹出框选择后 就根据选择切换
+        }
+      },
+      deep: true
     }
   },
   mounted() {
-    this.initSettlementid()
+    if (!this.isSender) {
+      this.initSettlementid()
+    }
   },
   methods: {
     initSettlementid() {
       let type = this.senderSearch
-      switch (type) {
-        case 'short': // 短驳
-          this.settlementId = 180
-          break
-        case 'load': // 干线
-          this.settlementId = 179
-          break
-        case 'deliver': // 送货
-          this.settlementId = 181
-          break
-      }
+      this.settlementId = this.SETTLEMENT_TYPE[this.senderSearch]
+      // switch (type) {
+      //   case 'short': // 短驳
+      //     this.settlementId = 180
+      //     break
+      //   case 'load': // 干线
+      //     this.settlementId = 179
+      //     break
+      //   case 'deliver': // 送货
+      //     this.settlementId = 181
+      //     break
+      // }
       this.$emit('setSettlementId', this.settlementId)
     },
     changeSenderSearch(obj) {
@@ -116,6 +139,7 @@ export default {
       this.selectVal = ''
       let array = []
       array.push(obj)
+      console.log('array', array)
       this.$emit('change', array)
     },
     clearSender(event) {

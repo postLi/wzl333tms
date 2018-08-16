@@ -8,6 +8,7 @@
     </el-form-item>
     <el-form-item v-if="senderSearch==='customer'">
       <el-autocomplete 
+      ref="searchAutocomplete"
       v-model="searchForm.shipSenderName" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 

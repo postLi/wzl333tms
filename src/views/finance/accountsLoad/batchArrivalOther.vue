@@ -165,19 +165,19 @@ export default {
           }
         },
         {
-          label: '到站装卸费',
+          label: '到站其他费',
           prop: 'fee',
           width: '120',
           fixed: false
         },
         {
-          label: '未结到站装卸费',
+          label: '未结到站其他费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已结到站其他费',
           prop: 'paidFee',
           width: '120',
           fixed: false
@@ -259,25 +259,25 @@ export default {
           }
         },
         {
-          label: '到站装卸费',
+          label: '到站其他费',
           prop: 'fee',
           width: '120',
           fixed: false
         },
         {
-          label: '未结到站装卸费',
+          label: '未结到站其他费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已结到站其他费',
           prop: 'paidFee',
           width: '120',
           fixed: false
         },
         {
-          label: '实结到站装卸费',
+          label: '实结到站其他费',
           prop: 'amount',
           width: '120',
           fixed: false,

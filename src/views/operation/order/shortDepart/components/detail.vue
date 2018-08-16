@@ -74,43 +74,30 @@
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
-          <el-table-column fixed width="50" sortable type="selection" ></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="运单号" fixed></el-table-column>
-          <el-table-column sortable width="120" prop="childShipSn" label="子运单号" fixed></el-table-column>
+          <el-table-column fixed width="50" sortable type="selection"></el-table-column>
+          <el-table-column sortable width="130" prop="shipSn" label="运单号" fixed></el-table-column>
+          <el-table-column sortable width="130" prop="childShipSn" label="子运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
+          <!-- <el-table-column sortable width="120" prop="warehouStatus" label="入库状态">
+          </el-table-column> -->
           <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isWareStatus(scope.$index, scope.row)" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="110" prop="actualWeight" label="实到重量" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isWareStatus(scope.$index, scope.row)" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="actualVolume" sortable label="实到体积" width="110" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number" :disabled="!isNeedArrival" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isWareStatus(scope.$index, scope.row)" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
-          <!--  <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
-            <template slot-scope="scope">
-              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column sortable width="110" prop="actualWeight" label="实到重量" v-if="!isEditActual">
-            <template slot-scope="scope">
-              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="actualVolume" sortable label="实到体积" width="110" v-if="!isEditActual">
-            <template slot-scope="scope">
-              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
-            </template>
-          </el-table-column> -->
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
@@ -124,7 +111,7 @@
           <el-table-column sortable width="120" prop="shipReceiverName" label="收货人"></el-table-column>
           <el-table-column sortable width="120" prop="shipReceiverMobile" label="收货人电话"></el-table-column>
           <el-table-column sortable width="200" prop="cargoName" label="货品名"></el-table-column>
-          <el-table-column sortable width="120" prop="shipGoodsSn" label="货号"></el-table-column>
+          <el-table-column sortable width="180" prop="shipGoodsSn" label="货号"></el-table-column>
           <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
         </el-table>
       </div>
@@ -240,7 +227,6 @@ export default {
       const curactualWeight = this.detailList[newVal].actualWeight // 应到重量
       const curactualAmount = this.detailList[newVal].actualAmount // 应到件数
       if (this.selectDetailList.length === 1 && curAmount === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
         this.detailList[newVal].actualAmount = curloadAmount
         // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
         // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
@@ -251,7 +237,6 @@ export default {
         })
       }
       if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
         // this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
         // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
         // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
@@ -352,44 +337,44 @@ export default {
         return false
       } else {
         postAddRepertory(50, this.newData).then(data => {
-          if (data.status === 200) {
-            this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() }})
-            this.$message({ type: 'success', message: '短驳入库操作成功' })
-            this.message = true
-          } else {
-            this.message = false
-          }
-          this.$emit('isSuccess', this.message)
-        })
+            if (data.status === 200) {
+              this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
+              this.$message({ type: 'success', message: '短驳入库操作成功' })
+              this.message = true
+            } else {
+              this.message = false
+            }
+            this.$emit('isSuccess', this.message)
+          })
           .catch(error => {
+             this.$message.error(error.errorInfo || error.text)
             this.message = false
             this.$emit('isSuccess', this.message)
           })
       }
     },
     getLoadTrack() {
-      console.log('infow3234', this.info.id)
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-        if (data) {
-          this.detailList = data.data
-          this.setData()
-          this.toggleAllRows()
-          this.$nextTick(() => {
-            this.detailList.forEach(e => {
-              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                e.actualAmount = e.loadAmount
-                e.actualWeight = e.loadWeight
-                e.actualVolume = e.loadVolume
-              } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
-
-              }
+          if (data) {
+            this.detailList = data.data
+            console.log('detailList', this.detailList)
+            this.setData()
+            this.toggleAllRows()
+            this.$nextTick(() => {
+              this.detailList.forEach(e => {
+                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                  e.actualAmount = e.loadAmount
+                  e.actualWeight = e.loadWeight
+                  e.actualVolume = e.loadVolume
+                } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+                }
+              })
             })
-          })
-        }
-      })
+          }
+        })
         .catch(error => {
-          this.$message({ type: 'danger', message: error.errorInfo })
+           this.$message.error(error.errorInfo || error.text)
         })
     },
     clickDetails(row) {
@@ -402,13 +387,22 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
-          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-            this.$refs.multipleTable.toggleRowSelection(e, false)
-          } else {
-            this.$refs.multipleTable.toggleRowSelection(e, true)
-          }
+          this.$refs.multipleTable.toggleRowSelection(e, true)
+          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+          //   this.$refs.multipleTable.toggleRowSelection(e, false)
+          // } else {
+          //   this.$refs.multipleTable.toggleRowSelection(e, true)
+          // }
         })
       })
+    },
+    isWareStatus (index, row) {
+      if (!this.isNeedArrival) {
+        return true
+      }
+      if (row.warehouStatus === 1) {
+        return true
+      }
     }
   }
 }

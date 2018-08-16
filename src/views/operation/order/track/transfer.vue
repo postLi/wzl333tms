@@ -491,6 +491,9 @@ export default {
           this.loading = false
         }
       })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
+      })
       this.isTransferTrack()
     },
     isTransferTrack() {

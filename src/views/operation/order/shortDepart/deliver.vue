@@ -17,21 +17,20 @@
       <div class="info_tab">
         <!-- 完成并发车：有发车时间和配载时间
             完成配载：只有配载时间 -->
-          <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
-            <el-table-column fixed sortable type="selection" width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
+          <el-table-column fixed sortable type="selection" width="50">
+          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-              </el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-                <template slot-scope="scope">
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
-          </el-table>
-        
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
       </div>
       <div class="info_tab_footer">
         共计:{{ total }}
@@ -315,14 +314,17 @@ export default {
         this.searchQueryData.vo.batchTypeId = undefined
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
-        if (data) {
-          this.dataList = data.list
-          this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
-        }
-      })
+          if (data) {
+            this.dataList = data.list
+            this.total = data.total
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     clearData() {
       this.isBatch = false
@@ -385,7 +387,7 @@ export default {
               }
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message.error(error.errorInfo || error.text)
               this.clearData()
             })
         })
@@ -411,7 +413,7 @@ export default {
               }
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message.error(error.errorInfo || error.text)
               this.clearData()
             })
         })
@@ -438,7 +440,7 @@ export default {
               }
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message.error(error.errorInfo || error.text)
               this.clearData()
             })
         })

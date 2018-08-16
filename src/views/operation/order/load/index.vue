@@ -9,9 +9,9 @@
           </template>
           <div class=" loadFrom clearfix">
             <el-form :model="formModel" :size="mini" ref="formModel" label-width="110px" :rules="formModelRules">
-              <div class="loadFrom-type">
+              <!-- <div class="loadFrom-type">
                 <el-checkbox v-if="loadTypeId === 39" v-model="isDirectDelivery" @change="changeDirect">直送</el-checkbox>
-              </div>
+              </div> -->
               <!-- 基本信息 -->
               <div class="loadFrom-type-baseInfo">
                 <div>
@@ -25,7 +25,7 @@
                 </div>
                 <div>
                   <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger" :key="truckKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck"  :maxlength="8">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck" :maxlength="8">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -38,7 +38,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" @blur="blurDriver"  :maxlength="10">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" @blur="blurDriver" :maxlength="10">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
                         <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
@@ -69,13 +69,12 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable v-number-only:point  :maxlength="8"></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable v-number-only:point :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point
-                     :maxlength="8"></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -106,7 +105,7 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
-                    <el-input size="mini" v-model="formModel.shortFee" clearable  :maxlength="8"></el-input>
+                    <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
               </div>
@@ -521,9 +520,12 @@ export default {
     },
     getLoadNo() {
       getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
-        this.truckMessage = data.text // 批次号
-        this.contractNo = data.text // 合同编号？？？？？
-      })
+          this.truckMessage = data.text // 批次号
+          this.contractNo = data.text // 合同编号？？？？？
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     getSystemTime() { // 获取系统时间
       if (!this.isEdit) {
@@ -542,9 +544,12 @@ export default {
         this.getUpdateRepertoryRight()
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-          this.leftTable = data.data
-          console.log('不修改 ')
-        })
+            this.leftTable = data.data
+            console.log('不修改 ')
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text)
+          })
       }
     },
     changeTableKey() {
@@ -617,15 +622,15 @@ export default {
     gotoPage() { // 操作成功后跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart', query: {pageKey: new Date().getTime()} })
+          this.$router.push({ path: '././shortDepart', query: { pageKey: new Date().getTime() } })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart')
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart', query: {pageKey: new Date().getTime()}  })
+          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() } })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage', query: {pageKey: new Date().getTime()}  })
+          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() } })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/deliverManage')
           break
       }
@@ -638,27 +643,27 @@ export default {
           if (this.isEdit) {
             console.log('这里是编辑完成配载', this.loadInfo)
             putLoadInfo(this.loadInfo).then(data => {
-              this.$message({ type: 'success', message: '修改配载信息成功' })
-              this.resetFieldsForm()
-              this.$nextTick(() => {
-                this.gotoPage() // 操作成功后跳转到配载列表页面
+                this.$message({ type: 'success', message: '修改配载信息成功' })
+                this.resetFieldsForm()
+                this.$nextTick(() => {
+                  this.gotoPage() // 操作成功后跳转到配载列表页面
+                })
               })
-            })
-            .catch(error => {
-              this.$message({ type: 'error', message: error.errorInfo })
-            })
+              .catch(error => {
+                this.$message.error(error.errorInfo || error.text)
+              })
           } else {
             console.log('这里是添加完成配载', this.loadInfo)
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
-              this.$message({ type: 'success', message: '插入配载信息成功' })
-              this.resetFieldsForm()
-              this.$nextTick(() => {
-                this.gotoPage()
+                this.$message({ type: 'success', message: '插入配载信息成功' })
+                this.resetFieldsForm()
+                this.$nextTick(() => {
+                  this.gotoPage()
+                })
               })
-            })
-            .catch(error => {
-              this.$message({ type: 'error', message: error.errorInfo })
-            })
+              .catch(error => {
+                this.$message.error(error.errorInfo || error.text)
+              })
           }
         })
       }
@@ -669,12 +674,15 @@ export default {
         this.setDataFinishTruck() // 处理数据
         this.$nextTick(() => {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
-            this.$message({ type: 'success', message: '保存成功' })
-            this.resetFieldsForm()
-            this.$nextTick(() => {
-              this.gotoPage() // 操作成功后跳转到配载列表页面
+              this.$message({ type: 'success', message: '保存成功' })
+              this.resetFieldsForm()
+              this.$nextTick(() => {
+                this.gotoPage() // 操作成功后跳转到配载列表页面
+              })
             })
-          })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text)
+            })
         })
       }
     },
@@ -736,8 +744,8 @@ export default {
       // 时间处理
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
-      this.formModel.requireArrivedTime = this.formModel.requireArrivedTime?parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59': ''
-      this.formModel.planArrivedTime = this.formModel.planArrivedTime? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.formModel.requireArrivedTime = this.formModel.requireArrivedTime ? parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.formModel.planArrivedTime = this.formModel.planArrivedTime ? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     setDataFinishTruck() { // 完成并发车 ：处理数据格式。。。
@@ -757,18 +765,21 @@ export default {
       // 时间处理
       // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
       // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
-      this.formModel.requireArrivedTime =this.formModel.requireArrivedTime? parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
-      this.formModel.planArrivedTime =this.formModel.planArrivedTime? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.formModel.requireArrivedTime = this.formModel.requireArrivedTime ? parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.formModel.planArrivedTime = this.formModel.planArrivedTime ? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
     },
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
       console.log('left', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
-          this.$set(this.setLoadTableList, 'left', data.data)
-          // this.setLoadTableList.left = objectMerge2([], data.data)
-          console.log('修改ing左边列表', this.setLoadTableList.left)
-        })
+            this.$set(this.setLoadTableList, 'left', data.data)
+            // this.setLoadTableList.left = objectMerge2([], data.data)
+            console.log('修改ing左边列表', this.setLoadTableList.left)
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text)
+          })
       }
       return this.setLoadTableList
     },
@@ -776,10 +787,13 @@ export default {
       console.log('right', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
-          this.$set(this.setLoadTableList, 'right', data.data)
-          // this.setLoadTableList.right = objectMerge2([], data.data)
-          console.log('修改ing右边列表', this.setLoadTableList.right)
-        })
+            this.$set(this.setLoadTableList, 'right', data.data)
+            // this.setLoadTableList.right = objectMerge2([], data.data)
+            console.log('修改ing右边列表', this.setLoadTableList.right)
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text)
+          })
       }
       return this.setLoadTableList
     },
@@ -817,22 +831,24 @@ export default {
         this.Drivers = this.cacheDriverList[orgid]
       } else {
         getAllDriver({
-          "currentPage": 1,
-          "pageSize": 200,
-          "vo": {
-            "orgid": orgid
-          }
-        }).then(data => {
-          this.Drivers = data.list
-          this.cacheDriverList[orgid] = data.list
-          console.log('Drivers', this.Drivers)
-        })
+            "currentPage": 1,
+            "pageSize": 200,
+            "vo": {
+              "orgid": orgid
+            }
+          }).then(data => {
+            this.Drivers = data.list
+            this.cacheDriverList[orgid] = data.list
+            console.log('Drivers', this.Drivers)
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text)
+          })
       }
     },
     getTrucks(orgid) {
       if (this.cacheTruckList[orgid]) {
         this.Trucks = this.cacheTruckList[orgid]
-        console.log(this.Trucks,"【我在11111")
       } else {
         // getAllTrunk({
         //   "currentPage": 1,
@@ -842,11 +858,13 @@ export default {
         //   }
         // })
         getTrucK().then(data => {
-          this.Trucks = data.data
-          console.log(this.Trucks,"【我在")
-          this.cacheTruckList[orgid] = data.data
-          console.log('Trucks', this.Trucks)
-        })
+            this.Trucks = data.data
+            this.cacheTruckList[orgid] = data.data
+            console.log('Trucks', this.Trucks)
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text)
+          })
       }
     },
     handleSelect(item) {
@@ -865,6 +883,8 @@ export default {
       // if (!this.flag) {
       this.formModel.dirverMobile = item.driverMobile
       this.formModel.dirverName = item.driverName
+      this.formModel.truckLoad = item.truckLoad
+      this.formModel.truckVolume = item.truckVolume
       // }
     },
     querySearch(queryString, cb) {

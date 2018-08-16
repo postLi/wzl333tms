@@ -277,7 +277,7 @@ export default {
           fixed: false
         },
         {
-          label: '实结送货费',
+          label: '实结整车保险费',
           prop: 'amount',
           width: '120',
           fixed: false,

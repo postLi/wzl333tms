@@ -9,6 +9,7 @@
     <el-form-item v-if="senderSearch==='customer'">
       <el-autocomplete 
       v-model="searchForm.shipSenderName" 
+       :maxlength="20"
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
@@ -18,6 +19,7 @@
       <el-autocomplete 
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
+       :maxlength="20"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
       </el-autocomplete>

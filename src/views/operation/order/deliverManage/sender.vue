@@ -218,10 +218,13 @@ export default {
         this.searchQuery.vo.batchTypeId = undefined
       }
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
-        this.infoList = data.list
-        this.total = data.total
-        this.loading = false
-      })
+          this.infoList = data.list
+          this.total = data.total
+          this.loading = false
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     fetchData() {
       this.fetchAllData()
@@ -333,7 +336,7 @@ export default {
             this.fetchData()
           })
           .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
+            this.$message.error(error.errorInfo || error.text || '操作失败')
           })
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以送货完成' })
@@ -348,7 +351,7 @@ export default {
             this.fetchData()
           })
           .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
+            this.$message.error(error.errorInfo || error.text || '操作失败')
           })
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以取消送货' })

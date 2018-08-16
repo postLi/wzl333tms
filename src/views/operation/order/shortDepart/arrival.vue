@@ -88,7 +88,7 @@ export default {
           width: "80",
           fixed: true,
           slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1)*this.searchQuery.pageSize) + scope.$index + 1
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
         },
         {
@@ -279,7 +279,7 @@ export default {
         case 'printPaper':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
-       case 'export': // 导出
+        case 'export': // 导出
           SaveAsFile({
             data: this.selected.length ? this.selected : this.infoList,
             columns: this.tableColumn,
@@ -338,7 +338,7 @@ export default {
               this.clearInfo()
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message.error(error.errorInfo || error.text)
               this.clearInfo()
             })
         })
@@ -373,7 +373,7 @@ export default {
               this.clearInfo()
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message.error(error.errorInfo || error.text)
               this.clearInfo()
             })
         })
@@ -399,7 +399,7 @@ export default {
               this.clearInfo()
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message.error(error.errorInfo || error.text)
               this.clearInfo()
             })
         })
@@ -414,14 +414,17 @@ export default {
         this.searchQuery.vo.batchTypeId = undefined
       }
       return postLoadList(this.searchQuery).then(data => {
-        if (data) {
-          this.infoList = data.list
-          this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
-        }
-      })
+          if (data) {
+            this.infoList = data.list
+            this.total = data.total
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     closeMe() { // 关闭弹出框
       this.editInfoVisible = false

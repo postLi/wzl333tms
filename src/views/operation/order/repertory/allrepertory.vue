@@ -476,7 +476,7 @@ export default {
   },
   methods: {
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail',order.shipId, order.id,  true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.id, true)
     },
     initTable() {
       // let strArray = this.$refs.multipleTable.$children
@@ -577,14 +577,9 @@ export default {
           this.repertoryArr = data.list
           this.total = data.total
           this.loading = false
-          this.$nextTick(() => {
-            if (data) {
-
-            }
-          })
         })
         .catch(error => {
-          this.$message({ type: 'error', message: '获取列表失败' })
+          this.$message.error(error.errorInfo || error.text || '获取列表失败')
           this.loading = false
         })
     },

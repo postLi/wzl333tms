@@ -44,7 +44,7 @@ export default {
         },
         {
           value: 'chenrongtao',
-          label: '陈荣涛',
+          label: '程荣涛',
           online: true
         },
         {
@@ -65,6 +65,11 @@ export default {
         {
           value: 'home',
           label: '157-2',
+          online: true
+        },
+        {
+          value: 'lingzhiying',
+          label: '凌梓颖',
           online: true
         }
       ]

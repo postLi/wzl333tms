@@ -54,7 +54,9 @@
           <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
+        <!-- 穿梭框 -->
         <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
+        <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
     </div>
@@ -213,7 +215,6 @@ export default {
     countSuccess (list) {
       this.countSuccessList = Object.assign([], list.info)
       this.countNum = list.count
-      console.log('countSuccessList',list)
     }
   }
 }

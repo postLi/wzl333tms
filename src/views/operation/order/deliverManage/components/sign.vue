@@ -159,7 +159,7 @@ export default {
               this.$emit('message', this.message)
             })
               .catch(error => {
-                this.$message({ type: 'error', message: error.text })
+                this.$message({ type: 'error', message: error.text || error.errorInfo || '操作失败' })
                 this.message = false
                 this.closeMe()
                 this.$emit('message', this.message)

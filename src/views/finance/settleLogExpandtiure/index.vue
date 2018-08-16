@@ -52,25 +52,29 @@
           <el-tab-pane label="批次支出" name="first">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
+                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-printer">智能结算</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange"></dataTable>
+              <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch"></dataTable>
             </div>
           </el-tab-pane>
           <el-tab-pane label="运单支出" name="second">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
+                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-printer">智能结算</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
       </div>
+      <!-- 智能结算弹出框 -->
+      <Count :popVisible="countVisible" @close="countVisible = false" :title="countTitle" :setSettlementId="settlementId" @success="countSuccess" @change="changeFeeIdBatch"></Count>
     </div>
   </div>
 </template>
@@ -85,6 +89,7 @@ import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
 import dataTableOrder from './components/dataTableOrder'
 import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
+import Count from './components/count'
 export default {
   name: 'settleLogExpandtiure',
   components: {
@@ -92,12 +97,14 @@ export default {
     selectType,
     querySelect,
     dataTable,
-    dataTableOrder
+    dataTableOrder,
+    Count
   },
   data() {
     return {
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
       loading: true,
+      settlementId: '',
       // settlementId: 180, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
@@ -114,10 +121,16 @@ export default {
         remark: ''
       },
       formModelRules: {},
+      countTitle: '',
       setLoadTableList: {},
       isEdit: false,
       activeName: 'first',
-      addIncomeInfo: {}
+      addIncomeInfo: {},
+      countVisible: false,
+      countSuccessListBatch: [],
+      countSuccessListShip: [],
+      countNumBatch: 0,
+      countNumShip: 0
     }
   },
   computed: {
@@ -141,17 +154,20 @@ export default {
     },
     getFeeInfo() {
       getFeeInfo(this.otherinfo.orgid, this.paymentsType).then(data => {
-        this.loading = false
-        this.formModel.amount = data.amount
-        this.formModel.settlementSn = data.settlementSn
-        this.formModel.agent = data.settlementBy
-        this.formModel.financialWay = this.$const.FINANCE_WAY[data.szDtoList[0].financialWay]
-        this.formModel.bankAccount = data.szDtoList[0].bankAccount
-        this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
-        this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
-        this.formModel.remark = data.remark
-        this.getSystemTime()
-      })
+          this.loading = false
+          this.formModel.amount = data.amount
+          this.formModel.settlementSn = data.settlementSn
+          this.formModel.agent = data.settlementBy
+          this.formModel.financialWay = this.$const.FINANCE_WAY[data.szDtoList[0].financialWay]
+          this.formModel.bankAccount = data.szDtoList[0].bankAccount
+          this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
+          this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
+          this.formModel.remark = data.remark
+          this.getSystemTime()
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: error.errorInfo || error.text })
+        })
     },
     doAction(type) {
       switch (type) {
@@ -162,13 +178,22 @@ export default {
           this.cancel()
           break
         case 'savePrint': // 保存并打印
-          this.$confirm('暂无打印功能，确认保存吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.save()
-          })
+          this.$message({ type: 'warning', message: '暂无打印功能！' })
+          // this.$confirm('暂无打印功能，确认保存吗？', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   this.save()
+          // })
+          break
+        case 'countBatch':
+          this.countTitle = '批次'
+          this.countVisible = true
+          break
+        case 'countShip':
+          this.countTitle = '运单'
+          this.countVisible = true
           break
       }
     },
@@ -201,9 +226,9 @@ export default {
       }
       this.setData()
       postAddIncome(this.addIncomeInfo).then(data => {
-        this.$message({ type: 'success', message: '保存成功！' })
-        this.$router.push({ path: './settleLog' })
-      })
+          this.$message({ type: 'success', message: '保存成功！' })
+          this.$router.push({ path: './settleLog' })
+        })
         .catch(error => {
           this.$message({ type: 'error', message: '保存失败！' })
         })
@@ -234,9 +259,26 @@ export default {
         }
       })
       this.formModel.amount = amount
-      console.log(this.formModel.amount)
     },
     getTableChange(obj) {
+      console.log(obj)
+    },
+    countSuccess(list) {
+      console.log('countSuccessList', list)
+      if (list.type === 178) { // 178-运单 179-批次
+        this.countSuccessListShip = Object.assign([], list.info)
+        this.countNumShip = list.count
+        console.log('list.countShip', list.count)
+      }
+      if (list.type === 179) {
+        this.countSuccessListBatch = Object.assign([], list.info)
+        this.countNumBatch = list.count
+        console.log('list.countBatch', list.count)
+      }
+    },
+    changeFeeIdBatch(obj) {
+      this.settlementId = obj
+      this.setSettlementId(obj)
       console.log(obj)
     }
   }
@@ -305,6 +347,10 @@ export default {
         .el-form-item__label {
           color: #ef0000;
         }
+      }
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+        color: #222;
       }
     }
     .el-collapse {

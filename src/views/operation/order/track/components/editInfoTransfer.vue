@@ -186,6 +186,9 @@ export default {
           this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
         })
+        .catch(error => {
+           this.$message.error(error.errorInfo || error.text || '删除失败')
+        })
       })
     },
     editItem(item) {
@@ -199,6 +202,9 @@ export default {
         this.getDetail()
         this.resetForm()
       })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
+      })
     },
     addTrack() {
       this.formModel.transferId = this.id
@@ -208,6 +214,9 @@ export default {
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
       })
     },
     getSystemTime() { // 获取系统时间

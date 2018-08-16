@@ -3,7 +3,7 @@
   <transferTable v-loading="loading">
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <!-- 搜索左边表格 -->
-      <currentSearch :info="orgLeftTable" @change="getSearch" @setSettlementId="setSettlementId"></currentSearch>
+      <currentSearch :info="countOrgLeftTable" @change="getSearch" :getSettlementId="settlementId" @setSettlementId="setSettlementId"></currentSearch>
     </div>
     <!-- 左边表格区 批次支出 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -67,6 +67,8 @@
         </el-table-column>
         <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>
+        <el-table-column prop="fee" sortable label="应付费用" width="120">
+        </el-table-column>
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
@@ -105,7 +107,7 @@ import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getOrderShipList } from '@/api/finance/settleLog'
 import currentSearch from './currentSearch'
-import { getSummaries } from '@/utils/'
+import { getSummaries, tmsMath } from '@/utils/'
 export default {
   data() {
     return {
@@ -124,6 +126,13 @@ export default {
       orgLeftTable: [],
       leftTable: [],
       rightTable: [],
+      countOrgLeftTable: [],
+      FEE_TYPE: {
+        179: 'loadFeeTotal',
+        180: 'shortPay',
+        181: 'sendPay'
+      },
+      // feeName: '',
       orgData: {
         left: [],
         right: []
@@ -138,12 +147,30 @@ export default {
     isModify: {
       type: Boolean,
       default: false
+    },
+    countSuccessList: {
+      type: Array,
+      default: []
+    },
+    countNum: {
+      type: [Number, String]
+    },
+    getSettlementId: {
+      type: [Number, String]
     }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
-    ])
+    ]),
+    feeName: {
+      get() {
+        return this.FEE_TYPE[this.settlementId]
+      },
+      set() {
+        return ''
+      }
+    }
   },
   components: {
     transferTable,
@@ -152,15 +179,32 @@ export default {
   },
   watch: {
     isModify: {
-      handler(cval, oval) { // 深度监听
-        // this.getList()
+      get() {
+        if (this.isModify) {
+          this.getList()
+        }
       },
-      deep: true
+      set() {}
     },
     setLoadTable: { // 深度监听数组变换
       handler(cval, oval) {
         if (cval) {
           this.orgData = Object.assign({}, cval)
+          this.getList()
+        }
+      },
+      deep: true
+    },
+    countSuccessList: {
+      handler(cval, oval) {
+        this.initCount(cval, oval) // 智能结算返回的数据
+      },
+      deep: true
+    },
+    getSettlementId: {
+      handler(cval, oval) {
+        if (cval) {
+          this.settlementId = cval
           this.getList()
         }
       },
@@ -171,15 +215,89 @@ export default {
   // this.getList()
   // },
   methods: {
+    initCount(cval, oval) { // 对智能结算进行操作
+      console.log(cval)
+      this.leftTable = []
+      this.rightTable = objectMerge2([], cval) // 被智能挑选到的数据 右边表格
+      this.$emit('loadTable', this.rightTable)
+      this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => {
+        // 左边表格显示的数据
+        if (this.rightTable[index]) {
+          return el.batchNo !== this.rightTable[index].batchNo
+        } else {
+          return true
+        }
+      })
+      this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
+      // 判断右边表格的数据 合计是否为智能结算中输入的值
+      let listCount = 0
+      let countDifference = 0
+      // let feeName = this.FEE_TYPE[this.settlementId] // 当前列表费用名
+      if (this.rightTable.length === 0) {
+        this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
+        return false
+      }
+
+      this.rightTable.forEach(e => {
+        listCount += Number(e[this.feeName])
+      })
+
+      let lastShipFeeTotal = Number(this.rightTable[this.rightTable.length - 1][this.feeName])
+      
+      if (this.rightTable.length > 1) { // 右边表格不只一条数据的时候
+        if (this.countNum < listCount) {
+          let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
+          console.log(listCount, lastShipFeeTotal, curShipFeeTotal)
+          this.rightTable[this.rightTable.length - 1][this.feeName] = curShipFeeTotal
+          this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+          this.leftTable[this.leftTable.length - 1][this.feeName] = tmsMath._sub(cval[cval.length - 1][this.feeName], curShipFeeTotal)
+          this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
+          this.$emit('loadTable', this.rightTable)
+        }
+      } else if (this.rightTable.length === 1) { // 当右边表格只有一条数据的时候
+        if (this.countNum < listCount) {
+          let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
+          this.rightTable[this.rightTable.length - 1][this.feeName] = curShipFeeTotal
+          this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+          this.leftTable[this.leftTable.length - 1][this.feeName] = tmsMath._sub(cval[cval.length - 1][this.feeName], curShipFeeTotal)
+          this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
+          this.$emit('loadTable', this.rightTable)
+        }
+      }
+      this.countOrgLeftTable = objectMerge2([], this.leftTable)
+
+    },
+    uniqueArray(array, key, fee) { // 去重算法 fee-需要合并值的字段 key-合并判断标识 array-数据列
+      let result = [array[0]]
+      for (let i = 1; i < array.length; i++) {
+        let item = array[i]
+        let repeat = false
+        for (let j = 0; j < result.length; j++) {
+          if (item[key] === result[j][key]) {
+            if (fee) {
+              result[j][fee] = tmsMath._add(item[fee], result[j][fee])
+            }
+            repeat = true
+            break
+          }
+        }
+        if (!repeat) {
+          result.push(item)
+        }
+      }
+      return result
+    },
     getList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.orgLeftTable = this.$options.data().orgLeftTable
+      this.countOrgLeftTable = this.$options.data().countOrgLeftTable
       let obj = {}
       if (this.isModify) {
         this.leftTable = this.orgData.left
         this.orgLeftTable = this.orgData.left
         this.rightTable = this.orgData.right
+        this.countOrgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
         this.$set(obj, 'orgId', this.otherinfo.orgid)
@@ -192,6 +310,7 @@ export default {
           this.loading = false
           this.leftTable = data
           this.orgLeftTable = data
+          this.countOrgLeftTable = data
           this.$emit('loadTable', this.rightTable)
         })
         obj = {}
@@ -203,7 +322,6 @@ export default {
         this.tableKey = Math.random()
         this.rightTable = this.$options.data().rightTable
         this.getList() // 重新获取列表
-        console.log(this.leftTable)
         this.$emit('setSettlementId', this.settlementId)
       }
     },
@@ -253,10 +371,14 @@ export default {
           if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
             this.orgLeftTable.splice(orgItem, 1)
           }
+          let countOrgItem = this.countOrgLeftTable.indexOf(e)
+          if (countOrgItem !== -1) { // 搜索源数据减去被穿梭的数据
+            this.countOrgLeftTable.splice(countOrgItem, 1)
+          }
         })
+        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'batchNo', this.feeName) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
-        console.log('rightTable', this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },
@@ -266,6 +388,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
@@ -273,6 +396,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
+        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'batchNo', this.feeName) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         console.log('rightTable', this.rightTable)

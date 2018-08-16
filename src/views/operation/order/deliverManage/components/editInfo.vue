@@ -171,10 +171,10 @@ export default {
           if (this.formModel.id) {
             console.log('edit')
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
                 this.editTrack()
               })
               .catch(() => {
@@ -183,10 +183,10 @@ export default {
           } else {
             console.log('add')
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
                 this.addTrack()
               })
               .catch(() => {
@@ -210,14 +210,17 @@ export default {
     },
     deleteTrack(item) {
       this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
           return deleteTrack(item.id).then(data => {
-            this.$message({ type: 'success', message: '删除成功' })
-            this.getDetail()
-          })
+              this.$message({ type: 'success', message: '删除成功' })
+              this.getDetail()
+            })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text || '删除失败')
+            })
         })
         .catch(() => {
           this.$message({ type: 'warning', message: '取消操作' })
@@ -231,19 +234,25 @@ export default {
     editTrack() { // 修改
       this.formModel.transferId = 0
       putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '操作失败')
+        })
     },
     addTrack() { // 添加
       this.formModel.loadId = this.id
       postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-        this.getSystemTime()
-      })
+          this.$message({ type: 'success', message: '添加成功' })
+          this.getDetail()
+          this.resetForm()
+          this.getSystemTime()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '操作失败')
+        })
     },
     handleClick() {
       if (this.activeName === 'second') {
@@ -393,7 +402,8 @@ export default {
       &:hover {}
     }
     /* 鼠标划过样式 */
-    .trackactive,.firstactive {
+    .trackactive,
+    .firstactive {
       .modifybtn,
       .deletebtn {
         display: inline-block;

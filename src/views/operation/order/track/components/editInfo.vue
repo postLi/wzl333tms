@@ -216,7 +216,7 @@ export default {
           this.resetForm()
         })
           .catch(error => {
-            this.$message({ type: 'success', message: '删除失败' })
+             this.$message.error(error.errorInfo || error.text ||  '删除失败')
           })
       })
     },
@@ -233,6 +233,9 @@ export default {
         this.getDetail()
         this.resetForm()
       })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
+      })
     },
     addTrack() { // 添加跟踪信息
       console.log('添加')
@@ -241,6 +244,9 @@ export default {
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
       })
     },
     handleClick() { // 底部按钮区显示

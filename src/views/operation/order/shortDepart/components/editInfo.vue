@@ -219,7 +219,7 @@ export default {
             this.getDetail()
           })
             .catch(error => {
-              this.$message({ type: 'success', message: '删除失败' })
+               this.$message.error(error.errorInfo || error.text)
             })
         })
         .catch(() => {
@@ -238,6 +238,9 @@ export default {
         this.getDetail()
         this.resetForm()
       })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
+      })
     },
     addTrack() { // 添加
       this.formModel.loadId = this.id
@@ -246,6 +249,9 @@ export default {
         this.getDetail()
         this.resetForm()
         this.getSystemTime()
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
       })
     },
     handleClick() {
