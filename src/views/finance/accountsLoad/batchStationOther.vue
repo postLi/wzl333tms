@@ -367,7 +367,7 @@ export default {
       }
     },
     getList() {
-      let selectListBatchNos = objectMerge2([], this.$route.query.selectListBatchNos)
+      let selectListBatchNos = Object.assign([], this.$route.query.selectListBatchNos)
       if (this.$route.query.selectListBatchNos) {
         this.isModify = true
       } else {
@@ -395,13 +395,14 @@ export default {
             this.isGoReceipt = false
           }
           this.rightTable.forEach(e => { // 左边表格减去右边的数据
+            e.amount = e.unpaidFee
             let item = this.leftTable.indexOf(e)
             if (item !== -1) {
               this.leftTable.splice(item, 1)
             }
-            e.amount = e.unpaidFee
+            
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.orgLeftTable = Object.assign([], this.leftTable)
         })
       }
     },
@@ -455,7 +456,7 @@ export default {
           
           let item = -1
           this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
+            if (el.batchNo === e.batchNo) {
               item = index
             }
           })

@@ -477,7 +477,7 @@ export default {
           this.rightTable.push(e)
           let item = -1
           this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
+            if (el.batchNo === e.batchNo) {
               item = index
             }
           })
