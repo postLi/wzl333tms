@@ -14,7 +14,7 @@
             <el-input v-model="searchTitle.memberName" auto-complete="off" disabled></el-input>
           </el-form-item>
         <el-form-item label="车牌号" prop="memberName" v-else>
-          <querySelect search="truckIdNumber" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />
+          <querySelect search="truckIdNumber" :orgid = "otherinfo.orgId" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />
 
         </el-form-item>
         <el-date-picker
@@ -581,7 +581,7 @@
       },
         // 查询
 
-      onSubmit() { 
+      onSubmit() {
         if (this.searchTitle.memberName) {
           if (!this.searchCreatTime[0]) {
             this.searchCreatTime = this.defaultTime

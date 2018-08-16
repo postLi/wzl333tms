@@ -479,23 +479,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <!-- <div slot="footer" class="dialog-footer stepFrom" v-if="isFootSecond">
-      <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
-        <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
+
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
@@ -944,6 +928,7 @@ export default {
       // console.log(_id);
       return getSelectLoadList(_id).then(data => {
         this.detailList = data
+        console.log(this.detailList);
         this.toggleAllRows()
         this.loading = false
         this.$nextTick(() => { // 默认设置实到数量为配载数量
