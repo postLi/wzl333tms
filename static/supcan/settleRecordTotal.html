@@ -17,8 +17,10 @@
     // var startTime ="2017-01-01";
     // var endTime ="2018-07-24";
     // var typeIds ="";
-    //    AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/FeeAggregation?orgId=1&startTime=2017-01-01&endTime="+endTime+"&typeIds=&access_token="+access_token);  
-    AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-finance/finance/report/v1/FeeAggregation" + query);
+    //    AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-finance/finance/report/v1/FeeAggregation?orgId=1&startTime=2017-01-01&endTime="+endTime+"&typeIds=&access_token="+access_token);
+    var url =   path  +"/"+(localStorage.tms_testapiurl || 'api')+"/api-finance/finance/report/v1/FeeAggregation" + query
+    AF.func("SetSource", "ds1 \r\n "+ url);
+    console.log(url)
     AF.func("Calc", "");
   }
 

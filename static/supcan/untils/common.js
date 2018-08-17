@@ -8,19 +8,14 @@ function activeShuoZhengCheck() {
   } else {
     // 插件未安装
     if ($B.type == 'chrome') {
-      if ($B.chrome_install_apitype == 'npapi')
-        {window.open("install_chrome.htm");}
-      else {
+      if ($B.chrome_install_apitype == 'npapi') { window.open("install_chrome.htm"); } else {
         var ofrm = document.getElementById('frm')
         // ofrm.height = 700
         ofrm.contentWindow.location.href = 'http://www.supcan.cn/download/clientinstall.htm?110'
         olbl.innerHTML = '下载 Chrome 浏览器插件安装包'
       }
     } else { // Firefox
-      if ($B.is64)
-        {alert("抱歉, 不支持 64位Firefox");}
-      else
-        {window.open("binary/supcan.xpi");}
+      if ($B.is64) { alert("抱歉, 不支持 64位Firefox"); } else { window.open("binary/supcan.xpi"); }
     }
   }
 }
@@ -62,7 +57,6 @@ function getUrlParams() { // 获取url里面的参数
     }
   }
   strQuery = strQuery.substr(0, strQuery.length - 1)
-  console.log(strQuery)
   return strQuery
 }
 
@@ -87,15 +81,12 @@ function hideChart(bGray) { // 隐藏
     AF.func('grayWindow', '1\r\n backcolor=#FFFFFF;alpha=100')
   }
 }
-console.log('sdfsdf')
+
 function OnEvent(id, Event, p1) {
-  console.log(id, Event, p1)
   if (Event == 'Print') {
     AF.func('Callfunc', '11', 'isOpenSysDialog=true; WorkSheet=Current')
   }
-  if (Event == 'Preview')
-    {AF.func("Callfunc", "18");}
+  if (Event == 'Preview') { AF.func("Callfunc", "18"); }
 
-  if (Event == 'Setting')
-    {AF.func("Callfunc", "216");}
+  if (Event == 'Setting') { AF.func("Callfunc", "216"); }
 }

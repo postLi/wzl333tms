@@ -8,6 +8,7 @@
     </el-form-item>
     <el-form-item v-if="senderSearch==='customer'">
       <el-autocomplete 
+       popper-class="popperHide"
       v-model="searchForm.shipSenderName" 
        :maxlength="20"
       :size="btnsize" 
@@ -17,6 +18,7 @@
     </el-form-item>
     <el-form-item v-if="senderSearch==='unit'">
       <el-autocomplete 
+       popper-class="popperHide"
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
        :maxlength="20"
@@ -26,6 +28,7 @@
     </el-form-item>
     <el-form-item label="运单号">
       <el-autocomplete 
+       popper-class="popperHide"
       v-model="searchForm.shipSn" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 

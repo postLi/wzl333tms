@@ -9,28 +9,28 @@
       </el-select>
     </el-form-item>
     <el-form-item v-if="senderSearch==='short'">
-      <el-autocomplete v-model="searchForm.shortBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect">
+      <el-autocomplete v-model="searchForm.shortBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect" popper-class="popperHide">
         <template slot-scope="{ item }">
-          <div class="name">{{ item.shortBatchNo }}</div>
+          <div class="name">{{ item.batchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='load'">
-      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect">
+      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect"  popper-class="popperHide">
         <template slot-scope="{ item }">
-          <div class="name">{{ item.mainBatchNo }}</div>
+          <div class="name">{{ item.batchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='deliver'">
-      <el-autocomplete v-model="searchForm.sendBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect">
+      <el-autocomplete v-model="searchForm.sendBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect" popper-class="popperHide">
         <template slot-scope="{ item }">
-          <div class="name">{{ item.sendBatchNo }}</div>
+          <div class="name">{{ item.batchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-autocomplete clearable v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect">
+      <el-autocomplete clearable v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide">
         <template slot-scope="{ item }">
           <div class="name">{{ item.truckIdNumber }}</div>
         </template>
@@ -113,7 +113,7 @@ export default {
       }
     },
     querySearch(type, queryString, cb) {
-      let leftTable = this.info
+      let leftTable = leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图
       this.selectVal = type // 当前选择输入的对象
       for (let item in this.searchForm) {
@@ -121,7 +121,8 @@ export default {
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }
-      let results = queryString ? uniqueArray(leftTable.filter(this.createFilter(queryString, type)), 'batchNo') : leftTable
+      console.log(typeof queryString, queryString, type)
+      let results = queryString ? leftTable.filter(this.createFilter(queryString, type)) : leftTable
       cb(results)
       let array = []
       results.forEach(e => {
@@ -131,7 +132,12 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
-        return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        if (type !== 'truckIdNumber') {
+          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }else {
+          return (res.truckIdNumber.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }
+        
       }
     },
     handleSelect(obj) {
@@ -139,8 +145,8 @@ export default {
       this.selectVal = ''
       let array = []
       array.push(obj)
-      console.log('array', array)
       this.$emit('change', array)
+      this.searchForm = this.$options.data().searchForm
     },
     clearSender(event) {
       this.searchForm = this.$options.data().searchForm
@@ -168,6 +174,9 @@ export default {
   .hidePopper {
     display: none !important;
     background-color: rgba(0, 0, 0, 0);
+  }
+  .el-autocomplete-suggestion .el-popper{
+    display:none;
   }
 }
 

@@ -17,7 +17,9 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" fixed width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="130">
+        </el-table-column>
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="130">
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
@@ -66,9 +68,9 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" fixed width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="130">
         </el-table-column>
-        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="120">
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="150">
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
@@ -151,6 +153,10 @@ export default {
     },
     countNum: {
       type: [Number, String]
+    },
+    activeName: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -190,59 +196,133 @@ export default {
         return cval
       },
       deep: true
+    },
+    activeName: {
+      handler(cval, oval) {
+        console.log(cval)
+        if (cval === 'second') {
+          this.getList()
+        }
+      },
+      deep: true
     }
   },
   activated() {
     this.getList()
   },
   methods: {
-    initCount(cval, oval) { // 对智能结算进行操作
-      this.leftTable = []
-      this.rightTable = objectMerge2([], cval) // 被智能挑选到的数据 右边表格
-      this.$emit('loadTable', this.rightTable)
-      this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { 
-      // 左边表格显示的数据
+    // initCount(cval, oval) { // 对智能结算进行操作
+    //   this.leftTable = []
+    //   this.rightTable = objectMerge2([], cval) // 被智能挑选到的数据 右边表格
+    //   this.$emit('loadTable', this.rightTable)
+      
+    //   this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
+    //     if (this.rightTable[index]) {
+    //       return el.shipSn !== this.rightTable[index].shipSn
+    //     } else {
+    //       console.log(el.shipSn)
+    //       return true
+    //     }
+    //   })
+
+    //   console.log(this.orgLeftTable, this.leftTable)
+    //   if (this.leftTable.length !== 0) {
+    //     this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
+    //   }
+
+    //    // 判断右边表格的数据 合计是否为智能结算中输入的值
+    //   let listCount = 0
+    //   let countDifference = 0
+    //   if (this.rightTable.length === 0) {
+    //     this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
+    //   }
+    //   this.rightTable.forEach(e => {
+    //     listCount += Number(e.shipFeeTotal)
+    //   })
+      
+    //   let lastShipFeeTotal = Number(this.rightTable[this.rightTable.length - 1].shipFeeTotal)
+    //   console.log(listCount, lastShipFeeTotal, this.countNum)
+    //   if (this.rightTable.length > 1) { // 右边表格不只一条数据的时候
+    //     if (this.countNum < listCount) {
+    //       let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
+    //       this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
+    //       this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+    //       this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+    //       this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
+    //       this.$emit('loadTable', this.rightTable)
+    //     }
+    //   } else if (this.rightTable.length === 1) { // 当右边表格只有一条数据的时候
+    //     if (this.countNum < listCount) {
+    //       let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
+    //       this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
+    //       this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+    //       this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+    //       this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
+    //       this.$emit('loadTable', this.rightTable)
+    //     }
+    //   }
+    //   this.countOrgLeftTable = objectMerge2([], this.leftTable)
+
+    // },
+    initCount(cval, oval) { // 对智能结算返回的数据进行操作
+      // this.getList()
+      this.leftTable = [] // 左边表格显示最原始的数据
+      this.rightTable = objectMerge2([], cval) // 右边表格显示的数据 
+      this.$emit('loadTable', this.rightTable) // 方便费用信息处显示计算总额
+
+      this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
         if (this.rightTable[index]) {
           return el.shipSn !== this.rightTable[index].shipSn
         } else {
           return true
         }
       })
-      // this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
-       // 判断右边表格的数据 合计是否为智能结算中输入的值
+      if  (this.leftTable.length !== 0) {
+        this.leftTable = this.uniqueArray(this.leftTable, 'shipSn')
+      }
+
+      // 判断右边表格的数据 合计是否为智能结算中输入的值
       let listCount = 0
       let countDifference = 0
+
+      this.rightTable.forEach(e => {
+        listCount += Number(e.shipFeeTotal)
+      })
       if (this.rightTable.length === 0) {
         this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
         return false
       }
-      this.rightTable.forEach(e => {
-        listCount += Number(e.shipFeeTotal)
-      })
-      
       let lastShipFeeTotal = Number(this.rightTable[this.rightTable.length - 1].shipFeeTotal)
-      console.log(listCount, lastShipFeeTotal, this.countNum)
+
       if (this.rightTable.length > 1) { // 右边表格不只一条数据的时候
         if (this.countNum < listCount) {
           let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
           this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
-          this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+
+          this.leftTable.push(objectMerge2(cval[cval.length - 1])) // 最后一条数据多出来的值 给左边列表添加多一条
           this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          this.leftTable[this.leftTable.length - 1].shipFeeTotalActual = this.leftTable[this.leftTable.length - 1].shipFeeTotal
+          
           this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
           this.$emit('loadTable', this.rightTable)
+        } else if (this.countNum > listCount) {
+          console.log(this.countNum, listCount, parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2)))
+
         }
       } else if (this.rightTable.length === 1) { // 当右边表格只有一条数据的时候
         if (this.countNum < listCount) {
           let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
           this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
-          this.leftTable.push(objectMerge2(cval[cval.length - 1]))
+
+          this.leftTable.push(objectMerge2(cval[cval.length - 1])) // 最后一条数据多出来的值 给左边列表添加多一条
           this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          this.leftTable[this.leftTable.length - 1].shipFeeTotalActual = this.leftTable[this.leftTable.length - 1].shipFeeTotal
+
           this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
           this.$emit('loadTable', this.rightTable)
         }
       }
       this.countOrgLeftTable = objectMerge2([], this.leftTable)
-
     },
     getList() {
       this.leftTable = this.$options.data().leftTable
@@ -309,7 +389,9 @@ export default {
         for (let j = 0; j < result.length; j++) {
           if (item[key] === result[j][key]) {
             if (fee) {
-              result[j][fee] = tmsMath._add(item[fee], result[j][fee])
+              for(let k in fee) {
+                result[j][fee[k]] = tmsMath._add(item[fee[k]], result[j][fee[k]])
+              }
             }
             repeat = true
             break
@@ -344,7 +426,7 @@ export default {
             this.countOrgLeftTable.splice(countOrgItem, 1)
           }
         })
-        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', 'shipFeeTotal') // 去重
+        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', ['shipFeeTotal', 'shipFeeTotalActual']) // 去重
         this.selectedRight = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }
@@ -363,7 +445,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
-        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', 'shipFeeTotal') // 去重
+        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', ['shipFeeTotal', 'shipFeeTotalActual']) // 去重
         this.selectedLeft = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }

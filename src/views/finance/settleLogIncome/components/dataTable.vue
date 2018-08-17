@@ -19,6 +19,8 @@
         </el-table-column>
         <el-table-column prop="shipGoodsSn" sortable label="货号" width="180">
         </el-table-column>
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="130">
+        </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="120">
@@ -65,6 +67,8 @@
         <el-table-column prop="shipSn" label="运单号" fixed width="130">
         </el-table-column>
         <el-table-column prop="shipGoodsSn" sortable label="货号" width="150">
+        </el-table-column>
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="130">
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
@@ -195,14 +199,16 @@ export default {
       this.rightTable = objectMerge2([], cval) // 右边表格显示的数据 
       this.$emit('loadTable', this.rightTable) // 方便费用信息处显示计算总额
 
-      this.leftTable =  objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
+      this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
         if (this.rightTable[index]) {
           return el.shipSn !== this.rightTable[index].shipSn
         } else {
           return true
         }
       })
-      this.leftTable = this.uniqueArray(this.leftTable, 'shipSn')
+      if  (this.leftTable.length !== 0) {
+        this.leftTable = this.uniqueArray(this.leftTable, 'shipSn')
+      }
 
       // 判断右边表格的数据 合计是否为智能结算中输入的值
       let listCount = 0
@@ -222,11 +228,12 @@ export default {
           let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
           this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
           this.leftTable.push(objectMerge2(cval[cval.length - 1]))
-          // this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
-          this.leftTable[this.leftTable.length - 1].shipFeeTotal = parseFloat(Number(cval[cval.length - 1].shipFeeTotal)- Number(curShipFeeTotal))
+          this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          this.leftTable[this.leftTable.length - 1].shipFeeTotalActual = this.leftTable[this.leftTable.length - 1].shipFeeTotal
           this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
           this.$emit('loadTable', this.rightTable)
         } else if (this.countNum > listCount) {
+          console.log(this.countNum, listCount, parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2)))
 
         }
       } else if (this.rightTable.length === 1) { // 当右边表格只有一条数据的时候
@@ -235,6 +242,7 @@ export default {
           this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
           this.leftTable.push(objectMerge2(cval[cval.length - 1]))
           this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          this.leftTable[this.leftTable.length - 1].shipFeeTotalActual = this.leftTable[this.leftTable.length - 1].shipFeeTotal
           this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
           this.$emit('loadTable', this.rightTable)
         }
@@ -306,7 +314,9 @@ export default {
         for (let j = 0; j < result.length; j++) {
           if (item[key] === result[j][key]) {
             if (fee) {
-              result[j][fee] = tmsMath._add(item[fee], result[j][fee])
+              for (let k in fee) {
+                result[j][fee[k]] = tmsMath._add(item[fee[k]], result[j][fee[k]])
+              }
             }
             repeat = true
             break
@@ -337,7 +347,7 @@ export default {
             this.countOrgLeftTable.splice(countOrgItem, 1)
           }
         })
-        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', 'shipFeeTotal') // 去重
+        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', ['shipFeeTotal', 'shipFeeTotalActual']) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
@@ -357,7 +367,7 @@ export default {
             this.rightTable.splice(item, 1)
           }
         })
-        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', 'shipFeeTotal') // 去重
+        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', ['shipFeeTotal', 'shipFeeTotalActual']) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)

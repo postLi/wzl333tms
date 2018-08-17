@@ -15,7 +15,8 @@
           <div class="popoveruser_info_lyy">
             <p>{{ otherinfo.name }}</p>
             <p>{{ company }}</p>
-            <p>当前环境： <el-button type="primary" @click="changeView" size="mini" plain>切换</el-button></p>
+            <p>当前环境：{{otherinfo.isTest===0?'生产环境':'测试环境'}}<br>
+             <el-button type="primary" v-show="otherinfo.associatedUsername" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'测试环境':'生产环境'}}</el-button></p>
           </div>
         </el-col>
         <el-col class="popover-btns" :span="24">
@@ -57,9 +58,27 @@ export default {
     lockScreen() {
       this.$store.dispatch('LockScreen')
     },
+    changeLogin (loginForm) {
+      this.$store.dispatch('Login', loginForm).then(() => {
+          location.href = '/'
+        })
+        .catch(error => {
+          this.$message({
+              message: error.errorInfo || error.text || '您的账号或者密码有误~',
+              type: 'warning'
+            })
+        })
+    },
     changeView () {
-      console.log('切换环境', this.otherinfo)
-      this.$message({type: 'warning', message: '暂无此功能'})
+      if ( this.otherinfo.isTest === 0 && typeof this.otherinfo.associatedUsername === 'string') {
+        let loginFormTest = {
+          username: this.otherinfo.associatedUsername,
+          password: this.otherinfo.name + '#test#'+this.otherinfo.orgid
+        }
+        this.changeLogin(loginFormTest) // 切换到测试环境
+      }else if ( this.otherinfo.isTest === 1 && typeof this.otherinfo.associatedUsername === 'string'){
+        this.logout()
+      }
     }
   }
 }

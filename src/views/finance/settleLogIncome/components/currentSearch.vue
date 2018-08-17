@@ -8,6 +8,7 @@
     </el-form-item>
     <el-form-item v-if="senderSearch==='customer'">
       <el-autocomplete 
+       popper-class="popperHide"
       ref="searchAutocomplete"
       v-model="searchForm.shipSenderName" 
       :size="btnsize" 
@@ -17,6 +18,7 @@
     </el-form-item>
     <el-form-item v-if="senderSearch==='unit'">
       <el-autocomplete 
+       popper-class="popperHide"
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
@@ -33,6 +35,7 @@
     </el-form-item> -->
     <el-form-item label="运单号">
       <el-autocomplete 
+       popper-class="popperHide"
       v-model="searchForm.shipSn" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
@@ -99,6 +102,7 @@ export default {
       let array = []
       array.push(obj)
       this.$emit('change', array)
+      this.searchForm = this.$options.data().searchForm
     },
     clearSender(event) {
       this.searchForm = this.$options.data().searchForm

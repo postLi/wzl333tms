@@ -8,8 +8,11 @@ import fetch from '../../utils/fetch'
  */
 export function postFindLowList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/list/', data).then(res => {
-    return res.data
-  })
+      return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 查询记收入或支出-费用信息
@@ -18,6 +21,9 @@ export function getFeeInfo(orgId, paymentsType) {
   return fetch.get('/api-finance/finance/tmsfinancecapitalflow/v1/getFeeInfo?orgId=' + orgId + '&paymentsType=' + paymentsType)
     .then(res => {
       return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
     })
 }
 /**
@@ -38,6 +44,9 @@ export function getOrderShipList(data) {
     })
     .then(res => {
       return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
     })
 }
 /**
@@ -94,6 +103,18 @@ export function getSettlementInfo(flowId) {
 export function getFeeTypeDict(settlementId) {
   return fetch.post('/api-finance/finance/tmsfinancefeetype/v1/getFeeTypeDict/', {
       settlementId: settlementId
+    })
+    .then(res => {
+      return res.data
+    })
+}
+/**
+ * 收支方式接口
+ */
+export function getOrgFirstFinancialWay(data) {
+  return fetch.post('/api-finance/finance/tmsfinancefinancialway/v1/getOrgFirstFinancialWay/', {
+      financialWay: data.financialWay,
+      orgId: data.orgId
     })
     .then(res => {
       return res.data

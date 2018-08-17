@@ -23,7 +23,9 @@
     // var businessType = "";
 
     // AF.func("SetSource", "ds1 \r\n http://localhost:7010/api-finance/finance/report/v1/findOperationReport?startTime="+startTime+"&endTime="+endTime+"&orgId="+orgId+"&selectType="+selectType+"&shipToCityName="+shipToCityName+"&businessType="+businessType+"&access_token="+access_token);  
-    AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-finance/finance/report/v1/findOperationReport" + query);
+    var url = path  +"/"+(localStorage.tms_testapiurl || 'api')+"/api-finance/finance/report/v1/findOperationReport" + query
+    AF.func("SetSource", "ds1 \r\n "+ url);
+    console.log(url)
 
     //需要重新计算， 因为SetSource仅仅是相当于更改一个属性?
     AF.func("Calc", "");

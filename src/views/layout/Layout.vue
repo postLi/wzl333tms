@@ -2,9 +2,11 @@
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <div class="navbar-wrapper">
         <navbar></navbar>
+        <img src="../../assets/png/ce.png" v-show="otherinfo.isTest===1" class="navbar-wrapper-ce">
     </div>
     <div class="sidebar-wrapper">
       <sidebar></sidebar>
+
     </div>
     <div class="main-container">
       <TagsView></TagsView>
@@ -184,6 +186,10 @@ export default {
             background: #373d41;
             z-index: 1009;
             min-width: 1180px;
+            .navbar-wrapper-ce{
+              height:46px;
+              vertical-align: middle;
+            }
         }
     }
 </style>

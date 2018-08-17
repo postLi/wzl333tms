@@ -57,7 +57,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch"></dataTable>
+              <dataTable @loadTable="getLoadTable" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch"></dataTable>
             </div>
           </el-tab-pane>
           <el-tab-pane label="运单支出" name="second">
@@ -68,7 +68,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -253,7 +253,8 @@ export default {
         })
       })
     },
-    handleClick() {},
+    handleClick() {
+    },
     getLoadTable(obj) {
       let amount = 0
       this.loadTable = Object.assign([], obj)

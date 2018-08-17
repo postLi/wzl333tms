@@ -23,6 +23,7 @@
     //模板数据源url，数据源自手工生成  
     // AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-order/order/view/v1/cargoView2?idNum=10&access_token=" + access_token);
     AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-order/order/view/v1/cargoView2?idNum=5000&access_token=" + query);
+    console.log(path  +"/api/api-order/order/view/v1/cargoView2?idNum=5000&access_token=" + query)
 
     //需要重新计算， 因为SetSource仅仅是相当于更改一个属性 
     AF.func("Calc", "");
