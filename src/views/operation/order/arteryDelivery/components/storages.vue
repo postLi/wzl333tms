@@ -893,6 +893,8 @@
         if (this.selectDetailList.length === 1 && curAmount === 0) {
           console.log(this.selectDetailList.length, this.detailList.length)
 
+          
+
           this.detailList[index].actualAmount = curloadAmount
           this.detailList[index].actualWeight = curloadWeight
           this.detailList[index].actualVolume = curloadVolume
