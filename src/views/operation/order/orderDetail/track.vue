@@ -2,10 +2,10 @@
   <div class="setpinfo_box" v-loading="loading">
     <h3 class="steptitle">物流信息</h3>
     <el-row class="stepItem_title">
-      <el-col :span="5" class="tracktype" >类型</el-col>
+      <el-col :span="3" class="tracktype" >类型</el-col>
       <el-col :span="4" >操作时间</el-col>
       <el-col :span="3">操作网点</el-col>
-      <el-col :span="6">操作信息</el-col>
+      <el-col :span="8">操作信息</el-col>
       <el-col :span="6">操作明细</el-col>
     </el-row>
     <div class="stepinfo">
@@ -14,7 +14,7 @@
         <span slot="icon" class="location" ></span>
         <template slot="description">
           <el-row class="stepItem">
-            <el-col :span="5">
+            <el-col :span="3">
               <span class="typebox">{{item.trackNode}}</span>
               <template v-if="item.trackType===1">
                 <span title="编辑" @click="editItem(item)" class="modifybtn"></span>
@@ -27,7 +27,7 @@
             <el-col :span="3" class="">
               <p>{{item.orgName}}</p>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <p>{{item.trackInfo}}</p>
             </el-col>
             <el-col :span="6">
@@ -222,6 +222,7 @@ export default {
 .setpinfo_box{
   display: flex;
   flex-direction: column;
+  min-width: 1060px;
   /* 覆盖ele样式 */
   .el-form--inline .el-form-item{
     margin-bottom: 0;

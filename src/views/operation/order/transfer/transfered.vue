@@ -316,11 +316,11 @@ export default {
         'width': '150'
       }, {
         'label': '等通知放货',
-        'prop': 'status',
-        'width': '150',
-        'slot': function(scope) {
+        'prop': 'cgStatus',
+        'width': '150'
+        /* 'slot': function(scope) {
           return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'
-        }
+        } */
       }, {
         'label': '回单要求',
         'prop': 'shipReceiptRequireName',
