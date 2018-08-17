@@ -26,6 +26,9 @@ service.interceptors.request.use(config => {
   if (config.url.indexOf('http://') === -1) {
     // 如果是生产环境，强制访问157
     if (process.env.NODE_ENV === 'production') {
+      // 这个值也要转为设定的值
+      window.tms_testapiurl = 'api'
+      localStorage.tms_testapiurl = 'api'
       config.url = '/api' + config.url
     } else {
       /**
