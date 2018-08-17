@@ -19,7 +19,7 @@
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" />
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码"></el-input>
+          <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码" v-numberOnly></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
           <el-input :maxlength="300" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
@@ -98,7 +98,7 @@ export default {
         // signPic: ''
       },
       rules: {
-        documentNum: [{ required: true, trigger: 'blur', validator: validateNum }]
+        // documentNum: [{ required: true, trigger: 'blur', validator: validateNum }]
       }
     }
   },
@@ -109,6 +109,9 @@ export default {
         this.form = newVal
         // this.setSystemTime()
         this.form.signTime = new Date()
+        this.form.signName = this.otherinfo.name
+        this.form.signTypeId = 99
+        this.form.signCocumentTypeId = 96
         this.orderNum = newVal.shipIds.length
         if (this.orderNum === 0) {
           this.orderNum = newVal.childShipIds.length

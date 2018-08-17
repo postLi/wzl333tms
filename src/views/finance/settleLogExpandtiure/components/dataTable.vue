@@ -67,7 +67,7 @@
         </el-table-column>
         <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>
-        <el-table-column prop="fee" sortable label="应付费用" width="120">
+        <el-table-column prop="loadFeeTotalActual" sortable label="实际合计" width="120">
         </el-table-column>
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
