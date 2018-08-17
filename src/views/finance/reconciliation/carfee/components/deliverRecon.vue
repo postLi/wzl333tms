@@ -505,7 +505,7 @@
     },
     mounted() {
       // this.searchCreatTime = this.defaultTime
-
+      this.messageButtonInfo.createTime = new Date()
       this.changeOrgid(this.otherinfo, this.$route.query.id)
       if (this.$route.query.id) {
         this.sendId = this.$route.query.id
@@ -528,6 +528,10 @@
           this.memberNameType = data.data
           // console.log(this.memberNameType);
           this.loading = false
+        }).catch(err => {
+          this.messageArr = []
+          this.infoMessageData(this.messageArr)
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchList() {
@@ -536,6 +540,10 @@
           this.messageArr = data
           this.infoMessageData(this.messageArr)
           this.loading = false
+        }).catch(err => {
+          this.messageArr = []
+          this.infoMessageData(this.messageArr)
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchDealPay() {
@@ -546,6 +554,8 @@
           this.dealPayInfo = data
           this.dealPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchReadyPay() {
@@ -556,6 +566,8 @@
           this.alreadyPayInfo = data
           this.alreadyPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       // 修改
@@ -566,6 +578,8 @@
           this.messageArr = data.data
           this.infoMessageData(this.messageArr)
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       moodifyDealPay() {
@@ -576,6 +590,8 @@
           this.dealPayInfo = data
           this.dealPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       moodifyReadyPay() {
@@ -586,6 +602,8 @@
           this.alreadyPayInfo = data
           this.alreadyPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       changeOrgid(item, checkId) {
@@ -617,7 +635,7 @@
             this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
-          this.searchCreatTime = this.defaultTime
+          // this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)

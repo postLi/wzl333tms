@@ -6,11 +6,11 @@
 
       <div class="sTitle">
         <el-form-item label="">
-          <el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>
+          <!--<el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>-->
 
-          <!--<el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">-->
-            <!--<div slot="content">双击可修改对账单名称</div>-->
-            <!--<el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable  @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"  auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"  @blur="tooltip = false;disabledName = true" @mouseenter.native=" disabledName === true && (tooltip = true)" @mouseleave.native="tooltip = false;disabledName = true"></el-input>-->
+          <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
+            <div slot="content">双击可修改对账单名称</div>
+            <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable  @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"  auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"  @blur="tooltip = false;disabledName = true" @mouseenter.native=" disabledName === true && (tooltip = true)" @mouseleave.native="tooltip = false;disabledName = true"></el-input>
             <!--@blur="tooltip = false;disabledName = true"-->
             <!--@mouseout.native="tooltip = false;disabledName = true"-->
             <!--<template slot-scope="scope">-->
@@ -372,6 +372,8 @@
     data() {
       const _this = this
       return {
+        tooltip: false,
+        disabledName: true,
         memberNameType:[],
         truckKey:0,
         pickOption: {
@@ -901,7 +903,28 @@
       .sTitle{
         flex: 1;
         text-align: center;
+        /*showBg*/
+        .el-tooltip.showBg{
+          .el-input__inner{
+            border-left-color: #c0c4cc;
+            border-right-color: #c0c4cc;
+            color: #fff;
+            font-weight: 600;
+            background: skyblue;
+          }
+        }
+        .el-input__suffix{
+          left: -20px;
+          top: -10px;
+        }
+        .el-input--suffix .el-input__inner {
+          padding-right: 0;
+        }
+        .el-input.is-disabled .el-input__inner {
+          background-color:#fff;
+        }
 
+        /*/*showBg*/
         span{
           position: relative;
           top: -11px;

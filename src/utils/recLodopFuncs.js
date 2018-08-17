@@ -299,7 +299,7 @@
  export function SaveAsFile(obj) {
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
-     const tableId = createTable(obj) // 重新创建打印视图table
+     const tableId = createReconciliation(obj.data) // 重新创建打印视图table
      LODOP = getLodop()
      LODOP.PRINT_INIT('数据表格')
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
@@ -312,7 +312,7 @@
      LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
      //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
      if (obj.name) {
-       LODOP.SAVE_TO_FILE(obj.name + '.xls')
+       LODOP.SAVE_TO_FILE(obj.name + '_' + (new Date().getTime()) + '.xls')
      } else {
        LODOP.SAVE_TO_FILE('新文件名.xls')
      }
@@ -464,13 +464,24 @@
 
  function createReconciliation(params) {
    console.log(params)
+   for(var i in params){
+     params[i] = params[i] === null ? '' : params[i]
+   }
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
    const div = document.createElement('div')
+
    const h3 = document.createElement('b') // 标题【结算收款单】
    const infoDiv = document.createElement('div')
    const table = document.createElement('table')
+   div.id = tableId
    const thead = document.createElement('thead')
    const tbody = document.createElement('tbody')
+   table.style.border = '1px solid #ff000';
+   var theadStr = `
+    <tr>
+      <td bgcolor="#ff0000" colspan="13" style="text-align: center;border:1px solid red;" >顺丰2018年07月01日-2018年07月01日对账表</td>
+    </tr>
+   `
   // 标题
    const tbodyStr = ` <tr>
     <td >承运商名称 </td>
@@ -514,10 +525,12 @@
   //  infoDiv.innerHTML = infoStr
    div.appendChild(h3)
    div.appendChild(infoDiv)
+   thead.innerHTML = theadStr
    table.appendChild(thead)
    table.appendChild(tbody)
    div.appendChild(table)
 
    document.body.appendChild(div)
+
    return tableId
  }

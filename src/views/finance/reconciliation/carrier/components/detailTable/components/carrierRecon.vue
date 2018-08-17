@@ -723,7 +723,7 @@
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
-  // import { createReconciliation } from '@/utils/recLodopFuncs'
+  import { createReconciliation,SaveAsFile } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -853,10 +853,14 @@
     methods: {
       export1() {
         alert('111')
-        createReconciliation({
-          data: this.messageInfo
-          //  columns: this.tableColumn
+        SaveAsFile({
+          data: this.messageInfo,
+          name: '新建对账'
         })
+        // createReconciliation({
+        //   data: this.messageInfo
+        //   //  columns: this.tableColumn
+        // })
       },
       fetchList() {
         this.loading = true
