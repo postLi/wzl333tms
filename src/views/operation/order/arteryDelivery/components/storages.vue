@@ -892,9 +892,6 @@
         const curloadVolume = this.detailList[index].loadVolume // 配载体积
         if (this.selectDetailList.length === 1 && curAmount === 0) {
           console.log(this.selectDetailList.length, this.detailList.length)
-
-          
-
           this.detailList[index].actualAmount = curloadAmount
           this.detailList[index].actualWeight = curloadWeight
           this.detailList[index].actualVolume = curloadVolume
@@ -993,12 +990,16 @@
 
             })
           })
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       getDetail() {
         const id = this.propsId
         return getLoadDetail(id).then(data => {
           this.trackDetail = Object.assign([], data)
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       toggleAllRows() {
@@ -1178,6 +1179,8 @@
                       message: '到车入库成功'
                     })
                     this.$emit('success')
+                  }).catch(err => {
+                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
                   })
                   this.closeMe()
                 }

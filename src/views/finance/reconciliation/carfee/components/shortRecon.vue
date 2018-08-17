@@ -515,16 +515,22 @@
         this.loading = true
         return getTrucK().then(data => {
           this.memberNameType = data.data
-          console.log(this.memberNameType);
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchList() {
         this.loading = true
         return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
+          this.messageArr = []
           this.messageArr = data
           this.infoMessageData(this.messageArr)
           this.loading = false
+        }).catch(err => {
+          this.messageArr = []
+          this.infoMessageData(this.messageArr)
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchDealPay() {
@@ -534,8 +540,9 @@
           this.dealPaytota = []
           this.dealPayInfo = data
           this.dealPaytota = data
-
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchReadyPay() {
@@ -546,6 +553,8 @@
           this.alreadyPayInfo = data
           this.alreadyPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
         // 修改
@@ -554,13 +563,12 @@
         this.sendId = this.$route.query.id
         return postCarfDtoById(this.sendId).then(data => {
           this.messageArr = data.data
+
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
-          this.$message({
-            type: 'info',
-            message: err.errorInfo || err.text || '未知错误，请重试~'
-          })
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+
         })
       },
       moodifyDealPay() {
@@ -631,6 +639,7 @@
           this.fetchReadyPay()
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
+
         } else {
           this.$message({
             message: '车牌号不能为空~',

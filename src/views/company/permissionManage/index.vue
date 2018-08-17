@@ -153,6 +153,8 @@
           this.loading = false
           getAuthInfo(this.otherinfo.orgid).then(res => {
             this.usersArr = res.list
+          }).catch(err => {
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       },
@@ -161,6 +163,8 @@
           getauthTreeInfo(this.theUser.id).then(res => {
             this.loading = false
             this.getTreeArr = res
+          }).catch(err => {
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         } else {
           getauthTreeInfo(0).then(res => {

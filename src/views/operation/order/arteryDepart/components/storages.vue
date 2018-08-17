@@ -678,6 +678,8 @@ export default {
         this.loading = false
         this.toggleAllRows()
         // this.$refs.multipleTable.toggleRowSelection(e, true)
+      }).catch(err => {
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
 
     },

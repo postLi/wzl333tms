@@ -14,111 +14,6 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <!--<el-table-->
-          <!--ref="multipleTable"-->
-          <!--:data="usersArr"-->
-          <!--stripe-->
-          <!--border-->
-          <!--@row-dblclick="getDbClick"-->
-          <!--@row-click="clickDetails"-->
-          <!--@selection-change="getSelection"-->
-          <!--height="100%"-->
-          <!--tooltip-effect="dark"-->
-          <!--:default-sort = "{prop: 'id', order: 'ascending'}"-->
-          <!--style="width: 100%">-->
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--type="selection"-->
-            <!--width="50">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--label="序号"-->
-            <!--width="160">-->
-            <!--<template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--fixed-->
-            <!--sortable-->
-            <!--prop="orgName"-->
-            <!--width="120"-->
-            <!--label="所属网点">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="financialWay"-->
-            <!--width="110"-->
-            <!--sortable-->
-            <!--label="收支方式">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="bankName"-->
-            <!--sortable-->
-            <!--width="140"-->
-            <!--label="银行名称">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="bankAccount"-->
-            <!--sortable-->
-            <!--width="180"-->
-            <!--label="银行卡号">-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column-->
-            <!--sortable-->
-            <!--prop="bankAccountName"-->
-            <!--width="130"-->
-            <!--label="开户人">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="alipayAccount"-->
-            <!--label="支付宝账号"-->
-            <!--width="160"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="wechatAccount"-->
-            <!--label="微信号"-->
-            <!--width="150"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column-->
-            <!--prop="statusStr"-->
-            <!--label="状态"-->
-            <!--width="110"-->
-            <!--sortable-->
-            <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="createBy"-->
-            <!--label="创建人"-->
-            <!--width="110"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column-->
-            <!--label="创建时间"-->
-            <!--width="160"-->
-            <!--sortable-->
-          <!--&gt;-->
-            <!--<template slot-scope="scope">-->
-              <!--{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column-->
-            <!--prop="remark"-->
-            <!--label="备注"-->
-            <!--width="150"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-        <!--</el-table>-->
 
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
@@ -278,6 +173,8 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch(err => {
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {

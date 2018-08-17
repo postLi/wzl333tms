@@ -916,6 +916,8 @@
             }
           })
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       modifyList() {
@@ -942,13 +944,15 @@
             }
           })
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       onSearch() {
         if (!this.searchCreatTime[0]) {
           this.searchCreatTime = this.defaultTime
         }
-  
+
         const searchObj = {}
         searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
         searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''

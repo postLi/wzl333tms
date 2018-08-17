@@ -12,86 +12,6 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <!-- <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="120">
-            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="200"
-            label="网点">
-          </el-table-column>
-          <el-table-column
-            prop="customerUnit"
-            width="200"
-            sortable
-            label="发货方">
-          </el-table-column>
-          <el-table-column
-            prop="customerName"
-            sortable
-            width="200"
-            label="发货人">
-          </el-table-column>
-          <el-table-column
-            prop="customerMobile"
-            sortable
-            width="200"
-            label="客户电话">
-          </el-table-column>
-
-          <el-table-column
-            sortable
-            prop="totalFee"
-            width="190"
-            label="对账合计">
-          </el-table-column>
-          <el-table-column
-            prop="receivableFee"
-            label="应收账款"
-            width="190"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="payableFee"
-            label="应付账款"
-            width="200"
-            sortable
-            >
-          </el-table-column>
-
-          <el-table-column
-            prop="totalCount"
-            label="总单数"
-            width="180"
-            sortable
-            >
-          </el-table-column>
-        </el-table> -->
 
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
@@ -229,6 +149,8 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch(err => {
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {

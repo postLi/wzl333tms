@@ -281,6 +281,8 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch(err => {
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {
@@ -370,10 +372,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
               })
             } else {
               this.closeAddCustomer()
@@ -418,10 +417,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
               })
             }).catch(() => {
               this.$message({
@@ -461,10 +457,7 @@ export default {
                   })
                   this.fetchData()
                 }).catch(err => {
-                  this.$message({
-                    type: 'info',
-                    message: err.errorInfo || err.text || '未知错误，请重试~'
-                  })
+                  this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
                 })
               }).catch(() => {
                 this.$message({

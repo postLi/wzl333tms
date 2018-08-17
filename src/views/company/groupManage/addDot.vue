@@ -46,7 +46,7 @@
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" maxlength="13" clearable>
+            <el-form-item label="客服电话" :label-width="formLabelWidth"  clearable>
               <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"></el-input>
             </el-form-item>
             <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city" >
@@ -138,8 +138,8 @@
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth" prop=""  clearable>
-              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" v-number-only :maxlength="13"></el-input>
+            <el-form-item label="客服电话" :label-width="formLabelWidth"  clearable>
+              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
               <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" ></el-input>
@@ -330,9 +330,9 @@
             { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
-          servicePhone: [
-            { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话', trigger: ['blur', 'change'] }
-          ],
+          // servicePhone: [
+          //   { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话', trigger: ['blur', 'change'] }
+          // ],
           // 网点代码
           networkCode: [
             { required: true, validator: this.validateIsEmpty('请输入网点代码') },

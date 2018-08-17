@@ -26,7 +26,7 @@ export function postCarfShortDetailList(params) {
  */
 export function postCarfBillCheckCarBaseInfo(params) {
   return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/getBillCheckCarBaseInfo/', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data
   })
 }
 
