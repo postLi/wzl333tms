@@ -28,9 +28,9 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>数量:<span>20</span>单<em>20%</em></li>
-          <li>重量:<span>20</span>千克<em>20%</em></li>
-          <li>体积:<span>20</span>方<em>20%</em></li>
+          <li>数量:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
+          <li>重量:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
+          <li>体积:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
         </ul>
         <ul>
           <li>
@@ -38,10 +38,10 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>短驳发车:<span>20</span>单<em>20%</em></li>
-          <li>短驳倒车:<span>20</span>千克<em>20%</em></li>
-          <li>干线发车:<span>20</span>方<em>20%</em></li>
-          <li>干线到车:<span>20</span>方<em>20%</em></li>
+          <li>短驳发车:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
+          <li>短驳倒车:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
+          <li>干线发车:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>干线到车:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
         </ul>
         <ul>
           <li>
@@ -49,11 +49,11 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>先付:<span>20</span>单<em>20%</em></li>
-          <li>到付:<span>20</span>千克<em>20%</em></li>
-          <li>回单付:<span>20</span>方<em>20%</em></li>
-          <li>月结:<span>20</span>方<em>20%</em></li>
-          <li>异动增款:<span>20</span>方<em>20%</em></li>
+          <li>先付:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
+          <li>到付:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
+          <li>回单付:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>月结:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>异动增款:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
         </ul>
         <ul>
           <li>
@@ -61,11 +61,11 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>回扣:<span>20</span>单<em>20%</em></li>
-          <li>其它费:<span>20</span>千克<em>20%</em></li>
-          <li>短驳车费:<span>20</span>方<em>20%</em></li>
-          <li>干线车费:<span>20</span>单<em>20%</em></li>
-          <li>送货车费:<span>20</span>千克<em>20%</em></li>
+          <li>回扣:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
+          <li>其它费:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
+          <li>短驳车费:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>干线车费:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
+          <li>送货车费:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
          
         </ul>
       </el-main>
@@ -93,6 +93,8 @@
 export default {
    data() {
      return {
+       dataset: [],
+       dataset1: [],
        pickerOptions2: {
          shortcuts: [{
            text: '最近一周',
@@ -130,7 +132,7 @@ export default {
      var myChart3 = echarts.init(document.getElementById('main'))
      const option = {
        title: {
-         text: '2018收入对比图',
+         text: '{{dataset}}18收入对比图',
          subtext: '测试数据',
          x: 'center'
        },
@@ -320,13 +322,24 @@ export default {
      myChart.setOption(option)
      myChart2.setOption(option2)
      myChart3.setOption(option3)
-   }
 
+     var count = 100
+     var a = new Array()
+     for (var i = 0; i < 100; i++) {
+       a[i] = i + 1
+     }
+     a.sort(function() {
+       return 0.5 - Math.random()
+     })
+     for (var i = 0; i < a.length; i++) {
+       this.dataset = a[i] + ''
+       console.log(a[i] + '')
+     }
+   }
  }
 </script>
 <style lang="scss">
 .main_content{
-  // padding-bottom: 100px !important;
  .clearfix:after{
     display: block;
     clear: both;
@@ -378,6 +391,7 @@ export default {
     width: 100%;
     display: flex;
     float: left;
+    -moz-box-sizing: border-box;
     ul{
       border:2px solid #ddd;
       background: #fff;
