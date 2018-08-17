@@ -104,11 +104,14 @@ export default {
         if (this.showFileList) {
           let arr = Array.isArray(newVal) ? newVal : newVal ? newVal.split(',') : []
           arr = arr.filter(el => el)
+          this.filelist = []
           this.filelist = arr.map(el => {
             const obj = {}
             obj.url = el
             return obj
           })
+        } else {
+          this.filelist = newVal ? [newVal] : []
         }
       },
       immediate: true
@@ -116,6 +119,9 @@ export default {
   },
   mounted() {
     this.init()
+  },
+  updated(){
+    console.log('single image updated~~~')
   },
   methods: {
     init() {

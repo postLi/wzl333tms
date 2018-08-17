@@ -612,7 +612,8 @@ export function exportWithIframe(url) {
 // 只计算小数点后两位
 export function getTotal() {
   const args = Array.from(arguments)
-  let total = 0
+  return tmsMath._calc('_add', args).result()
+  /* let total = 0
   // 先处理成俩位
   // 然后乘以10000
   // 再计算
@@ -625,7 +626,7 @@ export function getTotal() {
     total += parseInt(el, 10)
   })
   console.log('total args:', args, total, 'final:', (total / 10000))
-  return (total / 10000)
+  return (total / 10000) */
 }
 
 /**
@@ -745,11 +746,13 @@ export const tmsMath = {
 
     for (; i < len; i++) {
       // console.log('before calc:' + type, total, arg[i])
-      total = this[type](total, arg[i])
+      // 当为非数值对象时，则将其转为0
+      total = this[type](total, Number(arg[i]) || 0)
       // console.log('calc result:' + type, total)
     }
 
     this._result = total
+    return this
   },
   result(num = 2) {
     const res = parseFloat(this._result, 10).toFixed(num) || 0
