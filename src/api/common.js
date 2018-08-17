@@ -33,21 +33,21 @@ export function getSystemTime() {
         "expire": "1527005100"
     }
  */
-let UPLOADPOLICYDATA // 用来缓存上传policy
+window.UPLOADPOLICYDATA = '' // 用来缓存上传policy
 export function getUploadPolicy() {
   // 后期可添加是否过期的验证
-  if (UPLOADPOLICYDATA) {
+  if (window.UPLOADPOLICYDATA) {
     return new Promise((resolve) => {
-      resolve(UPLOADPOLICYDATA)
+      resolve(window.UPLOADPOLICYDATA)
     })
   } else {
     return fetch.get('/anfacommonservice/common/oss/v1/policy').then(res => {
-      UPLOADPOLICYDATA = res.data || {}
+      window.UPLOADPOLICYDATA = res.data || {}
       // 定时清除旧数据
       setTimeout(() => {
-        UPLOADPOLICYDATA = ''
-      }, 3 * 60 * 1000)
-      return UPLOADPOLICYDATA
+        window.UPLOADPOLICYDATA = ''
+      }, 1 * 60 * 1000)
+      return window.UPLOADPOLICYDATA
     })
   }
 }
