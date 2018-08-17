@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
-import store from '../store'
-import { getToken } from './auth'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -32,16 +32,16 @@ service.interceptors.request.use(config => {
        * 测试环境修改这里，不要修改上面那句代码
        */
       // 统一加上/api 前缀，方便后台转发接口
-      
+
       window.tms_testapiurl = localStorage.tms_testapiurl || 'api'
-      
+
       if(window.tms_testapiurl){
         config.url = '/' + window.tms_testapiurl + config.url
       } else {
-        
-        // config.url = '/api' + config.url
+
+        config.url = '/api' + config.url
         // config.url = '/localapi' + config.url
-        config.url = '/wukunzhi' + config.url
+        // config.url = '/wukunzhi' + config.url
         // config.url = '/huangyuwen' + config.url
         // config.url = '/dingfei' + config.url
         // config.url = '/ceshi' + config.url
@@ -49,6 +49,7 @@ service.interceptors.request.use(config => {
         // config.url = '/home' + config.url
         // config.url = '/fangjian' + config.url
         // config.url = '/aliyun' + config.url
+        // config.url = '/lingzhiying' + config.url
       }
     }
   }
