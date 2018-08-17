@@ -556,6 +556,11 @@
           this.messageArr = data.data
           this.infoMessageData(this.messageArr)
           this.loading = false
+        }).catch(err => {
+          this.$message({
+            type: 'info',
+            message: err.errorInfo || err.text || '未知错误，请重试~'
+          })
         })
       },
       moodifyDealPay() {
@@ -566,6 +571,11 @@
           this.dealPayInfo = data
           this.dealPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$message({
+            type: 'info',
+            message: err.errorInfo || err.text || '未知错误，请重试~'
+          })
         })
       },
       moodifyReadyPay() {
@@ -576,6 +586,11 @@
           this.alreadyPayInfo = data
           this.alreadyPaytota = data
           this.loading = false
+        }).catch(err => {
+          this.$notify({
+            type: 'info',
+            message: err.errorInfo || err.text || '未知错误，请重试~'
+          })
         })
       },
       changeOrgid(item, checkId) {
