@@ -228,8 +228,8 @@ export default {
           return true
         }
       })
-      this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
-      // 判断右边表格的数据 合计是否为智能结算中输入的值
+      // this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
+      // // 判断右边表格的数据 合计是否为智能结算中输入的值
       let listCount = 0
       let countDifference = 0
       // let feeName = this.FEE_TYPE[this.settlementId] // 当前列表费用名
@@ -243,16 +243,20 @@ export default {
       })
 
       let lastShipFeeTotal = Number(this.rightTable[this.rightTable.length - 1][this.feeName])
-      
+      console.log(listCount, this.rightTable.length, this.countNum)
+
       if (this.rightTable.length > 1) { // 右边表格不只一条数据的时候
+        console.log(listCount, this.rightTable.length, this.countNum)
         if (this.countNum < listCount) {
           let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
-          console.log(listCount, lastShipFeeTotal, curShipFeeTotal)
+          console.log(listCount, lastShipFeeTotal, curShipFeeTotal, '大于')
           this.rightTable[this.rightTable.length - 1][this.feeName] = curShipFeeTotal
           this.leftTable.push(objectMerge2(cval[cval.length - 1]))
           this.leftTable[this.leftTable.length - 1][this.feeName] = tmsMath._sub(cval[cval.length - 1][this.feeName], curShipFeeTotal)
           this.leftTable = this.uniqueArray(this.leftTable, 'batchNo') // 去重
           this.$emit('loadTable', this.rightTable)
+        }else if (this.countNum === listCount){
+          // console.log(listCount, lastShipFeeTotal, curShipFeeTotal, '等于')
         }
       } else if (this.rightTable.length === 1) { // 当右边表格只有一条数据的时候
         if (this.countNum < listCount) {

@@ -222,7 +222,8 @@ export default {
           let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
           this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
           this.leftTable.push(objectMerge2(cval[cval.length - 1]))
-          this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          // this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
+          this.leftTable[this.leftTable.length - 1].shipFeeTotal = parseFloat(Number(cval[cval.length - 1].shipFeeTotal)- Number(curShipFeeTotal))
           this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
           this.$emit('loadTable', this.rightTable)
         } else if (this.countNum > listCount) {

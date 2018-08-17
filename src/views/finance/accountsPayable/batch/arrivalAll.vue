@@ -89,8 +89,11 @@ export default {
       {
           label: '序号',
           prop: 'id',
-          width: '110',
-          fixed: true
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
         },
         {
           label: '发车批次',
@@ -136,73 +139,73 @@ export default {
         },
         {
           label: '到付运费',
-          prop: 'nowpayCarriage',
+          prop: 'arrivepayCarriage',
           width: '150',
           fixed: false
         },
         {
           label: '已结到付运费',
-          prop: 'paidNowpayCarriage',
+          prop: 'paidArrivepayCarriage',
           width: '180',
           fixed: false
         },
         {
           label: '未结到付运费',
-          prop: 'unpaidNowpayCarriage',
+          prop: 'unpaidArrivepayCarriage',
           width: '150',
           fixed: false
         },
         {
           label: '到付油卡',
-          prop: 'nowpayOilCard',
+          prop: 'arrivepayOilCard',
           width: '150',
           fixed: false
         },
         {
           label: '已结到付油卡',
-          prop: 'paidNowpayOilCard',
+          prop: 'paidArrivepayOilCard',
           width: '180',
           fixed: false
         },
         {
           label: '未结到付油卡',
-          prop: 'unpaidNowpayOilCard',
+          prop: 'unpaidArrivepayOilCard',
           width: '150',
           fixed: false
         },
         {
           label: '到站装卸费',
-          prop: 'backpayCarriage',
+          prop: 'arriveHandlingFee',
           width: '150',
           fixed: false
         },
         {
           label: '已结到站装卸费',
-          prop: 'paidBackpayCarriage',
+          prop: 'paidArriveHandlingFee',
           width: '180',
           fixed: false
         },
         {
           label: '未结到站装卸费',
-          prop: 'unpaidBackpayCarriage',
+          prop: 'unpaidArriveHandlingFee',
           width: '150',
           fixed: false
         },
         {
           label: '到站其他费',
-          prop: 'backpayOilCard',
+          prop: 'arriveOtherFee',
           width: '150',
           fixed: false
         },
         {
           label: '已结到站其他费',
-          prop: 'paidBackpayOilCard',
+          prop: 'paidArriveOtherFee',
           width: '180',
           fixed: false
         },
         {
           label: '未结到站其他运费',
-          prop: 'unpaidBackpayOilCard',
+          prop: 'unpaidArriveOtherFee',
           width: '150',
           fixed: false
         },

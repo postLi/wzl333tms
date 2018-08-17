@@ -5,10 +5,11 @@
     <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" class="staff_searchinfo clearfix">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="发货人" prop="shipSenderName">
+          <el-form-item label="发货人" prop="shipSenderName" v-if="settlementId===178">
             <querySelect search="customerName" type="sender" valuekey="customerName" label="customerName" v-model="formModel.shipSenderName" :remote="true" />
-
-            <!-- <el-input placeholder="发货人" v-model="formModel.shipSenderName"></el-input> -->
+          </el-form-item>
+          <el-form-item label="车牌号" prop="shipSenderName" v-else>
+            <querySelect search="truckIdNumber" type="trunk" valuekey="truckIdNumber" label="truckIdNumber" v-model="formModel.truckIdNumber" :remote="true" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -161,6 +162,7 @@ export default {
           }
           
           this.formModel.autoTotalAmount = Number(this.formModel.autoTotalAmount)
+          console.log(this.formModel)
           let info = Object.assign({}, this.formModel)
           getOrderShipList(info).then(data => {
               this.$emit('success', { info: data, count: info.autoTotalAmount, type: this.settlementId })

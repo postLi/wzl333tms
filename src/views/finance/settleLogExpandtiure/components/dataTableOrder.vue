@@ -208,7 +208,7 @@ export default {
           return true
         }
       })
-      this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
+      // this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
        // 判断右边表格的数据 合计是否为智能结算中输入的值
       let listCount = 0
       let countDifference = 0

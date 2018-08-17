@@ -40,7 +40,7 @@
 </template>
 <script>
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, uniqueArray } from '@/utils/index'
 export default {
   components: {
     querySelect
@@ -121,7 +121,7 @@ export default {
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }
-      let results = queryString ? leftTable.filter(this.createFilter(queryString, type)) : leftTable
+      let results = queryString ? uniqueArray(leftTable.filter(this.createFilter(queryString, type)), 'batchNo') : leftTable
       cb(results)
       let array = []
       results.forEach(e => {

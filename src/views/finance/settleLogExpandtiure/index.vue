@@ -202,8 +202,14 @@ export default {
       this.formModel.financialWay = obj
     },
     setData() { // 设置传给后台的数据结构
-      this.formModel.financialWayId = this.formModel.financialWay
-      this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
+      if (typeof this.formModel.financialWay === 'string') {
+        this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
+        this.formModel.financialWay = this.formModel.financialWay
+      } else {
+        this.formModel.financialWayId = this.formModel.financialWay
+        this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
+      }
+
       const szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)

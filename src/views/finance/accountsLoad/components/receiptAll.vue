@@ -239,9 +239,9 @@ export default {
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([], this.info)
+      this.formModel.detailDtoList = objectMerge2([], this.info)
       // 设置费用项
-      const obj = {}
+      let obj = {}
       this.formModel.detailDtoList.map(el => {
         if (obj[el.dataName]) {
           obj[el.dataName].amount += el.amount
@@ -252,6 +252,7 @@ export default {
       for (const i in obj) {
         this.formModel.detailDtoList2.push(obj[i])
       }
+      obj = {}
 
       this.formModel.detailDtoList2.forEach((e, index) => {
         this.formModel.amount += e.amount
@@ -308,6 +309,7 @@ export default {
         if (valid) {
           this.setData()
           console.log(this.submitData)
+          return false
           postLoadSettlement(this.submitData).then(data => {
               this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
