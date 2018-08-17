@@ -8,13 +8,25 @@
           <li>最近七天</li>
           <li>最近一个月</li>
           <li>最近两个月</li>
-          <li>2018-06-4至2019-08-09</li>
+          <li>2018-09-12至2018-12-14
+            <!-- <el-date-picker
+      v-model="value7"
+      type="daterange"
+      align="right"
+      unlink-panels
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      :picker-options="pickerOptions2">
+    </el-date-picker> -->
+          </li>
         </ul>
       </el-header>
       <el-main class="main_forthUl">
         <ul>
           <li>开单数量
-            <i class="el-icon-check"></i>
+            <div class="box_gg">
+            </div>
           </li>
           <li>数量:<span>20</span>单<em>20%</em></li>
           <li>重量:<span>20</span>千克<em>20%</em></li>
@@ -23,7 +35,8 @@
         <ul>
           <li>
             发车数量
-            <i class="el-icon-check"></i>
+            <div class="box_gg">
+            </div>
           </li>
           <li>短驳发车:<span>20</span>单<em>20%</em></li>
           <li>短驳倒车:<span>20</span>千克<em>20%</em></li>
@@ -33,7 +46,8 @@
         <ul>
           <li>
             收入
-            <i class="el-icon-check"></i>
+            <div class="box_gg">
+            </div>
           </li>
           <li>先付:<span>20</span>单<em>20%</em></li>
           <li>到付:<span>20</span>千克<em>20%</em></li>
@@ -44,7 +58,8 @@
         <ul>
           <li>
             支出
-            <i class="el-icon-check"></i>
+            <div class="box_gg">
+            </div>
           </li>
           <li>回扣:<span>20</span>单<em>20%</em></li>
           <li>其它费:<span>20</span>千克<em>20%</em></li>
@@ -76,6 +91,39 @@
  import echarts from 'echarts'
 
 export default {
+   data() {
+     return {
+       pickerOptions2: {
+         shortcuts: [{
+           text: '最近一周',
+           onClick(picker) {
+             const end = new Date()
+             const start = new Date()
+             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+             picker.$emit('pick', [start, end])
+           }
+         }, {
+           text: '最近一个月',
+           onClick(picker) {
+             const end = new Date()
+             const start = new Date()
+             start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+             picker.$emit('pick', [start, end])
+           }
+         }, {
+           text: '最近三个月',
+           onClick(picker) {
+             const end = new Date()
+             const start = new Date()
+             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+             picker.$emit('pick', [start, end])
+           }
+         }]
+       },
+       value6: '',
+       value7: ''
+     }
+   },
    mounted() {
      var myChart = echarts.init(document.getElementById('main_lefttop'))
      var myChart2 = echarts.init(document.getElementById('main_leftdown'))
@@ -124,15 +172,15 @@ export default {
            radius: '55%',
            center: ['50%', '60%'],
            data: [
-              { value: 335, name: '现付' },
-              { value: 310, name: '到付' },
-              { value: 234, name: '回单付' },
-              { value: 135, name: '月结' }
+          { value: 335, name: '现付' },
+          { value: 310, name: '到付' },
+          { value: 234, name: '回单付' },
+          { value: 135, name: '月结' }
            ]
          }
        ]
      }
- 
+
      const option2 = {
        tooltip: {
          trigger: 'item',
@@ -191,13 +239,13 @@ export default {
              }
            },
            data: [
-              { value: 500, name: '收入' },
-              { value: 310, name: '支出' }
+          { value: 500, name: '收入' },
+          { value: 310, name: '支出' }
            ]
          }
        ]
      }
- 
+
      const option3 = {
        title: {
          text: '安发物流2018年运力对比图',
@@ -238,8 +286,8 @@ export default {
            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
            markPoint: {
              data: [
-                        { type: 'max', name: '最大值' },
-                        { type: 'min', name: '最小值' }
+                    { type: 'max', name: '最大值' },
+                    { type: 'min', name: '最小值' }
              ]
            }
          },
@@ -249,8 +297,8 @@ export default {
            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
            markPoint: {
              data: [
-                        { type: 'max', name: '最大值' },
-                        { type: 'min', name: '最小值' }
+                    { type: 'max', name: '最大值' },
+                    { type: 'min', name: '最小值' }
              ]
            }
          },
@@ -260,8 +308,8 @@ export default {
            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
            markPoint: {
              data: [
-                        { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
-                        { name: '年最低', value: 0, xAxis: 11, yAxis: 3 }
+                    { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
+                    { name: '年最低', value: 0, xAxis: 11, yAxis: 3 }
              ]
            }
          }
@@ -278,7 +326,7 @@ export default {
 </script>
 <style lang="scss">
 .main_content{
-  padding-bottom: 100px !important;
+  // padding-bottom: 100px !important;
  .clearfix:after{
     display: block;
     clear: both;
@@ -290,20 +338,38 @@ export default {
     zoom:1;
 }
   background:rgb(235,235,235);
+  
   .head_title{
     height: 30px !important;
     line-height: 30px !important;
     background: #ffff;
+    padding:0px !important;
     ul{
-      margin-left: 65%;
+      margin-left: 70%;
       li{
         float: left;
-        padding: 0 10px;
+        // padding: 0 10px;
+        padding-left:15px;
         font-size: 14px;
         cursor: pointer;
+        .el-range-editor.el-input__inner{
+          margin-left:10px !important;
+          height:30px;
+          line-height: 30px;
+        }
+        .el-date-editor .el-range-separator{
+          line-height: 25px;
+        }
+        .el-date-editor .el-range__icon {
+          // line-height: 12px;
+        }
+        .el-range-editor .el-range-input{
+          margin-left:10px !important;
+        }
       }
       li:hover{
         color:#3e9ff1;
+        font-weight: bold;
       }
     }
   }
@@ -313,7 +379,7 @@ export default {
     display: flex;
     float: left;
     ul{
-      border:1px solid #ddd;
+      border:2px solid #ddd;
       background: #fff;
       float: left;
       flex: 23%;
@@ -324,75 +390,92 @@ export default {
         line-height: 30px;
         font-size: 14px;
         padding: 0 20px;
-        .el-icon-check{
-          float:right;
-          height: 30px;
-          line-height: 30px;
-          font-size: 20px;
-          color:#3e9ff1;
-          display: none;
-        }
         span{
           color:red;
           padding:0 10px;
         }
         em{
-          // text-align: right;
           float:right;
         }
       }
       li:nth-child(1){
         border-bottom: 1px solid #ddd;
+        position: relative;
+        .box_gg{
+          position: relative;
+          width:30px;
+          height:30px;
+          top:-31px;
+          left:356px;
+          // background: red;
+         
+          background-repeat:no-repeat;
+          background-position: right;
+          display: none;
+          z-index: 10000;
+        }
       }
-      // :hover li{
-      //   border:1px solid #3e9ff1;
-      // }
     }
     ul:nth-child(4){
       margin:10px 0 10px 0;
     }
-    
   }
   .main_forthUl ul:hover {
       border:2px solid #3e9ff1;
       cursor: pointer;
     }
-  .main_forthUl ul:hover .el-icon-check{
+  .main_forthUl ul:hover li .box_gg{
     display: block;
-    font-weight: bold;
+     background-image: url(../../assets/checkImg/sjx1.png);
+  }
+  .main_forthUl ul:active li .box_gg{
+    // display: none;
+    background-image: url(../../assets/checkImg/sjx.png);
   }
   .main_left{
     padding: 10px 0 !important ;
     width: 100%;
-    height: 840px;
+    height: 594px;
     .ul_left{
       float: left;
       width: 74.6%;
       background:#fff;
-      height:780px;
+      height:574px;
     }
     .ul_right{
       width: 23.8%;
       float:right;
       // background:yellow;
-      height:600px;
+      height:574px;
       li{
         width: 100%;
-        height: 65%;
+        height: 286px;
         background: #fff;
+        canvas{
+          height: 262px;
+        }
         p{
           font-size: 14px;
           padding: 10px;
         }
+        
       }
       li:nth-child(1){
         border-bottom: 2px solid #ddd;
       } 
       #main_lefttop{
-        height: 100%;
+        // height: 100%;
+        height:262px;
+        canvas{
+          height: 250px;
+        }
       }
       #main_leftdown{
-        height: 100%;
+        // height: 100%;
+        height:262px;
+        canvas{
+          height: 250px;
+        }
       }
       #main{
         height: 100%;
