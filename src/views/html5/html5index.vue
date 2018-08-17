@@ -344,7 +344,7 @@ export default {
   .main_left{
     padding: 10px 0 !important ;
     width: 100%;
-    height: 600px;
+    height: 840px;
     .ul_left{
       float: left;
       width: 74.6%;
