@@ -148,14 +148,9 @@ export default {
       if (this.columns.length > 0) {
         this.columns.forEach((e, index) => {
           if (index > 49) {  // 默认隐藏列
-            data.push({
-              label: e.label,
-              key: index,
-              fixed: e.fixed,
-              prop: e.prop,
-              width: e.width,
-              slot: e.slot
-            })
+            let obj = objectMerge2(e)
+            obj.key = index
+            data.push(obj)
           }
         })
       }
@@ -166,14 +161,9 @@ export default {
       if (this.columns.length > 0) {
         this.columns.forEach((e, index) => {
           if (index > -1 && index < 50) { // 默认显示列
-            data.push({
-              label: e.label,
-              key: index,
-              width: e.width,
-              fixed: e.fixed,
-              prop: e.prop,
-              slot: e.slot
-            })
+            let obj = objectMerge2(e)
+            obj.key = index
+            data.push(obj)
           }
         })
       }

@@ -16,8 +16,8 @@
 
 
         <el-form-item label="车牌号" prop="memberName" v-else>
-          <el-select v-model="searchTitle.memberName" clearable>
-            <el-option v-for="item in memberNameType"  :label="item.truckIdNumber" :value="item.id" ></el-option>
+          <el-select v-model="searchTitle.memberName" clearable >
+            <el-option v-for="item in memberNameType"  :label="item.truckIdNumber" :value="item.truckIdNumber" ></el-option>
           </el-select>
           <!--<querySelect search="truckIdNumber"  show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />-->
 
@@ -515,6 +515,7 @@
         this.loading = true
         return getTrucK().then(data => {
           this.memberNameType = data.data
+          console.log(this.memberNameType);
           this.loading = false
         })
       },
@@ -606,13 +607,15 @@
             this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
-          this.searchCreatTime = this.defaultTime
+          // this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
           this.fetchList()
           this.fetchDealPay()
           this.fetchReadyPay()
+          this.searchDealPay.memberName = this.searchTitle.memberName
+          this.searchAlReadyPay.memberName = this.searchTitle.memberName
         } else {
           this.$message({
             message: '车牌号不能为空~',

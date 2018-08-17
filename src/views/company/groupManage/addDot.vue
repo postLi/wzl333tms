@@ -456,7 +456,7 @@
             }).catch(err => {
               this.$message({
                 type: 'error',
-                message: '保存失败，原因：' + err.errorInfo ? err.errorInfo : err.text
+                message: err.errorInfo || err.text || '未知错误，请重试~'
               })
             })
           } else {

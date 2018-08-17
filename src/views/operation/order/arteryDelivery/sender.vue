@@ -372,7 +372,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '到车失败，原因：' + err.errorInfo ? err.errorInfo : err.text
+                  message: err.errorInfo || err.text || '未知错误，请重试~'
                 })
               })
             } else {
@@ -420,7 +420,7 @@ export default {
               }).catch(err => {
                 this.$message({
                   type: 'info',
-                  message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err.text
+                  message: err.errorInfo || err.text || '未知错误，请重试~'
                 })
               })
             }).catch(() => {
@@ -463,7 +463,7 @@ export default {
                 }).catch(err => {
                   this.$message({
                     type: 'info',
-                    message: '取消失败，原因：' + err.errorInfo ? err.errorInfo : err.text
+                    message: err.errorInfo || err.text || '未知错误，请重试~'
                   })
                 })
               }).catch(() => {

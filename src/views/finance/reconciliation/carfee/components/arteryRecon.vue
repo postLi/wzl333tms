@@ -1,48 +1,61 @@
 <template>
   <!---->
-  <div class="ahort_lll" v-loading="loading" >
+  <div class="ahort_lll" v-loading="loading">
     <div class="sTop">
-      <el-form :inline="true" :size="btnsize" label-position="center"   label-width="100px" class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
+      <el-form :inline="true" :size="btnsize" label-position="center" label-width="100px"
+               class="short_searchinfo clearfix" ref="formName" :model="searchTitle">
 
-      <div class="sTitle">
-        <el-form-item label="">
-          <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
-            <div slot="content">双击可修改对账单名称</div>
-            <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable  @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"  auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"  @blur="tooltip = false;disabledName = true" @mouseenter.native=" disabledName === true && (tooltip = true)" @mouseleave.native="tooltip = false;disabledName = true"></el-input>
-            <!--@blur="tooltip = false;disabledName = true"-->
-            <!--@mouseout.native="tooltip = false;disabledName = true"-->
-            <!--<template slot-scope="scope">-->
-            <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-            <!--</template>-->
-          </el-tooltip>
-      </el-form-item>
-      </div>
-      <div class="sDate">
+        <div class="sTitle">
+          <el-form-item label="">
+            <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
+                        tabindex="-1">
+              <div slot="content">双击可修改对账单名称</div>
+              <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
+                        @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
+                        auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
+                        @blur="tooltip = false;disabledName = true"
+                        @mouseenter.native=" disabledName === true && (tooltip = true)"
+                        @mouseleave.native="tooltip = false;disabledName = true"></el-input>
+              <!--@blur="tooltip = false;disabledName = true"-->
+              <!--@mouseout.native="tooltip = false;disabledName = true"-->
+              <!--<template slot-scope="scope">-->
+              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
+              <!--</template>-->
+            </el-tooltip>
+          </el-form-item>
+        </div>
+        <div class="sDate">
           <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-if="$route.query.id">
             <el-input v-model="searchTitle.memberName" auto-complete="off" disabled></el-input>
           </el-form-item>
-        <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-else>
-          <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" show="select" @change="getTrunkName"  v-model="searchTitle.memberName" clearable/>
+          <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-else>
+            <el-select v-model="searchTitle.memberName" clearable>
+              <el-option v-for="item in memberNameType" :label="item.truckIdNumber"
+                         :value="item.truckIdNumber"></el-option>
+            </el-select>
 
-        </el-form-item>
-        <el-date-picker
-          v-model="searchCreatTime"
-          :default-value="defaultTime"
-          type="daterange"
-          align="right"
-          value-format="yyyy-MM-dd"
-          start-placeholder="开始日期"
-          :picker-options="pickerOptions2"
-          end-placeholder="结束日期">
-        </el-date-picker>
-        <el-form-item class="">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-      </div>
+            <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" show="select" @change="getTrunkName"  v-model="searchTitle.memberName" clearable/>-->
+
+          </el-form-item>
+          <el-date-picker
+            v-model="searchCreatTime"
+            :default-value="defaultTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions2"
+            end-placeholder="结束日期">
+          </el-date-picker>
+          <el-form-item class="">
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+          </el-form-item>
+        </div>
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName2" :rules="rules">
+      <el-form :inline="true" :size="btnsize" label-position="center" :model="messageInfo" label-width="100px"
+               class="staff_searchinfo clearfix" ref="formName2" :rules="rules">
 
         <el-form-item label="车牌号">
           <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
@@ -93,7 +106,7 @@
           @row-click="clickDetails"
           height="200"
           tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
+          :default-sort="{prop: 'id', order: 'ascending'}"
           style="width: 100%">
           <el-table-column
             fixed
@@ -108,162 +121,8 @@
             label=""
             width="100">
             <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDelete(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="departureTime"
-            width="160"
-            label="发车时间">
-          </el-table-column>
-          <el-table-column
-            prop="batchNo"
-            width="160"
-            sortable
-            label="批次号">
-          </el-table-column>
-          <el-table-column
-            prop="contractNo"
-            width="160"
-            sortable
-            label="合同编号">
-          </el-table-column>
-          <el-table-column
-            prop="orgName"
-            sortable
-            width="160"
-            label="发车网点">
-          </el-table-column>
-          <el-table-column
-            prop="arriveOrgName"
-            sortable
-            width="160"
-            label="到达网点">
-          </el-table-column>
-
-          <el-table-column
-            sortable
-            prop="loadAmount"
-            width="140"
-            label="配载件数">
-          </el-table-column>
-          <el-table-column
-            prop="loadWeight"
-            label="配载重量"
-            width="140"
-            sortable
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="loadVolume"
-            sortable
-            width="160"
-            label="配载体积">
-          </el-table-column>
-          <el-table-column
-            prop="onSendPay"
-            label="现付运费"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="onCardPay"
-            label="现付油卡"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="backSendPay"
-            label="回付运费"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="backCardPay"
-            label="回付油卡"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="arrSendPay"
-            label="到付运费"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-          prop="arrCardPay"
-          label="到付油卡"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-          <el-table-column
-          prop="totalPay"
-          label="运费合计"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="140"
-            sortable
-          >
-            <template slot-scope="scope">
-              <el-input v-model="dealPayInfo[scope.$index].remark" auto-complete="off"  :maxlength="30" clearable></el-input>
-            </template>
-          </el-table-column>
-
-
-        </el-table>
-      </div>
-      <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
-      </div>
-      <div class="info_tab">
-        <!--@selection-change="getSelection"-->
-        <el-table
-          ref="multipleTable"
-          :data="alreadyPayInfo"
-          stripe
-          border
-          show-summary
-          :summary-method="getSummaries"
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          height="200"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="100">
-            <template slot-scope="scope">{{ scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label=""
-            width="100">
-            <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDeleteAl(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>
+              <span class="deletebtn" @click="iconDelete(scope.$index)"><icon-svg icon-class="delete_lll"
+                                                                                  fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -374,7 +233,165 @@
             sortable
           >
             <template slot-scope="scope">
-              <el-input v-model="alreadyPayInfo[scope.$index].remark" auto-complete="off"  :maxlength="30" clearable></el-input>
+              <el-input v-model="dealPayInfo[scope.$index].remark" auto-complete="off" :maxlength="30"
+                        clearable></el-input>
+            </template>
+          </el-table-column>
+
+
+        </el-table>
+      </div>
+      <div class="sMessageCont_info">
+        <p>已付清单(本结算期内)</p>
+      </div>
+      <div class="info_tab">
+        <!--@selection-change="getSelection"-->
+        <el-table
+          ref="multipleTable"
+          :data="alreadyPayInfo"
+          stripe
+          border
+          show-summary
+          :summary-method="getSummaries"
+          @row-dblclick="getDbClick"
+          @row-click="clickDetails"
+          height="200"
+          tooltip-effect="dark"
+          :default-sort="{prop: 'id', order: 'ascending'}"
+          style="width: 100%">
+          <!--<el-table-column-->
+          <!--fixed-->
+          <!--sortable-->
+          <!--type="selection"-->
+          <!--width="50">-->
+          <!--</el-table-column>-->
+          <el-table-column
+            fixed
+            sortable
+            label="序号"
+            width="100">
+            <template slot-scope="scope">{{ scope.$index + 1 }}</template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            label=""
+            width="100">
+            <template slot-scope="scope">
+              <span class="deletebtn" @click="iconDeleteAl(scope.$index)"><icon-svg icon-class="delete_lll"
+                                                                                    fill="red"></icon-svg></span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="departureTime"
+            width="160"
+            label="发车时间">
+          </el-table-column>
+          <el-table-column
+            prop="batchNo"
+            width="160"
+            sortable
+            label="批次号">
+          </el-table-column>
+          <el-table-column
+            prop="contractNo"
+            width="160"
+            sortable
+            label="合同编号">
+          </el-table-column>
+          <el-table-column
+            prop="orgName"
+            sortable
+            width="160"
+            label="发车网点">
+          </el-table-column>
+          <el-table-column
+            prop="arriveOrgName"
+            sortable
+            width="160"
+            label="到达网点">
+          </el-table-column>
+
+          <el-table-column
+            sortable
+            prop="loadAmount"
+            width="140"
+            label="配载件数">
+          </el-table-column>
+          <el-table-column
+            prop="loadWeight"
+            label="配载重量"
+            width="140"
+            sortable
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="loadVolume"
+            sortable
+            width="160"
+            label="配载体积">
+          </el-table-column>
+          <el-table-column
+            prop="onSendPay"
+            label="现付运费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="onCardPay"
+            label="现付油卡"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="backSendPay"
+            label="回付运费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="backCardPay"
+            label="回付油卡"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="arrSendPay"
+            label="到付运费"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="arrCardPay"
+            label="到付油卡"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="totalPay"
+            label="运费合计"
+            width="130"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            width="140"
+            sortable
+          >
+            <template slot-scope="scope">
+              <el-input v-model="alreadyPayInfo[scope.$index].remark" auto-complete="off" :maxlength="30"
+                        clearable></el-input>
             </template>
           </el-table-column>
 
@@ -385,13 +402,14 @@
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
-        <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageButtonInfo" label-width="90px" class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
+        <el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"
+                 class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
           <el-form-item label="备注">
-            <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" ></el-input>
+            <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>
           </el-form-item>
-            <div class="sMessageCont_info">
-        <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
-      </div>
+          <div class="sMessageCont_info">
+            <p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>
+          </div>
 
 
           <el-form-item label="公司名称">
@@ -401,13 +419,15 @@
             <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
           </el-form-item>
           <el-form-item label="联系方式" prop="orgBusinessOfficerPhone">
-            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable :maxlength="11"></el-input>
+            <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable
+                      :maxlength="11"></el-input>
           </el-form-item>
           <el-form-item label="财务负责人">
             <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"></el-input>
           </el-form-item>
           <el-form-item label="联系方式" prop="orgFinancialOfficerPhone">
-            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11" clearable></el-input>
+            <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
+                      clearable></el-input>
           </el-form-item>
           <el-form-item label="时间">
             <el-date-picker
@@ -422,763 +442,804 @@
     <div class="sBottomBut">
       <div>
         <!-- <el-button >打印</el-button> -->
-        <el-button >导出</el-button>
+        <el-button>导出</el-button>
         <el-button @click="canBtn()">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
     </div>
-    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form"  @close="oopenVisibleDialog" :tota="tota" :sendId="sendId" :isArtery="isArtery"></SaveDialog>
+    <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form" @close="oopenVisibleDialog" :tota="tota"
+                :sendId="sendId" :isArtery="isArtery"></SaveDialog>
   </div>
 </template>
 
 <script>
-  import { pickerOptions2, parseTime } from '@/utils/'
-  import { REGEX } from '@/utils/validate'
-  import { postCarfBillCheckCarBaseInfo, postCarfBillCheckCarInitList, postCarfDtoById, postCarfBillCheckCarUpdateList } from '@/api/finance/fin_carfee'
+  import {pickerOptions2, parseTime} from '@/utils/'
+  import {REGEX} from '@/utils/validate'
+  import {
+    postCarfBillCheckCarBaseInfo,
+    postCarfBillCheckCarInitList,
+    postCarfDtoById,
+    postCarfBillCheckCarUpdateList
+  } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import { mapGetters } from 'vuex'
-  import { objectMerge2 } from '@/utils/index'
+  import {mapGetters} from 'vuex'
+  import {objectMerge2} from '@/utils/index'
   import SaveDialog from './saveDialog'
+  import {getTrucK } from '@/api/operation/load'
 
   export default {
-      components: {
-        querySelect,
-        SaveDialog
-      },
-      data() {
-        const _this = this
-        return {
-          tooltip: false,
-          disabledName: true,
-            pickOption: {
-              firstDayOfWeek: 1,
-              disabledDate(time) {
-                // 小于终止日
-                return _this.messageInfo.checkEndTime ? time.getTime() > _this.messageInfo.checkEndTime : false
-              }
-            },
-            pickOption2: {
-              firstDayOfWeek: 1,
-              disabledDate(time) {
-                // 大于起始日
-                return _this.messageInfo.checkStartTime ? time.getTime() < _this.messageInfo.checkStartTime : false
-              }
-            },
-            pickerOptions2: {
-              shortcuts: pickerOptions2
-            },
-
-            searchCreatTime: [],
-            // changeCreateTime: [],
-            defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
-            searchForm: {},
-            usersArr: [],
-            messageArr: [],
-            checkBillName: '',
-            messageInfo: {
-              checkStartTime: '',
-              checkEndTime: '',
-              orgName: '',
-              memberIdType: 3,
-              memberName: '',
-              memberPerson: '',
-              memberPersonPhone: '',
-              checkBillCode: '',
-              bankAccount: '',
-              bankName: '',
-              alipayAccount: '',
-              wechatAccount: ''
-            },
-            messageButtonInfo: {
-              companyName: '',
-              orgBusinessOfficer: '', // 本网点业务负责人
-              orgBusinessOfficerPhone: '', // 本网点业务负责人
-              orgFinancialOfficer: '', // 本网点财务负责人
-              orgFinancialOfficerPhone: '', // 本网点财务负责人
-              createTime: '',
-              remark: '',
-              totalCount: ''
-            },
-            dealPayInfo: [],
-            alreadyPayInfo: [],
-            form: { 'orgId': '',
-              'checkBillCode': '',
-              'payDetailList': [],
-              'hadPayDetailList': []
-            },
-            // 保存总计数据
-            tota: {
-              alreadyPaytota: [],
-              dealPaytota: []
-            },
-            alreadyPaytota: [],
-            dealPaytota: [],
-            // 保存总计数据
-            sendId: '',
-            visibleDialog: false,
-            loading: false,
-            isShort: false,
-            deliver: false,
-            isArtery: false,
-            btnsize: 'mini',
-            searchTitle: {
-              orgId: '',
-              memberName: '', //
-              startTime: '',
-              endTime: ''
-            },
-            searchDealPay: {
-              orgId: '',
-              memberType: '3',
-              loadTypeId: 39,
-              payTypeStatus: 'pay',
-              memberName: '',
-              startTime: '',
-              endTime: ''
-            },
-            searchAlReadyPay: {
-              orgId: '',
-              memberType: '3',
-              loadTypeId: 39,
-              payTypeStatus: 'hadPay',
-              memberName: '',
-              startTime: '',
-              endTime: ''
-            },
-            moiffyDealPay: {
-              orgId: '',
-              loadTypeId: 39,
-              payTypeStatus: 'pay',
-              checkId: '1'
-            },
-            moiffyAlReadyPay: {
-              orgId: '',
-              loadTypeId: 39,
-              payTypeStatus: 'hadPay',
-              checkId: '1'
-            },
-            rules: {
-              'bankAccount': [
-                { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
-              ]
-            },
-            btnRule: {
-              'orgBusinessOfficerPhone': [
-                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-              ],
-              'orgFinancialOfficerPhone': [
-                { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-              ]
-            }
+    components: {
+      querySelect,
+      SaveDialog
+    },
+    data() {
+      const _this = this
+      return {
+        tooltip: false,
+        disabledName: true,
+        pickOption: {
+          firstDayOfWeek: 1,
+          disabledDate(time) {
+            // 小于终止日
+            return _this.messageInfo.checkEndTime ? time.getTime() > _this.messageInfo.checkEndTime : false
           }
+        },
+        pickOption2: {
+          firstDayOfWeek: 1,
+          disabledDate(time) {
+            // 大于起始日
+            return _this.messageInfo.checkStartTime ? time.getTime() < _this.messageInfo.checkStartTime : false
+          }
+        },
+        pickerOptions2: {
+          shortcuts: pickerOptions2
+        },
+
+        searchCreatTime: [],
+        // changeCreateTime: [],
+        defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
+        searchForm: {},
+        usersArr: [],
+        messageArr: [],
+        memberNameType: [],
+        checkBillName: '',
+        messageInfo: {
+          checkStartTime: '',
+          checkEndTime: '',
+          orgName: '',
+          memberIdType: 3,
+          memberName: '',
+          memberPerson: '',
+          memberPersonPhone: '',
+          checkBillCode: '',
+          bankAccount: '',
+          bankName: '',
+          alipayAccount: '',
+          wechatAccount: ''
+        },
+        messageButtonInfo: {
+          companyName: '',
+          orgBusinessOfficer: '', // 本网点业务负责人
+          orgBusinessOfficerPhone: '', // 本网点业务负责人
+          orgFinancialOfficer: '', // 本网点财务负责人
+          orgFinancialOfficerPhone: '', // 本网点财务负责人
+          createTime: '',
+          remark: '',
+          totalCount: ''
+        },
+        dealPayInfo: [],
+        alreadyPayInfo: [],
+        form: {
+          'orgId': '',
+          'checkBillCode': '',
+          'payDetailList': [],
+          'hadPayDetailList': []
+        },
+        // 保存总计数据
+        tota: {
+          alreadyPaytota: [],
+          dealPaytota: []
+        },
+        alreadyPaytota: [],
+        dealPaytota: [],
+        // 保存总计数据
+        sendId: '',
+        visibleDialog: false,
+        loading: false,
+        isShort: false,
+        deliver: false,
+        isArtery: false,
+        btnsize: 'mini',
+        searchTitle: {
+          orgId: '',
+          memberName: '', //
+          startTime: '',
+          endTime: ''
+        },
+        searchDealPay: {
+          orgId: '',
+          memberType: '3',
+          loadTypeId: 39,
+          payTypeStatus: 'pay',
+          memberName: '',
+          startTime: '',
+          endTime: ''
+        },
+        searchAlReadyPay: {
+          orgId: '',
+          memberType: '3',
+          loadTypeId: 39,
+          payTypeStatus: 'hadPay',
+          memberName: '',
+          startTime: '',
+          endTime: ''
+        },
+        moiffyDealPay: {
+          orgId: '',
+          loadTypeId: 39,
+          payTypeStatus: 'pay',
+          checkId: '1'
+        },
+        moiffyAlReadyPay: {
+          orgId: '',
+          loadTypeId: 39,
+          payTypeStatus: 'hadPay',
+          checkId: '1'
+        },
+        rules: {
+          'bankAccount': [
+            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+          ]
+        },
+        btnRule: {
+          'orgBusinessOfficerPhone': [
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+          ],
+          'orgFinancialOfficerPhone': [
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+          ]
+        }
+      }
 
     },
-      computed: {
-        ...mapGetters([
-          'otherinfo'
-        ])
-      },
-      mounted() {
+    computed: {
+      ...mapGetters([
+        'otherinfo'
+      ])
+    },
+    mounted() {
+      // this.searchCreatTime = this.defaultTime
+
+      this.changeOrgid(this.otherinfo, this.$route.query.id)
+      if (this.$route.query.id) {
+        this.sendId = this.$route.query.id
+        this.changeId(this.$route.query.id)
+        this.moodifyList().then(() => {
+          this.searchDealPay.memberName = this.searchTitle.memberName
+          this.searchAlReadyPay.memberName = this.searchTitle.memberName
+        })
+        this.moodifyDealPay()
+        this.moodifyReadyPay()
+      } else {
+        this.truckName()
         this.searchCreatTime = this.defaultTime
-
-        this.changeOrgid(this.otherinfo, this.$route.query.id)
-        if (this.$route.query.id) {
-          this.sendId = this.$route.query.id
-          this.changeId(this.$route.query.id)
-          this.moodifyList().then(() => {
-            this.searchDealPay.memberName = this.searchTitle.memberName
-            this.searchAlReadyPay.memberName = this.searchTitle.memberName
-          })
-          this.moodifyDealPay()
-          this.moodifyReadyPay()
-        }else {
-
+      }
+    },
+    methods: {
+      truckName() {
+        this.loading = true
+        return getTrucK().then(data => {
+          this.memberNameType = data.data
+          // console.log(this.memberNameType);
+          this.loading = false
+        })
+      },
+      fetchList() {
+        this.loading = true
+        return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
+          this.messageArr = data
+          this.infoMessageData(this.messageArr)
+          this.loading = false
+        })
+      },
+      fetchDealPay() {
+        this.loading = true
+        return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
+          this.dealPayInfo = []
+          this.dealPaytota = []
+          this.dealPayInfo = data
+          this.dealPaytota = data
+          this.loading = false
+        })
+      },
+      fetchReadyPay() {
+        this.loading = true
+        return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
+          this.alreadyPayInfo = []
+          this.alreadyPaytota = []
+          this.alreadyPayInfo = data
+          this.alreadyPaytota = data
+          this.loading = false
+        })
+      },
+      // 修改
+      moodifyList() {
+        this.loading = true
+        this.sendId = this.$route.query.id
+        return postCarfDtoById(this.sendId).then(data => {
+          this.messageArr = data.data
+          this.infoMessageData(this.messageArr)
+          this.loading = false
+        })
+      },
+      moodifyDealPay() {
+        this.loading = true
+        return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
+          this.dealPayInfo = []
+          this.dealPaytota = []
+          this.dealPayInfo = data
+          this.dealPaytota = data
+          this.loading = false
+        })
+      },
+      moodifyReadyPay() {
+        this.loading = true
+        return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
+          this.alreadyPayInfo = []
+          this.alreadyPaytota = []
+          this.alreadyPayInfo = data
+          this.alreadyPaytota = data
+          this.loading = false
+        })
+      },
+      changeOrgid(item, checkId) {
+        this.searchTitle.orgId = item.orgid
+        this.searchDealPay.orgId = item.orgid
+        this.searchAlReadyPay.orgId = item.orgid
+        this.moiffyDealPay.orgId = item.orgid
+        this.moiffyAlReadyPay.orgId = item.orgid
+        this.moiffyDealPay.checkId = checkId
+        this.moiffyAlReadyPay.checkId = checkId
+      },
+      changeId(id) {
+        this.searchTitle.id = id
+        this.searchDealPay.id = id
+        this.searchAlReadyPay.id = id
+      },
+      getTrunkName(trunk) {
+        if (trunk) {
+          this.searchTitle.memberName = trunk.truckIdNumber
+          this.searchDealPay.memberName = trunk.truckIdNumber
+          this.searchAlReadyPay.memberName = trunk.truckIdNumber
         }
       },
-      methods: {
-
-        fetchList() {
-          this.loading = true
-          return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
-            this.messageArr = data
-            this.infoMessageData(this.messageArr)
-            this.loading = false
-          })
-        },
-        fetchDealPay() {
-          this.loading = true
-          return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
-            this.dealPayInfo = []
-            this.dealPaytota = []
-            this.dealPayInfo = data
-            this.dealPaytota = data
-            this.loading = false
-          })
-        },
-        fetchReadyPay() {
-          this.loading = true
-          return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
-            this.alreadyPayInfo = []
-            this.alreadyPaytota = []
-            this.alreadyPayInfo = data
-            this.alreadyPaytota = data
-            this.loading = false
-          })
-        },
-        // 修改
-        moodifyList() {
-          this.loading = true
-          this.sendId = this.$route.query.id
-          return postCarfDtoById(this.sendId).then(data => {
-            this.messageArr = data.data
-            this.infoMessageData(this.messageArr)
-            this.loading = false
-          })
-        },
-        moodifyDealPay() {
-          this.loading = true
-          return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
-            this.dealPayInfo = []
-            this.dealPaytota = []
-            this.dealPayInfo = data
-            this.dealPaytota = data
-            this.loading = false
-          })
-        },
-        moodifyReadyPay() {
-          this.loading = true
-          return postCarfBillCheckCarUpdateList(this.moiffyAlReadyPay).then(data => {
-            this.alreadyPayInfo = []
-            this.alreadyPaytota = []
-            this.alreadyPayInfo = data
-            this.alreadyPaytota = data
-            this.loading = false
-          })
-        },
-        changeOrgid(item, checkId) {
-          this.searchTitle.orgId = item.orgid
-          this.searchDealPay.orgId = item.orgid
-          this.searchAlReadyPay.orgId = item.orgid
-          this.moiffyDealPay.orgId = item.orgid
-          this.moiffyAlReadyPay.orgId = item.orgid
-          this.moiffyDealPay.checkId = checkId
-          this.moiffyAlReadyPay.checkId = checkId
-        },
-        changeId(id) {
-          this.searchTitle.id = id
-          this.searchDealPay.id = id
-          this.searchAlReadyPay.id = id
-        },
-        getTrunkName(trunk) {
-          if (trunk) {
-            this.searchTitle.memberName = trunk.truckIdNumber
-            this.searchDealPay.memberName = trunk.truckIdNumber
-            this.searchAlReadyPay.memberName = trunk.truckIdNumber
-          }
-        },
-        // 查询
-        onSubmit() {
-          if (this.searchTitle.memberName) {
-            this.fetchList()
-            this.fetchDealPay()
-            this.fetchReadyPay()
-          } else{
-            this.$message({
-              message: '车牌号不能为空~',
-              type: 'error'
-            })
-            return false
+      // 查询
+      onSubmit() {
+        if (this.searchTitle.memberName) {
+          if (!this.searchCreatTime[0]) {
+            this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
+          this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
-        },
-        // 保存
-        submit() {
-          this.$refs['formName2'].validate((valid) => {
-            if (valid) {
-              this.$refs['formName3'].validate((valid) => {
-                if (valid) {
-                  for (const i in this.messageInfo) {
-                    this.form[i] = this.messageInfo[i]
-                  }
-                  for (const i in this.messageButtonInfo) {
-                    this.form[i] = this.messageButtonInfo[i]
-                  }
-                  this.form.orgId = this.otherinfo.orgid
-                  this.form.checkBillName = this.checkBillName
-                  this.form.payDetailList = []
-                  this.form.hadPayDetailList = []
-                  this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                    const a = {}
-                    a.shipOrderId = el.shipOrderId
-                    a.departureTime = el.departureTime
-                    a.batchNo = el.batchNo
-                    a.contractNo = el.contractNo
-                    a.orgName = el.orgName
-                    a.arriveOrgName = el.arriveOrgName
-                    a.loadAmount = el.loadAmount
-                    a.loadWeight = el.loadWeight
-                    a.loadVolume = el.loadVolume
-                    a.onSendPay = el.onSendPay
-                    a.onCardPay = el.onCardPay
-                    a.backSendPay = el.backSendPay
-                    a.backCardPay = el.backCardPay
-                    a.arrSendPay = el.arrSendPay
-                    a.arrCardPay = el.arrCardPay
-                    a.totalPay = el.totalPay
-                    a.remark = el.remark
-                    return a
-                  }) : []
-                  this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                    const a = {}
-                    a.shipOrderId = el.shipOrderId
-                    a.departureTime = el.departureTime
-                    a.batchNo = el.batchNo
-                    a.contractNo = el.contractNo
-                    a.orgName = el.orgName
-                    a.arriveOrgName = el.arriveOrgName
-                    a.loadAmount = el.loadAmount
-                    a.loadWeight = el.loadWeight
-                    a.loadVolume = el.loadVolume
-                    a.onSendPay = el.onSendPay
-                    a.onCardPay = el.onCardPay
-                    a.backSendPay = el.backSendPay
-                    a.backCardPay = el.backCardPay
-                    a.arrSendPay = el.arrSendPay
-                    a.arrCardPay = el.arrCardPay
-                    a.totalPay = el.totalPay
-                    a.remark = el.remark
-                    return a
-                  }) : []
-                  // 总计
-                  this.tota.dealPaytota = this.dealPaytota ? this.dealPaytota.map(el => {
-                    const a = {}
-                    a.totalPay = el.totalPay
-                    return a
-                  }) : []
-                  this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el => {
-                    const a = {}
-                    a.totalPay = el.totalPay
-                    return a
-                  }) : []
-                  console.log(this.tota)
+          this.fetchList()
+          this.fetchDealPay()
+          this.fetchReadyPay()
+          this.searchDealPay.memberName = this.searchTitle.memberName
+          this.searchAlReadyPay.memberName = this.searchTitle.memberName
+        } else {
+          this.$message({
+            message: '车牌号不能为空~',
+            type: 'error'
+          })
+          return false
+        }
+      },
+      // onSubmit() {
+      //   if (this.searchTitle.memberName) {
+      //     this.fetchList()
+      //     this.fetchDealPay()
+      //     this.fetchReadyPay()
+      //   } else {
+      //     this.$message({
+      //       message: '车牌号不能为空~',
+      //       type: 'error'
+      //     })
+      //     return false
+      //   }
+      //   const searchObj = {}
+      //   searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
+      //   searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+      //   this.infoSearchTime(searchObj.startTime, searchObj.endTime)
+      // },
+      // 保存
+      submit() {
+        this.$refs['formName2'].validate((valid) => {
+          if (valid) {
+            this.$refs['formName3'].validate((valid) => {
+              if (valid) {
+                for (const i in this.messageInfo) {
+                  this.form[i] = this.messageInfo[i]
+                }
+                for (const i in this.messageButtonInfo) {
+                  this.form[i] = this.messageButtonInfo[i]
+                }
+                this.form.orgId = this.otherinfo.orgid
+                this.form.checkBillName = this.checkBillName
+                this.form.payDetailList = []
+                this.form.hadPayDetailList = []
+                this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
+                  const a = {}
+                  a.shipOrderId = el.shipOrderId
+                  a.departureTime = el.departureTime
+                  a.batchNo = el.batchNo
+                  a.contractNo = el.contractNo
+                  a.orgName = el.orgName
+                  a.arriveOrgName = el.arriveOrgName
+                  a.loadAmount = el.loadAmount
+                  a.loadWeight = el.loadWeight
+                  a.loadVolume = el.loadVolume
+                  a.onSendPay = el.onSendPay
+                  a.onCardPay = el.onCardPay
+                  a.backSendPay = el.backSendPay
+                  a.backCardPay = el.backCardPay
+                  a.arrSendPay = el.arrSendPay
+                  a.arrCardPay = el.arrCardPay
+                  a.totalPay = el.totalPay
+                  a.remark = el.remark
+                  return a
+                }) : []
+                this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
+                  const a = {}
+                  a.shipOrderId = el.shipOrderId
+                  a.departureTime = el.departureTime
+                  a.batchNo = el.batchNo
+                  a.contractNo = el.contractNo
+                  a.orgName = el.orgName
+                  a.arriveOrgName = el.arriveOrgName
+                  a.loadAmount = el.loadAmount
+                  a.loadWeight = el.loadWeight
+                  a.loadVolume = el.loadVolume
+                  a.onSendPay = el.onSendPay
+                  a.onCardPay = el.onCardPay
+                  a.backSendPay = el.backSendPay
+                  a.backCardPay = el.backCardPay
+                  a.arrSendPay = el.arrSendPay
+                  a.arrCardPay = el.arrCardPay
+                  a.totalPay = el.totalPay
+                  a.remark = el.remark
+                  return a
+                }) : []
+                // 总计
+                this.tota.dealPaytota = this.dealPaytota ? this.dealPaytota.map(el => {
+                  const a = {}
+                  a.totalPay = el.totalPay
+                  return a
+                }) : []
+                this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el => {
+                  const a = {}
+                  a.totalPay = el.totalPay
+                  return a
+                }) : []
+                console.log(this.tota)
 
                 if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
-                    this.$message({
-                      message: '各款项不能为空~',
-                      type: 'error'
-                    })
-                    this.closeVisibleDialog()
-                    return false
-                  }else {
-                    this.oopenVisibleDialog()
-                    this.isArtery = true
-                    this.deliver = false
-                    this.isShort = false
-                  }
+                  this.$message({
+                    message: '各款项不能为空~',
+                    type: 'error'
+                  })
+                  this.closeVisibleDialog()
+                  return false
+                } else {
+                  this.oopenVisibleDialog()
+                  this.isArtery = true
+                  this.deliver = false
+                  this.isShort = false
                 }
-              })
+              }
+            })
           } else {
-              return false
-            }
-          })
-      },
-        canBtn() {
-          this.$confirm('确定要取消对账单吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$message({
-              type: 'success',
-              message: '保存成功!'
-            })
-            // this.$router.back(-1)
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=artery')
-        }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消操作'
-            })
-          })
-        },
-        validateIsEmpty(msg = '不能为空！') {
-          return (rule, value, callback) => {
-            if (!value) {
-              callback(new Error(msg))
-            }
-            if (this.$route.query.id && !value) {
-              callback()
-            }          else {
-              callback()
-            }
+            return false
           }
-        },
-        oopenVisibleDialog() {
-          this.visibleDialog = true
-        },
-        closeVisibleDialog() {
-          this.visibleDialog = false
-        },
-        getSummaries(param) {
-          const { columns, data } = param
+        })
+      },
+      canBtn() {
+        this.$confirm('确定要取消对账单吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '保存成功!'
+          })
+          // this.$router.back(-1)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=artery')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+      },
+      validateIsEmpty(msg = '不能为空！') {
+        return (rule, value, callback) => {
+          if (!value) {
+            callback(new Error(msg))
+          }
+          if (this.$route.query.id && !value) {
+            callback()
+          } else {
+            callback()
+          }
+        }
+      },
+      oopenVisibleDialog() {
+        this.visibleDialog = true
+      },
+      closeVisibleDialog() {
+        this.visibleDialog = false
+      },
+      getSummaries(param) {
+        const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
-            if (index === 0) {
-              sums[index] = '合计'
+          if (index === 0) {
+            sums[index] = '合计'
             return;
-            }
-            if (index === 3 || index === 4 || index === 5) {
-              sums[index] = ''
+          }
+          if (index === 3 || index === 4 || index === 5) {
+            sums[index] = ''
             return;
-            }
-            const values = data.map(item => Number(item[column.property]))
+          }
+          const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr)
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
               if (!isNaN(value)) {
-                  return prev + curr
+                return prev + curr
               } else {
-                  return prev
+                return prev
               }
-              }, 0)
+            }, 0)
             sums[index] += ' '
 
           } else {
-              sums[index] = ''
+            sums[index] = ''
           }
         })
 
         return sums
       },
-        iconDelete(index) {
-          this.dealPayInfo = this.dealPayInfo.filter((el, inx) => {
-            return inx !== index
-          })
-          this.delCont()
-        },
-        //
-        iconDeleteAl(index) {
-          this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
-            return inx !== index
-          })
-          this.delCont()
-        },
-        delCont() {
-          this.$message({
-            message: '删除成功~',
-            type: 'success'
-          })
-        },
-        infoMessageData(item) {
-          this.searchTitle.memberName = item.memberName
-          this.messageInfo.memberName = item.memberName
-          this.messageInfo.memberPerson = item.memberPerson
-          this.messageInfo.memberPersonPhone = item.memberPersonPhone
-          this.messageInfo.checkBillCode = item.checkBillCode
-          this.messageInfo.bankAccount = item.bankAccount
-          this.messageInfo.bankName = item.bankName
-          this.messageInfo.alipayAccount = item.alipayAccount
-          this.messageInfo.wechatAccount = item.wechatAccount
-          this.messageInfo.checkStartTime = item.checkStartTime
-          this.messageInfo.checkEndTime = item.checkEndTime
-          this.messageInfo.orgName = item.orgName
-          this.messageButtonInfo.companyName = item.companyName
-          this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
-          this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
-          this.messageButtonInfo.orgFinancialOfficer = item.orgFinancialOfficer
-          this.messageButtonInfo.orgFinancialOfficerPhone = item.orgFinancialOfficerPhone
-          this.messageButtonInfo.createTime = item.createTime
-          this.messageButtonInfo.remark = item.remark
-          this.messageButtonInfo.totalCount = item.totalCount
-          this.checkBillName = item.checkBillName
-        },
-        infoSearchTime(startTime, endTime) {
-          this.searchTitle.startTime = startTime
-          this.searchDealPay.startTime = startTime
-          this.searchAlReadyPay.startTime = startTime
-          this.searchTitle.endTime = endTime
-          this.searchDealPay.endTime = endTime
-          this.searchAlReadyPay.endTime = endTime
-        },
-        clickDetails(row, event, column) {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        getDbClick(row, event) {}
-
+      iconDelete(index) {
+        this.dealPayInfo = this.dealPayInfo.filter((el, inx) => {
+          return inx !== index
+        })
+        this.delCont()
       },
-      getSelection(selection) {
-        this.selected = selection
+      //
+      iconDeleteAl(index) {
+        this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
+          return inx !== index
+        })
+        this.delCont()
+      },
+      delCont() {
+        this.$message({
+          message: '删除成功~',
+          type: 'success'
+        })
+      },
+      infoMessageData(item) {
+        this.searchTitle.memberName = item.memberName
+        this.messageInfo.memberName = item.memberName
+        this.messageInfo.memberPerson = item.memberPerson
+        this.messageInfo.memberPersonPhone = item.memberPersonPhone
+        this.messageInfo.checkBillCode = item.checkBillCode
+        this.messageInfo.bankAccount = item.bankAccount
+        this.messageInfo.bankName = item.bankName
+        this.messageInfo.alipayAccount = item.alipayAccount
+        this.messageInfo.wechatAccount = item.wechatAccount
+        this.messageInfo.checkStartTime = item.checkStartTime
+        this.messageInfo.checkEndTime = item.checkEndTime
+        this.messageInfo.orgName = item.orgName
+        this.messageButtonInfo.companyName = item.companyName
+        this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
+        this.messageButtonInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
+        this.messageButtonInfo.orgFinancialOfficer = item.orgFinancialOfficer
+        this.messageButtonInfo.orgFinancialOfficerPhone = item.orgFinancialOfficerPhone
+        this.messageButtonInfo.createTime = item.createTime
+        this.messageButtonInfo.remark = item.remark
+        this.messageButtonInfo.totalCount = item.totalCount
+        this.checkBillName = item.checkBillName
+      },
+      infoSearchTime(startTime, endTime) {
+        this.searchTitle.startTime = startTime
+        this.searchDealPay.startTime = startTime
+        this.searchAlReadyPay.startTime = startTime
+        this.searchTitle.endTime = endTime
+        this.searchDealPay.endTime = endTime
+        this.searchAlReadyPay.endTime = endTime
+      },
+      clickDetails(row, event, column) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      },
+      getDbClick(row, event) {
       }
+
+    },
+    getSelection(selection) {
+      this.selected = selection
     }
+  }
 </script>
 
 <style lang="scss">
-.ahort_lll{
-  margin: 0 9px;
-  .sTop{
+  .ahort_lll {
+    margin: 0 9px;
+    .sTop {
 
-    .short_searchinfo{
-      display: flex;
-      padding: 20px 0 15px 0;
-      .sTitle{
-        flex: 1;
-        text-align: center;
-        /*showBg*/
-        .el-tooltip.showBg{
-          .el-input__inner{
-            border-left-color: #c0c4cc;
-            border-right-color: #c0c4cc;
-            color: #fff;
+      .short_searchinfo {
+        display: flex;
+        padding: 20px 0 15px 0;
+        .sTitle {
+          flex: 1;
+          text-align: center;
+          /*showBg*/
+          .el-tooltip.showBg {
+            .el-input__inner {
+              border-left-color: #c0c4cc;
+              border-right-color: #c0c4cc;
+              color: #fff;
+              font-weight: 600;
+              background: skyblue;
+            }
+          }
+          .el-input__suffix {
+            left: -20px;
+            top: -10px;
+          }
+          .el-input--suffix .el-input__inner {
+            padding-right: 0;
+          }
+          .el-input.is-disabled .el-input__inner {
+            background-color: #fff;
+          }
+
+          /*/*showBg*/
+          span {
+            position: relative;
+            top: -20px;
+            left: 200px;
+            font-size: 18px;
+            color: #333333;
             font-weight: 600;
-            background: skyblue;
+          }
+          .el-input__inner {
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            border-bottom: 3px double #c0c4cc;
+            font-size: 18px;
+            color: #333333;
+            font-weight: 600;
+            width: 200%;
+            text-align: center;
+          }
+          .el-input__inner:focus {
+            border-bottom-color: #c0c4cc;
           }
         }
-        .el-input__suffix{
-          left: -20px;
-          top: -10px;
+        .el-form-item__content {
+          line-height: 0;
         }
-        .el-input--suffix .el-input__inner {
-          padding-right: 0;
+      }
+      .el-form-item {
+        margin-bottom: 0;
+      }
+      .el-form--inline .el-form-item {
+        vertical-align: middle;
+      }
+      .sDate {
+        .el-form-item__label {
+          line-height: 40px;
         }
-        .el-input.is-disabled .el-input__inner {
-          background-color:#fff;
+        .el-input__inner {
+          height: 40px;
         }
+        .el-input.is-disabled {
+          .el-input__inner {
+            background-color: transparent;
+            color: #666;
+          }
+        }
+      }
+    }
 
-        /*/*showBg*/
-        span{
-          position: relative;
-          top: -20px;
-          left: 200px;
-          font-size: 18px;
-          color: #333333;
-          font-weight: 600;
-        }
-        .el-input__inner{
-          border-left-color: transparent;
-          border-right-color: transparent;
-          border-top-color: transparent;
-          border-bottom:3px double #c0c4cc;
-          font-size: 18px;
-          color: #333333;
-          font-weight: 600;
-          width: 200%;
-          text-align: center;
-        }
-        .el-input__inner:focus{
-          border-bottom-color: #c0c4cc;
-        }
-      }
-      .el-form-item__content{
-        line-height: 0;
-      }
-    }
-    .el-form-item{
-      margin-bottom:0;
-    }
-    .el-form--inline .el-form-item {
-      vertical-align: middle;
-    }
-    .sDate{
-      .el-form-item__label{
-        line-height: 40px;
-      }
-      .el-input__inner{
-        height: 40px;
-      }
-      .el-input.is-disabled{
-        .el-input__inner{
-          background-color: transparent;
-          color: #666;
-        }
-      }
-    }
-  }
-
-  .sMessageTop{
-    border: 1px solid #b4b4b4;
-    border-top: transparent;
-    border-bottom: transparent;
-    /*padding: 16px 0 10px 0;*/
-
-    .el-form-item{
-      /*width: 265px;*/
-      margin-bottom: 0;
-      margin-right: -5px;
+    .sMessageTop {
       border: 1px solid #b4b4b4;
-      border-left-color: transparent;
-      .el-input__inner{
+      border-top: transparent;
+      border-bottom: transparent;
+      /*padding: 16px 0 10px 0;*/
+
+      .el-form-item {
+        /*width: 265px;*/
+        margin-bottom: 0;
+        margin-right: -5px;
+        border: 1px solid #b4b4b4;
+        border-left-color: transparent;
+        .el-input__inner {
+          border-top-color: transparent;
+          border-right-color: transparent;
+          border-bottom-color: transparent;
+          width: 187px;
+          border-radius: 0;
+        }
+        .el-input__inner:focus {
+          border-left: 1px solid #dcdfe6;
+        }
+
+      }
+      .el-form-item:nth-of-type(6) {
+        /*border-top-color: transparent;*/
+        border-right-color: transparent;
+      }
+      .el-form-item:nth-of-type(7) {
+        border-top-color: transparent;
+      }
+      .el-form-item:nth-of-type(8) {
+        border-top-color: transparent;
+      }
+      .el-form-item:nth-of-type(9) {
+        border-top-color: transparent;
+      }
+      .el-form-item:nth-of-type(10) {
+        border-top-color: transparent;
+      }
+      .el-form-item:nth-of-type(11) {
+        border-top-color: transparent;
+      }
+      .el-form-item:nth-of-type(12) {
         border-top-color: transparent;
         border-right-color: transparent;
-        border-bottom-color: transparent;
-        width: 187px;
-        border-radius: 0;
       }
-      .el-input__inner:focus{
-        border-left: 1px solid #dcdfe6;
-      }
+      .sWetPay {
+        width: 50%;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        .el-form-item__content {
+          /*width: 90%;*/
+          .el-input {
+            .el-input__inner {
+              /*width: 100%;*/
 
-    }
-    .el-form-item:nth-of-type(6){
-      /*border-top-color: transparent;*/
-      border-right-color: transparent;
-    }
-    .el-form-item:nth-of-type(7){
-      border-top-color: transparent;
-    }
-    .el-form-item:nth-of-type(8){
-      border-top-color: transparent;
-    }
-    .el-form-item:nth-of-type(9){
-      border-top-color: transparent;
-    }
-    .el-form-item:nth-of-type(10){
-      border-top-color: transparent;
-    }
-    .el-form-item:nth-of-type(11){
-      border-top-color: transparent;
-    }
-    .el-form-item:nth-of-type(12){
-      border-top-color: transparent;
-      border-right-color: transparent;
-    }
-    .sWetPay{
-      width: 50%;
-      border-top-color: transparent;
-      border-right-color: transparent;
-      .el-form-item__content{
-        /*width: 90%;*/
-        .el-input{
-          .el-input__inner{
-            /*width: 100%;*/
+            }
 
-          }
-
-        }
-      }
-    }
-    .el-input.is-disabled .el-input__inner{
-      background-color: transparent;
-      color: #666666;
-    }
-  }
-  .sMessageCont{
-    .sMessageCont_info{
-      background-color: #e2eaff;
-      p{
-        text-align: center;
-        font-size: 14px;
-        color: #668cf0;
-        padding: 4px 0 5px 0;
-        font-weight: 600;
-      }
-    }
-    .info_tab{
-      .el-table__fixed-body-wrapper{
-        .deletebtn{
-          .svg-icon{
-            fill: #bec4d1;
-            font-size: 18px;
-          }
-        }
-        .deletebtn:hover{
-          .svg-icon{
-            fill: #ff4381;
-            cursor: pointer;
           }
         }
       }
+      .el-input.is-disabled .el-input__inner {
+        background-color: transparent;
+        color: #666666;
+      }
     }
-    .el-table {
-      thead{
-        line-height: 28px;
+    .sMessageCont {
+      .sMessageCont_info {
+        background-color: #e2eaff;
+        p {
+          text-align: center;
+          font-size: 14px;
+          color: #668cf0;
+          padding: 4px 0 5px 0;
+          font-weight: 600;
+        }
+      }
+      .info_tab {
+        .el-table__fixed-body-wrapper {
+          .deletebtn {
+            .svg-icon {
+              fill: #bec4d1;
+              font-size: 18px;
+            }
+          }
+          .deletebtn:hover {
+            .svg-icon {
+              fill: #ff4381;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .el-table {
+        thead {
+          line-height: 28px;
 
+        }
+        .cell {
+          line-height: 28px;
+        }
       }
-      .cell{
-        line-height: 28px;
-      }
-    }
-    .el-table {
-      td{
-        padding: 0px 0;
-      }
-    }
-  }
-  .sBottom{
-    border-right: 1px solid #b4b4b4;
-    border-left: 1px solid #b4b4b4;
-    margin-bottom: 70px;
-    .sMessageCont_info{
-      background-color: #e2eaff;
-      p{
-        text-align: left;
-        font-size: 14px;
-        color: #668cf0;
-        padding: 4px 0 5px 0;
-        font-weight: 600;
+      .el-table {
+        td {
+          padding: 0px 0;
+        }
       }
     }
-    .sMessageBut{
+    .sBottom {
+      border-right: 1px solid #b4b4b4;
+      border-left: 1px solid #b4b4b4;
+      margin-bottom: 70px;
+      .sMessageCont_info {
+        background-color: #e2eaff;
+        p {
+          text-align: left;
+          font-size: 14px;
+          color: #668cf0;
+          padding: 4px 0 5px 0;
+          font-weight: 600;
+        }
+      }
+      .sMessageBut {
 
-      /*padding: 16px 0 10px 0;*/
-        .sButtom_searchinfo{
-          .el-form-item{
+        /*padding: 16px 0 10px 0;*/
+        .sButtom_searchinfo {
+          .el-form-item {
             border: 1px solid #b4b4b4;
-            margin-right:-5px;
+            margin-right: -5px;
             margin-bottom: 0;
-            .el-input__inner{
+            .el-input__inner {
               width: 193px;
               border-radius: 0;
               border-top-color: transparent;
               border-right-color: transparent;
               border-bottom-color: transparent;
             }
-            .el-input__inner:nth-of-type(2n){
+            .el-input__inner:nth-of-type(2n) {
               border-right-color: transparent;
             }
           }
-          .el-form-item:nth-of-type(1){
+          .el-form-item:nth-of-type(1) {
             /*border-bottom-color: transparent;*/
             border-right-color: transparent;
           }
-          .el-form-item:nth-of-type(1){
+          .el-form-item:nth-of-type(1) {
             border-left-color: transparent;
             width: 100%;
-            .el-input__inner{
+            .el-input__inner {
               width: 1625px;
             }
           }
-          .el-form-item:nth-of-type(3){
+          .el-form-item:nth-of-type(3) {
             border-left-color: transparent;
           }
-          .el-form-item:nth-of-type(2n){
+          .el-form-item:nth-of-type(2n) {
             border-right-color: transparent;
           }
         }
-      .el-input__inner:focus {
-        border-color: #b4b4b4;
+        .el-input__inner:focus {
+          border-color: #b4b4b4;
+        }
       }
     }
-  }
-  .sBottomBut{
-    background: #eee;
-    height: 70px;
-    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 10;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    div{
-      position: fixed;
+    .sBottomBut {
+      background: #eee;
+      height: 70px;
+      box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+      position: absolute;
       bottom: 0;
-      left: 50%;
-      margin: 20px 0 15px 0;
-    }
+      left: 0;
+      width: 100%;
+      div {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        margin: 20px 0 15px 0;
+      }
 
+    }
   }
-}
 </style>

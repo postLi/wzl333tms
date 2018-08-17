@@ -120,7 +120,8 @@
                     <li>
                       <p> 到站装卸费</p>
                       <el-form-item prop="">
-                        <el-input :maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify" v-number-only:point></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify"
+                                  v-number-only:point></el-input>
                       </el-form-item>
                     </li>
                     <li>
@@ -247,17 +248,20 @@
                         <template slot-scope="scope">
                           <div v-if="column.checkfn">
                             <span v-if="column.checkfn(scope.row)">
-                              <el-input
+                               {{scope.row[column.prop]}}
 
-                                v-model.number="column.slot(scope)"
-                                :size="btnsize"
-                                v-number-only
-                                @change="(val) => changeData(scope.$index, column.prop, val)"
-                              >
-                              </el-input>
+
                             </span>
                             <span v-else>
-                              {{scope.row[column.prop]}}
+                               <el-input
+
+                                 v-model.number="column.slot(scope)"
+                                 :size="btnsize"
+                                 v-number-only
+                                 @change="(val) => changeData(scope.$index, column.prop, val)"
+                               >
+                              </el-input>
+                              <!--{{scope.row[column.prop]}}-->
                             </span>
                           </div>
                           <div v-else-if="column.expand">
@@ -293,7 +297,7 @@
                     </template>
                   </el-table>
 
-              </div>
+                </div>
               </div>
             </div>
             <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
@@ -645,8 +649,9 @@
             isAlFun: true,
             expand: true,
             fixed: false,
-            checkfn: (row)=>{
-              return row.warehouStatus !== 1
+            checkfn: (row) => {
+              console.log('row.warehouStatus:',row.warehouStatus)
+              return row.warehouStatus === 1
             },
 
             slot: (scope) => {
@@ -657,8 +662,8 @@
             prop: 'actualWeight',
             width: '100',
             expand: true,
-            checkfn: (row)=>{
-              return row.warehouStatus !== 1
+            checkfn: (row) => {
+              return row.warehouStatus === 1
             },
             fixed: false,
 
@@ -670,8 +675,8 @@
             prop: 'actualVolume',
             width: '100',
             expand: true,
-            checkfn: (row)=>{
-              return row.warehouStatus !== 1
+            checkfn: (row) => {
+              return row.warehouStatus === 1
             },
             fixed: false,
 
@@ -1100,7 +1105,7 @@
           // 导出
           case 'export':
             SaveAsFile({
-              data:  this.detailList,
+              data: this.detailList,
               columns: this.tableColumn,
               name: '批次详情'
             })
@@ -1108,7 +1113,7 @@
           // 打印
           case 'printer':
             PrintInFullPage({
-              data:  this.detailList,
+              data: this.detailList,
               columns: this.tableColumn,
               name: '批次详情'
             })
@@ -1146,7 +1151,7 @@
                   return false
                 }
                 else {
-                  if(this.formModel.arriveHandlingFee || this.formModel.arriveOtherFee){
+                  if (this.formModel.arriveHandlingFee || this.formModel.arriveOtherFee) {
                     this.formModel.arriveHandlingFee = 0
                     this.formModel.arriveOtherFee = 0
                   }
