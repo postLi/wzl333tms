@@ -8,8 +8,9 @@
           <li>最近七天</li>
           <li>最近一个月</li>
           <li>最近两个月</li>
-          <li>2018-09-12至2018-12-14
-            <!-- <el-date-picker
+          <li>
+            <!-- 2018-09-12至2018-12-14 -->
+          <el-date-picker
       v-model="value7"
       type="daterange"
       align="right"
@@ -18,7 +19,7 @@
       start-placeholder="开始日期"
       end-placeholder="结束日期"
       :picker-options="pickerOptions2">
-    </el-date-picker> -->
+    </el-date-picker>
           </li>
         </ul>
       </el-header>
@@ -28,9 +29,9 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>数量:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
-          <li>重量:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
-          <li>体积:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>数量:<span>{{ Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>重量:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>体积:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
         </ul>
         <ul>
           <li>
@@ -38,10 +39,10 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>短驳发车:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
-          <li>短驳倒车:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
-          <li>干线发车:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
-          <li>干线到车:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>短驳发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>短驳倒车:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>干线发车:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>干线到车:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
         </ul>
         <ul>
           <li>
@@ -49,11 +50,11 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>先付:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
-          <li>到付:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
-          <li>回单付:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
-          <li>月结:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
-          <li>异动增款:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
+          <li>先付:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>到付:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>回单付:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>月结:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>异动增款:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
         </ul>
         <ul>
           <li>
@@ -61,11 +62,11 @@
             <div class="box_gg">
             </div>
           </li>
-          <li>回扣:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
-          <li>其它费:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
-          <li>短驳车费:<span>{{dataset}}</span>方<em>{{dataset}}%</em></li>
-          <li>干线车费:<span>{{dataset}}</span>单<em>{{dataset}}%</em></li>
-          <li>送货车费:<span>{{dataset}}</span>千克<em>{{dataset}}%</em></li>
+          <li>回扣:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>其它费:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>短驳车费:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>干线车费:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%</em></li>
+          <li>送货车费:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%</em></li>
          
         </ul>
       </el-main>
@@ -93,8 +94,7 @@
 export default {
    data() {
      return {
-       dataset: [],
-       dataset1: [],
+ 
        pickerOptions2: {
          shortcuts: [{
            text: '最近一周',
@@ -322,19 +322,6 @@ export default {
      myChart.setOption(option)
      myChart2.setOption(option2)
      myChart3.setOption(option3)
-
-     var count = 100
-     var a = new Array()
-     for (var i = 0; i < 100; i++) {
-       a[i] = i + 1
-     }
-     a.sort(function() {
-       return 0.5 - Math.random()
-     })
-     for (var i = 0; i < a.length; i++) {
-       this.dataset = a[i] + ''
-       console.log(a[i] + '')
-     }
    }
  }
 </script>
@@ -358,7 +345,7 @@ export default {
     background: #ffff;
     padding:0px !important;
     ul{
-      margin-left: 70%;
+      margin-left: 58% !important;
       li{
         float: left;
         // padding: 0 10px;
@@ -369,6 +356,13 @@ export default {
           margin-left:10px !important;
           height:30px;
           line-height: 30px;
+          border:none;
+        }
+        .el-date-editor .el-range__close-icon{
+          margin-top:-8px;
+        }
+        .el-date-editor .el-range__icon {
+          display:none;
         }
         .el-date-editor .el-range-separator{
           line-height: 25px;
@@ -399,6 +393,7 @@ export default {
       flex: 23%;
       height: 185px;
       margin: 10px 25px 10px 0;
+      box-sizing: border-box;
       li{
         height: 30px;
         line-height: 30px;
@@ -420,9 +415,9 @@ export default {
           width:30px;
           height:30px;
           top:-31px;
-          left:356px;
+          left:358px;
           // background: red;
-         
+          display: block;
           background-repeat:no-repeat;
           background-position: right;
           display: none;
@@ -435,7 +430,7 @@ export default {
     }
   }
   .main_forthUl ul:hover {
-      border:2px solid #3e9ff1;
+      border:1px solid #3e9ff1;
       cursor: pointer;
     }
   .main_forthUl ul:hover li .box_gg{
