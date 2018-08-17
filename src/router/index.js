@@ -61,10 +61,13 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: '/dashboard',
+      component: _import('html5/html5index'),
       name: 'dashboard',
-      icon: 'shouye',
-      component: _import('dashboard/index'),
-      meta: { title: '首页', noCache: true }
+      icon: 'btn9_huidanhs',
+      meta: {
+        title: '首页',
+        noCache: false
+      }
     }, {
       path: '/checklist/index',
       component: _import('checklist/index'),
@@ -75,14 +78,11 @@ export const constantRouterMap = [
         noCache: false
       }
     }, {
-      path: '/html5/index',
-      component: _import('html5/html5index'),
-      name: 'html5page',
-      icon: 'btn9_huidanhs',
-      meta: {
-        title: 'H5',
-        noCache: false
-      }
+      path: '/flows',
+      name: 'flows',
+      icon: 'shouye',
+      component: _import('dashboard/index'),
+      meta: { title: '流程图', noCache: true }
     }]
   }
 ]
