@@ -13,8 +13,8 @@
       </el-header>
       <el-main class="main_forthUl">
         <ul>
-          <li>
-            开单数量
+          <li>开单数量
+            <i class="el-icon-check"></i>
           </li>
           <li>数量:<span>20</span>单<em>20%</em></li>
           <li>重量:<span>20</span>千克<em>20%</em></li>
@@ -23,6 +23,7 @@
         <ul>
           <li>
             发车数量
+            <i class="el-icon-check"></i>
           </li>
           <li>短驳发车:<span>20</span>单<em>20%</em></li>
           <li>短驳倒车:<span>20</span>千克<em>20%</em></li>
@@ -32,6 +33,7 @@
         <ul>
           <li>
             收入
+            <i class="el-icon-check"></i>
           </li>
           <li>先付:<span>20</span>单<em>20%</em></li>
           <li>到付:<span>20</span>千克<em>20%</em></li>
@@ -42,6 +44,7 @@
         <ul>
           <li>
             支出
+            <i class="el-icon-check"></i>
           </li>
           <li>回扣:<span>20</span>单<em>20%</em></li>
           <li>其它费:<span>20</span>千克<em>20%</em></li>
@@ -297,6 +300,10 @@ export default {
         float: left;
         padding: 0 10px;
         font-size: 14px;
+        cursor: pointer;
+      }
+      li:hover{
+        color:#3e9ff1;
       }
     }
   }
@@ -317,6 +324,14 @@ export default {
         line-height: 30px;
         font-size: 14px;
         padding: 0 20px;
+        .el-icon-check{
+          float:right;
+          height: 30px;
+          line-height: 30px;
+          font-size: 20px;
+          color:#3e9ff1;
+          display: none;
+        }
         span{
           color:red;
           padding:0 10px;
@@ -340,7 +355,12 @@ export default {
   }
   .main_forthUl ul:hover {
       border:2px solid #3e9ff1;
+      cursor: pointer;
     }
+  .main_forthUl ul:hover .el-icon-check{
+    display: block;
+    font-weight: bold;
+  }
   .main_left{
     padding: 10px 0 !important ;
     width: 100%;
