@@ -4,6 +4,7 @@
       <div class="scroll-container tags-view-wrapper" ref="scrollContainer" @wheel.prevent="handleScroll">
         <div class="scroll-wrapper" ref="scrollWrapper" :style="{left: left + 'px'}">
           <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard">
+           <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(indexTag)"></span>
             首页
           </router-link>
           <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span> {{generateTitle(tag.title)}}
@@ -113,7 +114,7 @@ export default {
       }
     },
     addViewTags() {
-      let route = this.generateRoute()
+      const route = this.generateRoute()
 
       if (!route) {
         return false
@@ -122,6 +123,7 @@ export default {
     },
     moveToCurrentTag() {
       // 针对首页特殊处理
+
       if (this.$route.path === this.indexTag.path) {
         this.moveToTarget(this.$refs.tagIndex.$el)
         return
@@ -131,7 +133,8 @@ export default {
 
       this.$nextTick(() => {
         for (const tag of tags) {
-          if (tag.fullPath === this.$route.fullPath) {
+          console.log('tag.fullPath === this.$route.fullPath', tag, tag.to, this.$route.path)
+          if (tag.to === this.$route.path) {
             this.moveToTarget(tag.$el)
             break
           }
@@ -193,6 +196,7 @@ export default {
       }
     },
     moveToTarget($target) {
+      console.log('this.$refs.tagIndex.$el:', $target)
       const $container = this.$refs.scrollContainer
       const $containerWidth = $container.offsetWidth
       const $targetLeft = $target.offsetLeft
@@ -224,6 +228,7 @@ export default {
   top: $topNavHeight;
   background: #e6e6e6;
   z-index: 999;
+  padding-right: 50px;
 
   left: 0;
   width: 100%;
