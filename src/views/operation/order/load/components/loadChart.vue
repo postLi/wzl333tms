@@ -83,9 +83,12 @@ export default {
       //   return this.$options.data().baseInfo
       // }
     },
-    truckInfo() {
-      this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
-      this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
+    truckInfo:{
+      handler() {
+        this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad) || 0
+        this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume) || 0
+      },
+      deep: true
     },
     popVisible() {
       if (this.popVisible) {
@@ -105,7 +108,6 @@ export default {
       if (this.popVisible) {
         this.baseInfo.weight = 0
         this.baseInfo.volume = 0
-        console.log(this.baseInfo)
         this.info.forEach(e => {
           this.baseInfo.weight += Number(e.loadWeight)
           this.baseInfo.volume += Number(e.loadVolume)

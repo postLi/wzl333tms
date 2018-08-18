@@ -69,12 +69,12 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model.number="formModel.truckLoad" placeholder="可载重量" clearable v-number-only:point :maxlength="8"></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" placeholder="可载体积" clearable v-number-only:point :maxlength="8"></el-input>
+                    <el-input size="mini" v-model.number="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8"></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -204,7 +204,7 @@
         <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
       </div>
       <!-- 配载率 -->
-      <loadChart :info="loadInfoPercent" :truckInfo="loadTruckInfo" :popVisible.sync="showRightTablePercent"></loadChart>
+      <loadChart :info="loadInfoPercent" :truckInfo="formModel" :popVisible.sync="showRightTablePercent"></loadChart>
       <!-- 添加车辆信息 -->
       <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="otherinfo.orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
@@ -289,7 +289,11 @@ export default {
         loadTime: parseTime(new Date()),
         requireArrivedTime: '',
         planArrivedTime: '',
-        orgid: ''
+        orgid: '',
+        dirverName: '',
+        dirverMobile: ''
+        // truckLoad: '',
+        // truckVolume: ''
       },
       isDirectDelivery: false,
       formFee: {},
@@ -364,16 +368,16 @@ export default {
       this.formModel.arriveOrgid = newVal
     },
     orgid() {},
-    loadTruckInfo() {
-      const data = Object.assign({}, this.formModel)
-      if (!data.truckLoad) {
-        this.$set(data, 'truckLoad', 0)
-      }
-      if (!data.truckVolume) {
-        this.$set(data, 'truckVolume', 0)
-      }
-      return data
-    },
+    // loadTruckInfo() {
+    //    const data = Object.assign({}, this.formModel)
+    //   if (!data.truckLoad) {
+    //     this.$set(data, 'truckLoad', 0)
+    //   }
+    //   if (!data.truckVolume) {
+    //     this.$set(data, 'truckVolume', 0)
+    //   }
+    //   return data
+    //  },
     loadInfoPercent() {
       const data = Object.assign([], this.loadInfoPercentOrg)
       return data
@@ -405,7 +409,6 @@ export default {
   },
   created() {
     this.setLoadTypeId()
-    console.log(this.$route)
   },
   mounted() {
     this.init()
@@ -878,14 +881,13 @@ export default {
     },
     handleSelectTruck(item) {
       this.truckKey = new Date().getTime()
-      // console.log('flag', this.flag)
       this.formModel.truckIdNumber = item.truckIdNumber
-      // if (!this.flag) {
       this.formModel.dirverMobile = item.driverMobile
       this.formModel.dirverName = item.driverName
-      this.formModel.truckLoad = item.truckLoad
-      this.formModel.truckVolume = item.truckVolume
-      // }
+      this.$set(this.formModel, 'truckLoad', Number(item.truckLoad))
+      this.$set(this.formModel, 'truckVolume', Number(item.truckVolume))
+      // this.formModel.truckLoad = item.truckLoad
+      // this.formModel.truckVolume = item.truckVolume
     },
     querySearch(queryString, cb) {
       if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
@@ -936,6 +938,9 @@ export default {
           }
         }
       })
+    },
+    changeTruckNum (val, type) {
+      this.$set(this.formModel, type, Number(val))
     }
   }
 }

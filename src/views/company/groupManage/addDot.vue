@@ -171,11 +171,12 @@
             <div class="rem-add-dot">
               <el-form-item label="备注" :label-width="formLabelWidth" prop="">
                 <el-input
+
                   type="textarea"
                   :rows="2"
                   placeholder="不可超300字"
                   v-model="form.remarks"
-                  auto-complete="off" maxlength="300" ></el-input>
+                  auto-complete="off" :maxlength="300" ></el-input>
               </el-form-item>
             </div>
           </el-form>

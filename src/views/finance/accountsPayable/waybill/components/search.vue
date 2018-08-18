@@ -5,7 +5,11 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="开单网点" prop="shipFromOrgid">
-      <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" >
+      <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel"></SelectTree>
+      <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
+    </el-form-item>
+    <el-form-item label="中转网点" prop="ascriptionOrgid" v-show="isTransferSel">
+      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid" >
       </SelectTree>
     </el-form-item>
     <el-form-item label="结算状态" prop="status">
@@ -61,6 +65,10 @@ export default {
     },
     orgid: {
       type: Number
+    },
+    isTransferSel: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

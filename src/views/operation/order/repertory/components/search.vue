@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="运单号" prop="shipSn">
-      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn"></querySelect>
+      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn"  :maxlength="15"></querySelect>
     </el-form-item>
     <el-form-item label="出发城市">
       <el-input v-model="searchForm.shipFromCityName" :maxlength="15"></el-input>

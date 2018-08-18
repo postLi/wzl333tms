@@ -12,6 +12,7 @@
       ref="searchAutocomplete"
       v-model="searchForm.shipSenderName" 
       :size="btnsize" 
+      :maxlength="15"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -20,7 +21,8 @@
       <el-autocomplete 
        popper-class="popperHide"
       v-model="searchForm.shipSenderUnit" 
-      :size="btnsize" 
+      :size="btnsize"
+      :maxlength="15"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -38,6 +40,7 @@
        popper-class="popperHide"
       v-model="searchForm.shipSn" 
       :size="btnsize" 
+      :maxlength="20"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       @select="handleSelect">

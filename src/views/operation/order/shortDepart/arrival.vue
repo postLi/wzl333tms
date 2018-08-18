@@ -350,7 +350,7 @@ export default {
 
     },
     repertory() { // 短驳入库-打开弹出框
-      if (this.loadInfo.bathStatusName === '短驳中' || this.loadInfo.bathStatusName === '已到车') {
+      if (this.loadInfo.bathStatusName === '短驳中' || this.loadInfo.bathStatusName === '已到车' || this.loadInfo.bathStatusName === '部分入库') {
         this.setInfo()
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳入库' })

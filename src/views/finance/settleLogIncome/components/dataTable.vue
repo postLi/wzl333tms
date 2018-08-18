@@ -25,13 +25,33 @@
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="120">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结现付" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结现付" width="120">
+        </el-table-column>
         <el-table-column prop="arrivalPay" sortable label="到付" width="120">
+        </el-table-column>
+         <el-table-column prop="" sortable label="未结到付" width="120">
+        </el-table-column>
+         <el-table-column prop="" sortable label="已结到付" width="120">
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="120">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结回单付" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结回单付" width="120">
+        </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结异动费用" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结异动费用" width="120">
+        </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结月结" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结月结" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -72,15 +92,35 @@
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
-        <el-table-column prop="onPay" sortable label="现付" width="120">
+         <el-table-column prop="onPay" sortable label="现付" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结现付" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结现付" width="120">
         </el-table-column>
         <el-table-column prop="arrivalPay" sortable label="到付" width="120">
         </el-table-column>
+         <el-table-column prop="" sortable label="未结到付" width="120">
+        </el-table-column>
+         <el-table-column prop="" sortable label="已结到付" width="120">
+        </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结回单付" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结回单付" width="120">
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结异动费用" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结异动费用" width="120">
+        </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结月结" width="120">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结月结" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>

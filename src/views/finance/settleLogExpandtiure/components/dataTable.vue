@@ -26,19 +26,51 @@
         </el-table-column>
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结短驳费" width="120" v-if="settlementId===180">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结短驳费" width="120" v-if="settlementId===180">
+        </el-table-column>
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
+        </el-table-column>
+         <el-table-column prop="" sortable label="未结送货费" width="120" v-if="settlementId===181">
+        </el-table-column>
+         <el-table-column prop="" sortable label="已结送货费" width="120" v-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="loadFeeTotal" sortable label="干线合计" width="120" v-if="settlementId===179">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结干线合计" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结干线合计" width="120" v-if="settlementId===179">
+        </el-table-column>
         <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+         <el-table-column prop="" sortable label="未结发站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+         <el-table-column prop="" sortable label="已结发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="startOtherPay" sortable label="发站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结发站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结发站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
         <el-table-column prop="endLoadPay" sortable label="到站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结到站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结到站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="endOtherPay" sortable label="到站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结到站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结到站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="整车保险费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结整车保险费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结整车保险费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="发车时间" width="120">
         </el-table-column>
@@ -73,19 +105,51 @@
         </el-table-column>
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结短驳费" width="120" v-if="settlementId===180">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结短驳费" width="120" v-if="settlementId===180">
+        </el-table-column>
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
+        </el-table-column>
+         <el-table-column prop="" sortable label="未结送货费" width="120" v-if="settlementId===181">
+        </el-table-column>
+         <el-table-column prop="" sortable label="已结送货费" width="120" v-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="loadFeeTotal" sortable label="干线合计" width="120" v-if="settlementId===179">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结干线合计" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结干线合计" width="120" v-if="settlementId===179">
+        </el-table-column>
         <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+         <el-table-column prop="" sortable label="未结发站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+         <el-table-column prop="" sortable label="已结发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="startOtherPay" sortable label="发站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结发站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结发站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
         <el-table-column prop="endLoadPay" sortable label="到站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结到站装卸费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结到站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="endOtherPay" sortable label="到站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
+        <el-table-column prop="" sortable label="未结到站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结到站其他费" width="120" v-if="settlementId===179">
+        </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="整车保险费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="未结整车保险费" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="" sortable label="已结整车保险费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="发车时间" width="120">
         </el-table-column>

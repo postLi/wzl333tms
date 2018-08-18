@@ -4,24 +4,20 @@
       <el-autocomplete 
       v-model="searchForm.shipToCityName" 
       :size="btnsize" 
+      popper-class="popperHide"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)" 
       placeholder="到达城市搜索" 
       @select="handleSelect">
-        <!-- <template slot-scope="{ item }">
-          <div class="name">{{ item.shipToCityName }}</div>
-        </template> -->
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="运单号">
       <el-autocomplete 
       v-model="searchForm.shipSn" 
       :size="btnsize" 
+      popper-class="popperHide"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       @select="handleSelect">
-       <!--  <template slot-scope="{ item }">
-          <div class="name">{{ item.shipSn }}</div>
-        </template> -->
       </el-autocomplete>
     </el-form-item>
   </el-form>

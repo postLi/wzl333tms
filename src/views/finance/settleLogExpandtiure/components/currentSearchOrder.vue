@@ -10,7 +10,7 @@
       <el-autocomplete 
        popper-class="popperHide"
       v-model="searchForm.shipSenderName" 
-       :maxlength="20"
+       :maxlength="15"
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
@@ -21,7 +21,7 @@
        popper-class="popperHide"
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
-       :maxlength="20"
+       :maxlength="15"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -32,7 +32,8 @@
       v-model="searchForm.shipSn" 
       :size="btnsize" 
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
-      placeholder="发货人搜索" 
+      placeholder="运单号搜索" 
+      :maxlength="20"
       @select="handleSelect">
         <template slot-scope="{ item }">
           <div class="name">{{ item.shipSn }}</div>

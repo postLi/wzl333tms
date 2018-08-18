@@ -111,7 +111,7 @@
       </div>
       <div class="receiptDialog_remark">
         <label>备注</label>
-        <el-input v-model="formModel.remark" placeholder="最多可输入300个字符" :size="btnsize"></el-input>
+        <el-input v-model="formModel.remark" placeholder="最多可输入300个字符" :size="btnsize" :maxlength="300"></el-input>
       </div>
     </el-form>
     <div slot="footer">
@@ -272,6 +272,9 @@ export default {
         this.formModel.szDtoList.forEach(e => {
           e.agent = this.otherinfo.name
         })
+        if (this.formModel.szDtoList.length < 1) { // 默认显示一条收支方式
+          this.plusItem()
+        }
       })
     },
     initDetailDtoList() {

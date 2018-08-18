@@ -30,7 +30,7 @@
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-autocomplete clearable v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide">
+      <el-autocomplete v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide">
         <template slot-scope="{ item }">
           <div class="name">{{ item.truckIdNumber }}</div>
         </template>
@@ -121,7 +121,6 @@ export default {
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }
-      console.log(typeof queryString, queryString, type)
       let results = queryString ? leftTable.filter(this.createFilter(queryString, type)) : leftTable
       cb(results)
       let array = []

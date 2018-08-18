@@ -308,7 +308,7 @@
             <div class="order-form-item">
               <span class="order-form-label">备注</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipRemarks" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipRemarks" :maxlength="300" />
               </el-form-item>
             </div>
           </el-col>

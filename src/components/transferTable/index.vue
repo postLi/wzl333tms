@@ -2,11 +2,11 @@
   <div class="transferTable">
     <!-- 穿梭框 -->
     <div class="transferTable_header">
-     <!--  <transition name="el-zoom-in-bottom">
-        <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')" plain class="transferTable_fresh clearfix"></el-button>
-      </transition> -->
       <div class="transferTable_searchs">
-         <slot name="tableSearch"></slot>
+        <div class="transferTable_fresh">
+          <slot name="tableRefresh"></slot>
+        </div>
+        <slot name="tableSearch"></slot>
       </div>
       <div class="transferTable_header_btn_direction">
         <el-tooltip effect="dark" content="向左侧拉伸" placement="top-end">
@@ -16,7 +16,7 @@
           <el-button icon="el-icon-arrow-left" type="primary" circle :disabled="isShowRight" size="mini" @click="doAction('showAllRight')" plain></el-button>
         </el-tooltip>
         <transition name="el-zoom-in-bottom">
-          <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')" plain ></el-button>
+          <el-button icon="el-icon-refresh" type="primary" v-if="isShowReback" circle size="mini" @click="doAction('showReback')" plain></el-button>
         </transition>
         <div class="transferTable_header_btn_box clearfix">
           <slot name="btnsBox"></slot>
@@ -91,12 +91,11 @@ export default {
     position: relative;
     border: 2px solid #cdf;
     border-bottom: none;
-    .transferTable_searchs{
-      position:absolute;
+    .transferTable_searchs {
+      position: absolute;
       top: 0px;
-      left:0px;
-      // background-color:gray;
-      display:flex;
+      left: 0px; // background-color:gray;
+      display: flex;
       flex-direction: row;
     }
 
@@ -105,9 +104,8 @@ export default {
       margin-left: -7px;
     }
     .transferTable_fresh {
-      position: absolute;
-      left: 10px;
-      top: 6px;
+      padding-top: 6px;
+      padding-left: 10px;
     }
     .transferTable_header_btn_box {
       position: absolute;

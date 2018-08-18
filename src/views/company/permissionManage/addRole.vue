@@ -14,7 +14,7 @@
                       type="textarea"
                       v-model="formInline.remark"
                       placeholder=""
-                      maxlength="300"
+                      :maxlength="300"
                       >
                       <!--:autosize="{ minRows: 2}"-->
                     </el-input>

@@ -70,7 +70,7 @@
       </div>
       <div class="receiptDialog_remark">
         <label>备注</label>
-        <el-input v-model="formModel.remark" placeholder="备注" :size="btnsize" :disabled="isEdit"></el-input>
+        <el-input v-model="formModel.remark" placeholder="备注" :size="btnsize" :disabled="isEdit" :maxlength="300"></el-input>
       </div>
     </el-form>
     <div slot="footer">
