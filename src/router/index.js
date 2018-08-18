@@ -63,7 +63,7 @@ export const constantRouterMap = [
       path: '/dashboard',
       component: _import('html5/html5index'),
       name: 'dashboard',
-      icon: 'btn9_huidanhs',
+      icon: 'shouye',
       meta: {
         title: '首页',
         noCache: false
@@ -80,7 +80,7 @@ export const constantRouterMap = [
     }, {
       path: '/flows',
       name: 'flows',
-      icon: 'shouye',
+      icon: 'canzhao',
       component: _import('dashboard/index'),
       meta: { title: '流程图', noCache: true }
     }]

@@ -314,7 +314,7 @@
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive"
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}"
                            v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
@@ -1493,11 +1493,12 @@
       }
     }
     /* 鼠标划过样式 */
-    .trackactive {
-      .modifybtn,
-      .deletebtn {
+    .trackactive{
+    .modifybtn, .deletebtn{
         display: inline-block;
       }
+    }
+    .trackactive,.firstactive {
       .typebox {
         background: url("../../../../../assets/png/track-active.png") no-repeat;
         color: #fff;

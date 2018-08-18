@@ -1170,11 +1170,12 @@ export default {
       &:hover {}
     }
     /* 鼠标划过样式 */
-    .trackactive,.firstactive {
-      .modifybtn,
-      .deletebtn {
+    .trackactive{
+    .modifybtn, .deletebtn{
         display: inline-block;
       }
+    }
+    .trackactive,.firstactive {
       .typebox {
         background: url("../../../../../assets/png/track-active.png") no-repeat;
         color: #fff;

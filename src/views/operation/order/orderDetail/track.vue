@@ -27,7 +27,7 @@
             <el-col :span="3" class="">
               <p>{{item.orgName}}</p>
             </el-col>
-            <el-col :span="8">
+            <el-col class="hyq-control-info" :span="8">
               <p>{{item.trackInfo}}</p>
             </el-col>
             <el-col :span="6">
@@ -286,10 +286,12 @@ export default {
     }
   }
   /* 鼠标划过样式 */
-  .trackactive,.firstactive{
+  .trackactive{
     .modifybtn, .deletebtn{
       display: inline-block;
     }
+  }
+  .trackactive,.firstactive{
     .typebox{
       background: url("../../../../assets/png/track-active.png") no-repeat;
       color: #fff;
@@ -302,7 +304,7 @@ export default {
     }
   }
   .modifybtn{
-    margin-left: 30px;
+    margin-left: 2px;
     background: url("../../../../assets/png/edit-icon.png") no-repeat;
     margin-right: 8px;
   }
@@ -322,6 +324,9 @@ export default {
       text-align: left;
       text-indent: 20px;
     }
+  }
+  .hyq-control-info{
+    padding-right: 10px;
   }
   
   .stepItem{
