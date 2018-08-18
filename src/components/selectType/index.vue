@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       val: '',
-      queryFn: (el)=>el,
+      queryFn: (el) => el,
       // listdata: [],
       types: [],
       dataCache: {
@@ -143,36 +143,36 @@ export default {
         // this.listdata = data
       }
     }
-    if(typeof this.filterfn === 'function'){
+    if (typeof this.filterfn === 'function') {
       this.queryFn = this.filterfn
     }
-      
+
     eventBus.$on('closepopbox', () => {
-      console.log('closepopbox selectType:')
-      this.$refs.myautocomplete.handleClose()
+      if (this.$refs.myautocomplete) {
+        this.$refs.myautocomplete.handleClose && this.$refs.myautocomplete.handleClose()
+      }
     })
   },
-  computed:{
-    listdata(){
-      console.log('this.queryFn',this.queryFn)
+  computed: {
+    listdata() {
+      console.log('this.queryFn', this.queryFn)
       return this.types.filter(this.queryFn)
     }
   },
   methods: {
-    makefilter(query){
+    makefilter(query) {
       this.query = query
-      let REG = new RegExp(query, 'i')
-      let filterfn = (el)=>{
+      const REG = new RegExp(query, 'i')
+      let filterfn = (el) => {
         console.log(el.dictName, REG, REG.test(el.dictName))
         return REG.test(el.dictName)
       }
-      
 
-      if(query===''){
-        filterfn = (el)=>el
-      } 
-      console.log('typeof this.filterfn',typeof this.filterfn)
-       if(typeof this.filterfn === 'function'){
+      if (query === '') {
+        filterfn = (el) => el
+      }
+      console.log('typeof this.filterfn', typeof this.filterfn)
+      if (typeof this.filterfn === 'function') {
         filterfn = this.filterfn
       }
       this.queryFn = filterfn

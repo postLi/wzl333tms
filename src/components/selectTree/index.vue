@@ -104,7 +104,9 @@ export default {
     this.aid = parseInt(this.value, 10) || ''
     this.init()
     eventBus.$on('closepopbox', () => {
-      this.$refs.myautocomplete.handleClose()
+      if (this.$refs.myautocomplete) {
+        this.$refs.myautocomplete.handleClose && this.$refs.myautocomplete.handleClose()
+      }
     })
   },
   computed: {

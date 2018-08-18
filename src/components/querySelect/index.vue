@@ -463,7 +463,9 @@ export default {
   methods: {
     initEvent() {
       eventBus.$on('closepopbox', () => {
-        this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
+        if (this.$refs.myautocomplete) {
+          this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose ? this.$refs.myautocomplete.handleClose() : ''
+        }
       })
     },
     initFindItem() {

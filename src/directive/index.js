@@ -19,7 +19,6 @@ const VueDirectiveObject = {
   keepNumber: function() {
     var hasPoint = this.hasPoint
     var pointNum = this.pointNum
-    console.log('hasPoint:', hasPoint, pointNum)
     // 如果第一位为小数点，则补0
     this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.').replace(new RegExp('^(\\d+)\\.(\\d{' + Math.abs(pointNum) + '}).*$'), '$1.$2') : this.value.replace(/\D/g, '').replace(/\./g, '')
   },
@@ -28,8 +27,11 @@ const VueDirectiveObject = {
   },
   onkeydown: function(event) {
     // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode),event.key,event.code, /[\d]/.test(String.fromCharCode(event.keyCode)))
+    // enter ctrl+c ctrl+v ctrl+a ctrl+x 应该仍然可以使用
     // 左右、删除、tab键
-    if (!(event.keyCode === 46) && !(event.keyCode === 8) && !(event.keyCode === 37) && !(event.keyCode === 39) && !(event.keyCode === 9) && !(event.key === '.' && this.hasPoint)) {
+    if (!(event.keyCode === 46) && !(event.keyCode === 8) && !(event.keyCode === 37) && !(event.keyCode === 39) && !(event.keyCode === 9) && !(event.key === '.' && this.hasPoint) && !(event.keyCode === 13) &&
+    !((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 65 || event.keyCode === 88) && event.ctrlKey && !event.altKey && !event.shiftKey)
+  ) {
       // 数字 小键盘数字
       if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
         event.stopPropagation()
@@ -57,7 +59,8 @@ Vue.directive('numberOnly', {
       el2.addEventListener('keyup', VueDirectiveObject.keepNumber)
       el2.addEventListener('change', VueDirectiveObject.keepNumber)
       el2.addEventListener('blur', VueDirectiveObject.keepNumber)
-      el2.addEventListener('onkeyup', VueDirectiveObject.keepNumber) // 20180809 lyy add
+      // el2.addEventListener('onkeyup', VueDirectiveObject.keepNumber) // 20180809 lyy add
+      // ...... 没毛病 ......
       /*       el2.addEventListener('blur', function(event) {
               // 隔100毫秒后再处理
               // 因为需要等elementUI回填数据后再处理

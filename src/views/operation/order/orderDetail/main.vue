@@ -545,31 +545,31 @@
             <th>签收描述</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-for="(item, index) in form.tmsOrderShipSignList" :key="index">
           <tr>
             <td>
-              {{ form.tmsOrderShipSign.signName }}
+              {{ item.signName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signTime }}
+              {{ item.signTime }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signStatusName }}
+              {{ item.signStatusName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signTypeName }}
+              {{ item.signTypeName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signCertificateName }}
+              {{ item.documentNum }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signRemark }}
+              {{ item.remark }}
             </td>
           </tr>
           <tr>
             <td colspan="6">
               <div class="clickimglist">
-              <span class="clickimg" v-for="(item, index) in (form.tmsOrderShipSign.signPic ? form.tmsOrderShipSign.signPic.split(',') : [])" :key="index">
+              <span class="clickimg" v-for="(item, index) in (item.signPic ? item.signPic.split(',') : [])" :key="index">
               <img v-showPicture  :src="item" />
               </span>
               </div>
@@ -908,6 +908,7 @@ export default {
       }
 
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
+      this.form.tmsOrderShipSignList = data.tmsOrderShipSignList || []
       this.form.tmsShLoadsList = data.tmsShLoadsList || [{}]
       this.form.tmsGxLoadsList = data.tmsGxLoadsList || [{}]
       this.form.tmsDbLoadsList = data.tmsDbLoadsList || [{}]

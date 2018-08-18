@@ -32,47 +32,44 @@ export default {
   },
   watch: {
     city: {
-      handler (newVal) {
+      handler(newVal) {
         this.cityName = newVal
       },
       immediate: true
     },
-    value (newVal) {
+    value(newVal) {
       this.cityName = newVal
     }
   },
   computed: {
   },
-  data () {
+  data() {
     return {
-      cityName: "",
+      cityName: '',
       // 缓存最近一次的请求数据
       lastQuery: '*',
       lastRequest: []
     }
   },
-  mounted () {
+  mounted() {
     eventBus.$on('closepopbox', () => {
-        console.log('closepopbox selectCity:')
-      this.$refs.myautocomplete.close()
+      this.$refs.myautocomplete && this.$refs.myautocomplete.close()
     })
   },
   methods: {
-    querySearch (queryString, cb) {
-      if(queryString === this.lastQuery){
+    querySearch(queryString, cb) {
+      if (queryString === this.lastQuery) {
         cb(this.lastRequest)
-      }else{
-        getCityInfo(queryString).then( data => {
+      } else {
+        getCityInfo(queryString).then(data => {
           this.lastQuery = queryString
           this.lastRequest = data
           cb(data)
         })
       }
-      
     },
-    handleSelect (info) {
-      
-      this.$emit("input", info.id || 0)
+    handleSelect(info) {
+      this.$emit('input', info.id || 0)
       this.$emit('change', info)
     }
   }
