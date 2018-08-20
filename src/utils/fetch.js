@@ -2,6 +2,8 @@ import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+// 引入事件对象
+import { eventBus } from '@/eventBus'
 
 // 创建axios实例
 const service = axios.create({
@@ -38,10 +40,9 @@ service.interceptors.request.use(config => {
 
       window.tms_testapiurl = localStorage.tms_testapiurl || 'api'
 
-      if(window.tms_testapiurl){
+      if (window.tms_testapiurl) {
         config.url = '/' + window.tms_testapiurl + config.url
       } else {
-
         config.url = '/api' + config.url
         // config.url = '/localapi' + config.url
         // config.url = '/wukunzhi' + config.url
@@ -89,7 +90,7 @@ service.interceptors.response.use(
     console.info('=============请求出错==============：', error)
     if (error.response) {
       const status = error.response.status
-
+      eventBus.$emit('hideSupcanChart')
       if (status === 403) {
         /* Message({
           message: '禁止访问',
@@ -104,28 +105,18 @@ service.interceptors.response.use(
         }) */
       } else if (status === 401) {
         // 401:非法的token;Token 过期了;
-        const ifr = document.getElementById('senderIframe')
-        // 如果有报表组件，需要隐藏她
-        if (ifr) {
-          const onload = ifr.onload
-          ifr.onload = function() {
-            setTimeout(() => {
-              ifr.contentWindow.hideChart(true)
-            }, 100)
-            onload && onload()
-          }
-        }
+
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
+            location.href = '/login' // 为了重新实例化vue-router对象 避免bug
           })
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
+            location.href = '/login'// 为了重新实例化vue-router对象 避免bug
           })
         })
       } else {
