@@ -26,10 +26,10 @@
     </div>
   </el-header>
   <el-main>
-    <div class="main_content" v-if="type===1">
+    <div class="main_checker" v-if="type===1">
       <el-button type="primary" @click="doAction('init')">初始化检查</el-button>
     </div>
-    <div class="main_content2" v-else-if="type===2">
+    <div class="main_checker2" v-else-if="type===2">
       <h6>公司管理</h6>
       <div class="company_content">
         <ul :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
@@ -80,13 +80,13 @@
       <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
       <ManageRemarks @success="setRemark" :popVisible.sync="popVisible" /> -->
     </div>
-     <!-- <div class="main_content" v-else-if="type===3">
+     <!-- <div class="main_checker" v-else-if="type===3">
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
     </div>
-     <div class="main_content" v-else-if="type===4">
+     <div class="main_checker" v-else-if="type===4">
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
     </div> -->
-     <div class="main_content" v-else>
+     <div class="main_checker" v-else>
       <el-button type="primary" @click="initSystem">初始化检查</el-button>
     </div>
     
@@ -624,7 +624,7 @@ export default {
       color:#3e9ff1;
     }
     padding:0 20px;
-    .main_content{
+    .main_checker{
       text-align: center;
       margin-top: 50px;
       .el-button{
@@ -637,7 +637,7 @@ export default {
         margin-top:20%;
       }
     }
-    .main_content2{
+    .main_checker2{
       border:1px solid rgba(188, 188, 188, 1);
       // padding:10px 40px;
      
