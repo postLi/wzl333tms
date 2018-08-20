@@ -116,12 +116,12 @@ export default {
         {
           label: "批次状态",
           prop: "batchTypeName",
-          width: "120"
+          width: "90"
         },
         {
           label: "车牌号",
           prop: "truckIdNumber",
-          width: "120"
+          width: "100"
         },
         {
           label: "司机",
@@ -131,12 +131,12 @@ export default {
         {
           label: "司机电话",
           prop: "dirverMobile",
-          width: "120"
+          width: "110"
         },
         {
           label: "短驳时间",
           prop: "departureTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -144,7 +144,7 @@ export default {
         {
           label: "配载时间",
           prop: "loadTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -157,7 +157,7 @@ export default {
         {
           label: "接收时间",
           prop: "receivingTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -165,41 +165,41 @@ export default {
         {
           label: "短驳费",
           prop: "shortFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "配载总件数",
           prop: "loadAmountall",
-          width: "120"
+          width: "100"
         },
         {
           label: "配载总重量",
           prop: "loadWeightall",
-          width: "120"
+          width: "100"
         },
         {
           label: "配载总体积",
           prop: "loadVolumeall",
-          width: "120"
+          width: "100"
         },
         {
           label: "重量装载率",
           prop: "weightLoadRate",
-          width: "120"
+          width: "100"
         }, {
           label: "体积装载率",
           prop: "volumeLoadRate",
-          width: "120"
+          width: "100"
         },
         {
           label: "短驳经办人",
           prop: "userName",
-          width: "120"
+          width: "100"
         },
         {
           label: "备注",
           prop: "remark",
-          width: "120"
+          width: "150"
         }
       ]
     }

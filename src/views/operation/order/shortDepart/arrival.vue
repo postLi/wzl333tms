@@ -100,13 +100,13 @@ export default {
         {
           label: "批次状态",
           prop: "bathStatusName",
-          width: "120",
+          width: "90",
           fixed: false
         },
         {
           label: "车牌号",
           prop: "truckIdNumber",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
@@ -118,13 +118,13 @@ export default {
         {
           label: "司机电话",
           prop: "dirverMobile",
-          width: "120",
+          width: "110",
           fixed: false
         },
         {
           label: "短驳时间",
           prop: "loadTime",
-          width: "180",
+          width: "150",
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -145,7 +145,7 @@ export default {
         {
           label: "接收时间",
           prop: "receivingTime",
-          width: "180",
+          width: "160",
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -154,67 +154,67 @@ export default {
         {
           label: "短驳费",
           prop: "shortFee",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "实到件数",
           prop: "actualAmount",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "实到重量",
           prop: "actualWeight",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "实到体积",
           prop: "actualVolume",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "配载总件数",
           prop: "amountall",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "配载总重量",
           prop: "weightall",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "配载总体积",
           prop: "volumeall",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "重量装载率",
           prop: "weightRate",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "体积装载率",
           prop: "volumeRate",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "短驳经办人",
           prop: "username",
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: "备注",
           prop: "remark",
-          width: "120",
+          width: "150",
           fixed: false
         }
       ]

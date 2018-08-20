@@ -1,34 +1,40 @@
 <template>
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="短驳时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
-      </el-date-picker>
-    </el-form-item>
-     <el-form-item label="批次状态" prop="batchTypeId">
-      <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit" :filterable="false" :filterfn="filterfn"></selectBatchType>
-    </el-form-item>
-    <el-form-item label="发车批次" prop="batchNo">
-      <el-input v-model="searchForm.batchNo" :maxlength="15" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-    </el-form-item>
-    <el-form-item label="车牌号">
-     <querySelect search="truckIdNumber" :remote="true"  :maxlength="8" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable @keyup.enter.native="onSubmit"></querySelect>
-    </el-form-item>
-    <el-form-item label="司机名称">
-       <querySelect search="driverName" type="driver"  :maxlength="10" v-model="searchForm.dirverName" valuekey="driverName"  label="driverName" :remote="true" clearable @keyup.enter.native="onSubmit" />
-    </el-form-item>
-    <el-form-item label="发车网点">
-      <SelectTree v-model="searchForm.orgid" clearable @keyup.enter.native="onSubmit">
-        <el-option slot="head" label="全部" value=""></el-option>
-      </SelectTree>
-    </el-form-item>
-    <el-form-item label="到车网点">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable @keyup.enter.native="onSubmit"  :orgid="otherinfo.orgid">
-      </SelectTree>
-    </el-form-item>
-    <el-form-item class="staff_searchinfo--btn">
-      <el-button type="primary" @click="onSubmit">查询</el-button>
-      <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
-    </el-form-item>
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
+    <el-row>
+      <el-col :span="21">
+        <el-form-item label="短驳时间">
+          <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="批次状态" prop="batchTypeId">
+          <selectBatchType v-model="searchForm.batchTypeId" type="short_batch_type" clearable @keyup.enter.native="onSubmit" :filterable="false" :filterfn="filterfn"></selectBatchType>
+        </el-form-item>
+        <el-form-item label="发车批次" prop="batchNo">
+          <el-input v-model="searchForm.batchNo" :maxlength="15" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+        </el-form-item>
+        <el-form-item label="车牌号">
+          <querySelect search="truckIdNumber" :remote="true" :maxlength="8" valuekey="truckIdNumber" v-model="searchForm.truckIdNumber" type="trunk" clearable @keyup.enter.native="onSubmit"></querySelect>
+        </el-form-item>
+        <el-form-item label="司机名称">
+          <querySelect search="driverName" type="driver" :maxlength="10" v-model="searchForm.dirverName" valuekey="driverName" label="driverName" :remote="true" clearable @keyup.enter.native="onSubmit" />
+        </el-form-item>
+        <el-form-item label="发车网点">
+          <SelectTree v-model="searchForm.orgid" clearable @keyup.enter.native="onSubmit">
+            <el-option slot="head" label="全部" value=""></el-option>
+          </SelectTree>
+        </el-form-item>
+        <el-form-item label="到车网点">
+          <SelectTree v-model="searchForm.arriveOrgid" clearable @keyup.enter.native="onSubmit" :orgid="otherinfo.orgid">
+          </SelectTree>
+        </el-form-item>
+      </el-col>
+      <el-col :span="3">
+        <el-form-item class="staff_searchinfo--btn">
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
 </template>
 <script>
@@ -98,7 +104,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.onSubmit()
   },
   methods: {
@@ -114,8 +120,8 @@ export default {
       this.$emit('change', this.searchForm)
       // this.searchForm = Object.assign({}, this.$options.data().searchForm)
     },
-    filterfn (obj) {
-     return obj.id !== 47
+    filterfn(obj) {
+      return obj.id !== 47
     },
     clearForm(formName) {
       this.$refs[formName].resetFields()

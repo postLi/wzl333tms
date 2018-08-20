@@ -212,7 +212,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item name="setup4" title="打印模板设置">
+        <el-collapse-item name="setup5" title="打印模板设置">
           <div class="clearfix setup-table">
             <div class="setup-left">运单标签设置</div>
             <div class="setup-right">
