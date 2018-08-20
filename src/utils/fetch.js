@@ -88,25 +88,38 @@ service.interceptors.response.use(
   },
   error => {
     console.info('=============请求出错==============：', error)
+    let err = error
     if (error.response) {
       const status = error.response.status
-      eventBus.$emit('hideSupcanChart')
+
       if (status === 403) {
+        err = {
+          text: '禁止访问',
+          status: 100
+        }
         /* Message({
           message: '禁止访问',
           type: 'error',
           duration: 1 * 1000
         }) */
       } else if (status === 404) {
+        err = {
+          text: '未找到相关信息',
+          status: 100
+        }
         /* Message({
           message: '未找到相关信息',
           type: 'error',
           duration: 1 * 1000
         }) */
       } else if (status === 401) {
+        err = {
+          text: 'Token 过期了',
+          status: 100
+        }
         // 401:非法的token;Token 过期了;
-
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+        eventBus.$emit('hideSupcanChart')
+        MessageBox.alert('你已被登出，请重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
@@ -120,6 +133,10 @@ service.interceptors.response.use(
           })
         })
       } else {
+        err = {
+          text: '请求错误：' + status,
+          status: 100
+        }
         /* Message({
           message: '请求错误：' + status,
           type: 'error',
@@ -134,7 +151,7 @@ service.interceptors.response.use(
         duration: 1 * 1000
       }) */
     }
-    return Promise.reject(error)
+    return Promise.reject(err)
   }
 )
 
