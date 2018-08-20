@@ -2113,7 +2113,7 @@ export default {
                 if (!this.output.isbatch) {
                   if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
-                    this.eventBus.$on('showOrderDetail', data.tmsOrderShip.id)
+                    this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
                   } else {
                     // this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + data.tmsOrderShip.id + '&tab=查看' + data.tmsOrderShip.shipSn)
                     this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')

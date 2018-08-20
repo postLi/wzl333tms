@@ -7,6 +7,16 @@ export default {
   hidden: true,
   children: [
     {
+      path: '/components/utils',
+      name: '工具类函数',
+      component: _import('componentsDemo/utils')
+    },
+    {
+      path: '/components/events',
+      name: '全局事件',
+      component: _import('componentsDemo/events')
+    },
+    {
       path: '/components/dirctive',
       name: '自定义指令',
       component: _import('componentsDemo/dirctive')

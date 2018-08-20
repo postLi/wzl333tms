@@ -71,15 +71,27 @@
       1234567890 | toThousandslsFilte <br>
       {{ 1234567890 | toThousandslsFilter }}
     </p>
+
+    <h3>smalltoBIG</h3>
+    <p>人民币转大写</p>
+    <el-input v-model.number="money" />
+    <p>转换:{ { money|smalltoBIG } }<br>
+    结果：{{money|smalltoBIG}}</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
   </div>
   </div>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       dialogTableVisible: false,
-      inputData: '安发网络'
+      inputData: '安发网络',
+      money: 0
     }
   },
   methods: {

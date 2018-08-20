@@ -337,39 +337,39 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(item,index) in form.tmsOrderTransferList" :key="index">
             <td>
-              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
+              {{ item.createTime}}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.oddNumbers }}
+              {{ item.oddNumbers }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.carrierName }}
+              {{ item.carrierName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.carrierMobile }}
+              {{ item.carrierMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.arrivalMobile }}
+              {{ item.arrivalMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.transferCharge }}
+              {{ item.transferCharge }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.deliveryExpense }}
+              {{ item.deliveryExpense }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.transferOtherFee }}
+              {{ item.transferOtherFee }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.totalCost }}
+              {{ item.totalCost }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.paymentName }}
+              {{ item.paymentName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.remark }}
+              {{ item.remark }}
             </td>
           </tr>
         </tbody>
@@ -522,9 +522,7 @@
             </td>
             <td>
               {{ item.loadName }}
-            </td>
-
-            
+            </td>      
           </tr>
         </tbody>
       </table>
@@ -735,6 +733,7 @@ export default {
           'transferTime': '',
           'updateTime': ''
         },
+        tmsOrderTransferList: [],
         tmsOrderShipSign: {},
         tmsShLoadsList: [],
         tmsGxLoadsList: [],
@@ -899,14 +898,16 @@ export default {
       this.form.customerList = data.customerList
       console.log('setOrderInfo:', data, this.form)
       // 设置中转信息
-      // 设置运单信息
-      if (data.tmsOrderTransfer) {
+      if (data.tmsOrderTransferList && data.tmsOrderTransferList.length) {
+        this.form.tmsOrderTransferList = data.tmsOrderTransferList
+      } else if (data.tmsOrderTransfer) {
         for (const i in data.tmsOrderTransfer) {
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
-        console.log('setOrderInfo2:', data.tmsOrderTransfer, this.form.tmsOrderTransfer)
+        this.form.tmsOrderTransferList = [this.form.tmsOrderTransfer]
       }
 
+      // 设置运单信息
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
       this.form.tmsOrderShipSignList = data.tmsOrderShipSignList || []
       this.form.tmsShLoadsList = data.tmsShLoadsList || [{}]

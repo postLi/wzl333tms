@@ -150,7 +150,7 @@ export function formatTime(time, option) {
   }
 }
 
-// 格式化时间
+// 获取链接参数对象
 export function getQueryObject(url) {
   url = url == null ? window.location.href : url
   const search = url.substring(url.lastIndexOf('?') + 1)
@@ -389,7 +389,6 @@ export function scrollTo(element, to, duration) {
   const difference = to - element.scrollTop
   const perTick = difference / duration * 10
   setTimeout(() => {
-    console.log(new Date())
     element.scrollTop = element.scrollTop + perTick
     if (element.scrollTop === to) return
     scrollTo(element, to, duration - 10)
@@ -754,6 +753,11 @@ export const tmsMath = {
     this._result = total
     return this
   },
+  clear() {
+    this._result = 0
+    this._isCalc = false
+    return this
+  },
   result(num = 2) {
     const res = parseFloat(this._result, 10).toFixed(num) || 0
     this._result = 0
@@ -782,20 +786,20 @@ export const tmsMath = {
  * @param  {[type]} array [description]
  * @param  {[type]} key   [description]
  */
-export const uniqueArray = (array, key) =>{
-      let result = [array[0]]
-      for (let i = 1; i < array.length; i++) {
-        let item = array[i]
-        let repeat = false
-        for (let j = 0; j < result.length; j++) {
-          if (item[key] === result[j][key]) {
+export const uniqueArray = (array, key) => {
+  const result = [array[0]]
+  for (let i = 1; i < array.length; i++) {
+    const item = array[i]
+    let repeat = false
+    for (let j = 0; j < result.length; j++) {
+      if (item[key] === result[j][key]) {
             repeat = true
             break
           }
-        }
-        if (!repeat) {
-          result.push(item)
-        }
-      }
-      return result
     }
+    if (!repeat) {
+      result.push(item)
+    }
+  }
+  return result
+}

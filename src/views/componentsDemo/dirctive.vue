@@ -3,7 +3,9 @@
     <h2>自定义指令</h2>
 
     <blockquote>
-      目前所有自定义指令都是注册到全局，可在子组件中直接使用
+      目前所有自定义指令都是注册到全局，可在子组件中直接使用<br><br>
+      文件路径：<br>
+      /src/directive/index.js
     </blockquote>
 
     <h3>v-numberOnly</h3>
@@ -63,7 +65,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       dialogTableVisible: false,
       inputData: '安发网络'
