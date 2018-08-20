@@ -132,7 +132,7 @@ export default {
      var myChart3 = echarts.init(document.getElementById('main'))
      const option = {
        title: {
-         text: '{{dataset}}18收入对比图',
+         text: '2018收入对比图',
          subtext: '测试数据',
          x: 'center'
        },
