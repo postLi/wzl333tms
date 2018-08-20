@@ -9,32 +9,31 @@ export default {
   name: 'app',
   mounted() {
     // 隐藏表格事件
+    const _this = this
     this.eventBus.$on('hideSupcanChart', function() {
+      _this.setSupcanChart(true)
+    })
+    this.eventBus.$on('showSupcanChart', function() {
+      _this.setSupcanChart(false)
+    })
+  },
+  methods: {
+    setSupcanChart(ishide) {
       const ifr = document.getElementById('senderIframe')
       // 如果有报表组件，需要隐藏她
       if (ifr) {
-        const onload = ifr.onload
-        ifr.onload = function() {
+        if (ifr.contentWindow && ifr.contentWindow.hideChart) {
+          ifr.contentWindow.hideChart(ishide)
+        }
+        // const onload = ifr.onload
+        /* ifr.onload = function() {
           setTimeout(() => {
-            ifr.contentWindow.hideChart(true)
+            ifr.contentWindow.hideChart(ishide)
           }, 100)
           onload && onload()
-        }
+        } */
       }
-    })
-    this.eventBus.$on('showSupcanChart', function() {
-      const ifr = document.getElementById('senderIframe')
-      // 如果有报表组件，需要显示她
-      if (ifr) {
-        const onload = ifr.onload
-        ifr.onload = function() {
-          setTimeout(() => {
-            ifr.contentWindow.hideChart(false)
-          }, 100)
-          onload && onload()
-        }
-      }
-    })
+    }
   }
 }
 </script>

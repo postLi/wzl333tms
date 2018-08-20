@@ -1,5 +1,5 @@
 <template>
-  <el-select @visible-change="getData"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+  <el-select @visible-change="getData" popper-class="selectTreePop"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
         v-if="!listdata.length"
         v-for="item in openGroups"
@@ -103,6 +103,14 @@ export default {
   mounted() {
     this.aid = parseInt(this.value, 10) || ''
     this.init()
+    var agnt = navigator.userAgent.toLowerCase()
+    // <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
+    if (agnt.indexOf('msie') > 0 || agnt.indexOf('trident') > 0) {
+      this.ifr = document.createElement('iframe')
+      this.ifr.setAttribute('frameborder', '0')
+      this.$refs['myautocomplete'].$refs['popper'].$el.appendChild(this.ifr)
+    }
+
     eventBus.$on('closepopbox', () => {
       if (this.$refs.myautocomplete) {
         this.$refs.myautocomplete.handleClose && this.$refs.myautocomplete.handleClose()
@@ -136,6 +144,18 @@ export default {
         this.fetchData()
       }
     },
+    showChart() {
+      if (this.ifr) {
+        this.ifr.style.display = 'none'
+      }
+      this.eventBus.$emit('showSupcanChart')
+    },
+    hideChart() {
+      if (this.ifr) {
+        this.ifr.style.display = 'block'
+      }
+      this.eventBus.$emit('hideSupcanChart')
+    },
     fetchData() {
       getAllOrgInfo(this.orgid || this.otherinfo.companyId).then(data => {
         this.groups = data
@@ -144,7 +164,12 @@ export default {
         this.inited = false
       })
     },
-    getData() {
+    getData(type) {
+      if (type) {
+        this.hideChart()
+      } else {
+        this.showChart()
+      }
       if (this.remote) {
         this.fetchData()
       }
@@ -189,6 +214,16 @@ export default {
 </script>
 
 <style lang="scss">
+.selectTreePop{
+  iframe{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+}
 .highlight{
     font-style: normal;
     color: #f00;

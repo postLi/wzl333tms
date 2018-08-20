@@ -8,14 +8,16 @@ function activeShuoZhengCheck() {
   } else {
     // 插件未安装
     if ($B.type == 'chrome') {
-      if ($B.chrome_install_apitype == 'npapi') { window.open("install_chrome.htm"); } else {
+      if ($B.chrome_install_apitype == 'npapi') { window.open('install_chrome.htm') } else {
         var ofrm = document.getElementById('frm')
         // ofrm.height = 700
-        ofrm.contentWindow.location.href = 'http://www.supcan.cn/download/clientinstall.htm?110'
-        olbl.innerHTML = '下载 Chrome 浏览器插件安装包'
+        if (ofrm) {
+          ofrm.contentWindow.location.href = 'http://www.supcan.cn/download/clientinstall.htm?110'
+          olbl.innerHTML = '下载 Chrome 浏览器插件安装包'
+        }
       }
     } else { // Firefox
-      if ($B.is64) { alert("抱歉, 不支持 64位Firefox"); } else { window.open("binary/supcan.xpi"); }
+      if ($B.is64) { alert('抱歉, 不支持 64位Firefox') } else { window.open('binary/supcan.xpi') }
     }
   }
 }
@@ -74,11 +76,16 @@ function getToken() { // 获取token
   var urlToken = getValue('access_token')
   return urlToken
 }
-
+// 硕正全局函数
+// http://www.supcan.cn/doc/dev/globalfunction.htm?101
+// 关于遮罩的示例
+// http://www.supcan.cn/frm_treelist.htm?v=2&n=35
 function hideChart(bGray) { // 隐藏
-  AF.func('grayWindow', '')
-  if (bGray) {
-    AF.func('grayWindow', '1\r\n backcolor=#FFFFFF;alpha=100')
+  if (window.AF && window.AF.func) {
+    AF.func('grayWindow', '')
+    if (bGray) {
+      AF.func('grayWindow', 'true \r\n backcolor=#FFFFFF;alpha=100')
+    }
   }
 }
 
@@ -86,7 +93,7 @@ function OnEvent(id, Event, p1) {
   if (Event == 'Print') {
     AF.func('Callfunc', '11', 'isOpenSysDialog=true; WorkSheet=Current')
   }
-  if (Event == 'Preview') { AF.func("Callfunc", "18"); }
+  if (Event == 'Preview') { AF.func('Callfunc', '18') }
 
-  if (Event == 'Setting') { AF.func("Callfunc", "216"); }
+  if (Event == 'Setting') { AF.func('Callfunc', '216') }
 }
