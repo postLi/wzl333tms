@@ -166,7 +166,6 @@ export default {
     if (!this.inited) {
       this.inited = true
       this.initInfo()
-      this.form.orgId = this.otherinfo.orgid
     }
   },
   watch: {
@@ -190,6 +189,7 @@ export default {
       } else {
         this.popTitle = '新增收支方式'
         this.newInfo(this.otherinfo)
+
       }
     },
     isModify: {
@@ -222,7 +222,7 @@ export default {
       this.financialWayClick(this.form.financialWayId)
     },
     newInfo(item) {
-      this.form.orgId = item.orgId
+      this.form.orgId = item.orgid
       this.form.remark = ''
       this.form.bankAccount = ''
       this.form.bankAccountName = ''
@@ -305,9 +305,10 @@ export default {
       })
     },
     reset() {
+
       // this.$refs['ruleForm'].resetFields()
       // this.form = {}
-      // this.form.orgId = this.otherinfo.orgid
+      this.form.orgId = this.otherinfo.orgid
       // this.form.financialWayId = 280
       // this.financialWayClick(this.form.financialWayId)
     },
@@ -335,7 +336,7 @@ export default {
     }
     .el-form-item{
       .el-form-item__content{
-        width: 69%;
+        width: 67%;
       }
     }
     .el-form-item.iom_textarea{

@@ -152,83 +152,6 @@
                   </el-button>
                 </div>
                 <div class="infos_tab">
-                  <!--<el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">-->
-                  <!--<el-table-column fixed sortable type="selection" width="40">-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                  <!--fixed-->
-                  <!--sortable-->
-                  <!--label="序号"-->
-                  <!--width="60">-->
-                  <!--<template slot-scope="scope">{{  scope.$index + 1 }}</template>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点">-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipSn" width="150" sortable label="运单号">-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="childShipSn" sortable width="120" label="子运单号">-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="loadAmount" sortable width="100" label="应到件数">-->
-                  <!--</el-table-column>-->
-                  <!--&lt;!&ndash;actualWeight   loadWeight&ndash;&gt;-->
-                  <!--<el-table-column sortable prop="loadWeight" width="100" label="应到重量" >-->
-                  <!--</el-table-column>-->
-                  <!--&lt;!&ndash;actualVolume   loadVolume&ndash;&gt;-->
-                  <!--<el-table-column label="应到体积" width="100" prop="loadVolume" sortable >-->
-                  <!--</el-table-column>-->
-
-
-                  <!--&lt;!&ndash;actualAmount  loadAmount   !isAlFun&ndash;&gt;-->
-                  <!--<el-table-column prop="actualAmount" sortable width="100" label="实到件数" v-if="isAlFun">-->
-                  <!--</el-table-column>-->
-                  <!--&lt;!&ndash;actualWeight   loadWeight&ndash;&gt;-->
-                  <!--<el-table-column sortable prop="actualWeight" width="100" label="实到重量" v-if="isAlFun">-->
-                  <!--</el-table-column>-->
-                  <!--&lt;!&ndash;actualVolume   loadVolume&ndash;&gt;-->
-                  <!--<el-table-column label="实到体积" width="100" prop="actualVolume" sortable v-if="isAlFun">-->
-                  <!--</el-table-column>-->
-
-
-                  <!--<el-table-column prop="actualAmount" sortable width="100" label="实到件数" v-if="!isAlFun" class="actuaNum">-->
-                  <!--<template slot-scope="scope">-->
-                  <!--<el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>-->
-                  <!--</template>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column sortable prop="actualWeight" width="100" label="实到重量" v-if="!isAlFun">-->
-                  <!--<template slot-scope="scope">-->
-                  <!--<el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>-->
-                  <!--</template>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column sortable prop="actualVolume" width="100" label="实到体积" v-if="!isAlFun">-->
-                  <!--<template slot-scope="scope">-->
-                  <!--<el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>-->
-                  <!--</template>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="loadAmount" label="配载件数" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column sortable prop="loadWeight" width="100" label="配载重量">-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="loadVolume" label="配载体积" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipFromCityName" label="出发城市" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipToCityName" label="到达城市" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipSenderName" label="发货人" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipSenderMobile" label="发货人电话" width="120" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipReceiverName" label="收货人" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipReceiverMobile" label="收货人电话" width="120" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="cargoName" label="货品名" width="100" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipGoodsSn" label="货号" width="130" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column prop="shipRemarks" label="运单备注" width="110" sortable>-->
-                  <!--</el-table-column>-->
-                  <!--</el-table>-->
 
 
                   <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails"
@@ -314,7 +237,8 @@
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}"
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive"
+                           :class="{'firstactive': index===0}"
                            v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
@@ -650,7 +574,7 @@
             expand: true,
             fixed: false,
             checkfn: (row) => {
-              console.log('row.warehouStatus:',row.warehouStatus)
+              console.log('row.warehouStatus:', row.warehouStatus)
               return row.warehouStatus === 1
             },
 
@@ -1154,7 +1078,7 @@
                   return false
                 }
                 else {
-                  if (this.formModel.arriveHandlingFee || this.formModel.arriveOtherFee) {
+                  if (this.formModel.arriveHandlingFee === '' || this.formModel.arriveOtherFee === '') {
                     this.formModel.arriveHandlingFee = 0
                     this.formModel.arriveOtherFee = 0
                   }
@@ -1493,12 +1417,12 @@
       }
     }
     /* 鼠标划过样式 */
-    .trackactive{
-    .modifybtn, .deletebtn{
+    .trackactive {
+      .modifybtn, .deletebtn {
         display: inline-block;
       }
     }
-    .trackactive,.firstactive {
+    .trackactive, .firstactive {
       .typebox {
         background: url("../../../../../assets/png/track-active.png") no-repeat;
         color: #fff;

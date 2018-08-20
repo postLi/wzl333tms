@@ -1,7 +1,7 @@
 <template>
   <!---->
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :orgid="searchQuery.vo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
 
@@ -16,208 +16,6 @@
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <!-- <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="100">
-            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="130"
-            label="网点">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="memberName"
-            width="130"
-            label="承运商">
-          </el-table-column>
-          <el-table-column
-            prop="checkBillName"
-            width="320"
-            sortable
-            label="对账单名">
-          </el-table-column>
-          <el-table-column
-            prop="createTime"
-            sortable
-            width="160"
-            label="创建时间">
-          </el-table-column>
-          <el-table-column
-            prop="checkBillCode"
-            sortable
-            width="280"
-            label="对账编号">
-          </el-table-column>
-
-
-          <el-table-column
-            prop="checkStartTime"
-            label="对账开始时间"
-            width="160"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="checkEndTime"
-            label="对账结束时间"
-            width="160"
-            sortable
-            >
-          </el-table-column>
-
-          <el-table-column
-            prop="totalCountFee"
-            label="应收应付对账合计"
-            width="180"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="receivableFee"
-            label="应收账款"
-            width="150"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="payableFee"
-            label="应付账款"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="receivedFee"
-            label="已收账款"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="paidFee"
-            label="已付账款"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="checkStatusName"
-            label="对账状态"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="createBy"
-            label="创建人"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="totalCount"
-            label="总单数"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="memberPerson"
-            label="业务负责人"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="memberPersonPhone"
-            label="业务负责人电话"
-            width="140"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="settlementType"
-            label="结算方式"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="bankAccount"
-            label="账户账号"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="账户开户行"
-            width="150"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="financialOfficer"
-            label="财务负责人"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="financialOfficerPhone"
-            label="财务负责人电话"
-            width="130"
-            sortable
-          >
-          </el-table-column><el-table-column
-          prop="alipayAccount"
-          label="支付宝"
-          width="130"
-          sortable
-        >
-        </el-table-column><el-table-column
-          prop="wechatAccount"
-          label="微信"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-
-        </el-table> -->
-
-
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
@@ -266,7 +64,7 @@ export default {
       }
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchQuery.vo.orgid = this.$route.query.orgid
     this.searchQuery.vo.carrierId = this.$route.query.id
   },
   data() {
@@ -458,7 +256,7 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-    
+
       // 判断是否有选中项
 
       if (!this.selected.length && type !== 'storage'  && type !== 'print'  && type !== 'export' ) {

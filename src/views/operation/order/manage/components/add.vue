@@ -54,19 +54,19 @@
               <li>
                 <p><i>*</i> 件数</p>
                 <el-form-item prop="tmsOrderCargoList.cargoAmount">
-                  <el-input :maxlength="10" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
-                <p>重量</p>
+                <p>重量(kg)</p>
                 <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                  <el-input :maxlength="10" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>
-                <p>体积</p>
+                <p>体积(方)</p>
                 <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                  <el-input :maxlength="10" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
+                  <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
                 </el-form-item>
               </li>
               <li>

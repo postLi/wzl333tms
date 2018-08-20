@@ -136,9 +136,19 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '发车时间',
-          prop: 'loadTime',
+          label: '到车时间',
+          prop: 'receivingTime',
           width: '160',
+          fixed: false
+        }, {
+          label: '发车时间',
+          prop: 'departureTime',
+          width: '160',
+          fixed: false
+        }, {
+          label: '时效',
+          prop: 'timeLiness',
+          width: '120',
           fixed: false
         }, {
           label: '司机名称',
@@ -153,7 +163,7 @@ export default {
         }, {
           label: '实到件数',
           prop: 'actualAmount',
-          width: '110',
+          width: '100',
           fixed: false
         }, {
           label: '实到重量',
