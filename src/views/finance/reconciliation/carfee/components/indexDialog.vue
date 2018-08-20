@@ -34,7 +34,7 @@
             fixed
             sortable
             prop="toPay"
-            width="189"
+            width="180"
             label="金额">
             </el-table-column>
           </el-table>
@@ -183,7 +183,7 @@
 
   }
   .saveDialog-index .popRight-content{
-    padding: 20px 0 5px 10px;
+    padding: 20px 10px 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{
       margin-right: -8px;

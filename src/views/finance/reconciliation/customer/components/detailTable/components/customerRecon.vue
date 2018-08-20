@@ -921,8 +921,12 @@
           this.messageArr = data.tmsFinanceBillCheckDto
           this.infoMessage(this.messageArr)
           this.infoList()
-          if (!data.customerDetailDtoList === []) {
+          if (data.customerDetailDtoList.length > 0) {
             data.customerDetailDtoList.forEach((el, val) => {
+              // this.dealInfo = []
+              // this.dealPayInfo = []
+              // this.alreadyInfo = []
+              // this.alreadyPayInfo = []
               if (el.type === 1) {
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
@@ -938,10 +942,7 @@
               }
             })
           } else {
-            this.dealInfo = []
-            this.dealPayInfo = []
-            this.alreadyInfo = []
-            this.alreadyPayInfo = []
+            this.infoPayFor()
           }
           this.loading = false
         }).catch(err => {
@@ -980,13 +981,14 @@
         if (!this.searchCreatTime[0]) {
           this.searchCreatTime = this.defaultTime
         }
-
         const searchObj = {}
         searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
         searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
         this.infoSearchTime(searchObj.startTime, searchObj.endTime)
         this.fetchList()
+        this.infoPayFor()
         this.closeVisibleDialog()
+
       },
       onSubmit() {
         if (this.$route.query.tab === '客户对账-创建对账') {
@@ -996,17 +998,6 @@
           this.modifyList()
           this.sendId = this.$route.query.id
         }
-        // const searchObj = {}
-        // searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-        // searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-        // this.infoSearchTime(searchObj.startTime, searchObj.endTime)
-
-        // if (this.$route.query.tab === '客户对账-创建对账') {
-        //   this.fetchList()
-        // } else {
-        //   this.modifyList()
-        //   this.sendId = this.$route.query.id
-        // }
       },
       submit() {
         this.$refs['formName2'].validate((valid) => {
@@ -1026,23 +1017,23 @@
                 this.alreadyInfo.map(el => this.form.customerDetailDtoList.push(el))
                 this.alreadyPayInfo.map(el => this.form.customerDetailDtoList.push(el))
                 //
-                this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el => {
+                this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
 
                   return a
                 }) : []
-                this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el => {
+                this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
                   return a
                 }) : []
-                this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el => {
+                this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
                   return a
                 }) : []
-                this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el => {
+                this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
                   return a
@@ -1063,6 +1054,12 @@
             return false
           }
         })
+      },
+      infoPayFor() {
+        this.dealInfo = []
+        this.dealPayInfo = []
+        this.alreadyInfo = []
+        this.alreadyPayInfo = []
       },
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {

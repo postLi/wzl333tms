@@ -888,7 +888,6 @@
           this.infoMessage(this.messageArr)
           this.infoList()
           if (data.carrierDetailDtoList.length > 0) {
-            console.log(data.carrierDetailDtoList,'承运商1');
             data.carrierDetailDtoList.forEach((el, val) => {
               if (el.type === 1) {
                 this.dealInfo.push(el)
@@ -907,7 +906,6 @@
               }
             })
           } else {
-            console.log(data.carrierDetailDtoList,'承运商2');
             this.dealInfo = []
             this.dealPayInfo = []
             this.alreadyInfo = []
@@ -988,23 +986,23 @@
                 this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 //
-                this.tota.dealtota = this.dealInfoData ? this.dealInfoData.map(el => {
+                this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
 
                   return a
                 }) : []
-                this.tota.dealPaytota = this.dealPayInfoData ? this.dealPayInfoData.map(el => {
+                this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
                   a.totalCost = el.totalCost
                   return a
                 }) : []
-                this.tota.alreadytota = this.alreadyInfoData ? this.alreadyInfoData.map(el => {
+                this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
                   return a
                 }) : []
-                this.tota.alreadyPaytota = this.alreadyPayInfoData ? this.alreadyPayInfoData.map(el => {
+                this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
                   const a = {}
                   a.totalCost = el.totalCost
                   return a
@@ -1081,6 +1079,7 @@
               if (!isNaN(value)) {
                 // return Math.round((prev + curr) * 100) / 100;
                 // return (prev + curr).toFixed(2);
+                let pcSum = (prev + curr)
                 return prev + curr
               } else {
                 return prev

@@ -829,12 +829,12 @@
                   return a
                 }) : []
                 // 总计
-                this.tota.dealPaytota = this.dealPaytota ? this.dealPaytota.map(el => {
+                this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
                   a.totalPay = el.totalPay
                   return a
                 }) : []
-                this.tota.alreadyPaytota = this.alreadyPaytota ? this.alreadyPaytota.map(el => {
+                this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
                   const a = {}
                   a.totalPay = el.totalPay
                   return a
