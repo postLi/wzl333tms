@@ -109,7 +109,7 @@
 </template>
 
 <script type="text/javascript">
-import { getAllOrgInfo, getAllUser, deleteEmployeer } from '../../../api/company/employeeManage'
+import { getAllOrgInfo, getAllUser, deleteEmployeer } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import SearchForm from './search'
 import TableSetup from './tableSetup'
