@@ -2,7 +2,7 @@
   <el-container>
     <el-main class="main_content ">
       <el-header class="head_title">
-        <h4>数据总览</h4>
+        <!-- <h4>数据总览</h4> -->
         <ul>
           <li>今天</li>
           <li>昨天</li>
@@ -27,6 +27,16 @@
       <el-main class="main_forthUl">
         <ul>
           <li>开单数量  
+            <div class="box_gg">
+              <i>
+                <img src="../../assets/checkImg/sjx1.png"/>
+              </i>
+            </div>
+            <div class="box_gg1">
+              <i>
+                <img src="../../assets/checkImg/sjx.png"/>
+              </i>
+            </div>
           </li>
           <li>数量:<span>{{ Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
           <li>重量:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -35,6 +45,16 @@
         <ul>
           <li>
             发车数量
+            <div class="box_gg">
+              <i>
+                <img src="../../assets/checkImg/sjx1.png"/>
+              </i>
+            </div>
+            <div class="box_gg1">
+              <i>
+                <img src="../../assets/checkImg/sjx.png"/>
+              </i>
+            </div>
           </li>
           <li>短驳发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
           <li>短驳倒车:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -44,6 +64,16 @@
         <ul>
           <li>
             收入
+            <div class="box_gg">
+              <i>
+                <img src="../../assets/checkImg/sjx1.png"/>
+              </i>
+            </div>
+            <div class="box_gg1">
+              <i>
+                <img src="../../assets/checkImg/sjx.png"/>
+              </i>
+            </div>
           </li>
           <li>现付:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
           <li>到付:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -54,7 +84,7 @@
         <ul>
           <li>
             支出
-            <!-- <div class="box_gg">
+            <div class="box_gg">
               <i>
                 <img src="../../assets/checkImg/sjx1.png"/>
               </i>
@@ -63,7 +93,7 @@
               <i>
                 <img src="../../assets/checkImg/sjx.png"/>
               </i>
-            </div> -->
+            </div>
           </li>
           <li>回扣:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
           <li>其它费:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -342,12 +372,12 @@ export default {
 // }
   padding:19px;
   overflow-y: hidden;
-  // background:rgb(235,235,235);
+  background:rgb(235,235,235);
   box-sizing: border-box;
   .head_title{
     height: 4% !important;
     line-height: 30px !important;
-    // background: #ffff;
+    background: #ffff;
     padding:0px !important;
     box-sizing: border-box;
     // box-shadow: 2px 2px 2px 2px ,-2px -2px -2px -2px rgba(0, 0, 0, 0.10);
@@ -428,24 +458,24 @@ export default {
       position: relative;
       transition: color 4s ease;
       border-radius: 5px;
-      //  .box_gg,.box_gg1{
-      //     position: absolute;
-      //     width: 8%;
-      //     height: 16%;
-      //     top: 0.1%;
-      //     left: 92.2%;
-      //     // background: red;
-      //     display: none;
-      //     background-repeat: no-repeat;
-      //     background-position: right;
-      //     box-sizing: border-box;
-      //     z-index: 10000;
-      //     img{
-      //       background-size:cover;
-      //       width: 100%;
-      //       height:100%;
-      //     }
-      //   }
+       .box_gg,.box_gg1{
+          position: absolute;
+          width: 8%;
+          height: 16%;
+          top: 0.1%;
+          left: 92.2%;
+          // background: red;
+          display: none;
+          background-repeat: no-repeat;
+          background-position: right;
+          box-sizing: border-box;
+          z-index: 10000;
+          img{
+            background-size:cover;
+            width: 100%;
+            height:100%;
+          }
+        }
       li{
         height: 30px;
         line-height: 30px;
@@ -479,7 +509,7 @@ export default {
     cursor: pointer;
     box-sizing: border-box;
     transition: all 0.2s ease-out; 
-    box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.10); 
+    box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.40); 
     overflow: hidden;
     color: #3e9ff1;
     // opacity: rgba(0, 0, 0, 0.44);
@@ -488,15 +518,15 @@ export default {
   }
   .main_forthUl ul li:nth-child(1){
     //  transform: translateX(-200px); transition-delay: 0.2s; 
-    background-color: #6bc9eb;
-    color:#fff;
+    // background-color: #6bc9eb;
+    // color:#fff;
   }
-  // .main_forthUl ul:hover .box_gg{
-  //   display: block;
-  // }
-  // .main_forthUl ul:active .box_gg1{
-  //   display: block;
-  // }
+  .main_forthUl ul:hover .box_gg{
+    display: block;
+  }
+  .main_forthUl ul:active .box_gg1{
+    display: block;
+  }
   .main_left{
     padding: 10px 0 !important ;
     width: 100%;
@@ -509,7 +539,9 @@ export default {
       background:#fff;
       height:584px;
       // box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.10);
-       box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.10);
+      //  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.10);
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.10) ;
+      border:1px solid #ddd;
     }
     .ul_right{
       width: 23.8%;
@@ -521,15 +553,17 @@ export default {
         height: 286px;
         background: #fff;
         border-radius: 5px;
-        box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.10);
+        // box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.10) inset;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.10) ;
+         border:1px solid #ddd;
         canvas{
           height: 262px;
         }
         p{
           font-size: 14px;
           padding: 7px;
-          background-color: #6bc9eb;
-          color:#fff;
+          // background-color: #6bc9eb;
+          // color:#fff;
           border-radius: 5px 5px 0 0;
         }
         
@@ -540,11 +574,11 @@ export default {
       } 
       li:hover{
         cursor: pointer;
-    box-sizing: border-box;
-    transition: all 0.2s ease-out; 
-    box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.10); 
-    overflow: hidden;
-    color: #3e9ff1;
+        box-sizing: border-box;
+        transition: all 0.2s ease-out; 
+        box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.10); 
+        overflow: hidden;
+        color: #3e9ff1;
     // opacity: rgba(0, 0, 0, 0.44);
     // font-weight: 300;
     transform: translateY(-3px); transition-delay: 0.2s; 
