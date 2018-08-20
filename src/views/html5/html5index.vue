@@ -377,7 +377,6 @@ export default {
   min-width: 1100px;
 }
 .main_content{
-
   padding:19px;
   overflow-y: hidden;
   background:rgb(235,235,235);

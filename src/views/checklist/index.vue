@@ -1,5 +1,5 @@
 <template>
-<el-container :key="viewKey" v-loading="loading">
+<el-container :key="viewKey" v-loading="loading" class="check_box">
   <el-header style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
@@ -510,23 +510,22 @@ export default {
     height: 100%;
   }
 }
-.el-container{
+.check_box{
+  min-width: 1100px;
   .el-header{
      margin-top:20px;
     .top_content{
         border:1px solid rgba(188, 188, 188, 1);
         height: 143px;
-        // background-color: #09abff;
         background-image: url(../../assets/checkImg/bgo1.png);
         background-repeat:no-repeat;
         background-position: center;
         background-size:cover;
         // background-size: 100%;
         padding: 45px 54px;
-        // text-align: center;
+        box-sizing: border-box;
         h6{
           font-size: 22px;
-          // color:rgba(190, 134, 51, 1);
           font-weight: normal;
           color: #ffffff;
         }
