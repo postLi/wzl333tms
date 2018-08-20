@@ -160,6 +160,7 @@ export default {
     flex: 1;
     .el-form-item{
       margin-bottom: 10px;
+      margin-right: 0;
     }
   }
 }

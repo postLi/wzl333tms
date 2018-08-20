@@ -1262,7 +1262,7 @@ export default {
       } else {
         obj = this.$refs['tmsOrderShipshipSn']
       }
-      if (obj) {
+      if (obj && this.output.iscreate) {
         obj.focus()
       }
     },
