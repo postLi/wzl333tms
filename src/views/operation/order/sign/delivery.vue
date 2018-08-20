@@ -593,12 +593,22 @@ export default {
         },
         fixed: false
       }, {
+        label: '签收状态',
+        prop: 'signStatusName',
+        width: '120',
+        fixed: false
+      }, {
         label: '签收时间',
         prop: 'signTime',
         width: '180',
         slot: (scope) => {
           return `${parseTime(scope.row.signTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
+        fixed: false
+      }, {
+        label: '签收类型',
+        prop: 'signTypeName',
+        width: '120',
         fixed: false
       }, {
         label: '出发城市',
@@ -682,16 +692,6 @@ export default {
         slot: (scope) => {
           return parseShipStatus(scope.row.shipIdentifying)
         },
-        fixed: false
-      }, {
-        label: '签收类型',
-        prop: 'signTypeName',
-        width: '120',
-        fixed: false
-      }, {
-        label: '签收状态',
-        prop: 'signStatusName',
-        width: '120',
         fixed: false
       }, {
         label: '签收人',

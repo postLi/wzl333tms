@@ -151,7 +151,7 @@ export default {
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
       this.searchForm.shipFromOrgid = ''
-      this.searchCreatTime = []
+      // this.searchCreatTime = []
     }
   }
 }

@@ -377,16 +377,7 @@ export default {
   min-width: 1100px;
 }
 .main_content{
-//  .clearfix:after{
-//     display: block;
-//     clear: both;
-//     content: "";
-//     visibility: hidden;
-//     height: 0;
-// }
-// .clearfix{
-//     zoom:1;
-// }
+
   padding:19px;
   overflow-y: hidden;
   background:rgb(235,235,235);
@@ -522,7 +513,7 @@ export default {
     }
   }
   .main_forthUl ul:hover {
-    // border:1px solid #3e9ff1;
+    border:1px solid #3e9ff1;
     cursor: pointer;
     box-sizing: border-box;
     transition: all 0.2s ease-out; 
@@ -531,7 +522,7 @@ export default {
     color: #3e9ff1;
     // opacity: rgba(0, 0, 0, 0.44);
     // font-weight: 300;
-    transform: translateY(-3px); transition-delay: 0.2s; 
+    transform: translateY(-3px); transition-delay: 0.1s; 
   }
   .main_forthUl ul li:nth-child(1){
     //  transform: translateX(-200px); transition-delay: 0.2s; 
@@ -620,4 +611,30 @@ export default {
     }
   }
 }
+@media (min-width: 1024px){
+.main_content{font-size: 18px}
+} /*>=1024的设备*/
+
+@media (min-width: 1100px) {
+.main_content{font-size: 20px}
+} /*>=1100的设备*/
+@media (min-width: 1280px) {
+body{font-size: 22px;}
+} /*>=1280的设备*/
+
+@media (min-width: 1366px) {
+
+body{font-size: 24px;}
+}  
+
+@media (min-width: 1440px) {
+body{font-size: 25px !important;}
+} 
+
+@media (min-width: 1680px) {
+body{font-size: 28px;}
+} 
+@media (min-width: 1920px) {
+body{font-size: 33px;}
+} 
 </style>

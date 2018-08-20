@@ -142,7 +142,7 @@ export default {
       rules: {
         documentNum: [
           // { required: true, trigger: 'blur', validator: validateNum }
-          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, required: true, trigger: 'blur', message: '只能输入字母和数字' }
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '只能输入字母和数字' }
         ]
       }
     }
