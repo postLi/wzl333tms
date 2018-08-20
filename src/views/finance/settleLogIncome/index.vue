@@ -26,7 +26,15 @@
               </div>
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="收支方式" prop="financialWay">
-                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
+                  <el-select v-model="formModel.financialWay" filterable placeholder="选择收支方式" v-if="isFinancialWays">
+                    <el-option
+                      v-for="item in financialWays"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay" v-else></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
                   <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable v-numberOnly></el-input>
@@ -71,7 +79,7 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
-import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
+import { getFeeInfo, postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/settleLog'
 import Count from './components/count'
 export default {
   name: 'settleLogIncome',
@@ -108,7 +116,9 @@ export default {
       isEdit: false,
       loadTable: [],
       addIncomeInfo: {},
-      countNum: 0
+      countNum: 0,
+      financialWays: [],
+      isFinancialWays: false
     }
   },
   computed: {
@@ -118,6 +128,7 @@ export default {
   },
   mounted() {
     this.getFeeInfo()
+
     // this.getSystemTime()
   },
   methods: {
@@ -127,6 +138,7 @@ export default {
       })
     },
     getFeeInfo() {
+      this.getOrgFirstFinancialWay() // 获取收支方式
       getFeeInfo(this.$route.query.orgId, this.paymentsType).then(data => {
         this.loading = false
         this.formModel.amount = data.amount
@@ -161,12 +173,10 @@ export default {
       }
     },
     setFinanceWay(obj) {
-      console.log(obj)
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
     },
     setData() { // 设置传给后台的数据结构
-      console.log(typeof this.formModel.financialWay, this.formModel.financialWay)
       if (typeof this.formModel.financialWay === 'string') {
         this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
         this.formModel.financialWay = this.formModel.financialWay
@@ -196,9 +206,6 @@ export default {
       .catch(error => {
         this.$message({type:'error', message:error.errorInfo || error.text})
       })
-        // .catch(error => {
-        //   this.$message({ type: 'error', message: '保存失败！' })
-        // })
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -222,6 +229,18 @@ export default {
     countSuccess (list) {
       this.countSuccessList = Object.assign([], list.info)
       this.countNum = list.count
+    },
+    getOrgFirstFinancialWay () { // 获取收支方式
+      let obj = {
+        financialWay: '',
+        orgId: this.otherinfo.orgid
+      }
+      getOrgFirstFinancialWay(obj).then(data => {
+        this.financialWays = data
+        if (this.financialWays !== null) {
+          this.isFinancialWays = true
+        }
+      })
     }
   }
 }

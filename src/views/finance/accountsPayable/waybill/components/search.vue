@@ -8,8 +8,8 @@
       <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel"></SelectTree>
       <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
     </el-form-item>
-    <el-form-item label="中转网点" prop="ascriptionOrgid" v-show="isTransferSel">
-      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid" >
+    <el-form-item label="中转网点" prop="transferOrgid" v-show="isTransferSel">
+      <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid" >
       </SelectTree>
     </el-form-item>
     <el-form-item label="结算状态" prop="status">

@@ -486,7 +486,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -504,20 +504,25 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
-        // this.$router.push({ path: './accountsPayable/batch' })
-        this.isFresh = true
-      } else {
-        this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-        this.$set(this.searchQuery.vo, 'sign', this.sign)
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-        this.isFresh = false
-      }
+      this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      this.$set(this.searchQuery.vo, 'sign', this.sign)
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      // if (!this.$route.query.searchQuery.vo) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
+      //   // this.$router.push({ path: './accountsPayable/batch' })
+      //   this.isFresh = true
+      // } else {
+      //   this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      //   this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      //   this.$set(this.searchQuery.vo, 'sign', this.sign)
+      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      //   this.isFresh = false
+      // }
     },
     getList() {
-      let selectListBatchNos = objectMerge2([], this.$route.query.selectListBatchNos)
+      let sns = JSON.parse(this.$route.query.selectListBatchNos)
+      let selectListBatchNos = objectMerge2([], sns)
       if (this.$route.query.selectListBatchNos) {
         this.isModify = true
       } else {
@@ -529,7 +534,7 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      if (!this.isFresh) {
+      // if (!this.isFresh) {
         postPayListBySummary(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListBatchNos.forEach(e => {
@@ -558,7 +563,7 @@ export default {
           this.orgLeftTable = objectMerge2([], this.leftTable)
         })
 
-      }
+      // }
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
@@ -660,7 +665,7 @@ export default {
         this.isGoReceipt = false
       }
     },
-    selectCurrent (obj, index) {
+    selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
@@ -724,11 +729,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-     let propsArr = ['_index|2|单','arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee','unpaidArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      let propsArr = ['_index|2|单', 'arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['_index|2|单','arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'amountArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'amountArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee','amountArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'amountArriveOtherFee','loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      let propsArr = ['_index|2|单', 'arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'amountArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'amountArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'amountArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'amountArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     }
   }

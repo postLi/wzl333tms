@@ -83,6 +83,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
+      selectListBatchNos: [],
       loading: false,
       setupTableVisible: false,
       tableColumn: [
@@ -291,9 +292,10 @@ export default {
      this.$router.push({
         path: '../accountsLoad',
         query: {
+          tab: '到车汇总结算',
           currentPage: 'batchArrivalAll', // 本页面标识符
-          searchQuery: this.searchQuery, // 搜索项
-          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
       })
     },

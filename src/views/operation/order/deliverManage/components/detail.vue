@@ -35,7 +35,7 @@
             <th>分摊方式</th>
             <td>
               <!-- {{info.truckLoad}} -->
-              <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled></el-input>
+              <el-input v-model="info.apportionTypeName" :size="btnsize" disabled></el-input>
             </td>
             <th>送货日期</th>
             <td>
@@ -49,7 +49,7 @@
           <tr>
             <th>备注</th>
             <td colspan="5">
-               <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
             </td>
           </tr>
         </tbody>
@@ -64,6 +64,19 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+        <!-- <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50" sortable type="selection"></el-table-column>
@@ -85,9 +98,11 @@
           <el-table-column sortable width="200" prop="cargoName" label="货品名"></el-table-column>
           <el-table-column sortable width="120" prop="shipGoodsSn" label="货号"></el-table-column>
           <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
-        </el-table>
+        </el-table> -->
       </div>
     </div>
+    <!-- 表格设置弹出框 -->
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     <!-- <Addbatch :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="closeAddBacth" :isModify="isModify" :isSongh="isSongh"></Addbatch> -->
   </div>
 </template>
@@ -95,8 +110,12 @@
 import { getSelectLoadDetailList } from '@/api/operation/load'
 // import { postBatchSign } from '@/api/operation/deliverManage'
 import { objectMerge2 } from '@/utils/index'
-// import Addbatch from './sign'
+import TableSetup from '@/components/tableSetup'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
+  components: {
+    TableSetup
+  },
   props: {
     info: {
       type: Array,
@@ -113,7 +132,9 @@ export default {
   data() {
     return {
       btnsize: 'mini',
+      setupTableVisible: false,
       loadId: '',
+      tablekey: 0,
       detailList: [],
       selectDetailList: [],
       message: false,
@@ -129,7 +150,116 @@ export default {
         signTypeId: 0,
         remark: '',
         signPic: ''
-      }
+      },
+      tableColumn: [{
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单重量',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单体积',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '130',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
+        }
+      ]
     }
   },
   mounted() {
@@ -144,32 +274,33 @@ export default {
     }
   },
   methods: {
-    setTable() {},
+    setTable() {
+      this.setupTableVisible = true
+    },
     doAction(type) {
       switch (type) {
         case 'add': // 签收
           this.openSignVisible()
           break
-        case 'print':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'print': // 打印
+          PrintInFullPage({
+            data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
-        case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'export': // 导出
+          SaveAsFile({
+            data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
       }
     },
-    setData() {},
-    // postBatchSign() {
-    // postBatchSign(data).then(data => {
-    //     this.$router.push({ path: '././deliverManage', query: { tableKey: Math.random() } })
-    //     this.$message({ type: 'success', message: '签收操作成功' })
-    //     this.message = true
-    //   })
-    //   .catch(error => {
-    //     this.message = false
-    //   })
-    // this.$emit('isSuccess', this.message)
-    // },
+    setData() {
+      // this.setupTableVisible = true
+    },
     getLoadTrack() {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
@@ -200,12 +331,9 @@ export default {
           if (!e.orgid || e.orgid === '') {
             e.orgid = null
           }
-          if (!e.loadId || e.loadId === '') {
-            e.loadId = null
-          }
           data.childShipIds.push(e.childShipIds)
           data.orgIds.push(e.orgid)
-          data.loadIds.push(e.loadId)
+          data.loadIds.push(this.loadId)
         })
         // data.shipIds = data.shipIds.join(',')
         // data.childShipIds = data.childShipIds.join(',')
@@ -215,6 +343,7 @@ export default {
       this.signData.shipIds = data.shipIds
       this.signData.childShipIds = data.childShipIds
       this.signData.orgIds = data.orgIds
+      this.signData.loadIds = data.loadIds
       data = {}
       console.log('select', this.signData)
     },
@@ -228,6 +357,10 @@ export default {
     openSignVisible() {
       console.log('批次详情页', this.signData)
       this.$emit('sendInfoData', this.signData)
+    },
+    setColumn(obj) {
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

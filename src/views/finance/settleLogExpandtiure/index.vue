@@ -271,22 +271,18 @@ export default {
       console.log(obj)
     },
     countSuccess(list) {
-      console.log('countSuccessList', list)
       if (list.type === 178) { // 178-运单 179-批次
         this.countSuccessListShip = Object.assign([], list.info)
         this.countNumShip = list.count
-        console.log('list.countShip', list.count)
       }
       if (list.type === 179) {
         this.countSuccessListBatch = Object.assign([], list.info)
         this.countNumBatch = list.count
-        console.log('list.countBatch', list.count)
       }
     },
     changeFeeIdBatch(obj) {
       this.settlementId = obj
       this.setSettlementId(obj)
-      console.log(obj)
     }
   }
 }

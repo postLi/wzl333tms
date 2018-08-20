@@ -105,6 +105,7 @@ export default {
       // if((route.fullPath === this.$route.fullPath) || (route.name === this.$route.name)){
       // 如果是tab，则只判断全路径
       // const ison = route.tab ? (route.fullPath === this.$route.fullPath) : (route.path === this.$route.path)
+      // const ison = route.path === this.$route.path
       const ison = route.fullPath === this.$route.fullPath
       if (ison) {
         this.selectedTag = route

@@ -230,9 +230,10 @@ export default {
       this.$router.push({
         path: '../accountsLoad',
         query: {
+          tab: '送货费结算',
           currentPage: 'batchDeliver', // 本页面标识符
-          searchQuery: this.searchQuery, // 搜索项
-          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
       })
     },

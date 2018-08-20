@@ -345,7 +345,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -363,20 +363,24 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
-        // this.$router.push({ path: './accountsPayable/batch' })
-        this.isFresh = true
-      } else {
-        this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
         this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-        this.isFresh = false
-      }
+      // if (!this.$route.query.searchQuery.vo) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
+      //   // this.$router.push({ path: './accountsPayable/batch' })
+      //   this.isFresh = true
+      // } else {
+      //   this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      //   this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      //   this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      //   this.isFresh = false
+      // }
     },
     getList() {
-      let selectListBatchNos = objectMerge2([], this.$route.query.selectListBatchNos)
+      let selectListBatchNos = objectMerge2([], JSON.parse(this.$route.query.selectListBatchNos))
       if (this.$route.query.selectListBatchNos) {
         this.isModify = true
       } else {

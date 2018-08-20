@@ -379,7 +379,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -397,19 +397,22 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
-        this.isFresh = true
-      } else {
-        // this.$set(this.searchQuery.vo, 'feeType', this.feeType)
-        this.searchQuery = Object.assign({} ,this.getRouteInfo)
-        console.log('this.searchQuery', this.searchQuery)
+       this.searchQuery = Object.assign({} ,this.getRouteInfo)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-        this.isFresh = false
-      }
+      // if (!this.$route.query.searchQuery.vo) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
+      //   this.isFresh = true
+      // } else {
+      //   // this.$set(this.searchQuery.vo, 'feeType', this.feeType)
+      //   this.searchQuery = Object.assign({} ,this.getRouteInfo)
+      //   console.log('this.searchQuery', this.searchQuery)
+      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      //   this.isFresh = false
+      // }
     },
     getList() {
-      let selectListShipSns = Object.assign([], this.$route.query.selectListShipSns)
+      let sns = this.$route.query.selectListShipSns
+      let selectListShipSns = Object.assign([], sns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -421,7 +424,7 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      if (!this.isFresh) {
+      // if (!this.isFresh) {
         postFindChangeList(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListShipSns.forEach(e => {
@@ -446,7 +449,7 @@ export default {
           this.orgLeftTable = Object.assign([], this.leftTable)
         })
 
-      }
+      // }
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)

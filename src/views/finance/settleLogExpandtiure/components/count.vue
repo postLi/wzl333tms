@@ -162,7 +162,6 @@ export default {
           }
           
           this.formModel.autoTotalAmount = Number(this.formModel.autoTotalAmount)
-          console.log(this.formModel)
           let info = Object.assign({}, this.formModel)
           getOrderShipList(info).then(data => {
               this.$emit('success', { info: data, count: info.autoTotalAmount, type: this.settlementId })

@@ -323,7 +323,6 @@ export default {
       this.$set(this.searchQuery.vo, 'sign', this.sign)
       // this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
       // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
-      console.log(this.searchQuery)
       return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
@@ -347,9 +346,10 @@ export default {
      this.$router.push({
         path: '../accountsLoad',
         query: {
+          tab: '发车汇总结算',
           currentPage: 'batchTruckAll', // 本页面标识符
-          searchQuery: this.searchQuery, // 搜索项
-          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
       })
     },

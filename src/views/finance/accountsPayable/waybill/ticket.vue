@@ -316,9 +316,10 @@ export default {
       this.$router.push({
         path: '../accountsLoad',
         query: {
+         tab: '实际提货费结算',
          currentPage: 'waybillTicket', // 本页面标识符
-         searchQuery: this.searchQuery, // 搜索项
-         selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
+         searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+         selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
        }
       })
     },

@@ -238,7 +238,6 @@ export default {
       if (!this.searchQuery.vo.orgId) {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
       }
-      console.log('sumit', this.searchQuery.vo)
       this.fetchAllData()
     },
     getSelection(selection) {

@@ -377,7 +377,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -395,16 +395,19 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
-        this.isFresh = true
-      } else {
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT') // 未结算，部分结算
-        this.isFresh = false
-      }
+
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      // if (!this.$route.query.searchQuery.vo) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
+      //   this.isFresh = true
+      // } else {
+      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT') // 未结算，部分结算
+      //   this.isFresh = false
+      // }
     },
     getList() {
-      let selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
+      let sns = JSON.parse(this.$route.query.selectListShipSns)
+      let selectListShipSns = objectMerge2([], sns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -417,7 +420,7 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       console.log('this.searchQuery', this.searchQuery)
-      if (!this.isFresh) {
+      // if (!this.isFresh) {
         postFindAbnormalList(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListShipSns.forEach(e => {
@@ -441,7 +444,7 @@ export default {
           })
           this.orgLeftTable = objectMerge2([], this.leftTable)
         })
-      }
+      // }
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)

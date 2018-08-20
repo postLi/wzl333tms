@@ -378,7 +378,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -396,18 +396,13 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
-        this.isFresh = true
-      } else {
-        // this.$set(this.searchQuery.vo, 'feeType', this.feeType)
-        this.searchQuery = Object.assign({} ,this.getRouteInfo)
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-        this.isFresh = false
-      }
+      this.searchQuery = Object.assign({}, this.getRouteInfo)
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     getList() {
-      let selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
+      let sns = JSON.parse(this.$route.query.selectListShipSns)
+      let selectListShipSns = objectMerge2([], sns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -419,32 +414,29 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      if (!this.isFresh) {
-        postFindTransferList(this.searchQuery).then(data => {
-          this.leftTable = Object.assign([], data.list)
-          selectListShipSns.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.shipSn) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            let item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+      postFindTransferList(this.searchQuery).then(data => {
+        this.leftTable = Object.assign([], data.list)
+        selectListShipSns.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.shipSn) {
+              this.rightTable.push(item)
             }
-            e.inputTotalCost = e.unpaidFee
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
         })
-
-      }
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          let item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+          e.inputTotalCost = e.unpaidFee
+        })
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+      })
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
@@ -543,7 +535,7 @@ export default {
       }
 
     },
-    selectCurrent (obj, index) {
+    selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
@@ -584,7 +576,7 @@ export default {
             shipSn: e.shipSn,
             dataName: '中转费'
           }
-           if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
             this.tableReceiptInfo.push(item)
           }
           item = {}
@@ -597,11 +589,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['_index|2|单','fee', 'unpaidFee', 'closeFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['_index|2|单','fee', 'unpaidFee', 'closeFee', 'inputTotalCost','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'inputTotalCost', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     }
   }

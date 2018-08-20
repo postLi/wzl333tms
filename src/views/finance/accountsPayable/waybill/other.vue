@@ -1,5 +1,5 @@
 <template>
-  <!-- 回扣 -->
+  <!-- 其他费用支出 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -291,9 +291,10 @@ export default {
       this.$router.push({
        path: '../accountsLoad',
        query: {
+          tab: '其他费用支出结算',
           currentPage: 'waybillOther', // 本页面标识符
-          searchQuery: this.searchQuery, // 搜索项
-          selectListShipSns: this.selectListShipSns // 列表选择项的批次号batchNo
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
         }
      })
     },
