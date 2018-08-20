@@ -869,11 +869,13 @@
     },
     methods: {
       export1() {
-        alert('111')
+        this.sendData()
+        console.log(JSON.stringify(this.form))
         SaveAsFile({
-          data: this.messageInfo,
+          data: objectMerge2({},this.form),
           name: '新建对账'
         })
+
         // createReconciliation({
         //   data: this.messageInfo
         //   //  columns: this.tableColumn
@@ -1024,6 +1026,22 @@
             return false
           }
         })
+      },
+      sendData() {
+        this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+        for (const i in this.messageInfo) {
+          this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
+        }
+        this.form.tmsFinanceBillCheckDto.checkStartTime = this.searchCreatTime[0]
+        this.form.tmsFinanceBillCheckDto.checkEndTime = this.searchCreatTime[1]
+        for (const i in this.messageButtonInfo) {
+          this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
+        }
+        this.form.carrierDetailDtoList = []
+        this.dealInfo.map(el => this.form.carrierDetailDtoList.push(el))
+        this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
+        this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
+        this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
       },
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {
