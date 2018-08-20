@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="html5index">
     <el-main class="main_content ">
       <el-header class="head_title">
         <!-- <h4>数据总览</h4> -->
@@ -163,6 +163,20 @@ export default {
      var myChart = echarts.init(document.getElementById('main_lefttop'))
      var myChart2 = echarts.init(document.getElementById('main_leftdown'))
      var myChart3 = echarts.init(document.getElementById('main'))
+     window.onresize = () => {
+       myChart.resize({
+         width: 'auto',
+         height: 'auto'
+       })
+       myChart2.resize({
+         width: 'auto',
+         height: 'auto'
+       })
+       myChart3.resize({
+         width: 'auto',
+         height: 'auto'
+       })
+     }
      const option = {
        title: {
          text: '',
@@ -359,6 +373,9 @@ export default {
  }
 </script>
 <style lang="scss">
+.html5index{
+  min-width: 1100px;
+}
 .main_content{
 //  .clearfix:after{
 //     display: block;
