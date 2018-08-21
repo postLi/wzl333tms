@@ -161,11 +161,17 @@
             </el-form-item>
 
             <div class="ad-add-dot" v-if="!isModify">
-              <el-checkbox :true-label="0" :false-label="1" v-model="form.accountStatus">开通管理员账号</el-checkbox>
+              <el-checkbox checked  v-model="form.accountStatus">开通管理员账号</el-checkbox>
               <p> 密码：123456</p>
             </div>
-            <el-form-item v-if="form.accountStatus === 0 && !isModify" :label-width="formLabelWidth" prop="">
-              <el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>
+            <el-form-item v-if="form.accountStatus  && !isModify" :label-width="formLabelWidth" prop="accountName">
+
+              <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
+                <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
+                <el-input v-model.trim="form.accountName" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input>
+              </el-tooltip>
+
+              <!--<el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>-->
             </el-form-item>
 
             <div class="rem-add-dot">
@@ -226,6 +232,9 @@
       },
       companyId: {
         type: Number
+      },
+      getCheckedKeyId :{
+        type:Number
       }
     },
     computed: {
@@ -252,10 +261,12 @@
         }
         this.watchDate(this.doInfo)
       },
+      getCheckedKeyId(val){
+
+      },
       doInfo: {
         handler() {
           this.checkShowMessage = false
-
           this.watchDate(this.doInfo)
         },
         immediate: true,
@@ -274,6 +285,7 @@
         callback()
       }
       return {
+        tooltip: false,
         formKey: 'lll',
         popTitle: '新增网点',
         // 多选框
@@ -306,7 +318,7 @@
           manageType: 3,
           remarks: '',
           // 默认值
-          accountStatus: 1,
+          accountStatus: true,
           // id: '',
           parentId: 0,
           createTime: '',
@@ -343,7 +355,11 @@
           city: [
             // 请选择城市
             { required: true, validator: this.validateIsEmpty('请选择城市') }
-          ]
+          ],
+          accountName: [
+            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
+            { max: 15, message: '不能超过15个字符', trigger: 'blur' }
+          ],
         },
         dialogVisible: false,
         formLabelWidth: '120px'
@@ -384,7 +400,8 @@
           this.form.orgType = 1
           this.form.status = 32
           this.form.manageType = 3
-          this.form.parentId = this.companyId
+          // this.form.parentId = this.companyId
+          this.form.parentId = this.getCheckedKeyId || this.companyId
         }
       },
       validateIsEmpty(msg = '不能为空！') {
