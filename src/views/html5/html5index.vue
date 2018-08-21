@@ -12,15 +12,26 @@
           <li>
             <!-- 2018-09-12至2018-12-14 -->
             <el-date-picker
-              v-model="value7"
+              v-model="pickerOptions3"
               type="daterange"
               align="right"
               unlink-panels
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              :picker-options="pickerOptions2">
+              :picker-options="pickerOptions3">
             </el-date-picker>
+            <!-- <el-date-picker
+              v-model="pickerOptions3"
+              :default-value="defaultTime"
+              type="daterange"
+              align="right"
+              value-format="yyyy-MM-dd"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions3"
+              end-placeholder="结束日期">
+            </el-date-picker> -->
+            
           </li>
         </ul>
       </el-header>
@@ -127,26 +138,104 @@
 export default {
    data() {
      return {
- 
-       pickerOptions2: {
+       pickTime: [],
+       pickerOptions3: {
          shortcuts: [{
-           text: '最近一周',
+           text: '今天',
            onClick(picker) {
-             const end = new Date()
-             const start = new Date()
-             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+             // 昨天
+             const day1 = new Date()
+             day1.setTime(day1.getTime() - 24 * 60 * 60 * 1000)
+             const start = day1.getFullYear() + '-' + (day1.getMonth() + 1) + '-' + day1.getDate()
+             // 今天
+             const day2 = new Date()
+             day2.setTime(day2.getTime())
+             const end = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
              picker.$emit('pick', [start, end])
            }
          }, {
-           text: '最近一个月',
+           text: '昨天',
+           onClick(picker) {
+            // 昨天
+             const day1 = new Date()
+             day1.setTime(day1.getTime() - 24 * 60 * 60 * 1000)
+             const end = day1.getFullYear() + '-' + (day1.getMonth() + 1) + '-' + day1.getDate()
+             // 前天
+             const day2 = new Date()
+             day2.setTime(day2.getTime() - 24 * 60 * 60 * 1000 - 24 * 60 * 60 * 1000)
+             const start = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
+             picker.$emit('pick', [start, end])
+             console.log('开始' + start, '结束' + end)
+           }
+         }, {
+           text: '本周',
+           onClick(picker) {
+             // 今天
+             const day2 = new Date()
+             day2.setTime(day2.getTime())
+             const end = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
+             // 条件判断今天到上周日的时间
+             var str = ''
+             const week = new Date().getDay()
+             if (week == 0) {
+               str = '今天是星期日'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 0)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+             } else if (week == 1) {
+               str = '今天是星期一'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 1)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+             } else if (week == 2) {
+               str = '今天是星期二'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 2)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+              //  console.log((new Date(end)).getTime() + '时间戳格式')
+               console.log(date.getDate() + '星期二所以减2')
+              //  console.log(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + '转换时间之后')
+               console.log(ThisWeeks)
+             } else if (week == 3) {
+               str = '今天是星期三'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 3)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+             } else if (week == 4) {
+               str = '今天是星期四'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 4)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+             } else if (week == 5) {
+               str = '今天是星期五'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 5)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+             } else if (week == 6) {
+               str = '今天是星期六'
+               const NewTues = (new Date(end)).getTime() - (86400000 * 6)
+               const date = new Date(NewTues)
+               // 本周时间
+               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+             }
+            //  picker.$emit('pick',{})
+           }
+         }, {
+           text: '本月',
            onClick(picker) {
              const end = new Date()
              const start = new Date()
-             start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
              picker.$emit('pick', [start, end])
            }
          }, {
-           text: '最近三个月',
+           text: '本年',
            onClick(picker) {
              const end = new Date()
              const start = new Date()
@@ -159,7 +248,11 @@ export default {
        value7: ''
      }
    },
+   methods: {
+
+   },
    mounted() {
+   //  this.searchForm = this.
      var myChart = echarts.init(document.getElementById('main_lefttop'))
      var myChart2 = echarts.init(document.getElementById('main_leftdown'))
      var myChart3 = echarts.init(document.getElementById('main'))

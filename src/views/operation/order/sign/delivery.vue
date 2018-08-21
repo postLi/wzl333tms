@@ -869,17 +869,17 @@ export default {
         fixed: false
       }, {
         label: '件数单价',
-        prop: 'amountFee',
+        prop: 'amountFees',
         width: '120',
         fixed: false
       }, {
         label: '重量单价',
-        prop: 'weightFee',
+        prop: 'weightFees',
         width: '120',
         fixed: false
       }, {
         label: '体积单价',
-        prop: 'volumeFee',
+        prop: 'volumeFees',
         width: '120',
         fixed: false
       }, {

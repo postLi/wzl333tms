@@ -29,7 +29,6 @@
           </el-form-item>
           <el-form-item label="凭证状态"  prop="signCertificate">
             <selectType v-model="searchForm.signCertificate" type="sign_certificate" >
-  
             </selectType>
           </el-form-item>
           <el-form-item label="运单号" prop="shipSn">
