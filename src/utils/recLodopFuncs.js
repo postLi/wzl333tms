@@ -642,7 +642,6 @@ function createReconciliation(params) {
     `
   }
   //dealInfo
-
   //dealPayInfo
   tbodyStr = tbodyStr + `
     <tr>
