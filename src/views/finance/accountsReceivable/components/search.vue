@@ -149,20 +149,4 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.tab-wrapper .tab-content .feeReceivableSearch{
-  display: flex;
-  .staff_searchinfo--btn{
-    width: 126px;
-    
-  }
-  .staff_searchinfo--input{
-    flex: 1;
-    .el-form-item{
-      margin-bottom: 10px;
-      margin-right: 0;
-    }
-  }
-}
-</style>
 

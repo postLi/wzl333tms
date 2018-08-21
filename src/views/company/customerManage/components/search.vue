@@ -1,29 +1,30 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
-      <el-form-item label="网点">
-          <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
-      </el-form-item>
-      <el-form-item :label="title+'货人'">
-          <el-input
-              :placeholder="title+'货方或/'+title+'货人'"
-              v-model="searchForm.name"
-              maxlength="15"
-              clearable>
-          </el-input>
-      </el-form-item>
-      <el-form-item label="手机号码">
-          <el-input
-              v-numberOnly
-              placeholder="请输入手机号码"
-              maxlength="11"
-              v-model="searchForm.mobile"
-              clearable>
-          </el-input>
-      </el-form-item>
+  <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="网点">
+            <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+        </el-form-item>
+        <el-form-item :label="title+'货人'">
+            <el-input
+                :placeholder="title+'货方或/'+title+'货人'"
+                v-model="searchForm.name"
+                maxlength="15"
+                clearable>
+            </el-input>
+        </el-form-item>
+        <el-form-item label="手机号码">
+            <el-input
+                v-numberOnly
+                placeholder="请输入手机号码"
+                maxlength="11"
+                v-model="searchForm.mobile"
+                clearable>
+            </el-input>
+        </el-form-item>
+      </div>
       
       <el-form-item class="staff_searchinfo--btn">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="info" @click="clearForm" plain>清空</el-button>
+          <el-button type="primary" @click="onSubmit">查询</el-button><el-button type="info" @click="clearForm" plain>清空</el-button>
       </el-form-item>
   </el-form>
 </template>

@@ -8,8 +8,8 @@
       <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
       <sidebar-item ref="sidebaritem" :routes='sidebarRouters'></sidebar-item>
       <div class="nologin">
-        <a href="http://192.168.1.157:9528/?nologin=1">
-        <el-button size="large" type="primary">TMS系统</el-button></a><br>
+        <!-- <a href="http://192.168.1.157:9528/?nologin=1">
+        <el-button size="large" type="primary">TMS系统</el-button></a><br> -->
         <a href="http://192.168.1.24:9526/?nologin=1"><el-button size="large" type="success">运力中心</el-button></a><br>
         <a href="http://192.168.1.170/member/content_list.php?channelid=1"><el-button size="large" type="warning">官网系统</el-button></a>
       </div>
@@ -120,12 +120,12 @@ export default {
   bottom: 0;
   left: 0;
   text-align: center;
-  .el-button{
+  .el-button2{
     margin-bottom: 10px;
     width: 150px;
   }
-  .el-button2{
-    width: 190px;
+  .el-button{
+    width: 100%;
     height: 50px;
     background-color: rgb(0,32,56);
     border: 4px solid #000;
@@ -137,6 +137,10 @@ export default {
     border-radius: 0;
     font-size: 16px;
     color: rgba(255,255,255,.65);
+
+    &:hover{
+      opacity: 1;
+    }
   }
 }
 </style>
