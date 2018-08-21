@@ -1294,7 +1294,7 @@
           border-top-color: transparent;
           border-right-color: transparent;
           border-bottom-color: transparent;
-          width: 187px;
+          width: 185px;
           border-radius: 0;
         }
         .el-input__inner:focus {
@@ -1403,7 +1403,7 @@
             margin-right: -5px;
             margin-bottom: 0;
             .el-input__inner {
-              width: 193px;
+              width: 190px;
               border-radius: 0;
               border-top-color: transparent;
               border-right-color: transparent;
