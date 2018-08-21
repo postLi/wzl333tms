@@ -7,7 +7,7 @@
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true"  @row-dblclick="dclickAddItem">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -17,53 +17,53 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" fixed width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="150">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
-        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="100">
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="90">
         </el-table-column>
-        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="100">
+        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="90">
         </el-table-column>
-        <el-table-column prop="onPay" sortable label="现付" width="100">
+        <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结现付" width="100">
+        <el-table-column prop="" sortable label="未结现付" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结现付" width="100">
+        <el-table-column prop="" sortable label="已结现付" width="90">
         </el-table-column>
-        <el-table-column prop="arrivalPay" sortable label="到付" width="100">
+        <el-table-column prop="arrivalPay" sortable label="到付" width="90">
         </el-table-column>
-         <el-table-column prop="" sortable label="未结到付" width="100">
+         <el-table-column prop="" sortable label="未结到付" width="90">
         </el-table-column>
-         <el-table-column prop="" sortable label="已结到付" width="100">
+         <el-table-column prop="" sortable label="已结到付" width="90">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="回单付" width="100">
+        <el-table-column prop="backPay" sortable label="回单付" width="90">
         </el-table-column>
         <el-table-column prop="" sortable label="未结回单付" width="100">
         </el-table-column>
         <el-table-column prop="" sortable label="已结回单付" width="100">
         </el-table-column>
-        <el-table-column prop="unusualPay" sortable label="异动费用" width="100">
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结异动费用" width="100">
+        <el-table-column prop="" sortable label="未结异动费用" width="110">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结异动费用" width="100">
+        <el-table-column prop="" sortable label="已结异动费用" width="110">
         </el-table-column>
-        <el-table-column prop="monthPay" sortable label="月结" width="100">
+        <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结月结" width="100">
+        <el-table-column prop="" sortable label="未结月结" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结月结" width="100">
+        <el-table-column prop="" sortable label="已结月结" width="90">
         </el-table-column>
-        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="100">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
         </el-table-column>
-        <el-table-column prop="shipToCityName" sortable label="到达城市" width="100">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="130">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="100">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="件数" width="100">
+        <el-table-column prop="cargoAmount" sortable label="件数" width="80">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="重量" width="100">
+        <el-table-column prop="cargoWeight" sortable label="重量" width="80">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="体积" width="100">
+        <el-table-column prop="cargoVolume" sortable label="体积" width="80">
         </el-table-column>
         <el-table-column prop="shipSenderUnit" sortable label="发货方" width="120">
         </el-table-column>
@@ -76,7 +76,7 @@
     <!-- 右边表格区 -->
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+      <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
@@ -86,53 +86,53 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" fixed width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="150">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
-        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="130">
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="90">
         </el-table-column>
-        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="100">
+        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="90">
         </el-table-column>
-         <el-table-column prop="onPay" sortable label="现付" width="100">
+         <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结现付" width="100">
+        <el-table-column prop="" sortable label="未结现付" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结现付" width="100">
+        <el-table-column prop="" sortable label="已结现付" width="90">
         </el-table-column>
-        <el-table-column prop="arrivalPay" sortable label="到付" width="100">
+        <el-table-column prop="arrivalPay" sortable label="到付" width="90">
         </el-table-column>
-         <el-table-column prop="" sortable label="未结到付" width="100">
+         <el-table-column prop="" sortable label="未结到付" width="90">
         </el-table-column>
-         <el-table-column prop="" sortable label="已结到付" width="100">
+         <el-table-column prop="" sortable label="已结到付" width="90">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="回单付" width="100">
+        <el-table-column prop="backPay" sortable label="回单付" width="90">
         </el-table-column>
         <el-table-column prop="" sortable label="未结回单付" width="100">
         </el-table-column>
         <el-table-column prop="" sortable label="已结回单付" width="100">
         </el-table-column>
-        <el-table-column prop="unusualPay" sortable label="异动费用" width="100">
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结异动费用" width="100">
+        <el-table-column prop="" sortable label="未结异动费用" width="110">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结异动费用" width="100">
+        <el-table-column prop="" sortable label="已结异动费用" width="110">
         </el-table-column>
-        <el-table-column prop="monthPay" sortable label="月结" width="100">
+        <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结月结" width="100">
+        <el-table-column prop="" sortable label="未结月结" width="90">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结月结" width="100">
+        <el-table-column prop="" sortable label="已结月结" width="90">
         </el-table-column>
-        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="100">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
         </el-table-column>
-        <el-table-column prop="shipToCityName" sortable label="到达城市" width="100">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="130">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="100">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="件数" width="100">
+        <el-table-column prop="cargoAmount" sortable label="件数" width="90">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="重量" width="100">
+        <el-table-column prop="cargoWeight" sortable label="重量" width="90">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="体积" width="100">
+        <el-table-column prop="cargoVolume" sortable label="体积" width="90">
         </el-table-column>
         <el-table-column prop="shipSenderUnit" sortable label="发货方" width="120">
         </el-table-column>
@@ -346,6 +346,16 @@ export default {
           break
       }
     },
+    dclickAddItem (row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
+    },
+    dclickMinusItem (row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
+    },
     uniqueArray(array, key, fee) {
       let result = [array[0]]
       for (let i = 1; i < array.length; i++) {
@@ -432,11 +442,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      let propsArr = ['shipFeeTotalActual','shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      let propsArr = ['shipFeeTotalActual','shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     }
   }
@@ -468,7 +478,7 @@ export default {
     position: absolute;
     z-index: 33;
     top: 10px;
-    left: 67px;
+    left: 66px;
     background-size: 18px;
     background-repeat: no-repeat;
   }

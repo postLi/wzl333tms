@@ -136,7 +136,7 @@ export default {
         this.loading = false
         this.formModel.amount = data.amount
         this.formModel.settlementSn = data.settlementSn
-        this.formModel.agent = data.settlementBy
+        this.formModel.agent = data.szDtoList[0].agent
         this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
         this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
         this.formModel.financialWay = data.szDtoList[0].financialWay

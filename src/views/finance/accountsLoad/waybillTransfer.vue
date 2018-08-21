@@ -401,8 +401,7 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     getList() {
-      let sns = JSON.parse(this.$route.query.selectListShipSns)
-      let selectListShipSns = objectMerge2([], sns)
+      let selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {

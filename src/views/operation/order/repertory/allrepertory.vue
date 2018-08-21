@@ -516,13 +516,13 @@ export default {
       this.fetchAllOrderRepertory()
     },
     doAction(type) {
-      if (type === 'colorpicker') {
-        this.closeColorpicker()
-        this.$message({
-          message: '请选择一条数据~',
-          type: 'warning'
-        })
-      }
+      // if (type === 'colorpicker') {
+      //   this.closeColorpicker()
+      //   this.$message({
+      //     message: '请选择一条数据~',
+      //     type: 'warning'
+      //   })
+      // }
       switch (type) {
         case 'colorpicker':
           this.reportorSelect = this.selected

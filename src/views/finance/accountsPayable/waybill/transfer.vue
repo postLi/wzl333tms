@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       btnsize: 'mini',
+      selectListShipSns: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,

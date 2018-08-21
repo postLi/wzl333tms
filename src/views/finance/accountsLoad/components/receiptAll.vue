@@ -167,7 +167,7 @@ export default {
       set() {}
     },
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     settlementTypeId() {
       let currentPage = this.$route.query.currentPage

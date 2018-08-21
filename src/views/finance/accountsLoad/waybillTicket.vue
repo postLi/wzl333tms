@@ -410,8 +410,8 @@ export default {
       // }
     },
     getList() {
-      let sns = JSON.parse(this.$route.query.selectListShipSns)
-      let selectListShipSns = objectMerge2([], sns)
+      console.log(this.$route.query.selectListShipSns)
+      let selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {

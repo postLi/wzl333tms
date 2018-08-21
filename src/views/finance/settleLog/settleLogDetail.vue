@@ -14,7 +14,7 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataListTop" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -81,13 +81,13 @@ export default {
       columnOrder: [{
           label: '结算网点',
           prop: 'orgName',
-          width: "120",
+          width: "100",
           fixed: false
         },
         {
           label: '结算单号',
           prop: 'settlementSn',
-          width: '150',
+          width: '140',
           fixed: true
         },
         {
@@ -99,25 +99,25 @@ export default {
         {
           label: '结算类型',
           prop: 'settlementIdZh',
-          width: '150',
+          width: '90',
           fixed: true
         },
         {
           label: '结算人',
           prop: 'settlementBy',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '金额',
           prop: 'amount',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '结算时间',
           prop: 'settlementTime',
-          width: '180',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
@@ -132,73 +132,73 @@ export default {
         {
           label: '现付',
           prop: 'onPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '到付',
           prop: 'arrivalPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '回单付',
           prop: 'backPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '月结',
           prop: 'monthPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '中转费合计',
           prop: 'transferPay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '异动费用',
           prop: 'unusualPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '异常费用',
           prop: 'exceptionPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '实际提货费',
           prop: 'pickPuPay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '回扣',
           prop: 'kickBackPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '其他费用支出',
           prop: 'othePay',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
           label: '收支方式',
           prop: 'financialWay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '银行名称',
           prop: 'bankName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
@@ -210,7 +210,7 @@ export default {
         {
           label: '开户人',
           prop: 'bankAccountName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -228,20 +228,20 @@ export default {
         {
           label: '微信号',
           prop: 'wechatAccount',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '支付宝号',
           prop: 'alipayAccount',
-          width: '150',
+          width: '120',
           fixed: false
         }
       ],
       columnBatch: [{
           label: '结算网点',
           prop: 'orgName',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
@@ -271,25 +271,25 @@ export default {
         {
           label: '结算类型',
           prop: 'settlementIdZh',
-          width: '150',
+          width: '110',
           fixed: true
         },
         {
           label: '结算人',
           prop: 'settlementBy',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '金额',
           prop: 'amount',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '结算时间',
           prop: 'settlementTime',
-          width: '150',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -298,7 +298,7 @@ export default {
         {
           label: '收支类型',
           prop: 'paymentsType',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
@@ -310,86 +310,86 @@ export default {
         {
           label: '短驳费',
           prop: 'shortPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
 
         {
           label: '送货费',
           prop: 'sendPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '现付运费',
           prop: 'onSendPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '现付油卡',
           prop: 'onCardPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '到付运费',
           prop: 'arrSendPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '到付油卡',
           prop: 'arrCardPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '回付运费',
           prop: 'backSendPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '回付油卡',
           prop: 'backCardPay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '发站装卸费',
           prop: 'startLoadPay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '发站其他费',
           prop: 'startOtherPay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '到站装卸费',
           prop: 'endLoadPay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '到站其他费',
           prop: 'endOtherPay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '收支方式',
           prop: 'financialWay',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '银行名称',
           prop: 'bankName',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
@@ -401,7 +401,7 @@ export default {
         {
           label: '开户人',
           prop: 'bankAccountName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -419,13 +419,13 @@ export default {
         {
           label: '微信号',
           prop: 'wechatAccount',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '支付宝号',
           prop: 'alipayAccount',
-          width: '150',
+          width: '120',
           fixed: false
         }
       ]

@@ -18,7 +18,7 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" @row-dblclick="selectedItem" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -103,31 +103,31 @@ export default {
         {
           label: '结算单号',
           prop: 'settlementSn',
-          width: '150',
+          width: '140',
           fixed: true
         },
         {
           label: '结算类型',
           prop: 'settlementIdZh',
-          width: '150',
+          width: '110',
           fixed: true
         },
         {
           label: '结算人',
           prop: 'settlementBy',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '金额',
           prop: 'amount',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '结算时间',
           prop: 'settlementTime',
-          width: '180',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
@@ -136,13 +136,13 @@ export default {
         {
           label: '收支方式',
           prop: 'financialWay',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '银行名称',
           prop: 'bankName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
@@ -154,7 +154,7 @@ export default {
         {
           label: '开户人',
           prop: 'bankAccountName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -172,13 +172,13 @@ export default {
         {
           label: '微信号',
           prop: 'wechatAccount',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '支付宝号',
           prop: 'alipayAccount',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {

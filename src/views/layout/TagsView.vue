@@ -84,7 +84,7 @@ export default {
     // 关闭当前路由
     const _this = this
     this.eventBus.$on('closeCurrentView', (route) => {
-      console.log('closeCurrent:', _this.selectedTag)
+      // console.log('closeCurrent:', _this.selectedTag)
       _this.closeSelectedTag(_this.selectedTag)
     })
   },
@@ -134,7 +134,7 @@ export default {
 
       this.$nextTick(() => {
         for (const tag of tags) {
-          console.log('tag.fullPath === this.$route.fullPath', tag, tag.to, this.$route.path)
+          // console.log('tag.fullPath === this.$route.fullPath', tag, tag.to, this.$route.path)
           if (tag.to === this.$route.path) {
             this.moveToTarget(tag.$el)
             break
@@ -197,7 +197,7 @@ export default {
       }
     },
     moveToTarget($target) {
-      console.log('this.$refs.tagIndex.$el:', $target)
+      // console.log('this.$refs.tagIndex.$el:', $target)
       const $container = this.$refs.scrollContainer
       const $containerWidth = $container.offsetWidth
       const $targetLeft = $target.offsetLeft
