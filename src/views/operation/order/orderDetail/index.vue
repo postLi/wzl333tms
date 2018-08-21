@@ -65,6 +65,9 @@ export default {
       }
     }
   },
+  activated() {
+    this.init()
+  },
   mounted() {
     this.init()
   },
@@ -125,8 +128,8 @@ export default {
         cancelButtonText: '关闭',
         type: 'warning'
       }).then(() => {
-          this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
-        }).catch(() => {
+        this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+      }).catch(() => {
           if (this.output.iswindow) {
             this.eventBus.$emit('closeCurrentView')
           } else {

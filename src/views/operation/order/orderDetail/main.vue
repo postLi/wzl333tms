@@ -809,11 +809,11 @@ export default {
     // 为了方便缓存数据，重新包装各个接口
     // 获取货物设置
     getCargoSetting() {
-      if (this.dataCache['cargoSeting']) {
-        return Promise.resolve(this.dataCache['cargoSeting'])
-      } else {
-        return orderManage.getCargoSetting(this.otherinfo.orgid)
-      }
+      // if (this.dataCache['cargoSeting']) {
+      //   return Promise.resolve(this.dataCache['cargoSeting'])
+      // } else {
+      return orderManage.getCargoSetting(this.otherinfo.orgid)
+      // }
     },
     // 获取基本设置信息
     getBaseSetting() {
