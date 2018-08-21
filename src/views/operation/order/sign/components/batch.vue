@@ -28,6 +28,9 @@
         <el-form-item label="签收类型:" prop="signTypeId" >
           <SelectType v-model="form.signTypeId" type="sign_type"/>
         </el-form-item>
+        <el-form-item label="签收人:" prop="signName">
+          <el-input :maxlength="10" v-model.trim="form.signName" ></el-input>
+        </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type"/>
         </el-form-item>
@@ -130,7 +133,6 @@ export default {
         'signTypeId': 99,
         'remark': '',
         'signPic': '',
-
         'loadIds': [],
         'shipIds': [],
         'childShipIds': [],

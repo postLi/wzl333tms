@@ -610,30 +610,4 @@ export default {
     }
   }
 }
-@media (min-width: 1024px){
-.main_content{font-size: 18px}
-} /*>=1024的设备*/
-
-@media (min-width: 1100px) {
-.main_content{font-size: 20px}
-} /*>=1100的设备*/
-@media (min-width: 1280px) {
-body{font-size: 22px;}
-} /*>=1280的设备*/
-
-@media (min-width: 1366px) {
-
-body{font-size: 24px;}
-}  
-
-@media (min-width: 1440px) {
-body{font-size: 25px !important;}
-} 
-
-@media (min-width: 1680px) {
-body{font-size: 28px;}
-} 
-@media (min-width: 1920px) {
-body{font-size: 33px;}
-} 
 </style>

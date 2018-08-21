@@ -4,10 +4,12 @@
         <div class="block">
           <el-date-picker
             v-model="searchCreatTime"
-            type="datetimerange"
-            value-format="yyyy-MM-dd hh:mm:ss"
+            :default-value="defaultTime"
+            type="daterange"
             align="right"
+            value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
+            :picker-options="pickerOptions2"
             end-placeholder="结束日期">
           </el-date-picker>
         </div>
@@ -84,7 +86,9 @@ export default {
     // }
 
     return {
-      searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      // searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      searchCreatTime: [],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       thestatus: '',
       searchForm: {
         shipFromOrgid: '',

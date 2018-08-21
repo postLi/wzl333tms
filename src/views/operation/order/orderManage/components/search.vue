@@ -95,8 +95,8 @@ export default {
     orgid(newVal) {
       this.searchForm.orgid = newVal
     },
-    $route(newVal){
-      if(this.$route.path.indexOf('operation/order/orderManage') !== -1){
+    $route(newVal) {
+      if (this.$route.path.indexOf('operation/order/orderManage') !== -1) {
         this.setSearch()
         this.onSubmit()
       }
@@ -109,7 +109,7 @@ export default {
     this.onSubmit()
   },
   methods: {
-    setSearch(){
+    setSearch() {
       const key = this.$route.query.key
       const value = this.$route.query.value
       if (key && value) {
