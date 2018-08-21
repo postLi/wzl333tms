@@ -13,17 +13,9 @@
           @node-click="getCheckedKeys"
 
         >
-          <!--<div v-if="checkedInput">-->
-            <span class="custom-tree-node" slot-scope="{ node, data }"  v-if="checkedInput === false">
+            <span class="custom-tree-node" slot-scope="{ node, data }" >
              <span v-bind:class="[data.status === 31 ? 'treeClass' : 'treeAct'] ">{{ node.label }}</span>
         </span>
-          <!--</div>-->
-
-         <!--<div v-else>-->
-           <!--<span class="custom-tree-node" slot-scope="{ node, data }"  >-->
-             <!--<span v-bind:class="[data.status === 31 ? 'treeClass' : 'treeAct'] ">{{ node.label }}</span>-->
-            <!--</span>-->
-         <!--</div>-->
 
 
 
@@ -260,7 +252,7 @@
     </div>
     <div class="info_news_footer">
       <div class="checked_footer">
-        <el-checkbox checked>过滤失效网点</el-checkbox>
+        <el-checkbox :checked="checkedInput">过滤失效网点</el-checkbox>
         <!--<p> 密码：123456</p>-->
       </div>
       <div class="total_footer">共计:{{ total }}</div>
@@ -302,7 +294,7 @@
         // treeAct: {
         //   background: '#c0c4cc'
         // },
-        checkedInput:false,
+        checkedInput:false,//过滤失效网点
         getCheckedKeyId:'',
         btnsize: 'mini',
         // 加载状态
@@ -388,8 +380,10 @@
         this.loading = true
         postAllOrgInfo(this.otherinfo.orgid).then(data => {
           this.dataTree = data
+
           this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
           this.loading = false
+          console.log(data)
         })
       },
       // 处理返回的节点数据

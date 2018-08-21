@@ -8,7 +8,7 @@
             <el-form-item label="公司名称" :label-width="formLabelWidth" prop="orgName" >
               <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 " :maxlength="15" ></el-input>
             </el-form-item>
-            <el-form-item label="总公司" :label-width="formLabelWidth" >
+            <el-form-item label="网点类型" :label-width="formLabelWidth" >
               <el-select v-model="form.orgType" :disabled="companyId === form.id || form.status===31">
                 <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"  ></el-option>
               </el-select>
@@ -234,7 +234,7 @@
         type: Number
       },
       getCheckedKeyId :{
-        type:Number
+        type:[Number,String]
       }
     },
     computed: {

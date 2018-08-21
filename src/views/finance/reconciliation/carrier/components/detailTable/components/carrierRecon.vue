@@ -870,7 +870,7 @@
     methods: {
       export1() {
         this.sendData()
-        console.log(JSON.stringify(this.form))
+        // console.log(JSON.stringify(this.form))
         SaveAsFile({
           data: objectMerge2({},this.form),
           name: '新建对账'

@@ -51,7 +51,7 @@ side_left .el-tree-node__content:hover{
 .side_left .el-tree-node__content .treeClass{
   /* background: rgb(195,232,255); */
   color: #999 !important;
-  /*display: none;*/
+  /*display: none !important;*/
 }
 /* 无效时显示的颜色 */
 .side_left .el-tree-node__content:hover {
