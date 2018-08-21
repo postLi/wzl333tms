@@ -127,13 +127,12 @@ export default {
   .el-button{
     width: 100%;
     height: 50px;
-    background-color: rgb(0,32,56);
+    background-color: #002038;
     border: 4px solid #000;
     border-top-color: rgb(5,55,93);
     border-right-color: rgb(5,55,93);
     border-left-color: rgb(5,21,39);
     border-bottom-color: rgb(5,21,39);
-    opacity: 0.65;
     border-radius: 0;
     font-size: 16px;
     color: rgba(255,255,255,.65);
