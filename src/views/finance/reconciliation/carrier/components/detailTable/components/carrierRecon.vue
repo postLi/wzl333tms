@@ -1283,8 +1283,8 @@
     }
     .sMessageTop {
       border: 1px solid #b4b4b4;
-      border-top: transparent;
-      border-bottom: transparent;
+      /*border-top: transparent;*/
+      /*border-bottom: transparent;*/
       .el-form-item {
         margin-bottom: 0;
         margin-right: -5px;
