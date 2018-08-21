@@ -165,11 +165,9 @@ export default {
       }
     },
     setFinanceWay(obj) {
-      console.log(obj)
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
       this.getOrgFirstFinancialWay()
-
     },
     setData() { // 设置传给后台的数据结构
       if (typeof this.formModel.financialWay === 'string') {
