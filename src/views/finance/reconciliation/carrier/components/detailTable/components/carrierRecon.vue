@@ -46,7 +46,7 @@
     </div>
     <div class="sMessageTop">
       <el-form :inline="true" :size="btnsize" label-position="center" :model="messageInfo" label-width="100px"
-               class="staff_searchinfo clearfix" ref="formName2" :rules="rules">
+               class=" clearfix" ref="formName2" :rules="rules">
 
         <el-form-item label="承运商名称">
           <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
@@ -1294,7 +1294,7 @@
           border-top-color: transparent;
           border-right-color: transparent;
           border-bottom-color: transparent;
-          width: 185px;
+          width: 187px;
           border-radius: 0;
         }
         .el-input__inner:focus {
@@ -1403,7 +1403,7 @@
             margin-right: -5px;
             margin-bottom: 0;
             .el-input__inner {
-              width: 191px;
+              width: 193px;
               border-radius: 0;
               border-top-color: transparent;
               border-right-color: transparent;

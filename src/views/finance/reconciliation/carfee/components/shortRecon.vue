@@ -52,7 +52,7 @@
       </el-form>
     </div>
     <div class="sMessageTop">
-      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class="staff_searchinfo clearfix" ref="formName2" :rules="rules">
+      <el-form :inline="true" :size="btnsize" label-position="center"  :model="messageInfo" label-width="100px" class=" clearfix" ref="formName2" :rules="rules">
 
         <el-form-item label="车牌号">
           <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
