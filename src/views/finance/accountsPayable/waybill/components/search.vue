@@ -1,47 +1,49 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="开单网点" prop="shipFromOrgid">
-      <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel"></SelectTree>
-      <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
-    </el-form-item>
-    <el-form-item label="中转网点" prop="transferOrgid" v-show="isTransferSel">
-      <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid" >
-      </SelectTree>
-    </el-form-item>
-    <el-form-item label="结算状态" prop="status">
-      <el-select size="small" v-model="searchForm.status" placeholder="结算状态">
-       <el-option v-for="(value, key) in $const.COUNT_STATUS" :value="key" :key="key" :label="value"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="运单号" prop="shipSn">
-      <el-input v-model="searchForm.shipSn" :maxlength="maxlength"></el-input>
-      <!-- <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect> -->
-    </el-form-item>
-    <el-form-item label="发货方" prop="senderUnit">
-      <el-input  v-model="searchForm.senderUnit" clearable  :maxlength="maxlength"></el-input>
-      <!-- <querySelect v-model="searchForm.senderUnit" search="customerUnit" valuekey="customerUnit" type="sender" label="customerUnit" :remote="true" /> -->
-    </el-form-item>
-    <el-form-item label="发货人" prop="senderName" >
-      <el-input  v-model="searchForm.senderName" clearable  :maxlength="maxlength"></el-input>
-      <!-- <querySelect v-model="searchForm.senderName" search="customerName" type="sender" label="customerName" valuekey="customerName" clearable> -->
-        <!-- <template slot-scope="{item}">
-          {{ item.senderName }} : {{ item.senderMobile }}
-        </template> -->
-      <!-- </querySelect> -->
-    </el-form-item>
-    <el-form-item label="出发城市">
-      <el-input v-model="searchForm.shipFromCityName" clearable  :maxlength="maxlength"></el-input>
-      <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
-    </el-form-item>
-    <el-form-item label="到达城市">
-      <el-input v-model="searchForm.shipToCityName" clearable  :maxlength="maxlength"></el-input>
-      <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" ></querySelect> -->
-    </el-form-item>
-    
+    <div class="staff_searchinfo--input">
+      <el-form-item label="开单时间">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="开单网点" prop="shipFromOrgid">
+        <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel"></SelectTree>
+        <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
+      </el-form-item>
+      <el-form-item label="中转网点" prop="transferOrgid" v-show="isTransferSel">
+        <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid" >
+        </SelectTree>
+      </el-form-item>
+      <el-form-item label="结算状态" prop="status">
+        <el-select v-model="searchForm.status" placeholder="结算状态">
+         <el-option v-for="(value, key) in $const.COUNT_STATUS" :value="key" :key="key" :label="value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="运单号" prop="shipSn">
+        <el-input v-model="searchForm.shipSn" :maxlength="maxlength"></el-input>
+        <!-- <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect> -->
+      </el-form-item>
+      <el-form-item label="发货方" prop="senderUnit">
+        <el-input  v-model="searchForm.senderUnit" clearable  :maxlength="maxlength"></el-input>
+        <!-- <querySelect v-model="searchForm.senderUnit" search="customerUnit" valuekey="customerUnit" type="sender" label="customerUnit" :remote="true" /> -->
+      </el-form-item>
+      <el-form-item label="发货人" prop="senderName" >
+        <el-input  v-model="searchForm.senderName" clearable  :maxlength="maxlength"></el-input>
+        <!-- <querySelect v-model="searchForm.senderName" search="customerName" type="sender" label="customerName" valuekey="customerName" clearable> -->
+          <!-- <template slot-scope="{item}">
+            {{ item.senderName }} : {{ item.senderMobile }}
+          </template> -->
+        <!-- </querySelect> -->
+      </el-form-item>
+      <el-form-item label="出发城市">
+        <el-input v-model="searchForm.shipFromCityName" clearable  :maxlength="maxlength"></el-input>
+        <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
+      </el-form-item>
+      <el-form-item label="到达城市">
+        <el-input v-model="searchForm.shipToCityName" clearable  :maxlength="maxlength"></el-input>
+        <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" ></querySelect> -->
+      </el-form-item>
+      
+    </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>

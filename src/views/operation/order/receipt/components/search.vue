@@ -1,11 +1,13 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="receipt_searchinfo clearfix">
-      <el-form-item label="开单时间:">
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+      <el-form-item label="开单时间">
         <div class="block">
           <el-date-picker
             v-model="searchCreatTime"
-            type="datetimerange"
+            type="daterange"
             align="right"
+            :picker-options="pickerOptions2"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -24,7 +26,8 @@
           </selectType>
         </el-form-item>
         <el-form-item label="运单号">
-            <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off"
+            clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="出发城市">
             <!-- <SelectCity @change="getFromCity" v-model="searchForm.shipFromCityName"/> -->
@@ -36,12 +39,13 @@
             <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="发货人">
-            <el-input v-model="searchForm.shipSenderId" :maxlength="15" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.shipSenderId" :maxlength="15" clearable auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="收货人">
-            <el-input v-model="searchForm.shipReceiverId" :maxlength="15" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.shipReceiverId" :maxlength="15" clearable auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
-        <el-form-item class="receipt_searchinfo--btn">
+        </div>
+        <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
         </el-form-item>
@@ -53,7 +57,7 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
-import { parseTime } from '@/utils/index'
+import { parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -108,6 +112,9 @@ export default {
         shipSn: [
           { required: true, trigger: 'blur', validator: validateshipSn }
         ]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },
@@ -172,37 +179,3 @@ export default {
   }
 }
 </script> 
-<style lang="scss">
-.tab-content{
-    .receipt_searchinfo{
-        padding: 10px 0;
-        // margin: 0 10px;
-        border-bottom: 1px dashed #999;
-        .el-form-item{
-            margin:0px 10px;
-        }
-        
-    }
-    .receipt_searchinfo--btn{
-        float: right;
-    }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .receipt_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .receipt_searchinfo--btn{
-          float: none;
-      }
-  }
-}
-.receipt_searchinfo{
-  .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
-    width:200px;
-  }
-}
-</style>
-

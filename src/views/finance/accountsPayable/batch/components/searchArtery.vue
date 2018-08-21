@@ -1,37 +1,39 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <el-form-item label="发车时间">
-      <el-date-picker
-            v-model="searchTime"
-            type="daterange"
-            align="right"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions"
-            end-placeholder="结束日期">
-          </el-date-picker>
-    </el-form-item>
-    <el-form-item label="发车网点">
-      <SelectTree v-model="searchForm.orgid" v-if="!isAllOrg"  :orgid="otherinfo.orgid"></SelectTree>
-      <SelectTree v-model="searchForm.orgid"  v-else>
-      </SelectTree>
-    </el-form-item>
-    <el-form-item label="结算网点"  v-if="isAllOrg">
-      <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid"></SelectTree>
-    </el-form-item>
-    <el-form-item label="到车网点"  v-if="!isAllOrg && isArrivalSel">
-      <SelectTree v-model="searchForm.arriveOrgid"  clearable></SelectTree>
-    </el-form-item>
-    <el-form-item label="发车批次" prop="batchNo">
-      <el-input placeholder="请输入发车批次" v-model="searchForm.batchNo"></el-input>
-    </el-form-item>
-    <el-form-item label="车牌号" prop="truckIdNumber">
-      <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
-    </el-form-item>
-    <el-form-item label="司机">
-      <el-input v-model="searchForm.dirverName" clearable :maxlength="10" placeholder="司机名称"></el-input>
-      <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
-    </el-form-item>
+    <div class="staff_searchinfo--input">
+      <el-form-item label="发车时间">
+        <el-date-picker
+              v-model="searchTime"
+              type="daterange"
+              align="right"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions"
+              end-placeholder="结束日期">
+            </el-date-picker>
+      </el-form-item>
+      <el-form-item label="发车网点">
+        <SelectTree v-model="searchForm.orgid" v-if="!isAllOrg"  :orgid="otherinfo.orgid"></SelectTree>
+        <SelectTree v-model="searchForm.orgid"  v-else>
+        </SelectTree>
+      </el-form-item>
+      <el-form-item label="结算网点"  v-if="isAllOrg">
+        <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid"></SelectTree>
+      </el-form-item>
+      <el-form-item label="到车网点"  v-if="!isAllOrg && isArrivalSel">
+        <SelectTree v-model="searchForm.arriveOrgid"  clearable></SelectTree>
+      </el-form-item>
+      <el-form-item label="发车批次" prop="batchNo">
+        <el-input placeholder="请输入发车批次" v-model="searchForm.batchNo"></el-input>
+      </el-form-item>
+      <el-form-item label="车牌号" prop="truckIdNumber">
+        <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
+      </el-form-item>
+      <el-form-item label="司机">
+        <el-input v-model="searchForm.dirverName" clearable :maxlength="10" placeholder="司机名称"></el-input>
+        <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
+      </el-form-item>
+    </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -65,7 +67,7 @@ export default {
   },
   data() {
     const orgidIdentifier = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
+      const reg = REGEX.ONLY_NUMBER
       if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
@@ -98,7 +100,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgid = this.otherinfo.orgid
     this.searchForm.ascriptionOrgid = this.otherinfo.orgid
     this.onSubmit()
@@ -110,7 +112,7 @@ export default {
          到车网点arriveOrgid
          结算网点ascriptionOrgid
        */
-      let searchObj = Object.assign({}, this.searchForm)
+      const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'departureStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'departureEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')

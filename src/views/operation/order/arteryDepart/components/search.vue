@@ -1,54 +1,57 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="配载时间:">
-      <el-date-picker
-        v-model="searchCreatTime"
-        type="daterange"
-        align="right"
-        unlink-panels
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-
-        value-format="timestamp"
-
-        >
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="批次状态:">
-      <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" />
-      <!--<SelectTree v-model="searchForm.orgid" />-->
-    </el-form-item>
-    <el-form-item label="发车批次:">
-      <el-input
-        v-model="searchForm.batchNo"
-        maxlength="15"
-        clearable>
-      </el-input>
-    </el-form-item>
-      <!--<el-form-item label="发站:">-->
-          <!--<SelectTree v-model="searchForm.orgid" />-->
-      <!--</el-form-item>-->
-
-    <el-form-item label="车牌号:" class="">
-      <el-input
-        v-model="searchForm.truckIdNumber"
-        maxlength="15"
-        clearable>
-      </el-input>
-    </el-form-item>
-    <el-form-item label="司机名称:" prop="dirverName">
-      <el-input
-        v-model="searchForm.dirverName"
-        maxlength="15"
-        clearable>
-      </el-input>
-    </el-form-item>
-    <el-form-item label="发车网点">
-      <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
-    </el-form-item>
-    <el-form-item label="到车网点">
-      <SelectTree v-model="searchForm.arriveOrgid" clearable></SelectTree>
-    </el-form-item>
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
+    <div class="staff_searchinfo--input">
+      
+      <el-form-item label="配载时间">
+        <el-date-picker
+          v-model="searchCreatTime"
+          type="daterange"
+          align="right"
+          unlink-panels
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions2"
+          value-format="timestamp"
+  
+          >
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="批次状态">
+        <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" />
+        <!--<SelectTree v-model="searchForm.orgid" />-->
+      </el-form-item>
+      <el-form-item label="发车批次">
+        <el-input
+          v-model="searchForm.batchNo"
+          maxlength="15"
+          clearable>
+        </el-input>
+      </el-form-item>
+        <!--<el-form-item label="发站">-->
+            <!--<SelectTree v-model="searchForm.orgid" />-->
+        <!--</el-form-item>-->
+  
+      <el-form-item label="车牌号" class="">
+        <el-input
+          v-model="searchForm.truckIdNumber"
+          maxlength="15"
+          clearable>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="司机名称" prop="dirverName">
+        <el-input
+          v-model="searchForm.dirverName"
+          maxlength="15"
+          clearable>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="发车网点">
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+      </el-form-item>
+      <el-form-item label="到车网点">
+        <SelectTree v-model="searchForm.arriveOrgid" clearable></SelectTree>
+      </el-form-item>
+    </div>
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -58,7 +61,7 @@
 
 <script>
 import { REGEX } from '@/utils/validate'
-import { parseTime } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 export default {
@@ -101,7 +104,7 @@ export default {
     const validateDriverName = function(rule, value, callback) {
       if (REGEX.ONLY_NUMBER_AND_LETTER(value)) {
         callback()
-      }else {
+      } else {
         callback(new Error('请输入有效的发车批次'))
       }
     }
@@ -146,6 +149,9 @@ export default {
           // validator: validateFormMobile, trigger: 'blur'
           validator: validateDriverName, trigger: 'change'
         }]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },

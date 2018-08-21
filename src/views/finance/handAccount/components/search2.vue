@@ -1,25 +1,28 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right"  :model="searchForm"  class="staff_searchinfo clearfix">
-    <el-form-item label="开单网点:">
-      <select-tree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
-    </el-form-item>
-    <el-form-item label="交账状态：">
-      <select-type v-model="searchForm.status" type="fee_status" >
-      </select-type>
-    </el-form-item>
-    <el-form-item label="开单时间:">
-      <div class="block">
-        <el-date-picker
-          v-model="searchCreatTime"
-          :default-value="defaultTime"
-          type="daterange"
-          align="right"
-          value-format="yyyy-MM-dd"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-      </div>
-    </el-form-item>
+  <el-form :inline="true" :size="btnsize" label-position="right"  :model="searchForm" label-width="70px"  class="staff_searchinfo clearfix">
+    <div class="staff_searchinfo--input">
+      <el-form-item label="开单网点">
+        <select-tree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+      </el-form-item>
+      <el-form-item label="交账状态">
+        <select-type v-model="searchForm.status" type="fee_status" >
+        </select-type>
+      </el-form-item>
+      <el-form-item label="开单时间">
+        <div class="block">
+          <el-date-picker
+            v-model="searchCreatTime"
+            :default-value="defaultTime"
+            type="daterange"
+            align="right"
+            :picker-options="pickerOptions2"
+            value-format="yyyy-MM-dd"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
+      </el-form-item>
+    </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -30,7 +33,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import { parseTime } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 
 export default {
   name: 'handaccount-manage-search',
@@ -56,6 +59,9 @@ export default {
         status: '',
         endTime: '',
         startTime: ''
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },

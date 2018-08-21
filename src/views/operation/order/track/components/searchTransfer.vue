@@ -1,23 +1,22 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <el-row>
-      <el-col :span="20">
-        <el-form-item label="中转时间">
-          <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @keyup.enter.native="onSubmit">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="承运商" prop="carrierName">
-          <el-input v-model="searchForm.carrierName" :maxlength="15" auto-complete="off" placeholder="承运商" clearable @keyup.enter.native="onSubmit"></el-input>
-         <!-- <querySelect v-model="searchForm.carrierName" search="carrierName" type="carrier" label="carrierName" :name="city" @change="getcity" :remote="true" clearable ></querySelect> -->
-        </el-form-item>
-      </el-col>
-      <el-col :span="4">
+
+        <div class="staff_searchinfo--input">
+          <el-form-item label="中转时间">
+            <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @keyup.enter.native="onSubmit">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="承运商" prop="carrierName">
+            <el-input v-model="searchForm.carrierName" :maxlength="15" auto-complete="off" placeholder="承运商" clearable @keyup.enter.native="onSubmit"></el-input>
+           <!-- <querySelect v-model="searchForm.carrierName" search="carrierName" type="carrier" label="carrierName" :name="city" @change="getcity" :remote="true" clearable ></querySelect> -->
+          </el-form-item>
+        </div>
+
         <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
         </el-form-item>
-      </el-col>
-    </el-row>
+
   </el-form>
 </template>
 <script>
@@ -41,7 +40,7 @@ export default {
   },
   data() {
     const orgidIdentifier = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
+      const reg = REGEX.ONLY_NUMBER
       if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
@@ -77,13 +76,13 @@ export default {
     }
   },
   methods: {
-    getcity () {},
+    getcity() {},
     onSubmit() {
       // if (this.searchForm.carrierName) {
       //   this.searchForm.carrierName = this.searchForm.carrierName.carrierName
       // }
       if (this.searchTime) {
-        this.searchForm.startTime =  parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
+        this.searchForm.startTime = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
         this.searchForm.endTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
       this.$emit('change', this.searchForm)

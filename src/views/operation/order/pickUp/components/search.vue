@@ -1,47 +1,50 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
-      <el-form-item label="出车时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime"
-            type="daterange"
-            align="right"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            unlink-panels
-          >
-          </el-date-picker>
-        </div>
+  <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="出车时间">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              type="daterange"
+              align="right"
+              :picker-options="pickerOptions2"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              unlink-panels
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="提货状态">
+          <SelectType v-model="searchForm.pickupStatus" type="pickup_status" />
+        </el-form-item>
+        <el-form-item label="提货批次">
+            <el-input
+                v-numberOnly
+                placeholder=""
+                maxlength="15"
+                v-model="searchForm.pickupBatchNumber"
+                clearable>
+            </el-input>
+        </el-form-item>
+      <el-form-item label="车牌号">
+        <el-input
+          placeholder=""
+          maxlength="8"
+          v-model="searchForm.truckIdNumber"
+          clearable>
+        </el-input>
       </el-form-item>
-      <el-form-item label="提货状态：">
-        <SelectType v-model="searchForm.pickupStatus" type="pickup_status" />
+      <el-form-item label="司机姓名">
+        <el-input
+          
+          placeholder=""
+          maxlength="8"
+          v-model="searchForm.driverName"
+          clearable>
+        </el-input>
       </el-form-item>
-      <el-form-item label="提货批次:">
-          <el-input
-              v-numberOnly
-              placeholder=""
-              maxlength="15"
-              v-model="searchForm.pickupBatchNumber"
-              clearable>
-          </el-input>
-      </el-form-item>
-    <el-form-item label="车牌号:">
-      <el-input
-        placeholder=""
-        maxlength="8"
-        v-model="searchForm.truckIdNumber"
-        clearable>
-      </el-input>
-    </el-form-item>
-    <el-form-item label="司机姓名:">
-      <el-input
-        
-        placeholder=""
-        maxlength="8"
-        v-model="searchForm.driverName"
-        clearable>
-      </el-input>
-    </el-form-item>
+      </div>
       <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -50,16 +53,16 @@
 </template>
 
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import SelectType from '@/components/selectType/index'
-import { parseTime } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 export default {
   components: {
     SelectType
   },
   props: {
     btnsize: {
-      type: [String,Object],
+      type: [String, Object],
       default: 'mini'
     },
     orgid: {
@@ -71,25 +74,25 @@ export default {
     }
   },
   computed: {
-    title () {
+    title() {
 
     }
   },
-  data () {
-    let _this = this
-    const validateFormMobile = function (rule, value, callback) {
-      if(validateMobile(value)){
+  data() {
+    const _this = this
+    const validateFormMobile = function(rule, value, callback) {
+      if (validateMobile(value)) {
         callback()
       } else {
         callback(new Error('请输入有效的手机号码'))
       }
     }
 
-    const validateFormEmployeer = function (rule, value, callback) {
+    const validateFormEmployeer = function(rule, value, callback) {
       callback()
     }
 
-    const validateFormNumber = function (rule, value, callback) {
+    const validateFormNumber = function(rule, value, callback) {
       _this.searchForm.mobile = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
@@ -104,27 +107,30 @@ export default {
       },
       rules: {
         mobile: [{
-          //validator: validateFormMobile, trigger: 'blur'
+          // validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.loading = true
     this.searchForm.orgid = this.orgid
     this.onSubmit()
   },
   methods: {
-    getOrgid (id){
+    getOrgid(id) {
       // this.searchForm.orgid = id
     },
-    onSubmit () {
+    onSubmit() {
       // this.searchForm.startTime = this.searchCreatTime[0] ? +this.searchCreatTime[0] : ''
       // this.searchForm.endTime = this.searchCreatTime[1] ? +this.searchCreatTime[1] : ''
       this.searchForm.startTime = this.searchCreatTime[0] ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''

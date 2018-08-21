@@ -1,5 +1,5 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" ref="searchFormRef" :model="searchForm"  class="staff_searchinfo clearfix">
+  <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" ref="searchFormRef" :model="searchForm"  class="staff_searchinfo clearfix">
       <div class="staff_searchinfo--input">
         <el-form-item label="归属网点">
             <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />

@@ -136,14 +136,18 @@
 .staff_searchinfo{
     padding:0 0 10px;
     margin: 0 10px;
+    padding-right: 126px;
     
     border-bottom:1px dashed #999;
-    display: flex;
-    .staff_searchinfo--btn{
-      width: 126px;
+    
+    .el-input__inner{
+        border-color: #ccc;
+        border-radius: 2px;
     }
+
     .staff_searchinfo--input{
-      flex: 1;
+      float: left;
+      width: 100%;
       .el-form-item{
         margin-bottom: 0;
         margin-right: 0;
@@ -163,11 +167,14 @@
         padding: 3px 5px;
     }
     .staff_searchinfo--btn{
+      width: 126px;
       float: right;
-      margin-right: 0;
+      margin-right: -126px;
       margin-top: 9px;
       text-align: right;
-      
+      .el-button{
+          float: left;
+      }
   }
 }
 .tab-content{

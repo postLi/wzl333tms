@@ -1,39 +1,41 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
-      <el-form-item label="开单时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime"
-            :default-value="defaultTime"
-            type="daterange"
-            align="right"
-            :size="btnsize"
-            value-format="yyyy-MM-dd"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions2"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </div>
-      </el-form-item>
-      <el-form-item label="开单网点:">
-        <select-tree v-model="searchForm.orgid"  :orgid="otherinfo.orgid" />
-      </el-form-item>
-      <el-form-item label="运单号" class="searchinfo--order">
-        <el-input
-            v-model="searchForm.shipSn"
-            maxlength="15"
-            @change="onSubmit"
-            clearable>
-        </el-input>
-      </el-form-item>
-    <el-form-item label="出发城市" class="searchinfo--order">
-        <el-input
-            v-model="searchForm.shipFormCityName"
-            maxlength="15"
-            @change="onSubmit"
-            clearable>
-        </el-input>
-      </el-form-item>
+  <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="开单时间">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              :default-value="defaultTime"
+              type="daterange"
+              align="right"
+              :size="btnsize"
+              value-format="yyyy-MM-dd"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="开单网点:">
+          <select-tree v-model="searchForm.orgid"  :orgid="otherinfo.orgid" />
+        </el-form-item>
+        <el-form-item label="运单号" class="searchinfo--order">
+          <el-input
+              v-model="searchForm.shipSn"
+              maxlength="15"
+              @change="onSubmit"
+              clearable>
+          </el-input>
+        </el-form-item>
+      <el-form-item label="出发城市" class="searchinfo--order">
+          <el-input
+              v-model="searchForm.shipFormCityName"
+              maxlength="15"
+              @change="onSubmit"
+              clearable>
+          </el-input>
+        </el-form-item>
+      </div>
       <el-form-item class="staff_searchinfo--btn">
         <el-button type="primary" @click="onSubmit">查询</el-button>
         <el-button type="info" @click="clearForm" plain>清空</el-button>

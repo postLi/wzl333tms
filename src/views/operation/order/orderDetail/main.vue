@@ -1387,5 +1387,28 @@ $backgroundcolor: #cbe1f7;
       .order-status-org{
       }
     }
+    // 签收图片
+    .clickimglist{
+      width: 100%;
+      overflow: auto;
+      padding-bottom: 2px;
+      margin: 10px auto;
+    }
+    .clickimg{
+      border: 1px solid #ccc;
+      padding: 2px;
+      text-align: center;
+      width: 200px;
+      height: 200px;
+      display: inline-block;
+      margin-left: 5px;
+      line-height: 200px;
+
+      img{
+        max-width: 100%;
+        max-height: 100%;
+        vertical-align: middle;
+      }
+    }
   }
 </style>

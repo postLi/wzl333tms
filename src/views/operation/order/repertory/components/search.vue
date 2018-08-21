@@ -1,20 +1,23 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="运单号" prop="shipSn">
-      <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn"  :maxlength="15"></querySelect>
-    </el-form-item>
-    <el-form-item label="出发城市">
-      <el-input v-model="searchForm.shipFromCityName" :maxlength="15"></el-input>
-      <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
-    </el-form-item>
-    <el-form-item label="到达城市">
-      <el-input v-model="searchForm.shipToCityName"  :maxlength="15"></el-input>
-      <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
-    </el-form-item>
+    <div class="staff_searchinfo--input">
+      
+      <el-form-item label="开单时间">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="运单号" prop="shipSn">
+        <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn"  :maxlength="15"></querySelect>
+      </el-form-item>
+      <el-form-item label="出发城市">
+        <el-input v-model="searchForm.shipFromCityName" :maxlength="15"></el-input>
+        <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
+      </el-form-item>
+      <el-form-item label="到达城市">
+        <el-input v-model="searchForm.shipToCityName"  :maxlength="15"></el-input>
+        <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
+      </el-form-item>
+    </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -42,7 +45,7 @@ export default {
   },
   data() {
     const orgidIdentifier = (rule, value, callback) => {
-      let reg = REGEX.ONLY_NUMBER
+      const reg = REGEX.ONLY_NUMBER
       if (value === '' || value === null || !value || value === undefined) {
         callback()
       } else if (!(reg.test(value))) {
@@ -67,12 +70,12 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
 
   },
   methods: {
     onSubmit() {
-      let searchObj = Object.assign({}, this.searchForm)
+      const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')

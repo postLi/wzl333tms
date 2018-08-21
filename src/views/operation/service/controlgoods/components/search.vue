@@ -1,32 +1,35 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-        <el-form-item label="开单时间:">
-          <div class="block">
-            <el-date-picker
-              v-model="searchCreatTime"
-              type="datetimerange"
-              
-              align="right"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="pickerOptions1"
-            >
-            </el-date-picker>
-          </div>
-        </el-form-item>
-        <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.shipFromOrgid"  :orgid="otherinfo.orgid" />
-        </el-form-item>
-        <el-form-item label="运单号" prop="shipSn">
-            <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
-       
-        <el-form-item label="出发城市">
-          <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
-        <el-form-item label="到达城市">
-            <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
+        <div class="staff_searchinfo--input">
+          
+          <el-form-item label="开单时间">
+            <div class="block">
+              <el-date-picker
+                v-model="searchCreatTime"
+                type="daterange"
+                :picker-options="pickerOptions2"
+                align="right"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                
+              >
+              </el-date-picker>
+            </div>
+          </el-form-item>
+          <el-form-item label="开单网点">
+              <SelectTree v-model="searchForm.shipFromOrgid"  :orgid="otherinfo.orgid" />
+          </el-form-item>
+          <el-form-item label="运单号" prop="shipSn">
+              <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+         
+          <el-form-item label="出发城市">
+            <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+          <el-form-item label="到达城市">
+              <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+        </div>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -39,7 +42,7 @@
 import { parseTime } from '@/utils/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -98,6 +101,9 @@ export default {
 
         //   validator: orgidIdentifier, trigger: 'change'
         // }]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },

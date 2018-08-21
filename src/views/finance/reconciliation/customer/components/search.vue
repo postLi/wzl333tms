@@ -1,38 +1,41 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="90px" class="staff_searchinfo clearfix">
-      <el-form-item label="发车时间:">
-        <el-date-picker
-          v-model="searchCreatTime"
-          type="daterange"
-          align="right"
-          unlink-panels
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="timestamp"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="开单网点:">
-          <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
-      </el-form-item>
-      <el-form-item label="发货人:">
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="发车时间">
+          <el-date-picker
+            v-model="searchCreatTime"
+            type="daterange"
+            align="right"
+            unlink-panels
+            :picker-options="pickerOptions2"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="timestamp"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="开单网点">
+            <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+        </el-form-item>
+        <el-form-item label="发货人">
+          <el-input
+            maxlength="15"
+            v-model="searchForm.customerName"
+            clearable>
+          </el-input>
+        </el-form-item>
+      <el-form-item label="发货人电话">
         <el-input
-          maxlength="15"
-          v-model="searchForm.customerName"
-          clearable>
+          v-numberOnly
+          maxlength="11"
+          v-model="searchForm.customerMobile"
+          clearable
+          prop="customerMobile"
+        >
         </el-input>
       </el-form-item>
-    <el-form-item label="发货人电话:">
-      <el-input
-        v-numberOnly
-        maxlength="11"
-        v-model="searchForm.customerMobile"
-        clearable
-        prop="customerMobile"
-      >
-      </el-input>
-    </el-form-item>
-      <el-form-item class="staff_searchinfo_tn art_marginTop" >
+      </div>
+      <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
       </el-form-item>
@@ -43,7 +46,7 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { REGEX } from '@/utils/validate'
-import { parseTime } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 
 export default {
   components: {
@@ -64,36 +67,35 @@ export default {
     }
   },
   computed: {
-    title () {
+    title() {
 
     }
   },
-  data () {
-    let _this = this
-    const valiCustomerMobile = function (rule, value, callback) {
-      if(REGEX.ONLY_NUMBER.test(value)){
+  data() {
+    const _this = this
+    const valiCustomerMobile = function(rule, value, callback) {
+      if (REGEX.ONLY_NUMBER.test(value)) {
         callback()
-      }
-      else {
+      } else {
         callback(new Error('只能输入数字'))
       }
     }
     return {
       rules: {
-        customerMobile:[
-          {validator: valiCustomerMobile, trigger: 'blur'}
+        customerMobile: [
+          { validator: valiCustomerMobile, trigger: 'blur' }
         ]
       },
       searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
       pickOption: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           // 小于终止日
           return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
         }
       },
       pickOption2: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           // 大于起始日
           return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
@@ -101,30 +103,33 @@ export default {
       },
       searchForm: {
         orgid: '',
-        customerName: '',//
-        customerMobile: '',//
-        startTime: '',//
-        endTime:''
+        customerName: '', //
+        customerMobile: '', //
+        startTime: '', //
+        endTime: ''
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgid = this.orgid
     this.onSubmit()
     // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
-    onSubmit () {
+    onSubmit() {
       this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
       this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.orgid = this.orgid
       this.searchForm.customerName = ''
       this.searchForm.customerMobile = ''
@@ -135,13 +140,4 @@ export default {
   }
 }
 </script>
-<style type="text/css" lang="scss">
-  .staff_searchinfo{
-    .staff_searchinfo_tn.el-form-item:last-of-type{
-      width: 10%;
-      float: right;
-    }
-  }
-
-</style>
 

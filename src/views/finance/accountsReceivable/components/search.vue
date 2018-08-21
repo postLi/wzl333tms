@@ -8,6 +8,7 @@
           :default-value="defaultTime"
           type="daterange"
           align="right"
+          :picker-options="pickerOptions2"
           value-format="yyyy-MM-dd"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
@@ -65,7 +66,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import { parseTime } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 
 export default {
   name: 'handaccount-manage-search',
@@ -105,6 +106,9 @@ export default {
         shipSn: '',
         ascriptionOrgId: '',
         status: ''
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },

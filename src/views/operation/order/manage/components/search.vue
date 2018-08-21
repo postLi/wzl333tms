@@ -1,33 +1,38 @@
 <template>
   <!--label-width="80px"-->
-  <el-form :inline="true" :size="btnsize" label-position="right" :model="searchForm"  class="staff_searchinfo clearfix" :rules="rules">
-      <el-form-item label="创建时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime"
-            type="daterange"
-            align="right"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            unlink-panels
-          >
-          </el-date-picker>
-        </div>
-          <!--<SelectTree v-model="searchForm.orgid" />-->
+  <el-form :inline="true" :size="btnsize" label-position="right"
+  label-width="70px" 
+  :model="searchForm"  class="staff_searchinfo clearfix" :rules="rules">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="创建时间">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              type="daterange"
+              align="right"
+              :picker-options="pickerOptions2"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              unlink-panels
+            >
+            </el-date-picker>
+          </div>
+            <!--<SelectTree v-model="searchForm.orgid" />-->
+        </el-form-item>
+      <el-form-item label="订单状态">
+        <SelectType v-model="searchForm.orderStatus" type="order_status" />
       </el-form-item>
-    <el-form-item label="订单状态：">
-      <SelectType v-model="searchForm.orderStatus" type="order_status" />
-    </el-form-item>
-    <el-form-item label="订单号:" prop="orderSn">
-      <el-input
-        placeholder=""
-        maxlength="11"
-        v-model="searchForm.orderSn"
-        clearable
-        @keyup.enter.native="onSubmit"
-      >
-      </el-input>
-    </el-form-item>
+      <el-form-item label="订单号" prop="orderSn">
+        <el-input
+          placeholder=""
+          maxlength="11"
+          v-model="searchForm.orderSn"
+          clearable
+          @keyup.enter.native="onSubmit"
+        >
+        </el-input>
+      </el-form-item>
+      </div>
       <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -37,7 +42,7 @@
 
 <script>
 import SelectType from '@/components/selectType/index'
-import { parseTime } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 import { REGEX } from '@/utils/validate'
 export default {
   components: {
@@ -69,6 +74,9 @@ export default {
         orderSn: [
           // { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
         ]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },
@@ -82,7 +90,6 @@ export default {
     this.loading = true
     this.searchForm.orgid = this.orgid
     this.onSubmit()
-
   },
   methods: {
     getOrgid(id) {
@@ -106,35 +113,4 @@ export default {
   }
 }
 </script>
-
-
-<style lang="scss">
-.tab-content{
-    .staff_searchinfo{
-        padding:10px 0;
-        margin: 0 10px;
-        border-bottom:1px dashed #999;
-        .el-form-item{
-            margin-bottom: 0;
-        }
-
-    }
-    .staff_searchinfo--btn{
-        float: right;
-        margin-right: 0;
-    }
-}
-@media screen and (max-width:1308px){
-  .tab-content {
-      .staff_searchinfo{
-          .el-form-item{
-              margin-bottom: 10px;
-          }
-      }
-      .staff_searchinfo--btn{
-          float: none;
-      }
-  }
-}
-</style>
 

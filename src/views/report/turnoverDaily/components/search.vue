@@ -1,20 +1,22 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-    <el-form-item label="开单时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="开单网点" prop="shipFromOrgid">
-     <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
-      </SelectTree>
-    </el-form-item>
-    <el-form-item label="发货人" prop="senderCustomerName">
-      <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
-        <template slot-scope="{item}">
-          {{ item.customerName }} : {{ item.customerMobile }}
-        </template>
-      </querySelect>
-    </el-form-item>
+    <div class="staff_searchinfo--input">
+      <el-form-item label="开单时间">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="开单网点" prop="shipFromOrgid">
+       <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
+        </SelectTree>
+      </el-form-item>
+      <el-form-item label="发货人" prop="senderCustomerName">
+        <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
+          <template slot-scope="{item}">
+            {{ item.customerName }} : {{ item.customerMobile }}
+          </template>
+        </querySelect>
+      </el-form-item>
+    </div>
     
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -84,7 +86,7 @@ export default {
       }
       this.$emit('change', searchObj)
     },
-    hideIframe (status) {
+    hideIframe(status) {
       this.$emit('hideIframe', status)
     },
     clearForm(formName) {

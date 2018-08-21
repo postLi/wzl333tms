@@ -1,20 +1,22 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right"  :model="searchForm"  class="staff_searchinfo clearfix">
-      <el-form-item label="开单网点:">
-        <select-tree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+  <el-form :inline="true" :size="btnsize" label-position="right"  :model="searchForm" label-width="70px"  class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="开单网点">
+          <select-tree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+        </el-form-item>
+        <el-form-item label="员工姓名">
+          <el-input
+              v-model="searchForm.userName"
+              maxlength="15"
+              @change="onSubmit"
+              clearable>
+          </el-input>
+        </el-form-item>
+      <el-form-item label="交账状态">
+        <select-type v-model="searchForm.status" type="fee_status" >
+        </select-type>
       </el-form-item>
-      <el-form-item label="员工姓名:">
-        <el-input
-            v-model="searchForm.userName"
-            maxlength="15"
-            @change="onSubmit"
-            clearable>
-        </el-input>
-      </el-form-item>
-    <el-form-item label="交账状态：">
-      <select-type v-model="searchForm.status" type="fee_status" >
-      </select-type>
-    </el-form-item>
+      </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm" plain>清空</el-button>

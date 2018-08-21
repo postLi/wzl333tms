@@ -1,44 +1,47 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo wzl clearfix">
-      <el-form-item label="开单时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime"
-            :default-value="defaultTime"
-            type="daterange"
-            align="right"
-            value-format="yyyy-MM-dd"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions2"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </div>
-      </el-form-item>
-        <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.shipFromOrgid" />
-        </el-form-item>
-        <el-form-item label="签收网点">
-            <SelectTree v-model="searchForm.signOrgid" :orgid="otherinfo.orgid"/>
-        </el-form-item>
-        <el-form-item label="签收状态"  prop="signStatus">
-          <selectType v-model="searchForm.signStatus"  type="sign_status">
-            <el-option slot="head" label="全部" value="" ></el-option>
-          </selectType>
-        </el-form-item>
-        <el-form-item label="凭证状态"  prop="signCertificate">
-          <selectType v-model="searchForm.signCertificate" type="sign_certificate" >
+    <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" :model="searchForm"  class="staff_searchinfo wzl clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="开单时间">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              :default-value="defaultTime"
+              type="daterange"
+              align="right"
+              value-format="yyyy-MM-dd"
 
-          </selectType>
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
         </el-form-item>
-        <el-form-item label="运单号" prop="shipSn">
-            <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
-        <el-form-item label="出发城市">
-          <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
-        <el-form-item label="到达城市">
-            <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
+          <el-form-item label="开单网点">
+              <SelectTree v-model="searchForm.shipFromOrgid" />
+          </el-form-item>
+          <el-form-item label="签收网点">
+              <SelectTree v-model="searchForm.signOrgid" :orgid="otherinfo.orgid"/>
+          </el-form-item>
+          <el-form-item label="签收状态"  prop="signStatus">
+            <selectType v-model="searchForm.signStatus"  type="sign_status">
+              <el-option slot="head" label="全部" value="" ></el-option>
+            </selectType>
+          </el-form-item>
+          <el-form-item label="凭证状态"  prop="signCertificate">
+            <selectType v-model="searchForm.signCertificate" type="sign_certificate" >
+  
+            </selectType>
+          </el-form-item>
+          <el-form-item label="运单号" prop="shipSn">
+              <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+          <el-form-item label="出发城市">
+            <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+          <el-form-item label="到达城市">
+              <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+      </div>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -51,7 +54,7 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
-import { parseTime } from '@/utils/index'
+import { parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -108,6 +111,9 @@ export default {
 
         //   { required: true, trigger: 'blur', validator: validateshipSn }
         // ]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },
@@ -119,6 +125,7 @@ export default {
   mounted() {
     // this.searchForm.shipFromOrgid = this.otherinfo.orgid
     this.searchForm.signOrgid = this.otherinfo.orgid
+    this.searchCreatTime = this.defaultTime
   },
   methods: {
     // getOrgid (id){
@@ -153,32 +160,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.el-range-editor--mini.el-input__inner{
-  height: 28px;
-  width: 200px;
-}
-
-.tab-wrapper .tab-content .staff_searchinfo{
-  padding:10px 0;
-  margin: 0 10px;
-  border-bottom:1px dashed #999;
-  .el-form-item{
-    margin:0 10px;
-  }
-  .el-form-item:nth-of-type(6){
-    margin:0 10px;
-    margin-left: 13px;
-  }
-}
-.el-input--suffix .el-input__inner{
-  padding-right: 4px;
-}
-.wzl{
-  .staff_searchinfo--btn{
-    .el-form-item__content{
-      top:-29px;
-    }
-  }
-}
-</style>

@@ -1,44 +1,48 @@
 <template>
-    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px"      class="staff_searchinfo unusual_search clearfix">
-        <el-form-item label="开单时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime"
-            type="datetimerange"
-            value-format="yyyy-MM-dd hh:mm:ss"
-            align="right"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </div>
-        </el-form-item>
-        <el-form-item label="开单网点">
-            <SelectTree v-model="searchForm.shipFromOrgid" type="org_id" :orgid="otherinfo.orgid"/>
-        </el-form-item>
-        <el-form-item label="结算状态:" prop="statusName">
-          <el-select v-model="searchForm.statusName">
-          <el-option label="全部" value=""></el-option>
-          <el-option label="已结算" value="ALLSETTLEMENT"></el-option>
-          <el-option label="部分结算" value="PARTSETTLEMENT"></el-option>
-          <el-option label="未结算" value="NOSETTLEMENT"></el-option>
-          </el-select>
-        </el-form-item>
-     
-        <el-form-item label="运单号">
-            <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
-        <!-- <el-form-item label="出发城市">
-            <SelectCity @change="getFromCity"  v-model="searchForm.shipFromCityName"/>
-        </el-form-item>
-        <el-form-item label="到达城市">
-            <SelectCity @change="getToCity" v-model="searchForm.shipToCityName" />
-        </el-form-item> -->
-        <el-form-item label="出发城市">
-          <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
-        <el-form-item label="到达城市">
-            <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
-        </el-form-item>
+    <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px"      class="staff_searchinfo unusual_search clearfix">
+      <div class="staff_searchinfo--input">
+        
+          <el-form-item label="开单时间">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              type="daterange"
+              value-format="yyyy-MM-dd hh:mm:ss"
+              :picker-options="pickerOptions2"
+              align="right"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
+          </el-form-item>
+          <el-form-item label="开单网点">
+              <SelectTree v-model="searchForm.shipFromOrgid" type="org_id" :orgid="otherinfo.orgid"/>
+          </el-form-item>
+          <el-form-item label="结算状态:" prop="statusName">
+            <el-select v-model="searchForm.statusName">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="已结算" value="ALLSETTLEMENT"></el-option>
+            <el-option label="部分结算" value="PARTSETTLEMENT"></el-option>
+            <el-option label="未结算" value="NOSETTLEMENT"></el-option>
+            </el-select>
+          </el-form-item>
+       
+          <el-form-item label="运单号">
+              <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+          <!-- <el-form-item label="出发城市">
+              <SelectCity @change="getFromCity"  v-model="searchForm.shipFromCityName"/>
+          </el-form-item>
+          <el-form-item label="到达城市">
+              <SelectCity @change="getToCity" v-model="searchForm.shipToCityName" />
+          </el-form-item> -->
+          <el-form-item label="出发城市">
+            <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+          <el-form-item label="到达城市">
+              <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
+          </el-form-item>
+      </div>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -50,7 +54,7 @@
 // import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-import { parseTime } from '@/utils/index'
+import { parseTime, pickerOptions2 } from '@/utils/index'
 import SelectCity from '@/components/selectCity/index'
 export default {
   components: {
@@ -99,6 +103,9 @@ export default {
           // validator: validateFormMobile, trigger: 'blur'
           validator: validateFormNumber, trigger: 'change'
         }]
+      },
+      pickerOptions2: {
+        shortcuts: pickerOptions2
       }
     }
   },
@@ -144,18 +151,3 @@ export default {
   }
 }
 </script> 
-<style lang="scss">
-.unusual_search{
-  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-    // margin:10px 0px;
-  }
-  .tab-wrapper .tab-content .staff_searchinfo{
-    margin:0 10px;
-  }
-  .el-range-editor--mini.el-input__inner{
-    width: 200px;
-  }
-}
-
-
-</style>

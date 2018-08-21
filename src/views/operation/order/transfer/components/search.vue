@@ -1,52 +1,54 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm"  class="staff_searchinfo clearfix">
-      <el-form-item label="中转时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime"
-            type="daterange"
-            align="right"
-            :size="btnsize"
-            value-format="yyyy-MM-dd"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions2"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </div>
-      </el-form-item>
-      <el-form-item label="承运商:">
-        <querySelect search="carrierName" type="carrier" valuekey="carrierId" show="select" v-model="searchForm.carrierId" :filterable="false" placeholder="请选择" />
-      </el-form-item>
-    <el-form-item v-if="!isbatch" label="出发城市:" class="searchinfo--order">
-        <el-input
-            v-model="searchForm.shipFromCityName"
-            maxlength="15"
-            @change="onSubmit"
-            clearable>
-        </el-input>
-      </el-form-item>
-      <el-form-item v-if="!isbatch" label="到达城市:" class="searchinfo--order">
-        <el-input
-            v-model="searchForm.shipToCityName"
-            maxlength="15"
-            @change="onSubmit"
-            clearable>
-        </el-input>
-      </el-form-item>
-      <el-form-item v-if="!isbatch" label="开单时间:">
-        <div class="block">
-          <el-date-picker
-            v-model="searchCreatTime2"
-            type="daterange"
-            align="right"
-            :size="btnsize"
-            value-format="yyyy-MM-dd"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions2"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </div>
-      </el-form-item>
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" label-width="70px" :model="searchForm"  class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="中转时间:">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime"
+              type="daterange"
+              align="right"
+              :size="btnsize"
+              value-format="yyyy-MM-dd"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="承运商:">
+          <querySelect search="carrierName" type="carrier" valuekey="carrierId" show="select" v-model="searchForm.carrierId" :filterable="false" placeholder="请选择" />
+        </el-form-item>
+      <el-form-item v-if="!isbatch" label="出发城市:" class="searchinfo--order">
+          <el-input
+              v-model="searchForm.shipFromCityName"
+              maxlength="15"
+              @change="onSubmit"
+              clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item v-if="!isbatch" label="到达城市:" class="searchinfo--order">
+          <el-input
+              v-model="searchForm.shipToCityName"
+              maxlength="15"
+              @change="onSubmit"
+              clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item v-if="!isbatch" label="开单时间:">
+          <div class="block">
+            <el-date-picker
+              v-model="searchCreatTime2"
+              type="daterange"
+              align="right"
+              :size="btnsize"
+              value-format="yyyy-MM-dd"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
+        </el-form-item>
+      </div>
       <el-form-item class="staff_searchinfo--btn">
         <el-button type="primary" @click="onSubmit">查询</el-button>
         <el-button type="info" @click="clearForm" plain>清空</el-button>
