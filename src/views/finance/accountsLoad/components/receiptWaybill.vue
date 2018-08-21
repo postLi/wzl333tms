@@ -264,9 +264,9 @@ export default {
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([], this.info)
+      this.formModel.detailDtoList = objectMerge2([], this.info)
        // 设置费用项
-      const obj = {}
+      let obj = {}
       this.formModel.detailDtoList.map(el => {
         if (obj[el.dataName]) {
           obj[el.dataName].amount += el.amount
@@ -277,6 +277,7 @@ export default {
       for (const i in obj) {
         this.formModel.detailDtoList2.push(obj[i])
       }
+      obj= {}
       
       this.formModel.detailDtoList2.forEach((e, index) => {
         this.formModel.amount += e.amount
@@ -323,7 +324,12 @@ export default {
       let shipPayableFeeDtos = []
       // this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       // this.$set(this.submitData, 'settlementId', this.settlementId)
-      this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.shipFromOrgid)
+      
+      if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
+        this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.transferOrgid)
+      }else {
+        this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.shipFromOrgid)
+      }
       this.$set(capitalFlow, 'settlementSn', this.formModel.settlementSn)
       this.$set(capitalFlow, 'settlementBy', this.formModel.settlementBy)
       this.$set(capitalFlow, 'settlementTime', this.formModel.settlementTime)
@@ -331,7 +337,7 @@ export default {
       this.$set(capitalFlow, 'detailDtoList', this.formModel.detailDtoList)
       this.$set(capitalFlow, 'szDtoList', this.formModel.szDtoList)
       financialWayLogs = Object.assign([], this.formModel.szDtoList)
-      shipPayableFeeDtos = Object.assign([], this.formModel.detailDtoList)
+      shipPayableFeeDtos = Object.assign([], this.info)
       this.$set(this.submitData, 'capitalFlow', capitalFlow)
       this.$set(this.submitData, 'financialWayLogs', financialWayLogs)
       this.$set(this.submitData, 'shipPayableFeeDtos', shipPayableFeeDtos)
@@ -343,8 +349,14 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          console.log(this.submitData)
-          postCreateloadSettlement(this.getRouteInfo.vo.shipFromOrgid, this.submitData).then(data => {
+          console.log('submitData',this.submitData)
+          let orgid = ''
+          if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
+            orgid = this.getRouteInfo.vo.transferOrgid
+          }else {
+            orgid = this.getRouteInfo.vo.shipFromOrgid
+          }
+          postCreateloadSettlement(orgid, this.submitData).then(data => {
               this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
               this.$router.push({ path: './accountsPayable/waybill', query:{name: this.currentPage} })

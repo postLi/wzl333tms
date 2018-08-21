@@ -71,8 +71,17 @@ export function getSelectType(type = '', orgId) {
 /**
  * 下载常用插件
  */
-export function downloadFile() {
-  const fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
+export function downloadFile(type) {
+  let fileUrl = ''
+  switch (type) {
+    case 'lodop': // lodop 云打印插件
+      fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/28tms_win32_cLodop_20180821.exe'
+      break
+    case 'supcan': // supcan 硕正报表插件
+      fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/28tms_win32_supcan_20180821.exe'
+      break
+  }
+  // const fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
   return fileUrl
 }
 
@@ -86,10 +95,10 @@ export function getInitializationCheck() {
 }
 
 export function postImportExcel(data) {
-  return fetch.post('/api-system/system/excel/v1/importExcel/',data).then(res => {
-    return res.data
-  })
-  .catch(error => {
-    return error.data
-  })
+  return fetch.post('/api-system/system/excel/v1/importExcel/', data).then(res => {
+      return res.data
+    })
+    .catch(error => {
+      return error.data
+    })
 }

@@ -233,6 +233,8 @@ export default {
         return false
       }
       this.setData()
+      console.log('this.addIncomeInfo', this.addIncomeInfo)
+      // return false /////////////////////////////////////////////////////////////////////////测试
       postAddIncome(this.addIncomeInfo).then(data => {
           this.$message({ type: 'success', message: '保存成功！' })
           this.$router.push({ path: './settleLog' })

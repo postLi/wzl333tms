@@ -206,9 +206,6 @@
                   <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                 </el-select >
               </el-form-item>
-              <el-form-item>
-                <el-button @click="downloadFile" icon="el-icon-download" type="primary" plain>下载插件</el-button>
-              </el-form-item>
             </div>
           </div>
         </el-collapse-item>
@@ -221,6 +218,19 @@
               </el-form-item>
               <el-form-item>
                 <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
+              </el-form-item>
+            </div>
+          </div>
+        </el-collapse-item>
+        <el-collapse-item name="setup6" title="常用插件下载">
+          <div class="clearfix setup-table">
+            <div class="setup-left">下载地址</div>
+            <div class="setup-right">
+              <el-form-item>
+                <el-button @click="downloadFile('lodop')" icon="el-icon-download" type="primary" plain>LODOP云打印插件下载</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="primary" plain>硕正报表插件下载</el-button>
               </el-form-item>
             </div>
           </div>
@@ -582,8 +592,8 @@ export default {
         }
       }
     },
-    downloadFile() { // 下载系统所需插件
-      window.open(downloadFile())
+    downloadFile(type) { // 下载系统所需插件
+      window.open(downloadFile(type))
     }
   },
   watch: {

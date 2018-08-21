@@ -586,6 +586,7 @@ export default {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
         }
       }
+      console.log('tableReceiptInfo', this.tableReceiptInfo)
     },
     getSumRight(param) { // 右边表格合计-自定义显示
       let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']

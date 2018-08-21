@@ -1,7 +1,6 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <!-- @focus="clearSender" -->
       <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" @change="changeSenderSearch">
         <el-option label="短驳" value="short"></el-option>
         <el-option label="干线" value="load"></el-option>

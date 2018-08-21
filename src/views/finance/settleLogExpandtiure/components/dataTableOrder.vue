@@ -15,49 +15,47 @@
             <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号" fixed width="120">
+        <el-table-column prop="shipSn" label="运单号" fixed width="130">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="130">
-        </el-table-column>
-        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="130">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="150">
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
         <el-table-column prop="kickBackPay" sortable label="回扣" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结回扣" width="120">
+        <el-table-column prop="noKickBackPay" sortable label="未结回扣" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结回扣" width="120">
+        <el-table-column prop="hadKickBackPay" sortable label="已结回扣" width="120">
         </el-table-column>
         <el-table-column prop="transferPay" sortable label="中转费" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结中转费" width="120">
+        <el-table-column prop="noTransferPay" sortable label="未结中转费" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结中转费" width="120">
+        <el-table-column prop="hadTransferPay" sortable label="已结中转费" width="120">
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结异动费用" width="120">
+        <el-table-column prop="noUnusualPay" sortable label="未结异动费用" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结异动费用" width="120">
+        <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="120">
         </el-table-column>
         <el-table-column prop="exceptionPay" sortable label="异常理赔" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结异常理赔" width="120">
+        <el-table-column prop="noExceptionPay" sortable label="未结异常理赔" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结异常理赔" width="120">
+        <el-table-column prop="hadExceptionPay" sortable label="已结异常理赔" width="120">
         </el-table-column>
         <el-table-column prop="pickPuPay" sortable label="实际提货费" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结实际提货费" width="120">
+        <el-table-column prop="noPickPuPay" sortable label="未结实际提货费" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结实际提货费" width="120">
+        <el-table-column prop="hadPickPuPay" sortable label="已结实际提货费" width="120">
         </el-table-column>
         <el-table-column prop="othePay" sortable label="其他费用" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结其他费用" width="120">
+        <el-table-column prop="noOthePay" sortable label="未结其他费用" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结其他费用" width="120">
+        <el-table-column prop="hadOthePay" sortable label="已结其他费用" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -75,7 +73,7 @@
         </el-table-column>
         <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
-        <el-table-column prop="remark" sortable label="运单备注" width="120">
+        <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
       </el-table>
     </div>
@@ -90,37 +88,49 @@
             <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号" fixed width="120">
+        <el-table-column prop="shipSn" label="运单号" fixed width="130">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="130">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="150">
         </el-table-column>
         <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="150">
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
-        <el-table-column prop="onPay" sortable label="现付" width="120">
+        <el-table-column prop="kickBackPay" sortable label="回扣" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结现付" width="120">
+        <el-table-column prop="noKickBackPay" sortable label="未结回扣" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结现付" width="120">
+        <el-table-column prop="hadKickBackPay" sortable label="已结回扣" width="120">
         </el-table-column>
-        <el-table-column prop="arrivalPay" sortable label="到付" width="120">
+        <el-table-column prop="transferPay" sortable label="中转费" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结到付" width="120">
+        <el-table-column prop="noTransferPay" sortable label="未结中转费" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结到付" width="120">
+        <el-table-column prop="hadTransferPay" sortable label="已结中转费" width="120">
         </el-table-column>
-        <el-table-column prop="backPay" sortable label="回单付" width="120">
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结回单付" width="120">
+        <el-table-column prop="noUnusualPay" sortable label="未结异动费用" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结回单付" width="120">
+        <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="120">
         </el-table-column>
-        <el-table-column prop="monthPay" sortable label="月结" width="120">
+        <el-table-column prop="exceptionPay" sortable label="异常理赔" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="未结月结" width="120">
+        <el-table-column prop="noExceptionPay" sortable label="未结异常理赔" width="120">
         </el-table-column>
-        <el-table-column prop="" sortable label="已结月结" width="120">
+        <el-table-column prop="hadExceptionPay" sortable label="已结异常理赔" width="120">
+        </el-table-column>
+        <el-table-column prop="pickPuPay" sortable label="实际提货费" width="120">
+        </el-table-column>
+        <el-table-column prop="noPickPuPay" sortable label="未结实际提货费" width="120">
+        </el-table-column>
+        <el-table-column prop="hadPickPuPay" sortable label="已结实际提货费" width="120">
+        </el-table-column>
+        <el-table-column prop="othePay" sortable label="其他费用" width="120">
+        </el-table-column>
+        <el-table-column prop="noOthePay" sortable label="未结其他费用" width="120">
+        </el-table-column>
+        <el-table-column prop="hadOthePay" sortable label="已结其他费用" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -138,7 +148,7 @@
         </el-table-column>
         <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
         </el-table-column>
-        <el-table-column prop="remark" sortable label="运单备注" width="120">
+        <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
       </el-table>
     </div>
@@ -453,18 +463,27 @@ export default {
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-          }
-          let orgItem = this.orgLeftTable.indexOf(e)
-          if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
-            this.orgLeftTable.splice(orgItem, 1)
-          }
-          let countOrgItem = this.countOrgLeftTable.indexOf(e)
-          if (countOrgItem !== -1) { // 搜索源数据减去被穿梭的数据
-            this.countOrgLeftTable.splice(countOrgItem, 1)
-          }
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
+            return el.shipSn !== e.shipSn 
+          })
+          this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
+            return el.shipSn !== e.shipSn
+          })
+          // let item = this.leftTable.indexOf(e)
+          // if (item !== -1) { // 源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          // }
+          // let orgItem = this.orgLeftTable.indexOf(e)
+          // if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+          //   this.orgLeftTable.splice(orgItem, 1)
+          // }
+          // let countOrgItem = this.countOrgLeftTable.indexOf(e)
+          // if (countOrgItem !== -1) { // 搜索源数据减去被穿梭的数据
+          //   this.countOrgLeftTable.splice(countOrgItem, 1)
+          // }
         })
         this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', ['shipFeeTotal', 'shipFeeTotalActual']) // 去重
         this.selectedRight = [] // 清空选择列表
@@ -479,11 +498,14 @@ export default {
           this.leftTable.push(e)
           this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+           this.rightTable = objectMerge2([], this.rightTable).filter(el => { // 源数据减去被穿梭的数据
+            return el.shipSn !== e.shipSn
+          })
+          // let item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', ['shipFeeTotal', 'shipFeeTotalActual']) // 去重
         this.selectedLeft = [] // 清空选择列表

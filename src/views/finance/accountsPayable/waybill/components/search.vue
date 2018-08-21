@@ -10,7 +10,7 @@
         <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
       </el-form-item>
       <el-form-item label="中转网点" prop="transferOrgid" v-show="isTransferSel">
-        <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid" >
+        <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
       <el-form-item label="结算状态" prop="status">
@@ -118,6 +118,9 @@ export default {
     }
   },
   mounted() {
+    if (this.isTransferSel) {
+      this.searchForm.transferOrgid = this.orgid
+    }
     this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()
   },

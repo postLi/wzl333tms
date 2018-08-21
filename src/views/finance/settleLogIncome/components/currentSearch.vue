@@ -78,7 +78,8 @@ export default {
   },
   methods: {
     querySearch(type, queryString, cb) {
-      let leftTable = this.info
+      let leftTable = Object.assign([], this.info)
+      console.log(leftTable.length)
       this.searchForm[type] = queryString // 绑定数据视图
       this.selectVal = type // 当前选择输入的对象
       for (let item in this.searchForm) {

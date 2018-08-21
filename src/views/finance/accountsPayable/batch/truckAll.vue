@@ -14,7 +14,7 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;"  @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -99,13 +99,13 @@ export default {
         {
           label: '发车批次',
           prop: 'batchNo',
-          width: '150',
+          width: '120',
           fixed: true
         },
         {
           label: '批次状态',
           prop: 'batchTypeName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -117,13 +117,13 @@ export default {
         {
           label: '到达网点',
           prop: 'arriveOrgName',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '发车时间',
           prop: 'departureTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -132,7 +132,7 @@ export default {
         {
           label: '到达时间',
           prop: 'receivingTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -141,163 +141,163 @@ export default {
         {
           label: '现付运费',
           prop: 'nowpayCarriage',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '已结现付运费',
           prop: 'paidNowpayCarriage',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结现付运费',
           prop: 'unpaidNowpayCarriage',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '现付油卡',
           prop: 'nowpayOilCard',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '已结现付油卡',
           prop: 'paidNowpayOilCard',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结现付油卡',
           prop: 'unpaidNowpayOilCard',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '回付运费',
           prop: 'backpayCarriage',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '已结回付运费',
           prop: 'paidBackpayCarriage',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结回付运费',
           prop: 'unpaidBackpayCarriage',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '回付油卡',
           prop: 'backpayOilCard',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '已结回付油卡',
           prop: 'paidBackpayOilCard',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结回付油卡',
           prop: 'unpaidBackpayOilCard',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '整车保险费',
           prop: 'carloadInsuranceFee',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '已结整车保险费',
           prop: 'paidCarloadInsuranceFee',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结整车保险费',
           prop: 'unpaidCarloadInsuranceFee',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '发站装卸费',
           prop: 'leaveHandlingFee',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '已结发站装卸费',
           prop: 'paidLeaveHandlingFee',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结发站装卸费',
           prop: 'unpaidLeaveHandlingFee',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '发站其他费',
           prop: 'leaveOtherFee',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '已结发站其他费',
           prop: 'paidLeaveOtherFee',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结发站其他费',
           prop: 'unpaidLeaveOtherFee',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '车牌号',
           prop: 'truckIdNumber',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
           label: '司机名称',
           prop: 'dirverName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '司机电话',
           prop: 'dirverMobile',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
           label: '配载件数',
           prop: 'loadAmountall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '配载重量',
           prop: 'loadWeightall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '配载体积',
           prop: 'loadVolumeall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {

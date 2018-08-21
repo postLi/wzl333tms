@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @focus="clearSender">
+      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @clear="clearSearchSelect" @focus="clearSender">
         <el-option label="发货方" value="unit"></el-option>
         <el-option label="发货人" value="customer"></el-option>
       </el-select>
@@ -68,6 +68,9 @@ export default {
     }
   },
   methods: {
+    clearSearchSelect (obj) { // 如果选择框为空恢复右边数据列表
+      this.$emit('change', objectMerge2([], this.info))
+    },
     querySearch(type, queryString, cb) {
       let leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图

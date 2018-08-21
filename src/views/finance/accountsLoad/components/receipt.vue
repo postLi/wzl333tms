@@ -278,11 +278,8 @@ export default {
       })
     },
     initDetailDtoList() {
-
       this.formModel.amount = 0
       this.formModel.detailDtoList = objectMerge2([],this.info)
-      console.log(this.formModel.detailDtoList)
-      console.log('info',this.info)
 
       // 设置费用项
       

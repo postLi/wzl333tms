@@ -1,23 +1,16 @@
 <template>
   <!-- 智能结算弹出框 -->
   <el-dialog :title="'智能结算-'+title" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
-    <!-- <el-form ref="formModel" :model="formModel" :rules="rules" label="90px" inline size="mini" label-position="right" > -->
-    <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" class="staff_searchinfo clearfix">
-      <el-row>
-        <el-col :span="12">
+    <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" label-width="70px">
           <el-form-item label="发货人" prop="shipSenderName" v-if="settlementId===178">
             <querySelect search="customerName" type="sender" valuekey="customerName" label="customerName" v-model="formModel.shipSenderName" :remote="true" />
           </el-form-item>
           <el-form-item label="车牌号" prop="shipSenderName" v-else>
             <querySelect search="truckIdNumber" type="trunk" valuekey="truckIdNumber" label="truckIdNumber" v-model="formModel.truckIdNumber" :remote="true" />
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="支出金额" prop="autoTotalAmount">
             <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount"></el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="费用项">
             <el-select v-model="formModel.feeId"  v-if="settlementId === 178" >
               <el-option label="全部" value=""></el-option>
@@ -31,18 +24,11 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <!-- <el-select v-model="formModel.settlementId"  v-else @change="selectFeeIdBatch">
-              <el-option v-for="item in feeIdsBatch" :label="item.feeType" :value="item.id" :key="item.id"></el-option>
-            </el-select> -->
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="开单日期">
             <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
-        </el-col>
-      </el-row>
     </el-form>
     <p>提示：智能结算可以按照发货人开单日期自动挑选运单结算，运用场景如:某某客户结算某个月运费一万块，可以筛选客户，收入金额10000块，系统将自动挑选运单结算。</p>
     <span slot="footer" class="dialog-footer">

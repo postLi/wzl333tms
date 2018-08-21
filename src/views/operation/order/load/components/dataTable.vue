@@ -288,14 +288,20 @@ export default {
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-          }
-          let orgItem = this.orgLeftTable.indexOf(e)
-          if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
-            this.orgLeftTable.splice(orgItem, 1)
-          }
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = this.leftTable.indexOf(e)
+          // if (item !== -1) { // 源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          // }
+          // let orgItem = this.orgLeftTable.indexOf(e)
+          // if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+          //   this.orgLeftTable.splice(orgItem, 1)
+          // }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -309,12 +315,16 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
-          // this.orgLeftTable.push(e)
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.orgLeftTable.push(e)
+
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表

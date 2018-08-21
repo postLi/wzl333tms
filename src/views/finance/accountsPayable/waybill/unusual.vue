@@ -14,7 +14,7 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail" stripe border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -97,7 +97,7 @@ export default {
       {
         label: '开单网点',
         prop: 'shipFromOrgName',
-        width: '150',
+        width: '140',
         fixed: false
       },
       {
@@ -109,7 +109,7 @@ export default {
       {
         label: '结算状态',
         prop: 'statusName',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
@@ -124,37 +124,37 @@ export default {
       {
         label: '出发城市',
         prop: 'shipFromCityName',
-        width: '150',
+        width: '140',
         fixed: false
       },
       {
         label: '到达城市',
         prop: 'shipToCityName',
-        width: '150',
+        width: '140',
         fixed: false
       },
       {
         label: '异动费用',
         prop: 'fee',
-        width: '150',
+        width: '90',
         fixed: false
       },
       {
         label: '已结异动费用',
         prop: 'closeFee',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '未结异动费用',
         prop: 'unpaidFee',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '开单日期',
         prop: 'createTime',
-        width: '180',
+        width: '160',
         slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
@@ -163,25 +163,25 @@ export default {
       {
         label: '发货方',
         prop: 'senderUnit',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '发货人',
         prop: 'senderCustomerName',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '收货方',
         prop: 'receiverUnit',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '收货人',
         prop: 'receiverCustomerName',
-        width: '150',
+        width: '100',
         fixed: false
       },
         // {
@@ -193,25 +193,25 @@ export default {
       {
         label: '货品名',
         prop: 'cargoName',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '件数',
         prop: 'cargoAmount',
-        width: '150',
+        width: '90',
         fixed: false
       },
       {
         label: '重量(kg)',
         prop: 'cargoWeight',
-        width: '150',
+        width: '90',
         fixed: false
       },
       {
         label: '体积(方)',
         prop: 'cargoVolume',
-        width: '150',
+        width: '90',
         fixed: false
       },
         // {
@@ -235,19 +235,19 @@ export default {
       {
         label: '付款方式',
         prop: 'shipPayWayName',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '制单人',
         prop: 'userName',
-        width: '150',
+        width: '90',
         fixed: false
       },
       {
         label: '发货人电话',
         prop: 'senderCustomerMobile',
-        width: '150',
+        width: '110',
         fixed: false
       },
       {
@@ -259,7 +259,7 @@ export default {
       {
         label: '收货人电话',
         prop: 'receiverCustomerMobile',
-        width: '150',
+        width: '110',
         fixed: false
       },
       {
@@ -271,13 +271,13 @@ export default {
       {
         label: '交接方式',
         prop: 'shipDeliveryMethodName',
-        width: '150',
+        width: '100',
         fixed: false
       },
       {
         label: '时效',
         prop: 'shipEffective',
-        width: '150',
+        width: '80',
         fixed: false
       },
       {

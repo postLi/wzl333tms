@@ -14,7 +14,7 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;"  @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -99,13 +99,13 @@ export default {
         {
           label: '发车批次',
           prop: 'batchNo',
-          width: '150',
+          width: '120',
           fixed: true
         },
         {
           label: '结算状态',
           prop: 'statusName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -117,13 +117,13 @@ export default {
         {
           label: '到达网点',
           prop: 'arriveOrgName',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '发车时间',
           prop: 'departureTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -132,7 +132,7 @@ export default {
         {
           label: '到达时间',
           prop: 'receivingTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -141,55 +141,55 @@ export default {
         {
           label: '到站其他费',
           prop: 'fee',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '已结到站其他费',
           prop: 'paidFee',
-          width: '180',
+          width: '120',
           fixed: false
         },
         {
           label: '未结到站其他费',
           prop: 'unpaidFee',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '车牌号',
           prop: 'truckIdNumber',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '司机名称',
           prop: 'dirverName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '司机电话',
           prop: 'dirverMobile',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
           label: '配载件数',
           prop: 'loadAmountall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '配载重量',
           prop: 'loadWeightall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '配载体积',
           prop: 'loadVolumeall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
