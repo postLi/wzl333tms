@@ -69,8 +69,11 @@ export function postCancelSettlement(data) {
  */
 export function postAddIncome(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/', data).then(res => {
-    return res.data
-  })
+      return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**************************************
  *             资金流水明细
@@ -82,8 +85,11 @@ export function postAddIncome(data) {
  */
 export function postDetailList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
-    return res.data
-  })
+      return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 取消结算
@@ -107,6 +113,9 @@ export function getFeeTypeDict(settlementId) {
     .then(res => {
       return res.data
     })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 收支方式接口
@@ -118,5 +127,8 @@ export function getOrgFirstFinancialWay(data) {
     })
     .then(res => {
       return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
     })
 }

@@ -16,9 +16,9 @@
             <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column label="发车批次" prop="batchNo" fixed width="120">
+        <el-table-column label="发车批次" prop="batchNo" fixed width="100">
         </el-table-column>
-        <el-table-column prop="truckIdNumber" sortable label="车牌号" width="120">
+        <el-table-column prop="truckIdNumber" sortable label="车牌号" width="100">
         </el-table-column>
         <el-table-column prop="driverName" sortable label="司机" width="120">
         </el-table-column>

@@ -11,7 +11,7 @@
             <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="单据号" prop="settlementSn">
-                  <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" disabled></querySelect>
+                  <el-input v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="支出金额" prop="amount">
                   <el-input :size="btnsize" v-model="formModel.amount" placeholder="支出金额" disabled v-number-only:point></el-input>
@@ -88,7 +88,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
 import dataTableOrder from './components/dataTableOrder'
-import { getFeeInfo, postAddIncome } from '@/api/finance/settleLog'
+import { getFeeInfo, postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/settleLog'
 import Count from './components/count'
 export default {
   name: 'settleLogExpandtiure',
@@ -153,6 +153,7 @@ export default {
       })
     },
     getFeeInfo() {
+      this.getOrgFirstFinancialWay() // 获取收支方式信息
       getFeeInfo(this.otherinfo.orgid, this.paymentsType).then(data => {
           this.loading = false
           this.formModel.amount = data.amount
@@ -200,6 +201,7 @@ export default {
     setFinanceWay(obj) {
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
+      this.getOrgFirstFinancialWay()
     },
     setData() { // 设置传给后台的数据结构
       if (typeof this.formModel.financialWay === 'string') {
@@ -283,6 +285,24 @@ export default {
     changeFeeIdBatch(obj) {
       this.settlementId = obj
       this.setSettlementId(obj)
+    },
+    getOrgFirstFinancialWay () { // 获取收支方式
+      let obj = {
+        financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
+        orgId: this.otherinfo.orgid
+      }
+      getOrgFirstFinancialWay(obj).then(data => {
+        this.financialWays = data
+        if (this.financialWays) {
+         this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
+         this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
+         this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
+        }else {
+          this.formModel.bankAccount = ''
+         this.formModel.wechatAccount = ''
+         this.formModel.alipayAccount = ''
+        }
+      })
     }
   }
 }

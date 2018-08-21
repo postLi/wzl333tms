@@ -12,8 +12,11 @@ import fetch from '../../utils/fetch'
  */
 export function postFindListByFeeType(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findListByFeeType/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
+      return res.data || { list: [], totalCount: 0 }
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 查询应付中转费列表
@@ -22,8 +25,11 @@ export function postFindListByFeeType(data) {
  */
 export function postFindTransferList(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findTransferList/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
+      return res.data || { list: [], totalCount: 0 }
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 查询异常理赔列表
@@ -32,8 +38,11 @@ export function postFindTransferList(data) {
  */
 export function postFindAbnormalList(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findAbnormalList/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
+      return res.data || { list: [], totalCount: 0 }
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 查询异动费用列表
@@ -42,8 +51,11 @@ export function postFindAbnormalList(data) {
  */
 export function postFindChangeList(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findChangeList/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
+      return res.data || { list: [], totalCount: 0 }
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 结算保存
@@ -51,9 +63,12 @@ export function postFindChangeList(data) {
  * @return {[type]}      [description]
  */
 export function postCreateloadSettlement(orgId, data) {
-  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/create/'+ orgId, data).then(res => {
-    return res.data
-  })
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/create/' + orgId, data).then(res => {
+      return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 
 
@@ -72,8 +87,11 @@ export function postCreateloadSettlement(orgId, data) {
  */
 export function postPayListBySummary(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/payListBySummary/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
+      return res.data || { list: [], totalCount: 0 }
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  * 结算页面列表-单个费用
@@ -86,8 +104,11 @@ export function postPayListBySummary(data) {
  */
 export function postPayListByOne(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/payListByOne/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
-  })
+      return res.data || { list: [], totalCount: 0 }
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }
 /**
  *  获得结算单号
@@ -102,6 +123,9 @@ export function GetFeeInfo(orgId, paymentsType) {
  */
 export function postLoadSettlement(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/loadSettlement/', data).then(res => {
-    return res.data
-  })
+      return res.data
+    })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
 }

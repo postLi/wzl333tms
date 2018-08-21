@@ -8,10 +8,10 @@
             费用信息
           </template>
           <div class="feeFrom clearfix">
-            <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
+            <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="80px" :rules="formModelRules">
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="单据号" prop="settlementSn">
-                  <querySelect v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></querySelect>
+                  <el-input v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></el-input>
                 </el-form-item>
                 <el-form-item label="收入金额" prop="amount">
                   <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled v-number-only:point :maxlength="8" ></el-input>
@@ -26,15 +26,7 @@
               </div>
               <div class="feeFrom-type-baseInfo">
                 <el-form-item label="收支方式" prop="financialWay">
-                  <el-select v-model="formModel.financialWay" filterable placeholder="选择收支方式" v-if="isFinancialWays">
-                    <el-option
-                      v-for="item in financialWays"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay" v-else></selectType>
+                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
                 </el-form-item>
                 <el-form-item label="银行卡号" prop="bankAccount">
                   <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable v-numberOnly></el-input>
@@ -128,13 +120,14 @@ export default {
   },
   mounted() {
     this.getFeeInfo()
-
-    // this.getSystemTime()
   },
   methods: {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = parseTime(data)
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text || '获取系统时间发生失败~')
       })
     },
     getFeeInfo() {
@@ -150,10 +143,9 @@ export default {
         this.formModel.bankAccount = data.szDtoList[0].bankAccount
         this.formModel.remark = data.remark
         this.getSystemTime()
-        console.log('getFeeInfo',this.formModel, data)
       })
       .catch(error => {
-        this.$message({type:'error', message:error.errorInfo || error.text})
+        this.$message({type:'error', message:error.errorInfo || error.text || '发生未知错误！'})
       })
 
     },
@@ -173,8 +165,11 @@ export default {
       }
     },
     setFinanceWay(obj) {
+      console.log(obj)
       this.formModel.financialWayId = obj
       this.formModel.financialWay = obj
+      this.getOrgFirstFinancialWay()
+
     },
     setData() { // 设置传给后台的数据结构
       if (typeof this.formModel.financialWay === 'string') {
@@ -199,7 +194,7 @@ export default {
         return false
       }
       this.setData()
-      postAddIncome(this.addIncomeInfo).then(data => {
+      postAddIncome(this.addIncomeInfo).then(data => { // 保存
         this.$message({ type: 'success', message: '保存成功！' })
         this.$router.push({ path: './settleLog' })
       })
@@ -218,7 +213,7 @@ export default {
         })
       })
     },
-    getLoadTable(obj) {
+    getLoadTable(obj) { // 获取右边合计总数 = 收入金额
       let amount = 0
       this.loadTable = Object.assign([], obj)
       this.loadTable.forEach((e, index) => {
@@ -232,13 +227,19 @@ export default {
     },
     getOrgFirstFinancialWay () { // 获取收支方式
       let obj = {
-        financialWay: '',
+        financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
         orgId: this.otherinfo.orgid
       }
       getOrgFirstFinancialWay(obj).then(data => {
         this.financialWays = data
-        if (this.financialWays !== null) {
-          this.isFinancialWays = true
+        if (this.financialWays) {
+         this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
+         this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
+         this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
+        }else {
+          this.formModel.bankAccount = ''
+         this.formModel.wechatAccount = ''
+         this.formModel.alipayAccount = ''
         }
       })
     }
