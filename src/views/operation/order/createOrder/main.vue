@@ -414,7 +414,7 @@
                   </td>
                   <td>
                     <el-input size="mini" :maxlength="20"
-                    v-numberOnly:point   v-model="form.tmsOrderTransfer.codService" />
+                    v-numberOnly:point   v-model="form.tmsOrderTransfer.transferOtherFee" />
                   </td>
                   <td>
                     <el-input size="mini" :maxlength="8" disabled v-model="form.tmsOrderTransfer.totalCost" />
@@ -838,7 +838,7 @@ export default {
           'arrivalMobile': '',
           'carrierId': '',
           'carrierMobile': '',
-          'codService': '',
+          'transferOtherFee': '',
           'createTime': '',
           'deliveryExpense': '',
           // 当修改运单时，是否可以修改中转信息
@@ -886,7 +886,7 @@ export default {
   },
   computed: {
     'transferTotalFee'() {
-      return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.codService).result()
+      return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
     'theFeeConfig'() {
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
