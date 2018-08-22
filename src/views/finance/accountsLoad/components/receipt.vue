@@ -11,7 +11,6 @@
           <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
           </el-date-picker>
         </div>
-
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
@@ -53,18 +52,22 @@
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-               <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="100">
             <template slot-scope="props">
-              <!-- <el-input v-model="props.row.financialWay" :size="btnsize"></el-input> -->
-              <!-- <querySelect v-model="props.row.financialWay" search="financialWay" keyvalue="financialWay" type="payway" /> -->
-              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
+              <!-- <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
                 <template slot-scope="{item}">
                   <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
                 </template>
-              </querySelect>
+              </querySelect> -->
+              <el-autocomplete popper-class="querySelectItem" v-model="props.row.financialWay" :size="btnsize" :fetch-suggestions="querySearch" placeholder="支付方式" 
+              @select="(item) => sender(item,props.$index)">
+                <template slot-scope="{item}">
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
+                </template>
+              </el-autocomplete>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
@@ -74,7 +77,7 @@
           </el-table-column>
           <el-table-column prop="bankAccount" label="银行卡号">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankAccount" :size="btnsize"  :maxlength="maxlength" v-numberOnly></el-input>
+              <el-input v-model="props.row.bankAccount" :size="btnsize" :maxlength="maxlength" v-numberOnly></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="bankAccountName" label="开户人">
@@ -130,6 +133,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
 import querySelect from '@/components/querySelect/index'
 import { PrintSettlement } from '@/utils/lodopFuncs'
+import { postTmsFfinancialwayList } from '@/api/finance/financefinancialway'
 export default {
   components: {
     querySelect
@@ -149,6 +153,7 @@ export default {
       formModel: {
         detailDtoList2: []
       },
+      financialWalList: [],
       loading: true,
       rules: {},
       btnsize: 'mini',
@@ -172,49 +177,49 @@ export default {
     getRouteInfo() {
       return JSON.parse(this.$route.query.searchQuery)
     },
-    settlementTypeId () {
+    settlementTypeId() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchShort':
-        return 180
+          return 180
         case 'batchDeliver':
-        return 181
+          return 181
         case 'batchInsurance':
-        return 179
+          return 179
         case 'batchStationLoad':
-        return 179
+          return 179
         case 'batchStationOther':
-        return 179
+          return 179
         case 'batchArrivalLoad':
-        return 179
+          return 179
         case 'batchArrivalOther':
-        return 179
+          return 179
         case 'batchArrivalAll':
-        return 179
+          return 179
       }
     },
-    dataName () {
+    dataName() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchShort':
-        return '短驳费'
+          return '短驳费'
         case 'batchDeliver':
-        return '送货费'
+          return '送货费'
         case 'batchInsurance':
-        return '整车保险费'
+          return '整车保险费'
         case 'batchStationLoad':
-        return '发站装卸费'
+          return '发站装卸费'
         case 'batchStationOther':
-        return '发站其他费'
+          return '发站其他费'
         case 'batchArrivalLoad':
-        return '到站装卸费'
+          return '到站装卸费'
         case 'batchArrivalOther':
-        return '到站其他费'
+          return '到站其他费'
         case 'waybillKickback':
-        return '回扣'
+          return '回扣'
       }
     },
-    currentPage () {
+    currentPage() {
       let currentPage = this.$route.query.currentPage
       return currentPage.substr(5, currentPage.length)
     }
@@ -246,16 +251,43 @@ export default {
     // }
   },
   mounted() {
+    this.postTmsFfinancialwayList()
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
-    print () {
+    print() {
       let data = Object.assign({}, this.formModel)
       this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
       PrintSettlement(data)
       this.submitForm('formModel')
+    },
+    postTmsFfinancialwayList() {
+      let query = {
+        currentPage: 1,
+        pageSize: 100,
+        vo: {
+          financialWay: '',
+          financialWayTypeId: '',
+          orgId: this.otherinfo.orgid,
+          status: ''
+        }
+      }
+      postTmsFfinancialwayList(query).then(data => {
+        this.financialWalList = data.list
+      })
+    },
+    querySearch(queryString, cb) {
+      let dataList = this.financialWalList
+      let results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (res) => {
+        return (res.financialWay.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
     },
     init() {
       this.loading = false
@@ -265,7 +297,7 @@ export default {
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
         this.formModel.detailDtoList2 = []
-        this.formModel.settlementTime = parseTime(new Date()) 
+        this.formModel.settlementTime = parseTime(new Date())
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
@@ -279,10 +311,10 @@ export default {
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = objectMerge2([],this.info)
+      this.formModel.detailDtoList = objectMerge2([], this.info)
 
       // 设置费用项
-      
+
       let obj = {}
       this.formModel.detailDtoList.map(el => {
         if (obj[el.dataName]) {
@@ -319,11 +351,11 @@ export default {
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
       let apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
-         this.amount.splice(apoint, 1)
+        this.amount.splice(apoint, 1)
       }
     },
-    sender (item, index) {
-      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
+    sender(item, index) {
+      this.$set(this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index], item))
     },
     getSystemTime() {
       getSystemTime().then(data => {
@@ -337,10 +369,10 @@ export default {
       }
     },
     setData() {
-      
+
       if (this.dataName === '到站装卸费' && this.dataName === '到站其他费') {
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      }else {
+      } else {
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid) // 不是到付的进入结算页面,结算网点ascriptionOrgid默认为搜索的发车网点
       }
       this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
@@ -355,12 +387,12 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          console.log(this.dataName,this.submitData)
+          console.log(this.dataName, this.submitData)
           // return false ////////////////////////////////////////////
           postLoadSettlement(this.submitData).then(data => {
               this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch', query:{name: this.currentPage} })
+              this.$router.push({ path: './accountsPayable/batch', query: { name: this.currentPage } })
             })
             .catch(error => {
               this.$message({ type: 'error', message: error.errorInfo || error.text })
@@ -393,8 +425,7 @@ export default {
     getSum(param) { // 表格合计-自定义显示
       const { columns, data } = param
       const sums = []
-      this.$nextTick(() => {
-      })
+      this.$nextTick(() => {})
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '合计'
@@ -405,7 +436,7 @@ export default {
           return
         }
         let count = -2 // 从第3列开始显示
-        for(let i = 12; i > 2; i--) {
+        for (let i = 12; i > 2; i--) {
           count++
           if (index === i) {
             sums[index] = this.amount[count]

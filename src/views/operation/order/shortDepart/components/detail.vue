@@ -27,7 +27,7 @@
             </td>
             <th>短驳费</th>
             <td>
-              <el-input v-model="info.shortFee" :size="btnsize"></el-input>
+              <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input>
             </td>
             <th>分摊方式</th>
             <td>

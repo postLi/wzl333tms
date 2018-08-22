@@ -56,7 +56,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                    <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -336,7 +336,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return JSON.stringify(this.$route.query.searchQuery)
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -354,10 +354,11 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
+      console.log(this.getRouteInfo.vo)
       this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-        this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
       //   // this.$router.push({ path: './accountsPayable/batch' })
@@ -385,29 +386,29 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       // if (!this.isFresh) {
-        postPayListByOne(this.searchQuery).then(data => {
-          this.leftTable = Object.assign([], data.list)
-          selectListBatchNos.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.batchNo) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            let item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+      postPayListByOne(this.searchQuery).then(data => {
+        this.leftTable = Object.assign([], data.list)
+        selectListBatchNos.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.batchNo) {
+              this.rightTable.push(item)
             }
-            e.amount = e.unpaidFee
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
         })
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          let item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+          e.amount = e.unpaidFee
+        })
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+      })
 
       // }
     },
@@ -417,8 +418,10 @@ export default {
       let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
       let paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
+        this.isGoReceipt = true
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
       } else {
+        this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
@@ -507,7 +510,7 @@ export default {
         this.isGoReceipt = false
       }
     },
-     selectCurrent (obj, index) {
+    selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
@@ -559,11 +562,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['_index|2|单','fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['_index|2|单','fee', 'unpaidFee', 'paidFee', 'loadAmountall|','amount', 'loadWeightall|', 'loadVolumeall|']
+      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'amount', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     }
   }

@@ -122,6 +122,12 @@ export default {
         pageSize: 100,
         vo: {}
       },
+      FEE_TYPE: {
+        amountArrivepayCarriage: '实结到付运费',
+        amountArrivepayOilCard: '实结到付油卡',
+        amountArriveHandlingFee: '实结到站装卸费',
+        amountArriveOtherFee: '实结到站其他费'
+      },
       sign: 2, // 2-到车汇总
       tableColumnLeft: [{
           label: '发车批次',
@@ -571,8 +577,11 @@ export default {
       let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
       let paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.isGoReceipt = true
+        this.$set(this.rightTable, index, Object.assign(this.rightTable[index], { [prop]: unpaidVal }))
+        this.$message({ type: 'warning', message: '【'+this.FEE_TYPE[prop]+'】 实结费用不小于0，不大于未结费用。' })
       } else {
+        this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]

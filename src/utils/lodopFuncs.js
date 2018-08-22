@@ -18,9 +18,7 @@
      var verOPR = ua.match(/OPR\D?\d+/i)
      var verFF = ua.match(/Firefox\D?\d+/i)
      var x64 = ua.match(/x64/i)
-     if ((verTrident == null) && (verIE == null) && (x64 !== null))
-       {return true;}
-     else
+     if ((verTrident == null) && (verIE == null) && (x64 !== null)) { return true; } else
      if (verFF !== null) {
        verFF = verFF[0].match(/\d+/)
        if ((verFF[0] >= 41) || (x64 !== null)) return true
@@ -36,7 +34,7 @@
          if (verChrome[0] >= 41) return true
        };
      }
-     return false  
+     return false
    } catch (err) { return true };
  }
 
@@ -78,8 +76,7 @@
        if (!LODOP && document.readyState !== 'complete') { alert('C-Lodop没准备好，请稍后再试！'); return };
        if (!LODOP) {
          if (isIE) document.write(strCLodopInstall)
-         else
-           {var conf = confirm("没有安装LODOP云打印插件,确认下载？")}
+         else { var conf = confirm("没有安装LODOP云打印插件,确认下载？") }
          if (conf) {
            window.open(downloadPath)
          }
@@ -88,8 +85,7 @@
        } else {
          if (CLODOP.CVERSION < '3.0.4.3') {
            if (isIE) document.write(strCLodopUpdate)
-           else
-             {document.body.innerHTML = strCLodopUpdate + document.body.innerHTML;}
+           else { document.body.innerHTML = strCLodopUpdate + document.body.innerHTML; }
          }
          if (oEMBED && oEMBED.parentNode) oEMBED.parentNode.removeChild(oEMBED)
          if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT)
@@ -111,16 +107,13 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        //=====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-         if (navigator.userAgent.indexOf('Chrome') >= 0)
-           {document.body.innerHTML = strHtmChrome + document.body.innerHTML;}
-         if (navigator.userAgent.indexOf('Firefox') >= 0)
-           {document.body.innerHTML = strHtmFireFox + document.body.innerHTML;}
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+         if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML; }
+         if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML; }
          if (is64IE) document.write(strHtm64_Install)
          else
          if (isIE) document.write(strHtmInstall)
-         else
-           {document.body.innerHTML = strHtmInstall + document.body.innerHTML;}
+         else { document.body.innerHTML = strHtmInstall + document.body.innerHTML; }
          return LODOP
        };
      }
@@ -129,8 +122,7 @@
          if (is64IE) document.write(strHtm64_Update)
          else
          if (isIE) document.write(strHtmUpdate)
-         else
-           {document.body.innerHTML = strHtmUpdate + document.body.innerHTML;}
+         else { document.body.innerHTML = strHtmUpdate + document.body.innerHTML; }
        }
        return LODOP
      };
@@ -224,7 +216,7 @@
      getLodop()
    }
  }
-  //打印合同
+ //打印合同
  export function PrintContract(obj) {
    try {
      const tableId = obj
@@ -291,11 +283,11 @@
      let str = ''
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
-        str += 'LODOP.PRINT_INIT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流流托运单打印");'
-      } else {
-        str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.filedName + ':' + e.value + '");'
-        str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-      }
+         str += 'LODOP.PRINT_INIT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流流托运单打印");'
+       } else {
+         str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.filedName + ':' + e.value + '");'
+         str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+       }
      })
      eval(str)
      // LODOP.PRINT_SETUP()
@@ -336,10 +328,7 @@
    try {
      var LODOP = getLodop()
      if (LODOP.VERSION) {
-       if (LODOP.CVERSION)
-         {alert("当前有C-Lodop云打印可用!\n C-Lodop版本:" + LODOP.CVERSION + "(内含Lodop" + LODOP.VERSION + ")");}
-       else
-         {alert("本机已成功安装了Lodop控件！\n 版本号:" + LODOP.VERSION);}
+       if (LODOP.CVERSION) { alert("当前有C-Lodop云打印可用!\n C-Lodop版本:" + LODOP.CVERSION + "(内含Lodop" + LODOP.VERSION + ")"); } else { alert("本机已成功安装了Lodop控件！\n 版本号:" + LODOP.VERSION); }
      }
    } catch (err) {
      getLodop()
@@ -389,8 +378,9 @@
      const tbodyTr = tbody.insertRow()
      for (let j = 0; j < columns.length; j++) {
        const td = tbodyTr.insertCell()
-       td.innerHTML = data[k][columns[j].prop]
+       td.innerHTML = columns[j].prop === 'id' ? k+1 :data[k][columns[j].prop]
        td.style.width = data[k][columns[j].width] + 'px'
+       // td.setAttribute('width', data[k][columns[j].width])
      }
    }
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id

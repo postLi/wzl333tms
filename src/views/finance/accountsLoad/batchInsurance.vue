@@ -416,8 +416,10 @@ export default {
       let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
       let paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
+        this.isGoReceipt = true
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
       } else {
+        this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]

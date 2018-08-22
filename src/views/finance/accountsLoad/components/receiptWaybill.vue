@@ -59,11 +59,17 @@
           </el-table-column>
           <el-table-column prop="financialWay" label="收支方式" width="120">
             <template slot-scope="props">
-              <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
+              <!-- <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
                 <template slot-scope="{item}">
                   <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
                 </template>
-              </querySelect>
+              </querySelect> -->
+              <el-autocomplete popper-class="querySelectItem" v-model="props.row.financialWay" :size="btnsize" :fetch-suggestions="querySearch" placeholder="支付方式" 
+              @select="(item) => sender(item,props.$index)">
+                <template slot-scope="{item}">
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
+                </template>
+              </el-autocomplete>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
@@ -129,6 +135,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
 import querySelect from '@/components/querySelect/index'
 import { PrintSettlement } from '@/utils/lodopFuncs'
+import { postTmsFfinancialwayList } from '@/api/finance/financefinancialway'
 export default {
   components: {
     querySelect
@@ -150,6 +157,7 @@ export default {
         detailDtoList2: []
       },
       loading: true,
+      financialWalList: [],
       rules: {},
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
@@ -227,6 +235,7 @@ export default {
     }
   },
   mounted() {
+    this.postTmsFfinancialwayList()
     this.$nextTick(() => {
       this.init()
     })
@@ -241,6 +250,32 @@ export default {
       this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
       PrintSettlement(data)
       this.submitForm('formModel')
+    },
+    postTmsFfinancialwayList() {
+      let query = {
+        currentPage: 1,
+        pageSize: 100,
+        vo: {
+          financialWay: '',
+          financialWayTypeId: '',
+          orgId: this.otherinfo.orgid,
+          status: ''
+        }
+      }
+      postTmsFfinancialwayList(query).then(data => {
+        this.financialWalList = data.list
+      })
+    },
+    querySearch(queryString, cb) {
+      let dataList = this.financialWalList
+      let results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (res) => {
+        return (res.financialWay.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
     },
     init() {
       this.loading = false
