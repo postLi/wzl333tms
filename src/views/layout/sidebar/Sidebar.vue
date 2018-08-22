@@ -8,10 +8,10 @@
       <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
       <sidebar-item ref="sidebaritem" :routes='sidebarRouters'></sidebar-item>
       <div class="nologin">
-        <!-- <a href="http://192.168.1.157:9528/?nologin=1">
+        <!-- <a :href="'http://192.168.1.157:9528/?access_token='+token">
         <el-button size="large" type="primary">TMS系统</el-button></a><br> -->
-        <a href="http://192.168.1.24:9526/?nologin=1"><el-button size="large" type="success">运力中心</el-button></a><br>
-        <a href="http://192.168.1.170/member/content_list.php?channelid=1"><el-button size="large" type="warning">官网系统</el-button></a>
+        <a :href="'http://192.168.1.24:9526/?access_token=' + token"><el-button size="large" type="success">运力中心</el-button></a><br>
+        <a :href="'http://192.168.1.170/member/loginbytoken.php?access_token='+token"><el-button size="large" type="warning">官网系统</el-button></a>
       </div>
       <div @mouseover="showSubnav" @mouseout="hideSubnav" class="subNavWrapper"></div>
   </div>
@@ -23,6 +23,7 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import SidebarMenuSearch from './SidebarMenuSearch'
 import Hamburger from '@/components/Hamburger'
+import { getToken } from '@/utils/auth'
 
 export default {
   components: { SidebarItem, Hamburger, SidebarMenuSearch },
@@ -32,6 +33,14 @@ export default {
       'sidebarRouters',
       'permission_routers'
     ])
+  },
+  data() {
+    return {
+      token: ''
+    }
+  },
+  mounted() {
+    this.token = getToken()
   },
   methods: {
     toggleSideBar() {

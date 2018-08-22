@@ -2428,17 +2428,16 @@ export default {
       this.isChecked = true
       this.isCheckedShow = false
       // 先判断表单必填项是否校验通过
-      console.log('提交前数据：', this.form)
       // this.$refs['ruleForm'].validate((valid, errlist) => {
       this.vaildateForm().then(valid => {
         this.isChecked = false
         this.isCheckedShow = false
-
         if (valid) {
           // 判断运费是否符合总计
           if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result() !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
-            this.showMessage('各付款方式之和与合计运费不等~')
+            this.$message.error('各付款方式之和与合计运费不等~')
           } else {
+            console.log('提交前数据4：', valid)
             // 再提取各个表格项里的数据
             const data = objectMerge2({}, this.form)
             delete data.sender

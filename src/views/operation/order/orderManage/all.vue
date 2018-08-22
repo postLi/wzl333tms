@@ -132,7 +132,7 @@ export default {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
-        'fixed': true
+        'fixed': false
       }, {
         'label': '运单标识',
         'prop': 'shipIdentifying',

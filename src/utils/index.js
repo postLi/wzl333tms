@@ -409,6 +409,83 @@ export function toggleClass(element, className) {
   element.className = classString
 }
 
+export const pickerOptions3 = {
+  currentMonth(dateobj) {
+    const end = dateobj || new Date()
+    const start = new Date(end.getFullYear(), end.getMonth(), 1)
+    return [start, end]
+  },
+  currentAllMonth(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth() + 1, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastMonth(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth() - 1, 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth(), 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastDay(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  today(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  currentWeek(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  currentAllWeek(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
+    _end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay() + 7)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  currentYear(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), 0, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  currentAllYear(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), 0, 1)
+    _end = new Date(_end.getFullYear() + 1, 0, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastYear(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear() - 1, 0, 1)
+    _end = new Date(_end.getFullYear(), 0, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  }
+}
+
 export const pickerOptions2 = [{
   text: '今天',
   onClick(picker) {
@@ -793,9 +870,9 @@ export const uniqueArray = (array, key) => {
     let repeat = false
     for (let j = 0; j < result.length; j++) {
       if (item[key] === result[j][key]) {
-            repeat = true
-            break
-          }
+        repeat = true
+        break
+      }
     }
     if (!repeat) {
       result.push(item)
