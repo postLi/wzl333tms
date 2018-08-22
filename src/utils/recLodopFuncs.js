@@ -545,6 +545,7 @@ function createReconciliation(params) {
   table.setAttribute('border', '1')
   table.setAttribute('font', '12px')
   table.setAttribute('width', '100%')
+  table.setAttribute('height', '100%')
   table.setAttribute('table-layout', 'fixed')
   var theadStr = ''
   theadStr = `
@@ -555,9 +556,9 @@ function createReconciliation(params) {
    `
   // 标题
   let tbodyStr = ` <tr>
-    <td width="5%">承运商名称 </td>
+    <td width="5%" height="5%">承运商名称 </td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberName}</td>
-    <td width="5%" >业务负责人</td>
+    <td width="5%"  height="5%">业务负责人</td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPerson}</td>
     <td width="5%" >联系方式</td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPersonPhone}</td>
@@ -617,7 +618,7 @@ function createReconciliation(params) {
           <td colspan="1" >小计</td>
           <td colspan="1" >备注</td>
       </tr>`
-  // tbodyStr = tbodyStr
+
   for (let i = 0; i < dealInfo.length; i++) {
     tbodyStr += `
              <tr>
