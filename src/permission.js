@@ -11,12 +11,12 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   // 如果链接带有token信息，则将其保存
   // 会覆盖原有的token
-  if (to.query.tmstoken) {
-    store.dispatch('FeLogin', to.query.tmstoken).then(() => {
+  if (to.query.access_token) {
+    store.dispatch('FeLogin', to.query.access_token).then(() => {
       next({
-        path: to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1').replace(/\?$/, '')
+        path: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, '')
       })
-      console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1').replace(/\?$/, ''))
+      console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, ''))
     })
   } else if (to.query.nologin) {
     store.dispatch('Login', {
@@ -44,8 +44,8 @@ router.beforeEach((to, from, next) => {
           console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           next({ path: '/login', query: {
-            // 删除tmstoken，避免重复循环
-            tourl: to.fullPath.replace(/([&|?])(tmstoken=[^&]*&?)/, '$1')
+            // 删除access_token，避免重复循环
+            tourl: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1')
           }})
         })
       } else {

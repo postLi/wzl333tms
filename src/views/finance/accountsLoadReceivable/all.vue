@@ -382,11 +382,11 @@ export default {
       }
     },
     setRight(item) {
-      item.inputNowPayFee = 1
+      /* item.inputNowPayFee = 1
       item.inputArrivepayFee = 1
       item.inputReceiptpayFee = 1
       item.inputMonthpayFee = 1
-      item.inputChangeFee = 1
+      item.inputChangeFee = 1 */
 
       // this.rightTable.push(item)
 
@@ -411,7 +411,14 @@ export default {
           // 过滤未完成结算的数据
           this.leftTable = Object.assign([], data.list.filter(el => {
             return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.totalStatus)
-          }))
+          })).map(el => {
+            el.inputNowPayFee = el.notNowPayFee
+            el.inputArrivepayFee = el.notArrivepayFee
+            el.inputReceiptpayFee = el.notReceiptpayFee
+            el.inputMonthpayFee = el.notMonthpayFee
+            el.inputChangeFee = el.notChangeFee
+            return el
+          })
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
               if (e === item.shipSn) {
@@ -437,7 +444,16 @@ export default {
       }
     },
     changLoadData(index, prop, newVal) {
-      this.rightTable[index][prop] = newVal
+      let num = 0
+
+      if (newVal) {
+        num = this.rightTable[index][prop.replace('input', 'not')]
+      }
+
+      this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
+        [prop]: num
+      }))
+
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名
