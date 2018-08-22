@@ -230,10 +230,19 @@ export default {
          }, {
            text: '本月',
            onClick(picker) {
-             const end = new Date()
-             const start = new Date()
-             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-             picker.$emit('pick', [start, end])
+            // 今天
+            const day2 = new Date()
+            day2.setTime(day2.getTime())
+            const end = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
+            const Newday = (new Date(end)).getTime()
+
+            const NewTues = (new Date(end)).getTime() - (86400000 * 3)
+            const date = new Date(NewTues)
+            // 本周时间
+            const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+
+            const ThisMonth = Newday - date.getDate() * 86400000
+            picker.$emit('pick', [start, end])
            }
          }, {
            text: '本年',
@@ -244,6 +253,7 @@ export default {
              picker.$emit('pick', [start, end])
            }
          }]
+         
        },
        value6: '',
        value7: ''
