@@ -72,7 +72,17 @@ export default {
     TableSetup
   },
   mounted() {
-    this.searchQuery.vo.userId = this.$route.query.id
+    // this.searchQuery.vo.userId = this.$route.query.id
+  },
+  activated() {
+    // this.searchQuery.vo.userId = this.$route.query.id
+    // this.fetchData()
+  },
+  watch: {
+    $route() {
+      this.searchQuery.vo.userId = this.$route.query.id
+      this.fetchData()
+    }
   },
   data() {
     return {

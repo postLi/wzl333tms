@@ -65,7 +65,7 @@ import SearchForm from './components/search'
 import TableSetup from './components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
-import { getSummaries } from '@/utils/'
+import { getSummaries, objectMerge2 } from '@/utils/'
 
 export default {
   components: {
@@ -229,7 +229,9 @@ export default {
     },
     fetchAllOrder() {
       this.loading = true
-      return accountApi.getReceivableList(this.searchQuery).then(data => {
+      const data = objectMerge2(this.searchQuery)
+      data.vo.ascriptionOrgId = data.vo.shipFromOrgid
+      return accountApi.getReceivableList(data).then(data => {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false

@@ -70,7 +70,7 @@ export default {
     },
     clearForm() {
       this.searchForm.status = ''
-      this.searchForm.username = ''
+      this.searchForm.userName = ''
       this.searchForm.orgid = this.otherinfo.orgid
     }
   }

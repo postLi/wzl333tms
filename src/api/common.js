@@ -34,6 +34,7 @@ export function getSystemTime() {
     }
  */
 window.UPLOADPOLICYDATA = '' // 用来缓存上传policy
+window.UPLOADPOLICYDATA_timer = '' // 加个定时器变量，防止没有引用的定时器被自动回收
 export function getUploadPolicy() {
   // 后期可添加是否过期的验证
   if (window.UPLOADPOLICYDATA) {
@@ -44,9 +45,9 @@ export function getUploadPolicy() {
     return fetch.get('/anfacommonservice/common/oss/v1/policy').then(res => {
       window.UPLOADPOLICYDATA = res.data || {}
       // 定时清除旧数据
-      setTimeout(() => {
+      window.UPLOADPOLICYDATA_timer = setTimeout(() => {
         window.UPLOADPOLICYDATA = ''
-      }, 1 * 60 * 1000)
+      }, 1 * 30 * 1000)
       return window.UPLOADPOLICYDATA
     })
   }
@@ -96,8 +97,8 @@ export function getInitializationCheck() {
 
 export function postImportExcel(data) {
   return fetch.post('/api-system/system/excel/v1/importExcel/', data).then(res => {
-      return res.data
-    })
+    return res.data
+  })
     .catch(error => {
       return error.data
     })

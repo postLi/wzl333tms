@@ -533,6 +533,7 @@ export default {
       // 控制显示提示消息
       isChecked: false,
       isCheckedShow: false,
+      isSaving: false,
       // 提货批次相关
       currentBatch: 1,
       // 最近编辑的批次，用来返回或者切换到下一个未保存的票
@@ -2425,6 +2426,7 @@ export default {
       })
     },
     submitForm() {
+      this.loading = true
       this.isChecked = true
       this.isCheckedShow = false
       // 先判断表单必填项是否校验通过
@@ -2432,6 +2434,7 @@ export default {
       this.vaildateForm().then(valid => {
         this.isChecked = false
         this.isCheckedShow = false
+
         if (valid) {
           // 判断运费是否符合总计
           if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result() !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
@@ -2530,6 +2533,7 @@ export default {
               data.tmsOrderShip.shipStatus = this.orderData.tmsOrderShip.shipStatus
               console.log('change Order:', data)
               orderManage.putChangeOrder(data).then(res => {
+                this.loading = false
                 this.$message.success('成功修改运单！')
                 this.eventBus.$emit('saveOrderSuccess')
 
@@ -2545,6 +2549,7 @@ export default {
                   this.batchSaveList[this.currentBatch].data = data
                 }
               }).catch(err => {
+                this.loading = false
                 this.$message.error('修改失败，原因：' + err.text)
               })
             } else {
@@ -2567,6 +2572,7 @@ export default {
                 this.eventBus.$emit('saveOrderSuccess')
                 data.tmsOrderShip.id = res.data
                 this.tmsOrderShipId = res.data
+                this.loading = false
                 // 当为批次列表过来的，不作处理
                 if (!this.output.isbatch) {
                   if (this.output.isPreOrder) {
@@ -2587,10 +2593,13 @@ export default {
                   this.print() // 执行成功后打印运单
                 }
               }).catch(err => {
+                this.loading = false
                 this.$message.error('创建失败，原因：' + err.text)
               })
             }
           }
+        } else {
+          this.loading = false
         }
       })
     },

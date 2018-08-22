@@ -120,7 +120,7 @@ export default {
   mounted() {
     this.init()
   },
-  updated(){
+  updated() {
     console.log('single image updated~~~')
   },
   methods: {
@@ -132,6 +132,9 @@ export default {
         this.upload.signature = data.signature
         this.uploadUrl = data.host
         this.dir = data.dir
+        this.timer = setTimeout(() => {
+          this.init()
+        }, 3 * 60 * 1000) // 每3分钟自动获取凭证
         // this.upload.key = data.dir + this.random_string() + type
       }).catch(() => {
       })
