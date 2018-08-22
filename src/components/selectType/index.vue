@@ -97,6 +97,10 @@ export default {
       type: Boolean,
       default: false
     },
+    arterDelivery: {
+      type: Boolean,
+      default: false
+    },
     filterfn: {
       type: Function
     },
@@ -180,7 +184,16 @@ export default {
     },
     fetchData() {
       var cb = (data) => {
-        this.types = data
+
+        if(this.arterDelivery){
+          this.types = data.filter(el => {
+            return el.id !== 52
+          })
+        }else{
+          this.types = data
+
+        }
+
         // this.listdata = data
         // debugger
         CACHE.set(this.type, data)

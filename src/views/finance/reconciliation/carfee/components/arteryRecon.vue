@@ -156,7 +156,12 @@
             width="160"
             label="到达网点">
           </el-table-column>
-
+          <el-table-column
+            prop="driverName"
+            sortable
+            width="100"
+            label="司机">
+          </el-table-column>
           <el-table-column
             sortable
             prop="loadAmount"
@@ -313,7 +318,12 @@
             width="160"
             label="到达网点">
           </el-table-column>
-
+          <el-table-column
+            prop="driverName"
+            sortable
+            width="100"
+            label="司机">
+          </el-table-column>
           <el-table-column
             sortable
             prop="loadAmount"

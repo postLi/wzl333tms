@@ -230,6 +230,7 @@ export default {
       this.form.wechatAccount = ''
       this.form.financialWayId = 280
       this.form.financialWay = ''
+      this.form.bankName = ''
 
       this.financialWayClick(this.form.financialWayId)
     },

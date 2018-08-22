@@ -13,7 +13,7 @@
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
                 <!--</el-form-item>-->
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px"
-                         class="sta_searchinfo clearfix" :model="formModel">
+                         class="st_searchinfo clearfix" :model="formModel">
                   <el-form-item label="到达网点:">
                     <el-input v-model="formModel.arriveOrgName" :maxlength="15" clearable disabled>
                     </el-input>
@@ -61,7 +61,7 @@
               </div>
               <div class="infos_table_">
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px"
-                         class="sta_searchinfo clearfix" :model="formModel" :rules="ruleData">
+                         class="st_searchinfo clearfix" :model="formModel" :rules="ruleData">
                   <ul>
                     <li>
                       <p>现付运费</p>
@@ -134,7 +134,7 @@
                   </ul>
                 </el-form>
               </div>
-              <div class="tab_info">
+              <div class="tab_info artDelivery_table">
                 <div class="_btns_box">
                   <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')"
                              v-if="!isAlFun" class="table_poptitle">{{popTitle}}
@@ -1163,7 +1163,10 @@
     display: flex;
     flex-direction: column;
     position: relative;
-
+    margin-top: 78px;
+    .tab_info.artDelivery_table{
+      padding: 0;
+    }
     .tab_info {
       padding: 0 10px;
       height: 100%;
@@ -1172,10 +1175,11 @@
       flex-direction: column;
 
       ._btns_box {
-        padding-top: 17px;
+        /*padding-top: 17px;*/
         margin-bottom: 10px;
         border-top: 2px dotted #c8c8c8;
         position: relative;
+        padding: 17px 10px 0 10px;
         .el-button {
           margin-right: 0;
         }
@@ -1199,7 +1203,7 @@
         width: 100%;
         height: calc(100vh - 570px);
         flex-grow: 1;
-
+        padding: 0 10px;
         .el-table {
           table {
             th,
@@ -1259,19 +1263,28 @@
       overflow: hidden;
     }
     .info_form {
-      margin-top: 85px;
-      padding-bottom: 10px;
+      /*margin-top: 85px;*/
+      /*padding-bottom: 10px;*/
 
-      .sta_searchinfo {
+      .st_searchinfo {
         border-left: #d4d4d4;
         .el-form-item {
-          margin-right: 0;
+          margin-right: 35px;
           margin-bottom: 15px;
+        }
+        .el-form-item:nth-of-type(3) {
+          margin-right: 0;
+        }
+        .el-form-item:nth-of-type(6) {
+          margin-right: 0;
+        }
+        .el-form-item:nth-of-type(9) {
+          margin-right: 0;
         }
         .el-form-item.art_remk {
           width: 100%;
           .el-form-item__content {
-            width: 81%;
+            width: 88%;
             .el-textarea.is-disabled {
               .el-textarea__inner {
                 background-color: #fff;
@@ -1290,10 +1303,10 @@
       }
     }
     .infos_table_ {
-      padding: 0 40px 10px 10px;
+      padding: 0 10px 10px 10px;
       margin-top: 10px;
       border-color: #dcdfe6;
-      .sta_searchinfo {
+      .st_searchinfo {
         border-left: 1px solid #d4d4d4;
         border-right: 1px solid #d4d4d4;
         ul {

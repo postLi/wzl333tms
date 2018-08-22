@@ -12,7 +12,7 @@
                 <!--<el-form-item label="网点">-->
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
                 <!--</el-form-item>-->
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="sta_searchinfo clearfix" :model="formModel">
+                <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="st_searchinfo clearfix" :model="formModel">
                   <el-form-item label="到达网点:">
                     <el-input v-model="formModel.arriveOrgName" :maxlength="15" clearable disabled>
                     </el-input>
@@ -57,7 +57,7 @@
                 </el-form>
               </div>
               <div class="infos_table">
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">
+                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="st_searchinfo clearfix">
                   <ul>
                     <li>
                       <p>现付运费</p>
@@ -128,7 +128,7 @@
                   </ul>
                 </el-form>
               </div>
-              <div class="tab_info">
+              <div class="tab_info artDepart_table ">
                 <div class="btns_box_send">
                   <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_print" >打印清单</el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单</el-button>
@@ -138,7 +138,7 @@
 
 
 
- <el-table ref="multipleTable"  :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+ <el-table ref="multipleTable"  :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe >
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -849,7 +849,12 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
+  margin-top: 80px;
+  .tab_info.artDepart_table{
+    /*padding-right: 10px;*/
+    padding: 0;
 
+  }
   .tab_info {
 
     padding: 0 10px;
@@ -860,7 +865,7 @@ export default {
 
     .btns_box_send {
       border-top: 2px dotted #dcdfe6;
-      padding-top: 10px;
+      padding: 10px 10px 0 0 ;
       margin-bottom: 10px;
       position:relative;
 
@@ -885,7 +890,7 @@ export default {
       width: 100%;
       height: calc(100vh - 570px);
       flex-grow: 1;
-
+      padding: 0 10px;
       .el-table {
         table {
           th,
@@ -901,6 +906,7 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
+
     }
   }
   .infos_tab_footer {
@@ -924,17 +930,26 @@ export default {
     overflow: hidden;
   }
   .info_form {
-    margin-top: 85px;
-    padding-bottom: 10px;
-    .sta_searchinfo {
+    /*margin-top: 85px;*/
+    /*padding-bottom: 10px;*/
+    .st_searchinfo {
       .el-form-item {
-        margin-right: 0;
+        margin-right: 35px;
         margin-bottom: 15px;
+      }
+      .el-form-item:nth-of-type(3){
+        margin-right: 0;
+      }
+      .el-form-item:nth-of-type(6){
+        margin-right: 0;
+      }
+      .el-form-item:nth-of-type(9){
+        margin-right: 0;
       }
       .el-form-item.art_remk{
         width: 100%;
         .el-form-item__content{
-          width: 82%;
+          width: 88%;
         }
       }
     }
@@ -943,7 +958,7 @@ export default {
     padding: 0 10px 10px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
-    .sta_searchinfo{
+    .st_searchinfo{
       border-left: 1px solid #d4d4d4;
       border-right: 1px solid #d4d4d4;
       ul {
@@ -1001,7 +1016,7 @@ export default {
   bottom: auto;
   min-width: 1000px;
   max-width: 1000px;
-  .sta_searchinfo{
+  .st_searchinfo{
     .el-input.is-disabled {
       .el-input__inner{
         color: #3e9ff1;

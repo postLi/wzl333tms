@@ -13,7 +13,7 @@
           >
         </el-date-picker>
       </el-form-item>
-      
+
       <el-form-item label="到车时间">
         <el-date-picker
           v-model="searchEndTime"
@@ -28,7 +28,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="批次状态">
-        <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" clearable/>
+        <SelectType v-model="searchForm.batchTypeId" type="main_batch_type" placeholder="请选择" class="pickup-way" clearable :arterDelivery="true"/>
       </el-form-item>
         <el-form-item label="发车网点">
             <SelectTree v-model="searchForm.orgid" clearable/>
