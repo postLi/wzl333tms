@@ -297,7 +297,11 @@ export default {
       }
     },
     setData() {
-      this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      if (this.$route.query.currentPage === 'batchTruckAll') { // 发车汇总 不是到付的进入结算页面,结算网点ascriptionOrgid默认为外面发车网点
+        this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid)
+      }else {
+        this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      }
       this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
       this.$set(this.submitData, 'settlementSn', this.formModel.settlementSn)
       this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
@@ -311,7 +315,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          console.log(this.submitData)
+          console.log(this.$route.query.currentPage,JSON.parse(this.$route.query.searchQuery),this.getRouteInfo,this.submitData)
           postLoadSettlement(this.submitData).then(data => {
               this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()

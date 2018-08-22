@@ -254,27 +254,27 @@ export default {
           width: "120",
           fixed: false
         },
-        {
-          label: "应到件数",
-          prop: "loadAmount",
-          width: "120",
-          fixed: false,
-          hide: true
-        },
-        {
-          label: "应到重量",
-          prop: "loadWeight",
-          width: "120",
-          fixed: false,
-          hide: true
-        },
-        {
-          label: "应到体积",
-          prop: "loadVolume",
-          width: "120",
-          fixed: false,
-          hide: true
-        },
+        // {
+        //   label: "应到件数",
+        //   prop: "loadAmount",
+        //   width: "120",
+        //   fixed: false,
+        //   hide: true
+        // },
+        // {
+        //   label: "应到重量",
+        //   prop: "loadWeight",
+        //   width: "120",
+        //   fixed: false,
+        //   hide: true
+        // },
+        // {
+        //   label: "应到体积",
+        //   prop: "loadVolume",
+        //   width: "120",
+        //   fixed: false,
+        //   hide: true
+        // },
         {
           label: "实到件数",
           prop: "actualAmount",

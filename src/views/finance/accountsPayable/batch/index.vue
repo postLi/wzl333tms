@@ -2,15 +2,10 @@
   <div class=" tab-wrapper">
     <div class="eltab clearfix">
       <span @click="component = 'Short'" class="tab-label" :class="{'active-tab': component.indexOf('Short')!==-1}">短驳费</span>
-
       <span @click="component = 'Deliver'" class="tab-label" :class="{'active-tab': component.indexOf('Deliver')!==-1}">送货费</span>
-
       <span @click="component = 'TruckAll'" class="tab-label" :class="{'active-tab': component.indexOf('TruckAll')!==-1}">发车汇总</span>
-
       <span @click="component = 'ArrivalAll'" class="tab-label" :class="{'active-tab': component.indexOf('ArrivalAll')!==-1}">到车汇总</span>
-
       <span @click="component = 'Insurance'" class="tab-label" :class="{'active-tab': component.indexOf('Insurance')!==-1}">整车保险费</span>
-
       <span @click="component = 'StationLoad'" class="tab-label" :class="{'active-tab': component.indexOf('StationLoad')!==-1}">发站装卸费</span>
       <span @click="component = 'StationOther'" class="tab-label" :class="{'active-tab': component.indexOf('StationOther')!==-1}">发站其他费</span>
       <span @click="component = 'ArriveLoad'" class="tab-label" :class="{'active-tab': component.indexOf('ArriveLoad')!==-1}">到站装卸费</span>
@@ -21,7 +16,6 @@
     </keep-alive>
   </div>
 </template>
-
 <script>
 import Short from './short'
 // import Artery from './artery'
@@ -47,8 +41,7 @@ export default {
     TruckAll,
     ArrivalAll
   },
-  props: {
-  },
+  props: {},
   mounted() {
     this.initPage()
   },
@@ -61,7 +54,7 @@ export default {
     initPage() {
       if (this.$route.query.name) {
         // console.log(this.$route.query.name)
-        const name = this.$route.query.name  // 接收子父组件路由传过来的值
+        const name = this.$route.query.name // 接收子父组件路由传过来的值
         switch (name) {
           case 'Short':
             this.component = 'Short'
@@ -95,5 +88,5 @@ export default {
     }
   }
 }
-</script>
 
+</script>

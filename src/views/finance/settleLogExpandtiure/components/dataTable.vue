@@ -40,7 +40,13 @@
         </el-table-column>
         <el-table-column prop="hadLoadFeeTotal" sortable label="已结发车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
+        <el-table-column prop="loadFeeTotal" sortable label="到车汇总" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="noLoadFeeTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="hadLoadFeeTotal" sortable label="已结到车汇总" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <!-- <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="noStartLoadPay" sortable label="未结发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
@@ -69,7 +75,7 @@
         <el-table-column prop="noWholeSurePay" sortable label="未结整车保险费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="hadWholeSurePay" sortable label="已结整车保险费" width="120" v-if="settlementId===179">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="departureTime" sortable label="送货时间" width="160" v-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="departureTime" sortable label="发车时间" width="160" v-if="settlementId===179">
@@ -121,7 +127,13 @@
         </el-table-column>
         <el-table-column prop="hadLoadFeeTotal" sortable label="已结发车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
+        <el-table-column prop="loadFeeTotal" sortable label="到车汇总" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="noLoadFeeTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
+        </el-table-column>
+        <el-table-column prop="hadLoadFeeTotal" sortable label="已结到车汇总" width="120" v-if="settlementId===179">
+        </el-table-column>
+       <!--  <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="noStartLoadPay" sortable label="未结发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
@@ -150,7 +162,7 @@
         <el-table-column prop="noWholeSurePay" sortable label="未结整车保险费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="hadWholeSurePay" sortable label="已结整车保险费" width="120" v-if="settlementId===179">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="departureTime" sortable label="送货时间" width="160" v-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="departureTime" sortable label="发车时间" width="160" v-if="settlementId===179">
@@ -521,11 +533,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shortPay', 'sendPay', 'loadFeeTotal', 'startLoadPay', 'startOtherPay', 'endLoadPay', 'endOtherPay', 'repertoryAmount']
+      let propsArr = ['shortPay', 'sendPay', 'loadFeeTotal', 'startLoadPay', 'startOtherPay', 'endLoadPay', 'endOtherPay', 'repertoryAmount','loadFeeTotalActual','wholeSurePay','noShortPay','hadShortPay','noSendPay','hadSendPay','noLoadFeeTotal','hadLoadFeeTotal','noStartLoadPay','hadStartLoadPay','noStartOtherPay','hadStartOtherPay','noEndLoadPay','hadEndLoadPay','noEndOtherPay','hadEndOtherPay','noWholeSurePay','hadWholeSurePay']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shortPay', 'sendPay', 'loadFeeTotal', 'startLoadPay', 'startOtherPay', 'endLoadPay', 'endOtherPay', 'repertoryAmount']
+      let propsArr = ['shortPay', 'sendPay', 'loadFeeTotal', 'startLoadPay', 'startOtherPay', 'endLoadPay', 'endOtherPay', 'repertoryAmount','loadFeeTotalActual','wholeSurePay','noShortPay','hadShortPay','noSendPay','hadSendPay','noLoadFeeTotal','hadLoadFeeTotal','noStartLoadPay','hadStartLoadPay','noStartOtherPay','hadStartOtherPay','noEndLoadPay','hadEndLoadPay','noEndOtherPay','hadEndOtherPay','noWholeSurePay','hadWholeSurePay']
       return getSummaries(param, propsArr)
     }
   }

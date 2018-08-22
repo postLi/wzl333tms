@@ -364,9 +364,9 @@ export default {
     },
     initLeftParams() {
       this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-        this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
       //   // this.$router.push({ path: './accountsPayable/batch' })
@@ -432,7 +432,6 @@ export default {
           [prop]: this.rightTable[index][prop]
         }))
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     // changLoadData(newVal) {
     //   let unpay = this.rightTable[newVal].unpaidFee
@@ -527,7 +526,7 @@ export default {
         this.isGoReceipt = false
       }
     },
-     selectCurrent (obj, index) {
+    selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
@@ -558,6 +557,21 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
+      let count = 0
+      if (this.rightTable.length > 1) {
+        objectMerge2([], this.rightTable).forEach(e => {
+          objectMerge2([], this.rightTable).forEach(el => {
+            if (e.ascriptionOrgid !== el.ascriptionOrgid) {
+              count++
+            }
+          })
+        })
+      }
+      if (count > 0) {
+        count = 0
+        this.$message({ type: 'warning', message: '不能同时结算两个网点' })
+        return false
+      }
       this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
         this.rightTable.forEach((e, index) => {
@@ -579,11 +593,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['_index|2|单','fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['_index|2|单','fee', 'unpaidFee', 'paidFee', 'loadAmountall|','amount', 'loadWeightall|', 'loadVolumeall|']
+      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'amount', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     }
   }

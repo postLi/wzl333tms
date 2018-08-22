@@ -537,6 +537,21 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
+      let count = 0
+      if (this.rightTable.length > 1) {
+        objectMerge2([], this.rightTable).forEach(e => {
+          objectMerge2([], this.rightTable).forEach(el => {
+            if (e.ascriptionOrgid !== el.ascriptionOrgid) {
+              count++
+            }
+          })
+        })
+      }
+      if (count > 0) {
+        count = 0
+        this.$message({ type: 'warning', message: '不能同时结算两个网点' })
+        return false
+      }
       this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
         this.rightTable.forEach((e, index) => {

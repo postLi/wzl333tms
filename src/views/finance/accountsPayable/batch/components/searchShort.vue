@@ -85,7 +85,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgid = this.otherinfo.orgid
-    this.searchForm.ascriptionOrgid = this.otherinfo.orgid
+    // this.searchForm.ascriptionOrgid = this.otherinfo.orgid // 结算网点
     this.onSubmit()
   },
   methods: {

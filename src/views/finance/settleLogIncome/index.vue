@@ -55,7 +55,7 @@
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
+        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
@@ -110,7 +110,8 @@ export default {
       addIncomeInfo: {},
       countNum: 0,
       financialWays: [],
-      isFinancialWays: false
+      isFinancialWays: false,
+      tableKey: 0
     }
   },
   computed: {
@@ -194,6 +195,8 @@ export default {
       this.setData()
       postAddIncome(this.addIncomeInfo).then(data => { // 保存
         this.$message({ type: 'success', message: '保存成功！' })
+        this.getFeeInfo()
+        this.tableKey = new Date().getTime()
         this.$router.push({ path: './settleLog' })
       })
       .catch(error => {

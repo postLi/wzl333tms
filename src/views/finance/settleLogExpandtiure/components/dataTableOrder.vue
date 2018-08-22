@@ -541,11 +541,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','shipFeeTotalActual','noKickBackPay','hadKickBackPay','noTransferPay','hadTransferPay','noUnusualPay','hadUnusualPay','noExceptionPay','hadExceptionPay','noPickPuPay','hadPickPuPay','noOthePay','hadOthePay']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual','cargoVolume','noKickBackPay','hadKickBackPay','noTransferPay','hadTransferPay','noUnusualPay','hadUnusualPay','noExceptionPay','hadExceptionPay','noPickPuPay','hadPickPuPay','noOthePay','hadOthePay']
       return getSummaries(param, propsArr)
     }
   }

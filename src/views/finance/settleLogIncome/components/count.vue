@@ -21,8 +21,9 @@
     </el-form>
     <p>提示：智能结算可以按照发货人开单日期自动挑选运单结算，运用场景如:某某客户结算某个月运费一万块，可以筛选客户，收入金额10000块，系统将自动挑选运单结算。</p>
     <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="onSubmit('formModel')">确 定</el-button>
     <el-button @click="closeMe">取 消</el-button>
-    <el-button type="primary" @click="onSubmit('formModel')">确 定</el-button>
+    
   </span>
   </el-dialog>
 </template>

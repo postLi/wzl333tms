@@ -19,7 +19,7 @@
         </el-table-column>
         <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
-        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="90">
+        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
@@ -441,11 +441,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay','hadOnPay','hadBackPay','hadArrivalPay','noArrivalPay','hadMonthPay','noMonthPay','noBackPay','hadUnusualPay','noUnusualPay','arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay','hadBackPay','hadArrivalPay','hadOnPay','noArrivalPay','hadMonthPay','noMonthPay','noBackPay','hadUnusualPay','noUnusualPay','hadBackPay','hadArrivalPay','arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     }
   }

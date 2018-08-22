@@ -17,7 +17,7 @@
         <SelectTree v-model="searchForm.orgid"  v-else>
         </SelectTree>
       </el-form-item>
-      <el-form-item label="结算网点"  v-if="isAllOrg">
+      <el-form-item label="结算网点"  v-if="isAllOrg"> <!-- 到付 -->
         <SelectTree v-model="searchForm.ascriptionOrgid" :orgid="otherinfo.orgid"></SelectTree>
       </el-form-item>
       <el-form-item label="到车网点"  v-if="!isAllOrg && isArrivalSel">
@@ -102,7 +102,9 @@ export default {
   },
   mounted() {
     this.searchForm.orgid = this.otherinfo.orgid
-    this.searchForm.ascriptionOrgid = this.otherinfo.orgid
+    if (this.isAllOrg) { // 到车汇总/到站装卸费/到站其他费，(到付)要传结算网点 其他的费用不需要
+      this.searchForm.ascriptionOrgid = this.otherinfo.orgid
+    }
     this.onSubmit()
   },
   methods: {

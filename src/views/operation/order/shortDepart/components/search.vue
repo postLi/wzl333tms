@@ -21,7 +21,7 @@
           <el-form-item label="到达网点">
             <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
           </el-form-item>
-          <el-form-item label="网点">
+          <el-form-item label="发车网点">
             <SelectTree v-model="searchForm.arriveOrgid" clearable :orgid="otherinfo.orgid"></SelectTree>
           </el-form-item>
         </div>

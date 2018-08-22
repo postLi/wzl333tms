@@ -83,11 +83,11 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
+      selectedList: [],
       selectListBatchNos: [],
       loading: false,
       setupTableVisible: false,
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '序号',
           prop: 'id',
           width: '50',
@@ -233,6 +233,25 @@ export default {
       }
     },
     count() {
+      let count = 0
+      if (this.selectedList.length !== 0) {
+        objectMerge2([], this.selectedList).forEach(e => {
+          objectMerge2([], this.selectedList).forEach(el => {
+            console.log(e.ascriptionOrgid, el.ascriptionOrgid)
+            if (e.ascriptionOrgid !== el.ascriptionOrgid) {
+              count++
+            }
+          })
+        })
+      }
+      if (count > 0) {
+        count = 0
+        this.$message({type: 'warning', message: '不能同时结算两个不同的网点'})
+        return false
+      }
+      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点
+        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
+      }
       this.$router.push({
         path: '../accountsLoad',
         query: {
@@ -242,6 +261,7 @@ export default {
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
       })
+      console.log(this.searchQuery.vo)
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
@@ -251,7 +271,7 @@ export default {
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })
-      console.log(this.selectListBatchNos)
+      this.selectedList = list
     },
     showDetail(order) {
       // this.eventBus.$emit('showOrderDetail', order.id)

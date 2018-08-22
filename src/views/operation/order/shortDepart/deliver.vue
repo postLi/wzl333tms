@@ -150,6 +150,11 @@ export default {
           }
         },
         {
+          label: "发车网点",
+          prop: "orgName",
+          width: "120"
+        },
+        {
           label: "到达网点",
           prop: "arriveOrgName",
           width: "120"
