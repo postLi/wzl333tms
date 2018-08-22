@@ -326,10 +326,10 @@ export function CreatePrintPageEnable(info) {
 }
 
 // 保存为xls文件
-export function SaveAsFile(obj) {
+export function SaveAsFileCarrier(obj) {
   try {
     // let tableId = createTable(data, columns) // 重新创建打印视图table
-    const tableId = createReconciliation(obj.data) // 重新创建打印视图table
+    const tableId = createCarrier(obj.data) // 重新创建打印视图table
     LODOP = getLodop()
     LODOP.PRINT_INIT('数据表格')
     // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
@@ -347,6 +347,58 @@ export function SaveAsFile(obj) {
       LODOP.SAVE_TO_FILE('新文件名.xls')
     }
   } catch (err) {
+    getLodop()
+  }
+}
+export function SaveAsFileCustomer(obj) {
+  try {
+    // let tableId = createTable(data, columns) // 重新创建打印视图table
+    const tableId = createCustomer(obj.data) // 重新创建打印视图table
+    // console.log(obj);
+    LODOP = getLodop()
+    LODOP.PRINT_INIT('数据表格')
+    // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+    LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+    // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+    LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+    LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+    LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+    LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+    LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+    if (obj.name) {
+      LODOP.SAVE_TO_FILE(obj.name + '_' + (new Date().getTime()) + '.xls')
+    } else {
+      LODOP.SAVE_TO_FILE('新文件名.xls')
+    }
+  } catch (err) {
+    getLodop()
+  }
+}
+
+export function SaveAsFileCarrfeeShort(obj) {
+  try {
+    // let tableId = createTable(data, columns) // 重新创建打印视图table
+    const tableId = createCarrfeeShort(obj.data) // 重新创建打印视图table
+    // console.log(obj);
+    LODOP = getLodop()
+    LODOP.PRINT_INIT('数据表格')
+    // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+    LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+    // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+    LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+    LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+    LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+    LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+    LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+    if (obj.name) {
+      LODOP.SAVE_TO_FILE(obj.name + '_' + (new Date().getTime()) + '.xls')
+    } else {
+      LODOP.SAVE_TO_FILE('新文件名.xls')
+    }
+  } catch (err) {
+    console.log(err);
     getLodop()
   }
 }
@@ -497,16 +549,14 @@ function createSettlement(obj) { // 打印创建结算单视图
   return tableId
 }
 
-function createReconciliation(params) {
+//承运商
+function createCarrier(params) {
   // console.log(params,params)
-  // console.log(params.tmsFinanceBillCheckDto.checkBillName)
   let dealInfo = []
   let dealPayInfo = []
   let alreadyInfo = []
   let alreadyPayInfo = []
   params.carrierDetailDtoList.forEach(function (el, val) {
-
-    // console.log(el)
     if (el.type === 1) {
       dealInfo.push(el)
     }
@@ -519,8 +569,6 @@ function createReconciliation(params) {
     else {
       alreadyPayInfo.push(el)
     }
-
-
   })
 
   //初始化tmsFinanceBillCheckDto
@@ -528,11 +576,6 @@ function createReconciliation(params) {
     params.tmsFinanceBillCheckDto[i] = params.tmsFinanceBillCheckDto[i] === null ? '' : params.tmsFinanceBillCheckDto[i]
   }
   //初始化dealInfo
-  // for (var i in dealInfo) {
-  //   dealInfo[i] = dealInfo[i] === null ? '' : dealInfo[i]
-  //   console.log(dealInfo[i]);
-  // }
-
   const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
   const div = document.createElement('div')
   const infoDiv = document.createElement('font')
@@ -545,39 +588,35 @@ function createReconciliation(params) {
   table.setAttribute('border', '1')
   table.setAttribute('font', '12px')
   table.setAttribute('width', '100%')
-  table.setAttribute('height', '100%')
   table.setAttribute('table-layout', 'fixed')
   var theadStr = ''
+  // 标题
   theadStr = `
     <tr>
-      <td bgcolor="#ff0000" colspan="16" style="text-align: center;border:1px solid red;" >${params.tmsFinanceBillCheckDto.checkBillName}</td>
+      <td colspan="16" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.tmsFinanceBillCheckDto.checkBillName}</td>
     </tr>
-    
    `
-  // 标题
   let tbodyStr = ` <tr>
-    <td width="5%" height="5%">承运商名称 </td>
+    <td width="5%" height="25px">承运商名称 </td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberName}</td>
-    <td width="5%"  height="5%">业务负责人</td>
+    <td width="5%"  height="25px">业务负责人</td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPerson}</td>
-    <td width="5%" >联系方式</td>
+    <td width="5%" height="25px">联系方式</td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPersonPhone}</td>
-    <td width="5%">对账单编号 </td>
+    <td width="5%" height="25px">对账单编号 </td>
     <td colspan="3" width="15%">${params.tmsFinanceBillCheckDto.checkBillCode}</td>
-    
   </tr>
    <tr>
-      <td width="5%">客户编号</td>
+      <td width="5%" height="25px">客户编号</td>
       <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberCode}</td>
-      <td width="5%">开始时间</td>
+      <td width="5%" height="25px">开始时间</td>
       <td colspan="3" width="20%"> ${params.tmsFinanceBillCheckDto.checkStartTime}</td>
-      <td width="5%">结束时间 </td>
+      <td width="5%" height="25px">结束时间 </td>
       <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.checkEndTime}</td>
-      <td width="5%">结算方式</td>
+      <td width="5%" height="25px">结算方式</td>
       <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.settlementType}</td>
   </tr>
   <tr>
-    
     <td width="5%">账户账号</td>
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankAccount}</td>
     <td width="5%">账户开户行 </td>
@@ -588,12 +627,11 @@ function createReconciliation(params) {
     <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.financialOfficerPhone}</td>
   </tr>
   <tr>
-      <td width="5%">支付宝 </td>
+      <td width="5%" height="25px">支付宝 </td>
       <td colspan="3">${params.tmsFinanceBillCheckDto.alipayAccount}</td>
-      <td width="5%">微信</td>
+      <td width="5%" height="25px">微信</td>
       <td colspan="11">${params.tmsFinanceBillCheckDto.wechatAccount}</td>
   </tr>`
-
   //dealInfo
   tbodyStr = tbodyStr + `
     <tr>
@@ -639,14 +677,13 @@ function createReconciliation(params) {
               <td colspan="1" >${dealInfo[i].totalFee}</td>
               <td colspan="1" >${dealInfo[i].remark}</td>
             </tr>
-    
     `
   }
   //dealInfo
   //dealPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="16" bgcolor="orange" align="left">应付清单 </td>
+        <td colspan="16" bgcolor="rgb(255,193,0)" align="left">应付清单 </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -687,11 +724,9 @@ function createReconciliation(params) {
               <td colspan="1" >${dealPayInfo[i].totalCost}</td>
               <td colspan="1" >${dealPayInfo[i].remark}</td>
             </tr>
-    
     `
   }
   //dealPayInfo
-
   //alreadyInfo
   tbodyStr = tbodyStr + `
     <tr>
@@ -716,7 +751,6 @@ function createReconciliation(params) {
           <td colspan="1" >小计</td>
           <td colspan="1" >备注</td>
       </tr>`
-  // tbodyStr = tbodyStr
   for (let i = 0; i < alreadyInfo.length; i++) {
     tbodyStr += `
              <tr>
@@ -737,15 +771,13 @@ function createReconciliation(params) {
               <td colspan="1" >${alreadyInfo[i].totalFee}</td>
               <td colspan="1" >${alreadyInfo[i].remark}</td>
             </tr>
-    
     `
   }
   //dealPayInfo
-
   //alreadyPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="16" bgcolor="orange" align="left">已付清单(本结算期内) </td>
+        <td colspan="16" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -766,7 +798,6 @@ function createReconciliation(params) {
           <td colspan="1" >小计</td>
           <td colspan="1" >备注</td>
       </tr>`
-  // tbodyStr = tbodyStr
   for (let i = 0; i < alreadyPayInfo.length; i++) {
     tbodyStr += `
              <tr>
@@ -787,24 +818,711 @@ function createReconciliation(params) {
               <td colspan="1" >${alreadyPayInfo[i].totalFee}</td>
               <td colspan="1" >${alreadyPayInfo[i].remark}</td>
             </tr>
-    
     `
   }
   //alreadyPayInfo
-
   // alreadyPayInfo
-
-  // thead.innerHTML = theadStr
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >备注</td>
+      <td colspan="15">${params.tmsFinanceBillCheckDto.remark}</td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td colspan="16" bgcolor="yellow">若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</td>
+      
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td width="5%" height="10px">公司名称</td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.companyName}</td>
+      <td width="5%" height="10px">业务负责人</td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.orgBusinessOfficer}</td>
+      <td width="5%" height="10px">联系方式</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgBusinessOfficerPhone}</td>
+       <td width="5%" height="10px">财务负责人</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
+       </tr>
+       <tr>
+       <td width="5%" height="10px">财务联系电话</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
+       <td width="5%" height="10px">时间</td>
+       <td colspan="11">${params.tmsFinanceBillCheckDto.createTime}</td>
+    </tr>
+  `
   tbody.innerHTML = tbodyStr
-  //  infoDiv.innerHTML = infoStr
   div.appendChild(infoDiv)
   thead.innerHTML = theadStr
   table.appendChild(thead)
   table.appendChild(tbody)
   infoDiv.appendChild(table)
   div.appendChild(infoDiv)
-
   document.body.appendChild(div)
+  return tableId
+}
 
+
+//客户
+function createCustomer(params) {
+  console.log(params,params.tmsFinanceBillCheckDto.companyName)
+  let dealInfo = []
+  let dealPayInfo = []
+  let alreadyInfo = []
+  let alreadyPayInfo = []
+  params.customerDetailDtoList.forEach(function (el, val) {
+    if (el.type === 1) {
+      dealInfo.push(el)
+    }
+    else if (el.type === 2) {
+      dealPayInfo.push(el)
+    }
+    else if (el.type === 3) {
+      alreadyInfo.push(el)
+    }
+    else {
+      alreadyPayInfo.push(el)
+    }
+  })
+
+  //初始化tmsFinanceBillCheckDto
+  for (var i in params.tmsFinanceBillCheckDto) {
+    params.tmsFinanceBillCheckDto[i] = params.tmsFinanceBillCheckDto[i] === null ? '' : params.tmsFinanceBillCheckDto[i]
+  }
+  //初始化dealInfo
+  const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+  const div = document.createElement('div')
+  const infoDiv = document.createElement('font')
+  infoDiv.setAttribute('size', '2')
+  const table = document.createElement('table')
+  div.id = tableId
+  const thead = document.createElement('thead')
+  const tbody = document.createElement('tbody')
+  table.style.border = '1px solid #ff000';
+  table.setAttribute('border', '1')
+  table.setAttribute('font', '12px')
+  table.setAttribute('width', '100%')
+  table.setAttribute('table-layout', 'fixed')
+  var theadStr = ''
+  // 标题
+  theadStr = `
+    <tr>
+      <td colspan="18" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.tmsFinanceBillCheckDto.checkBillName}</td>
+    </tr>
+   `
+  let tbodyStr = ` <tr>
+    <td width="5%" height="25px">发货方 </td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberName}</td>
+    <td width="5%"  height="25px">发货人</td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPerson}</td>
+    <td width="5%" height="25px">联系方式</td>
+    <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.memberPersonPhone}</td>
+    <td width="5%" height="25px">对账单编号 </td>
+    <td colspan="3" width="15%">${params.tmsFinanceBillCheckDto.checkBillCode}</td>
+  </tr>
+   <tr>
+      <td width="5%" height="25px">客户编号</td>
+      <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberCode}</td>
+      <td width="5%" height="25px">开始时间</td>
+      <td colspan="3" width="20%"> ${params.tmsFinanceBillCheckDto.checkStartTime}</td>
+      <td width="5%" height="25px">结束时间 </td>
+      <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.checkEndTime}</td>
+      <td width="5%" height="25px">结算方式</td>
+      <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.settlementType}</td>
+  </tr>
+  <tr>
+    <td width="5%">账户账号</td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankAccount}</td>
+    <td width="5%">账户开户行 </td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankName}</td>
+    <td width="5%">财务负责人</td>
+    <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.financialOfficer}</td>
+    <td width="5%">联系方式</td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.financialOfficerPhone}</td>
+  </tr>
+  <tr>
+      <td width="5%" height="25px">支付宝 </td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.alipayAccount}</td>
+      <td width="5%" height="25px">微信</td>
+      <td colspan="13">${params.tmsFinanceBillCheckDto.wechatAccount}</td>
+  </tr>`
+  //dealInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="yellow" align="left">应收清单 </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >交接方式</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >付款方式</td>
+          <td colspan="1" >异动增款</td>
+          <td colspan="1" >回单付</td>
+          <td colspan="1" >月结</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+
+  for (let i = 0; i < dealInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${dealInfo[i].createTime}</td>
+              <td colspan="1" >${dealInfo[i].shipSn}</td>
+              <td colspan="1"  >${dealInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${dealInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${dealInfo[i].shipToCityName}</td>
+              <td colspan="1" >${dealInfo[i].cargoName}</td>
+              <td colspan="1" >${dealInfo[i].cargoAmount}</td>
+              <td colspan="1" >${dealInfo[i].cargoWeight}</td>
+              <td colspan="1" >${dealInfo[i].cargoVolume}</td>
+              <td colspan="1" >${dealInfo[i].shipDeliveryMethod}</td>
+              <td colspan="1" >${dealInfo[i].unusualRemark}</td>
+              <td colspan="1" >${dealInfo[i].shipPayWay}</td>
+              <td colspan="1" >${dealInfo[i].unusualFee}</td>
+              <td colspan="1" >${dealInfo[i].shipReceiptpayFee}</td>
+              <td colspan="1" >${dealInfo[i].shipMonthpayFee}</td>
+              <td colspan="1" >${dealInfo[i].totalFee}</td>
+              <td colspan="1" >${dealInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealInfo
+  //dealPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">应付清单 </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >异常类型</td>
+          <td colspan="1" >异常件数</td>
+          <td colspan="1" >异动减款</td>
+          <td colspan="1" >异常金额</td>
+          <td colspan="1" >代收货款</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  // tbodyStr = tbodyStr
+  for (let i = 0; i < dealPayInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${dealPayInfo[i].createTime}</td>
+              <td colspan="1" >${dealPayInfo[i].shipSn}</td>
+              <td colspan="1" >${dealPayInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${dealPayInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${dealPayInfo[i].shipToCityName}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoName}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoAmount}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoWeight}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoVolume}</td>
+              <td colspan="1" >${dealPayInfo[i].unusualRemark}</td>
+              <td colspan="1" >${dealPayInfo[i].abnormalType}</td>
+              <td colspan="1" >${dealPayInfo[i].abnormalAmount}</td>
+              <td colspan="1" >${dealPayInfo[i].unusualFee}</td>
+              <td colspan="1" >${dealPayInfo[i].registerFee}</td>
+              <td colspan="1" >${dealPayInfo[i].agencyFund}</td>
+              <td colspan="1" >${dealPayInfo[i].totalFee}</td>
+              <td colspan="1" >${dealPayInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  //alreadyInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="yellow" align="left">已收清单(本结算期内) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >交接方式</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >付款方式</td>
+          <td colspan="1" >异动增款</td>
+          <td colspan="1" >回单付</td>
+          <td colspan="1" >月结</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  for (let i = 0; i < alreadyInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${alreadyInfo[i].createTime}</td>
+              <td colspan="1" >${alreadyInfo[i].shipSn}</td>
+              <td colspan="1" >${alreadyInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${alreadyInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${alreadyInfo[i].shipToCityName}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoName}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoAmount}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoWeight}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoVolume}</td>
+              <td colspan="1" >${alreadyInfo[i].shipDeliveryMethod}</td>
+              <td colspan="1" >${alreadyInfo[i].unusualRemark}</td>
+              <td colspan="1" >${alreadyInfo[i].shipPayWay}</td>
+              <td colspan="1" >${alreadyInfo[i].unusualFee}</td>
+              <td colspan="1" >${alreadyInfo[i].shipReceiptpayFee}</td>
+              <td colspan="1" >${alreadyInfo[i].shipMonthpayFee}</td>
+              <td colspan="1" >${alreadyInfo[i].totalFee}</td>
+              <td colspan="1" >${alreadyInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  //alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+           <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >异常类型</td>
+          <td colspan="1" >异常件数</td>
+          <td colspan="1" >异动减款</td>
+          <td colspan="1" >异常金额</td>
+          <td colspan="1" >代收货款</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  for (let i = 0; i < alreadyPayInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${alreadyPayInfo[i].createTime}</td>
+              <td colspan="1" >${alreadyPayInfo[i].shipSn}</td>
+              <td colspan="1" >${alreadyPayInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${alreadyPayInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${alreadyPayInfo[i].shipToCityName}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoName}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoAmount}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoWeight}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoVolume}</td>
+              <td colspan="1" >${alreadyPayInfo[i].unusualRemark}</td>
+              <td colspan="1" >${alreadyPayInfo[i].abnormalType}</td>
+              <td colspan="1" >${alreadyPayInfo[i].abnormalAmount}</td>
+              <td colspan="1" >${alreadyPayInfo[i].unusualFee}</td>
+              <td colspan="1" >${alreadyPayInfo[i].registerFee}</td>
+              <td colspan="1" >${alreadyPayInfo[i].agencyFund}</td>
+              <td colspan="1" >${alreadyPayInfo[i].totalFee}</td>
+              <td colspan="1" >${alreadyPayInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //alreadyPayInfo
+  // alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >备注</td>
+      <td colspan="17">${params.tmsFinanceBillCheckDto.remark}</td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td colspan="18" bgcolor="yellow">若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</td>
+      
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td width="5%" height="10px">公司名称</td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.companyName}</td>
+      <td width="5%" height="10px">业务负责人</td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.orgBusinessOfficer}</td>
+      <td width="5%" height="10px">联系方式</td>
+       <td colspan="5">${params.tmsFinanceBillCheckDto.orgBusinessOfficerPhone}</td>
+       <td width="5%" height="10px">财务负责人</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
+       </tr>
+       <tr>
+       <td width="5%" height="10px">联系方式</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
+       <td width="5%" height="10px">时间</td>
+       <td colspan="13">${params.tmsFinanceBillCheckDto.createTime}</td>
+    </tr>
+  `
+  tbody.innerHTML = tbodyStr
+  div.appendChild(infoDiv)
+  thead.innerHTML = theadStr
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  infoDiv.appendChild(table)
+  div.appendChild(infoDiv)
+  document.body.appendChild(div)
+  return tableId
+}
+
+
+//短驳
+function createCarrfeeShort(params) {
+  console.log(params,params.tmsFinanceBillCheckDto.companyName)
+  let dealInfo = []
+  let dealPayInfo = []
+  let alreadyInfo = []
+  let alreadyPayInfo = []
+  params.customerDetailDtoList.forEach(function (el, val) {
+    if (el.type === 1) {
+      dealInfo.push(el)
+    }
+    else if (el.type === 2) {
+      dealPayInfo.push(el)
+    }
+    else if (el.type === 3) {
+      alreadyInfo.push(el)
+    }
+    else {
+      alreadyPayInfo.push(el)
+    }
+  })
+
+  //初始化tmsFinanceBillCheckDto
+  for (var i in params.tmsFinanceBillCheckDto) {
+    params.tmsFinanceBillCheckDto[i] = params.tmsFinanceBillCheckDto[i] === null ? '' : params.tmsFinanceBillCheckDto[i]
+  }
+  //初始化dealInfo
+  const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+  const div = document.createElement('div')
+  const infoDiv = document.createElement('font')
+  infoDiv.setAttribute('size', '2')
+  const table = document.createElement('table')
+  div.id = tableId
+  const thead = document.createElement('thead')
+  const tbody = document.createElement('tbody')
+  table.style.border = '1px solid #ff000';
+  table.setAttribute('border', '1')
+  table.setAttribute('font', '12px')
+  table.setAttribute('width', '100%')
+  table.setAttribute('table-layout', 'fixed')
+  var theadStr = ''
+  // 标题
+  theadStr = `
+    <tr>
+      <td colspan="18" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.tmsFinanceBillCheckDto.checkBillName}</td>
+    </tr>
+   `
+  let tbodyStr = ` <tr>
+    <td width="5%" height="25px">发货方 </td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberName}</td>
+    <td width="5%"  height="25px">发货人</td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPerson}</td>
+    <td width="5%" height="25px">联系方式</td>
+    <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.memberPersonPhone}</td>
+    <td width="5%" height="25px">对账单编号 </td>
+    <td colspan="3" width="15%">${params.tmsFinanceBillCheckDto.checkBillCode}</td>
+  </tr>
+   <tr>
+      <td width="5%" height="25px">客户编号</td>
+      <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberCode}</td>
+      <td width="5%" height="25px">开始时间</td>
+      <td colspan="3" width="20%"> ${params.tmsFinanceBillCheckDto.checkStartTime}</td>
+      <td width="5%" height="25px">结束时间 </td>
+      <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.checkEndTime}</td>
+      <td width="5%" height="25px">结算方式</td>
+      <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.settlementType}</td>
+  </tr>
+  <tr>
+    <td width="5%">账户账号</td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankAccount}</td>
+    <td width="5%">账户开户行 </td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankName}</td>
+    <td width="5%">财务负责人</td>
+    <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.financialOfficer}</td>
+    <td width="5%">联系方式</td>
+    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.financialOfficerPhone}</td>
+  </tr>
+  <tr>
+      <td width="5%" height="25px">支付宝 </td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.alipayAccount}</td>
+      <td width="5%" height="25px">微信</td>
+      <td colspan="13">${params.tmsFinanceBillCheckDto.wechatAccount}</td>
+  </tr>`
+  //dealInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="yellow" align="left">应收清单 </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >交接方式</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >付款方式</td>
+          <td colspan="1" >异动增款</td>
+          <td colspan="1" >回单付</td>
+          <td colspan="1" >月结</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+
+  for (let i = 0; i < dealInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${dealInfo[i].createTime}</td>
+              <td colspan="1" >${dealInfo[i].shipSn}</td>
+              <td colspan="1"  >${dealInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${dealInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${dealInfo[i].shipToCityName}</td>
+              <td colspan="1" >${dealInfo[i].cargoName}</td>
+              <td colspan="1" >${dealInfo[i].cargoAmount}</td>
+              <td colspan="1" >${dealInfo[i].cargoWeight}</td>
+              <td colspan="1" >${dealInfo[i].cargoVolume}</td>
+              <td colspan="1" >${dealInfo[i].shipDeliveryMethod}</td>
+              <td colspan="1" >${dealInfo[i].unusualRemark}</td>
+              <td colspan="1" >${dealInfo[i].shipPayWay}</td>
+              <td colspan="1" >${dealInfo[i].unusualFee}</td>
+              <td colspan="1" >${dealInfo[i].shipReceiptpayFee}</td>
+              <td colspan="1" >${dealInfo[i].shipMonthpayFee}</td>
+              <td colspan="1" >${dealInfo[i].totalFee}</td>
+              <td colspan="1" >${dealInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealInfo
+  //dealPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">应付清单 </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >异常类型</td>
+          <td colspan="1" >异常件数</td>
+          <td colspan="1" >异动减款</td>
+          <td colspan="1" >异常金额</td>
+          <td colspan="1" >代收货款</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  // tbodyStr = tbodyStr
+  for (let i = 0; i < dealPayInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${dealPayInfo[i].createTime}</td>
+              <td colspan="1" >${dealPayInfo[i].shipSn}</td>
+              <td colspan="1" >${dealPayInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${dealPayInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${dealPayInfo[i].shipToCityName}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoName}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoAmount}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoWeight}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoVolume}</td>
+              <td colspan="1" >${dealPayInfo[i].unusualRemark}</td>
+              <td colspan="1" >${dealPayInfo[i].abnormalType}</td>
+              <td colspan="1" >${dealPayInfo[i].abnormalAmount}</td>
+              <td colspan="1" >${dealPayInfo[i].unusualFee}</td>
+              <td colspan="1" >${dealPayInfo[i].registerFee}</td>
+              <td colspan="1" >${dealPayInfo[i].agencyFund}</td>
+              <td colspan="1" >${dealPayInfo[i].totalFee}</td>
+              <td colspan="1" >${dealPayInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  //alreadyInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="yellow" align="left">已收清单(本结算期内) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >交接方式</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >付款方式</td>
+          <td colspan="1" >异动增款</td>
+          <td colspan="1" >回单付</td>
+          <td colspan="1" >月结</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  for (let i = 0; i < alreadyInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${alreadyInfo[i].createTime}</td>
+              <td colspan="1" >${alreadyInfo[i].shipSn}</td>
+              <td colspan="1" >${alreadyInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${alreadyInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${alreadyInfo[i].shipToCityName}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoName}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoAmount}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoWeight}</td>
+              <td colspan="1" >${alreadyInfo[i].cargoVolume}</td>
+              <td colspan="1" >${alreadyInfo[i].shipDeliveryMethod}</td>
+              <td colspan="1" >${alreadyInfo[i].unusualRemark}</td>
+              <td colspan="1" >${alreadyInfo[i].shipPayWay}</td>
+              <td colspan="1" >${alreadyInfo[i].unusualFee}</td>
+              <td colspan="1" >${alreadyInfo[i].shipReceiptpayFee}</td>
+              <td colspan="1" >${alreadyInfo[i].shipMonthpayFee}</td>
+              <td colspan="1" >${alreadyInfo[i].totalFee}</td>
+              <td colspan="1" >${alreadyInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  //alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+           <td colspan="1" >序号</td>
+          <td colspan="1" >开单时间</td>
+          <td colspan="1" >运单号</td>
+          <td colspan="1" >货号</td>
+          <td colspan="1" >出发城市</td>
+          <td colspan="1" >到达城市</td>
+          <td colspan="1" >货品名</td>
+          <td colspan="1" >件数</td>
+          <td colspan="1" >重量</td>
+          <td colspan="1" >体积</td>
+          <td colspan="1" >异动备注</td>
+          <td colspan="1" >异常类型</td>
+          <td colspan="1" >异常件数</td>
+          <td colspan="1" >异动减款</td>
+          <td colspan="1" >异常金额</td>
+          <td colspan="1" >代收货款</td>
+          <td colspan="1" >小计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  for (let i = 0; i < alreadyPayInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">序号1</td>
+              <td colspan="1" >${alreadyPayInfo[i].createTime}</td>
+              <td colspan="1" >${alreadyPayInfo[i].shipSn}</td>
+              <td colspan="1" >${alreadyPayInfo[i].shipGoodsSn} </td>
+              <td colspan="1" >${alreadyPayInfo[i].shipFromCityName}</td>
+              <td colspan="1" >${alreadyPayInfo[i].shipToCityName}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoName}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoAmount}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoWeight}</td>
+              <td colspan="1" >${alreadyPayInfo[i].cargoVolume}</td>
+              <td colspan="1" >${alreadyPayInfo[i].unusualRemark}</td>
+              <td colspan="1" >${alreadyPayInfo[i].abnormalType}</td>
+              <td colspan="1" >${alreadyPayInfo[i].abnormalAmount}</td>
+              <td colspan="1" >${alreadyPayInfo[i].unusualFee}</td>
+              <td colspan="1" >${alreadyPayInfo[i].registerFee}</td>
+              <td colspan="1" >${alreadyPayInfo[i].agencyFund}</td>
+              <td colspan="1" >${alreadyPayInfo[i].totalFee}</td>
+              <td colspan="1" >${alreadyPayInfo[i].remark}</td>
+            </tr>
+    `
+  }
+  //alreadyPayInfo
+  // alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >备注</td>
+      <td colspan="17">${params.tmsFinanceBillCheckDto.remark}</td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td colspan="18" bgcolor="yellow">若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</td>
+      
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td width="5%" height="10px">公司名称</td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.companyName}</td>
+      <td width="5%" height="10px">业务负责人</td>
+      <td colspan="3">${params.tmsFinanceBillCheckDto.orgBusinessOfficer}</td>
+      <td width="5%" height="10px">联系方式</td>
+       <td colspan="5">${params.tmsFinanceBillCheckDto.orgBusinessOfficerPhone}</td>
+       <td width="5%" height="10px">财务负责人</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
+       </tr>
+       <tr>
+       <td width="5%" height="10px">联系方式</td>
+       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
+       <td width="5%" height="10px">时间</td>
+       <td colspan="13">${params.tmsFinanceBillCheckDto.createTime}</td>
+    </tr>
+  `
+  tbody.innerHTML = tbodyStr
+  div.appendChild(infoDiv)
+  thead.innerHTML = theadStr
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  infoDiv.appendChild(table)
+  div.appendChild(infoDiv)
+  document.body.appendChild(div)
   return tableId
 }

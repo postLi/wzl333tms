@@ -1,3 +1,4 @@
+<script src="../../../../utils/recLodopFuncs.js"></script>
 <template>
   <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />

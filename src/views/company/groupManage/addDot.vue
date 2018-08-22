@@ -209,6 +209,7 @@
   import querySelect from '@/components/querySelect/index'
   import { REGEX } from '../../../utils/validate'
   import { objectMerge2 } from '@/utils/index'
+  import {mapGetters} from 'vuex'
   // import {Obj}
   export default {
     components: {
@@ -216,6 +217,11 @@
       SelectTree,
       SelectCity,
       querySelect
+    },
+    computed: {
+      ...mapGetters([
+        'otherinfo'
+      ])
     },
     props: {
       popVisible: {
@@ -248,6 +254,7 @@
       }
 
     },
+
     watch: {
       'form.accountStatus': {
         handler() {
@@ -257,12 +264,13 @@
       popVisible(val) {
         if (val) {
           this.formKey = Math.random()
+          this.fetchData()
           // console.log(JSON.stringify(this.doInfo))
         }
         this.watchDate(this.doInfo)
       },
       getCheckedKeyId(val){
-
+        this.watchDate()
       },
       doInfo: {
         handler() {
@@ -290,9 +298,10 @@
         popTitle: '新增网点',
         // 多选框
         checked: true,
-        loading: false,
+        loading: true,
         checkShowMessage: false,
         netWorkType: [],
+        newnNetWorkType: [],
         manageType: [],
         netWorkStatus: [],
         // 验证
@@ -366,16 +375,33 @@
       }
     },
     mounted() {
-      this.watchDate()
-      this.form.parentId = this.orgid || this.companyId
-      Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
-        this.loading = false
-        this.netWorkType = resArr[0]
-        this.manageType = resArr[1]
-        this.netWorkStatus = resArr[2]
-      })
+
+      // this.watchDate()
+      // this.form.parentId = this.orgid || this.companyId
+      // Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
+      //   this.loading = false
+      //   this.netWorkType = resArr[0]
+      //   this.manageType = resArr[1]
+      //   this.netWorkStatus = resArr[2]
+      // })
     },
     methods: {
+      fetchData() {
+        this.loading = true
+        this.form.parentId = this.orgid || this.companyId
+        Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
+          this.manageType = resArr[1]
+          this.netWorkStatus = resArr[2]
+          if(!this.isModify){
+            this.netWorkType = resArr[0].filter(el => {
+              return el.id !== 5
+            })
+          }else{
+            this.netWorkType = resArr[0]
+          }
+          this.loading = false
+        })
+      },
       canadd(val, item) {
         if (item && item.index && item.index >= 5) {
           this.$message.info('添加的层级数不能超过5层，请重新选择~')
@@ -401,7 +427,9 @@
           this.form.status = 32
           this.form.manageType = 3
           // this.form.parentId = this.companyId
-          this.form.parentId = this.getCheckedKeyId || this.companyId
+          this.form.parentId = this.getCheckedKeyId || this.otherinfo.orgid
+
+
         }
       },
       validateIsEmpty(msg = '不能为空！') {
@@ -467,10 +495,11 @@
               reqPromise = postOrgSaveDate(this.form)
             }
             reqPromise.then(res => {
-              this.loading = false
+
               this.$emit('success')
               this.$message.success('保存成功')
               this.closeMe()
+              this.loading = false
             }).catch(err => {
               this.$message({
                 type: 'error',

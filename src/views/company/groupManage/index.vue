@@ -1,6 +1,6 @@
 <template>
   <!--v-loading="loading"-->
-  <div class="company clearfix">
+  <div class="company clearfix" v-loading="loading">
     <div class="company-box">
       <div class="side_left">
         <el-tree
@@ -34,8 +34,9 @@
                 <el-form-item label="公司名称" :label-width="formLabelWidth">
                   <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="总公司" :label-width="formLabelWidth">
-                  <el-input :value='form.orgType ===1 ? "营业网点" : "分拨中心"' disabled></el-input>
+                <el-form-item label="网点类型" :label-width="formLabelWidth">
+                  <el-input :value='form.orgTypeName' disabled></el-input>
+                  <!--<el-input :value='form.orgType ===1 ? "营业网点" : "分拨中心"' disabled></el-input>-->
                 </el-form-item>
                 <el-form-item label="公司状态" :label-width="formLabelWidth" disabled="disabled">
                   <el-input :value='form.status ===32 ? "有效" : "无效"' disabled></el-input>
@@ -95,7 +96,8 @@
                   <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="网点类型" :label-width="formLabelWidth">
-                  <el-input :value='form.orgType ===1 ? "营业网点" : "分拨中心"' disabled></el-input>
+                  <el-input :value='form.orgTypeName' disabled></el-input>
+                  <!--<el-input :value='form.orgType ===1 ? "营业网点" : "分拨中心"' disabled></el-input>-->
                 </el-form-item>
                 <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
                   <el-input :value='form.status ===32 ? "有效" : "无效"' disabled></el-input>
@@ -272,7 +274,7 @@
   import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
   import {getUserInfo} from '../../../utils/auth'
-
+  import {objectMerge2} from '@/utils/index'
   export default {
     name: 'groupManage',
     components: {
@@ -333,7 +335,8 @@
         getOrgId: '', // 根据组织id获取列表
         form: {
           orgName: '',
-          orgType: 1,
+          // orgType: 1,
+          orgTypeName: '',
           status: 32,
           responsibleTelephone: '',
           // creatTime:'',
@@ -354,7 +357,6 @@
           // 默认值
           accountStatus: '0',
           parentId: 0
-
         },
         // 缓存节点数据
         orgInfoCache: {},
@@ -366,6 +368,7 @@
     },
 
     mounted() {
+      this.loading = true
       this.fetchOrg()// 左边树形数据
       // 部门维护
       this.userinfo = getUserInfo()
@@ -380,35 +383,65 @@
         this.loading = true
         postAllOrgInfo(this.otherinfo.orgid).then(data => {
           this.dataTree = data
-
+          // console.log(this.dataTree[0].id,'数据');
           this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
           this.loading = false
-          console.log(data)
+          // console.log(data)
         })
+
       },
       // 处理返回的节点数据
       handleOrgInfo(data) {
-        this.form = data
-        this.getform = Object.assign({}, data)
+        this.form = data //顶部隐藏页面
+        this.getform = objectMerge2({}, this.form)
+        // console.log(this.getform)
       },
       // 根据组织id显示列表
       fetchOrgId(id) {
+        this.loading = true
         this.getOrgId = parseInt(id, 10)
         this.fetchAllUsers(id)
+        // if (this.getCheckedKeyId) {
+        //   getOrgId(this.getCheckedKeyId).then(res => {
+        //     console.log(res,"滴100行")
+        //     this.orgInfoCache[id] = res.data
+        //     this.handleOrgInfo(res.data)
+        //     // this.fetchOrg()
+        //     this.loading = false
+        //   })
+        //   // this.handleOrgInfo()
+        //   // this.loading = false
+        // }
+        // else {
+        //   this.loading = true
+        //   getOrgId(id).then(res => {
+        //     console.log(res,"滴400行")
+        //     this.orgInfoCache[id] = res.data
+        //     this.handleOrgInfo(res.data)
+        //     this.loading = false
+        //   })
+        // }
         if (this.orgInfoCache[id]) {
           this.handleOrgInfo(this.orgInfoCache[id])
+          this.loading = false
         } else {
+          this.loading = true
           getOrgId(id).then(res => {
+            console.log(res,"滴400行")
             this.orgInfoCache[id] = res.data
             this.handleOrgInfo(res.data)
+            this.loading = false
           })
         }
+        this.loading = false
       },
       fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {
+        this.loading = true
         getAllUser(orgid, name, mobile, pageSize, pageNum).then(res => {
           this.usersArr = res.list
           this.total = res.total
         })
+        this.loading = false
       },
       seleClick(selected) {
         this.selected = selected
@@ -472,12 +505,15 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              this.loading = true
               deleteEmployeer(ids).then(res => {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
                 })
+
                 this.fetchOrgId(this.getOrgId)
+                this.loading = false
               }).catch(err => {
                 this.$message({
                   type: 'info',
@@ -500,10 +536,11 @@
         return row.tag === value
       },
       getCheckedKeys() {
-        // alert()
+        this.loading = true
         this.getCheckedKeyId = this.$refs.tree._data.currentNode.node.data.id
         this.fetchOrgId(this.$refs.tree._data.currentNode.node.data.id)// 根据组织id显示列表
         this.addDoTotVisible = false
+        this.loading = false
       },
       // 新增网点
       closeAddDot() {

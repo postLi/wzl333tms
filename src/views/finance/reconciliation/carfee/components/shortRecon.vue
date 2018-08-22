@@ -345,7 +345,7 @@
     <div class="sBottomBut">
       <div>
         <!-- <el-button >打印</el-button> -->
-        <el-button >导出</el-button>
+        <el-button @click="export1">导出</el-button>
         <el-button @click="canBtn()">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
@@ -363,6 +363,7 @@
   import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
   import {getTrucK } from '@/api/operation/load'
+  import { SaveAsFileCarrfeeShort} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -524,6 +525,14 @@
       }
     },
     methods: {
+      export1() {
+        this.sendData()
+        // console.log(JSON.stringify(this.form))
+        SaveAsFileCarrfeeShort({
+          data: objectMerge2({},this.form),
+          name: '新建对账'
+        })
+      },
       truckName(){
         this.loading = true
         return getTrucK().then(data => {
@@ -759,6 +768,23 @@
             return false
           }
         })
+      },
+      sendData(){
+        for (const i in this.messageInfo) {
+          this.form[i] = this.messageInfo[i]
+        }
+        for (const i in this.messageButtonInfo) {
+          this.form[i] = this.messageButtonInfo[i]
+        }
+        this.form.orgId = this.otherinfo.orgid
+        this.form.checkBillName = this.checkBillName
+        this.form.payDetailList = []
+        this.form.hadPayDetailList = []
+        // this.dealInfo.map(el => this.form.carrierDetailDtoList.push(el))
+        this.dealPayInfo.map(el => this.form.payDetailList.push(el))
+        this.alreadyPayInfo.map(el => this.form.hadPayDetailList.push(el))
+        console.log(this.form)
+
       },
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {

@@ -777,7 +777,7 @@
     <div class="sBottomBut">
       <div>
         <!-- <el-button >打印</el-button> -->
-        <el-button>导出</el-button>
+        <el-button @click="export1">导出</el-button>
         <el-button @click="canBtn()">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
@@ -797,6 +797,7 @@
   import {mapGetters} from 'vuex'
   import {objectMerge2} from '@/utils/index'
   import SaveDialog from './saveDialog'
+  import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -914,6 +915,14 @@
       this.onSubmit()
     },
     methods: {
+      export1() {
+        this.sendData()
+        // console.log(JSON.stringify(this.form))
+        SaveAsFileCustomer({
+          data: objectMerge2({}, this.form),
+          name: '新建对账'
+        })
+      },
       fetchList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
@@ -923,10 +932,6 @@
           this.infoList()
           if (data.customerDetailDtoList.length > 0) {
             data.customerDetailDtoList.forEach((el, val) => {
-              // this.dealInfo = []
-              // this.dealPayInfo = []
-              // this.alreadyInfo = []
-              // this.alreadyPayInfo = []
               if (el.type === 1) {
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
@@ -1054,6 +1059,20 @@
             return false
           }
         })
+      },
+      sendData() {
+        this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+        for (const i in this.messageInfo) {
+          this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
+        }
+        for (const i in this.messageButtonInfo) {
+          this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
+        }
+        this.form.customerDetailDtoList = []
+        this.dealInfo.map(el => this.form.customerDetailDtoList.push(el))
+        this.dealPayInfo.map(el => this.form.customerDetailDtoList.push(el))
+        this.alreadyInfo.map(el => this.form.customerDetailDtoList.push(el))
+        this.alreadyPayInfo.map(el => this.form.customerDetailDtoList.push(el))
       },
       infoPayFor() {
         this.dealInfo = []

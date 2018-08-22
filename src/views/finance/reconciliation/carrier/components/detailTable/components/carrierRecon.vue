@@ -703,7 +703,7 @@
             <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"
                       clearable></el-input>
           </el-form-item>
-          <el-form-item label="联系方式" prop="orgFinancialOfficerPhone">
+          <el-form-item label="财务联系电话" prop="orgFinancialOfficerPhone">
             <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
                       clearable></el-input>
           </el-form-item>
@@ -740,7 +740,7 @@
   import {mapGetters} from 'vuex'
   import {objectMerge2} from '@/utils/index'
   import SaveDialog from './saveDialog'
-  import {createReconciliation, SaveAsFile} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCarrier} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -871,15 +871,10 @@
       export1() {
         this.sendData()
         // console.log(JSON.stringify(this.form))
-        SaveAsFile({
+        SaveAsFileCarrier({
           data: objectMerge2({},this.form),
           name: '新建对账'
         })
-
-        // createReconciliation({
-        //   data: this.messageInfo
-        //   //  columns: this.tableColumn
-        // })
       },
       fetchList() {
         this.loading = true
