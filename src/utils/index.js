@@ -409,7 +409,7 @@ export function toggleClass(element, className) {
   element.className = classString
 }
 
-export const pickerOptions3 = {
+export const pickerOptions4 = {
   currentMonth(dateobj) {
     const end = dateobj || new Date()
     const start = new Date(end.getFullYear(), end.getMonth(), 1)
@@ -446,12 +446,23 @@ export const pickerOptions3 = {
     // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
     return [start, _end]
   },
+  yesterDay(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const before = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 2)
+    return [before, start]
+  },
   currentWeek(dateobj) {
     const _end = dateobj || new Date()
     const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
-
     // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
     return [start, _end]
+  },
+  lastWeek(dateobj) {
+    const _end = dateobj || new Date()
+    const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay() - 7)
+    return [start, end]
   },
   currentAllWeek(dateobj) {
     let _end = dateobj || new Date()

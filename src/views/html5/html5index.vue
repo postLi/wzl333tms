@@ -4,11 +4,12 @@
       <el-header class="head_title">
         <!-- <h4>数据总览</h4> -->
         <ul>
-          <li>今天</li>
+          <!-- <li>今天</li>
           <li>昨天</li>
           <li>本周</li>
           <li>本月</li>
-          <li>本年</li>
+          <li>本年</li> -->
+          <li v-for="(item, index) in dataset" :key="index" @click="doAction(item.text)">{{item.text}}</li>
           <li>
             <!-- 2018-09-12至2018-12-14 -->
             <el-date-picker
@@ -111,7 +112,6 @@
           <li>短驳车费:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
           <li>干线车费:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
           <li>送货车费:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-         
         </ul>
       </el-main>
       <el-main class="main_left">
@@ -133,366 +133,352 @@
 </template>
 
 <script>
- import echarts from 'echarts'
-
+import echarts from 'echarts'
+import { pickerOptions4 } from '@/utils/index'
+import { postHomedetail } from '@/api/index'
 export default {
-   data() {
+  compontents: {
+    pickerOptions4
+  },
+  data() {
+    return {
+      dataset: [],
+      searchQuery: {
+        vo: {
+          'nowStartTime': '',
+          'nowEndTime': '',
+          'pastStartTime': '',
+          'pastEndTime': ''
+        }
+      },
+      pickerOptions3: {
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            const Today = pickerOptions4.today()
+            // console.log(pickerOptions4.today())
+            picker.$emit('pick', Today)
+            postHomedetail(this.searchQuery).then(data => {
+              console.log(data)
+            })
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const YesterDay = pickerOptions4.yesterDay()
+            // console.log(pickerOptions4.yesterDay())
+            picker.$emit('pick', YesterDay)
+          }
+        }, {
+          text: '本周',
+          onClick(picker) {
+            // 最近的星期天的日期，到今天的日期
+            const CurrentWeek = pickerOptions4.currentWeek()
+           // 上上周星期天的日前，到上周六的日期
+            const lastWeek = pickerOptions4.lastWeek()
+            // console.log(pickerOptions4.currentWeek())
+            picker.$emit('pick', CurrentWeek)
+          }
+        }, {
+          text: '本月',
+          onClick(picker) {
+            // 本月1日到今天的日前
+            const CurrentMonth = pickerOptions4.currentMonth()
+            // 上月1日到上月的结束时间
+            const LastMonth = pickerOptions4.lastMonth()
+            // console.log(pickerOptions4.lastMonth())
+            picker.$emit('pick', CurrentMonth)
+          }
+        }, {
+          text: '本年',
+          onClick(picker) {
+            const CurrentYear = pickerOptions4.currentYear()
+            const LastYear = pickerOptions4.lastYear()
+            picker.$emit('pick', CurrentYear)
+          }
+        }]
 
-     return {
-       pickTime: [],
-       pickerOptions3: {
-         
-         shortcuts: [{
-           text: '今天',
-           onClick(picker) {
-             // 昨天
-             const day1 = new Date()
-             day1.setTime(day1.getTime() - 24 * 60 * 60 * 1000)
-             const start = day1.getFullYear() + '-' + (day1.getMonth() + 1) + '-' + day1.getDate()
-             // 今天
-             const day2 = new Date()
-             day2.setTime(day2.getTime())
-             const end = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
-             picker.$emit('pick', [start, end])
-           }
-         }, {
-           text: '昨天',
-           onClick(picker) {
-            // 昨天
-             const day1 = new Date()
-             day1.setTime(day1.getTime() - 24 * 60 * 60 * 1000)
-             const end = day1.getFullYear() + '-' + (day1.getMonth() + 1) + '-' + day1.getDate()
-             // 前天
-             const day2 = new Date()
-             day2.setTime(day2.getTime() - 24 * 60 * 60 * 1000 - 24 * 60 * 60 * 1000)
-             const start = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
-             picker.$emit('pick', [start, end])
-             console.log('开始' + start, '结束' + end)
-           }
-         }, {
-           text: '本周',
-           onClick(picker) {
-             // 今天
-             const day2 = new Date()
-             day2.setTime(day2.getTime())
-             const end = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
-             // 条件判断今天到上周日的时间
-             var str = ''
-             const week = new Date().getDay()
-             if (week == 0) {
-               str = '今天是星期日'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 0)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-             } else if (week == 1) {
-               str = '今天是星期一'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 1)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-             } else if (week == 2) {
-               str = '今天是星期二'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 2)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-              //  console.log((new Date(end)).getTime() + '时间戳格式')
-               console.log(date.getDate() + '星期二所以减2')
-              //  console.log(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + '转换时间之后')
-               console.log(ThisWeeks)
-             } else if (week == 3) {
-               str = '今天是星期三'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 3)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-             } else if (week == 4) {
-               str = '今天是星期四'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 4)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-             } else if (week == 5) {
-               str = '今天是星期五'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 5)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-             } else if (week == 6) {
-               str = '今天是星期六'
-               const NewTues = (new Date(end)).getTime() - (86400000 * 6)
-               const date = new Date(NewTues)
-               // 本周时间
-               const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-             }
-            //  picker.$emit('pick',{})
-            
-           }
-         }, {
-           text: '本月',
-           onClick(picker) {
-            // 今天
-            const day2 = new Date()
-            day2.setTime(day2.getTime())
-            const end = day2.getFullYear() + '-' + (day2.getMonth() + 1) + '-' + day2.getDate()
-            const Newday = (new Date(end)).getTime()
-
-            const NewTues = (new Date(end)).getTime() - (86400000 * 3)
-            const date = new Date(NewTues)
-            // 本周时间
-            const ThisWeeks = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-
-            const ThisMonth = Newday - date.getDate() * 86400000
-            picker.$emit('pick', [start, end])
-           }
-         }, {
-           text: '本年',
-           onClick(picker) {
-             const end = new Date()
-             const start = new Date()
-             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-             picker.$emit('pick', [start, end])
-           }
-         }]
-
-       },
-       value6: '',
-       value7: ''
-     }
-   },
-   methods: {
-
-   },
-   mounted() {
+      },
+      value6: '',
+      value7: ''
+    }
+  },
+  methods: {
+    doAction(type) {
+      switch (type) {
+        case '今天':
+          const Today = pickerOptions4.today()
+          console.log(this.dataset)
+          // picker.$emit('pick', Today)
+          this.pickerOptions3 = Today
+          console.log('今天')
+          break
+        case '昨天':
+          const YesterDay = pickerOptions4.yesterDay()
+          this.pickerOptions3 = YesterDay
+          console.log('昨天')
+          break
+        case '本周':
+          // 最近的星期天的日期，到今天的日期
+          const CurrentWeek = pickerOptions4.currentWeek()
+          // 上上周星期天的日前，到上周六的日期
+          const lastWeek = pickerOptions4.lastWeek()
+          this.pickerOptions3 = CurrentWeek
+          console.log('本周')
+          break
+        case '本月':
+          // 本月1日到今天的日前
+          const CurrentMonth = pickerOptions4.currentMonth()
+          // 上月1日到上月的结束时间
+          const LastMonth = pickerOptions4.lastMonth()
+          this.pickerOptions3 = CurrentMonth
+          console.log('本月')
+          break
+        case '本年':
+          const CurrentYear = pickerOptions4.currentYear()
+          const LastYear = pickerOptions4.lastYear()
+          this.pickerOptions3 = CurrentYear
+          break
+      }
+    }
+  },
+  mounted() {
+    this.dataset = this.pickerOptions3.shortcuts
+    console.log(this.dataset)
    //  this.searchForm = this.
-     var myChart = echarts.init(document.getElementById('main_lefttop'))
-     var myChart2 = echarts.init(document.getElementById('main_leftdown'))
-     var myChart3 = echarts.init(document.getElementById('main'))
-     window.onresize = () => {
-       myChart.resize({
-         width: 'auto',
-         height: 'auto'
-       })
-       myChart2.resize({
-         width: 'auto',
-         height: 'auto'
-       })
-       myChart3.resize({
-         width: 'auto',
-         height: 'auto'
-       })
-     }
-     const option = {
-       title: {
-         text: '',
-         subtext: '',
-         x: 'center'
-       },
-       tooltip: {
-         trigger: 'item',
-         formatter: '{a} <br/>{b} : {c} ({d}%)'
-       },
-       legend: {
-         orient: 'vertical',
-         x: 'left',
-         data: ['现付', '到付', '回单付', '月结']
-       },
-       toolbox: {
-         show: true,
-         feature: {
-           mark: { show: true },
-           dataView: { show: true, readOnly: false },
-           magicType: {
-             show: true,
-             type: ['pie', 'funnel'],
-             option: {
-               funnel: {
-                 x: '25%',
-                 width: '50%',
-                 funnelAlign: 'left',
-                 max: 1548
-               }
-             }
-           },
-           restore: { show: true },
-           saveAsImage: { show: true }
-         }
-       },
-       calculable: true,
-       series: [
-         {
-           name: '收入来源',
-           type: 'pie',
-           radius: '55%',
-           center: ['50%', '60%'],
-           data: [
+    var myChart = echarts.init(document.getElementById('main_lefttop'))
+    var myChart2 = echarts.init(document.getElementById('main_leftdown'))
+    var myChart3 = echarts.init(document.getElementById('main'))
+    window.onresize = () => {
+      myChart.resize({
+        width: 'auto',
+        height: 'auto'
+      })
+      myChart2.resize({
+        width: 'auto',
+        height: 'auto'
+      })
+      myChart3.resize({
+        width: 'auto',
+        height: 'auto'
+      })
+    }
+    const option = {
+      title: {
+        text: '',
+        subtext: '',
+        x: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        x: 'left',
+        data: ['现付', '到付', '回单付', '月结']
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          magicType: {
+            show: true,
+            type: ['pie', 'funnel'],
+            option: {
+              funnel: {
+                x: '25%',
+                width: '50%',
+                funnelAlign: 'left',
+                max: 1548
+              }
+            }
+          },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      calculable: true,
+      series: [
+        {
+          name: '收入来源',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '60%'],
+          data: [
           { value: 335, name: '现付' },
           { value: 310, name: '到付' },
           { value: 234, name: '回单付' },
           { value: 135, name: '月结' }
-           ]
-         }
-       ]
-     }
+          ]
+        }
+      ]
+    }
 
-     const option2 = {
-       tooltip: {
-         trigger: 'item',
-         formatter: '{a} <br/>{b} : {c} ({d}%)'
-       },
-       legend: {
-         orient: 'vertical',
-         x: 'left',
-         data: ['收入', '支出']
-       },
-       toolbox: {
-         show: true,
-         feature: {
-           mark: { show: true },
-           dataView: { show: true, readOnly: false },
-           magicType: {
-             show: true,
-             type: ['pie', 'funnel'],
-             option: {
-               funnel: {
-                 x: '25%',
-                 width: '50%',
-                 funnelAlign: 'center',
-                 max: 1548
-               }
-             }
-           },
-           restore: { show: true },
-           saveAsImage: { show: true }
-         }
-       },
-       calculable: true,
-       series: [
-         {
-           name: '2018收入支出比',
-           type: 'pie',
-           radius: ['50%', '70%'],
-           itemStyle: {
-             normal: {
-               label: {
-                 show: false
-               },
-               labelLine: {
-                 show: false
-               }
-             },
-             emphasis: {
-               label: {
-                 show: true,
-                 position: 'center',
-                 textStyle: {
-                   fontSize: '30',
-                   fontWeight: 'bold'
-                 }
-               }
-             }
-           },
-           data: [
+    const option2 = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        x: 'left',
+        data: ['收入', '支出']
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          magicType: {
+            show: true,
+            type: ['pie', 'funnel'],
+            option: {
+              funnel: {
+                x: '25%',
+                width: '50%',
+                funnelAlign: 'center',
+                max: 1548
+              }
+            }
+          },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      calculable: true,
+      series: [
+        {
+          name: '2018收入支出比',
+          type: 'pie',
+          radius: ['50%', '70%'],
+          itemStyle: {
+            normal: {
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              label: {
+                show: true,
+                position: 'center',
+                textStyle: {
+                  fontSize: '30',
+                  fontWeight: 'bold'
+                }
+              }
+            }
+          },
+          data: [
           { value: 500, name: '收入' },
           { value: 310, name: '支出' }
-           ]
-         }
-       ]
-     }
+          ]
+        }
+      ]
+    }
 
-     const option3 = {
-       title: {
-         text: '安发物流2018年运力对比图',
-         subtext: '测试数据'
-       },
-       tooltip: {
-         trigger: 'axis'
-       },
-       legend: {
-         data: ['运单数', '体积', '重量']
-       },
-       toolbox: {
-         show: true,
-         feature: {
-           mark: { show: true },
-           dataView: { show: true, readOnly: false },
-           magicType: { show: true, type: ['line', 'bar'] },
-           restore: { show: true },
-           saveAsImage: { show: true }
-         }
-       },
-       calculable: true,
-       xAxis: [
-         {
-           type: 'category',
-           data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-         }
-       ],
-       yAxis: [
-         {
-           type: 'value'
-         }
-       ],
-       series: [
-         {
-           name: '运单数',
-           type: 'bar',
-           data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-           markPoint: {
-             data: [
+    const option3 = {
+      title: {
+        text: '安发物流2018年运力对比图',
+        subtext: '测试数据'
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['运单数', '体积', '重量']
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ['line', 'bar'] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      calculable: true,
+      xAxis: [
+        {
+          type: 'category',
+          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: '运单数',
+          type: 'bar',
+          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+          markPoint: {
+            data: [
                     { type: 'max', name: '最大值' },
                     { type: 'min', name: '最小值' }
-             ]
-           }
-         },
-         {
-           name: '体积',
-           type: 'bar',
-           data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-           markPoint: {
-             data: [
+            ]
+          }
+        },
+        {
+          name: '体积',
+          type: 'bar',
+          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+          markPoint: {
+            data: [
                     { type: 'max', name: '最大值' },
                     { type: 'min', name: '最小值' }
-             ]
-           }
-         },
-         {
-           name: '重量',
-           type: 'bar',
-           data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
-           markPoint: {
-             data: [
+            ]
+          }
+        },
+        {
+          name: '重量',
+          type: 'bar',
+          data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
+          markPoint: {
+            data: [
                     { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
                     { name: '年最低', value: 0, xAxis: 11, yAxis: 3 }
-             ]
-           }
-         }
-       ]
-     }
+            ]
+          }
+        }
+      ]
+    }
 
     // 为echarts对象加载数据
-     myChart.setOption(option)
-     myChart2.setOption(option2)
-     myChart3.setOption(option3)
-   }
- }
+    myChart.setOption(option)
+    myChart2.setOption(option2)
+    myChart3.setOption(option3)
+  }
+}
 </script>
 <style lang="scss">
+// .app-main{
+//   background:rgb(235,235,235);
+// }
 .html5index{
   min-width: 1100px;
+  background:rgb(235,235,235);
 }
 .main_content{
-  padding:19px;
+  padding: 16px 20px 13px 20px;
   overflow-y: hidden;
-  background:rgb(235,235,235);
+  // background:rgb(235,235,235);
   box-sizing: border-box;
+  float:left;
   .head_title{
     height: 4% !important;
     line-height: 30px !important;
     background: #ffff;
     padding:0px !important;
     box-sizing: border-box;
+    // margin-bottom: 0.6%;
     // box-shadow: 2px 2px 2px 2px ,-2px -2px -2px -2px rgba(0, 0, 0, 0.10);
     h4{
       font-size: 14px;
@@ -553,7 +539,7 @@ export default {
     }
   }
   .main_forthUl{
-    padding: 0 !important ;
+    padding: 10px 0 0 0 !important ;
     width: 100%;
     display: flex;
     float: left;
@@ -627,7 +613,7 @@ export default {
     color: #3e9ff1;
     // opacity: rgba(0, 0, 0, 0.44);
     // font-weight: 300;
-    transform: translateY(-3px); transition-delay: 0.1s; 
+    // transform: translateY(-3px); transition-delay: 0.1s; 
   }
   .main_forthUl ul li:nth-child(1){
     //  transform: translateX(-200px); transition-delay: 0.2s; 
