@@ -137,6 +137,7 @@
 
 export default {
    data() {
+     
      return {
        pickTime: [],
        pickerOptions3: {
@@ -253,7 +254,7 @@ export default {
              picker.$emit('pick', [start, end])
            }
          }]
-         
+
        },
        value6: '',
        value7: ''
