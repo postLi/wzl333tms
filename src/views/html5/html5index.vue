@@ -137,10 +137,11 @@
 
 export default {
    data() {
-     
+
      return {
        pickTime: [],
        pickerOptions3: {
+         
          shortcuts: [{
            text: '今天',
            onClick(picker) {
