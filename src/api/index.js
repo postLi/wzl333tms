@@ -10,7 +10,7 @@ import fetch from '@/utils/fetch'
  * @param {*} params
  */
 export function postHomedetail(id) {
-  return fetch.post('/lingchiwing/system/tmshomedetail/v1/home/1', id).then(res => {
+  return fetch.post('/api-system/system/tmshomedetail/v1/home/1').then(res => {
     return res.data || {}
   })
 }

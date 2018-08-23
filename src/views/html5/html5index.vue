@@ -154,7 +154,10 @@ export default {
         shortcuts: [{
           text: '今天',
           onClick(picker) {
+            // 今天
             const Today = pickerOptions4.today()
+            // 昨天
+            const yesterDay = pickerOptions4.yesterDay()
             // console.log(pickerOptions4.today())
             picker.$emit('pick', Today)
             postHomedetail(this.searchQuery).then(data => {
@@ -164,8 +167,11 @@ export default {
         }, {
           text: '昨天',
           onClick(picker) {
-            const YesterDay = pickerOptions4.yesterDay()
-            // console.log(pickerOptions4.yesterDay())
+            // 昨天
+            const yesterDay = pickerOptions4.yesterDay()
+            // 前天
+            const beforeDady = pickerOptions4.beforeDady()
+            console.log(pickerOptions4.yesterDay())
             picker.$emit('pick', YesterDay)
           }
         }, {
@@ -207,7 +213,7 @@ export default {
       switch (type) {
         case '今天':
           const Today = pickerOptions4.today()
-          console.log(this.dataset)
+          // console.log(this.dataset)
           // picker.$emit('pick', Today)
           this.pickerOptions3 = Today
           console.log('今天')

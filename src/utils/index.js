@@ -449,8 +449,14 @@ export const pickerOptions4 = {
   yesterDay(dateobj) {
     const _end = dateobj || new Date()
     const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
-    const before = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 2)
-    return [before, start]
+    const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
+    return [start, end]
+  },
+  beforeDady(dateobj) {
+    const _end = dateobj || new Date()
+    const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 2)
+    return [start, end]
   },
   currentWeek(dateobj) {
     const _end = dateobj || new Date()
