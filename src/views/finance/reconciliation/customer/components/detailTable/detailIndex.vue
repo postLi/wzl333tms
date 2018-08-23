@@ -70,7 +70,7 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.orgId = this.otherinfo.orgid
+    this.searchQuery.vo.orgId = this.$route.query.orgid
     this.searchQuery.vo.memberId = this.$route.query.id
   },
   data() {

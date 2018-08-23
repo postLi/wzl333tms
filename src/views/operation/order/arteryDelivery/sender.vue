@@ -1,4 +1,4 @@
-<script src="../../../../utils/recLodopFuncs.js"></script>
+
 <template>
   <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
@@ -264,7 +264,7 @@ export default {
         }, {
           label: '配载时间',
           prop: 'requireArrivedTime',
-          width: '120',
+          width: '160',
           fixed: false
         }, {
           label: '配载人',

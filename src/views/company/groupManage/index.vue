@@ -427,7 +427,7 @@
         } else {
           this.loading = true
           getOrgId(id).then(res => {
-            console.log(res,"滴400行")
+            // console.log(res,"滴400行")
             this.orgInfoCache[id] = res.data
             this.handleOrgInfo(res.data)
             this.loading = false

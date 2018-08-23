@@ -123,7 +123,7 @@ export default {
         },
         {
           label: "短驳时间",
-          prop: "loadTime",
+          prop: "departureTime",
           width: "150",
           fixed: false,
           slot: (scope) => {
