@@ -18,7 +18,8 @@
 
 .container-right{
   float: right;
-  margin: 200px 0 0px 0px;
+  margin: 219px 0 0px 0px;
+  width: 330px;
 }
 
 .login-container {
@@ -41,9 +42,8 @@
   border-radius: 0px;
   padding: 12px 5px 12px 15px;
   color: rgba(100, 100, 100, 1);
-  height: 47px;
+  height: 40px;
 }
-
 
 
 .svg-container {
@@ -59,24 +59,35 @@
 
 .login-form {
   display: inline-block;
-  padding: 25px 21px 23px 21px;
+  padding: 0px 21px 23px 21px;
   background: #fff;
   border: 1px solid #fff;
   border-radius: 10px;
-  -moz-box-shadow: 12px 12px 12px 5px rgba(130,170,234,0.7);
-  box-shadow: 12px 12px 12px 5px rgba(130,170,234,0.7);
+  transition: 0.5s;
+  box-shadow: 1px 1px 15px rgba(0,0,0,0.4);
+  -moz-box-shadow: 1px 1px 15px rgba(0,0,0,0.4);
+  /*-moz-box-shadow: 12px 12px 12px 5px rgba(130,170,234,0.7);
+  box-shadow: 12px 12px 12px 5px rgba(130,170,234,0.7);*/
 
+}
+.login-form:hover{
+  transition: 0.2s;
+  box-shadow: 0px 1px 30px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 1px 30px rgba(0,0,0,0.3);
 }
 
 .login-form .el-form-item {
   border: 1px solid #aaa;
   background: #fff;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
   color: #454545;
-  margin-bottom: 10px !important;
+  margin-bottom: 20px !important;
+}
+.login-form .el-input-group__append, .el-input-group__prepend{
+  padding: 0;
 }
 .login-form .el-input-group__prepend{
-  border-radius: 5px 0 0 5px;
+  /*border-radius: 5px 0 0 5px;*/
   border: 0;
   border-right: 1px solid #dcdfe6;
 }
@@ -84,23 +95,27 @@
 .login-container .el-form-item:hover{
   border-color: #409eff;
 }
-
+.container-top{
+  background-color: #FFF;
+  /*height: 60px;*/
+}
 .logo{
   text-align: center;
 }
 
 .logo-img{
-  display: inline-block;
-  width: 370px;
-  height: 62px;
+  /*display: inline-block;*/
+  /*width: 370px;*/
+  height: 35px;
+  margin:10px auto;
   vertical-align: middle;
 }
 
 .title {
-  font-size: 26px;
+  font-size: 18px;
   color: #515151;
-  margin: 20px auto 40px auto;
-  text-align: center;
+  margin: 35px auto 30px auto;
+  /*text-align: center;*/
   font-weight: bold;
 }
 
@@ -114,22 +129,27 @@
 }
 
 .login{
+  margin-top: 40px;
   margin-bottom: 0 !important;
 }
 
 /*记住密码*/
 .rember{
-  display: inline-block;
+  /*display: inline-block;*/
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+
 }
 
 .rember .el-checkbox__label{
-  text-align: center;
+  /*text-align: center;*/
   color: #666;
 }
 
 .rember-tit{
-  display: inline-block;
-  padding-left: 220px;
+  /*display: inline-block;*/
+  /*padding-left: 200px;*/
   cursor: pointer;
   color: #666;
   font-size: 14px;
@@ -146,6 +166,7 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 1230px;
+  margin-top: 250px;
 }
 .button-cont ul{
   display: inline-block;
@@ -162,7 +183,7 @@
 
 .down{
   position: absolute;
-  bottom: 32px;
+  bottom: 0px;
   right: 0;
 }
 
@@ -175,4 +196,20 @@
 .down p{
   color: #eee;
   font-size: 12px;
+}
+.icon_login{
+  display: block;
+  width:38px;
+  height: 38px;
+}
+ .icon_login_user{
+  background-image: url('../assets/login_images/nn1.png');
+}
+.icon_login_password{
+  background-image: url('../assets/login_images/nn2.png');
+}
+.login-form .el-input-group__prepend:focus{
+   .icon_login_user{
+  background-image: url('../assets/login_images/bb1.png');
+   }
 }
