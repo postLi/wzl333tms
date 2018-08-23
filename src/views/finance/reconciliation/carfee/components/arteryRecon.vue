@@ -452,7 +452,7 @@
     <div class="sBottomBut">
       <div>
         <!-- <el-button >打印</el-button> -->
-        <el-button>导出</el-button>
+        <el-button @click="export1">导出</el-button>
         <el-button @click="canBtn()">取消</el-button>
         <el-button @click="submit('formName')" type="primary">保存</el-button>
       </div>
@@ -476,6 +476,7 @@
   import {objectMerge2} from '@/utils/index'
   import SaveDialog from './saveDialog'
   import {getTrucK } from '@/api/operation/load'
+  import { SaveAsFileCarfeefeeArt} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -636,6 +637,23 @@
       }
     },
     methods: {
+      export1() {
+        if (this.searchTitle.memberName) {
+          this.sendData()
+          // console.log(JSON.stringify(this.form))
+          SaveAsFileCarfeefeeArt({
+            data: objectMerge2({},this.form),
+            name: '新建对账'
+          })
+        }else{
+          this.$message({
+            message: '请选择车牌号进行查询~',
+            type: 'error'
+          })
+          return false
+        }
+
+      },
       truckName() {
         this.loading = true
         return getTrucK().then(data => {
@@ -786,58 +804,7 @@
           if (valid) {
             this.$refs['formName3'].validate((valid) => {
               if (valid) {
-                for (const i in this.messageInfo) {
-                  this.form[i] = this.messageInfo[i]
-                }
-                for (const i in this.messageButtonInfo) {
-                  this.form[i] = this.messageButtonInfo[i]
-                }
-                this.form.orgId = this.otherinfo.orgid
-                this.form.checkBillName = this.checkBillName
-                this.form.payDetailList = []
-                this.form.hadPayDetailList = []
-                this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                  const a = {}
-                  a.shipOrderId = el.shipOrderId
-                  a.departureTime = el.departureTime
-                  a.batchNo = el.batchNo
-                  a.contractNo = el.contractNo
-                  a.orgName = el.orgName
-                  a.arriveOrgName = el.arriveOrgName
-                  a.loadAmount = el.loadAmount
-                  a.loadWeight = el.loadWeight
-                  a.loadVolume = el.loadVolume
-                  a.onSendPay = el.onSendPay
-                  a.onCardPay = el.onCardPay
-                  a.backSendPay = el.backSendPay
-                  a.backCardPay = el.backCardPay
-                  a.arrSendPay = el.arrSendPay
-                  a.arrCardPay = el.arrCardPay
-                  a.totalPay = el.totalPay
-                  a.remark = el.remark
-                  return a
-                }) : []
-                this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                  const a = {}
-                  a.shipOrderId = el.shipOrderId
-                  a.departureTime = el.departureTime
-                  a.batchNo = el.batchNo
-                  a.contractNo = el.contractNo
-                  a.orgName = el.orgName
-                  a.arriveOrgName = el.arriveOrgName
-                  a.loadAmount = el.loadAmount
-                  a.loadWeight = el.loadWeight
-                  a.loadVolume = el.loadVolume
-                  a.onSendPay = el.onSendPay
-                  a.onCardPay = el.onCardPay
-                  a.backSendPay = el.backSendPay
-                  a.backCardPay = el.backCardPay
-                  a.arrSendPay = el.arrSendPay
-                  a.arrCardPay = el.arrCardPay
-                  a.totalPay = el.totalPay
-                  a.remark = el.remark
-                  return a
-                }) : []
+               this.sendData()
                 // 总计
                 this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
@@ -849,7 +816,7 @@
                   a.totalPay = el.totalPay
                   return a
                 }) : []
-                console.log(this.tota)
+                // console.log(this.tota)
 
                 if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
                   this.$message({
@@ -870,6 +837,60 @@
             return false
           }
         })
+      },
+      sendData(){
+        for (const i in this.messageInfo) {
+          this.form[i] = this.messageInfo[i]
+        }
+        for (const i in this.messageButtonInfo) {
+          this.form[i] = this.messageButtonInfo[i]
+        }
+        this.form.orgId = this.otherinfo.orgid
+        this.form.checkBillName = this.checkBillName
+        this.form.payDetailList = []
+        this.form.hadPayDetailList = []
+        this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
+          const a = {}
+          a.shipOrderId = el.shipOrderId
+          a.departureTime = el.departureTime
+          a.batchNo = el.batchNo
+          a.contractNo = el.contractNo
+          a.orgName = el.orgName
+          a.arriveOrgName = el.arriveOrgName
+          a.loadAmount = el.loadAmount
+          a.loadWeight = el.loadWeight
+          a.loadVolume = el.loadVolume
+          a.onSendPay = el.onSendPay
+          a.onCardPay = el.onCardPay
+          a.backSendPay = el.backSendPay
+          a.backCardPay = el.backCardPay
+          a.arrSendPay = el.arrSendPay
+          a.arrCardPay = el.arrCardPay
+          a.totalPay = el.totalPay
+          a.remark = el.remark
+          return a
+        }) : []
+        this.form.hadPayDetailList = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
+          const a = {}
+          a.shipOrderId = el.shipOrderId
+          a.departureTime = el.departureTime
+          a.batchNo = el.batchNo
+          a.contractNo = el.contractNo
+          a.orgName = el.orgName
+          a.arriveOrgName = el.arriveOrgName
+          a.loadAmount = el.loadAmount
+          a.loadWeight = el.loadWeight
+          a.loadVolume = el.loadVolume
+          a.onSendPay = el.onSendPay
+          a.onCardPay = el.onCardPay
+          a.backSendPay = el.backSendPay
+          a.backCardPay = el.backCardPay
+          a.arrSendPay = el.arrSendPay
+          a.arrCardPay = el.arrCardPay
+          a.totalPay = el.totalPay
+          a.remark = el.remark
+          return a
+        }) : []
       },
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {

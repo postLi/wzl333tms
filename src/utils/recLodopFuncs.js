@@ -376,10 +376,67 @@ export function SaveAsFileCustomer(obj) {
   }
 }
 
-export function SaveAsFileCarrfeeShort(obj) {
+
+export function SaveAsFileCarfeefeeShort(obj) {
   try {
     // let tableId = createTable(data, columns) // 重新创建打印视图table
-    const tableId = createCarrfeeShort(obj.data) // 重新创建打印视图table
+    const tableId = createCarfeefeeShort(obj.data) // 重新创建打印视图table
+    // console.log(obj);
+    LODOP = getLodop()
+    LODOP.PRINT_INIT('数据表格')
+    // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+    LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+    // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+    LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+    LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+    LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+    LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+    LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+    if (obj.name) {
+      LODOP.SAVE_TO_FILE(obj.name + '_' + (new Date().getTime()) + '.xls')
+    } else {
+      LODOP.SAVE_TO_FILE('新文件名.xls')
+    }
+  } catch (err) {
+    console.log(err);
+    getLodop()
+  }
+}
+
+export function SaveAsFileCarfeefeeArt(obj) {
+  try {
+    // let tableId = createTable(data, columns) // 重新创建打印视图table
+    const tableId = createCarfeefeeArt(obj.data) // 重新创建打印视图table
+    // console.log(obj);
+    LODOP = getLodop()
+    LODOP.PRINT_INIT('数据表格')
+    // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+    LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+    // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+    LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+    LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+    LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+    LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+    LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+    if (obj.name) {
+      LODOP.SAVE_TO_FILE(obj.name + '_' + (new Date().getTime()) + '.xls')
+    } else {
+      LODOP.SAVE_TO_FILE('新文件名.xls')
+    }
+  } catch (err) {
+    console.log(err);
+    getLodop()
+  }
+}
+
+//
+
+export function SaveAsFileCarfeeDeliver(obj) {
+  try {
+    // let tableId = createTable(data, columns) // 重新创建打印视图table
+    const tableId = createCarfeefeeDeliver(obj.data) // 重新创建打印视图table
     // console.log(obj);
     LODOP = getLodop()
     LODOP.PRINT_INIT('数据表格')
@@ -587,7 +644,7 @@ function createCarrier(params) {
   table.style.border = '1px solid #ff000';
   table.setAttribute('border', '1')
   table.setAttribute('font', '12px')
-  table.setAttribute('width', '100%')
+  table.setAttribute('width', '1800')
   table.setAttribute('table-layout', 'fixed')
   var theadStr = ''
   // 标题
@@ -660,7 +717,7 @@ function createCarrier(params) {
   for (let i = 0; i < dealInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
+              <td colspan="1">${i+1}</td>
               <td colspan="1" >${dealInfo[i].transferTime}</td>
               <td colspan="1" >${dealInfo[i].shipSn}</td>
               <td colspan="1"  >${dealInfo[i].oddNumbers} </td>
@@ -707,7 +764,7 @@ function createCarrier(params) {
   for (let i = 0; i < dealPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
+              <td colspan="1">${i+1}</td>
               <td colspan="1" >${dealPayInfo[i].transferTime}</td>
               <td colspan="1" >${dealPayInfo[i].shipSn}</td>
               <td colspan="1" >${dealPayInfo[i].oddNumbers} </td>
@@ -754,7 +811,7 @@ function createCarrier(params) {
   for (let i = 0; i < alreadyInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
+              <td colspan="1">${i+1}</td>
               <td colspan="1" >${alreadyInfo[i].transferTime}</td>
               <td colspan="1" >${alreadyInfo[i].shipSn}</td>
               <td colspan="1" >${alreadyInfo[i].oddNumbers} </td>
@@ -801,7 +858,7 @@ function createCarrier(params) {
   for (let i = 0; i < alreadyPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
+              <td colspan="1">${i+1}</td>
               <td colspan="1" >${alreadyPayInfo[i].transferTime}</td>
               <td colspan="1" >${alreadyPayInfo[i].shipSn}</td>
               <td colspan="1" >${alreadyPayInfo[i].oddNumbers} </td>
@@ -902,7 +959,7 @@ function createCustomer(params) {
   table.style.border = '1px solid #ff000';
   table.setAttribute('border', '1')
   table.setAttribute('font', '12px')
-  table.setAttribute('width', '100%')
+  table.setAttribute('width', '1800')
   table.setAttribute('table-layout', 'fixed')
   var theadStr = ''
   // 标题
@@ -977,24 +1034,24 @@ function createCustomer(params) {
   for (let i = 0; i < dealInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
-              <td colspan="1" >${dealInfo[i].createTime}</td>
-              <td colspan="1" >${dealInfo[i].shipSn}</td>
-              <td colspan="1"  >${dealInfo[i].shipGoodsSn} </td>
-              <td colspan="1" >${dealInfo[i].shipFromCityName}</td>
-              <td colspan="1" >${dealInfo[i].shipToCityName}</td>
-              <td colspan="1" >${dealInfo[i].cargoName}</td>
-              <td colspan="1" >${dealInfo[i].cargoAmount}</td>
-              <td colspan="1" >${dealInfo[i].cargoWeight}</td>
-              <td colspan="1" >${dealInfo[i].cargoVolume}</td>
-              <td colspan="1" >${dealInfo[i].shipDeliveryMethod}</td>
-              <td colspan="1" >${dealInfo[i].unusualRemark}</td>
-              <td colspan="1" >${dealInfo[i].shipPayWay}</td>
-              <td colspan="1" >${dealInfo[i].unusualFee}</td>
-              <td colspan="1" >${dealInfo[i].shipReceiptpayFee}</td>
-              <td colspan="1" >${dealInfo[i].shipMonthpayFee}</td>
-              <td colspan="1" >${dealInfo[i].totalFee}</td>
-              <td colspan="1" >${dealInfo[i].remark}</td>
+              <td colspan="1">${i+1}</td>
+              <td colspan="1" >${dealInfo[i].createTime ? dealInfo[i].createTime : ''}</td>
+              <td colspan="1" >${dealInfo[i].shipSn ? dealInfo[i].shipSn : ''}</td>
+              <td colspan="1"  >${dealInfo[i].shipGoodsSn ? dealInfo[i].shipGoodsSn : ''} </td>
+              <td colspan="1" >${dealInfo[i].shipFromCityName ? dealInfo[i].shipFromCityName : ''}</td>
+              <td colspan="1" >${dealInfo[i].shipToCityName ? dealInfo[i].shipToCityName : ''}</td>
+              <td colspan="1" >${dealInfo[i].cargoName ? dealInfo[i].cargoName : ''}</td>
+              <td colspan="1" >${dealInfo[i].cargoAmount ? dealInfo[i].cargoAmount : ''}</td>
+              <td colspan="1" >${dealInfo[i].cargoWeight ? dealInfo[i].cargoWeight : ''}</td>
+              <td colspan="1" >${dealInfo[i].cargoVolume ? dealInfo[i].cargoVolume : ''}</td>
+              <td colspan="1" >${dealInfo[i].shipDeliveryMethod ? dealInfo[i].shipDeliveryMethod :''}</td>
+              <td colspan="1" >${dealInfo[i].unusualRemark ? dealInfo[i].unusualRemark : ''}</td>
+              <td colspan="1" >${dealInfo[i].shipPayWay ? dealInfo[i].shipPayWay : ''}</td>
+              <td colspan="1" >${dealInfo[i].unusualFee ? dealInfo[i].unusualFee : ''}</td>
+              <td colspan="1" >${dealInfo[i].shipReceiptpayFee ? dealInfo[i].shipReceiptpayFee : ''}</td>
+              <td colspan="1" >${dealInfo[i].shipMonthpayFee ? dealInfo[i].shipMonthpayFee : ''}</td>
+              <td colspan="1" >${dealInfo[i].totalFee ? dealInfo[i].totalFee : ''}</td>
+              <td colspan="1" >${dealInfo[i].remark ? dealInfo[i].remark ? ''}</td>
             </tr>
     `
   }
@@ -1029,24 +1086,24 @@ function createCustomer(params) {
   for (let i = 0; i < dealPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
-              <td colspan="1" >${dealPayInfo[i].createTime}</td>
-              <td colspan="1" >${dealPayInfo[i].shipSn}</td>
-              <td colspan="1" >${dealPayInfo[i].shipGoodsSn} </td>
-              <td colspan="1" >${dealPayInfo[i].shipFromCityName}</td>
-              <td colspan="1" >${dealPayInfo[i].shipToCityName}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoName}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoAmount}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoWeight}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoVolume}</td>
-              <td colspan="1" >${dealPayInfo[i].unusualRemark}</td>
-              <td colspan="1" >${dealPayInfo[i].abnormalType}</td>
-              <td colspan="1" >${dealPayInfo[i].abnormalAmount}</td>
-              <td colspan="1" >${dealPayInfo[i].unusualFee}</td>
-              <td colspan="1" >${dealPayInfo[i].registerFee}</td>
-              <td colspan="1" >${dealPayInfo[i].agencyFund}</td>
-              <td colspan="1" >${dealPayInfo[i].totalFee}</td>
-              <td colspan="1" >${dealPayInfo[i].remark}</td>
+              <td colspan="1">${i+1}</td>
+              <td colspan="1" >${dealPayInfo[i].createTime ? dealPayInfo[i].createTime : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].shipSn ? dealPayInfo[i].shipSn : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].shipGoodsSn ? dealPayInfo[i].shipGoodsSn : ''} </td>
+              <td colspan="1" >${dealPayInfo[i].shipFromCityName ? dealPayInfo[i].shipFromCityName : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].shipToCityName ? dealPayInfo[i].shipToCityName : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoName ? dealPayInfo[i].cargoName : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoAmount ? dealPayInfo[i].cargoAmount : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoWeight ? dealPayInfo[i].cargoWeight : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].cargoVolume ? dealPayInfo[i].cargoVolume : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].unusualRemark ? dealPayInfo[i].unusualRemark : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].abnormalType ? dealPayInfo[i].abnormalType : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].abnormalAmount ? dealPayInfo[i].abnormalAmount : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].unusualFee ? dealPayInfo[i].unusualFee : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].registerFee ? dealPayInfo[i].registerFee : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].agencyFund ? dealPayInfo[i].agencyFund : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].totalFee ? dealPayInfo[i].totalFee : ''}</td>
+              <td colspan="1" >${dealPayInfo[i].remark ? dealPayInfo[i].remark : ''}</td>
             </tr>
     `
   }
@@ -1080,12 +1137,12 @@ function createCustomer(params) {
   for (let i = 0; i < alreadyInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
-              <td colspan="1" >${alreadyInfo[i].createTime}</td>
-              <td colspan="1" >${alreadyInfo[i].shipSn}</td>
-              <td colspan="1" >${alreadyInfo[i].shipGoodsSn} </td>
-              <td colspan="1" >${alreadyInfo[i].shipFromCityName}</td>
-              <td colspan="1" >${alreadyInfo[i].shipToCityName}</td>
+              <td colspan="1">${i+1}</td>
+              <td colspan="1" >${alreadyInfo[i].createTime ? alreadyInfo[i].createTime : ''}</td>
+              <td colspan="1" >${alreadyInfo[i].shipSn ? alreadyInfo[i].shipSn : ''}</td>
+              <td colspan="1" >${alreadyInfo[i].shipGoodsSn ? alreadyInfo[i].shipGoodsSn : ''} </td>
+              <td colspan="1" >${alreadyInfo[i].shipFromCityName ? alreadyInfo[i].shipFromCityName : ''}</td>
+              <td colspan="1" >${alreadyInfo[i].shipToCityName ? alreadyInfo[i].shipToCityName : ''}</td>
               <td colspan="1" >${alreadyInfo[i].cargoName}</td>
               <td colspan="1" >${alreadyInfo[i].cargoAmount}</td>
               <td colspan="1" >${alreadyInfo[i].cargoWeight}</td>
@@ -1131,7 +1188,7 @@ function createCustomer(params) {
   for (let i = 0; i < alreadyPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
+              <td colspan="1">${i+1}</td>
               <td colspan="1" >${alreadyPayInfo[i].createTime}</td>
               <td colspan="1" >${alreadyPayInfo[i].shipSn}</td>
               <td colspan="1" >${alreadyPayInfo[i].shipGoodsSn} </td>
@@ -1196,31 +1253,18 @@ function createCustomer(params) {
 }
 
 
+
 //短驳
-function createCarrfeeShort(params) {
-  console.log(params,params.tmsFinanceBillCheckDto.companyName)
-  let dealInfo = []
-  let dealPayInfo = []
-  let alreadyInfo = []
-  let alreadyPayInfo = []
-  params.customerDetailDtoList.forEach(function (el, val) {
-    if (el.type === 1) {
-      dealInfo.push(el)
-    }
-    else if (el.type === 2) {
-      dealPayInfo.push(el)
-    }
-    else if (el.type === 3) {
-      alreadyInfo.push(el)
-    }
-    else {
-      alreadyPayInfo.push(el)
-    }
-  })
+function createCarfeefeeShort(params) {
+  console.log(params,params.payDetailList)
 
   //初始化tmsFinanceBillCheckDto
-  for (var i in params.tmsFinanceBillCheckDto) {
-    params.tmsFinanceBillCheckDto[i] = params.tmsFinanceBillCheckDto[i] === null ? '' : params.tmsFinanceBillCheckDto[i]
+  for (var i in params) {
+    params[i] = params[i] === null || undefined ? '' : params[i]
+  }
+  for (var i in params.payDetailList) {
+    params.payDetailList[i] = params.payDetailList[i] === null || undefined ? '' : params.payDetailList[i]
+    // alert(params.payDetailList[i])
   }
   //初始化dealInfo
   const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
@@ -1234,99 +1278,78 @@ function createCarrfeeShort(params) {
   table.style.border = '1px solid #ff000';
   table.setAttribute('border', '1')
   table.setAttribute('font', '12px')
-  table.setAttribute('width', '100%')
+  table.setAttribute('width', '1900')
   table.setAttribute('table-layout', 'fixed')
   var theadStr = ''
   // 标题
   theadStr = `
     <tr>
-      <td colspan="18" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.tmsFinanceBillCheckDto.checkBillName}</td>
+      <td colspan="12" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.checkBillName}</td>
     </tr>
    `
   let tbodyStr = ` <tr>
-    <td width="5%" height="25px">发货方 </td>
-    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberName}</td>
-    <td width="5%"  height="25px">发货人</td>
-    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberPerson}</td>
+    <td width="5%" height="25px">车牌号 </td>
+    <td colspan="2" width="20%">${params.memberName}</td>
+    <td width="5%"  height="25px">司机</td>
+    <td colspan="2" width="20%">${params.memberPerson}</td>
     <td width="5%" height="25px">联系方式</td>
-    <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.memberPersonPhone}</td>
+    <td colspan="2" width="20%">${params.memberPersonPhone}</td>
     <td width="5%" height="25px">对账单编号 </td>
-    <td colspan="3" width="15%">${params.tmsFinanceBillCheckDto.checkBillCode}</td>
+    <td colspan="2" width="15%">${params.checkBillCode}</td>
   </tr>
    <tr>
-      <td width="5%" height="25px">客户编号</td>
-      <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.memberCode}</td>
+     
       <td width="5%" height="25px">开始时间</td>
-      <td colspan="3" width="20%"> ${params.tmsFinanceBillCheckDto.checkStartTime}</td>
+      <td colspan="2" width="20%"> ${params.checkStartTime}</td>
       <td width="5%" height="25px">结束时间 </td>
-      <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.checkEndTime}</td>
-      <td width="5%" height="25px">结算方式</td>
-      <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.settlementType}</td>
-  </tr>
-  <tr>
-    <td width="5%">账户账号</td>
-    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankAccount}</td>
-    <td width="5%">账户开户行 </td>
-    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.bankName}</td>
-    <td width="5%">财务负责人</td>
-    <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.financialOfficer}</td>
-    <td width="5%">联系方式</td>
-    <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.financialOfficerPhone}</td>
+      <td colspan="2" width="20%">${params.checkEndTime}</td>
+      
+      <td width="5%">账户账号</td>
+      <td colspan="2" width="20%">${params.bankAccount}</td>
+      <td width="5%">账户开户行 </td>
+      <td colspan="2" width="20%">${params.bankName}</td>
   </tr>
   <tr>
       <td width="5%" height="25px">支付宝 </td>
-      <td colspan="3">${params.tmsFinanceBillCheckDto.alipayAccount}</td>
+      <td colspan="3">${params.alipayAccount}</td>
       <td width="5%" height="25px">微信</td>
-      <td colspan="13">${params.tmsFinanceBillCheckDto.wechatAccount}</td>
+      <td colspan="7">${params.wechatAccount}</td>
   </tr>`
   //dealInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="18" bgcolor="yellow" align="left">应收清单 </td>
+        <td colspan="12" bgcolor="yellow" align="left">应付账款 </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
           <td colspan="1" >序号</td>
-          <td colspan="1" >开单时间</td>
-          <td colspan="1" >运单号</td>
-          <td colspan="1" >货号</td>
-          <td colspan="1" >出发城市</td>
-          <td colspan="1" >到达城市</td>
-          <td colspan="1" >货品名</td>
-          <td colspan="1" >件数</td>
-          <td colspan="1" >重量</td>
-          <td colspan="1" >体积</td>
-          <td colspan="1" >交接方式</td>
-          <td colspan="1" >异动备注</td>
-          <td colspan="1" >付款方式</td>
-          <td colspan="1" >异动增款</td>
-          <td colspan="1" >回单付</td>
-          <td colspan="1" >月结</td>
-          <td colspan="1" >小计</td>
+          <td colspan="1" >发车时间</td>
+          <td colspan="1" >短驳批次号</td>
+          <td colspan="1" >发车网点</td>
+          <td colspan="1" >到达网点</td>
+          <td colspan="1" >配载件数</td>
+          <td colspan="1" >配载重量</td>
+          <td colspan="1" >配载体积</td>
+          <td colspan="1" >司机</td>
+          <td colspan="2" >短驳费</td>
           <td colspan="1" >备注</td>
       </tr>`
 
-  for (let i = 0; i < dealInfo.length; i++) {
+  for (let i = 0; i < params.payDetailList.length; i++) {
+
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
-              <td colspan="1" >${dealInfo[i].createTime}</td>
-              <td colspan="1" >${dealInfo[i].shipSn}</td>
-              <td colspan="1"  >${dealInfo[i].shipGoodsSn} </td>
-              <td colspan="1" >${dealInfo[i].shipFromCityName}</td>
-              <td colspan="1" >${dealInfo[i].shipToCityName}</td>
-              <td colspan="1" >${dealInfo[i].cargoName}</td>
-              <td colspan="1" >${dealInfo[i].cargoAmount}</td>
-              <td colspan="1" >${dealInfo[i].cargoWeight}</td>
-              <td colspan="1" >${dealInfo[i].cargoVolume}</td>
-              <td colspan="1" >${dealInfo[i].shipDeliveryMethod}</td>
-              <td colspan="1" >${dealInfo[i].unusualRemark}</td>
-              <td colspan="1" >${dealInfo[i].shipPayWay}</td>
-              <td colspan="1" >${dealInfo[i].unusualFee}</td>
-              <td colspan="1" >${dealInfo[i].shipReceiptpayFee}</td>
-              <td colspan="1" >${dealInfo[i].shipMonthpayFee}</td>
-              <td colspan="1" >${dealInfo[i].totalFee}</td>
-              <td colspan="1" >${dealInfo[i].remark}</td>
+              <td colspan="1" >${i+1}</td>
+              <td colspan="1" >${params.payDetailList[i].departureTime}</td>
+              <td colspan="1" >${params.payDetailList[i].batchNo}</td>
+              <td colspan="1" >${params.payDetailList[i].orgName}</td>
+              <td colspan="1" >${params.payDetailList[i].arriveOrgName}</td>
+              <td colspan="1" >${params.payDetailList[i].loadAmount}</td>
+              <td colspan="1" >${params.payDetailList[i].loadWeight}</td>
+              <td colspan="1" >${params.payDetailList[i].loadVolume}</td>
+              <td colspan="1" >${params.payDetailList[i].driverName}</td>
+              <td colspan="2" >${params.payDetailList[i].shortPay}</td>
+              <td colspan="1" >${params.payDetailList[i].remark}</td>
             </tr>
     `
   }
@@ -1334,51 +1357,37 @@ function createCarrfeeShort(params) {
   //dealPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">应付清单 </td>
+        <td colspan="12" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
           <td colspan="1" >序号</td>
-          <td colspan="1" >开单时间</td>
-          <td colspan="1" >运单号</td>
-          <td colspan="1" >货号</td>
-          <td colspan="1" >出发城市</td>
-          <td colspan="1" >到达城市</td>
-          <td colspan="1" >货品名</td>
-          <td colspan="1" >件数</td>
-          <td colspan="1" >重量</td>
-          <td colspan="1" >体积</td>
-          <td colspan="1" >异动备注</td>
-          <td colspan="1" >异常类型</td>
-          <td colspan="1" >异常件数</td>
-          <td colspan="1" >异动减款</td>
-          <td colspan="1" >异常金额</td>
-          <td colspan="1" >代收货款</td>
-          <td colspan="1" >小计</td>
+          <td colspan="1" >发车时间</td>
+          <td colspan="1" >短驳批次号</td>
+          <td colspan="1" >发车网点</td>
+          <td colspan="1" >到达网点</td>
+          <td colspan="1" >配载件数</td>
+          <td colspan="1" >配载重量</td>
+          <td colspan="1" >配载体积</td>
+          <td colspan="1" >司机</td>
+          <td colspan="2" >短驳费</td>
           <td colspan="1" >备注</td>
       </tr>`
   // tbodyStr = tbodyStr
-  for (let i = 0; i < dealPayInfo.length; i++) {
+  for (let i = 0; i < params.hadPayDetailList.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">序号1</td>
-              <td colspan="1" >${dealPayInfo[i].createTime}</td>
-              <td colspan="1" >${dealPayInfo[i].shipSn}</td>
-              <td colspan="1" >${dealPayInfo[i].shipGoodsSn} </td>
-              <td colspan="1" >${dealPayInfo[i].shipFromCityName}</td>
-              <td colspan="1" >${dealPayInfo[i].shipToCityName}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoName}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoAmount}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoWeight}</td>
-              <td colspan="1" >${dealPayInfo[i].cargoVolume}</td>
-              <td colspan="1" >${dealPayInfo[i].unusualRemark}</td>
-              <td colspan="1" >${dealPayInfo[i].abnormalType}</td>
-              <td colspan="1" >${dealPayInfo[i].abnormalAmount}</td>
-              <td colspan="1" >${dealPayInfo[i].unusualFee}</td>
-              <td colspan="1" >${dealPayInfo[i].registerFee}</td>
-              <td colspan="1" >${dealPayInfo[i].agencyFund}</td>
-              <td colspan="1" >${dealPayInfo[i].totalFee}</td>
-              <td colspan="1" >${dealPayInfo[i].remark}</td>
+              <td colspan="1">${i+1}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].departureTime}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].batchNo}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].orgName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].arriveOrgName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadAmount}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadWeight}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadVolume}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].driverName}</td>
+              <td colspan="2" >${params.hadPayDetailList[i].shortPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].remark}</td>
             </tr>
     `
   }
@@ -1387,7 +1396,216 @@ function createCarrfeeShort(params) {
   tbodyStr = tbodyStr + `
     <tr>
       <td >备注</td>
-      <td colspan="17">${params.tmsFinanceBillCheckDto.remark}</td>
+      <td colspan="11">${params.remark}</td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td colspan="12" bgcolor="yellow">若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</td>
+      
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td width="5%" height="10px">公司名称</td>
+      <td colspan="2">${params.companyName}</td>
+      <td width="5%" height="10px">业务负责人</td>
+      <td colspan="2">${params.orgBusinessOfficer}</td>
+      <td width="5%" height="10px">联系方式</td>
+       <td colspan="2">${params.orgBusinessOfficerPhone}</td>
+       <td width="5%" height="10px">财务负责人</td>
+       <td colspan="2">${params.orgFinancialOfficer}</td>
+       </tr>
+       <tr>
+       <td width="5%" height="10px">联系方式</td>
+       <td colspan="2">${params.orgFinancialOfficerPhone}</td>
+       <td width="5%" height="10px">时间</td>
+       <td colspan="8">${params.createTime}</td>
+    </tr>
+  `
+  tbody.innerHTML = tbodyStr
+  div.appendChild(infoDiv)
+  thead.innerHTML = theadStr
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  infoDiv.appendChild(table)
+  div.appendChild(infoDiv)
+  document.body.appendChild(div)
+  return tableId
+}
+
+
+//干线
+function createCarfeefeeArt(params) {
+  console.log(params,params.payDetailList)
+
+  //初始化tmsFinanceBillCheckDto
+  for (var i in params) {
+    params[i] = params[i] === null || undefined ? '' : params[i]
+  }
+  for (var i in params.payDetailList) {
+    params.payDetailList[i] = params.payDetailList[i] === null || undefined ? '' : params.payDetailList[i]
+    // alert(params.payDetailList[i])
+  }
+  //初始化dealInfo
+  const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+  const div = document.createElement('div')
+  const infoDiv = document.createElement('font')
+  infoDiv.setAttribute('size', '2')
+  const table = document.createElement('table')
+  div.id = tableId
+  const thead = document.createElement('thead')
+  const tbody = document.createElement('tbody')
+  table.style.border = '1px solid #ff000';
+  table.setAttribute('border', '1')
+  table.setAttribute('font', '12px')
+  table.setAttribute('width', '1800')
+  table.setAttribute('table-layout', 'fixed')
+  var theadStr = ''
+  // 标题
+  theadStr = `
+    <tr>
+      <td colspan="18" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.checkBillName}</td>
+    </tr>
+   `
+  let tbodyStr = ` <tr>
+    <td width="5%" height="25px">车牌号 </td>
+    <td colspan="3" width="20%">${params.memberName}</td>
+    <td width="5%"  height="25px">司机</td>
+    <td colspan="3" width="20%">${params.memberPerson}</td>
+    <td width="5%" height="25px">联系方式</td>
+    <td colspan="5" width="20%">${params.memberPersonPhone}</td>
+    <td width="5%" height="25px">对账单编号 </td>
+    <td colspan="3" width="15%">${params.checkBillCode}</td>
+  </tr>
+   <tr>
+     
+      <td width="5%" height="25px">开始时间</td>
+      <td colspan="3" width="20%"> ${params.checkStartTime}</td>
+      <td width="5%" height="25px">结束时间 </td>
+      <td colspan="3" width="20%">${params.checkEndTime}</td>
+      
+      <td width="5%">账户账号</td>
+      <td colspan="5" width="20%">${params.bankAccount}</td>
+      <td width="5%">账户开户行 </td>
+      <td colspan="3" width="20%">${params.bankName}</td>
+  </tr>
+  <tr>
+      <td width="5%" height="25px">支付宝 </td>
+      <td colspan="3">${params.alipayAccount}</td>
+      <td width="5%" height="25px">微信</td>
+      <td colspan="13">${params.wechatAccount}</td>
+  </tr>`
+  //dealInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="yellow" align="left">应付账款 </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >发车时间</td>
+          <td colspan="1" >批次号</td>
+          <td colspan="1" >合同编号</td>
+          <td colspan="1" >发车网点</td>
+          <td colspan="1" >到达网点</td>
+          <td colspan="1" >司机</td>
+          <td colspan="1" >配载件数</td>
+          <td colspan="1" >配载重量</td>
+          <td colspan="1" >配载体积</td>
+          <td colspan="1" >现付运费</td>
+          <td colspan="1" >现付油卡</td>
+          <td colspan="1" >回付运费</td>
+          <td colspan="1" >回付油卡</td>
+          <td colspan="1" >到付运费</td>
+          <td colspan="1" >到付油卡</td>
+          <td colspan="1" >运费合计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+
+  for (let i = 0; i < params.payDetailList.length; i++) {
+
+    tbodyStr += `
+             <tr>
+              <td colspan="1" >${i+1}</td>
+              <td colspan="1" >${params.payDetailList[i].departureTime}</td>
+              <td colspan="1" >${params.payDetailList[i].batchNo}</td>
+              <td colspan="1" >${params.payDetailList[i].contractNo} </td>
+              <td colspan="1" >${params.payDetailList[i].orgName}</td>
+              <td colspan="1" >${params.payDetailList[i].arriveOrgName}</td>
+              <td colspan="1" >${params.payDetailList[i].driverName}</td>
+              <td colspan="1" >${params.payDetailList[i].loadAmount}</td>
+              <td colspan="1" >${params.payDetailList[i].loadWeight}</td>
+              <td colspan="1" >${params.payDetailList[i].loadVolume}</td>
+              <td colspan="1" >${params.payDetailList[i].onSendPay}</td>
+              <td colspan="1" >${params.payDetailList[i].onCardPay}</td>
+              <td colspan="1" >${params.payDetailList[i].backSendPay}</td>
+              <td colspan="1" >${params.payDetailList[i].backCardPay}</td>
+              <td colspan="1" >${params.payDetailList[i].arrSendPay}</td>
+              <td colspan="1" >${params.payDetailList[i].arrCardPay}</td>
+              <td colspan="1" >${params.payDetailList[i].totalPay}</td>
+              <td colspan="1" >${params.payDetailList[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealInfo
+  //dealPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >发车时间</td>
+          <td colspan="1" >批次号</td>
+          <td colspan="1" >合同编号</td>
+          <td colspan="1" >发车网点</td>
+          <td colspan="1" >到达网点</td>
+          <td colspan="1" >司机</td>
+          <td colspan="1" >配载件数</td>
+          <td colspan="1" >配载重量</td>
+          <td colspan="1" >配载体积</td>
+          <td colspan="1" >现付运费</td>
+          <td colspan="1" >现付油卡</td>
+          <td colspan="1" >回付运费</td>
+          <td colspan="1" >回付油卡</td>
+          <td colspan="1" >到付运费</td>
+          <td colspan="1" >到付油卡</td>
+          <td colspan="1" >运费合计</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  // tbodyStr = tbodyStr
+  for (let i = 0; i < params.hadPayDetailList.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">${i+1}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].departureTime}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].batchNo}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].contractNo} </td>
+              <td colspan="1" >${params.hadPayDetailList[i].orgName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].arriveOrgName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].driverName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadAmount}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadWeight}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadVolume}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].onSendPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].onCardPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].backSendPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].backCardPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].arrSendPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].arrCardPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].totalPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  // alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >备注</td>
+      <td colspan="17">${params.remark}</td>
     </tr>
   `
   tbodyStr = tbodyStr + `
@@ -1399,19 +1617,196 @@ function createCarrfeeShort(params) {
   tbodyStr = tbodyStr + `
     <tr>
       <td width="5%" height="10px">公司名称</td>
-      <td colspan="3">${params.tmsFinanceBillCheckDto.companyName}</td>
+      <td colspan="3">${params.companyName}</td>
       <td width="5%" height="10px">业务负责人</td>
-      <td colspan="3">${params.tmsFinanceBillCheckDto.orgBusinessOfficer}</td>
+      <td colspan="3">${params.orgBusinessOfficer}</td>
       <td width="5%" height="10px">联系方式</td>
-       <td colspan="5">${params.tmsFinanceBillCheckDto.orgBusinessOfficerPhone}</td>
+       <td colspan="5">${params.orgBusinessOfficerPhone}</td>
        <td width="5%" height="10px">财务负责人</td>
-       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
+       <td colspan="3">${params.orgFinancialOfficer}</td>
        </tr>
        <tr>
        <td width="5%" height="10px">联系方式</td>
-       <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
+       <td colspan="3">${params.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
-       <td colspan="13">${params.tmsFinanceBillCheckDto.createTime}</td>
+       <td colspan="13">${params.createTime}</td>
+    </tr>
+  `
+  tbody.innerHTML = tbodyStr
+  div.appendChild(infoDiv)
+  thead.innerHTML = theadStr
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  infoDiv.appendChild(table)
+  div.appendChild(infoDiv)
+  document.body.appendChild(div)
+  return tableId
+}
+
+
+//送货
+function createCarfeefeeDeliver(params) {
+  console.log(params,params.payDetailList)
+
+  //初始化tmsFinanceBillCheckDto
+  for (var i in params) {
+    params[i] = params[i] === null || undefined ? '' : params[i]
+  }
+  for (var i in params.payDetailList) {
+    params.payDetailList[i] = params.payDetailList[i] === null || undefined ? '' : params.payDetailList[i]
+    // alert(params.payDetailList[i])
+  }
+  //初始化dealInfo
+  const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+  const div = document.createElement('div')
+  const infoDiv = document.createElement('font')
+  infoDiv.setAttribute('size', '2')
+  const table = document.createElement('table')
+  div.id = tableId
+  const thead = document.createElement('thead')
+  const tbody = document.createElement('tbody')
+  table.style.border = '1px solid #ff000';
+  table.setAttribute('border', '1')
+  table.setAttribute('font', '12px')
+  table.setAttribute('width', '1800')
+  table.setAttribute('table-layout', 'fixed')
+  var theadStr = ''
+  // 标题
+  theadStr = `
+    <tr>
+      <td colspan="12" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px" >${params.checkBillName}</td>
+    </tr>
+   `
+  let tbodyStr = ` <tr>
+    <td width="5%" height="25px">车牌号 </td>
+    <td colspan="3" width="20%">${params.memberName}</td>
+    <td width="5%"  height="25px">司机</td>
+    <td colspan="1" width="20%">${params.memberPerson}</td>
+    <td width="5%" height="25px">联系方式</td>
+    <td colspan="2" width="20%">${params.memberPersonPhone}</td>
+    <td width="5%" height="25px">对账单编号 </td>
+    <td colspan="2" width="15%">${params.checkBillCode}</td>
+  </tr>
+   <tr>
+     
+      <td width="5%" height="25px">开始时间</td>
+      <td colspan="3" width="20%"> ${params.checkStartTime}</td>
+      <td width="5%" height="25px">结束时间 </td>
+      <td colspan="1" width="20%">${params.checkEndTime}</td>
+      
+      <td width="5%">账户账号</td>
+      <td colspan="2" width="20%">${params.bankAccount}</td>
+      <td width="5%">账户开户行 </td>
+      <td colspan="2" width="20%">${params.bankName}</td>
+  </tr>
+  <tr>
+      <td width="5%" height="25px">支付宝 </td>
+      <td colspan="3">${params.alipayAccount}</td>
+      <td width="5%" height="25px">微信</td>
+      <td colspan="7">${params.wechatAccount}</td>
+  </tr>`
+  //dealInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="12" bgcolor="yellow" align="left">应付账款 </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >送货时间</td>
+          <td colspan="1" >送货批次号</td>
+          <td colspan="1" >司机</td>
+          <td colspan="1" >发车网点</td>
+          <td colspan="1" >配载件数</td>
+          <td colspan="1" >配载重量</td>
+          <td colspan="1" >配载体积</td>
+          <td colspan="3" >送货费</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+
+  for (let i = 0; i < params.payDetailList.length; i++) {
+
+    tbodyStr += `
+             <tr>
+              <td colspan="1" >${i+1}</td>
+              <td colspan="1" >${params.payDetailList[i].departureTime}</td>
+              <td colspan="1" >${params.payDetailList[i].batchNo}</td>
+              <td colspan="1" >${params.payDetailList[i].driverName}</td>
+              <td colspan="1" >${params.payDetailList[i].orgName}</td>
+              <td colspan="1" >${params.payDetailList[i].loadAmount}</td>
+              <td colspan="1" >${params.payDetailList[i].loadWeight}</td>
+              <td colspan="1" >${params.payDetailList[i].loadVolume}</td>
+              <td colspan="3" >${params.payDetailList[i].sendPay}</td>
+              <td colspan="1" >${params.payDetailList[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealInfo
+  //dealPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="12" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1" >序号</td>
+          <td colspan="1" >送货时间</td>
+          <td colspan="1" >送货批次号</td>
+          <td colspan="1" >司机</td>
+          <td colspan="1" >发车网点</td>
+          <td colspan="1" >配载件数</td>
+          <td colspan="1" >配载重量</td>
+          <td colspan="1" >配载体积</td>
+          <td colspan="3" >送货费</td>
+          <td colspan="1" >备注</td>
+      </tr>`
+  // tbodyStr = tbodyStr
+  for (let i = 0; i < params.hadPayDetailList.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">${i+1}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].departureTime}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].batchNo}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].driverName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].orgName}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadAmount}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadWeight}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].loadVolume}</td>
+              <td colspan="3" >${params.hadPayDetailList[i].shortPay}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].remark}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  // alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >备注</td>
+      <td colspan="11">${params.remark}</td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td colspan="12" bgcolor="yellow">若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</td>
+      
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td width="5%" height="10px">公司名称</td>
+      <td colspan="2">${params.companyName}</td>
+      <td width="5%" height="10px">业务负责人</td>
+      <td colspan="2">${params.orgBusinessOfficer}</td>
+      <td width="5%" height="10px">联系方式</td>
+       <td colspan="2">${params.orgBusinessOfficerPhone}</td>
+       <td width="5%" height="10px">财务负责人</td>
+       <td colspan="2">${params.orgFinancialOfficer}</td>
+       </tr>
+       <tr>
+       <td width="5%" height="10px">联系方式</td>
+       <td colspan="2">${params.orgFinancialOfficerPhone}</td>
+       <td width="5%" height="10px">时间</td>
+       <td colspan="8">${params.createTime}</td>
     </tr>
   `
   tbody.innerHTML = tbodyStr

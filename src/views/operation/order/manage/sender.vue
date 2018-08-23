@@ -280,7 +280,7 @@ export default {
       this.loading = true
       return getPostlist(this.searchForms).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       }).catch(err => {
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
