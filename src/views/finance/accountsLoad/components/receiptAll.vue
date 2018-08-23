@@ -261,7 +261,13 @@ export default {
         }
       }
       postTmsFfinancialwayList(query).then(data => {
-        this.financialWalList = data.list
+        // this.financialWalList = data.list
+        this.financialWalList = []
+        data.list.forEach(e => {
+          if (e.statusStr === '启用') {
+            this.financialWalList.push(e)
+          }
+        })
       })
     },
     querySearch(queryString, cb) {

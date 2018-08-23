@@ -55,7 +55,7 @@
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
+        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
@@ -117,7 +117,10 @@ export default {
   computed: {
     ...mapGetters([
       'otherinfo'
-    ])
+    ]),
+    getRouteInfo() {
+      return this.$route.query.orgId
+    }
   },
   mounted() {
     this.getFeeInfo()
@@ -133,7 +136,7 @@ export default {
     },
     getFeeInfo() {
       this.getOrgFirstFinancialWay() // 获取收支方式
-      getFeeInfo(this.$route.query.orgId, this.paymentsType).then(data => {
+      getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
         this.loading = false
         this.formModel.amount = data.amount
         this.formModel.settlementSn = data.settlementSn
@@ -182,7 +185,7 @@ export default {
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
       this.$set(this.addIncomeInfo, 'settlementId', this.settlementId)
-      this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
+      this.$set(this.addIncomeInfo, 'orgId', this.getRouteInfo)
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
       this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
@@ -229,7 +232,7 @@ export default {
     getOrgFirstFinancialWay () { // 获取收支方式
       let obj = {
         financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
-        orgId: this.otherinfo.orgid
+        orgId: this.getRouteInfo
       }
       getOrgFirstFinancialWay(obj).then(data => {
         this.financialWays = data

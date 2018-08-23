@@ -57,7 +57,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTable @loadTable="getLoadTable" :key="tableKey" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch"></dataTable>
+              <dataTable @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" @feeName="getFeeName" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch"></dataTable>
             </div>
           </el-tab-pane>
           <el-tab-pane label="运单支出" name="second">
@@ -68,7 +68,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -131,13 +131,22 @@ export default {
       countSuccessListBatch: [],
       countSuccessListShip: [],
       countNumBatch: 0,
-      countNumShip: 0
+      countNumShip: 0,
+      feeName: {
+        arrPayName: [],
+        arrNoPayName: [],
+        arrPayNameActual: [],
+        arrhadPayName: []
+      }
     }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
-    ])
+    ]),
+    getRouteInfo() {
+      return this.$route.query.orgId
+    }
   },
   watch: {
     settlementId(newVal) {
@@ -155,7 +164,7 @@ export default {
     },
     getFeeInfo() {
       this.getOrgFirstFinancialWay() // 获取收支方式信息
-      getFeeInfo(this.otherinfo.orgid, this.paymentsType).then(data => {
+      getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
           this.loading = false
           this.formModel.amount = data.amount
           this.formModel.settlementSn = data.settlementSn
@@ -212,11 +221,17 @@ export default {
         this.formModel.financialWayId = this.formModel.financialWay
         this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
       }
+       this.loadTable.forEach(e => {
+        this.feeName.arrPayName.forEach((el, index) => {
+          e[el] = e[this.feeName.arrNoPayName[index]]
+        })
+      })
+       console.log(JSON.stringify(this.loadTable))
 
       const szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
-      this.$set(this.addIncomeInfo, 'orgId', this.otherinfo.orgid)
+      this.$set(this.addIncomeInfo, 'orgId', this.getRouteInfo)
       this.$set(this.addIncomeInfo, 'settlementId', this.setSettlementId)
       this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
       this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
@@ -260,8 +275,7 @@ export default {
         })
       })
     },
-    handleClick() {
-    },
+    handleClick() {},
     getLoadTable(obj) {
       let amount = 0
       this.loadTable = Object.assign([], obj)
@@ -269,13 +283,16 @@ export default {
         if (e.shipFeeTotal) {
           amount += e.shipFeeTotal
         } else {
-          amount += e.loadFeeTotal
+          amount += e.loadFeeTotalActual
         }
       })
       this.formModel.amount = amount
     },
+    getFeeName(obj) {
+      this.feeName = Object.assign([], obj)
+    },
     getTableChange(obj) {
-      console.log(obj)
+
     },
     countSuccess(list) {
       if (list.type === 178) { // 178-运单 179-批次
@@ -291,21 +308,21 @@ export default {
       this.settlementId = obj
       this.setSettlementId(obj)
     },
-    getOrgFirstFinancialWay () { // 获取收支方式
+    getOrgFirstFinancialWay() { // 获取收支方式
       let obj = {
         financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
-        orgId: this.otherinfo.orgid
+        orgId: this.getRouteInfo
       }
       getOrgFirstFinancialWay(obj).then(data => {
         this.financialWays = data
         if (this.financialWays) {
-         this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
-         this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
-         this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
-        }else {
+          this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
+          this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
+          this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
+        } else {
           this.formModel.bankAccount = ''
-         this.formModel.wechatAccount = ''
-         this.formModel.alipayAccount = ''
+          this.formModel.wechatAccount = ''
+          this.formModel.alipayAccount = ''
         }
       })
     }

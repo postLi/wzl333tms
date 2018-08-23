@@ -21,6 +21,10 @@
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
+        <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
+        </el-table-column>
+        <el-table-column prop="hadShipFeeTotal" sortable label="已结运费合计" width="120">
+        </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
         <el-table-column prop="noOnPay" sortable label="未结现付" width="90">
@@ -193,6 +197,9 @@ export default {
     countNum: {
       type: Number,
       default: 0
+    },
+    orgId: {
+      type: [Number, String]
     }
   },
   computed: {
@@ -298,7 +305,8 @@ export default {
         this.countOrgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
-        this.$set(obj, 'orgId', this.otherinfo.orgid)
+        this.$set(obj, 'orgId', this.orgId)
+        console.log(this.orgId)
         this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
         this.$set(obj, 'settlementId', this.settlementId)

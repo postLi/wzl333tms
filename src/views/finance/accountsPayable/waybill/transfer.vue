@@ -283,7 +283,7 @@ export default {
       },
       {
         label: '时效',
-        prop: 'shipEffective',
+        prop: 'shipEffectiveName',
         width: '80',
         fixed: false
       },

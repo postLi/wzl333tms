@@ -266,7 +266,7 @@ export default {
       },
       {
         label: '时效',
-        prop: 'shipEffective',
+        prop: 'shipEffectiveName',
         width: '90',
         fixed: false
       },

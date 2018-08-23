@@ -107,7 +107,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="110">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="id" search="name" label="name" :maxlength="maxlength" />
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="username" search="name" label="name" :maxlength="maxlength" />
             </template>
           </el-table-column>
         </el-table>
@@ -275,10 +275,16 @@ export default {
         }
       }
       postTmsFfinancialwayList(query).then(data => {
-        this.financialWalList = data.list
+        this.financialWalList = []
+        data.list.forEach(e => {
+          if (e.statusStr === '启用') {
+            this.financialWalList.push(e)
+          }
+        })
       })
     },
     querySearch(queryString, cb) {
+
       let dataList = this.financialWalList
       let results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
       // 调用 callback 返回建议列表的数据

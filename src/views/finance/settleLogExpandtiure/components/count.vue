@@ -17,7 +17,7 @@
         <!-- <querySelect search="truckIdNumber" type="trunk" valuekey="truckIdNumber" label="truckIdNumber" v-model="formModel.truckIdNumber" :remote="true" /> -->
       </el-form-item>
       <el-form-item label="支出金额" prop="autoTotalAmount">
-        <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount"></el-input>
+        <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount" @keyup.enter.native="onSubmit('formModel')"></el-input>
       </el-form-item>
       <el-form-item label="费用项">
         <el-select v-model="formModel.feeId" v-if="settlementId === 178">
