@@ -598,6 +598,11 @@ export default {
         width: '120',
         fixed: false
       }, {
+        label: '凭证状态',
+        prop: 'signCertificateName',
+        width: '120',
+        fixed: false
+      }, {
         label: '签收时间',
         prop: 'signTime',
         width: '180',

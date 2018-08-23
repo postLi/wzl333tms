@@ -251,7 +251,7 @@ export default {
       id: '',
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 10,
+        'pageSize': 100,
         'vo': {
         }
       },
@@ -481,10 +481,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
               })
             }).catch(() => {
               this.$message({
@@ -494,6 +491,7 @@ export default {
             })
           } else if (this.selected[0].abnormalStatus === 119) {
             this.$message.warning('异常已处理，不允许删除')
+            return false
           }
 
           // this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {

@@ -9,7 +9,6 @@
               type="daterange"
               align="right"
               value-format="yyyy-MM-dd"
-
               start-placeholder="开始日期"
               :picker-options="pickerOptions2"
               end-placeholder="结束日期">
@@ -53,7 +52,7 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
-import { parseTime, pickerOptions2 } from '@/utils/index'
+import { parseTime, pickerOptions2, objectMerge3 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
@@ -117,21 +116,23 @@ export default {
     }
   },
   watch: {
-    // orgid(newVal){
-    //   this.searchForm.orgid = newVal
-    // }
+    orgid(newVal) {
+      // this.searchForm.signOrgid = newVal
+      this.searchForm.shipFromOrgid = newVal
+    }
   },
   mounted() {
-    // this.searchForm.shipFromOrgid = this.otherinfo.orgid
+    this.searchForm.shipFromOrgid = ''
     this.searchForm.signOrgid = this.otherinfo.orgid
     this.searchCreatTime = this.defaultTime
+    this.onSubmit()
   },
   methods: {
     // getOrgid (id){
     //   this.searchForm.orgid = id
     // },
     // getFromCity(city) {
-    //   this.searchForm.shipFromCityCode = city.id.toString()
+    //   this.searchForm.shipFromCityCodobjectMerge3.id.toString()
     //   this.searchForm.shipFromCityName = city.longAddr
     // },
     // getToCity(city) {
@@ -148,12 +149,14 @@ export default {
       this.$emit('change', data)
     },
     clearForm() {
+      this.searchForm.signOrgid = this.otherinfo.orgid
       this.searchForm.shipFromOrgid = ''
       this.searchForm.signStatus = ''
-      // this.searchForm.signCertificate = ''
+      this.searchForm.signCertificate = ''
       this.searchForm.shipSn = ''
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
+      this.searchCreatTime = this.defaultTime
       // this.searchCreatTime = []
     }
   }

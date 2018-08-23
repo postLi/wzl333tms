@@ -22,11 +22,11 @@
               </el-form-item>
               <el-form-item label="接收备注" :label-width="formLabelWidth" prop="acceptRemark">
                 <el-input
-                  :maxlength="300"
+                  :maxlength="200"
                   type="textarea"
                   :rows="7"
                   :cols="30"
-                  placeholder="最多300个字符"
+                  placeholder="最多200个字符"
                   v-model="form.acceptRemark"
                   auto-complete="off"></el-input>
               </el-form-item>

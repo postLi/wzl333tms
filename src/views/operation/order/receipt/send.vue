@@ -627,7 +627,7 @@ export default {
                     // this.closeAddDot()
             })
           } else {
-            this.$message.warning('回单已接收不可取消~')
+            this.$message.warning('回单已接收不能取消~')
           }
 
           break

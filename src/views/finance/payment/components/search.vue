@@ -5,8 +5,10 @@
           <div class="block">
             <el-date-picker
               v-model="searchCreatTime"
+              :default-value="defaultTime"
               type="daterange"
               align="right"
+              value-format="yyyy-MM-dd"
               start-placeholder="开始日期"
               :picker-options="pickerOptions2"
               end-placeholder="结束日期">
@@ -92,7 +94,9 @@ export default {
     }
 
     return {
-      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      // searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       thestatus: '',
       searchForm: {
         // shipFromOrgid: '',
@@ -142,7 +146,9 @@ export default {
     }
   },
   mounted() {
-    console.log('title:', this.title, this.status)
+    // console.log('title:', this.title, this.status)
+    this.searchCreatTime = this.defaultTime
+    this.onSubmit()
     // this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
@@ -173,8 +179,8 @@ export default {
       this.searchForm.senderName = ''
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
-      // this.thestatus = ''
-      // this.searchCreatTime = []
+      this.thestatus = ''
+      this.searchCreatTime = this.defaultTime
     }
   }
 }

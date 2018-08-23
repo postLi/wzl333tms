@@ -5,15 +5,15 @@
           <el-form-item label="开单时间">
             <div class="block">
               <el-date-picker
-                v-model="searchCreatTime"
-                type="daterange"
-                :picker-options="pickerOptions2"
-                align="right"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                
-              >
-              </el-date-picker>
+              v-model="searchCreatTime"
+              :default-value="defaultTime"
+              type="daterange"
+              align="right"
+              value-format="yyyy-MM-dd"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
+              end-placeholder="结束日期">
+            </el-date-picker>
             </div>
           </el-form-item>
           <el-form-item label="开单网点">
@@ -85,7 +85,9 @@ export default {
     //   }
     // }
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      // searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       pickerOptions1: '',
 
       searchForm: {
@@ -117,6 +119,7 @@ export default {
   },
   mounted() {
     this.searchForm.shipFromOrgid = this.orgid
+    this.searchCreatTime = this.defaultTime
     this.onSubmit()
   },
   methods: {
@@ -152,11 +155,12 @@ export default {
     },
     clearForm() {
     //   this.searchForm.name = ''
-      this.searchForm.orgid = this.orgid
+      this.searchForm.shipFromOrgid = this.orgid
       this.searchForm.shipSn = ''
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
       this.searchForm.shipFromOrgid = ''
+      this.searchCreatTime = this.defaultTime
       // this.searchCreatTime = []
     }
   }

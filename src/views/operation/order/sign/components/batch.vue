@@ -38,7 +38,7 @@
           <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
-          <el-input :maxlength="300" v-model.trim="form.remark" auto-complete="off"></el-input>
+          <el-input :maxlength="250" v-model.trim="form.remark" auto-complete="off" placeholder="最多可输入250个字符"></el-input>
         </el-form-item>
       </div>      
     </el-form>
@@ -83,7 +83,7 @@ export default {
       type: Boolean,
       default: false
     },
-    dotInfo: [Object, Array],
+    dotInfo: [Array, Object],
     // searchQuery:[Object,Array],
     isDepMain: {
       type: Boolean,
@@ -128,6 +128,7 @@ export default {
         'repertoryIds': [],
         'signTime': '',
         'signName': '',
+        'receiver_customer_name': '',
         'signCocumentTypeId': 96,
         'documentNum': '',
         'signTypeId': 99,
@@ -158,8 +159,10 @@ export default {
     },
     dotInfo(newVal) {
       // this.form = this.dotInfo
-      console.log(this.dotInfo + '00o0')
+
       // this.form = this.dotInfo
+      // this.form.signName = this.dotInfo[0].receiver_customer_name
+      // console.log(this.dotInfo.receiver_customer_name)
       this.form.num = this.dotInfo.length
       let total = 0
       this.dotInfo.map(el => {
@@ -173,6 +176,7 @@ export default {
       })
       this.form.agencyFund = total
     },
+
     // searchQuery(newVal){
     //    this.form.repertoryId = this.searchQuery.vo.repertoryId
     //    console.log(this.searchQuery);
@@ -232,7 +236,7 @@ export default {
             promiseObj = postPickupBatchSign(data)// 自提批量
           } else if (this.isSongh) {
             data.shipIds = this.dotInfo.map(el => {
-              console.log(66)
+              // console.log(66)
               return el.shipId
             })
             data.childShipIds = this.dotInfo.map(el => {
@@ -247,7 +251,7 @@ export default {
             promiseObj = postBatchSign(data)// 送货批量
           }
           promiseObj.then(res => {
-            console.log(res)
+            // console.log(res)
             this.$message({
               message: '签收成功~',
               type: 'success'

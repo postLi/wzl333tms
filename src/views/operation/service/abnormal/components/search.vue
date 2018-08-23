@@ -21,11 +21,12 @@
           <div class="block">
             <el-date-picker
               v-model="searchCreatTime"
+              :default-value="defaultTime"
               type="daterange"
-              value-format="yyyy-MM-dd hh:mm:ss"
               align="right"
-              :picker-options="pickerOptions2"
+              value-format="yyyy-MM-dd"
               start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
               end-placeholder="结束日期">
             </el-date-picker>
           </div>
@@ -88,7 +89,9 @@ export default {
     }
 
     return {
-      searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      // searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      searchCreatTime: [],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
         orgId: '', // 网点
         shipSn: '', //  运单号
@@ -122,6 +125,8 @@ export default {
   },
   mounted() {
     this.searchForm.orgId = this.orgid
+    this.searchCreatTime = this.defaultTime
+    this.onSubmit()
   },
   methods: {
     getOrgid(id) {
@@ -137,9 +142,10 @@ export default {
     },
     clearForm() {
       this.searchForm.shipSn = ''
+      this.searchCreatTime = this.defaultTime
       // this.searchForm.orgId = ''
-      // this.searchForm.orgId = this.orgid
-      // this.searchForm.abnormalStatus = ''
+      this.searchForm.orgId = this.orgid
+      this.searchForm.abnormalStatus = ''
       // this.searchCreatTime = []
     }
   }

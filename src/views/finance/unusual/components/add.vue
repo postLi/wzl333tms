@@ -90,7 +90,7 @@
             </el-date-picker>
           </el-form-item> 
           <el-form-item class="driverRemarks ms" label="异动备注" prop="remark" >
-            <el-input type="textarea" :maxlength="300" v-model="form.remark" placeholder="注：最多可输入300个字符" :disabled="isDbClick ? true : false"></el-input>
+            <el-input type="textarea" :maxlength="250" v-model="form.remark" placeholder="注：最多可输入250个字符" :disabled="isDbClick ? true : false"></el-input>
           </el-form-item>
         </div>
       </el-form>

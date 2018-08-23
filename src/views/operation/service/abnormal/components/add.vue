@@ -64,7 +64,7 @@
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常件数"  prop="abnormalAmount" >
-            <el-input v-model="form.abnormalAmount" v-numberOnly :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input v-model="form.abnormalAmount" v-numberOnly :maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="处理网点" prop="disposeOrgId" class="label">
             <SelectTree v-model="form.disposeOrgId" :disabled="isCheck || isDeal ? true : false"/>
@@ -112,7 +112,7 @@
             <el-input :maxlength="10"  v-model="form.disposeName"  :disabled="true"></el-input>
           </el-form-item>
           <el-form-item class="driverRemarks ms" label="处理意见" prop="disposeOpinion" >
-            <el-input type="textarea" :maxlength="125" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
+            <el-input type="textarea" :maxlength="200" v-model="form.disposeOpinion" :disabled="isCheck ? true : false"></el-input>
           </el-form-item>
             <p class="ts">注意：问题描述最多输入200字</p>
             <p class="wz"> <a>图片上传</a>注：最多可上传6张图片，每张图片不能大于5M</p>
@@ -270,7 +270,7 @@ export default {
           { required: true, validator: validateNameSn }
         ],
         abnormalType: [
-          { required: true, message: '请选择异常类型', trigger: 'change' }
+          { required: true, message: '请选择异常类型', trigger: 'burl' }
         ],
         // registerFee: [
         //   { required: true, validator: validatereg }
@@ -390,6 +390,9 @@ export default {
           this.form = res
           this.form.disposeTime = new Date()
           // this.form.disposeName = this.otherinfo.name
+          if (res.abnormalStatus === 118) {
+            this.form.disposeResult = ''
+          }
         })
       } else if (this.isDeal) {
         this.popTitle = '异常处理'

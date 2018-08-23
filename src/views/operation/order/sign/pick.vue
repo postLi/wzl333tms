@@ -562,10 +562,11 @@ export default {
         'currentPage': 1,
         'pageSize': 10000,
         'vo': {
-          'repertoryId': '',
-          'signId': '',
-          'signStatus': '226',
-          'signOrgid': ''
+          repertoryId: '',
+          signId: '',
+          signStatus: '226',
+          signOrgid: ''
+
           // 'shipFromOrgid': 1
         }
       },
@@ -598,6 +599,11 @@ export default {
       }, {
         label: '签收状态',
         prop: 'signStatusName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '凭证状态',
+        prop: 'signCertificateName',
         width: '120',
         fixed: false
       }, {
@@ -975,6 +981,7 @@ export default {
           })
           if (ids.length > 1) {
             this.dotInfo = ids
+            console.log(this.dotInfo)
             this.isModify = true
             this.openAddBatch()
             this.isPick = false
@@ -1026,10 +1033,9 @@ export default {
               // this.$emit('success')
               this.fetchAllreceipt()
               return false
-            }).catch(res => {
+            }).catch(err => {
               this.loading = false
-              this.$message.warning(res.text)
-                  // this.closeMe()
+              this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
             })
           } else {
             this.$message.warning('不可取消~')

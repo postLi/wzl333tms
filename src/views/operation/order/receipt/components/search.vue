@@ -4,13 +4,15 @@
       <el-form-item label="开单时间">
         <div class="block">
           <el-date-picker
-            v-model="searchCreatTime"
-            type="daterange"
-            align="right"
-            :picker-options="pickerOptions2"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
+              v-model="searchCreatTime"
+              :default-value="defaultTime"
+              type="daterange"
+              align="right"
+              value-format="yyyy-MM-dd"
+              start-placeholder="开始日期"
+              :picker-options="pickerOptions2"
+              end-placeholder="结束日期">
+            </el-date-picker>
         </div>
           <!--<SelectTree v-model="searchForm.orgid" />-->
       </el-form-item>
@@ -39,10 +41,10 @@
             <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="发货人">
-            <el-input v-model="searchForm.shipSenderId" :maxlength="15" clearable auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.sendName" :maxlength="15" clearable auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         <el-form-item label="收货人">
-            <el-input v-model="searchForm.shipReceiverId" :maxlength="15" clearable auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
+            <el-input v-model="searchForm.recName" :maxlength="15" clearable auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
         </el-form-item>
         </div>
         <el-form-item class="staff_searchinfo--btn">
@@ -95,7 +97,9 @@ export default {
     }
 
     return {
-      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      // searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       thestatus: '',
       searchForm: {
         shipFromOrgid: '',
@@ -106,7 +110,7 @@ export default {
         shipToCityCode: '',
         shipToCityName: '',
         shipSenderId: '',
-        shipReceiverId: ''
+        recName: ''
       },
       rules: {
         shipSn: [
@@ -143,6 +147,8 @@ export default {
   },
   mounted() {
     // this.searchForm.orgid = this.orgid
+    this.searchCreatTime = this.defaultTime
+    this.onSubmit()
   },
   methods: {
     getOrgid(id) {
@@ -166,15 +172,14 @@ export default {
       this.$emit('change', data)
     },
     clearForm() {
-      this.searchForm.shipFromOrgid = ''
-      // this.searchForm.orgid = this.orgid
       this.searchForm.shipSn = ''
-      this.searchForm.shipReceiverId = ''
-      this.searchForm.shipSenderId = ''
+      this.searchForm.recName = ''
+      this.searchForm.sendName = ''
       this.searchCreatTime = this.$options.data().searchCreatTime
       this.searchForm.shipFromCityName = ''
       this.searchForm.shipToCityName = ''
       this.thestatus = ''
+      this.searchCreatTime = this.defaultTime
     }
   }
 }

@@ -63,8 +63,8 @@
           <SelectType v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
         </el-form-item>
         <el-form-item class="driverRemarks ms" label="备注" prop="remark" >
-          <input class="bz" :maxlength="300" v-model.trim="form.remark" v-if="isDbclick" disabled="isDbclick"  placeholder="最多可输入300个字符"/>
-          <input class="bz1" :maxlength="300" v-model.trim="form.remark" v-else  placeholder="最多可输入300个字符"/>
+          <input class="bz" :maxlength="250" v-model.trim="form.remark" v-if="isDbclick" disabled="isDbclick"  placeholder="最多可输入250个字符"/>
+          <input class="bz1" :maxlength="250" v-model.trim="form.remark" v-else  placeholder="最多可输入250个字符"/>
             <!-- <el-input type="textarea" :maxlength="200" v-model="form.remark" :disabled="isDbclick"></el-input> -->
         </el-form-item>
       </div>
@@ -221,8 +221,6 @@ export default {
       devobj: {
         'childShipId': '' // 子运单id
       },
-
-
 
       rules: {
         signName: [

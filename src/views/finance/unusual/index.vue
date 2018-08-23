@@ -481,8 +481,7 @@ export default {
         prop: 'monthPayFee',
         width: '120',
         fixed: false
-      },
-       {
+      }, {
         label: '到达省',
         prop: 'shipToCityName1',
         width: '120',
@@ -507,7 +506,7 @@ export default {
         },
         fixed: false
       },
-       {
+      {
         label: '发货地址',
         prop: 'senderDetailedAddress',
         width: '120',
@@ -564,18 +563,18 @@ export default {
       switch (type) {
         // 导出
         case 'export':
-          let arr = objectMerge2([], this.dataset) // 所有的数据
+          const arr = objectMerge2([], this.dataset) // 所有的数据
           arr.forEach(e => {
-            this.$set(e, 'shipToCityName1',e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2',e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3',e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
           })
 
-          let arrSel = objectMerge2([], this.selected) // 选择打勾的数据
+          const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
           arrSel.forEach(e => {
-            this.$set(e, 'shipToCityName1',e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2',e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3',e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
           })
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
@@ -622,29 +621,31 @@ export default {
           })
           ids = ids.join(',')
           console.log(ids + 'wzl')
-          this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
-            confirmButtonText: '删除',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            Delete(ids).then(res => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
+          if (this.selected[0].status !== 'NOSETTLEMENT') {
+            this.$message.warning('已结算或者部分结算的单据不能删除')
+            return false
+          } else if (this.selected[0].status === 'NOSETTLEMENT') {
+            this.$confirm('确定要删除 ' + deleteItem + ' 订单异动信息吗？', '提示', {
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then((ids) => {
+              Delete(ids).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
               })
-              this.fetchData()
-            }).catch(err => {
+            }).catch(() => {
               this.$message({
                 type: 'info',
-                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                message: '已取消删除'
               })
             })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
-          })
+          }
           break
       }
       // 清除选中状态，避免影响下个操作

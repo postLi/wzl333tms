@@ -165,17 +165,17 @@ export default {
       tooltip: false,
       rules: {
         driverName: [
-          { required: true, message: '请输入司机名称', trigger: 'blur' }
+          { required: true, message: '请输入司机名称' }
         ],
         orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+          { required: true, message: '请选择所属机构' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' }
+          { required: true, message: '请输入手机号码' }
           // { validator: validateFormNumber, trigger: 'change' }
         ],
         driverCardid: [
-          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '身份证号码只能输入字母和数字' }
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, message: '身份证号码只能输入字母和数字' }
         ]
       },
       popTitle: '新增司机',

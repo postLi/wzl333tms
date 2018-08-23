@@ -101,7 +101,7 @@ export function deleteTrunkInfo(id) {
  * @param {array} ids 多个车辆id用数组处理
  */
 export function deleteSomeTrunkInfo(ids) {
-  return fetch.post('/api-system/system/trunk/v1/bathDelete/?ids=' + ids)
+  return fetch.delete('/api-system/system/trunk/v1/bathDelete/?ids=' + ids)
 }
 /**
  * 根据选中的ids导出对应的excel文件
