@@ -14,3 +14,9 @@ export function postHomedetail(id) {
     return res.data || {}
   })
 }
+
+export function getHomeYearDetail() {
+  return fetch.get('/api-system/system/tmshomedetail/v1/findCapacityCompany').then(res => {
+    return res.data || {}
+  })
+}

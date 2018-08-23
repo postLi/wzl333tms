@@ -397,7 +397,7 @@ export default {
         {
           key: 'shipUserid',
           value: '0',
-          name: '制单员'
+          name: '业务员'
         }
       ],
       form: {

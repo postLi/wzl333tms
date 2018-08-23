@@ -1,140 +1,155 @@
 <template>
-  <el-container class="html5index">
-    <el-main class="main_content ">
-      <el-header class="head_title">
-        <!-- <h4>数据总览</h4> -->
+  <div class="html5index main_content">
+    <!-- <h4>数据总览</h4> -->
+      <div class="head_title clearfix">
         <ul>
-          <!-- <li>今天</li>
-          <li>昨天</li>
-          <li>本周</li>
-          <li>本月</li>
-          <li>本年</li> -->
-          <li v-for="(item, index) in dataset" :key="index" @click="doAction(item.text)">{{item.text}}</li>
-          <li>
-            <!-- 2018-09-12至2018-12-14 -->
-            <el-date-picker
-              v-model="pickerOptions3"
-              type="daterange"
-              align="right"
-              unlink-panels
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="pickerOptions3">
-            </el-date-picker>
-            <!-- <el-date-picker
-              v-model="pickerOptions3"
-              :default-value="defaultTime"
-              type="daterange"
-              align="right"
-              value-format="yyyy-MM-dd"
-              start-placeholder="开始日期"
-              :picker-options="pickerOptions3"
-              end-placeholder="结束日期">
-            </el-date-picker> -->
-          </li>
-        </ul>
-      </el-header>
-      <el-main class="main_forthUl">
-        <ul>
-          <li>开单数量  
-            <div class="box_gg">
-              <i>
-                <img src="../../assets/checkImg/sjx1.png"/>
-              </i>
-            </div>
-            <div class="box_gg1">
-              <i>
-                <img src="../../assets/checkImg/sjx.png"/>
-              </i>
-            </div>
-          </li>
-          <li>数量:<span>{{ Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>重量:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-          <li>体积:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-        </ul>
-        <ul>
-          <li>
-            发车数量
-            <div class="box_gg">
-              <i>
-                <img src="../../assets/checkImg/sjx1.png"/>
-              </i>
-            </div>
-            <div class="box_gg1">
-              <i>
-                <img src="../../assets/checkImg/sjx.png"/>
-              </i>
-            </div>
-          </li>
-          <li>短驳发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>短驳倒车:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-          <li>干线发车:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>干线到车:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-        </ul>
-        <ul>
-          <li>
-            收入
-            <div class="box_gg">
-              <i>
-                <img src="../../assets/checkImg/sjx1.png"/>
-              </i>
-            </div>
-            <div class="box_gg1">
-              <i>
-                <img src="../../assets/checkImg/sjx.png"/>
-              </i>
-            </div>
-          </li>
-          <li>现付:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>到付:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-          <li>回单付:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>月结:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-          <li>异动增款:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-        </ul>
-        <ul>
-          <li>
-            支出
-            <div class="box_gg">
-              <i>
-                <img src="../../assets/checkImg/sjx1.png"/>
-              </i>
-            </div>
-            <div class="box_gg1">
-              <i>
-                <img src="../../assets/checkImg/sjx.png"/>
-              </i>
-            </div>
-          </li>
-          <li>回扣:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>其它费:<span>{{Math.floor(Math.random() * 100)}}</span>千克（吨）<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-          <li>短驳车费:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-          <li>干线车费:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-          <li>送货车费:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-        </ul>
-      </el-main>
-      <el-main class="main_left">
-        <ul class="ul_left" id="main"></ul>
-        <ul class="ul_right">
-          <li>
-            <p>运费收入</p>
-            <div id="main_lefttop"></div>
-          </li>
-          <li>
-            <p>运费收支对比</p>
-            <div id="main_leftdown"></div>
-          </li>
-        </ul>
-      </el-main>
-    </el-main>
-    
-  </el-container>
+        <!-- <li>今天</li>
+        <li>昨天</li>
+        <li>本周</li>
+        <li>本月</li>
+        <li>本年</li> -->
+        <li v-for="(item, index) in dataset" :key="index" @click="doAction(item.text)">{{item.text}}</li>
+        <li>
+          <!-- 2018-09-12至2018-12-14 -->
+          <el-date-picker
+            v-model="pickerOptions3"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions3">
+          </el-date-picker>
+          <!-- <el-date-picker
+            v-model="pickerOptions3"
+            :default-value="defaultTime"
+            type="daterange"
+            align="right"
+            value-format="yyyy-MM-dd"
+            start-placeholder="开始日期"
+            :picker-options="pickerOptions3"
+            end-placeholder="结束日期">
+          </el-date-picker> -->
+        </li>
+      </ul>
+      </div>
+      
+      <el-row class="main_forthUl" :gutter="15">
+          <el-col :span="6">
+            <ul>
+              <li>开单数量  
+                <div class="box_gg">
+                  <i>
+                    <img src="../../assets/checkImg/sjx1.png"/>
+                  </i>
+                </div>
+                <div class="box_gg1">
+                  <i>
+                    <img src="../../assets/checkImg/sjx.png"/>
+                  </i>
+                </div>
+              </li>
+              <li>数量:<span>{{ Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>重量:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>体积:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+            </ul>
+          </el-col>
+          <el-col :span="6">
+            <ul>
+              <li>
+                发车数量
+                <div class="box_gg">
+                  <i>
+                    <img src="../../assets/checkImg/sjx1.png"/>
+                  </i>
+                </div>
+                <div class="box_gg1">
+                  <i>
+                    <img src="../../assets/checkImg/sjx.png"/>
+                  </i>
+                </div>
+              </li>
+              <li>短驳发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>短驳到车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>干线发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>干线到车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+            </ul>
+          </el-col>
+          <el-col :span="6">
+            <ul>
+              <li>
+                收入
+                <div class="box_gg">
+                  <i>
+                    <img src="../../assets/checkImg/sjx1.png"/>
+                  </i>
+                </div>
+                <div class="box_gg1">
+                  <i>
+                    <img src="../../assets/checkImg/sjx.png"/>
+                  </i>
+                </div>
+              </li>
+              <li>现付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>到付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>回单付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>月结:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>异动增款:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+            </ul>
+          </el-col>
+          <el-col :span="6">
+            <ul>
+              <li>
+                支出
+                <div class="box_gg">
+                  <i>
+                    <img src="../../assets/checkImg/sjx1.png"/>
+                  </i>
+                </div>
+                <div class="box_gg1">
+                  <i>
+                    <img src="../../assets/checkImg/sjx.png"/>
+                  </i>
+                </div>
+              </li>
+              <li>回扣:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>其它费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>短驳车费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>干线车费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>送货车费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+            </ul>
+          </el-col>
+      </el-row>
+
+      <el-row class="main_left" :gutter="15">
+        <el-col :span="18">
+          <ul class="ul_left" id="main"></ul>
+        </el-col>
+        <el-col :span="6">
+          <ul class="ul_right">
+            <li>
+              <div class="inner_div">
+                <p>运费收入</p>
+                <div id="main_lefttop"></div>
+              </div>
+            </li>
+            <li>
+              <div class="inner_div">
+                <p>运费收支对比</p>
+                <div id="main_leftdown"></div>
+              </div>
+            </li>
+          </ul>
+        </el-col>
+      </el-row>
+  </div>
 </template>
 
 <script>
 import echarts from 'echarts'
 import { pickerOptions4 } from '@/utils/index'
-import { postHomedetail } from '@/api/index'
+import { postHomedetail, getHomeYearDetail } from '@/api/index'
 export default {
   compontents: {
     pickerOptions4
@@ -269,54 +284,67 @@ export default {
       })
     }
     const option = {
-      title: {
-        text: '',
-        subtext: '',
-        x: 'center'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      legend: {
-        orient: 'vertical',
-        x: 'left',
-        data: ['现付', '到付', '回单付', '月结']
-      },
-      toolbox: {
-        show: true,
-        feature: {
-          mark: { show: true },
-          dataView: { show: true, readOnly: false },
-          magicType: {
-            show: true,
-            type: ['pie', 'funnel'],
-            option: {
-              funnel: {
-                x: '25%',
-                width: '50%',
-                funnelAlign: 'left',
-                max: 1548
+      baseOption: {
+        title: {
+          text: '',
+          subtext: '',
+          x: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          x: 'left',
+          data: ['现付', '到付', '回单付', '月结', '异动增款']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            dataView: { show: false, readOnly: false },
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel'],
+              option: {
+                funnel: {
+                  x: '25%',
+                  width: '50%',
+                  funnelAlign: 'left',
+                  max: 1548
+                }
               }
-            }
-          },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
-      calculable: true,
-      series: [
-        {
-          name: '收入来源',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: [
+            },
+            restore: { show: false },
+            saveAsImage: { show: false }
+          }
+        },
+        calculable: true,
+        series: [
+          {
+            name: '收入来源',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [
           { value: 335, name: '现付' },
           { value: 310, name: '到付' },
           { value: 234, name: '回单付' },
-          { value: 135, name: '月结' }
-          ]
+          { value: 135, name: '月结' },
+          { value: 100, name: '异动增款' }
+            ]
+          }
+        ]
+      },
+      media: [
+        {
+          query: { maxWidth: 670 },
+          option: {
+            legend: {
+              orient: 'horizontal'
+            }
+          }
         }
       ]
     }
@@ -335,7 +363,7 @@ export default {
         show: true,
         feature: {
           mark: { show: true },
-          dataView: { show: true, readOnly: false },
+          dataView: { show: false, readOnly: false },
           magicType: {
             show: true,
             type: ['pie', 'funnel'],
@@ -348,8 +376,8 @@ export default {
               }
             }
           },
-          restore: { show: true },
-          saveAsImage: { show: true }
+          restore: { show: false },
+          saveAsImage: { show: false }
         }
       },
       calculable: true,
@@ -385,86 +413,104 @@ export default {
         }
       ]
     }
+   // 获取年度运力数据
+    getHomeYearDetail().then(data => {
+      const monthArr = []
+      const shipArr = []
+      const weightArr = []
+      const volumeArr = []
+      data.map(el => {
+        shipArr.push(el.shipNum)
+        weightArr.push(el.weight)
+        volumeArr.push(el.volume)
+      })
+      const option3 = {
+        title: {
+          text: '安发物流2018年运力对比图',
+          subtext: '年度数据'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          selected: {
+            '运单数': true,
+            '体积': false,
+            '重量': false
+          },
+          data: ['运单数', '体积', '重量']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            dataView: { show: false, readOnly: false },
+            magicType: { show: true, type: ['line', 'bar'] },
+            restore: { show: false },
+            saveAsImage: { show: false }
+          }
+        },
+        calculable: true,
+        xAxis: [
+          {
+            type: 'category',
+            // '2018年\n\r1月'
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: '运单数',
+            type: 'bar',
+            // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
+            data: shipArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          },
+          {
+            name: '体积',
+            type: 'bar',
+            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+            data: volumeArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          },
+          {
+            name: '重量',
+            type: 'bar',
+            // data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
+            data: weightArr,
+            markPoint: {
+              data: [
+                { type: 'max', name: '最大值' },
+                { type: 'min', name: '最小值' }
+                      /* { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
+                      { name: '年最低', value: 0, xAxis: 11, yAxis: 3 } */
+              ]
+            }
+          }
+        ]
+      }
 
-    const option3 = {
-      title: {
-        text: '安发物流2018年运力对比图',
-        subtext: '每日数据'
-      },
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        selected: {
-          '运单数': true,
-          '体积': false,
-          '重量': false
-        },
-        data: ['运单数', '体积', '重量']
-      },
-      toolbox: {
-        show: true,
-        feature: {
-          mark: { show: true },
-          dataView: { show: true, readOnly: false },
-          magicType: { show: true, type: ['line', 'bar'] },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
-      calculable: true,
-      xAxis: [
-        {
-          type: 'category',
-          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-        }
-      ],
-      yAxis: [
-        {
-          type: 'value'
-        }
-      ],
-      series: [
-        {
-          name: '运单数',
-          type: 'bar',
-          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-          markPoint: {
-            data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-            ]
-          }
-        },
-        {
-          name: '体积',
-          type: 'bar',
-          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-          markPoint: {
-            data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-            ]
-          }
-        },
-        {
-          name: '重量',
-          type: 'bar',
-          data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
-          markPoint: {
-            data: [
-                    { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
-                    { name: '年最低', value: 0, xAxis: 11, yAxis: 3 }
-            ]
-          }
-        }
-      ]
-    }
+      myChart3.setOption(option3)
+    })
 
     // 为echarts对象加载数据
     myChart.setOption(option)
     myChart2.setOption(option2)
-    myChart3.setOption(option3)
   }
 }
 </script>
@@ -474,19 +520,24 @@ export default {
 // }
 .html5index{
   min-width: 1100px;
+  height: 100%;
+  min-height: 666px;
   background:rgb(235,235,235);
 }
 .main_content{
-  padding: 16px 20px 13px 20px;
+  padding: 15px;
   overflow-y: hidden;
   // background:rgb(235,235,235);
   box-sizing: border-box;
-  float:left;
+  display: flex;
+  flex-direction: column;
+
   .head_title{
-    height: 4% !important;
-    line-height: 30px !important;
+    height: 31px ;
+    line-height: 31px ;
+    overflow: hidden;
+    border-radius: 2px;
     background: #ffff;
-    padding:0px !important;
     box-sizing: border-box;
     // margin-bottom: 0.6%;
     // box-shadow: 2px 2px 2px 2px ,-2px -2px -2px -2px rgba(0, 0, 0, 0.10);
@@ -497,14 +548,18 @@ export default {
     ul{
       // margin-right: -50% !important;
       
-      float:right;
       position: relative;
+      width: 100%;
       // width: 45%;
       height: 100%;
+      text-align: right;
       // background:yellow;
       li{
-        float: left;
-        padding-left:2%;
+        display: inline-block;
+        min-width: 45px;
+        text-align: center;
+        
+        white-space: nowrap;
         font-size: 14px;
         color:#333; /* 初始颜色 */
         cursor: pointer;
@@ -541,6 +596,7 @@ export default {
       li:hover{
         color:#3e9ff1;
         transform: scale(1.4);
+        
         // font-weight: bold;
       }
       li:nth-child(6):hover {
@@ -549,20 +605,16 @@ export default {
     }
   }
   .main_forthUl{
-    padding: 10px 0 0 0 !important ;
-    width: 100%;
-    display: flex;
-    float: left;
+    overflow: hidden;
     -moz-box-sizing: border-box;
      box-sizing: border-box;
+     height: 215px;
     ul{
       // border:1px solid #ddd;
       box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.10);
       background: #fff;
-      float: left;
-      flex: 23%;
       height: 185px;
-      margin: 10px 25px 10px 0;
+      margin: 15px 0 15px 0;
       box-sizing: border-box;
       position: relative;
       transition: color 4s ease;
@@ -610,7 +662,7 @@ export default {
       }
     }
     ul:nth-child(4){
-      margin:10px 0 10px 0;
+      margin:15px 0 15px 0;
     }
   }
   .main_forthUl ul:hover {
@@ -631,44 +683,52 @@ export default {
     // color:#fff;
   }
   .main_forthUl ul:hover .box_gg{
-    display: block;
+    display: none;
   }
   .main_forthUl ul:active .box_gg1{
-    display: block;
+    display: none;
   }
   .main_left{
-    padding: 10px 0 !important ;
-    width: 100%;
-    height: 594px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    padding: 0 0 !important ;
+    flex:1;
+    .el-col{
+      height: 100%;
+    }
     .ul_left{
-      float: left;
-      width: 74.6%;
       background:#fff;
-      height:584px;
+      height:100%;
       // box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.10);
       //  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.10);
       box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.10) ;
       border:1px solid #ddd;
     }
     .ul_right{
-      width: 23.8%;
-      float:right;
-      height:584px;
+      height:100%;
       
       li{
         width: 100%;
-        height: 286px;
-        background: #fff;
-        border-radius: 5px;
-        // box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.10) inset;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.10) ;
-         border:1px solid #ddd;
+        height: 50%;
+        padding-top: 7.5px;
+         
+        .inner_div{
+          height: 100%;
+          background: #fff;
+          border-radius: 5px;
+          padding-top: 30px;
+          // box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.10) inset;
+          box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.10) ;
+          border:1px solid #ddd;
+
+          &>div{
+           height: 100%;
+         }
+        }
+         
         canvas{
-          height: 262px;
+          height: 100%;
         }
         p{
+          margin-top: -30px;
           font-size: 14px;
           padding: 7px;
           // background-color: #6bc9eb;
@@ -678,33 +738,19 @@ export default {
         
       }
       li:nth-child(1){
-        border-bottom: 2px solid #ddd;
-        margin-bottom: 15px;
+        padding-bottom: 7.5px;
+        padding-top: 0;
       } 
-      li:hover{
+      .inner_div:hover{
         cursor: pointer;
         box-sizing: border-box;
         transition: all 0.2s ease-out; 
         box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.10); 
         overflow: hidden;
         color: #3e9ff1;
-    // opacity: rgba(0, 0, 0, 0.44);
-    // font-weight: 300;
-    transform: translateY(-3px); transition-delay: 0.2s; 
-      }
-      #main_lefttop{
-        // height: 100%;
-        height:262px;
-        canvas{
-          height: 250px;
-        }
-      }
-      #main_leftdown{
-        // height: 100%;
-        height:262px;
-        canvas{
-          height: 250px;
-        }
+        // opacity: rgba(0, 0, 0, 0.44);
+        // font-weight: 300;
+        transform: translateY(-3px); transition-delay: 0.2s; 
       }
       #main{
         height: 100%;

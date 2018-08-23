@@ -85,19 +85,19 @@
             发货方
           </div>
           <div class="order-form-item">
-            <span class="order-form-label">发货单位</span>
-            <el-form-item prop="sender.customerUnit">
-              <querySelect search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
+            <span :class="{'required': shipFieldValue.shipSenderId}" class="order-form-label">发货方</span>
+            <el-form-item :error='shipFieldValueInfo.shipSenderUnit' >
+              <querySelect ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
-            <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderId}">发 货 人</span>
+            <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderName}">发 货 人</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderName' >
               <querySelect ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
-            <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderId}">联系电话</span>
+            <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
               <querySelect ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
             </el-form-item>
@@ -114,19 +114,19 @@
             收货方
           </div>
           <div class="order-form-item">
-            <span class="order-form-label">收货单位</span>
-            <el-form-item prop="receiver.customerUnit">
-              <querySelect search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
+            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">收货方</span>
+            <el-form-item :error='shipFieldValueInfo.shipReceiverUnit'>
+              <querySelect ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">收 货 人</span>
+            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverName}">收 货 人</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverName'>
               <querySelect ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">联系电话</span>
+            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
               <querySelect ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
             </el-form-item>
@@ -550,10 +550,12 @@ export default {
         shipToCityName: '', // 到达城市
 
         shipReceiverName: '',
+        shipReceiverUnit: '',
         shipReceiverMobile: '',
         'shipReceiverAddress': '', // 收货方地址
         'shipSenderAddress': '', // 发货方地址
         shipSenderName: '',
+        shipSenderUnit: '',
         shipSenderMobile: '',
 
         cargoName: '',
@@ -592,6 +594,10 @@ export default {
         cargoAmount: true,
         cargoWeight: true,
         cargoVolume: true,
+        shipReceiverName: true,
+        shipReceiverMobile: true,
+        shipSenderName: true,
+        shipSenderMobile: true,
 
         // 系统设置页面控制
         'amountFee': false,
@@ -610,9 +616,9 @@ export default {
         'shipGoodsSn': false, // 货号
         'shipReceiptSn': false, // 回单号
         'shipReceiverAddress': false, // 收货方地址
-        'shipReceiverId': false, // 包含发货人、发货人电话
+        'shipReceiverId': false, // 包含发货方
         'shipSenderAddress': false, // 发货方地址
-        'shipSenderId': false, // 包含收货人、收货人电话
+        'shipSenderId': false, // 包含收货方
         'shipToOrgid': false, // 目的网点
         'shipUserid': false, // 业务员/开单人
         'volumeFee': false,
@@ -2119,6 +2125,21 @@ export default {
       }
       return msg
     },
+    checkshipSenderUnit(m) {
+      const value = this.form.sender.customerUnit
+      let msg = ''
+      if (!value) {
+        msg = '发货人不能为空'
+      }
+      this.shipFieldValueInfo.shipSenderUnit = msg
+      if (msg && !m) {
+        this.$message.error(msg)
+        this.$refs['tmsOrdercustomerUnit'].$refs['myautocomplete'].focus()
+      } else {
+        msg = m
+      }
+      return msg
+    },
     checkshipSenderName(m) {
       const value = this.form.sender.customerName
       let msg = ''
@@ -2159,6 +2180,21 @@ export default {
       if (msg && !m) {
         this.$message.error(msg)
         this.$refs['tmsOrderdetailedAddress'].$refs['myautocomplete'].focus()
+      } else {
+        msg = m
+      }
+      return msg
+    },
+    checkshipReceiverUnit(m) {
+      const value = this.form.receiver.customerUnit
+      let msg = ''
+      if (!value) {
+        msg = '收货方不能为空'
+      }
+      this.shipFieldValueInfo.shipReceiverUnit = msg
+      if (msg && !m) {
+        this.$message.error(msg)
+        this.$refs['tmsOrdershipReceiverUnit'].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2371,24 +2407,32 @@ export default {
         if (checklist.shipGoodsSn) {
           msg = this.checkshipGoodsSn(msg)
         }
-      // 发货人
+      // 发货方
         if (checklist.shipSenderId) {
+          msg = this.checkshipSenderUnit(msg)
+        }
+      // 发货人
+        if (checklist.shipSenderName) {
           msg = this.checkshipSenderName(msg)
         }
       // 发货人电话
-        if (checklist.shipSenderId) {
+        if (checklist.shipSenderMobile) {
           msg = this.checkshipSenderMobile(msg)
         }
       // 发货地址
         if (checklist.shipSenderAddress) {
           msg = this.checkshipSenderAddress(msg)
         }
-      // 收货人
+      // 收货方
         if (checklist.shipReceiverId) {
+          msg = this.checkshipReceiverUnit(msg)
+        }
+      // 收货人
+        if (checklist.shipReceiverName) {
           msg = this.checkshipReceiverName(msg)
         }
       // 收货人电话
-        if (checklist.shipReceiverId) {
+        if (checklist.shipReceiverMobile) {
           msg = this.checkshipReceiverMobile(msg)
         }
       // 收货地址

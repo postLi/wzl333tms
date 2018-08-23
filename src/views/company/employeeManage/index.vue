@@ -78,7 +78,7 @@
                       sortable
                       >
                       <template slot-scope="scope">
-                          {{ scope.row.sexFlag === "0" ? "男" : "女" }}
+                          {{ scope.row.sexFlag === "0" ? "男" : scope.row.sexFlag === "1" ? "女" : '' }}
                       </template>
                     </el-table-column>
                     <el-table-column
