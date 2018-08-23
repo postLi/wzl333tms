@@ -260,6 +260,90 @@ export default {
           this.pickerOptions3 = CurrentYear
           break
       }
+    },
+    initYearChart(echart, shipArr, weightArr, volumeArr) {
+      const option3 = {
+        title: {
+          text: '安发物流2018年运力对比图',
+          subtext: '年度数据'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          selected: {
+            '运单数': true,
+            '体积': false,
+            '重量': false
+          },
+          data: ['运单数', '体积', '重量']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            dataView: { show: false, readOnly: false },
+            magicType: { show: true, type: ['line', 'bar'] },
+            restore: { show: false },
+            saveAsImage: { show: false }
+          }
+        },
+        calculable: true,
+        xAxis: [
+          {
+            type: 'category',
+            // '2018年\n\r1月'
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: '运单数',
+            type: 'bar',
+            // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
+            data: shipArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          },
+          {
+            name: '体积',
+            type: 'bar',
+            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+            data: volumeArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          },
+          {
+            name: '重量',
+            type: 'bar',
+            // data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
+            data: weightArr,
+            markPoint: {
+              data: [
+                { type: 'max', name: '最大值' },
+                { type: 'min', name: '最小值' }
+                      /* { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
+                      { name: '年最低', value: 0, xAxis: 11, yAxis: 3 } */
+              ]
+            }
+          }
+        ]
+      }
+
+      echart.setOption(option3)
     }
   },
   mounted() {
@@ -424,88 +508,12 @@ export default {
         weightArr.push(el.weight)
         volumeArr.push(el.volume)
       })
-      const option3 = {
-        title: {
-          text: '安发物流2018年运力对比图',
-          subtext: '年度数据'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          selected: {
-            '运单数': true,
-            '体积': false,
-            '重量': false
-          },
-          data: ['运单数', '体积', '重量']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            mark: { show: true },
-            dataView: { show: false, readOnly: false },
-            magicType: { show: true, type: ['line', 'bar'] },
-            restore: { show: false },
-            saveAsImage: { show: false }
-          }
-        },
-        calculable: true,
-        xAxis: [
-          {
-            type: 'category',
-            // '2018年\n\r1月'
-            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value'
-          }
-        ],
-        series: [
-          {
-            name: '运单数',
-            type: 'bar',
-            // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
-            data: shipArr,
-            markPoint: {
-              data: [
-                      { type: 'max', name: '最大值' },
-                      { type: 'min', name: '最小值' }
-              ]
-            }
-          },
-          {
-            name: '体积',
-            type: 'bar',
-            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-            data: volumeArr,
-            markPoint: {
-              data: [
-                      { type: 'max', name: '最大值' },
-                      { type: 'min', name: '最小值' }
-              ]
-            }
-          },
-          {
-            name: '重量',
-            type: 'bar',
-            // data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0],
-            data: weightArr,
-            markPoint: {
-              data: [
-                { type: 'max', name: '最大值' },
-                { type: 'min', name: '最小值' }
-                      /* { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18 },
-                      { name: '年最低', value: 0, xAxis: 11, yAxis: 3 } */
-              ]
-            }
-          }
-        ]
-      }
-
-      myChart3.setOption(option3)
+      this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
+    }).catch(err => {
+      const shipArr = [2.0, 4.9, 7.0, 10, 25.6, 76.7, 135.6, 162.2, '', '', '', '']
+      const weightArr = [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0]
+      const volumeArr = [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0]
+      this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
     })
 
     // 为echarts对象加载数据
