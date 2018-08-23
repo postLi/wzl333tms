@@ -10,8 +10,8 @@
       <div class="nologin">
         <!-- <a :href="'http://192.168.1.157:9528/?access_token='+token">
         <el-button size="large" type="primary">TMS系统</el-button></a><br> -->
-        <a :href="'http://192.168.1.24:9526/?access_token=' + token"><el-button size="large" type="success">运力中心</el-button></a><br>
-        <a :href="'http://192.168.1.170/member/loginbytoken.php?access_token='+token"><el-button size="large" type="warning">官网系统</el-button></a>
+        <a v-if="otherinfo.rolesIdList.indexOf(113) !== -1" :href="'http://192.168.1.24:9526/?access_token=' + token"><el-button size="large" type="success">运力中心</el-button></a><br>
+        <a v-if="otherinfo.rolesIdList.indexOf(114) !== -1" :href="'http://192.168.1.170/member/loginbytoken.php?access_token='+token"><el-button size="large" type="warning">官网系统</el-button></a>
       </div>
       <div @mouseover="showSubnav" @mouseout="hideSubnav" class="subNavWrapper"></div>
   </div>

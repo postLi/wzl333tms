@@ -71,7 +71,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
-          data.rolesIdList = data.rolesId.split(',')
+          // data.rolesIdList = data.rolesId.split(',')
           commit('SET_ROLES', data.rolesIdList)
           commit('SET_NAME', data.username)
           commit('SET_USERNAME', data.username)

@@ -188,7 +188,7 @@ export default {
         for (const i in this.form) {
           this.form[i] = this.userInfo[i]
         }
-        this.form.rolesId = this.userInfo.rolesIdList === '0' ? '' : this.userInfo.rolesIdList
+        this.form.rolesId = this.userInfo.rolesIdList === 0 ? '' : this.userInfo.rolesIdList
       } else {
         this.popTitle = '新增员工'
         for (const i in this.form) {
