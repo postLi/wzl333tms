@@ -699,6 +699,7 @@ export default {
   .main_left{
     padding: 0 0 !important ;
     flex:1;
+    overflow: hidden;
     .el-col{
       height: 100%;
     }
