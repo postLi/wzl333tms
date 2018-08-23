@@ -264,7 +264,7 @@ export default {
       this.loading = true
       return fetchPostlist(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },

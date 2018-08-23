@@ -550,6 +550,43 @@
         this.form.tmsOrderPre.id = item.id
         this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
       },
+      newinfoData() {
+        this.form.tmsOrderCargoList.cargoName = ''
+        this.form.tmsOrderCargoList.cargoAmount = ''
+        this.form.tmsOrderCargoList.cargoWeight = ''
+        this.form.tmsOrderCargoList.cargoVolume = ''
+        this.form.tmsOrderCargoList.cargoPack = ''
+        this.form.tmsOrderCargoList.description = ''
+        this.form.tmsOrderCargoList.agencyFund = ''
+        this.form.tmsOrderCargoList.commissionFee = ''
+        this.form.tmsOrderCargoList.shipFee = ''
+        this.form.tmsOrderCargoList.productPrice = ''
+        this.form.tmsOrderCargoList.id = ''
+        // 发
+        this.form.customSend.customerName = ''
+        this.form.customSend.customerMobile = ''
+        this.form.customSend.detailedAddress = ''
+        this.form.customSend.customerUnit = ''
+        this.form.customSend.customerId = ''
+        // 收
+        this.form.customRece.customerName = ''
+        this.form.customRece.customerMobile = ''
+        this.form.customRece.detailedAddress = ''
+        this.form.customRece.customerUnit = ''
+        this.form.customRece.customerId = ''
+
+        // 订单信息
+        this.form.tmsOrderPre.orderFromCityName = ''
+        this.form.tmsOrderPre.orderToCityName = ''
+        this.form.tmsOrderPre.orderRemarks = ''
+        // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
+        // this.form.tmsOrderPre.orderEffective = ''
+        this.form.tmsOrderPre.id = ''
+        this.form.tmsOrderPre.orderToOrgid = ''
+        this.form.tmsOrderPre.orderPickupMethod = 218
+        this.form.tmsOrderPre.orderEffective = 94
+        this.form.tmsOrderPre.orderPayWay = 76
+      },
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
           if (!value) {

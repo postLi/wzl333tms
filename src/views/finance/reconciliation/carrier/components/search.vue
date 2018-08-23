@@ -18,8 +18,8 @@
             <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="承运商">
-          <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" :filterable="true" show="select"  @change="getCarrier"/>
-  
+          <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" :filterable="true" show="select" v-model="searchForm.carrierId" @change="getCarrier"/>
+
         </el-form-item>
       </div>
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
@@ -105,7 +105,7 @@ export default {
   methods: {
     getCarrier(item) {
       if (item) {
-        console.log(item)
+        // console.log(item)
         this.searchForm.carrierId = item.carrierId
       }
     },
@@ -119,6 +119,8 @@ export default {
       this.searchForm.carrierId = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
+
+      console.log(this.searchForm)
       // this.searchCreatTime = []
     },
     carrierItem(item) {

@@ -575,19 +575,20 @@
       },
       fetchList() {
         this.loading = true
+
         return postCarfBillCheckCarBaseInfo(this.searchTitle).then(data => {
           this.messageArr = []
           this.messageArr = data
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
-          this.messageArr = []
-          this.infoMessageData(this.messageArr)
+          this.newMessageData()
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchDealPay() {
         this.loading = true
+
         return postCarfBillCheckCarInitList(this.searchDealPay).then(data => {
           this.dealPayInfo = []
           this.dealPaytota = []
@@ -600,6 +601,7 @@
       },
       fetchReadyPay() {
         this.loading = true
+
         return postCarfBillCheckCarInitList(this.searchAlReadyPay).then(data => {
           this.alreadyPayInfo = []
           this.alreadyPaytota = []
@@ -679,13 +681,18 @@
 
       onSubmit() {
         if (this.searchTitle.memberName) {
-          if (!this.searchCreatTime[0]) {
-            this.searchCreatTime = this.defaultTime
-          }
+          // if (!this.searchCreatTime[0]) {
+          //   this.searchCreatTime = this.defaultTime
+          //   console.log(this.searchCreatTime,"打印")
+          // }
+          console.log(this.searchCreatTime,"打印")
           const searchObj = {}
+          // debugger
           // this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+          // console.log(searchObj.startTime,"打印2")
+          // console.log(this.defaultTime[0],"打印3")
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
           this.fetchList()
           this.fetchDealPay()
@@ -775,7 +782,7 @@
         this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
           const a = {}
           a.shipOrderId = el.shipOrderId
-          a.shortPay = el.shortPay
+           a.shortPay = el.shortPay
           a.remark = el.remark
           a.departureTime = el.departureTime
           a.batchNo = el.batchNo
@@ -913,8 +920,33 @@
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
-        this.searchCreatTime[0] = item.checkStartTime
-        this.searchCreatTime[1] = item.checkEndTime
+
+      },
+      newMessageData() {
+        this.searchTitle.memberName = ''
+        this.messageInfo.memberName = ''
+        this.messageInfo.memberPerson = ''
+        this.messageInfo.memberPersonPhone = ''
+        this.messageInfo.checkBillCode = ''
+        this.messageInfo.bankAccount = ''
+        this.messageInfo.bankName = ''
+        this.messageInfo.alipayAccount = ''
+        this.messageInfo.wechatAccount = ''
+        this.messageInfo.checkStartTime = ''
+        this.messageInfo.checkEndTime = ''
+        this.messageInfo.orgName = ''
+        this.messageButtonInfo.companyName = ''
+        this.messageButtonInfo.orgBusinessOfficer = ''
+        this.messageButtonInfo.orgBusinessOfficerPhone = ''
+        this.messageButtonInfo.orgFinancialOfficer = ''
+        this.messageButtonInfo.orgFinancialOfficerPhone = ''
+        this.messageButtonInfo.createTime = ''
+        this.messageButtonInfo.remark = ''
+        this.messageButtonInfo.totalCount = ''
+        this.checkBillName = ''
+        // this.searchCreatTime = ''
+        // this.searchCreatTime[0] = ''
+        // this.searchCreatTime[1] = ''
       },
       infoSearchTime(startTime, endTime) {
         this.searchTitle.startTime = startTime

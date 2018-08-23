@@ -671,8 +671,7 @@
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
-          this.messageArr = []
-          this.infoMessageData(this.messageArr)
+         this.newMessageData()
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
@@ -1001,6 +1000,32 @@
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
+      },
+      newMessageData() {
+        this.searchTitle.memberName = ''
+        this.messageInfo.memberName = ''
+        this.messageInfo.memberPerson = ''
+        this.messageInfo.memberPersonPhone = ''
+        this.messageInfo.checkBillCode = ''
+        this.messageInfo.bankAccount = ''
+        this.messageInfo.bankName = ''
+        this.messageInfo.alipayAccount = ''
+        this.messageInfo.wechatAccount = ''
+        this.messageInfo.checkStartTime = ''
+        this.messageInfo.checkEndTime = ''
+        this.messageInfo.orgName = ''
+        this.messageButtonInfo.companyName = ''
+        this.messageButtonInfo.orgBusinessOfficer = ''
+        this.messageButtonInfo.orgBusinessOfficerPhone = ''
+        this.messageButtonInfo.orgFinancialOfficer = ''
+        this.messageButtonInfo.orgFinancialOfficerPhone = ''
+        this.messageButtonInfo.createTime = ''
+        this.messageButtonInfo.remark = ''
+        this.messageButtonInfo.totalCount = ''
+        this.checkBillName = ''
+        // this.searchCreatTime = ''
+        // this.searchCreatTime[0] = ''
+        // this.searchCreatTime[1] = ''
       },
       infoSearchTime(startTime, endTime) {
         this.searchTitle.startTime = startTime

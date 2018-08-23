@@ -139,7 +139,7 @@
           <el-table-column
             fixed
             sortable
-            prop="transferTime"
+            prop="createTime"
             width="160"
             label="中转时间">
           </el-table-column>
@@ -289,7 +289,7 @@
           <el-table-column
             fixed
             sortable
-            prop="transferTime"
+            prop="createTime"
             width="160"
             label="中转时间">
           </el-table-column>
@@ -432,7 +432,7 @@
           <el-table-column
             fixed
             sortable
-            prop="transferTime"
+            prop="createTime"
             width="160"
             label="中转时间">
           </el-table-column>
@@ -577,7 +577,7 @@
           <el-table-column
             fixed
             sortable
-            prop="transferTime"
+            prop="createTime"
             width="160"
             label="中转时间">
           </el-table-column>
