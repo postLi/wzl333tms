@@ -74,7 +74,13 @@ service.interceptors.response.use(
     const res = response.data
 
     if (res.status !== 200 && response.config.url.indexOf('/uaa/oauth/token') === -1) {
-      console.info('=============状态不对出错==============：', res)
+      console.group('=============状态不对出错==============：')
+      console.warn('请求链接：', response.config.url)
+      console.warn('请求方法：', response.config.method)
+      console.warn('请求链接参数：', response.config.params)
+      console.warn('请求body参数：', response.config.data)
+      console.warn('请求结果：', res)
+      console.groupEnd('=============状态不对出错==============：')
       /* Message({
         message: ((res.errorInfo || '') + ' : ' + (res.msg || '') + ' : ' + (res.code || '') + ' : ' + (res.text || '') + ' : ' + (res.status || '')),
         type: 'error',
@@ -87,7 +93,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.info('=============请求出错==============：', error)
+    console.warn('=============请求出错==============：', error)
     let err = error
     if (error.response) {
       const status = error.response.status

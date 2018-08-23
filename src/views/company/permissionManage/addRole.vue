@@ -101,7 +101,7 @@
       theUser(newVal) {
         if (this.isModify) {
           this.popTitle = '修改角色'
-          this.formInline = objectMerge2(this.theUser)
+          this.formInline = objectMerge2(this.theUser || {})
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
         if (this.reference) {
@@ -206,14 +206,13 @@
             }
             promiseObj.then(res => {
               this.loading = false
-              this.$message.success("保存成功")
+              this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')
-
-            }).catch(err => {
+          }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-            this.loading = false
-          })
+              this.loading = false
+            })
           } else {
             return false
           }

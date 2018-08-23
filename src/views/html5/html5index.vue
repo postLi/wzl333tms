@@ -389,12 +389,17 @@ export default {
     const option3 = {
       title: {
         text: '安发物流2018年运力对比图',
-        subtext: '测试数据'
+        subtext: '每日数据'
       },
       tooltip: {
         trigger: 'axis'
       },
       legend: {
+        selected: {
+          '运单数': true,
+          '体积': false,
+          '重量': false
+        },
         data: ['运单数', '体积', '重量']
       },
       toolbox: {
