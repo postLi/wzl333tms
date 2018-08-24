@@ -423,7 +423,7 @@ export default {
               putCancelLoadDepart(ids, 39).then(res => {
                 this.$message({
                   type: 'success',
-                  message: '取消装车成功!'
+                  message: '取消发车成功!'
                 })
                 this.fetchData()
               }).catch(err => {
