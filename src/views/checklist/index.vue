@@ -323,6 +323,23 @@ export default {
           this.cancelAni = !this.cancelAni
           if (this.cancelAni) {
             clearInterval(this.timer)
+            console.log()
+          } else {
+            var idx = 0
+            var arr = this.countList
+            var len = this.countList.length
+            var j = 0
+            const self = this
+            self.timer = setInterval(() => {
+              if (idx < len) {
+              // console.log(idx, len, arr[j].title, 666666)
+                self.contTitle = arr[j++].title
+                idx++
+              } else {
+                clearInterval(self.timer)
+                idx = 0
+              }
+            }, 150)
           }
           break
         case 'agane':
@@ -547,7 +564,7 @@ export default {
         background-image: url(../../assets/checkImg/bgo1.png);
         background-image: url(../../assets/checkImg/bgo1.png);
         background-repeat:no-repeat;
-        background-size: 100%;
+       background-size:cover;
         position: relative;
         h6{
           font-size: 30px;

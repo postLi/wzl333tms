@@ -86,9 +86,6 @@ export default {
         animation-play-state: paused;
       }
     }
-
-    
-
     .progressLabel{
       position: relative;
       top: 6px;
