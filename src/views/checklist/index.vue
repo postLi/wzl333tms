@@ -1,5 +1,5 @@
 <template>
-<el-container :key="viewKey" v-loading="loading" class="check_box">
+<el-container :key="viewKey" class="check_box">
   <el-header style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
@@ -126,7 +126,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      // loading: false,
       info: {},
       ischecked: false,
       showAni: false,
@@ -235,11 +235,12 @@ export default {
     }
   },
   mounted() {
+    // this.loading = true
     this.isParentOrg()
-    this.loading = true
+
     getInitializationCheck().then(data => {
       this.dataset = data
-      this.loading = false
+
       var totals = 0
       for (const total in data) {
         if (data[total] === 0) {
@@ -247,6 +248,7 @@ export default {
         }
         console.log(data[total], total, '数量')
       }
+      // this.loading = false
       // console.log(totals, 2222)
       if (totals > 0) {
         this.flog = false
@@ -263,46 +265,37 @@ export default {
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
     fetchData(type) {
-      this.loading = true
       if (type === 'addOrg') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addRole') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addReciveCustomer') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addSendCustomer') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addDiver') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addTruck') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addCarrier') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
       if (type === 'addSetting') {
         this.initSystem()
         this.closeAddDot()
-        this.loading = false
       }
     },
     closeAddDot(obj) {
@@ -384,14 +377,14 @@ export default {
     initSystem() {
       this.viewKey = new Date().getTime()
       this.type = 2
-      this.loading = true
+      // this.loading = true
       this.dataset = {}
       // options获取原来的数据
       this.countList = this.$options.data().countList
       getInitializationCheck().then(data => {
-        this.loading = false
         this.showani = true
         this.dataset = data
+        // this.loading = false
         for (const item in this.countList) {
           this.countList[item].value = data[ this.countList[item].label]
           this.countList[item].message = this.countList[item].message.replace(/undefined/, String(this.countList[item].value))

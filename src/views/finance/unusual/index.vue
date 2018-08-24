@@ -335,7 +335,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '100',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -353,7 +353,7 @@ export default {
       }, {
         label: '开单日期',
         prop: 'shipCreateTime',
-        width: '180',
+        width: '160',
         slot: (scope) => {
           return `${parseTime(scope.row.shipCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -381,7 +381,7 @@ export default {
       }, {
         label: '异动费用',
         prop: 'fee',
-        width: '120',
+        width: '100',
         fixed: false
       }, {
         label: '费用类型',
@@ -389,14 +389,9 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '异动费用',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      }, {
         label: '异动时间',
         prop: 'createTime',
-        width: '180',
+        width: '160',
         slot: (scope) => {
           return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -434,22 +429,22 @@ export default {
       }, {
         label: '货品名',
         prop: 'cargoName',
-        width: '120',
+        width: '100',
         fixed: false
       }, {
         label: '件数',
         prop: 'cargoAmount',
-        width: '120',
+        width: '60',
         fixed: false
       }, {
         label: '重量',
         prop: 'cargoWeight',
-        width: '120',
+        width: '60',
         fixed: false
       }, {
         label: '体积',
         prop: 'cargoVolume',
-        width: '120',
+        width: '60',
         fixed: false
       }, {
         label: '运单备注',
@@ -464,22 +459,22 @@ export default {
       }, {
         label: '现付',
         prop: 'nowPayFee',
-        width: '120',
+        width: '60',
         fixed: false
       }, {
         label: '到付',
         prop: 'arrivePayFee',
-        width: '120',
+        width: '60',
         fixed: false
       }, {
         label: '回单付',
         prop: 'receiptPayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '月结',
         prop: 'monthPayFee',
-        width: '120',
+        width: '60',
         fixed: false
       }, {
         label: '到达省',
