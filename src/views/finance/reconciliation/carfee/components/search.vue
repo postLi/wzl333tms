@@ -124,7 +124,10 @@ export default {
       this.searchForm.memberPerson = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchCreatTime = []
+      this.searchCreatTime = [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()]
+      alert('')
+      console.log(this.searchCreatTime)
+      console.log(this.searchForm)
     }
   }
 }
