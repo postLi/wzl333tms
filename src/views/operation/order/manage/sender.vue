@@ -33,7 +33,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :key="mykey" :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      mykey: '',
       tablekey: 0,
       btnsize: 'mini',
       usersArr: [],
@@ -575,6 +576,7 @@ export default {
       this.AddCustomerVisible = true
     },
     closeAddCustomer() {
+      //this.mykey = Math.random()
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {

@@ -58,6 +58,7 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import {postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
+  import {tmsMath} from '@/utils/'
 
   export default {
     components: {
@@ -133,7 +134,8 @@
         this.dialogInfo[1].toPay = this.dotInfo.payableFee
         this.dialogInfo[2].toPay = this.dotInfo.receivedFee
         this.dialogInfo[3].toPay = this.dotInfo.paidFee
-        this.totaMoney = this.dotInfo.receivableFee + this.dotInfo.payableFee + this.dotInfo.receivedFee + this.dotInfo.paidFee
+        // this.totaMoney = tmsMath(this.dotInfo.receivableFee,this.dotInfo.payableFee,this.dotInfo.payableFee,this.dotInfo.paidFee)
+        this.dotInfo.receivableFee + this.dotInfo.payableFee + this.dotInfo.receivedFee + this.dotInfo.paidFee
         this.popTitle = this.dotInfo.checkBillName
       },
         popVisible (newVal) {

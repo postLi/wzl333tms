@@ -4,14 +4,13 @@
         <el-form-item label="中转时间">
           <el-date-picker
             v-model="searchCreatTime"
+            :default-value="defaultTime"
             type="daterange"
             align="right"
-            unlink-panels
-            :picker-options="pickerOptions2"
+            value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="timestamp"
-          >
+            :picker-options="pickerOptions2"
+            end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="中转网点">
@@ -62,7 +61,8 @@ export default {
   data() {
     const _this = this
     return {
-      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
+      searchCreatTime: [],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       pickOption: {
         firstDayOfWeek: 1,
         disabledDate(time) {
@@ -99,6 +99,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgid = this.orgid
+    this.searchCreatTime = this.defaultTime
     this.onSubmit()
     // this.searchForm.batchTypeId = this.orgid
   },
@@ -119,8 +120,8 @@ export default {
       this.searchForm.carrierId = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-
-      console.log(this.searchForm)
+      this.searchCreatTime = this.defaultTime
+      // console.log(this.searchForm)
       // this.searchCreatTime = []
     },
     carrierItem(item) {

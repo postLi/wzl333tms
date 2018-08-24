@@ -733,14 +733,15 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime} from '@/utils/'
+  import {pickerOptions2, parseTime,objectMerge2,tmsMath} from '@/utils/'
   import {REGEX} from '@/utils/validate'
   import {postCarrierinitialize, getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
   import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  // import {objectMerge2,tmsMath} from '@/utils/index'
   import SaveDialog from './saveDialog'
   import { SaveAsFileCarrier} from '@/utils/recLodopFuncs'
+  // import
 
   export default {
     components: {
@@ -887,7 +888,16 @@
           if (data.carrierDetailDtoList.length > 0) {
             data.carrierDetailDtoList.forEach((el, val) => {
               if (el.type === 1) {
+                // el.cargoAmount = 40.11
                 this.dealInfo.push(el)
+                // let el2 = objectMerge2({},el,{
+                //   cargoAmount: 13.01
+                // })
+                // this.dealInfo.push(el2)
+                // let el3 = objectMerge2({},el,{
+                //   cargoAmount: 10.01
+                // })
+                // this.dealInfo.push(el3)
                 this.dealInfoData.push(el)
               } else if (el.type === 2) {
                 this.dealPayInfo.push(el)
@@ -1090,10 +1100,10 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                // return Math.round((prev + curr) * 100) / 100;
-                // return (prev + curr).toFixed(2);
-                let pcSum = (prev + curr)
-                return prev + curr
+
+                return tmsMath._add(prev,curr)
+                // return (prev+curr)
+
               } else {
                 return prev
               }

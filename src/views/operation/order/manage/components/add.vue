@@ -1,5 +1,5 @@
 <template>
-  <pop-right :title="popTitle +  orderSn" :isShow="popVisible" @close="closeMe" class="addPreOrderPop_lll"
+  <pop-right :title="popTitle +  orderSn" :key="ke1yVal" :isShow="popVisible" @close="closeMe" class="addPreOrderPop_lll"
              v-loading="loading">
     <template class="addPreOrderPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini"
@@ -305,6 +305,7 @@
         }
       }
       return {
+        ke1yVal: '',
         rules: {
           'tmsOrderPre.orderToCityName': [
             {required: true, validator: this.validateIsEmpty('到达城市不能为空')}
@@ -315,47 +316,47 @@
           ],
           'customSend.customerMobile': [
             {required: true, validator: this.validateIsEmpty('发货人联系电话不能为空')},
-            {validator: validateMobile, trigger: 'blur'}
+            {validator: validateMobile}
           ],
           'customRece.customerName': [
             {required: true, validator: this.validateIsEmpty('收货人不能为空')}
           ],
           'customRece.customerMobile': [
             {required: true, validator: this.validateIsEmpty('收货人联系电话不能为空')},
-            {validator: validateMobile, trigger: 'blur'}
+            {validator: validateMobile}
           ],
           'tmsOrderCargoList.cargoName': [
             {validator: this.validateIsEmpty('货品名不能为空')}
             // { validator: validateCargoName, trigger: 'change' }
           ],
           'tmsOrderCargoList.cargoAmount': [
-            {validator: this.validateIsEmpty('件数不能为空'), trigger: 'blur'},
-            {validator: validatePickupNum, trigger: 'blur'}
+            {validator: this.validateIsEmpty('件数不能为空')},
+            {validator: validatePickupNum}
           ],
           'tmsOrderCargoList.cargoVolume': [{
-            validator: validateVolumnWeight, trigger: 'blur'
+            validator: validateVolumnWeight
           },
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}],
+            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}],
           'tmsOrderCargoList.cargoWeight':
             [{
-              validator: validateVolumnWeight, trigger: 'blur'
+              validator: validateVolumnWeight
             },
-              {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+              {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
             ],
           'tmsOrderCargoList.description': [
-            {validator: validateOnlyNumberAndLetter, trigger: ['change']}
+            {validator: validateOnlyNumberAndLetter}
           ],
           'tmsOrderCargoList.agencyFund': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
           ],
           'tmsOrderCargoList.commissionFee': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字',  pattern: REGEX.ONLY_NUMBER}
           ],
           'tmsOrderCargoList.shipFee': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
           ],
           'tmsOrderCargoList.productPrice': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
           ]
         },
         btnsize: 'mini',
@@ -465,20 +466,44 @@
       },
       orgid(newVal) {
       },
-      info: {
+      info(val) {
+          if (this.isModify) {
+            this.popTitle = '修改订单'
+            this.orderSn = this.info.orderSn
 
-        handler() {
-          // this.$refs['ruleForm'].resetFields()
-          this.checkShowMessage = false
-          this.watchData()
-        },
-        immediate: true
+            this.infoData(this.info)
+          } else if (this.isDbclick) {
+            this.popTitle = '查看订单'
+            this.orderSn = this.info.orderSn
+            this.infoData(this.info)
+          } else {
+            this.popTitle = '新增订单'
+            this.reset()
+          }
       },
-      isModify: {
-        handler() {
-          this.watchData()
-        },
-        immediate: true
+      isModify(val) {
+        // handler() {
+        //   this.watchData()
+        // },
+        // immediate: true
+
+          if (this.isModify) {
+            this.popTitle = '修改订单'
+            this.orderSn = this.info.orderSn
+
+            this.infoData(this.info)
+          } else if (this.isDbclick) {
+            this.popTitle = '查看订单'
+            this.orderSn = this.info.orderSn
+            this.infoData(this.info)
+            // this.ke1yVal = Math.random()
+          } else {
+            this.popTitle = '新增订单'
+            this.reset()
+            // this.newinfoData()
+          }
+          // this.ke1yVal = Math.random()
+
       }
     },
     methods: {
@@ -489,32 +514,19 @@
         if (this.isModify) {
           this.popTitle = '修改订单'
           this.orderSn = this.info.orderSn
+
           this.infoData(this.info)
         } else if (this.isDbclick) {
           this.popTitle = '查看订单'
           this.orderSn = this.info.orderSn
           this.infoData(this.info)
+          // this.ke1yVal = Math.random()
         } else {
           this.popTitle = '新增订单'
-          this.orderSn = ''
-          this.form.tmsOrderCargoList = objectMerge2({}, this.carObj)
-          this.form.customSend = objectMerge2({}, this.customSend)
-          this.form.customRece = objectMerge2({}, this.customRece)
-          this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
-          this.form.tmsOrderPre.orderFromCityName = ''
-          this.form.tmsOrderPre.orderToCityName = ''
-          // this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
-          // this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
-          // this.form.tmsOrderPre.orderEffectiveName = ''
-          this.form.tmsOrderCargoList.agencyFund = ''
-          this.form.tmsOrderCargoList.commissionFee = ''
-          this.form.tmsOrderCargoList.shipFee = ''
-          this.form.tmsOrderCargoList.productPrice = ''
-          this.form.tmsOrderPre.orderRemarks = ''
-          this.form.tmsOrderPre.orderPickupMethod = 218
-          this.form.tmsOrderPre.orderEffective = 94
-          this.form.tmsOrderPre.orderPayWay = 76
+          this.reset()
+          // this.newinfoData()
         }
+        // this.ke1yVal = Math.random()
       },
       infoData(item) {
         this.form.tmsOrderCargoList.cargoName = item.cargoName
@@ -549,6 +561,7 @@
         this.form.tmsOrderPre.orderEffective = item.orderEffective
         this.form.tmsOrderPre.id = item.id
         this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
+        this.ke1yVal = Math.random()
       },
       newinfoData() {
         this.form.tmsOrderCargoList.cargoName = ''
@@ -699,26 +712,66 @@
         })
       },
       reset() {
-        // let tms1 = {}
-        // let tms2 = {}
-        // let tms11 = {}
-        // let tms12 = {}
-        // this.form.customSend = tms1
-        // this.form.customRece = tms2
-        // this.form.customerList[0] = tms11
-        // this.form.customerList[1] = tms12
-        // let that = this
-        // that.form.customSend = {}
-        Object.assign(this.form.customSend)
-        Object.assign(this.form.customRece)
-
-        Object.assign(this.form.tmsOrderCargoList)
-        Object.assign(this.form.tmsOrderPre)
-        // console.log(this.form.customerList[0]);
-        // console.log(that.form.customSend);
+        this.form = {
+          customSend: {
+            // 发货人
+            customerId: '',
+            customerUnit: '',
+            customerName: '',
+            customerMobile: '',
+            detailedAddress: '',
+            customerType: 1
+          },
+          customRece: {
+            customerId: '',
+            customerUnit: '',
+            customerName: '',
+            customerMobile: '', //
+            detailedAddress: '',
+            customerType: 2
+          },
+          customerList: [{}, {}],
+          // 货物信息
+          tmsOrderCargoList: [
+            {
+              cargoName: '',  // 货品名
+              cargoAmount: '',  // 件数
+              cargoWeight: '',  // 重量
+              cargoVolume: '',  // 体积
+              cargoPack: '',  // 包装
+              description: '', // 品种规格
+              commissionFee: '', // 代收款手续费
+              agencyFund: '', // 代收款
+              productPrice: '', // 声明价值
+              shipFee: '', // 运费shipFee
+              id: ''
+            }
+          ],
+          // 订单信息
+          tmsOrderPre: {
+            orderFromCityCode: '',
+            orderFromCityName: '',
+            orderToCityCode: '',
+            orderToCityName: '',
+            orderFromOrgid: '',
+            orderToOrgid: '', // 目的网点
+            orderPickupMethod: 218, // 提货方式
+            orderEffective: 94, // 紧急度
+            orderPayWay: 76, // 付款方式 orderPayWayName
+            // deliveryFee:'',//运费
+            // commissionFee:'',//代收款手续费
+            // agencyFund:'',//代收款
+            // productPrice:'',//声明价值
+            orderRemarks: '', //
+            id: ''
+            // cargoId,senderId,receiverId
+          }
+        }
+        this.ke1yVal = Math.random()
       },
       closeMe(done) {
         this.reset()
+        // this.ke1yVal = Math.random()
         this.$emit('update:popVisible', false)
         this.$emit('close')
         if (typeof done === 'function') {

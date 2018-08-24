@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="addPickUpPop" v-loading="loading">
     <template class="addPickUpPop-content" slot="content">
-      <el-form :model="form"  :rules="rules" ref="ruleForm" label-width="90px" :show-message="checkShowMessage" :inline="true" label-position="right" size="mini" class="pickup_lrl">
+      <el-form :model="form"  :rules="rules" ref="ruleForm" label-width="90px" :show-message="checkShowMessage" :inline="true" label-position="right" size="mini" class="pickup_lrl" :key="valkey">
         <div class="info_date" style="margin-top: 10px;">提货信息</div>
         <div class="pickUp-top">
           <el-form-item label="提货批次" prop="customerUnit">
@@ -301,6 +301,7 @@ export default {
           arriveTime: ''//
         }
       },
+      valkey:'',
       checked: true,
       checkShowMessage: false,
       formLabelWidth: '80px',
@@ -337,18 +338,20 @@ export default {
       } else if (this.isDbclick) {
         this.popTitle = '查看派车单'
         this.infoData(this.info)
+
+
       } else {
         this.popTitle = '提货派车单'
-        this.form.tmsOrderPickup = this.setObject(this.form.tmsOrderPickup)
-        this.form.tmsTruck = this.setObject(this.form.tmsTruck)
-        this.form.tmsDriver = this.setObject(this.form.tmsDriver)
-        this.form.tmsCustomer = this.setObject(this.form.tmsCustomer)
+        // this.newInfoData()
+        this.reset()
         this.form.tmsTruck.truckUnit = ''
         this.form.tmsOrderPickup.payMethod = 76
         this.form.tmsOrderPickup.pickupStatus = 236
         this.form.tmsOrderPickup.outTime = new Date()
         this.fetchGetPickUp()
+        // this.valkey = Math.random()
       }
+
     }
   },
   methods: {
@@ -394,6 +397,7 @@ export default {
       this.form.tmsCustomer.detailedAddress = item.detailedAddress
 
       this.pickupBatchNumber = item.pickupBatchNumber
+      this.valkey = Math.random()
     },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -474,7 +478,7 @@ export default {
           this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
 
           let promiseObj
-          console.log(this.form.tmsTruck.truckIdNumber)
+          // console.log(this.form.tmsTruck.truckIdNumber)
           const data = objectMerge2({}, this.form)
           // 判断操作，调用对应的函数
           if (this.isModify) {
@@ -496,11 +500,11 @@ export default {
           }
 
           promiseObj.then(res => {
-            this.loading = false
-            this.$message.success('保存成功')
-            this.closeMe()
             this.$refs[formName].resetFields()
             this.$emit('success')
+            this.closeMe()
+            this.$message.success('保存成功')
+            this.loading = false
           }).catch(err => {
             this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
@@ -510,14 +514,51 @@ export default {
         }
       })
     },
+    newInfoData(){
+      this.form = {
+        tmsCustomer: {
+          customerName: '',
+          customerMobile: '',
+          detailedAddress: '',
+          customerId: ''
+        },
+        tmsDriver: {
+          driverName: '', // 司机姓名
+          driverMobile: '', // 司机手机 /
+          driverId: ''
+          //  发送短信给司机
+        },
+        tmsTruck: {
+          truckIdNumber: '', // 车牌号 /
+          truckType: '', // 车辆类型
+          truckUnit: '', // 车辆单位
+          truckId: ''
+        },
+        tmsOrderPickup: {
+          pickupBatchNumber: '', // 提货批次
+          pickupName: '', // 货品名
+          pickupAmount: '', // 件数
+          pickupVolume: '', // 体积
+          pickupWeight: '', // 重量
+          carriage: '', // 运费
+          payMethod: 76, // 付款方式
+          toCityCode: '', // 到达城市
+          toCityName: '', // 到达城市
+          remark: '',
+          truckFee: '', // 车费
+          pickupStatus: 236, // 提货状态
+          collectionFee: '', // 代收费用
+          outTime: '', // 出车时间
+          arriveTime: ''//
+        }
+      }
+
+    },
     reset() {
-      Object.assign(this.form.tmsOrderPickup)
-      Object.assign(this.form.tmsTruck)
-      Object.assign(this.form.tmsDriver)
-      Object.assign(this.form.tmsCustomer)
+      this.newInfoData()
+      this.valkey = Math.random()
     },
     closeMe(done) {
-      // this.$refs[formName].resetFields();
       this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {

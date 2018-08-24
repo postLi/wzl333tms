@@ -58,6 +58,7 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import { postCreatesaveCarrierDetail } from '@/api/finance/fin_carrier'
+  import {tmsMath} from '@/utils/'
   // parseTime
   import { parseTime } from '@/utils'
   export default {
@@ -189,7 +190,9 @@
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
+        // this.totaMoney = tmsMath(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay)
         this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
+        // console.log(this.dialogInfo[0].toPay);
       },
       closeMe(done) {
         this.reset()

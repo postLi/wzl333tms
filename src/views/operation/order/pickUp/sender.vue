@@ -34,7 +34,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
+    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  :key="mykey" />
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible" @success="fetchData" :dotInfo="selectInfo"></PickupMain>
     <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
@@ -76,6 +76,7 @@ export default {
   },
   data() {
     return {
+      mykey: '',
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -218,7 +219,7 @@ export default {
       }, {
         label: '车牌号',
         prop: 'truckIdNumber',
-        width: '90',
+        width: '120',
         fixed: false
       }, {
         label: '车费',
@@ -427,6 +428,7 @@ export default {
     },
 
     closeAddCustomer() {
+      // this.mykey = Math.random()
       this.AddCustomerVisible = false
     },
     openpickMaintainisible() {
