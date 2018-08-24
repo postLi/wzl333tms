@@ -41,11 +41,11 @@
 			</TR>
 			<TR height="24" sequence="2">
 				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash" formula="=datarow(&apos;ds1\data&apos;)"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
-				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dash" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dot" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dot" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dot" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dot" topBorderStyle="dash"/>
+				<TD textColor="#000080" leftBorderColor="#1E1E1E" leftBorderStyle="dot" topBorderStyle="dash"/>
 				<TD topBorder="0" leftBorderColor="#1E1E1E" leftBorderStyle="dash" datatype="0"/>
 			</TR>
 			<TR height="15" sequence="3">
@@ -79,7 +79,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://localhost:7010/api-finance/finance/report/v1/findDetail?startCreatTime=2018-05-13 00:00:00&amp;endCreatTime=2018-07-27 23:59:59&amp;shipFromOrgid=1&amp;access_token=cc7b5d76-3618-487f-a697-a5676ab65c31</Source>
+	<Source>http://192.168.1.157:9528/api/api-finance/finance/report/v1/findDetail?shipFromOrgid=1&amp;startCreatTime=2018-06-25 11:36:34&amp;endCreatTime=2018-08-24 11:36:34&amp;access_token=be1435ca-5b3a-4c32-a5c6-fa3a587bf0d2</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>

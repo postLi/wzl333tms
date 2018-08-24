@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content">
+  <div class="tab-content" v-loading="loading">
     <!-- 短驳发车 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -218,7 +218,7 @@ export default {
     }
   },
   activated() {
-    this.searchQuery.orgId = this.otherinfo.orgid
+    // this.searchQuery.orgId = this.otherinfo.orgid
     this.fetchAllShortDepartList()
   },
   methods: {
@@ -227,9 +227,9 @@ export default {
     },
     getSearchParam(obj) {
       this.searchQuery = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
-      if (!this.searchQuery.orgId) {
-        this.searchQuery.orgId = this.otherinfo.orgid
-      }
+      // if (!this.searchQuery.orgId) {
+      //   this.searchQuery.orgId = this.otherinfo.orgid
+      // }
       this.fetchAllShortDepartList()
     },
     doAction(type) {

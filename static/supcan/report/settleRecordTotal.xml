@@ -68,16 +68,16 @@
 			</TR>
 			<TR height="24" sequence="3">
 				<TD leftBorderStyle="dash" topBorderStyle="dash" decimal="0" formula="=dataRowNumber()"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="1" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" decimal="0" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" datatype="6"/>
-				<TD leftBorderStyle="dash" topBorderStyle="dash" decimal="0" datatype="6"/>
-				<TD topBorder="0" leftBorderStyle="dash" align="left"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="1" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" decimal="0" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" datatype="6"/>
+				<TD leftBorderStyle="dot" topBorderStyle="dash" decimal="0" datatype="6"/>
+				<TD topBorder="0" leftBorderStyle="dot" align="left"/>
 			</TR>
 			<TR height="24" sequence="4">
 				<TD textColor="#FFFFFF" bgColor="#363636" topBorderStyle="dash" decimal="0">合计</TD>
@@ -131,7 +131,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://192.168.1.198:9528/localapi/api-finance/finance/report/v1/FeeAggregation?typeIds=&amp;orgId=71&amp;senderId=&amp;startTime=2018-06-22 20:01:29&amp;endTime=2018-08-21 20:01:29&amp;access_token=05182f16-644f-471e-861d-6e93dee1f37e</Source>
+	<Source>http://192.168.1.157:9528/api/api-finance/finance/report/v1/FeeAggregation?typeIds=&amp;orgId=1&amp;senderId=&amp;startTime=2018-06-25 11:45:17&amp;endTime=2018-08-24 11:45:17&amp;access_token=be1435ca-5b3a-4c32-a5c6-fa3a587bf0d2</Source>
 	<XML_RecordAble_Nodes>
 		<Node>
 			<name/>

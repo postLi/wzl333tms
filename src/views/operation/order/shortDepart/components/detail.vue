@@ -5,10 +5,12 @@
         <tbody>
           <tr>
             <th>到达网点</th>
-            <td v-if="info.arriveOrgName"> <!-- 短驳发车 -->
+            <td v-if="info.arriveOrgName">
+              <!-- 短驳发车 -->
               <el-input v-model="info.arriveOrgName" :size="btnsize" disabled></el-input>
             </td>
-            <td v-else> <!-- 短驳到货 -->
+            <td v-else>
+              <!-- 短驳到货 -->
               <el-input v-model="info.endOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
@@ -112,57 +114,26 @@
           <el-table-column sortable width="180" prop="shipGoodsSn" label="货号"></el-table-column>
           <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
         </el-table> -->
-        <el-table 
-           ref="multipleTable" 
-           :reserve-selection="true" 
-           :data="detailList" 
-           @row-click="clickDetails" 
-           @selection-change="getSelection" 
-           stripe 
-           border 
-           height="100%" 
-           tyle="height:100%;" 
-           :default-sort="{prop: 'id', order: 'ascending'}" 
-           tooltip-effect="dark">
+        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <!-- 普通列 -->
           <template v-for="column in tableColumn">
-            <el-table-column
-            :key="column.id"
-            :fixed="column.fixed"
-            :label="column.label"
-            :prop="column.prop"
-            :width="column.width"
-            v-if="!column.slot"
-            sortable>
-          </el-table-column>
-          <!-- 有返回值的列 -->
-          <el-table-column
-            :key="column.id"
-            :fixed="column.fixed"
-            :label="column.label"
-            :prop="column.prop"
-            :width="column.width"
-            v-else
-            sortable>
-            <template slot-scope="scope">
-              <!-- 有输入框的列 -->
-              <div v-if="column.expand">
-                <el-input type="number" 
-                v-model="column.slot(scope)" 
-                :size="btnsize"
-                :disabled='isWareStatus(scope.$index, scope.row)'
-                @change="changeData(scope.$index)" 
-                v-numberOnly ></el-input>
-              </div>
-              <!-- 有返回值的列 -->
-              <div v-else>
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
-              </div>
-            </template>
-          </el-table-column>
-
+            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" sortable>
+            </el-table-column>
+            <!-- 有返回值的列 -->
+            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else sortable>
+              <template slot-scope="scope">
+                <!-- 有输入框的列 -->
+                <div v-if="column.expand">
+                  <el-input type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                </div>
+                <!-- 有返回值的列 -->
+                <div v-else>
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </div>
+              </template>
+            </el-table-column>
           </template>
         </el-table>
       </div>
@@ -202,7 +173,7 @@ export default {
     arrivalStatus() {
       console.log(this.arrivalStatus)
     },
-    type () {}
+    type() {}
   },
   data() {
     return {
@@ -412,7 +383,7 @@ export default {
   watch: {
     isShow() {
       if (this.isShow) {
-        
+
         if (this.arrivalStatus === '已入库') {
           this.isNeedArrival = false
         } else {
@@ -425,19 +396,19 @@ export default {
       }
     }
   },
-  created () {
-    switch(this.type) {
+  created() {
+    switch (this.type) {
       case 'deliver':
-      this.isEditActual = true // 短驳发车
-      break
+        this.isEditActual = true // 短驳发车
+        break
       case 'arrival':
-      this.isEditActual = false // 短驳到货
-      break
+        this.isEditActual = false // 短驳到货
+        break
     }
     this.setTableColumn()
   },
   methods: {
-     setTableColumn () { // 设置表格列
+    setTableColumn() { // 设置表格列
       let arrTableColumn = []
       objectMerge2([], this.tableColumnArrival).forEach(e => {
         if (!e.hide) {
@@ -448,7 +419,7 @@ export default {
         }
       })
       this.tableColumnDeiver = objectMerge2([], arrTableColumn)
-      this.tableColumn = this.isEditActual? Object.assign([], this.tableColumnDeiver) : Object.assign([], this.tableColumnArrival)
+      this.tableColumn = this.isEditActual ? Object.assign([], this.tableColumnDeiver) : Object.assign([], this.tableColumnArrival)
     },
     setTable() {
       this.setupTableVisible = true
@@ -480,7 +451,34 @@ export default {
           break
       }
     },
-    changeData(newVal) { // 判断当行
+    changeInputData(index, prop, newVal) { // 判断当行-新
+      let curVal = this.detailList[index][prop] // 实到值
+      let loadName = 'load' + prop.substring(6) // 配载名称
+      let loadVal = this.detailList[index][loadName] // 配载值
+      const _this = this
+      curVal = Number(newVal)
+      this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
+        [prop]: curVal
+      }))
+
+      if (prop === 'actualAmount' && curVal === 0) {
+        curVal = Number(loadVal)
+        this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
+          [prop]: curVal
+        }))
+        this.$notify({
+          title: '提示',
+          message: '实到件数不能为0',
+          type: 'warning'
+        })
+      }
+
+      console.log(index, prop, loadName, curVal, loadVal, this.detailList[index].actualAmount)
+      return curVal
+
+    },
+    changeData(newVal) { // 判断当行-废
+      console.log(newVal, this.detailList[newVal].actualWeight)
       const curAmount = this.detailList[newVal].actualAmount // 实到件数
       const curWeight = this.detailList[newVal].actualWeight // 实到重量
       const curVolume = this.detailList[newVal].actualVolume // 实到体积
@@ -536,6 +534,7 @@ export default {
       } else {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       }
+      console.log(this.detailList[newVal].actualAmount, this.detailList[newVal].actualWeight, this.detailList[newVal].actualVolume)
       return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
     },
     setData() {
@@ -659,7 +658,7 @@ export default {
         return true
       }
     },
-    setColumn (obj) { // 打开表格设置
+    setColumn(obj) { // 打开表格设置
       this.tableColumn = obj
       this.tablekey = Math.random()
     }

@@ -68,7 +68,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"  @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -223,7 +223,7 @@ export default {
       }
        this.loadTable.forEach(e => {
         this.feeName.arrPayName.forEach((el, index) => {
-          e[el] = e[this.feeName.arrNoPayName[index]]
+          e[el] = e[this.feeName.arrPayNameActual[index]]
         })
       })
        console.log(JSON.stringify(this.loadTable))
@@ -255,7 +255,7 @@ export default {
           this.$message({ type: 'success', message: '保存成功！' })
           this.getFeeInfo()
           this.tableKey = new Date().getTime()
-          this.$router.push({ path: './settleLog' })
+          this.$router.push({ path: './settleLog' , query:{ pageKey: new Date().getTime()  }})
         })
         .catch(error => {
           this.$message({ type: 'error', message: '保存失败！' })
@@ -271,7 +271,10 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$router.push({
-          path: './settleLog'
+          path: './settleLog',
+          query: {
+            pageKey: new Date().getTime()
+          }
         })
       })
     },
@@ -280,8 +283,8 @@ export default {
       let amount = 0
       this.loadTable = Object.assign([], obj)
       this.loadTable.forEach((e, index) => {
-        if (e.shipFeeTotal) {
-          amount += e.shipFeeTotal
+        if (e.shipFeeTotalActual) {
+          amount += e.shipFeeTotalActual
         } else {
           amount += e.loadFeeTotalActual
         }

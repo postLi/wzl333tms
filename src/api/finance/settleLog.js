@@ -22,9 +22,6 @@ export function getFeeInfo(orgId, paymentsType) {
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
-    })
 }
 /**
  * 记收入-运单信息

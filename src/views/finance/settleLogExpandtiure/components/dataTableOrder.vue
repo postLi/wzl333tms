@@ -112,11 +112,15 @@
         </el-table-column>
         <el-table-column prop="hadKickBackPay" sortable label="已结回扣" width="120">
         </el-table-column>
+         <el-table-column prop="kickBackPayActual" sortable label="实结回扣" width="120">
+        </el-table-column>
         <el-table-column prop="transferPay" sortable label="中转费" width="120">
         </el-table-column>
         <el-table-column prop="noTransferPay" sortable label="未结中转费" width="120">
         </el-table-column>
         <el-table-column prop="hadTransferPay" sortable label="已结中转费" width="120">
+        </el-table-column>
+        <el-table-column prop="transferPayActual" sortable label="实结中转费" width="120">
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
@@ -124,11 +128,15 @@
         </el-table-column>
         <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="120">
         </el-table-column>
+        <el-table-column prop="unusualPayActual" sortable label="实结异动费用" width="120">
+        </el-table-column>
         <el-table-column prop="exceptionPay" sortable label="异常理赔" width="120">
         </el-table-column>
         <el-table-column prop="noExceptionPay" sortable label="未结异常理赔" width="120">
         </el-table-column>
         <el-table-column prop="hadExceptionPay" sortable label="已结异常理赔" width="120">
+        </el-table-column>
+        <el-table-column prop="exceptionPayActual" sortable label="实结异常理赔" width="120">
         </el-table-column>
         <el-table-column prop="pickPuPay" sortable label="实际提货费" width="120">
         </el-table-column>
@@ -136,11 +144,15 @@
         </el-table-column>
         <el-table-column prop="hadPickPuPay" sortable label="已结实际提货费" width="120">
         </el-table-column>
+        <el-table-column prop="pickPuPayActual" sortable label="实结实际提货费" width="120">
+        </el-table-column>
         <el-table-column prop="othePay" sortable label="其他费用" width="120">
         </el-table-column>
         <el-table-column prop="noOthePay" sortable label="未结其他费用" width="120">
         </el-table-column>
         <el-table-column prop="hadOthePay" sortable label="已结其他费用" width="120">
+        </el-table-column>
+        <el-table-column prop="othePayActual" sortable label="实结其他费用" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -349,7 +361,6 @@ export default {
       // // 判断右边表格的数据 合计是否为智能结算中输入的值
       let listCount = 0
       let countDifference = 0
-      // let feeName = this.FEE_TYPE[this.settlementId] // 当前列表费用名
 
       // 判断返回的数据 实结支出费用等于 未结费用
       // 前者等于 | 小于后者 不用进行操作
@@ -358,20 +369,22 @@ export default {
       let nameFlag = '' // 右边最后一条的批次号或者运单号
       let isCopyLastData = false // 左边是否需要复制一条右边最后那条数据  true-要复制 false-不复制
       this.arrPayNameActual.forEach((el, actIndex) => {
+
         let feeActual = this.rightTable[this.rightTable.length - 1][el] // 实际费用
         let feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
+
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
           this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
+          console.log('el', el, feeActual, feeNo)
           isCopyLastData = true
           this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分结算的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
           this.arrLastPartNoFeeName.push(this.arrNoPayName[actIndex])
         }
       })
-      if (this.rightTable[this.rightTable.length - 1].loadFeeTotal !== this.rightTable[this.rightTable.length - 1].loadFeeTotalActual) {
+
+      if (this.rightTable[this.rightTable.length - 1].shipFeeTotal !== this.rightTable[this.rightTable.length - 1].shipFeeTotalActual) {
         isCopyLastData = true
-        this.arrLastPartFeeName.push('shipFeeTotal')
-        this.arrLastPartActualFeeName.push('shipFeeTotalActual')
       } else {
         isCopyLastData = false
       }
@@ -382,16 +395,8 @@ export default {
           let noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未结费用名
           let feeNameActual = e + 'Actual' // 实际费用名
           this.leftTable[this.leftTable.length - 1][feeNameActual] = this.rightTable[this.rightTable.length - 1][noFeeName] - this.rightTable[this.rightTable.length - 1][feeNameActual]
-          this.leftTable[this.leftTable.length - 1].loadFeeTotalActual = this.rightTable[this.rightTable.length - 1].loadFeeTotal - this.rightTable[this.rightTable.length - 1].loadFeeTotalActual
         })
       }
-      // 需要回传的rightTable
-      // let actualRightTable = objectMerge2([], this.rightTable).forEach((e, index) => { // 设置需要回传的右边列表 需求：费用-未结
-      //   this.arrPayName.forEach((el, payIndex) => {
-      //     e[el] = e[this.arrNoPayName[payIndex]]
-      //   })
-      // })
-      // this.$emit('loadTable', actualRightTable)
       
       this.$emit('loadTable', this.rightTable)
       this.countOrgLeftTable = objectMerge2([], this.leftTable)
@@ -555,18 +560,6 @@ export default {
           this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
-          // let item = this.leftTable.indexOf(e)
-          // if (item !== -1) { // 源数据减去被穿梭的数据
-          //   this.leftTable.splice(item, 1)
-          // }
-          // let orgItem = this.orgLeftTable.indexOf(e)
-          // if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
-          //   this.orgLeftTable.splice(orgItem, 1)
-          // }
-          // let countOrgItem = this.countOrgLeftTable.indexOf(e)
-          // if (countOrgItem !== -1) { // 搜索源数据减去被穿梭的数据
-          //   this.countOrgLeftTable.splice(countOrgItem, 1)
-          // }
         })
         this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         this.selectedRight = [] // 清空选择列表
@@ -585,11 +578,6 @@ export default {
            this.rightTable = objectMerge2([], this.rightTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
-          // let item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         this.selectedLeft = [] // 清空选择列表
@@ -626,11 +614,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','shipFeeTotalActual','noKickBackPay','hadKickBackPay','noTransferPay','hadTransferPay','noUnusualPay','hadUnusualPay','noExceptionPay','hadExceptionPay','noPickPuPay','hadPickPuPay','noOthePay','hadOthePay']
+      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','shipFeeTotalActual','noKickBackPay','hadKickBackPay','noTransferPay','hadTransferPay','noUnusualPay','hadUnusualPay','noExceptionPay','hadExceptionPay','noPickPuPay','hadPickPuPay','noOthePay','hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual','cargoVolume','noKickBackPay','hadKickBackPay','noTransferPay','hadTransferPay','noUnusualPay','hadUnusualPay','noExceptionPay','hadExceptionPay','noPickPuPay','hadPickPuPay','noOthePay','hadOthePay']
+      let propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual','cargoVolume','noKickBackPay','hadKickBackPay','noTransferPay','hadTransferPay','noUnusualPay','hadUnusualPay','noExceptionPay','hadExceptionPay','noPickPuPay','hadPickPuPay','noOthePay','hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 'kickBackPayActual', 'transferPayActual', 'unusualPayActual','exceptionPayActual', 'pickPuPayActual', 'othePayActual']
       return getSummaries(param, propsArr)
     }
   }

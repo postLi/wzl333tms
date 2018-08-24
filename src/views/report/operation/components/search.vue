@@ -112,7 +112,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgId = this.orgid
-    this.searchForm.selectType = 2
+    this.searchForm.selectType = 1
     this.searchForm.businessType = 1
     this.onSubmit()
   },

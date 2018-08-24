@@ -38,11 +38,11 @@
 			</TR>
 			<TR height="24" sequence="2">
 				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash" formula="=datarow(&apos;ds1\data\jsonobject&apos;)"/>
-				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
-				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
-				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
-				<TD leftBorderColor="#404040" leftBorderStyle="dash" topBorderColor="#404040" topBorderStyle="dash"/>
-				<TD topBorder="0" leftBorderStyle="dash" datatype="0"/>
+				<TD leftBorderColor="#000000" leftBorderStyle="dot" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD leftBorderColor="#000000" leftBorderStyle="dot" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD leftBorderColor="#000000" leftBorderStyle="dot" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD leftBorderColor="#000000" leftBorderStyle="dot" topBorderColor="#404040" topBorderStyle="dash"/>
+				<TD topBorder="0" leftBorderColor="#000000" leftBorderStyle="dot" datatype="0"/>
 			</TR>
 			<TR height="15" sequence="3">
 				<TD leftBorder="0" topBorderColor="#000000" topBorderStyle="dash" datatype="0"/>
@@ -74,7 +74,7 @@
 	<Version>2</Version>
 	<Type>4</Type>
 	<TypeMeaning>JSON</TypeMeaning>
-	<Source>http://localhost:7010/api-finance/finance/report/v1/findOperationReport?startTime=2018-07-13 11:11:11&amp;endTime=2018-07-28 11:11:11&amp;orgId=1&amp;selectType=2&amp;shipToCityName=&amp;businessType=&amp;access_token=bf45717a-f769-4caa-92fb-2ae2fce239d8</Source>
+	<Source>http://192.168.1.157:9528/api/api-finance/finance/report/v1/findOperationReport?shipToCityName=&amp;orgId=1&amp;selectType=1&amp;businessType=1&amp;startTime=2018-06-25 11:41:40&amp;endTime=2018-08-24 11:41:40&amp;access_token=be1435ca-5b3a-4c32-a5c6-fa3a587bf0d2</Source>
 	<Memo>11111</Memo>
 	<XML_RecordAble_Nodes>
 		<Node>

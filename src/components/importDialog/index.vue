@@ -129,6 +129,7 @@ export default {
       this.isProgress = true
       postImportExcel(data).then(res => {
           this.resMessage = res
+          this.failInfoList = res.failInfoList
           this.isInitDialog = false
           this.percentageAnimated()
           this.$emit('success')

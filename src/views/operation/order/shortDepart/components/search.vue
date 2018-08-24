@@ -18,11 +18,11 @@
           <el-form-item label="司机名称">
             <el-input v-model="searchForm.dirverName" :maxlength="10" auto-complete="off" placeholder="司机名称" clearable></el-input>
           </el-form-item>
-          <el-form-item label="到达网点">
-            <SelectTree v-model="searchForm.orgId" clearable></SelectTree>
-          </el-form-item>
           <el-form-item label="发车网点">
-            <SelectTree v-model="searchForm.arriveOrgid" clearable :orgid="otherinfo.orgid"></SelectTree>
+            <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"></SelectTree>
+          </el-form-item>
+          <el-form-item label="到达网点">
+            <SelectTree v-model="searchForm.arriveOrgid" clearable></SelectTree>
           </el-form-item>
         </div>
 

@@ -14,7 +14,7 @@
                   <el-input v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></el-input>
                 </el-form-item>
                 <el-form-item label="收入金额" prop="amount">
-                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled v-number-only:point :maxlength="8" ></el-input>
+                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled v-number-only:point :maxlength="8"></el-input>
                 </el-form-item>
                 <el-form-item label="发生时间" prop="settlementTime">
                   <el-date-picker size="mini" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="发生时间">
@@ -55,7 +55,7 @@
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit" :countSuccessList="countSuccessList"></dataTable>
+        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
@@ -111,7 +111,13 @@ export default {
       countNum: 0,
       financialWays: [],
       isFinancialWays: false,
-      tableKey: 0
+      tableKey: 0,
+      feeName: {
+        arrPayName: [],
+        arrNoPayName: [],
+        arrPayNameActual: [],
+        arrhadPayName: []
+      }
     }
   },
   computed: {
@@ -128,29 +134,29 @@ export default {
   methods: {
     getSystemTime() {
       getSystemTime().then(data => {
-        this.formModel.settlementTime = parseTime(data)
-      })
-      .catch(error => {
-         this.$message.error(error.errorInfo || error.text || '获取系统时间发生失败~')
-      })
+          this.formModel.settlementTime = parseTime(data)
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '获取系统时间发生失败~')
+        })
     },
     getFeeInfo() {
       this.getOrgFirstFinancialWay() // 获取收支方式
-      getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
-        this.loading = false
-        this.formModel.amount = data.amount
-        this.formModel.settlementSn = data.settlementSn
-        this.formModel.agent = data.szDtoList[0].agent
-        this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
-        this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
-        this.formModel.financialWay = data.szDtoList[0].financialWay
-        this.formModel.bankAccount = data.szDtoList[0].bankAccount
-        this.formModel.remark = data.remark
-        this.getSystemTime()
-      })
-      .catch(error => {
-        this.$message({type:'error', message:error.errorInfo || error.text || '发生未知错误！'})
-      })
+      getFeeInfo(this.$route.query.orgId, this.paymentsType).then(data => {
+          this.loading = false
+          this.formModel.amount = data.amount
+          this.formModel.settlementSn = data.settlementSn
+          this.formModel.agent = data.szDtoList[0].agent
+          this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
+          this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
+          this.formModel.financialWay = data.szDtoList[0].financialWay
+          this.formModel.bankAccount = data.szDtoList[0].bankAccount
+          this.formModel.remark = data.remark
+          this.getSystemTime()
+        })
+        // .catch(error => {
+        //   this.$message({ type: 'error', message: error.errorInfo || error.text || '发生未知错误！' })
+        // })
 
     },
     doAction(type) {
@@ -164,8 +170,8 @@ export default {
         case 'savePrint': // 保存并打印
           break
         case 'count':
-        this.countVisible = true
-        break
+          this.countVisible = true
+          break
       }
     },
     setFinanceWay(obj) {
@@ -177,10 +183,16 @@ export default {
       if (typeof this.formModel.financialWay === 'string') {
         this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
         this.formModel.financialWay = this.formModel.financialWay
-      }else {
+      } else {
         this.formModel.financialWayId = this.formModel.financialWay
         this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
       }
+      this.loadTable.forEach(e => {
+        this.feeName.arrPayName.forEach((el, index) => {
+          e[el] = e[this.feeName.arrPayNameActual[index]]
+        })
+      })
+       console.log(JSON.stringify(this.loadTable))
       const szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)
@@ -197,14 +209,14 @@ export default {
       }
       this.setData()
       postAddIncome(this.addIncomeInfo).then(data => { // 保存
-        this.$message({ type: 'success', message: '保存成功！' })
-        this.getFeeInfo()
-        this.tableKey = new Date().getTime()
-        this.$router.push({ path: './settleLog' })
-      })
-      .catch(error => {
-        this.$message({type:'error', message:error.errorInfo || error.text})
-      })
+          this.$message({ type: 'success', message: '保存成功！' })
+          this.getFeeInfo()
+          this.tableKey = new Date().getTime()
+          this.$router.push({ path: './settleLog', query:{ pageKey: new Date().getTime()  } })
+        })
+        .catch(error => {
+          this.$message({ type: 'error', message: error.errorInfo || error.text })
+        })
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -213,23 +225,29 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$router.push({
-          path: './settleLog'
+          path: './settleLog',
+          query: {
+            pageKey: new Date().getTime()
+          }
         })
       })
+    },
+    getFeeName(obj) {
+      this.feeName = Object.assign([], obj)
     },
     getLoadTable(obj) { // 获取右边合计总数 = 收入金额
       let amount = 0
       this.loadTable = Object.assign([], obj)
       this.loadTable.forEach((e, index) => {
-        amount += e.shipFeeTotal
+        amount += e.shipFeeTotalActual
       })
       this.formModel.amount = amount
     },
-    countSuccess (list) {
+    countSuccess(list) {
       this.countSuccessList = Object.assign([], list.info)
       this.countNum = list.count
     },
-    getOrgFirstFinancialWay () { // 获取收支方式
+    getOrgFirstFinancialWay() { // 获取收支方式
       let obj = {
         financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
         orgId: this.getRouteInfo
@@ -237,13 +255,13 @@ export default {
       getOrgFirstFinancialWay(obj).then(data => {
         this.financialWays = data
         if (this.financialWays) {
-         this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
-         this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
-         this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
-        }else {
+          this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
+          this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
+          this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
+        } else {
           this.formModel.bankAccount = ''
-         this.formModel.wechatAccount = ''
-         this.formModel.alipayAccount = ''
+          this.formModel.wechatAccount = ''
+          this.formModel.alipayAccount = ''
         }
       })
     }
@@ -296,9 +314,9 @@ export default {
           color: #ef0000;
         }
       }
-      .el-input.is-disabled .el-input__inner{
-        background-color:#fff;
-        color:#222;
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+        color: #222;
       }
     }
     .el-collapse {

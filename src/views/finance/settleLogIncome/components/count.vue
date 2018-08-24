@@ -6,7 +6,7 @@
             <querySelect search="customerName" type="sender" valuekey="customerName" label="customerName" v-model="formModel.shipSenderName" :remote="true" />
           </el-form-item>
           <el-form-item label="收入金额" prop="autoTotalAmount">
-            <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount"></el-input>
+            <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount" @keyup.enter.native="onSubmit('formModel')"></el-input>
           </el-form-item>
           <el-form-item label="费用项" prop="feeId">
             <el-select v-model="formModel.feeId">
