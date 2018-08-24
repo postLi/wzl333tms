@@ -11,7 +11,7 @@
         </div>
       </el-col>
       <el-col :span="20">
-        <span class="inline-label">姓名：</span>{{ otherinfo.username }}
+        <span class="inline-label">姓名：</span>{{ otherinfo.name }}
           <br />
           <span class="inline-label">手机号：</span>
         {{ otherinfo.mobilephone }}
@@ -47,7 +47,7 @@
         <div class="label">公司：</div>
       </el-col>
       <el-col :span="20">
-        {{ otherinfo.orgName }}
+        {{ otherinfo.companyName }}
       </el-col>
 
       <el-col :span="4">
@@ -57,19 +57,21 @@
         {{ otherinfo.orgName }}
       </el-col>
 
-      <el-col :span="20">
-        <div class="label" style="text-align: left;margin-left:178px;">所属部门：<span class="wzloooo">{{ otherinfo.departmentName || otherinfo.departmentId }}</span></div>
+
+      <el-col :span="4">
+        <div class="label">所属部门：</div>
       </el-col>
       <el-col :span="20">
-        <!-- {{ otherinfo.departmentName || otherinfo.departmentId }} -->
+        {{ otherinfo.departmentName || otherinfo.departmentId }}
       </el-col>
 
-      <el-col :span="20">
-        <div class="label" style="text-align: left;margin-left:209px;">职位：<span  class="wzloooo">{{ otherinfo.position }}</span></div>
+      <el-col :span="4">
+        <div class="label">职位：</div>
       </el-col>
       <el-col :span="20">
-        <!-- {{ otherinfo.position }} -->
+        {{ otherinfo.position }}
       </el-col>
+
     </el-row>
     <ChangePwPop :isShow.sync="showPop" @close="close" />
   </div>

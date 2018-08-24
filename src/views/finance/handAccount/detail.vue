@@ -1,7 +1,7 @@
 <template>
 <div class="handAccount-manager tab-wrapper tab-wrapper-100">
   <div class="tab-content handAccount-detail" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="searchQuery.vo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
           
@@ -81,6 +81,7 @@ export default {
   watch: {
     $route() {
       this.searchQuery.vo.userId = this.$route.query.id
+      this.searchQuery.vo.orgid = this.$route.query.orgid
       this.fetchData()
     }
   },

@@ -2,7 +2,7 @@
   <el-form :inline="true" :size="btnsize" label-position="right"  :model="searchForm" label-width="70px"  class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
       <el-form-item label="开单网点">
-        <select-tree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+        <select-tree v-model="searchForm.orgid" :orgid="searchForm.orgid" />
       </el-form-item>
       <el-form-item label="交账状态">
         <select-type v-model="searchForm.status" type="fee_status" >
@@ -47,7 +47,7 @@ export default {
       default: 'mini'
     },
     orgid: {
-      type: Number
+      type: [Number, String]
     }
   },
   data() {
@@ -66,8 +66,11 @@ export default {
     }
   },
   watch: {
-    orgid(newVal) {
-      this.searchForm.orgid = newVal
+    orgid: {
+      handler(newVal) {
+        this.searchForm.orgid = Number(newVal)
+      },
+      immediate: true
     }
   },
   mounted() {
