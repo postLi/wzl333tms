@@ -2466,7 +2466,35 @@ export default {
           msg = this.checkshipUserid(msg)
         }
 
-        resolve(!msg)
+      // 检查运单号是否重复
+        if (this.output.ismodify) {
+          resolve(!msg)
+        } else {
+          this.detectOrderNum().then(isDulip => {
+            if (isDulip) {
+            /**
+             运单号重复
+                ↓
+             是否允许手动输入 → 不允许，自动生成一个新的
+                ↓
+             允许输入，聚焦到运单号框由用户修改
+             */
+              if (this.config.shipNo.manualInput !== '1') {
+                orderManage.getShipSn(this.otherinfo.orgid).then(res => {
+                  this.form.tmsOrderShip.shipSn = res.data
+                })
+                this.$message.error('重复的订单号，已为你重新生成新的运单号~')
+              } else {
+                this.$refs['tmsOrderShipshipSn'].focus()
+                this.$message.error('重复的订单号，请修改~')
+              }
+
+              resolve(false)
+            } else {
+              resolve(!msg)
+            }
+          })
+        }
       })
     },
     submitForm() {
@@ -2506,6 +2534,10 @@ export default {
                 data.tmsOrderTransfer.id = this.orderData.tmsOrderTransfer ? this.orderData.tmsOrderTransfer.id : ''
               }
             }
+            // 处理城市信息
+            data.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName.replace(/,$/, '')
+            data.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName.replace(/,$/, '')
+
             // 判断收发货人信息
             let changeSender = false
             for (const i in this.form.sender) {

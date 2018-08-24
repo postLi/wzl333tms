@@ -16,6 +16,7 @@
   >
   <i slot="suffix" v-if="suffix" :class="[suffix]" class="el-input__icon el-icon-date"></i>
   <i slot="prefix" v-if="prefix" :class="[prefix]" class="el-input__icon el-icon-search"></i>
+  <slot name="head"></slot>
   <template slot-scope="{ item }">
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
@@ -50,6 +51,7 @@
     :loading="loading"
     v-bind="$attrs"
     >
+    <slot name="select-remote-head"></slot>
     <el-option
       v-for="item in searchData"
       :key="item[valuekey]"
@@ -84,6 +86,7 @@
     ref="myautocomplete"
     v-bind="$attrs"
     >
+    <slot name="select-head"></slot>
     <el-option
       v-for="item in allData"
       :key="item[valuekey]"
