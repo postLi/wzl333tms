@@ -1,12 +1,16 @@
 <template>
   <div class="sign-manager tab-wrapper">
     <div class="eltab clearfix">
-        <span @click="component = 'Pick'" class="tab-label" :class="{'active-tab': component.indexOf('Pick')!==-1}">自提签收</span>
+       <router-link to="/operation/order/sign/Pick" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Pick')!==-1}">自提签收</router-link>
+      <router-link to="/operation/order/sign/Delivery" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Delivery')!==-1}">送货签收</router-link>
+       <router-link to="/operation/order/sign/Transfer" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Transfer')!==-1}">中转签收</router-link>
+        <!-- <span @click="component = 'Pick'" class="tab-label" :class="{'active-tab': component.indexOf('Pick')!==-1}">自提签收</span>
         <span @click="component = 'Delivery'" class="tab-label" :class="{'active-tab': component.indexOf('Delivery')!==-1}">送货签收</span>
-        <span @click="component = 'Transfer'" class="tab-label" :class="{'active-tab': component.indexOf('Transfer')!==-1}">中转签收</span>
+        <span @click="component = 'Transfer'" class="tab-label" :class="{'active-tab': component.indexOf('Transfer')!==-1}">中转签收</span> -->
     </div>
     <keep-alive>
-        <component v-bind:is="component"></component>
+      <router-view></router-view>
+        <!-- <component v-bind:is="component"></component> -->
     </keep-alive>
   </div>
   
@@ -34,6 +38,19 @@ export default {
   },
   computed: {
 
+  },
+  watch: {
+    $route(){
+      if(this.$route.path.indexOf('/operation/order/sign/Pick')!==-1){
+        this.component = 'Pick'
+      }
+      if(this.$route.path.indexOf('/operation/order/sign/Delivery')!==-1){
+        this.component = 'Delivery'
+      }
+      if(this.$route.path.indexOf('/operation/order/sign/Transfer')!==-1){
+        this.component = 'Transfer'
+      }
+    }
   },
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid

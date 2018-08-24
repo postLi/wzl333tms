@@ -20,14 +20,17 @@
 .container-right{
   float: right;
   margin: 219px 0 0px 0px;
-  width: 330px;
+  width: 335px;
 }
 
 .login-container {
   position: relative;
   height: 100%;
   min-height: 86px;
-  background: url('../assets/login_images/bg.png');
+  background-image: url('../assets/login_images/bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   overflow: auto;
 }
 
@@ -59,14 +62,16 @@
 }
 
 .login-form {
+  width:100%;
   display: inline-block;
-  padding: 0px 21px 23px 21px;
+  padding: 0px 25px 23px 25px;
   background: #fff;
-  border: 1px solid #fff;
+  border: 1px solid #13407c;
+  border-radius: 5px;
   border-radius: 10px;
   transition: 0.5s;
-  box-shadow: 1px 1px 15px rgba(0,0,0,0.4);
-  -moz-box-shadow: 1px 1px 15px rgba(0,0,0,0.4);
+  /*box-shadow: 1px 1px 15px rgba(0,0,0,0.4);
+  -moz-box-shadow: 1px 1px 15px rgba(0,0,0,0.4);*/
   /*-moz-box-shadow: 12px 12px 12px 5px rgba(130,170,234,0.7);
   box-shadow: 12px 12px 12px 5px rgba(130,170,234,0.7);*/
 
@@ -117,25 +122,27 @@
 }
 
 .title {
-  font-size: 18px;
-  color: #515151;
-  margin: 35px auto 30px auto;
+  font-size: 16px;
+  color: #333;
+  margin: 36px auto 30px auto;
   /*text-align: center;*/
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
-.el-but{
+.login .el-but{
   line-height: 40px !important;
-  font-size: 18px;
+  font-size: 14px;
   background-color: #0a84ff;
   letter-spacing: 2px;
-  padding: 4px 20px;
+  padding: 0px 20px;
   border: none;
+  color:#FFFFFF;
 }
 
 .login{
-  margin-top: 40px;
-  margin-bottom: 0 !important;
+  margin-top: 42px;
+  margin-bottom: 20px;
+  height: 40px;
 }
 
 /*记住密码*/
@@ -214,8 +221,9 @@
 .icon_login_password{
   background-image: url('../assets/login_images/nn2.png');
 }
-.login-form .el-input-group__prepend:focus{
-   .icon_login_user{
-  background-image: url('../assets/login_images/bb1.png');
-   }
+.icon_login_user_error {
+   background-image: url('../assets/login_images/cc1.png');
+}
+.icon_login_password_error{
+  background-image: url('../assets/login_images/cc2.png');
 }

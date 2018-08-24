@@ -1,13 +1,18 @@
 <template>
   <div class="receipt-manager tab-wrapper">
     <div class="eltab clearfix">
-      <span @click="component = 'Recycle'" class="tab-label" :class="{'active-tab': component.indexOf('Recycle')!==-1}">回单回收</span>
+      <router-link to="/operation/order/receipt/Recycle" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Recycle')!==-1}">回单回收</router-link>
+      <router-link to="/operation/order/receipt/Send" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Send')!==-1}">回单寄出</router-link>
+      <router-link to="/operation/order/receipt/Accept" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Accept')!==-1}">回单接收</router-link>
+      <router-link to="/operation/order/receipt/Grant" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('Grant')!==-1}">回单发放</router-link>
+     <!--  <span @click="component = 'Recycle'" class="tab-label" :class="{'active-tab': component.indexOf('Recycle')!==-1}">回单回收</span>
       <span @click="component = 'Send'" class="tab-label" :class="{'active-tab': component.indexOf('Send')!==-1}">回单寄出</span>
       <span @click="component = 'Accept'" class="tab-label" :class="{'active-tab': component.indexOf('Accept')!==-1}">回单接收</span>
-      <span @click="component = 'Grant'" class="tab-label" :class="{'active-tab': component.indexOf('Grant')!==-1}">回单发放</span>
+      <span @click="component = 'Grant'" class="tab-label" :class="{'active-tab': component.indexOf('Grant')!==-1}">回单发放</span> -->
     </div>
     <keep-alive>
-      <component v-bind:is="component"></component>
+      <router-view></router-view>
+      <!-- <component v-bind:is="component"></component> -->
     </keep-alive>
   </div>
 </template>
@@ -47,6 +52,22 @@ export default {
     return {
       btnsize: 'mini',
       component: 'Recycle'
+    }
+  },
+  watch: {
+    $route(){
+      if(this.$route.path.indexOf('/operation/order/receipt/Recycle')!==-1){
+        this.component = 'Recycle'
+      }
+      if(this.$route.path.indexOf('/operation/order/receipt/Send')!==-1){
+        this.component = 'Send'
+      }
+      if(this.$route.path.indexOf('/operation/order/receipt/Accept')!==-1){
+        this.component = 'Accept'
+      }
+      if(this.$route.path.indexOf('/operation/order/receipt/Grant')!==-1){
+        this.component = 'Grant'
+      }
     }
   },
   methods: {

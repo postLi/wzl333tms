@@ -10,7 +10,7 @@
         </SelectTree>
       </el-form-item>
       <el-form-item label="发货人" prop="senderCustomerName">
-        <querySelect search="customerMobile" v-model="searchForm.customerName" type="receiver" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
+        <querySelect search="customerMobile" v-model="searchForm.senderCustomerName" type="sender" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
           <template slot-scope="{item}">
             {{ item.customerName }} : {{ item.customerMobile }}
           </template>

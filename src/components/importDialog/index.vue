@@ -118,7 +118,7 @@ export default {
       if (!extension || extension !== '.xlsx') {
         this.$message({
           type: 'info',
-          message: '只能上传 .xlsx 或者 .xls 文件'
+          message: '只能上传 .xlsx 模板文件'
         })
         return
       }

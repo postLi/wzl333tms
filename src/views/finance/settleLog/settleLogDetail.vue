@@ -381,6 +381,12 @@ export default {
           fixed: false
         },
         {
+          label: '整车保险费',
+          prop: 'wholeSurePay',
+          width: '120',
+          fixed: false
+        },
+        {
           label: '收支方式',
           prop: 'financialWay',
           width: '100',

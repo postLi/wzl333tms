@@ -30,19 +30,19 @@
         </el-form-item> -->
           <el-form-item prop="username">
             <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable>
-              <template slot="prepend"><i class="icon_login icon_login_user"></i></template>
+              <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
             <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
-              <template slot="prepend"><i class="icon_login icon_login_password"></i></template>
+              <template slot="prepend"><i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i></template>
             </el-input>
           </el-form-item>
-          <el-form-item class="login">
+          <div class="login">
             <el-button class="el-but" type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
               登录
             </el-button>
-          </el-form-item>
+          </div>
           <div class="rember">
             <el-checkbox v-model="checked">记住密码</el-checkbox>
             <p class="rember-tit" @click="forgetPsw">忘记密码</p>
@@ -118,12 +118,8 @@ export default {
         accNum: [{ required: true, trigger: 'blur' }],
         // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
-      }
-
-    }
-  },
-  computed: {
-    iconLoginUser: {
+      },
+      loginError: false
 
     }
   },
@@ -152,6 +148,7 @@ export default {
             // this.$router.push({ path: nexturl && nexturl.indexOf('/login') === -1 ? nexturl : '/' })
             this.$router.push({ path: '/' })
           }).catch(() => {
+            this.loginError = true
             this.$message({
               message: '您的账号或者密码有误~',
               type: 'warning'
@@ -159,6 +156,7 @@ export default {
             this.loading = false
           })
         } else {
+          this.loginError = true
           console.log('error submit!!')
           return false
         }
@@ -173,9 +171,11 @@ export default {
     },
     username() {
       this.holder = ''
+      this.loginError = false 
     },
     password() {
       this.holder = ''
+      this.loginError = false 
     }
   }
 }

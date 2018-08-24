@@ -2,11 +2,12 @@
   <div class="showdepart-manager tab-wrapper" :key="key">
     <div class="eltab clearfix">
       <!-- 短驳管理 -->
-      <span @click="component = 'deliver'" class="tab-label" :class="{'active-tab': component.indexOf('deliver')!==-1}">短驳发车</span>
-      <span @click="component = 'arrival'" class="tab-label" :class="{'active-tab': component.indexOf('arrival')!==-1}">短驳到货</span>
+      <router-link to="/operation/order/shortDepart/deliver" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('deliver')!==-1}">短驳发车</router-link>
+      <router-link to="/operation/order/shortDepart/arrival" tag="span"  class="tab-label" :class="{'active-tab': component.indexOf('arrival')!==-1}">短驳到货</router-link>
     </div>
     <keep-alive>
-      <component v-bind:is="component"></component>
+      <router-view></router-view>
+      <!-- <component v-bind:is="component"></component> -->
     </keep-alive>
   </div>
 </template>
@@ -33,6 +34,16 @@ export default {
   },
   activated() {
     this.setPage()
+  },
+  watch: {
+    $route(){
+      if(this.$route.path.indexOf('/operation/order/shortDepart/deliver')!==-1){
+        this.component = 'deliver'
+      }
+      if(this.$route.path.indexOf('/operation/order/shortDepart/arrival')!==-1){
+        this.component = 'arrival'
+      }
+    }
   },
   methods: {
     setPage() {
