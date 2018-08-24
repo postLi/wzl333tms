@@ -645,9 +645,11 @@ export default {
               })
               this.fetchAllreceipt()
               return false
-            }).catch(res => {
-              this.$message.error(res.text)
-              this.closeAddDot()
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
+              })
             })
           } else {
             this.$message.warning('回单已寄出不能取消~~')

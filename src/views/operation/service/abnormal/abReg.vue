@@ -481,7 +481,10 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                this.$message({
+                  type: 'error',
+                  message: err.errorInfo || err.text || '未知错误，请重试~'
+                })
               })
             }).catch(() => {
               this.$message({

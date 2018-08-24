@@ -544,7 +544,7 @@ export default {
       tablekey: 0,
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 10,
+        'pageSize': 1000,
         'vo': {
           'status': 2
         }
@@ -894,6 +894,11 @@ export default {
         this.total = data.total
         this.loading = false
         console.log(data)
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.errorInfo || err.text || '未知错误，请重试~'
+        })
       })
     },
     doAction(type) {

@@ -327,7 +327,7 @@ export default {
       loading: true,
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 10,
+        'pageSize': 1000,
         'vo': {
           'pageType': 3,
           'fundsAccountStatus': '260'

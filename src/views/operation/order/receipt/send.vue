@@ -599,6 +599,11 @@ export default {
               })
               this.fetchAllreceipt()
               return false
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
+              })
             })
           } else {
             this.$message.warning('回单已寄出请选择未寄出项~')
@@ -622,9 +627,11 @@ export default {
               })
               this.fetchAllreceipt()
               return false
-            }).catch(res => {
-              this.$message.error(res.text)
-                    // this.closeAddDot()
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
+              })
             })
           } else {
             this.$message.warning('回单已接收不能取消~')

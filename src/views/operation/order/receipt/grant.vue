@@ -613,6 +613,11 @@ export default {
               })
               this.fetchAllreceipt()
               return false
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
+              })
             })
           } else {
             this.$message.warning('请选择未发放项~')

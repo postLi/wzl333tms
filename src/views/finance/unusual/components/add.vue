@@ -191,7 +191,7 @@ export default {
     //   } else {
     //     callback()
     //   }
-    
+
     // }
     return {
       timekey: '111',
@@ -418,8 +418,8 @@ export default {
         this.form.cargoPack = data.cargoPack
         this.form.cargoAmount = data.cargoAmount
         this.form.cargoVolume = data.cargoVolume
-        this.form.shipFee = data.shipFee
-        this.form.shipPayWayName = data.shipPayWay
+        this.form.shipFee = data.shipTotalFee
+        this.form.shipPayWayName = data.shipPayWayName
         this.form.shipSn = data.shipSn
         // this.form.createTime = data.createTime
         this.form.shipNowpayFee = data.shipNowpayFee

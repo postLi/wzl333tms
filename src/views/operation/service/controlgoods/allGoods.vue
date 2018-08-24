@@ -524,7 +524,7 @@ export default {
       tablekey: 0,
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 100,
+        'pageSize': 1000,
         'vo': {
           'shipFromOrgid': 1
         }
@@ -868,6 +868,11 @@ export default {
         this.total = data.total
         this.loading = false
                 // console.log(data);
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.errorInfo || err.text || '未知错误，请重试~'
+        })
       })
     },
     // fetchAllPutFh() {
@@ -928,6 +933,11 @@ export default {
               this.$message({
                 message: '控货成功~',
                 type: 'success'
+              }).catch(err => {
+                this.$message({
+                  type: 'error',
+                  message: err.errorInfo || err.text || '未知错误，请重试~'
+                })
               })
               this.fetchData()
               return false

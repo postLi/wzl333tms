@@ -401,6 +401,11 @@ export default {
           this.form.disposeTime = new Date()
           this.form.disposeName = this.otherinfo.name
           this.form.disposeResult = 228
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.errorInfo || err.text || '未知错误，请重试~'
+          })
         })
       } else {
         this.dengji()
@@ -578,10 +583,11 @@ export default {
             })
             this.closeMe()
             this.$emit('success')
-          }).catch(res => {
-            this.loading = false
-            this.$message.warning(res.text)
-            // this.closeMe()
+          }).catch(err => {
+            this.$message({
+              type: 'error',
+              message: err.errorInfo || err.text || '未知错误，请重试~'
+            })
           })
         } else {
           return false

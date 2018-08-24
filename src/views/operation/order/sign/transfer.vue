@@ -915,6 +915,11 @@ export default {
         this.total = data.total
         this.signId = data.signId
         this.loading = false
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.errorInfo || err.text || '未知错误，请重试~'
+        })
       })
     },
     fetchData() {
@@ -1025,10 +1030,11 @@ export default {
               // this.$emit('success')
               this.fetchAllreceipt()
               return false
-            }).catch(res => {
-                  // this.loading = false
-              this.$message.warning(res.text)
-                    // this.closeMe()
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
+              })
             })
           } else {
             this.$message.warning('不可取消~')

@@ -1016,21 +1016,20 @@ export default {
             this.searchQuery.vo.shipId = shipId
             this.searchQuery.vo.signId = signId
             // console.log(repertoryId);
-            postCancelSign(this.searchQuery.vo)
-              .then(res => {
-                this.$message({
-                  message: '取消签收成功~',
-                  type: 'success'
-                })
+            postCancelSign(this.searchQuery.vo).then(res => {
+              this.$message({
+                message: '取消签收成功~',
+                type: 'success'
+              })
                 // this.$emit('success')
-                this.fetchAllreceipt()
-                return false
+              this.fetchAllreceipt()
+              return false
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
               })
-              .catch(res => {
-                // this.loading = false
-                this.$message.warning(res.text)
-                // this.closeMe()
-              })
+            })
           } else {
             this.$message.warning('不可取消~')
           }

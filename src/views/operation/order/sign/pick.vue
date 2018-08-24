@@ -1034,8 +1034,10 @@ export default {
               this.fetchAllreceipt()
               return false
             }).catch(err => {
-              this.loading = false
-              this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+              this.$message({
+                type: 'error',
+                message: err.errorInfo || err.text || '未知错误，请重试~'
+              })
             })
           } else {
             this.$message.warning('不可取消~')

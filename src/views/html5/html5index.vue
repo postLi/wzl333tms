@@ -3,14 +3,8 @@
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <ul>
-        <!-- <li>今天</li>
-        <li>昨天</li>
-        <li>本周</li>
-        <li>本月</li>
-        <li>本年</li> -->
         <li v-for="(item, index) in dataset" :key="index" @click="doAction(item.text)">{{item.text}}</li>
         <li>
-          <!-- 2018-09-12至2018-12-14 -->
           <el-date-picker
             v-model="pickerOptions3"
             type="daterange"
@@ -21,25 +15,14 @@
             end-placeholder="结束日期"
             :picker-options="pickerOptions3">
           </el-date-picker>
-          <!-- <el-date-picker
-            v-model="pickerOptions3"
-            :default-value="defaultTime"
-            type="daterange"
-            align="right"
-            value-format="yyyy-MM-dd"
-            start-placeholder="开始日期"
-            :picker-options="pickerOptions3"
-            end-placeholder="结束日期">
-          </el-date-picker> -->
         </li>
       </ul>
       </div>
-      
       <el-row class="main_forthUl" :gutter="15">
           <el-col :span="6">
             <ul>
               <li>开单数量  
-                <div class="box_gg">
+                <!-- <div class="box_gg">
                   <i>
                     <img src="../../assets/checkImg/sjx1.png"/>
                   </i>
@@ -48,7 +31,7 @@
                   <i>
                     <img src="../../assets/checkImg/sjx.png"/>
                   </i>
-                </div>
+                </div> -->
               </li>
               <li>数量:<span>{{ Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
               <li>重量:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -59,7 +42,7 @@
             <ul>
               <li>
                 发车数量
-                <div class="box_gg">
+                <!-- <div class="box_gg">
                   <i>
                     <img src="../../assets/checkImg/sjx1.png"/>
                   </i>
@@ -68,7 +51,7 @@
                   <i>
                     <img src="../../assets/checkImg/sjx.png"/>
                   </i>
-                </div>
+                </div> -->
               </li>
               <li>短驳发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
               <li>短驳到车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -80,7 +63,7 @@
             <ul>
               <li>
                 收入
-                <div class="box_gg">
+                <!-- <div class="box_gg">
                   <i>
                     <img src="../../assets/checkImg/sjx1.png"/>
                   </i>
@@ -89,7 +72,7 @@
                   <i>
                     <img src="../../assets/checkImg/sjx.png"/>
                   </i>
-                </div>
+                </div> -->
               </li>
               <li>现付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
               <li>到付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
@@ -102,7 +85,7 @@
             <ul>
               <li>
                 支出
-                <div class="box_gg">
+                <!-- <div class="box_gg">
                   <i>
                     <img src="../../assets/checkImg/sjx1.png"/>
                   </i>
@@ -111,7 +94,7 @@
                   <i>
                     <img src="../../assets/checkImg/sjx.png"/>
                   </i>
-                </div>
+                </div> -->
               </li>
               <li>回扣:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
               <li>其它费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
