@@ -720,6 +720,7 @@
       closeMe(done) {
         this.reset()
         this.$emit('update:popVisible', false)
+        this.$emit('close')
         if (typeof done === 'function') {
           done()
         }

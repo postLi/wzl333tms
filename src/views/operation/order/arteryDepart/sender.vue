@@ -107,7 +107,7 @@ export default {
         {
           label: '序号',
           prop: 'id',
-          width: '60',
+          width: '70',
           fixed: true,
           slot: (scope) => {
             return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -227,12 +227,15 @@ export default {
           prop: 'leaveOtherFee',
           width: '120',
           fixed: false
-        }, {
-          label: '配载时间',
-          prop: 'loadTime',
-          width: '160',
-          fixed: false
-        }, {
+        },
+
+        // {
+        //   label: '配载时间',
+        //   prop: 'loadTime',
+        //   width: '160',
+        //   fixed: false
+        // },
+        {
           label: '配载人',
           prop: 'userName',
           width: '90',

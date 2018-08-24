@@ -107,7 +107,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '50',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1

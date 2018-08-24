@@ -1,7 +1,7 @@
 <template>
   <!--v-loading="loading"-->
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :orgid="searchQuery.vo.orgId " :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
 

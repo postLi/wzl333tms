@@ -253,10 +253,10 @@
                    :createrId="otherinfo.orgid"></DepMaintain>
     </div>
     <div class="info_news_footer">
-      <div class="checked_footer">
-        <el-checkbox :checked="checkedInput">过滤失效网点</el-checkbox>
-        <!--<p> 密码：123456</p>-->
-      </div>
+      <!--<div class="checked_footer">-->
+        <!--<el-checkbox :checked="checkedInput">过滤失效网点</el-checkbox>-->
+        <!--&lt;!&ndash;<p> 密码：123456</p>&ndash;&gt;-->
+      <!--</div>-->
       <div class="total_footer">共计:{{ total }}</div>
       <div class="show_pager">
         <Pager :total="total" @change="handlePageChange"/>
@@ -569,12 +569,16 @@
   @import "../../../styles/mixin.scss";
   @import "./index.css";
 
-  .info_news_footer .total_footer {
+  /*.info_news_footer .total_footer {*/
+    /*float: left;*/
+    /*padding-left: 80px;*/
+  /*}*/
+  /*.info_news_footer .checked_footer {*/
+    /*float: left;*/
+    /*padding-left: 10px;*/
+  /*}*/
+  .info_news_footer .total_footer{
     float: left;
-    padding-left: 80px;
-  }
-  .info_news_footer .checked_footer {
-    float: left;
-    padding-left: 10px;
+    padding-left: 200px;
   }
 </style>

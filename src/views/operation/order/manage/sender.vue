@@ -95,7 +95,7 @@ export default {
         {
           label: '序号',
           prop: 'id',
-          width: '50',
+          width: '70',
           fixed: true,
           slot: (scope) => {
             return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) + scope.$index + 1

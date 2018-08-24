@@ -100,6 +100,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgId = this.orgid
+
     this.onSubmit()
   },
   methods: {
@@ -113,7 +114,7 @@ export default {
       this.searchForm.checkStatus = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
-      this.searchForm.searchCreatTime = []
+      // this.searchForm.searchCreatTime = []
     }
   }
 }
