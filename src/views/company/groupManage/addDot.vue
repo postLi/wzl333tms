@@ -209,7 +209,7 @@
   import querySelect from '@/components/querySelect/index'
   import { REGEX } from '../../../utils/validate'
   import { objectMerge2 } from '@/utils/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   // import {Obj}
   export default {
     components: {
@@ -239,8 +239,8 @@
       companyId: {
         type: Number
       },
-      getCheckedKeyId :{
-        type:[Number,String]
+      getCheckedKeyId: {
+        type: [Number, String]
       }
     },
     computed: {
@@ -269,7 +269,7 @@
         }
         this.watchDate(this.doInfo)
       },
-      getCheckedKeyId(val){
+      getCheckedKeyId(val) {
         this.watchDate()
       },
       doInfo: {
@@ -298,7 +298,7 @@
         popTitle: '新增网点',
         // 多选框
         checked: true,
-        loading: true,
+        loading: false,
         checkShowMessage: false,
         netWorkType: [],
         newnNetWorkType: [],
@@ -368,7 +368,7 @@
           accountName: [
             { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
             { max: 15, message: '不能超过15个字符', trigger: 'blur' }
-          ],
+          ]
         },
         dialogVisible: false,
         formLabelWidth: '120px'
@@ -392,11 +392,11 @@
         Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
           this.manageType = resArr[1]
           this.netWorkStatus = resArr[2]
-          if(!this.isModify){
+          if (!this.isModify) {
             this.netWorkType = resArr[0].filter(el => {
               return el.id !== 5
             })
-          }else{
+          } else{
             this.netWorkType = resArr[0]
           }
           this.loading = false
@@ -428,9 +428,7 @@
           this.form.manageType = 3
           // this.form.parentId = this.companyId
           this.form.parentId = this.getCheckedKeyId || this.otherinfo.orgid
-
-
-        }
+      }
       },
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
@@ -495,8 +493,7 @@
               reqPromise = postOrgSaveDate(this.form)
             }
             reqPromise.then(res => {
-
-              this.$emit('success')
+            this.$emit('success')
               this.$message.success('保存成功')
               this.closeMe()
               this.loading = false

@@ -328,6 +328,9 @@ export default {
           break
         case 'check':
           this.cancelAni = !this.cancelAni
+          if (this.cancelAni) {
+            clearInterval(this.timer)
+          }
           break
         case 'agane':
           this.type = 3
@@ -415,13 +418,13 @@ export default {
         var j = 0
         const self = this
         function slideDown() {
-          var t = setInterval(() => {
+          self.timer = setInterval(() => {
             if (idx < len) {
               // console.log(idx, len, arr[j].title, 666666)
               self.contTitle = arr[j++].title
               idx++
             } else {
-              clearInterval(t)
+              clearInterval(self.timer)
               idx = 0
             }
           }, 150)
