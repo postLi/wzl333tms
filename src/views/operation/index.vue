@@ -24,10 +24,10 @@
           <div slot="content">
             功能：把同个区域不同网点收的货物配载到分拨中心，进行干线配载
           </div>
-          <div @click="gotoPage('deliver', './order/shortDepart')">
+          <router-link to="./order/shortDepart/arrival">
             <i class="flowicon duanbo"></i>
             <p>短驳接收</p>
-          </div>
+          </router-link>
         </el-tooltip>
         <el-tooltip placement="top">
           <div slot="content">
@@ -42,7 +42,7 @@
           <div slot="content">
             功能：开单收货，网点到货形成库存
           </div>
-          <router-link to="./order/repertory">
+          <router-link to="./order/repertory/allrepertory">
             <i class="flowicon kucun"></i>
             <p>库存管理</p>
           </router-link>
@@ -53,7 +53,7 @@
           <div slot="content">
             功能：把货物转运给分拨中心
           </div>
-          <router-link to="./order/shortDepart">
+          <router-link to="./order/shortDepart/deliver">
             <i class="flowicon duobofache"></i>
             <p>短驳发车</p>
           </router-link>
@@ -89,7 +89,7 @@
           <div slot="content">
             功能：对自提，送货上门，中转外发运单进行签收
           </div>
-          <router-link to="./order/sign">
+          <router-link to="./order/sign/Pick">
             <i class="flowicon qianshou"></i>
             <p>签收管理</p>
           </router-link>
@@ -101,19 +101,19 @@
             <div slot="content">
               功能：对目的网点寄回的回单做接收
             </div>
-            <div @click="gotoPage('Accept', './order/receipt')">
+            <router-link to="/operation/order/receipt/Send">
               <i class="flowicon jieshou"></i>
               <p>回单接收</p>
-            </div>
+            </router-link>
           </el-tooltip>
           <el-tooltip placement="bottom">
             <div slot="content">
               功能：开单网点把回单发放给客户
             </div>
-            <div @click="gotoPage('Grant', './order/receipt')">
+            <router-link to="/operation/order/receipt/Recycle">
               <i class="flowicon fafang"></i>
               <p>回单发放</p>
-            </div>
+            </router-link>
           </el-tooltip>
         </div>
         <div class="operation_flow_foot_right">
@@ -121,19 +121,19 @@
             <div slot="content">
               功能：从收货人处回收回单
             </div>
-            <div @click="gotoPage('Recycle', './order/receipt')">
+            <router-link to="/operation/order/receipt/Grant">
               <i class="flowicon huishou"></i>
               <p>回单回收</p>
-            </div>
+            </router-link>
           </el-tooltip>
           <el-tooltip placement="bottom">
             <div slot="content">
               功能：目的网点把回单寄到开单网点
             </div>
-            <div @click="gotoPage('Send', './order/receipt')">
+            <router-link to="/operation/order/receipt/Accept">
               <i class="flowicon jichu"></i>
               <p>回单寄出</p>
-            </div>
+            </router-link>
           </el-tooltip>
         </div>
       </div>
@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     gotoPage(name, path) {
-      this.$router.push({ path: path, query: { tableKey: name } })
+      this.$router.push({ path: path, query: { tableKey: name }})
     }
   }
 }

@@ -3,19 +3,19 @@
     <div class="wzl_caiwu-flow">
       <div class="fin1-content">
         <el-tooltip content="现付" placement="top">
-          <el-button @click="gotoPage('Cash', './accountsReceivable')">现付</el-button>
+          <el-button @click="gotoPage('Cash', '/finance/accountsReceivable/cash')">现付</el-button>
         </el-tooltip>
         <el-tooltip content="到付" placement="top">
-          <el-button @click="gotoPage('Arrive', './accountsReceivable')">到付</el-button>
+          <el-button @click="gotoPage('Arrive', '/finance/accountsReceivable/arrive')">到付</el-button>
         </el-tooltip>
         <el-tooltip content="月结" placement="top">
-          <el-button @click="gotoPage('Month', './accountsReceivable')">月结</el-button>
+          <el-button @click="gotoPage('Month', '/finance/accountsReceivable/month')">月结</el-button>
         </el-tooltip>
         <el-tooltip content="回单付" placement="top">
-          <el-button @click="gotoPage('Receipt', './accountsReceivable')">回单付</el-button>
+          <el-button @click="gotoPage('Receipt', '/finance/accountsReceivable/receipt')">回单付</el-button>
         </el-tooltip>
         <el-tooltip content="异动费用" placement="top">
-          <el-button @click="gotoPage('Abnormal', './accountsReceivable')">异动费用</el-button>
+          <el-button @click="gotoPage('Abnormal', '/finance/accountsReceivable/abnormal')">异动费用</el-button>
         </el-tooltip>
       </div>
       <div class="fin2-content">
@@ -76,22 +76,22 @@
       </div>
       <div class="fin3-content">
         <el-tooltip content="货款到账" placement="top">
-          <el-button @click="gotoPage('Accept', './payment')">货款到账</el-button>
+          <el-button @click="gotoPage('Accept', '/finance/payment/accept')">货款到账</el-button>
         </el-tooltip>
         <el-tooltip content="货款发放" placement="top">
-          <el-button @click="gotoPage('Grant', './payment')">货款发放</el-button>
+          <el-button @click="gotoPage('Grant', '/finance/payment/grant')">货款发放</el-button>
         </el-tooltip>
       </div>
       <div class="fin4-content">
         <el-tooltip content="货款回收" placement="top">
-          <el-button @click="gotoPage('Recycle', './payment')">货款回收</el-button>
+          <el-button @click="gotoPage('Recycle', '/finance/payment/recycle')">货款回收</el-button>
         </el-tooltip>
         <el-tooltip content="货款汇款" placement="top">
-          <el-button @click="gotoPage('Send', './payment')">货款汇款</el-button>
+          <el-button @click="gotoPage('Send', '/finance/payment/send')">货款汇款</el-button>
         </el-tooltip>
       </div>
       <div class="fin5-content">
-        <router-link to="./accountsReceivable">
+        <router-link to="/finance/accountsReceivable/all">
           <el-tooltip content="应收账款" placement="top">
             <el-button>应收账款</el-button>
           </el-tooltip>
@@ -103,9 +103,9 @@
         </el-tooltip>
       </div>
       <div class="fin6-content">
-        <router-link to="./reconciliation/carrier">
-           <el-tooltip content="帐款管理" placement="top">
-            <el-button>账款管理</el-button>
+        <router-link to="/finance/payment/recycle">
+           <el-tooltip content="货款管理" placement="top">
+            <el-button>货款管理</el-button>
           </el-tooltip>
         </router-link>
         <router-link to="./settleLogIncome">

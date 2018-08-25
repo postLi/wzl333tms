@@ -18,7 +18,7 @@
      var verOPR = ua.match(/OPR\D?\d+/i)
      var verFF = ua.match(/Firefox\D?\d+/i)
      var x64 = ua.match(/x64/i)
-     if ((verTrident == null) && (verIE == null) && (x64 !== null)) { return true; } else
+     if ((verTrident == null) && (verIE == null) && (x64 !== null)) { return true } else
      if (verFF !== null) {
        verFF = verFF[0].match(/\d+/)
        if ((verFF[0] >= 41) || (x64 !== null)) return true
@@ -32,24 +32,24 @@
        if (verChrome !== null) {
          verChrome = verChrome[0].match(/\d+/)
          if (verChrome[0] >= 41) return true
-       };
+       }
      }
      return false
-   } catch (err) { return true };
+   } catch (err) { return true }
  }
 
- //====页面引用CLodop云打印必须的JS文件：====
+ // ====页面引用CLodop云打印必须的JS文件：====
  if (needCLodop()) {
    var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement
    var oscript = document.createElement('script')
-   oscript.src = 'http://localhost:8000/CLodopfuncs.js?priority=1';
+   oscript.src = 'http://localhost:8000/CLodopfuncs.js?priority=1'
    head.insertBefore(oscript, head.firstChild)
 
-   //引用双端口(8000和18000）避免其中某个被占用：
+   // 引用双端口(8000和18000）避免其中某个被占用：
    oscript = document.createElement('script')
-   oscript.src = 'http://localhost:18000/CLodopfuncs.js?priority=0';
+   oscript.src = 'http://localhost:18000/CLodopfuncs.js?priority=0'
    head.insertBefore(oscript, head.firstChild)
- };
+ }
  // ====获取LODOP对象的主过程：====
  export function getLodop(oOBJECT, oEMBED) {
    // var strHtmInstall = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
@@ -73,10 +73,10 @@
      var isIE = (navigator.userAgent.indexOf('MSIE') >= 0) || (navigator.userAgent.indexOf('Trident') >= 0)
      if (needCLodop()) {
        try { LODOP = getCLodop() } catch (err) {}
-       if (!LODOP && document.readyState !== 'complete') { alert('C-Lodop没准备好，请稍后再试！'); return };
+       if (!LODOP && document.readyState !== 'complete') { alert('C-Lodop没准备好，请稍后再试！'); return }
        if (!LODOP) {
          if (isIE) document.write(strCLodopInstall)
-         else { var conf = confirm("没有安装LODOP云打印插件,确认下载？") }
+         else { var conf = confirm('没有安装LODOP云打印插件,确认下载？') }
          if (conf) {
            window.open(downloadPath)
          }
@@ -85,14 +85,14 @@
        } else {
          if (CLODOP.CVERSION < '3.0.4.3') {
            if (isIE) document.write(strCLodopUpdate)
-           else { document.body.innerHTML = strCLodopUpdate + document.body.innerHTML; }
+           else { document.body.innerHTML = strCLodopUpdate + document.body.innerHTML }
          }
          if (oEMBED && oEMBED.parentNode) oEMBED.parentNode.removeChild(oEMBED)
          if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT)
-       };
+       }
      } else {
        var is64IE = isIE && (navigator.userAgent.indexOf('x64') >= 0)
-       //=====如果页面有Lodop就直接使用，没有则新建:==========
+       // =====如果页面有Lodop就直接使用，没有则新建:==========
        if (oOBJECT != undefined || oEMBED != undefined) {
          if (isIE) LODOP = oOBJECT
          else LODOP = oEMBED
@@ -106,41 +106,40 @@
          document.documentElement.appendChild(LODOP)
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
-       //=====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
-         if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML; }
-         if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML; }
+       // =====Lodop插件未安装时提示下载地址:==========
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+         if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML }
+         if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML }
          if (is64IE) document.write(strHtm64_Install)
          else
          if (isIE) document.write(strHtmInstall)
-         else { document.body.innerHTML = strHtmInstall + document.body.innerHTML; }
+         else { document.body.innerHTML = strHtmInstall + document.body.innerHTML }
          return LODOP
-       };
+       }
      }
      if (LODOP.VERSION < '6.2.2.3') {
        if (!needCLodop()) {
          if (is64IE) document.write(strHtm64_Update)
          else
          if (isIE) document.write(strHtmUpdate)
-         else { document.body.innerHTML = strHtmUpdate + document.body.innerHTML; }
+         else { document.body.innerHTML = strHtmUpdate + document.body.innerHTML }
        }
        return LODOP
-     };
+     }
      // ===如下空白位置适合调用统一功能(如注册语句、语言选择等):===
 
      // ===========================================================
      return LODOP
-   } catch (err) { alert('getLodop出错:' + err) };
+   } catch (err) { alert('getLodop出错:' + err) }
  }
 
  // 全局常量
  // export const LODOP
 
-
  // export let LODOP
 
- // var LODOP; //声明为全局变量   
- //直接打印
+ // var LODOP; //声明为全局变量
+ // 直接打印
  export function lodopPrint() {
    try {
      CreatePrintPage()
@@ -149,7 +148,7 @@
      getLodop()
    }
  }
- //选择打印机
+ // 选择打印机
  export function lodopPrinter() {
    try {
      CreatePrintPage()
@@ -168,7 +167,7 @@
      getLodop()
    }
  }
- //打印维护  
+ // 打印维护
  export function lodopSetup() {
    try {
      CreatePrintPage()
@@ -177,7 +176,7 @@
      getLodop()
    }
  }
- //打印设计  
+ // 打印设计
  export function lodopDesign() {
    try {
      CreatePrintPage()
@@ -186,7 +185,7 @@
      getLodop()
    }
  }
- //空白设计  
+ // 空白设计
  export function myBlankDesign() {
    try {
      LODOP = getLodop()
@@ -196,7 +195,7 @@
      getLodop()
    }
  }
- //打印表格
+ // 打印表格
  export function PrintInFullPage(obj) {
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
@@ -210,13 +209,13 @@
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
      LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) //横向时的正向显示
+     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()
    } catch (err) {
      getLodop()
    }
  }
- //打印合同
+ // 打印合同
  export function PrintContract(obj) {
    try {
      const tableId = obj
@@ -230,7 +229,7 @@
      LODOP.ADD_PRINT_HTM('1%', '1%', '98%', '100%', 'URL:' + obj)
      // LODOP.ADD_PRINT_HTM("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) //横向时的正向显示
+     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()
    } catch (err) {
      getLodop()
@@ -250,14 +249,14 @@
      // LODOP.ADD_PRINT_TABLE("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
      LODOP.ADD_PRINT_HTM('5%', '10%', '80%', '95%', document.getElementById(tableId).innerHTML)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) //横向时的正向显示
+     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()
    } catch (err) {
 
    }
  }
 
- //创建打印页面    【已保存】标签或运单
+ // 创建打印页面    【已保存】标签或运单
  export function CreatePrintPage(info) {
    try {
      LODOP = getLodop()
@@ -273,7 +272,7 @@
      getLodop()
    }
  }
- //创建打印页面    【未保存】标签或运单
+ // 创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info) {
    try {
      LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', 'KZDesigner GK888t (EPL)')
@@ -306,13 +305,13 @@
      LODOP.PRINT_INIT('数据表格')
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
      LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
-     //LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML); 
-     LODOP.SET_SAVE_MODE('Orientation', 2) //Excel文件的页面设置：横向打印   1-纵向,2-横向;
-     LODOP.SET_SAVE_MODE('PaperSize', 9) //Excel文件的页面设置：纸张大小   9-对应A4
-     LODOP.SET_SAVE_MODE('Zoom', 100) //Excel文件的页面设置：缩放比例
-     LODOP.SET_SAVE_MODE('CenterHorizontally', true) //Excel文件的页面设置：页面水平居中
-     LODOP.SET_SAVE_MODE('CenterVertically', true) //Excel文件的页面设置：页面垂直居中
-     //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到） 
+     // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+     LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+     LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+     LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+     LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+     LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+     //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
      if (obj.name) {
        LODOP.SAVE_TO_FILE(obj.name + '.xls')
      } else {
@@ -323,12 +322,12 @@
    }
  }
 
- //检查当前是否有装lodop插件
+ // 检查当前是否有装lodop插件
  export function CheckIsInstall() {
    try {
      var LODOP = getLodop()
      if (LODOP.VERSION) {
-       if (LODOP.CVERSION) { alert("当前有C-Lodop云打印可用!\n C-Lodop版本:" + LODOP.CVERSION + "(内含Lodop" + LODOP.VERSION + ")"); } else { alert("本机已成功安装了Lodop控件！\n 版本号:" + LODOP.VERSION); }
+       if (LODOP.CVERSION) { alert('当前有C-Lodop云打印可用!\n C-Lodop版本:' + LODOP.CVERSION + '(内含Lodop' + LODOP.VERSION + ')') } else { alert('本机已成功安装了Lodop控件！\n 版本号:' + LODOP.VERSION) }
      }
    } catch (err) {
      getLodop()
@@ -378,8 +377,9 @@
      const tbodyTr = tbody.insertRow()
      for (let j = 0; j < columns.length; j++) {
        const td = tbodyTr.insertCell()
-       td.innerHTML = columns[j].prop === 'id' ? k+1 :data[k][columns[j].prop]
-       td.style.width = data[k][columns[j].width] + 'px'
+       // 处理当列没有值、宽度设置等信息时，做默认值处理
+       td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
+       td.style.width = (data[k][columns[j].width] || 120) + 'px'
        // td.setAttribute('width', data[k][columns[j].width])
      }
    }

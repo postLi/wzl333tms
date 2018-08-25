@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 // 引入事件对象
 import { eventBus } from '@/eventBus'
 
@@ -120,11 +120,12 @@ service.interceptors.response.use(
         }) */
       } else if (status === 401) {
         err = {
-          text: 'Token 过期了',
-          status: 100
+          text: '',
+          status: 200
         }
         // 401:非法的token;Token 过期了;
         eventBus.$emit('hideSupcanChart')
+        removeToken()
         MessageBox.alert('你已被登出，请重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
