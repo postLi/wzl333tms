@@ -3,16 +3,16 @@
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <ul>
-        <li v-for="(item, index) in dataset" :key="index" @click="doAction(item.text)">{{item.text}}</li>
+        <li v-for="(item, index) in dataset" :class="{'active':item.keyval === currentkey} " :key="index" @click="currentkey = item.keyval">{{item.text}}</li>
         <li>
           <el-date-picker
-            v-model="pickerOptions3"
+            v-model="pickerDate"
             type="daterange"
             align="right"
-            unlink-panels
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            @change="getDateChange"
             :picker-options="pickerOptions3">
           </el-date-picker>
         </li>
@@ -33,9 +33,9 @@
                   </i>
                 </div> -->
               </li>
-              <li>数量:<span>{{ Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>重量:<span>{{Math.floor(Math.random() * 100)}}</span>千克<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-              <li>体积:<span>{{Math.floor(Math.random() * 100)}}</span>方<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>数量:<span>{{ thedata.amount }}</span>单<Arrow :value="thedata.amountCent" /></li>
+              <li>重量:<span>{{ thedata.amountWeight}}</span>千克<Arrow :value="thedata.weightCent" /></li>
+              <li>体积:<span>{{thedata.amountVolume}}</span>方<Arrow :value="thedata.volumeCent" /></li>
             </ul>
           </el-col>
           <el-col :span="6">
@@ -53,10 +53,10 @@
                   </i>
                 </div> -->
               </li>
-              <li>短驳发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>短驳到车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-              <li>干线发车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>干线到车:<span>{{Math.floor(Math.random() * 100)}}</span>单<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
+              <li>短驳发车:<span>{{ thedata.shortSend }}</span>单<Arrow :value="thedata.shortSendCent" /></li>
+              <li>短驳到车:<span>{{ thedata.shortArrive }}</span>单<Arrow :value="thedata.shortArriveCent" /></li>
+              <li>干线发车:<span>{{ thedata.lineSend }}</span>单<Arrow :value="thedata.lineSendCent" /></li>
+              <li>干线到车:<span>{{ thedata.lineArrive }}</span>单<Arrow :value="thedata.lineArriveCent" /></li>
             </ul>
           </el-col>
           <el-col :span="6">
@@ -74,11 +74,11 @@
                   </i>
                 </div> -->
               </li>
-              <li>现付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>到付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-              <li>回单付:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>月结:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-              <li>异动增款:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>现付:<span>{{ thedata.nowPayFee }}</span>元<Arrow :value="thedata.nowComCent" /></li>
+              <li>到付:<span>{{ thedata.arrivePayFee }}</span>元<Arrow :value="thedata.arriveComCent" /></li>
+              <li>回单付:<span>{{ thedata.receiptPayFee }}</span>元<Arrow :value="thedata.receiptComCent" /></li>
+              <li>月结:<span>{{ thedata.monthPayFee }}</span>元<Arrow :value="thedata.monthComCent" /></li>
+              <li>异动增款:<span>{{ thedata.abnormalAddFee }}</span>元<Arrow :value="thedata.addComCent" /></li>
             </ul>
           </el-col>
           <el-col :span="6">
@@ -96,11 +96,11 @@
                   </i>
                 </div> -->
               </li>
-              <li>回扣:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>其它费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-              <li>短驳车费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
-              <li>干线车费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/greenx.png"/></i></em></li>
-              <li>送货车费:<span>{{Math.floor(Math.random() * 100)}}</span>元<em>{{Math.floor(Math.random() * 100)}}%<i><img src="../../assets/checkImg/redx.png"/></i></em></li>
+              <li>回扣:<span>{{ thedata.brokerageFee }}</span>元<Arrow :value="thedata.brokerageComCent" /></li>
+              <li>其它费:<span>{{ thedata.otherFee }}</span>元<Arrow :value="thedata.otherComCent" /></li>
+              <li>短驳车费:<span>{{ thedata.shortFee }}</span>元<Arrow :value="thedata.shortComCent" /></li>
+              <li>干线车费:<span>{{ thedata.lineFee }}</span>元<Arrow :value="thedata.lineComCent" /></li>
+              <li>送货车费:<span>{{ thedata.sendFee }}</span>元<Arrow :value="thedata.sendComCent" /></li>
             </ul>
           </el-col>
       </el-row>
@@ -130,27 +130,96 @@
 </template>
 
 <script>
+// 需要考虑按需引入，减小引入体积
+// echarts的各模块
+// https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
 import { pickerOptions4 } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail } from '@/api/index'
+import Arrow from './arrow'
 export default {
-  compontents: {
-    pickerOptions4
+  components: {
+    Arrow
+  },
+  watch: {
+    currentkey(newVal) {
+      if (newVal !== '') {
+        this.doAction(newVal)
+      }
+    }
   },
   data() {
     return {
       dataset: [],
+      currentkey: '',
       searchQuery: {
         vo: {
           'nowStartTime': '',
           'nowEndTime': '',
           'pastStartTime': '',
-          'pastEndTime': ''
+          'pastEndTime': '',
+          'buttonKey': 0
         }
       },
+      thedata: {
+        'abnormalAddCent': '-1.00%',
+        'abnormalAddFee': 2495.00, // 异动增款
+        'abnormalSubFee': 4158.00, // 异动减款
+        'addComCent': '-1.00%',
+        'amount': 14, // 运单总数
+        'amountCent': '-7.00%',
+        'amountCollectCent': '64.00%',
+        'amountPayCent': '36.00%',
+        'amountVolume': 169.40, // 总体积
+        'amountWeight': 5270.37, // 总重量
+        'arriveComCent': '-50.00%',
+        'arrivePayCent': '-50.00%',
+        'arrivePayFee': 8076.00, // 到付
+        'brokerageComCent': '-10.00%',
+        'brokerageFee': 3258.00, // 回扣
+        'collectFee': 29515.00, // 总收入
+        'creatTime': null, // 开单时间
+        'lineArrive': 1, // 干线到车总数
+        'lineArriveCent': '0.00%',
+        'lineComCent': '-5.00%',
+        'lineFee': 608.00, // 干线费
+        'lineSend': 3, // 干线发车总数
+        'lineSendCent': '-25.00%',
+        'monthComCent': '133.00%',
+        'monthPayCent': '133.00%',
+        'monthPayFee': 5797.00, // 月结
+        'nowComCent': '51.00%',
+        'nowPayCent': '51.00%',
+        'nowPayFee': 10602.00, // 现付
+        'orgid': 1, // 归属网点
+        'otherComCent': '-7.00%',
+        'otherFee': 3308.00, // 其他费
+        'payFee': 16750.00, // 总支出
+        'receiptComCent': '-76.00%',
+        'receiptPayCent': '-76.00%',
+        'receiptPayFee': 2545.00, // 回单付
+        'sendComCent': '-5.00%',
+        'sendFee': 3058.00, // 送货费
+        'shortArrive': 3, // 短驳到车总数
+        'shortArriveCent': '0.00%',
+        'shortComCent': '11.00%',
+        'shortFee': 2360.00, // 短驳费
+        'shortSend': 7, // 短驳发车总数
+        'shortSendCent': '0.00%',
+        'subComCent': '4.00%',
+        'type': null, // 数据类型：0,短驳发车；1，短驳到车；2，干线发车；3，干线到车
+        'volume': null, // 体积
+        'volumeCent': '-14.00%',
+        'week': null, // 星期几
+        'weight': null, // 重量
+        'weightCent': '3.00%',
+        'id': null
+      },
+      pickerDate: [],
       pickerOptions3: {
         shortcuts: [{
           text: '今天',
+          keyval: 0,
           onClick(picker) {
             // 今天
             const Today = pickerOptions4.today()
@@ -158,12 +227,10 @@ export default {
             const yesterDay = pickerOptions4.yesterDay()
             // console.log(pickerOptions4.today())
             picker.$emit('pick', Today)
-            postHomedetail(this.searchQuery).then(data => {
-              console.log(data)
-            })
           }
         }, {
           text: '昨天',
+          keyval: 1,
           onClick(picker) {
             // 昨天
             const yesterDay = pickerOptions4.yesterDay()
@@ -174,6 +241,7 @@ export default {
           }
         }, {
           text: '本周',
+          keyval: 2,
           onClick(picker) {
             // 最近的星期天的日期，到今天的日期
             const CurrentWeek = pickerOptions4.currentWeek()
@@ -184,6 +252,7 @@ export default {
           }
         }, {
           text: '本月',
+          keyval: 3,
           onClick(picker) {
             // 本月1日到今天的日前
             const CurrentMonth = pickerOptions4.currentMonth()
@@ -194,6 +263,7 @@ export default {
           }
         }, {
           text: '本年',
+          keyval: 4,
           onClick(picker) {
             const CurrentYear = pickerOptions4.currentYear()
             const LastYear = pickerOptions4.lastYear()
@@ -207,42 +277,101 @@ export default {
     }
   },
   methods: {
+    getDateChange(val) {
+      this.searchQuery.vo.buttonKey = 5
+      this.searchQuery.vo.nowStartTime = val[0].getTime()
+      this.searchQuery.vo.nowEndTime = val[0].getTime()
+      this.currentkey = 5
+    },
     doAction(type) {
       switch (type) {
-        case '今天':
+        case 0:
           const Today = pickerOptions4.today()
           // console.log(this.dataset)
           // picker.$emit('pick', Today)
-          this.pickerOptions3 = Today
+          this.pickerDate = Today
+          this.searchQuery.vo.buttonKey = 0
+          this.currentkey = 0
           console.log('今天')
           break
-        case '昨天':
+        case 1:
           const YesterDay = pickerOptions4.yesterDay()
-          this.pickerOptions3 = YesterDay
+          this.pickerDate = YesterDay
           console.log('昨天')
+          this.searchQuery.vo.buttonKey = 1
+          this.currentkey = 1
           break
-        case '本周':
+        case 2:
           // 最近的星期天的日期，到今天的日期
           const CurrentWeek = pickerOptions4.currentWeek()
           // 上上周星期天的日前，到上周六的日期
           const lastWeek = pickerOptions4.lastWeek()
-          this.pickerOptions3 = CurrentWeek
+          this.pickerDate = CurrentWeek
+          this.searchQuery.vo.buttonKey = 2
+          this.currentkey = 2
           console.log('本周')
           break
-        case '本月':
+        case 3:
           // 本月1日到今天的日前
           const CurrentMonth = pickerOptions4.currentMonth()
           // 上月1日到上月的结束时间
           const LastMonth = pickerOptions4.lastMonth()
-          this.pickerOptions3 = CurrentMonth
+          this.pickerDate = CurrentMonth
+          this.searchQuery.vo.buttonKey = 3
+          this.currentkey = 3
           console.log('本月')
           break
-        case '本年':
+        case 4:
           const CurrentYear = pickerOptions4.currentYear()
           const LastYear = pickerOptions4.lastYear()
-          this.pickerOptions3 = CurrentYear
+          this.pickerDate = CurrentYear
+          this.searchQuery.vo.buttonKey = 4
+          this.currentkey = 4
           break
       }
+      this.getData()
+    },
+    getData() {
+      /**
+       *
+      *选择的日期周期(0:今天；1：昨天；2：本周；3：本月； 4：本年；5：自定义；
+      private Integer buttonKey;
+        */
+      postHomedetail(this.otherinfo.companyId, this.searchQuery.vo).then(data => {
+        this.thedata = data
+        this.setInChart()
+        this.setCompareChart()
+      }).catch(err => {
+        this.currentkey = ''
+        this.$message.warning('查不到相关数据。')
+      })
+    },
+    setInChart() {
+      this.myChart.setOption({
+        series: [
+          {
+            data: [
+          { value: this.thedata.nowPayFee, name: '现付' },
+          { value: this.thedata.arrivePayFee, name: '到付' },
+          { value: this.thedata.receiptPayFee, name: '回单付' },
+          { value: this.thedata.monthPayFee, name: '月结' },
+          { value: this.thedata.abnormalAddFee, name: '异动增款' }
+            ]
+          }
+        ]
+      })
+    },
+    setCompareChart() {
+      this.myChart2.setOption({
+        series: [
+          {
+            data: [
+          { value: this.thedata.collectFee, name: '收入' },
+          { value: this.thedata.payFee, name: '支出' }
+            ]
+          }
+        ]
+      })
     },
     initYearChart(echart, shipArr, weightArr, volumeArr) {
       const option3 = {
@@ -325,13 +454,15 @@ export default {
           }
         ]
       }
-
+      echart.hideLoading()
       echart.setOption(option3)
     }
   },
   mounted() {
     this.dataset = this.pickerOptions3.shortcuts
-    console.log(this.dataset)
+    // 默认展示今天的数据
+    this.currentkey = 0
+
    //  this.searchForm = this.
     var myChart = echarts.init(document.getElementById('main_lefttop'))
     var myChart2 = echarts.init(document.getElementById('main_leftdown'))
@@ -481,6 +612,7 @@ export default {
       ]
     }
    // 获取年度运力数据
+    myChart3.showLoading()
     getHomeYearDetail().then(data => {
       const monthArr = []
       const shipArr = []
@@ -502,6 +634,8 @@ export default {
     // 为echarts对象加载数据
     myChart.setOption(option)
     myChart2.setOption(option2)
+    this.myChart = myChart
+    this.myChart2 = myChart2
   }
 }
 </script>
@@ -584,7 +718,7 @@ export default {
       //   height: 100%;
       //   background: red;
       // }
-      li:hover{
+      li:hover,li.active{
         color:#3e9ff1;
         transform: scale(1.4);
         

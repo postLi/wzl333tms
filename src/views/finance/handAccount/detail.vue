@@ -79,10 +79,13 @@ export default {
     // this.fetchData()
   },
   watch: {
-    $route() {
-      this.searchQuery.vo.userId = this.$route.query.id
-      this.searchQuery.vo.orgid = this.$route.query.orgid
-      this.fetchData()
+    $route: {
+      handler() {
+        this.searchQuery.vo.userId = this.$route.query.id
+        this.searchQuery.vo.orgid = this.$route.query.orgid
+        this.fetchData()
+      },
+      immediate: true
     }
   },
   data() {

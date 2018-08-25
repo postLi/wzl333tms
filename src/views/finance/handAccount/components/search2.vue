@@ -68,7 +68,7 @@ export default {
   watch: {
     orgid: {
       handler(newVal) {
-        this.searchForm.orgid = Number(newVal)
+        this.searchForm.orgid = Number(newVal) || ''
       },
       immediate: true
     }

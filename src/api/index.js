@@ -9,8 +9,8 @@ import fetch from '@/utils/fetch'
 }
  * @param {*} params
  */
-export function postHomedetail(id) {
-  return fetch.post('/api-system/system/tmshomedetail/v1/home/1').then(res => {
+export function postHomedetail(id, data) {
+  return fetch.post('/api-system/system/tmshomedetail/v1/home/1', data).then(res => {
     return res.data || {}
   })
 }

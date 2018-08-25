@@ -17,6 +17,9 @@
   </div>
 </template>
 <script>
+// 需要考虑按需引入，减小引入体积
+// echarts的各模块
+// https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
 import { objectMerge2 } from '@/utils/index'
 export default {
@@ -83,7 +86,7 @@ export default {
       //   return this.$options.data().baseInfo
       // }
     },
-    truckInfo:{
+    truckInfo: {
       handler() {
         this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad) || 0
         this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume) || 0
@@ -120,7 +123,7 @@ export default {
       this.initChartVolume()
     },
     initChartWeight() {
-      let surweight = this.baseInfo.totalWeight - this.baseInfo.weight
+      const surweight = this.baseInfo.totalWeight - this.baseInfo.weight
       this.baseInfo.surplusWeight = surweight
       console.log(this.baseInfo.surplusWeight)
       if (this.popVisible) {
@@ -152,26 +155,26 @@ export default {
               }
             },
             data: [{
-                value: this.baseInfo.weight,
-                name: '已配载',
-                itemStyle: {
+              value: this.baseInfo.weight,
+              name: '已配载',
+              itemStyle: {
                   color: '#FFCC66'
                 }
-              },
-              {
-                value: this.baseInfo.surplusWeight,
-                name: '可配载',
-                itemStyle: {
+            },
+            {
+              value: this.baseInfo.surplusWeight,
+              name: '可配载',
+              itemStyle: {
                   color: '#79F7C1'
                 }
-              }
+            }
             ]
           }]
         })
       }
     },
     initChartVolume() {
-      let survolume = this.baseInfo.totalVolume - this.baseInfo.volume
+      const survolume = this.baseInfo.totalVolume - this.baseInfo.volume
       this.baseInfo.surplusVolume = survolume
       if (this.popVisible) {
         this.chart = echarts.init(this.$refs.echartVolume)
@@ -202,19 +205,19 @@ export default {
               }
             },
             data: [{
-                value: this.baseInfo.volume,
-                name: '已配载',
-                itemStyle: {
+              value: this.baseInfo.volume,
+              name: '已配载',
+              itemStyle: {
                   color: '#FFCC66'
                 }
-              },
-              {
-                value: this.baseInfo.surplusVolume,
-                name: '可配载',
-                itemStyle: {
+            },
+            {
+              value: this.baseInfo.surplusVolume,
+              name: '可配载',
+              itemStyle: {
                   color: '#79F7C1'
                 }
-              }
+            }
             ]
           }]
         })
