@@ -107,104 +107,104 @@ export default {
         //     slot: (scope) => {
         //       return ((this.searchQueryData.currentPage - 1)*this.searchQueryData.pageSize) + scope.$index + 1
         //     }
-        //   }, 
+        //   },
         {
-          label: "发车批次",
-          prop: "batchNo",
-          width: "110"
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '110'
         },
         {
-          label: "批次状态",
-          prop: "batchTypeName",
-          width: "90"
+          label: '批次状态',
+          prop: 'batchTypeName',
+          width: '90'
         },
         {
-          label: "车牌号",
-          prop: "truckIdNumber",
-          width: "100"
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '100'
         },
         {
-          label: "司机",
-          prop: "dirverName",
-          width: "120"
+          label: '司机',
+          prop: 'dirverName',
+          width: '120'
         },
         {
-          label: "司机电话",
-          prop: "dirverMobile",
-          width: "110"
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '110'
         },
         {
-          label: "短驳时间",
-          prop: "departureTime",
-          width: "160",
+          label: '短驳时间',
+          prop: 'departureTime',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
-          label: "配载时间",
-          prop: "loadTime",
-          width: "160",
+          label: '配载时间',
+          prop: 'loadTime',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
-          label: "发车网点",
-          prop: "orgName",
-          width: "120"
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120'
         },
         {
-          label: "到达网点",
-          prop: "arriveOrgName",
-          width: "120"
+          label: '到达网点',
+          prop: 'arriveOrgName',
+          width: '120'
         },
         {
-          label: "接收时间",
-          prop: "receivingTime",
-          width: "160",
+          label: '接收时间',
+          prop: 'receivingTime',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
-          label: "短驳费",
-          prop: "shortFee",
-          width: "100"
+          label: '短驳费',
+          prop: 'shortFee',
+          width: '100'
         },
         {
-          label: "配载总件数",
-          prop: "loadAmountall",
-          width: "100"
+          label: '配载总件数',
+          prop: 'loadAmountall',
+          width: '100'
         },
         {
-          label: "配载总重量",
-          prop: "loadWeightall",
-          width: "100"
+          label: '配载总重量',
+          prop: 'loadWeightall',
+          width: '100'
         },
         {
-          label: "配载总体积",
-          prop: "loadVolumeall",
-          width: "100"
+          label: '配载总体积',
+          prop: 'loadVolumeall',
+          width: '100'
         },
         {
-          label: "重量装载率",
-          prop: "weightLoadRate",
-          width: "100"
+          label: '重量装载率',
+          prop: 'weightLoadRate',
+          width: '100'
         }, {
-          label: "体积装载率",
-          prop: "volumeLoadRate",
-          width: "100"
+          label: '体积装载率',
+          prop: 'volumeLoadRate',
+          width: '100'
         },
         {
-          label: "短驳经办人",
-          prop: "userName",
-          width: "100"
+          label: '短驳经办人',
+          prop: 'userName',
+          width: '100'
         },
         {
-          label: "备注",
-          prop: "remark",
-          width: "150"
+          label: '备注',
+          prop: 'remark',
+          width: '150'
         }
       ]
     }
@@ -245,7 +245,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '././load', query: { loadTypeId: 38, tab: '新增短驳' } })
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' }})
           break
         case 'truck': // 发车
           if (isWork) {
@@ -295,7 +295,7 @@ export default {
       if (list.length === 1) {
         this.selected = Object.assign([], list)
         this.isDisBtn = false
-        let tid = 0
+        const tid = 0
         this.selected.forEach(e => {
           this.selectedData = Object.assign({}, e)
         })
@@ -319,14 +319,14 @@ export default {
         this.searchQueryData.vo.batchTypeId = undefined
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
-          if (data) {
+        if (data) {
             this.dataList = data.list
             this.total = data.total
             this.loading = false
           } else {
             this.loading = false
           }
-        })
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text)
         })
@@ -385,12 +385,12 @@ export default {
         }).then(() => {
           console.log('发车', this.commonTruck)
           putTruckDepart(this.commonTruck).then(data => {
-              if (data) {
+            if (data) {
                 this.$message({ type: 'success', message: '发车成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
-            })
+          })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text)
               this.clearData()
@@ -411,12 +411,12 @@ export default {
         }).then(() => {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
-              if (data) {
+            if (data) {
                 this.$message({ type: 'success', message: '取消发车操作成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
-            })
+          })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text)
               this.clearData()
@@ -426,7 +426,6 @@ export default {
         this.$message({ type: 'warning', message: '短驳中状态才可以取消发车' })
         this.clearData()
       }
-
     },
     chanelRepertory() { // 取消装车
       this.setData(47)
@@ -438,12 +437,12 @@ export default {
         }).then(() => {
           console.log('取消装车', this.commonTruck)
           putTruckLoad(this.commonTruck).then(data => {
-              if (data) {
+            if (data) {
                 this.$message({ type: 'success', message: '取消装车操作成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
-            })
+          })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text)
               this.clearData()
@@ -455,9 +454,9 @@ export default {
       }
     },
     edit() { // 修改
-      let batchTypeId = this.selectedData.batchTypeId
+      const batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
-        this.$router.push({ path: '././load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' } })
+        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' }})
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
         this.clearData()

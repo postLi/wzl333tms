@@ -17,103 +17,103 @@ export default {
   },
   icon: 'gongsiguanli',
   children: [{
-      path: '/company/index',
-      icon: 'information',
-      hidden: true,
-      name: '公司管理',
-      component: _import('company/index'),
-      meta: { title: '公司管理', stitle: '公司', noCache: true }
-    },
-    {
-      path: '/company/myinfo',
-      icon: 'information',
-      hidden: true,
-      name: '个人中心',
-      component: _import('company/myinfo/index'),
-      meta: { title: '个人中心', noCache: true }
-    },
-    {
-      path: '/company/groupManage',
-      icon: 'zuzhijiagou',
-      hidden: false,
-      name: 'groupManage',
-      component: _import('company/groupManage/index'),
-      meta: { title: '网点管理', stitle: '网点', noCache: false }
-    },
-    {
-      path: '/company/permissionManage',
-      icon: 'quanxianguanli',
-      hidden: false,
-      name: '权限管理',
-      component: _import('company/permissionManage/index'),
-      meta: { title: '权限管理', stitle: '权限', noCache: false }
-    },
-    {
-      path: '/company/employeeManage',
-      icon: 'yuangongguanli',
-      hidden: false,
-      name: 'employeeManage',
-      component: _import('company/employeeManage/index'),
-      meta: { title: '员工管理', stitle: '员工', noCache: false }
-    },
-    {
-      path: '/company/customerManage',
-      icon: 'kehuguanli',
-      hidden: false,
-      name: 'customerManage',
-      component: _import('company/customerManage/index'),
+    path: '/company/index',
+    icon: 'information',
+    hidden: true,
+    name: '公司管理',
+    component: _import('company/index'),
+    meta: { title: '公司管理', stitle: '公司', noCache: true }
+  },
+  {
+    path: '/company/myinfo',
+    icon: 'information',
+    hidden: true,
+    name: '个人中心',
+    component: _import('company/myinfo/index'),
+    meta: { title: '个人中心', noCache: true }
+  },
+  {
+    path: '/company/groupManage',
+    icon: 'zuzhijiagou',
+    hidden: false,
+    name: 'groupManage',
+    component: _import('company/groupManage/index'),
+    meta: { title: '网点管理', stitle: '网点', noCache: false }
+  },
+  {
+    path: '/company/permissionManage',
+    icon: 'quanxianguanli',
+    hidden: false,
+    name: '权限管理',
+    component: _import('company/permissionManage/index'),
+    meta: { title: '权限管理', stitle: '权限', noCache: false }
+  },
+  {
+    path: '/company/employeeManage',
+    icon: 'yuangongguanli',
+    hidden: false,
+    name: 'employeeManage',
+    component: _import('company/employeeManage/index'),
+    meta: { title: '员工管理', stitle: '员工', noCache: false }
+  },
+  {
+    path: '/company/customerManage',
+    icon: 'kehuguanli',
+    hidden: false,
+    name: 'customerManage',
+    component: _import('company/customerManage/index'),
       // redirect: '/company/customerManage/sender',
-      meta: { title: '客户管理', stitle: '客户', noCache: false },
-      children: [{
-          path: '/company/customerManage/sender',
-          icon: 'QQ',
-          name: '发货人',
-          component: _import('company/customerManage/sender'),
-          meta: { role: ['admin'], title: '发货人', noCache: true, istab: true }
-        },
-        {
-          path: '/company/customerManage/receiver',
-          icon: 'QQ',
-          name: '收货人',
-          component: _import('company/customerManage/receiver'),
-          meta: { role: ['admin'], title: '收货人', noCache: true, istab: true }
-        }
-      ]
+    meta: { title: '客户管理', stitle: '客户', noCache: false },
+    children: [{
+      path: '/company/customerManage/sender',
+      icon: 'QQ',
+      name: '发货人',
+      component: _import('company/customerManage/sender'),
+      meta: { role: ['admin'], title: '发货人', noCache: true, istab: true }
+    },
+    {
+      path: '/company/customerManage/receiver',
+      icon: 'QQ',
+      name: '收货人',
+      component: _import('company/customerManage/receiver'),
+      meta: { role: ['admin'], title: '收货人', noCache: true, istab: true }
+    }
+    ]
       /* children: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender/index'), meta: { title: '发货人', noCache: true }},
       { path: '/company/customerManage/receiver', hidden: false, name: '收货人', component: _import('company/customerManage/receiver/index'), meta: { title: '收货人', noCache: true }}] */
-    },
-    {
-      path: '/company/driverManage',
-      icon: 'sijiguanli',
-      hidden: false,
-      name: 'driverManage',
-      component: _import('company/driverManage/index'),
-      meta: { title: '司机管理', stitle: '司机', noCache: false }
-    },
-    {
-      path: '/company/trunkManage',
-      icon: 'cheliangguanli',
-      hidden: false,
-      name: 'trunkManage',
-      component: _import('company/trunkManage/index'),
-      meta: { title: '车辆管理', stitle: '车辆', noCache: false }
-    },
-    {
-      path: '/company/carrierManage',
-      icon: 'chengyunshang',
-      hidden: false,
-      name: 'carrierManage',
-      component: _import('company/carrierManage/index'),
-      meta: { title: '承运商管理', stitle: '承运商', noCache: false }
-    },
-    { path: '/company/systemSetup', icon: 'xitongshezhi', hidden: false, name: 'systemSetup', component: _import('company/systemSetup/index'), meta: { title: '系统设置', stitle: '设置', noCache: false } },
-    {
-      path: '/company/printManage',
-      icon: 'dayin',
-      hidden: true,
-      name: '打印模版管理',
-      component: _import('company/printManage/index'),
-      meta: { title: '打印模版管理', stitle: '打印', noCache: true }
-    }
+  },
+  {
+    path: '/company/driverManage',
+    icon: 'sijiguanli',
+    hidden: false,
+    name: 'driverManage',
+    component: _import('company/driverManage/index'),
+    meta: { title: '司机管理', stitle: '司机', noCache: false }
+  },
+  {
+    path: '/company/trunkManage',
+    icon: 'cheliangguanli',
+    hidden: false,
+    name: 'trunkManage',
+    component: _import('company/trunkManage/index'),
+    meta: { title: '车辆管理', stitle: '车辆', noCache: false }
+  },
+  {
+    path: '/company/carrierManage',
+    icon: 'chengyunshang',
+    hidden: false,
+    name: 'carrierManage',
+    component: _import('company/carrierManage/index'),
+    meta: { title: '承运商管理', stitle: '承运商', noCache: false }
+  },
+    { path: '/company/systemSetup', icon: 'xitongshezhi', hidden: false, name: 'systemSetup', component: _import('company/systemSetup/index'), meta: { title: '系统设置', stitle: '设置', noCache: false }},
+  {
+    path: '/company/printManage',
+    icon: 'dayin',
+    hidden: true,
+    name: '打印模版管理',
+    component: _import('company/printManage/index'),
+    meta: { title: '打印模版管理', stitle: '打印', noCache: true }
+  }
   ]
 }

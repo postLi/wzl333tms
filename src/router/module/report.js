@@ -8,7 +8,7 @@ export default {
   icon: 'baobiao',
   name: '报表管理首页',
   noDropdown: false,
-  meta:{
+  meta: {
     title: '报表管理'
   },
   children: [{

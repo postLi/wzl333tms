@@ -1,3 +1,9 @@
+.viewtip{
+    font-size: 12px;
+    color: #999;
+    margin-left: 10px;
+    line-height: 30px;
+}
 .tab-wrapper{
   height: 100%;
   padding-top: 8px;
@@ -7,11 +13,12 @@
     line-height: 30px;
     border-bottom: 1px solid #91cbf7;
   }
+
   .tab-label:first-child{
     margin-left: 1px;
     border-left-width: 1px; 
-    
   }
+  
   .tab-label{
     float: left;
     padding-left: 12px;
@@ -29,7 +36,7 @@
       background: #ffffee;
     }
   }
-  .active-tab{
+  .active-tab,.router-link-active{
     color:#3e9ff1;
     border-color: #3e9ff1;
     border-bottom-color: #fff;

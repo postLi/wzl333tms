@@ -487,7 +487,7 @@ export default {
           }
           var id = this.selected[0].id
 
-          this.$router.push({ path: '/operation/order/track', query: {
+          this.$router.push({ path: '/operation/order/track/transfer', query: {
             transfer: id
           }})
           break
