@@ -14,6 +14,7 @@
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -28,107 +29,40 @@
             type="selection"
             width="50">
           </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="80">
-            <template slot-scope="scope">
-              {{ (searchQuery.currentPage - 1)*searchQuery.pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="120"
-            label="归属网点">
-          </el-table-column>
-          <el-table-column
-            prop="driverName"
-            sortable
-            width="120"
-            label="司机姓名">
-          </el-table-column>
-          <el-table-column
-            prop="driverMobile"
-            sortable
-            width="120"
-            label="司机电话">
-          </el-table-column>
-          <el-table-column
-            sortable
-            width="200"
-            prop="driverCardid"
-            label="身份证号码">
-          </el-table-column>
-          <el-table-column
-            label="驾驶证类型"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">
-              {{ getLicenType(scope.row.licenseType) }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="驾驶证有效期"
-            width="180"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.validityDate | parseTime('{y}-{m}-{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="bankCardNumber"
-            label="银行卡号"
-            width="200"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="银行名称"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="openBank"
-            label="开户行"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="driverAddress"
-            label="地址"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="driverRemarks"
-            label="备注"
-            sortable
-            >
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.ispic" :width="column.width">
+              <template slot-scope="scope">
+                <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span>
+              </template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
+            
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <AddCustomer :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn"  />
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'driver'"></ImportDialog>
   </div>
 </template>
 <script>
 import { getAllDriver, deleteSomeDriverInfo, getExportExcel, getDriverLiceseType } from '@/api/company/driverManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
+import { objectMerge2, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   name: 'driverManage',
@@ -178,7 +112,71 @@ export default {
           driverName: ''
         }
       },
-      licenseTypes: []
+      licenseTypes: [],
+      tablekey: '',
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '归属网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '司机姓名',
+        prop: 'driverName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '司机电话',
+        prop: 'driverMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '身份证号码',
+        prop: 'driverCardid',
+        width: '120',
+        fixed: false
+      }, {
+        label: '驾驶证类型',
+        prop: 'licenseTypeName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '驾驶证有效期',
+        prop: 'validityDate',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          return parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}')
+        }
+      }, {
+        label: '银行卡号',
+        prop: 'bankCardNumber',
+        width: '180'
+      }, {
+        label: '银行名称',
+        prop: 'bankName',
+        fixed: false
+      }, {
+        label: '开户行',
+        prop: 'openBank',
+        fixed: false
+      }, {
+        label: '地址',
+        prop: 'driverAddress',
+        fixed: false
+      }, {
+        label: '备注',
+        prop: 'driverRemarks',
+        width: '180',
+        fixed: false
+      }]
     }
   },
   methods: {
@@ -214,9 +212,8 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type!=='import') {
+      if (!this.selected.length && type !== 'add' && type !== 'import' && type !== 'export') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -281,19 +278,15 @@ export default {
           break
           // 导出数据
         case 'export':
-          var ids2 = this.selected.map(el => {
-            return el.id
-          })
-          getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '司机列表-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'import':
-        this.importDialogVisible = true
-        break
+          this.importDialogVisible = true
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -303,6 +296,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true

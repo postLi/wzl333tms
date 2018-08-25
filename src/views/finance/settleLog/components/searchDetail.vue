@@ -1,22 +1,24 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <el-form-item label="结算时间">
-      <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @change="changeVal">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="结算网点" prop="orgId">
-      <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"  @change="changeVal">
-      </SelectTree>
-    </el-form-item>
-    <el-form-item label="费用类型" prop="feeId">
-      <el-select v-model="searchForm.feeId" @change="changeVal">
-        <el-option label="全部" value=""></el-option>
-        <el-option v-for="item in feeIds" :label="item.feeType" :value="item.id" :key="item.id"></el-option>
-      </el-select>
-      <!-- <selectType v-model="searchForm.feeId" type="fee_type" @change="selectFeeType">
-        <el-option slot="head" label="全部" value=""></el-option>
-      </selectType> -->
-    </el-form-item>
+    <div class="staff_searchinfo--input">
+      <el-form-item label="结算时间">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @change="changeVal">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结算网点" prop="orgId">
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"  @change="changeVal">
+        </SelectTree>
+      </el-form-item>
+      <el-form-item label="费用类型" prop="feeId">
+        <el-select v-model="searchForm.feeId" @change="changeVal">
+          <el-option label="全部" value=""></el-option>
+          <el-option v-for="item in feeIds" :label="item.feeType" :value="item.id" :key="item.id"></el-option>
+        </el-select>
+        <!-- <selectType v-model="searchForm.feeId" type="fee_type" @change="selectFeeType">
+          <el-option slot="head" label="全部" value=""></el-option>
+        </selectType> -->
+      </el-form-item>
+    </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -42,7 +44,7 @@ export default {
       default: 'mini'
     },
     orgid: {
-      type: Number
+      type: [Number, String]
     }
   },
   data() {
@@ -103,7 +105,7 @@ export default {
       }
       this.$emit('change', searchObj)
     },
-    changeVal (obj) {
+    changeVal(obj) {
       this.onSubmit()
     },
     clearForm(formName) {

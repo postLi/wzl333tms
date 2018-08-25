@@ -88,7 +88,7 @@ export default {
       loading: false,
       setupTableVisible: false,
       tableColumn: [
-      {
+        {
           label: '序号',
           prop: 'id',
           width: '50',
@@ -112,7 +112,7 @@ export default {
         {
           label: '发车网点',
           prop: 'orgName',
-          width: "120",
+          width: '120',
           fixed: false
         },
         {
@@ -202,38 +202,46 @@ export default {
       ]
     }
   },
- methods: {
-    getSearchParam(obj) {
+  methods: {
+   getSearchParam(obj) {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
-    handlePageChange(obj) {
+   handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    fetchList() {
+   fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
       })
     },
-    setTable() {},
-    doAction(type) {
+   setTable() {},
+   doAction(type) {
       switch (type) {
         case 'count':
           this.count()
           break
         case 'export':
-          SaveAsFile(this.dataList, this.tableColumn)
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-整车保险费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
-          PrintInFullPage(this.dataList, this.tableColumn)
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-整车保险费'
+          })
           break
       }
     },
-    count() {
+   count() {
       let count = 0
       if (this.selectedList.length !== 0) {
         objectMerge2([], this.selectedList).forEach(e => {
@@ -247,7 +255,7 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({type: 'warning', message: '不能同时结算两个不同的网点'})
+        this.$message({ type: 'warning', message: '不能同时结算两个不同的网点' })
         return false
       }
       if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点
@@ -263,10 +271,10 @@ export default {
         }
       })
     },
-    clickDetails(row) {
+   clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection(list) {
+   getSelection(list) {
       this.selectListBatchNos = []
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
@@ -274,20 +282,20 @@ export default {
       this.selectedList = list
       console.log(this.selectListBatchNos)
     },
-    showDetail(order) {
+   showDetail(order) {
       // this.eventBus.$emit('showOrderDetail', order.id)
     },
-    setTable() {
+   setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable() {
+   closeSetupTable() {
       this.setupTableVisible = false
     },
-    setColumn(obj) { // 重绘表格列表
+   setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     }
-  }
+ }
 }
 
 </script>

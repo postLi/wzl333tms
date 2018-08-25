@@ -9,6 +9,7 @@
                 <el-table
                     ref="multipleTable"
                     :data="usersArr"
+                    :key="tablekey"
                     stripe
                     border
                     @row-click="clickDetails"
@@ -23,76 +24,15 @@
                       type="selection"
                       width="50">
                     </el-table-column>
-                    <el-table-column
-                        fixed
-                        sortable
-                        label="序号"
-                        width="80">
+                    <template v-for="column in tableColumn">
+                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
                         <template slot-scope="scope">
-                        {{ (searchForm.pageNum - 1)*searchForm.pageSize + scope.$index + 1 }}
+                          <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                          <span v-else v-html="column.slot(scope)"></span>
                         </template>
-                    </el-table-column>
-                    <el-table-column
-                      fixed
-                      sortable
-                      prop="name"
-                      width="150"
-                      label="姓名">
-                    </el-table-column>
-                    <el-table-column
-                      prop="orgName"
-                      sortable
-                      width="150"
-                      label="归属网点">
-                    </el-table-column>
-                    <el-table-column
-                      prop="departmentName"
-                      sortable
-                      width="150"
-                      label="归属部门">
-                    </el-table-column>
-                    <el-table-column
-                      prop="position"
-                      sortable
-                      width="150"
-                      label="职务">
-                    </el-table-column>
-                    <el-table-column
-                      prop="username"
-                      sortable
-                      width="150"
-                      label="登录账号">
-                    </el-table-column>
-                    <el-table-column
-                      sortable
-                      width="200"
-                      label="权限角色">
-                       <template slot-scope="scope">
-                           <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
-                           <span class="unauth" v-else>未授权</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      label="性别"
-                      width="120"
-                      sortable
-                      >
-                      <template slot-scope="scope">
-                          {{ scope.row.sexFlag === "0" ? "男" : scope.row.sexFlag === "1" ? "女" : '' }}
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="mobilephone"
-                      label="联系手机"
-                      width="150"
-                      sortable
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      sortable
-                      label="创建日期">
-                      <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d}') }}</template>
-                    </el-table-column>
+                      </el-table-column>
+                    </template>
                   </el-table>
             </div>
 
@@ -101,7 +41,7 @@
         <transition name="slideInRight">
             <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData"  />
         </transition>
-        <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"  />
         <transition name="slideInRight">
             <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" v-if="showSetAuth" />
         </transition>
@@ -112,11 +52,11 @@
 import { getAllOrgInfo, getAllUser, deleteEmployeer } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import SearchForm from './search'
-import TableSetup from './tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddEmployeer from './add'
 import SetAuth from './authorization'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2 } from '@/utils/'
+import { objectMerge2, parseTime } from '@/utils/'
 
 export default{
   name: 'employeeManage',
@@ -165,7 +105,69 @@ export default{
       dialogFormVisible: false,
             // 是否修改员工信息
       isModify: false,
-      total: 0
+      total: 0,
+      tablekey: '',
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchForm.pageNum - 1) * this.searchForm.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '姓名',
+        prop: 'name',
+        width: '120',
+        fixed: true
+      }, {
+        label: '归属网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '归属部门',
+        prop: 'departmentName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '职务',
+        prop: 'position',
+        width: '120',
+        fixed: false
+      }, {
+        label: '登录账号',
+        prop: 'username',
+        width: '120',
+        fixed: false
+      }, {
+        label: '权限角色',
+        prop: 'rolesName',
+        width: '200',
+        slot: (scope) => {
+          return scope.row.rolesId !== '0' ? scope.row.rolesName : '<span class="unauth" v-else>未授权</span>'
+        },
+        fixed: false
+      }, {
+        label: '性别',
+        prop: 'sexFlag',
+        width: '100',
+        slot: (scope) => {
+          return scope.row.sexFlag === '0' ? '男' : scope.row.sexFlag === '1' ? '女' : ''
+        }
+      }, {
+        label: '联系手机',
+        prop: 'mobilephone',
+        width: '120',
+        fixed: false
+      }, {
+        label: '创建日期',
+        prop: 'createTime',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        },
+        fixed: false
+      }]
     }
   },
   mounted() {
@@ -264,6 +266,10 @@ export default{
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddEmployeer() {
       this.showAddEmployeer = true

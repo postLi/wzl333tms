@@ -12,6 +12,7 @@
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -56,17 +57,18 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <AddOrder @action="setAction" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
 </template>
 <script>
 import * as transferManageApi from '@/api/operation/transfer'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, uniqArray } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   components: {
@@ -120,6 +122,7 @@ export default {
         }
       },
       // 默认sort值为true
+      tablekey: '',
       tableColumn: [{
         'label': '中转批次',
         'prop': 'transferBatchNo',
@@ -221,27 +224,27 @@ export default {
       }).then(() => {
           // 提交前先进行去重
         transferManageApi.deleteTransfer(this.otherinfo.orgid, uniqArray(transferBatchNos).join(','), '').then(res => {
-            this.$message({
+          this.$message({
               type: 'success',
               message: '取消成功!'
             })
-            this.fetchData()
-          }).catch(err => {
+          this.fetchData()
+        }).catch(err => {
             this.$message({
               type: 'info',
               message: '取消失败，原因：' + (err.errorInfo ? err.errorInfo : err.text)
             })
           })
       }).catch((err) => {
-          this.$message({
+        this.$message({
             type: 'info',
             message: '已取消:' + JSON.stringify(err)
           })
-        })
+      })
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'waifa') {
+      if (!this.selected.length && type !== 'waifa' && type !== 'export' && type !== 'print') {
         this.closeAddOrder()
         this.$message({
           message: '请选择要操作的项~',
@@ -264,9 +267,9 @@ export default {
           this.isModify = true
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能修改单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
           }
           this.selectInfo = this.selected[0]
           this.$router.push({ path: '/operation/order/transferLoad', query: {
@@ -277,9 +280,9 @@ export default {
         case 'track':
           if (this.selected.length > 1) {
             this.$message({
-                      message: '每次只能操作单条数据~',
-                      type: 'warning'
-                    })
+              message: '每次只能操作单条数据~',
+              type: 'warning'
+            })
           }
           const id = this.selected[0].id
 
@@ -297,12 +300,12 @@ export default {
           } else {
                   // 获取批次
             const transferBatchNos = avaiableItem.map(el => {
-                    return el.transferBatchNo
-                  })
+              return el.transferBatchNo
+            })
                   // 获取运单号
             const shipSns = avaiableItem.map(el => {
-                    return el.shipSn
-                  })
+              return el.shipSn
+            })
 
             this.cancelBatch(transferBatchNos)
           }
@@ -310,14 +313,17 @@ export default {
           break
           // 导出数据
         case 'export':
-          const ids2 = this.selected.map(el => {
-            return el.customerId
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '中转批次列表-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
-          transferManageApi.getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-                  type: 'success',
-                  message: '即将自动下载!'
-                })
+          break
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '中转批次列表'
           })
           break
       }
@@ -329,6 +335,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddOrder(item) {
       this.selectInfo = item

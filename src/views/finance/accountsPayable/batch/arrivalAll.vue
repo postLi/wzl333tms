@@ -87,7 +87,7 @@ export default {
       loading: false,
       setupTableVisible: false,
       tableColumn: [
-      {
+        {
           label: '序号',
           prop: 'id',
           width: '50',
@@ -111,7 +111,7 @@ export default {
         {
           label: '发车网点',
           prop: 'orgName',
-          width: "120",
+          width: '120',
           fixed: false
         },
         {
@@ -281,23 +281,31 @@ export default {
           this.count()
           break
         case 'export':
-          SaveAsFile(this.dataList, this.tableColumn)
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-到车汇总-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
-          PrintInFullPage(this.dataList, this.tableColumn)
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-到车汇总'
+          })
           break
       }
     },
     count() {
-     this.$router.push({
-        path: '../accountsLoad',
-        query: {
+      this.$router.push({
+       path: '../accountsLoad',
+       query: {
           tab: '到车汇总结算',
           currentPage: 'batchArrivalAll', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
-      })
+     })
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)

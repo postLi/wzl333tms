@@ -108,22 +108,42 @@ Vue.directive('onlyNumberAndLetter', {
   }
 })
 // 展示大图
+function clickImageShowBig(el) {
+  MessageBox.alert('<div class="showPictureBox"><img src="' + (el.getAttribute('imgurl') || el.src || el.href) + '" /></div>', {
+    dangerouslyUseHTMLString: true,
+    showConfirmButton: false,
+    closeOnClickModal: true,
+    center: true,
+    customClass: 'showPictureWrapper',
+    // 必须指定callback 或者 promise回调，否则会报错
+    callback: () => {
+
+    }
+  })
+}
+// 全局绑定一个委托事件，用来侦测是否需要预览
+function bingAppClickImageShow() {
+  const el = document.getElementById('app')
+  if (el) {
+    el.addEventListener('click', function(e) {
+      // 简单判断
+      const find = e.srcElement
+      if (find.classList.contains('toPreviewImg')) {
+        e.preventDefault()
+        e.stopPropagation()
+        clickImageShowBig(find)
+      }
+    })
+  }
+}
+bingAppClickImageShow()
+
 Vue.directive('showPicture', {
   bind: function(el) {
     el.addEventListener('click', function(e) {
       e.preventDefault()
       e.stopPropagation()
-      MessageBox.alert('<div class="showPictureBox"><img src="' + (this.getAttribute('imgurl') || el.src || el.href) + '" /></div>', {
-        dangerouslyUseHTMLString: true,
-        showConfirmButton: false,
-        closeOnClickModal: true,
-        center: true,
-        customClass: 'showPictureWrapper',
-        // 必须指定callback 或者 promise回调，否则会报错
-        callback: () => {
-
-        }
-      })
+      clickImageShowBig(el)
     })
   },
   unbind: function(el) {

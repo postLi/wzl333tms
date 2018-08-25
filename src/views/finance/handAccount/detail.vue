@@ -13,6 +13,7 @@
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -55,15 +56,16 @@
         </el-table>
       </div>   
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
   </div>
 </template>
 <script>
 import * as handAccountApi from '@/api/finance/handAccount'
 import SearchForm from './components/search2'
-import TableSetup from './components/tableSetup'
-import { getSummaries } from '@/utils/'
+import TableSetup from '@/components/tableSetup'
+import { getSummaries, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   name: 'handAccountDetail',
@@ -112,6 +114,7 @@ export default {
         }
       },
       // 默认sort值为true
+      tablekey: '',
       tableColumn: [{
         'label': '序号',
         'prop': '',
@@ -213,7 +216,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -232,14 +235,17 @@ export default {
           break
           // 导出数据
         case 'export':
-          var ids2 = this.selected.map(el => {
-            return el.customerId
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: this.$route.query.tab.replace('查看', '') + '交账单-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
-          handAccountApi.getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          break
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: this.$route.query.tab.replace('查看', '') + '交账单'
           })
           break
       }

@@ -90,192 +90,192 @@ export default {
       loading: false,
       setupTableVisible: false,
       tableColumn: [
-      {
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '运单标识',
-        prop: 'shipIdentifying',
-        width: '150',
-        fixed: false,
-        slot: function(scope) {
+        {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '运单标识',
+          prop: 'shipIdentifying',
+          width: '150',
+          fixed: false,
+          slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      },
-      {
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '140',
-        fixed: false
-      },
-      {
-        label: '到达城市',
-        prop: 'shipToCityName',
-        width: '140',
-        fixed: false
-      },
-      {
-        label: '实际提货费',
-        prop: 'fee',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '已结实际提货费',
-        prop: 'closeFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结实际提货费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单日期',
-        prop: 'createTime',
-        width: '160',
-        slot: (scope) => {
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '140',
+          fixed: false
+        },
+        {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '140',
+          fixed: false
+        },
+        {
+          label: '实际提货费',
+          prop: 'fee',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '已结实际提货费',
+          prop: 'closeFee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '未结实际提货费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '开单日期',
+          prop: 'createTime',
+          width: '160',
+          slot: (scope) => {
           return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
-        fixed: false
-      },
-      {
-        label: '发货方',
-        prop: 'senderUnit',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '发货人',
-        prop: 'senderCustomerName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '收货方',
-        prop: 'receiverUnit',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '收货人',
-        prop: 'receiverCustomerName',
-        width: '100',
-        fixed: false
-      },
+          fixed: false
+        },
+        {
+          label: '发货方',
+          prop: 'senderUnit',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '发货人',
+          prop: 'senderCustomerName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '收货方',
+          prop: 'receiverUnit',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'receiverCustomerName',
+          width: '100',
+          fixed: false
+        },
         // {
         //   label: '结算操作人',
         //   prop: 'settlementBy',
         //   width: '100',
         //   fixed: false
         // },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '件数',
-        prop: 'cargoAmount',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '重量(kg)',
-        prop: 'cargoWeight',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '体积(方)',
-        prop: 'cargoVolume',
-        width: '90',
-        fixed: false
-      },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '重量(kg)',
+          prop: 'cargoWeight',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '体积(方)',
+          prop: 'cargoVolume',
+          width: '90',
+          fixed: false
+        },
         // {
         //   label: '提货车牌',
         //   prop: 'shipIdentifying',
         //   width: '150',
         //   fixed: false
         // },
-      {
-        label: '付款方式',
-        prop: 'shipPayWayName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '制单人',
-        prop: 'userName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '发货人电话',
-        prop: 'senderCustomerMobile',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '发货人地址',
-        prop: 'senderDetailedAddress',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '收货人电话',
-        prop: 'receiverCustomerMobile',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '收货地址',
-        prop: 'receiverDetailedAddress',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '交接方式',
-        prop: 'shipDeliveryMethodName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '时效',
-        prop: 'shipEffectiveName',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '150',
-        fixed: false
-      }
+        {
+          label: '付款方式',
+          prop: 'shipPayWayName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '制单人',
+          prop: 'userName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '发货人电话',
+          prop: 'senderCustomerMobile',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '发货人地址',
+          prop: 'senderDetailedAddress',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '收货人电话',
+          prop: 'receiverCustomerMobile',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '收货地址',
+          prop: 'receiverDetailedAddress',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '交接方式',
+          prop: 'shipDeliveryMethodName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '时效',
+          prop: 'shipEffectiveName',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '150',
+          fixed: false
+        }
       ]
     }
   },
@@ -305,10 +305,18 @@ export default {
           this.count()
           break
         case 'export':
-          SaveAsFile(this.dataList, this.tableColumn)
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '运单结算-实际提货费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
-          PrintInFullPage(this.dataList, this.tableColumn)
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '运单结算-实际提货费'
+          })
           break
       }
     },
@@ -316,11 +324,11 @@ export default {
       this.$router.push({
         path: '../accountsLoad',
         query: {
-         tab: '实际提货费结算',
-         currentPage: 'waybillTicket', // 本页面标识符
-         searchQuery: JSON.stringify(this.searchQuery), // 搜索项
-         selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
-       }
+          tab: '实际提货费结算',
+          currentPage: 'waybillTicket', // 本页面标识符
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
+        }
       })
     },
     clickDetails(row) {

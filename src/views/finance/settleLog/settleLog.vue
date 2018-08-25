@@ -97,7 +97,7 @@ export default {
         {
           label: '结算网点',
           prop: 'orgName',
-          width: "120",
+          width: '120',
           fixed: false
         },
         {
@@ -244,10 +244,18 @@ export default {
           }
           break
         case 'export':
-          SaveAsFile(this.dataList, this.tableColumn)
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '资金流水-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
-          PrintInFullPage(this.dataList, this.tableColumn)
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '资金流水'
+          })
           break
       }
     },
@@ -269,19 +277,19 @@ export default {
       })
     },
     cancelCount() {
-      let data = {}
+      const data = {}
       this.$set(data, 'flowId', this.selectedList[0].flowId)
       postCancelSettlement(data).then(data => {
-          this.$message({ type: 'success', message: '取消结算操作成功' })
-          this.fetchList()
-        })
+        this.$message({ type: 'success', message: '取消结算操作成功' })
+        this.fetchList()
+      })
         .catch(error => {
           this.$message({ type: 'error', message: '取消结算操作失败' })
           this.fetchList()
         })
     },
     showCount() {
-      this.tableReceiptInfo = Object.assign([],this.selectedList)
+      this.tableReceiptInfo = Object.assign([], this.selectedList)
       this.popVisibleDialog = true
       this.$refs.multipleTable.clearSelection()
     },

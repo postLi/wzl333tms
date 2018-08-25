@@ -14,6 +14,7 @@
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -28,108 +29,40 @@
             type="selection"
             width="50">
           </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="80">
-            <template slot-scope="scope">
-              {{ (searchQuery.currentPage - 1)*searchQuery.pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="companyName"
-            label="收货公司">
-          </el-table-column>
-          <el-table-column
-            prop="customerUnit"
-            sortable
-            label="收货方">
-          </el-table-column>
-          <el-table-column
-            prop="customerName"
-            sortable
-            label="收货人">
-          </el-table-column>
-          <el-table-column
-            prop="customerMobile"
-            sortable
-            label="手机号码">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="orgName"
-            label="归属组织">
-          </el-table-column>
-          <el-table-column
-            label="公司法人"
-            prop="legalPersonname"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="vipNum"
-            label="VIP号"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="idcard"
-            label="身份证号码">
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="银行名称"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="bankCardNumber"
-            label="银行卡号"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="openBank"
-            label="开户行"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="detailedAddress"
-            label="详细地址"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            label="身份证图片"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">
-                <span v-showPicture :imgurl="scope.row.idCardPositive">预览</span>
-            </template>
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.ispic" :width="column.width">
+              <template slot-scope="scope">
+                <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span>
+              </template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
+            
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange"  /></div> </div>
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn"  />
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'receiver'"></ImportDialog>
   </div>
 </template>
 <script>
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
+import { objectMerge2, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   components: {
@@ -178,7 +111,78 @@ export default {
           customerMobile: '',
           customerName: ''
         }
-      }
+      },
+      tablekey: '',
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '收货公司',
+        prop: 'companyName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '收货方',
+        prop: 'customerUnit',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'customerName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '手机号码',
+        prop: 'customerMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '归属组织',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '公司法人',
+        prop: 'legalPersonname',
+        width: '120',
+        fixed: false
+      }, {
+        label: 'VIP号',
+        prop: 'vipNum',
+        width: '180'
+      }, {
+        label: '身份证号码',
+        prop: 'idcard',
+        width: 200,
+        fixed: false
+      }, {
+        label: '银行名称',
+        prop: 'bankName',
+        fixed: false
+      }, {
+        label: '银行卡号',
+        prop: 'bankCardNumber',
+        fixed: false
+      }, {
+        label: '开户行',
+        prop: 'openBank',
+        fixed: false
+      }, {
+        label: '详细地址',
+        prop: 'detailedAddress',
+        fixed: false
+      }, {
+        label: '身份证图片',
+        prop: 'idCardPositive',
+        width: '180',
+        fixed: false,
+        ispic: true
+      }]
     }
   },
   methods: {
@@ -207,9 +211,8 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'import') {
+      if (!this.selected.length && type !== 'add' && type !== 'import' && type !== 'export') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -261,9 +264,9 @@ export default {
               this.fetchData()
             }).catch(err => {
               this.$message({
-                        type: 'info',
-                        message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
-                      })
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err.text
+              })
             })
           }).catch(() => {
             this.$message({
@@ -274,19 +277,15 @@ export default {
           break
           // 导出数据
         case 'export':
-          const ids2 = this.selected.map(el => {
-            return el.customerId
-          })
-          getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '收货人列表-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'import':
           this.importDialogVisible = true
-        break
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -296,6 +295,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true

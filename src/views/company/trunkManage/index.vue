@@ -14,6 +14,7 @@
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -28,146 +29,40 @@
             type="selection"
             width="50">
           </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="80">
-            <template slot-scope="scope">
-              {{ (searchQuery.currentPage - 1)*searchQuery.pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="truckIdNumber"
-            fixed            
-            sortable
-            width="120"
-            label="车牌号">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="orgName"
-            width="120"
-            label="归属网点">
-          </el-table-column>
-          <el-table-column
-            sortable
-            width="130"
-            label="车辆来源">
-            <template slot-scope="scope">
-              {{ getLabelName(scope.row.truckSource, truckSources) }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="truckLoad"
-            width="130"
-            label="可载重（吨）">
-          </el-table-column>
-          <el-table-column
-            label="可载体积"
-            prop="truckVolume"
-            width="130"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            label="车长"
-            prop="truckHeight"
-            width="100"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="truckWidth"
-            label="车宽"
-            width="100"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="truckHeight"
-            label="车高"
-            width="100"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            label="车型"
-            width="100"
-            sortable
-            >
-            <template slot-scope="scope">
-              {{ getLabelName(scope.row.truckType, truckTypes) }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="车辆注册时间"
-            width="150"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.truckRegisterDate | parseTime('{y}-{m}-{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            label="车辆报废时间"
-            width="150"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.truckScrapDate | parseTime('{y}-{m}-{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="truckRemarks"
-            label="备注"
-            width="100"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="truckUnit"
-            label="车辆单位"
-            width="130"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="truckUnitMobile"
-            label="单位电话"
-            width="130"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="driverName"
-            label="司机"
-            width="100"
-            sortable
-            >
-          </el-table-column>
-
-          <el-table-column
-            prop="dirverMobile"
-            label="司机电话"
-            width="130"
-            sortable
-            >
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.ispic" :width="column.width">
+              <template slot-scope="scope">
+                <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span>
+              </template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
+            
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <AddCustomer :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn"  />
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'truck'"></ImportDialog>
   </div>
 </template>
 <script>
 import { getAllTrunk, deleteSomeTrunkInfo, getExportExcel, getTruckType, getTruckSource } from '@/api/company/trunkManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
+import { objectMerge2, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   name: 'trunkManage',
@@ -219,7 +114,106 @@ export default {
         }
       },
       truckSources: [],
-      truckTypes: []
+      truckTypes: [],
+      tablekey: '',
+      tableColumn: [
+        {
+          label: '序号',
+          prop: 'id',
+          width: '80',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        }, {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: true
+        }, {
+          label: '归属网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '车辆来源',
+          prop: 'truckSource',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            return this.getLabelName(scope.row.truckSource, this.truckSources)
+          }
+        }, {
+          label: '可载重（吨）',
+          prop: 'truckLoad',
+          width: '120',
+          fixed: false
+        }, {
+          label: '可载体积（方）',
+          prop: 'truckVolume',
+          width: '120',
+          fixed: false
+        }, {
+          label: '车长',
+          prop: 'truckLength',
+          width: '100'
+        }, {
+          label: '车宽',
+          prop: 'truckWidth',
+          fixed: false
+        }, {
+          label: '车高',
+          prop: 'truckHeight',
+          fixed: false
+        }, {
+          label: '车型',
+          prop: 'truckType',
+          fixed: false,
+          slot: (scope) => {
+            return this.getLabelName(scope.row.truckType, this.truckTypes)
+          }
+        }, {
+          label: '车辆注册时间',
+          prop: 'truckRegisterDate',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            return parseTime(scope.row.truckRegisterDate, '{y}-{m}-{d} {h}:{i}:{s}')
+          }
+        }, {
+          label: '车辆报废时间',
+          prop: 'truckScrapDate',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            return parseTime(scope.row.truckScrapDate, '{y}-{m}-{d} {h}:{i}:{s}')
+          }
+        }, {
+          label: '备注',
+          prop: 'truckRemarks',
+          width: '180',
+          fixed: false
+        }, {
+          label: '车辆单位',
+          prop: 'truckUnit',
+          width: '180',
+          fixed: false
+        }, {
+          label: '单位电话',
+          prop: 'truckUnitMobile',
+          width: '180',
+          fixed: false
+        }, {
+          label: '司机',
+          prop: 'driverName',
+          width: '180',
+          fixed: false
+        }, {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '180',
+          fixed: false
+        }]
     }
   },
   methods: {
@@ -262,9 +256,8 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'import') {
+      if (!this.selected.length && type !== 'add' && type !== 'import' && type !== 'export') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -329,19 +322,15 @@ export default {
           break
           // 导出数据
         case 'export':
-          var ids2 = this.selected.map(el => {
-            return el.truckId
-          })
-          getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '车辆列表-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'import':
-        this.importDialogVisible = true
-        break
+          this.importDialogVisible = true
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -351,6 +340,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true

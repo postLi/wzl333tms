@@ -88,116 +88,116 @@ export default {
       loading: false,
       setupTableVisible: false,
       tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '50',
-          fixed: true,
-          slot: (scope) => {
+        label: '序号',
+        prop: 'id',
+        width: '50',
+        fixed: true,
+        slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
-        },
-        {
-          label: '短驳批次',
-          prop: 'batchNo',
-          width: '130',
-          fixed: true
-        },
-        {
-          label: '结算状态',
-          prop: 'statusName',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '发车网点',
-          prop: 'orgName',
-          width: "120",
-          fixed: false
-        },
-        {
-          label: '到达网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '短驳时间',
-          prop: 'departureTime',
-          width: '160',
-          fixed: false,
-          slot: (scope) => {
+      },
+      {
+        label: '短驳批次',
+        prop: 'batchNo',
+        width: '130',
+        fixed: true
+      },
+      {
+        label: '结算状态',
+        prop: 'statusName',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达网点',
+        prop: 'arriveOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '短驳时间',
+        prop: 'departureTime',
+        width: '160',
+        fixed: false,
+        slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-        },
-        {
-          label: '接收时间',
-          prop: 'receivingTime',
-          width: '160',
-          fixed: false,
-          slot: (scope) => {
+      },
+      {
+        label: '接收时间',
+        prop: 'receivingTime',
+        width: '160',
+        fixed: false,
+        slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-        },
-        {
-          label: '短驳费',
-          prop: 'fee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '已结短驳费',
-          prop: 'paidFee',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '未结短驳费',
-          prop: 'unpaidFee',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '车牌号',
-          prop: 'truckIdNumber',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '司机名称',
-          prop: 'dirverName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '司机电话',
-          prop: 'dirverMobile',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '短驳件数',
-          prop: 'loadAmountall',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '短驳重量',
-          prop: 'loadWeightall',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '短驳体积',
-          prop: 'loadVolumeall',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '备注',
-          prop: 'remark',
-          width: '150',
-          fixed: false
-        }
+      },
+      {
+        label: '短驳费',
+        prop: 'fee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '已结短驳费',
+        prop: 'paidFee',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '未结短驳费',
+        prop: 'unpaidFee',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '司机名称',
+        prop: 'dirverName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '短驳件数',
+        prop: 'loadAmountall',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '短驳重量',
+        prop: 'loadWeightall',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '短驳体积',
+        prop: 'loadVolumeall',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      }
       ]
     }
   },
@@ -225,10 +225,18 @@ export default {
           this.count()
           break
         case 'export':
-          SaveAsFile(this.dataList, this.tableColumn)
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-短驳费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
-          PrintInFullPage(this.dataList, this.tableColumn)
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-短驳费'
+          })
           break
       }
     },
@@ -246,7 +254,7 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({type: 'warning', message: '不能同时结算两个不同的网点'})
+        this.$message({ type: 'warning', message: '不能同时结算两个不同的网点' })
         return false
       }
       if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点

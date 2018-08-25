@@ -15,6 +15,7 @@
           ref="multipleTable"
           :data="usersArr"
           stripe
+          :key="tablekey"
           border
           @row-click="clickDetails"
           @selection-change="getSelection"
@@ -28,101 +29,34 @@
             type="selection"
             width="50">
           </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="80">
-            <template slot-scope="scope">
-              {{ (searchQuery.currentPage - 1)*searchQuery.pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="carrierName"
-            fixed
-            sortable
-            width="120"
-            label="承运商名称">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="orgName"
-            width="120"
-            label="归属网点">
-          </el-table-column>
-          <el-table-column
-            prop="carrierSn"
-            sortable
-            width="120"
-            label="承运商编码">
-          </el-table-column>
-
-          <el-table-column
-            sortable
-            prop="liableName"
-            width="120"
-            label="负责人">
-          </el-table-column>
-          <el-table-column
-            label="负责人手机"
-            width="120"
-            prop="liablePhone"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="carrierMobile"
-            width="120"
-            label="客服电话"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            sortable
-            width="200"
-            label="合同起始日">
-            <template slot-scope="scope">
-                  {{ scope.row.contractStarttime | parseTime('{y}-{m}-{d}') }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            width="200"
-            label="合同终止日">
-            <template slot-scope="scope">
-                  {{ scope.row.contractEndtime | parseTime('{y}-{m}-{d}') }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="carrierAddr"
-            label="地址"
-            width="200"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="carrierRemarks"
-            label="备注"
-            sortable
-            >
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :issender="true" :columns="tableColumn" :popVisible="setupTableVisible" @success="setColumn" @close="closeSetupTable"   />
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'carrier'"></ImportDialog>
   </div>
 </template>
 <script>
 import { getAllCarrier, deleteSomeCarrierInfo, getExportExcel } from '@/api/company/carrierManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
+import { objectMerge2, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   name: 'carrierManage',
@@ -170,7 +104,71 @@ export default {
           carrierMobile: '',
           carrierName: ''
         }
-      }
+      },
+      tablekey: '',
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '承运商名称',
+        prop: 'carrierName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '归属网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '承运商编码',
+        prop: 'carrierSn',
+        width: '120',
+        fixed: false
+      }, {
+        label: '负责人',
+        prop: 'liableName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '负责人手机',
+        prop: 'liablePhone',
+        width: '120',
+        fixed: false
+      }, {
+        label: '客服电话',
+        prop: 'carrierMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '合同起始日',
+        prop: 'contractStarttime',
+        width: '180',
+        slot: (scope) => {
+          return parseTime(scope.row.contractStarttime, '{y}-{m}-{d} {h}:{i}:{s}')
+        }
+      }, {
+        label: '合同终止日',
+        prop: 'contractEndtime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          return parseTime(scope.row.contractEndtime, '{y}-{m}-{d} {h}:{i}:{s}')
+        }
+      }, {
+        label: '地址',
+        prop: 'carrierAddr',
+        width: 200,
+        fixed: false
+      }, {
+        label: '备注',
+        prop: 'carrierRemarks',
+        fixed: false
+      }]
     }
   },
   methods: {
@@ -200,7 +198,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'import') {
+      if (!this.selected.length && type !== 'add' && type !== 'import' && type !== 'export') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -265,19 +263,25 @@ export default {
           break
           // 导出数据
         case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '承运商列表-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
+          /*
           var ids2 = this.selected.map(el => {
             return el.carrierId
           })
-          getExportExcel(ids2.join(',')).then(res => {
+           getExportExcel(ids2.join(',')).then(res => {
             this.$message({
               type: 'success',
               message: '即将自动下载!'
             })
-          })
+          }) */
           break
         case 'import':
-        this.importDialogVisible = true
-        break
+          this.importDialogVisible = true
+          break
       }
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
@@ -287,6 +291,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true
