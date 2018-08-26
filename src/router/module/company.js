@@ -69,14 +69,14 @@ export default {
       icon: 'QQ',
       name: '发货人',
       component: _import('company/customerManage/sender'),
-      meta: { role: ['admin'], title: '发货人', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '客户管理', title: '发货人', noCache: true, istab: true }
     },
     {
       path: '/company/customerManage/receiver',
       icon: 'QQ',
       name: '收货人',
       component: _import('company/customerManage/receiver'),
-      meta: { role: ['admin'], title: '收货人', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '客户管理', title: '收货人', noCache: true, istab: true }
     }
     ]
       /* children: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender/index'), meta: { title: '发货人', noCache: true }},

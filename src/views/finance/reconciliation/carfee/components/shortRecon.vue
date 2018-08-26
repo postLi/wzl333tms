@@ -371,8 +371,8 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
+  import { pickerOptions2, parseTime } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
@@ -380,11 +380,11 @@
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { mapGetters } from 'vuex'
+  import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
-  import {getTrucK} from '@/api/operation/load'
-  import {SaveAsFileCarfeefeeShort} from '@/utils/recLodopFuncs'
+  import { getTrucK } from '@/api/operation/load'
+  import { SaveAsFileCarfeefeeShort } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -506,15 +506,15 @@
         },
         rules: {
           'bankAccount': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
@@ -525,8 +525,7 @@
       ])
     },
     mounted() {
-
-      // this.searchCreatTime = this.defaultTime
+    // this.searchCreatTime = this.defaultTime
       this.messageButtonInfo.createTime = new Date()
       this.changeOrgid(this.otherinfo, this.$route.query.id)
       if (this.$route.query.id) {
@@ -562,7 +561,6 @@
           })
           return false
         }
-
       },
       truckName() {
         this.loading = true
@@ -623,7 +621,6 @@
           this.loading = false
         }).catch(err => {
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-
         })
       },
       moodifyDealPay() {
@@ -685,7 +682,7 @@
           //   this.searchCreatTime = this.defaultTime
           //   console.log(this.searchCreatTime,"打印")
           // }
-          console.log(this.searchCreatTime,"打印")
+          console.log(this.searchCreatTime, '打印')
           const searchObj = {}
           // debugger
           // this.searchCreatTime = this.defaultTime
@@ -699,7 +696,6 @@
           this.fetchReadyPay()
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
-
         } else {
           this.$message({
             message: '车牌号不能为空~',
@@ -782,7 +778,7 @@
         this.form.payDetailList = this.dealPayInfo ? this.dealPayInfo.map(el => {
           const a = {}
           a.shipOrderId = el.shipOrderId
-           a.shortPay = el.shortPay
+          a.shortPay = el.shortPay
           a.remark = el.remark
           a.departureTime = el.departureTime
           a.batchNo = el.batchNo
@@ -809,7 +805,6 @@
           a.driverName = el.driverName
           return a
         }) : []
-
       },
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {
@@ -822,7 +817,7 @@
             message: '保存成功!'
           })
           // this.$router.back(-1)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=shortDepart')
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/shortDepart')
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -843,7 +838,7 @@
         }
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
@@ -920,7 +915,6 @@
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
-
       },
       newMessageData() {
         this.searchTitle.memberName = ''

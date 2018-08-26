@@ -7,7 +7,7 @@
            <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(indexTag)"></span>
             首页
           </router-link>
-          <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span> {{generateTitle(tag.title)}}
+          <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span> {{tag.title}}
             <span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
           </router-link>
         </div>
@@ -27,7 +27,7 @@
             <i class="el-icon-check"></i> 首页
           </router-link>
           <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath">
-            <i class="el-icon-check"></i> {{generateTitle(tag.title)}}
+            <i class="el-icon-check"></i> {{tag.title}}
           </router-link>
         </ul>
       </div>
@@ -89,9 +89,6 @@ export default {
     })
   },
   methods: {
-    generateTitle(title) {
-      return title
-    },
     // 判断是否为非首页
     generateRoute() {
       if (this.$route.name && this.$route.name !== 'dashboard') {

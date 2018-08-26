@@ -463,8 +463,8 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
+  import { pickerOptions2, parseTime } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
@@ -472,11 +472,11 @@
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { mapGetters } from 'vuex'
+  import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
-  import {getTrucK } from '@/api/operation/load'
-  import { SaveAsFileCarfeefeeArt} from '@/utils/recLodopFuncs'
+  import { getTrucK } from '@/api/operation/load'
+  import { SaveAsFileCarfeefeeArt } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -599,20 +599,19 @@
         },
         rules: {
           'bankAccount': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
-
-    },
+  },
     computed: {
       ...mapGetters([
         'otherinfo'
@@ -642,18 +641,17 @@
           this.sendData()
           // console.log(JSON.stringify(this.form))
           SaveAsFileCarfeefeeArt({
-            data: objectMerge2({},this.form),
+            data: objectMerge2({}, this.form),
             name: '新建对账'
           })
-        }else{
+        }else {
           this.$message({
             message: '请选择车牌号进行查询~',
             type: 'error'
           })
           return false
         }
-
-      },
+    },
       truckName() {
         this.loading = true
         return getTrucK().then(data => {
@@ -671,7 +669,7 @@
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
-         this.newMessageData()
+          this.newMessageData()
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
@@ -803,7 +801,7 @@
           if (valid) {
             this.$refs['formName3'].validate((valid) => {
               if (valid) {
-               this.sendData()
+                this.sendData()
                 // 总计
                 this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
@@ -837,7 +835,7 @@
           }
         })
       },
-      sendData(){
+      sendData() {
         for (const i in this.messageInfo) {
           this.form[i] = this.messageInfo[i]
         }
@@ -902,7 +900,7 @@
             message: '保存成功!'
           })
           // this.$router.back(-1)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee?tabname=artery')
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/artery')
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -929,17 +927,17 @@
         this.visibleDialog = false
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
-            return;
-          }
+            return
+        }
           if (index === 3 || index === 4 || index === 5) {
             sums[index] = ''
-            return;
-          }
+            return
+        }
           const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
@@ -951,8 +949,7 @@
               }
             }, 0)
             sums[index] += ' '
-
-          } else {
+        } else {
             sums[index] = ''
           }
         })

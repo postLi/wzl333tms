@@ -22,16 +22,15 @@ export default {
       icon: 'QQ',
       name: '客服订单',
       component: _import('operation/order/manage/sender'),
-      meta: { role: ['admin'], title: '客服订单', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '订单管理', title: '客服订单', noCache: true, istab: true }
     },
     {
       path: '/operation/order/manage/import',
       icon: 'QQ',
       name: '运单导入',
       component: _import('operation/order/manage/receiver'),
-      meta: { role: ['admin'], title: '运单导入', noCache: true, istab: true }
-    }
-    ]
+      meta: { role: ['admin'], ptitle: '订单管理', title: '运单导入', noCache: true, istab: true }
+    }]
   }, {
     path: '/operation/order/pickUp',
     icon: 'yygl4_tihuo',
@@ -72,21 +71,21 @@ export default {
       icon: 'QQ',
       name: '全部运单',
       component: _import('operation/order/orderManage/all'),
-      meta: { role: ['admin'], title: '全部运单', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '运单管理', title: '全部运单', noCache: true, istab: true }
     },
     {
       path: '/operation/order/orderManage/History',
       icon: 'QQ',
       name: '改单记录',
       component: _import('operation/order/orderManage/history'),
-      meta: { role: ['admin'], title: '改单记录', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '运单管理', title: '改单记录', noCache: true, istab: true }
     },
     {
       path: '/operation/order/orderManage/Dashboard',
       icon: 'QQ',
       name: '草稿箱',
       component: _import('operation/order/orderManage/dashboard'),
-      meta: { role: ['admin'], title: '草稿箱', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '运单管理', title: '草稿箱', noCache: true, istab: true }
     }
     ]
   },
@@ -101,14 +100,14 @@ export default {
       icon: 'QQ',
       name: '短驳发车',
       component: _import('operation/order/shortDepart/deliver'),
-      meta: { role: ['admin'], title: '短驳发车', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '短驳管理', title: '短驳发车', noCache: true, istab: true }
     },
     {
       path: '/operation/order/shortDepart/arrival',
       icon: 'QQ',
       name: '短驳到货',
       component: _import('operation/order/shortDepart/arrival'),
-      meta: { role: ['admin'], title: '短驳到货', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '短驳管理', title: '短驳到货', noCache: true, istab: true }
     }
     ]
   },
@@ -142,21 +141,21 @@ export default {
       icon: 'QQ',
       name: '库存总表',
       component: _import('operation/order/repertory/allrepertory'),
-      meta: { role: ['admin'], title: '库存总表', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '库存管理', title: '库存总表', noCache: true, istab: true }
     },
     {
       path: '/operation/order/repertory/deliver',
       icon: 'QQ',
       name: '发货库存',
       component: _import('operation/order/repertory/deliver'),
-      meta: { role: ['admin'], title: '发货库存', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '库存管理', title: '发货库存', noCache: true, istab: true }
     },
     {
       path: '/operation/order/repertory/arrival',
       icon: 'QQ',
       name: '到货库存',
       component: _import('operation/order/repertory/arrival'),
-      meta: { role: ['admin'], title: '到货库存', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '库存管理', title: '到货库存', noCache: true, istab: true }
     }
     ]
   }, {
@@ -170,21 +169,21 @@ export default {
       icon: 'QQ',
       name: '自提签收',
       component: _import('operation/order/sign/pick'),
-      meta: { role: ['admin'], title: '自提签收', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '签收管理', title: '自提签收', noCache: true, istab: true }
     },
     {
       path: '/operation/order/sign/Delivery',
       icon: 'QQ',
       name: '送货签收',
       component: _import('operation/order/sign/delivery'),
-      meta: { role: ['admin'], title: '送货签收', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '签收管理', title: '送货签收', noCache: true, istab: true }
     },
     {
       path: '/operation/order/sign/Transfer',
       icon: 'QQ',
       name: '中转签收',
       component: _import('operation/order/sign/transfer'),
-      meta: { role: ['admin'], title: '中转签收', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '签收管理', title: '中转签收', noCache: true, istab: true }
     }
     ]
   }, {
@@ -198,28 +197,28 @@ export default {
       icon: 'QQ',
       name: '回单回收',
       component: _import('operation/order/receipt/recycle'),
-      meta: { role: ['admin'], title: '回单回收', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '回单管理', title: '回单回收', noCache: true, istab: true }
     },
     {
       path: '/operation/order/receipt/Send',
       icon: 'QQ',
       name: '回单寄出',
       component: _import('operation/order/receipt/send'),
-      meta: { role: ['admin'], title: '回单寄出', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '回单管理', title: '回单寄出', noCache: true, istab: true }
     },
     {
       path: '/operation/order/receipt/Accept',
       icon: 'QQ',
       name: '回单接收',
       component: _import('operation/order/receipt/accept'),
-      meta: { role: ['admin'], title: '回单接收', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '回单管理', title: '回单接收', noCache: true, istab: true }
     },
     {
       path: '/operation/order/receipt/Grant',
       icon: 'QQ',
       name: '回单发放',
       component: _import('operation/order/receipt/grant'),
-      meta: { role: ['admin'], title: '回单发放', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '回单管理', title: '回单发放', noCache: true, istab: true }
     }
     ]
   },
@@ -242,28 +241,28 @@ export default {
       icon: 'QQ',
       name: '干线跟踪',
       component: _import('operation/order/track/artery'),
-      meta: { role: ['admin'], title: '干线跟踪', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '在途跟踪', title: '干线跟踪', noCache: true, istab: true }
     },
     {
       path: '/operation/order/track/short',
       icon: 'QQ',
       name: '短驳跟踪',
       component: _import('operation/order/track/short'),
-      meta: { role: ['admin'], title: '短驳跟踪', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '在途跟踪', title: '短驳跟踪', noCache: true, istab: true }
     },
     {
       path: '/operation/order/track/deliver',
       icon: 'QQ',
       name: '送货跟踪',
       component: _import('operation/order/track/deliver'),
-      meta: { role: ['admin'], title: '送货跟踪', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '在途跟踪', title: '送货跟踪', noCache: true, istab: true }
     },
     {
       path: '/operation/order/track/transfer',
       icon: 'QQ',
       name: '中转跟踪',
       component: _import('operation/order/track/transfer'),
-      meta: { role: ['admin'], title: '中转跟踪', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '在途跟踪', title: '中转跟踪', noCache: true, istab: true }
     }
     ]
   },
@@ -279,14 +278,14 @@ export default {
       icon: 'QQ',
       name: '已中转运单',
       component: _import('operation/order/transfer/transfered'),
-      meta: { role: ['admin'], title: '已中转运单', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '中转管理', title: '已中转运单', noCache: true, istab: true }
     },
     {
       path: '/operation/order/transfer/batch',
       icon: 'QQ',
       name: '中转批次',
       component: _import('operation/order/transfer/batch'),
-      meta: { role: ['admin'], title: '中转批次', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '中转管理', title: '中转批次', noCache: true, istab: true }
     }
     ]
   },
@@ -323,17 +322,58 @@ export default {
     meta: { role: ['admin'], title: '客服中心', noCache: false, stitle: '客服' },
     children: [{
       path: '/operation/service/abnormal',
+      redirect: '/operation/service/abnormal/abReg',
       icon: 'QQ',
       name: '异常管理',
       component: _import('operation/service/abnormal/index'),
-      meta: { role: ['admin'], title: '异常管理', noCache: true }
+      meta: { role: ['admin'], title: '异常管理', noCache: true },
+      children: [
+        {
+          path: '/operation/service/abnormal/abReg',
+          icon: 'QQ',
+          name: '异常登记',
+          component: _import('operation/service/abnormal/abReg'),
+          meta: { role: ['admin'], ptitle: '异常管理', istab: true, title: '异常登记', noCache: false }
+        },
+        {
+          path: '/operation/service/abnormal/abDeal',
+          icon: 'QQ',
+          name: '异常处理',
+          component: _import('operation/service/abnormal/abDeal'),
+          meta: { role: ['admin'], ptitle: '异常管理', istab: true, title: '异常处理', noCache: false }
+        }
+      ]
     },
     {
       path: '/operation/service/controlgoods',
+      redirect: '/operation/service/controlgoods/allGoods',
       icon: 'QQ',
       name: '控货管理',
       component: _import('operation/service/controlgoods/index'),
-      meta: { role: ['admin'], title: '控货管理', noCache: true }
+      meta: { role: ['admin'], title: '控货管理', noCache: true },
+      children: [
+        {
+          path: '/operation/service/controlgoods/allGoods',
+          icon: 'QQ',
+          name: '全部',
+          component: _import('operation/service/controlgoods/allGoods'),
+          meta: { role: ['admin'], ptitle: '控货管理', istab: true, title: '全部', noCache: false }
+        },
+        {
+          path: '/operation/service/controlgoods/noGoods',
+          icon: 'QQ',
+          name: '未放货',
+          component: _import('operation/service/controlgoods/noGoods'),
+          meta: { role: ['admin'], ptitle: '控货管理', istab: true, title: '未放货', noCache: false }
+        },
+        {
+          path: '/operation/service/controlgoods/haveGoods',
+          icon: 'QQ',
+          name: '已放货',
+          component: _import('operation/service/controlgoods/haveGoods'),
+          meta: { role: ['admin'], ptitle: '控货管理', istab: true, title: '已放货', noCache: false }
+        }
+      ]
     }
     ]
   }

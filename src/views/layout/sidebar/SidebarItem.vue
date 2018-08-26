@@ -23,7 +23,7 @@
             <li v-for="(item, index) in route.children"
               v-if="!item.hidden"
               :key="index"
-              :class="{'is-active': item.path === $route.path}"
+              :class="{'is-active': isFolder(item) ? item.meta.title === $route.meta.ptitle : item.path === $route.path}"
               class="submenu-item">
               <router-link :to="item.path" :index="item.path" :key="item.name">
                 <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
@@ -43,7 +43,7 @@
               v-if="!item.hidden"
               :key="index"
               :path="item.path"
-              :class="{'is-active': item.path === $route.path}"
+              :class="{'is-active': isFolder(item) ? item.meta.title === $route.meta.ptitle : item.path === $route.path}"
               class="submenu-item submenu-item-tab">
                 <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
             </li>
@@ -70,79 +70,85 @@ export default {
       'sidebar'
     ])
   },
-  data () {
+  data() {
     return {
       open: true
     }
   },
   methods: {
-    isFolder (item) {
+    isFolder(item) {
       return item.children && item.children.length
     },
-    removeOtherOpenFolder () {
-      let childRef = Array.isArray(this.$refs.sidebarMenuItem) ? this.$refs.sidebarMenuItem : [this.$refs.sidebarMenuItem]
-      childRef.map( el =>{
-        if(el.isFolder && el.open){
+    removeOtherOpenFolder() {
+      const childRef = Array.isArray(this.$refs.sidebarMenuItem) ? this.$refs.sidebarMenuItem : [this.$refs.sidebarMenuItem]
+      childRef.map(el => {
+        if (el.isFolder && el.open) {
           el.open = false
         }
       })
     },
-    isOpen (route) {
+    isOpen(route) {
       return true
     },
-    toggle (event) {
+    toggle(event) {
       const el = closest(event.target, 'li')
+      const ul = closest(el, 'ul')
+      console.log()
+      const lis = Array.from(ul.querySelectorAll('.isOpen') || []).filter(l => {
+        return l !== el
+      }).forEach(el2 => {
+        el2.classList.toggle('isOpen')
+      })
       el.classList.toggle('isOpen')
     },
-    setSubNav(type, event){
-      let parentEle = document.querySelector('.sidebar-menu')
-      let isHide = document.querySelector('.hideSidebar') ? true : false
-      let showBox = document.querySelector('.subNavWrapper')
+    setSubNav(type, event) {
+      const parentEle = document.querySelector('.sidebar-menu')
+      const isHide = !!document.querySelector('.hideSidebar')
+      const showBox = document.querySelector('.subNavWrapper')
 
-      if(type === 'show'){
-        if(isHide){
-          let el = closest(event.target, 'li.menu-item')
-          let ul = el ? el.querySelector('.sidebar-submenu') : ''
+      if (type === 'show') {
+        if (isHide) {
+          const el = closest(event.target, 'li.menu-item')
+          const ul = el ? el.querySelector('.sidebar-submenu') : ''
 
-          if(ul){
+          if (ul) {
             showBox.innerHTML = ''
             showBox.appendChild(ul.cloneNode(true))
-            let elHeight = showBox.offsetHeight
-            let winHeight = window.innerHeight
+            const elHeight = showBox.offsetHeight
+            const winHeight = window.innerHeight
             let parentY = el.offsetTop + parentEle.offsetTop - parentEle.scrollTop
             // 50 为顶部导航的高度
             // 保证底端对齐
             // 当子菜单为超长时，需要设置滚动条显示
-            if((parentY + elHeight + 50) > winHeight){
+            if ((parentY + elHeight + 50) > winHeight) {
               parentY = winHeight - elHeight - 50
             }
-            showBox.style.display = "block"
+            showBox.style.display = 'block'
             showBox.style.top = parentY + 'px'
           }
-          
         }
       } else {
         showBox.innerHTML = ''
       }
     },
-    clearTimer () {
+    clearTimer() {
       clearTimeout(this.subMenuTimer)
     },
-    showSubNav (event) {
+    showSubNav(event) {
       this.clearTimer()
-      this.setSubNav('show', event)  
+      this.setSubNav('show', event)
     },
-    hideSubNav (event) {
+    hideSubNav(event) {
       this.clearTimer()
       this.subMenuTimer = setTimeout(() => {
-        this.setSubNav('hide')   
-      }, 200);
+        this.setSubNav('hide')
+      }, 200)
     },
-    showTab (event) {
-      let el = closest(event.target, 'li.submenu-item-tab')
-      
-      if(el){
-        eventBus.$emit('changeTab', el.path)        
+    showTab(event) {
+      const el = closest(event.target, 'li.submenu-item-tab')
+
+      if (el) {
+        eventBus.$emit('changeTab', el.path)
       }
     }
   }
@@ -181,7 +187,7 @@ $sidebarBackgroundColor: #42485b;
     font-size: $sidebarFontSize;
     color: rgba(255, 255, 255, 0.8);
     position: relative;
-    transition: height .4s ease;
+    transition: height 1s ease;
   }
   .isOpen{
     height: auto;

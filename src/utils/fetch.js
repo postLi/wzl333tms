@@ -139,6 +139,7 @@ service.interceptors.response.use(
             location.href = '/login'// 为了重新实例化vue-router对象 避免bug
           })
         })
+        return false
       } else {
         err = {
           text: '请求错误：' + status,
