@@ -330,7 +330,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '异常理赔结算',
           currentPage: 'waybillAbnormal', // 本页面标识符

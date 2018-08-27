@@ -322,7 +322,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '实际提货费结算',
           currentPage: 'waybillTicket', // 本页面标识符

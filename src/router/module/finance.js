@@ -206,7 +206,7 @@ export default {
       hidden: true,
       name: '账款结算',
       component: _import('finance/accountsLoad/index'),
-      meta: { role: ['admin'], title: '账款结算', noCache: false }
+      meta: { role: ['admin'], title: '账款结算', noCache: false, istab: true }
     }
     ]
   },

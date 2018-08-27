@@ -142,20 +142,7 @@ export default {
       return name
     }
   },
-  created() {
-    // this.getParentPage()
-  },
   methods: {
-    getParentPage() {
-      this.$route.matched.forEach(e => {
-        let str = '/finance/accountsLoad'
-        if (e.path.indexOf(str) !== -1) {
-          e.meta.title = this.pageName
-          e.name = this.pageName
-          console.log(e.path)
-        }
-      })
-    }
   }
 }
 

@@ -331,7 +331,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '异动费用结算',
           currentPage: 'waybillUnusual', // 本页面标识符

@@ -328,7 +328,7 @@ export default {
           }
       })
         .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
         })
     },
     clearData() {
@@ -392,7 +392,7 @@ export default {
               }
           })
             .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
               this.clearData()
             })
         })
@@ -418,7 +418,7 @@ export default {
               }
           })
             .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
               this.clearData()
             })
         })
@@ -444,7 +444,7 @@ export default {
               }
           })
             .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
               this.clearData()
             })
         })

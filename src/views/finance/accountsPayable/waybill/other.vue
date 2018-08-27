@@ -297,7 +297,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
          tab: '其他费用支出结算',
          currentPage: 'waybillOther', // 本页面标识符

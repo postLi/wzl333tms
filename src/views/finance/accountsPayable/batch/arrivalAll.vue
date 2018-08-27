@@ -298,7 +298,7 @@ export default {
     },
     count() {
       this.$router.push({
-       path: '../accountsLoad',
+       path: '../../accountsLoad',
        query: {
           tab: '到车汇总结算',
           currentPage: 'batchArrivalAll', // 本页面标识符

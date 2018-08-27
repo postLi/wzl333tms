@@ -256,7 +256,7 @@ export default {
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
       }
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '送货费结算',
           currentPage: 'batchDeliver', // 本页面标识符

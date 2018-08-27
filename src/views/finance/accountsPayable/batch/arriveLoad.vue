@@ -242,7 +242,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '到站装卸费结算',
           currentPage: 'batchArrivalLoad', // 本页面标识符

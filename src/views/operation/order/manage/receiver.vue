@@ -332,14 +332,15 @@ export default {
     },
     showImport () {
       // 显示导入窗口
+      this.$message({type: 'warning', message: '该功能尚在开发中！'})
     },
     doAction (type) {
       if(type==='import'){
         this.showImport()
-        return false
+        // return false
       }
       // 判断是否有选中项
-      if(!this.selected.length && type !== 'accept'){
+      if(!this.selected.length && type !== 'accept' && type!=='import'){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',

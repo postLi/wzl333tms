@@ -262,7 +262,7 @@ export default {
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
       }
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '整车保险费结算',
           currentPage: 'batchInsurance', // 本页面标识符

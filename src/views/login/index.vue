@@ -45,7 +45,7 @@
           </div>
           <div class="rember">
             <el-checkbox v-model="checked">记住密码</el-checkbox>
-            <p class="rember-tit" @click="forgetPsw">忘记密码</p>
+            <!-- <p class="rember-tit" @click="forgetPsw">忘记密码</p> -->
           </div>
         </el-form>
       </div>
@@ -111,8 +111,8 @@ export default {
       // 模拟登陆信息
       loginForm: {
         // accNum: '4',
-        username: 'fangjian',
-        password: '123456'
+        // username: 'fangjian',
+        // password: '123456'
       },
       loginRules: {
         accNum: [{ required: true, trigger: 'blur' }],
@@ -167,14 +167,14 @@ export default {
       // console.log(5555)
     },
     accNum() {
-      this.holder = ''
+      // this.holder = ''
     },
     username() {
-      this.holder = ''
+      // this.holder = ''
       this.loginError = false 
     },
     password() {
-      this.holder = ''
+      // this.holder = ''
       this.loginError = false 
     }
   }

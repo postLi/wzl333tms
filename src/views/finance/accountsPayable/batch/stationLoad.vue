@@ -263,7 +263,7 @@ export default {
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
       }
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '发站装卸费',
           currentPage: 'batchStationLoad', // 本页面标识符

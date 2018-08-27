@@ -7,7 +7,7 @@
   :fetch-suggestions="querySearch"
   :value-key="showkey"
   @focus="()=>{$emit('focus'),initData()}"
-  @change="()=>{$emit('change')}"
+  @change="(val)=>{$emit('change' ,handleSelect(val))}"
   @blur="()=>{$emit('blur')}"
   :placeholder="place"
   ref="myautocomplete"

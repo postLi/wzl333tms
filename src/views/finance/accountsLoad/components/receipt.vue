@@ -14,7 +14,7 @@
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
-          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
+          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="name" show="select" search="name" label="name" />
         </div>
       </div>
       <div class="receiptDialog_table">
@@ -55,7 +55,7 @@
               <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="financialWay" label="收支方式" width="100">
+          <el-table-column prop="financialWay" label="收支方式" width="80">
             <template slot-scope="props">
               <!-- <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
                 <template slot-scope="{item}">
@@ -75,12 +75,12 @@
               <el-input v-model="props.row.bankName" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="bankAccount" label="银行卡号">
+          <el-table-column prop="bankAccount" label="银行卡号" width="200">
             <template slot-scope="props">
               <el-input v-model="props.row.bankAccount" :size="btnsize" :maxlength="maxlength" v-numberOnly></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="bankAccountName" label="开户人">
+          <el-table-column prop="bankAccountName" label="开户人" width="80">
             <template slot-scope="props">
               <el-input v-model="props.row.bankAccountName" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
@@ -105,9 +105,9 @@
               <el-input v-model="props.row.alipayAccount" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="agent" label="经办人" width="110">
+          <el-table-column prop="agent" label="经办人" width="80">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="username" search="name" label="name" :maxlength="maxlength" />
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name"  show="select" search="name" label="name" :maxlength="maxlength" />
             </template>
           </el-table-column>
         </el-table>

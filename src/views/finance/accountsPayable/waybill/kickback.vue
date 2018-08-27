@@ -315,7 +315,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
          tab: '回扣结算',
          currentPage: 'waybillKickback', // 本页面标识符

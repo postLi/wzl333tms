@@ -336,7 +336,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
           tab: '中转费结算',
           currentPage: 'waybillTransfer', // 本页面标识符
