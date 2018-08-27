@@ -51,8 +51,8 @@
           <el-form-item label="车费" prop="tmsOrderPickup.truckFee">
             <el-input v-model="form.tmsOrderPickup.truckFee"  auto-complete="off" :disabled="isDbclick"></el-input>
           </el-form-item>
-          <el-form-item label="代收费用" prop="tmsOrderPickup.collectionFee">
-            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick" :maxlength="8"></el-input>
+          <el-form-item label="代收费用">
+            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick" :maxlength="8" v-number-only:point></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="tmsTruck.truckIdNumber">
             <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="form.tmsTruck.truckIdNumber" :disabled="isDbclick" :maxlength="8"/>

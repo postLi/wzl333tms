@@ -307,8 +307,8 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}/{m}/{d}')"></el-input>，到达时间为
-                      <el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}/{m}/{d}')"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime"></el-input>，到达时间为
+                      <el-input size="mini" disabled :value="formModel.receivingTime"></el-input>。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
                   </div>

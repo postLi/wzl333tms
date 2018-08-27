@@ -1,5 +1,6 @@
 <template>
-  <pop-right :title="popTitle +  orderSn" :key="ke1yVal" :isShow="popVisible" @close="closeMe" class="addPreOrderPop_lll"
+  <pop-right :title="popTitle +  orderSn" :key="ke1yVal" :isShow="popVisible" @close="closeMe"
+             class="addPreOrderPop_lll"
              v-loading="loading">
     <template class="addPreOrderPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :inline="true" label-position="right" size="mini"
@@ -102,8 +103,8 @@
             </li>
             <li>
               <p>品种规格</p>
-              <el-form-item prop="tmsOrderCargoList.description">
-                <el-input :maxlength="20" v-model="form.tmsOrderCargoList.description" :disabled="isDbclick"></el-input>
+              <el-form-item prop="">
+                <el-input :maxlength="20"  v-model="form.tmsOrderCargoList.description" :disabled="isDbclick"></el-input>
               </el-form-item>
             </li>
           </ul>
@@ -154,9 +155,9 @@
               </td>
 
               <td>
-                <el-form-item label="代收款" prop="tmsOrderCargoList.agencyFund">
+                <el-form-item label="代收款">
                   <el-input v-model="form.tmsOrderCargoList.agencyFund" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick"></el-input>
+                            :disabled="isDbclick" v-number-only:point></el-input>
                 </el-form-item>
               </td>
               <td>
@@ -174,15 +175,15 @@
               </td>
 
               <td>
-                <el-form-item label="运费" prop="tmsOrderCargoList.shipFee">
+                <el-form-item label="运费">
                   <el-input v-model="form.tmsOrderCargoList.shipFee" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick"></el-input>
+                            :disabled="isDbclick" v-number-only:point></el-input>
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="声明价值" prop="">
                   <el-input v-model="form.tmsOrderCargoList.productPrice" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only></el-input>
+                            :disabled="isDbclick" v-number-only:point></el-input>
                 </el-form-item>
               </td>
             </tr>
@@ -341,22 +342,23 @@
             [{
               validator: validateVolumnWeight
             },
-              {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+              {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
             ],
           'tmsOrderCargoList.description': [
-            {validator: validateOnlyNumberAndLetter}
+            // {validator: validateOnlyNumberAndLetter}
+            {pattern: REGEX.ONLY_NUMBER_AND_LETTER, message: '只能输入数字或者字母'}
           ],
           'tmsOrderCargoList.agencyFund': [
             {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
           ],
           'tmsOrderCargoList.commissionFee': [
-            {message: '只能输入数字',  pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
           ],
           'tmsOrderCargoList.shipFee': [
-            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
           ],
           'tmsOrderCargoList.productPrice': [
-            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
           ]
         },
         btnsize: 'mini',
@@ -454,7 +456,8 @@
         this.inited = true
         this.initInfo()
       }
-      this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
+      // this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
+      // console.log(this.form.tmsOrderPre.orderFromOrgid);
     },
     watch: {
       popVisible(newVal, oldVal) {
@@ -467,19 +470,19 @@
       orgid(newVal) {
       },
       info(val) {
-          if (this.isModify) {
-            this.popTitle = '修改订单'
-            this.orderSn = this.info.orderSn
+        if (this.isModify) {
+          this.popTitle = '修改订单'
+          this.orderSn = this.info.orderSn
 
-            this.infoData(this.info)
-          } else if (this.isDbclick) {
-            this.popTitle = '查看订单'
-            this.orderSn = this.info.orderSn
-            this.infoData(this.info)
-          } else {
-            this.popTitle = '新增订单'
-            this.reset()
-          }
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
+          this.popTitle = '查看订单'
+          this.orderSn = this.info.orderSn
+          this.infoData(this.info)
+        } else {
+          this.popTitle = '新增订单'
+          this.reset()
+        }
       },
       isModify(val) {
         // handler() {
@@ -487,22 +490,22 @@
         // },
         // immediate: true
 
-          if (this.isModify) {
-            this.popTitle = '修改订单'
-            this.orderSn = this.info.orderSn
+        if (this.isModify) {
+          this.popTitle = '修改订单'
+          this.orderSn = this.info.orderSn
 
-            this.infoData(this.info)
-          } else if (this.isDbclick) {
-            this.popTitle = '查看订单'
-            this.orderSn = this.info.orderSn
-            this.infoData(this.info)
-            // this.ke1yVal = Math.random()
-          } else {
-            this.popTitle = '新增订单'
-            this.reset()
-            // this.newinfoData()
-          }
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
+          this.popTitle = '查看订单'
+          this.orderSn = this.info.orderSn
+          this.infoData(this.info)
           // this.ke1yVal = Math.random()
+        } else {
+          this.popTitle = '新增订单'
+          this.reset()
+          // this.newinfoData()
+        }
+        // this.ke1yVal = Math.random()
 
       }
     },
@@ -668,7 +671,7 @@
       submitForm(ruleForm) {
         this.isChecked = true
         this.isCheckedShow = false
-        this.checkShowMessage = false
+        this.checkShowMessage = true
         this.$refs[ruleForm].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
@@ -691,6 +694,7 @@
               // data.id = this.form.tmsOrderPre.id
               promiseObj = postModifyOrder(data)
             } else {
+
               promiseObj = postAddOrder(data)
             }
 
@@ -753,7 +757,7 @@
             orderFromCityName: '',
             orderToCityCode: '',
             orderToCityName: '',
-            orderFromOrgid: '',
+            orderFromOrgid: this.otherinfo.orgid,
             orderToOrgid: '', // 目的网点
             orderPickupMethod: 218, // 提货方式
             orderEffective: 94, // 紧急度
@@ -767,6 +771,7 @@
             // cargoId,senderId,receiverId
           }
         }
+        // this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
         this.ke1yVal = Math.random()
       },
       closeMe(done) {

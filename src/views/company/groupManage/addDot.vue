@@ -96,9 +96,9 @@
             <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName" >
               <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 " :maxlength="15" ></el-input>
             </el-form-item>
-            <el-form-item label="网点类型" :label-width="formLabelWidth">
-              <el-select v-model="form.orgType" >
-                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id" :disabled="form.status===31" ></el-option>
+            <el-form-item label="网点类型" :label-width="formLabelWidth" >
+              <el-select v-model="form.orgType" :disabled="isModify">
+                <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id" :disabled="form.status===31 " ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
@@ -392,13 +392,17 @@
         Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
           this.manageType = resArr[1]
           this.netWorkStatus = resArr[2]
-          if (!this.isModify) {
             this.netWorkType = resArr[0].filter(el => {
               return el.id !== 5
             })
-          } else{
-            this.netWorkType = resArr[0]
-          }
+
+          // if (!this.isModify) {
+          //   this.netWorkType = resArr[0].filter(el => {
+          //     return el.id !== 5
+          //   })
+          // } else{
+          //   this.netWorkType = resArr[0]
+          // }
           this.loading = false
         })
       },

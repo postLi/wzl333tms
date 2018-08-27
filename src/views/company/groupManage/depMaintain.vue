@@ -10,22 +10,31 @@
               </li>
             </ul>
           </div>
-
+          <!--添加-->
           <div class="depmain-add" v-if="hiddenAdd" >
             <div class="add-fixed">
-              <el-input
-                placeholder="请输入内容"
-
-
-
-                v-model="dictName"
-                ref="dictNameInput"
-              >
-              </el-input>
-              <div class="dep-img">
-                <img src="../../../assets/icom/groupManage-checked.png" @click="addDep">
-                <img src="../../../assets/icom/groupManage-false.png" @click="closeMe">
+              <input type="text" v-focus v-model="dictName" />
+              <div class="addSvg">
+                <span  @click="addDep">
+                  <icon-svg class="lll-dot-true" icon-class="lll-dot-true" ></icon-svg>
+                </span>
+                <span @click="closeMe">
+                  <icon-svg class="lll-dot-false" icon-class="lll-dot-false" ></icon-svg>
+                </span>
               </div>
+              <!--<el-input-->
+                <!--placeholder="请输入内容"-->
+                <!--v-model="dictName"-->
+                <!--ref="dictNameInput"-->
+                <!--v-focus-->
+                <!--@focus="addDep"-->
+              <!--&gt;-->
+              <!--</el-input>-->
+              <!--&lt;!&ndash;<input type="text" v-focus />&ndash;&gt;-->
+              <!--<div class="dep-img">-->
+                <!--<img src="../../../assets/icom/groupManage-checked.png" @click="addDep">-->
+                <!--<img src="../../../assets/icom/groupManage-false.png" @click="closeMe">-->
+              <!--</div>-->
             </div>
             <div class="depmain-list">
               <ul>
@@ -39,20 +48,33 @@
           <div class="depmain-edit"  v-if="hiddenEdit" v-loading="loading">
             <div class="depmain-list" >
               <ul :key="theulkey">
-                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index">
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  @click="currentIndex = index">
                   <span v-once>{{item.dictName}}</span>
                   <div class="edit-hidden">
-                    <el-input
-                      v-model="item.dictName"
-
-                    >
-                    </el-input>
+                    <input type="text" v-focus="focusIndex === index" v-model="item.dictName" />
+                    <!--<el-input-->
+                      <!--v-model="item.dictName"-->
+                    <!--&gt;-->
+                    <!--</el-input>-->
                     <div class="dep-img">
                       <img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >
-                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id">
+                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >
                     </div>
                   </div>
                 </li>
+                <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index" @click="currentIndex = index">-->
+                  <!--<span v-once>{{item.dictName}}</span>-->
+                  <!--<div class="edit-hidden">-->
+                    <!--<el-input-->
+                      <!--v-model="item.dictName"-->
+                    <!--&gt;-->
+                    <!--</el-input>-->
+                    <!--<div class="dep-img">-->
+                      <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
+                      <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</li>-->
               </ul>
             </div>
           </div>
@@ -64,7 +86,12 @@
         <el-button @click="editMe">{{editText}}</el-button>
       </div>
       <div slot="footer" class="dialog-footer-frame" v-if="remBotton">
-        <el-button @click="closeMe">{{remText}}</el-button>
+        <!--完成-->
+        <el-button @click="editDep(item)">{{remText}}</el-button>
+      </div>
+      <div slot="footer" class="dialog-footer-frame" >
+        <span></span>
+        <!--<el-button @click="closeMe">{{remText}}</el-button>-->
       </div>
     </PopFrame>
   </div>
@@ -89,8 +116,17 @@
         },
         createrId: [Number, String]
       },
+      directives: {
+        focus: {
+          // 指令的定义
+          inserted: function (el) {
+            el.focus()
+          }
+        }
+      },
       data() {
         return {
+
           theulkey: 'theulkey',
           currentIndex: 0,
           checked1: true,
@@ -116,7 +152,7 @@
        //   底部按钮
           addText: '添加',
           editText: '编辑',
-          remText: '取消',
+          remText: '完成',
           showBotton: false,
           remBotton: false,
        //   底部按钮
@@ -139,7 +175,7 @@
           if (this.isDepMain) {
             this.popTitle = '部门'
             this.showBotton = true
-            this.remBotton = false
+            // this.remBotton = false
             this.hiddenAdd = false
             this.hiddenEdit = false
             this.showDate = true
@@ -158,7 +194,7 @@
         }
       },
       mounted() {
-        //
+        // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
       },
       methods: {
         resetValue(item, oldvalue) {
@@ -201,7 +237,7 @@
         },
         submitForm(ruleForm) {
           this.popTitle = '添加'
-          this.remBotton = true
+          // this.remBotton = true
           this.hiddenAdd = true
           this.showBotton = false
           this.hiddenEdit = false
@@ -231,6 +267,7 @@
               })
               this.loading = false
               this.getSelectDict(this.createrId)
+              this.closeMe()
             })
           }
         },
@@ -321,6 +358,33 @@
 /*depmain-add*/
   .add-fixed{
     position: fixed;
+    background: rgb(233,243,250);
+    input{
+      border-color: #e4e7ed;
+      width: 350px;
+      /*height: 24px;*/
+      /*line-height: 24px;*/
+      margin: 5px 20px 5px 10px;
+      color: #3e9ff1;
+      /*background: transparent;*/
+      padding: 2px;
+
+    }
+    .addSvg{
+      display: inline-block;
+      span{
+        cursor: pointer;
+
+        .lll-dot-true{
+          font-size: 20px;
+          margin-right: 10px;
+        }
+        .lll-dot-false{
+          font-size: 20px;
+          margin-right: 15px;
+        }
+      }
+    }
   }
 .depmain-add .el-input{
   width: 340px;
@@ -332,6 +396,11 @@
   }
   .depmain-add .depmain-list{
     overflow: hidden;
+    ul{
+      li:nth-of-type(1){
+        margin-top: 30px;
+      }
+    }
   }
 
    /*edit*/
@@ -360,6 +429,9 @@
   }
   .depmain-edit .depmain-list .showcurrent .edit-hidden{
     display: block;
+  }
+  .depmain-edit .depmain-list .showcurrent .edit-hidden .el-input.is-active .el-input__inner, .el-input__inner:focus{
+    border-color: #409EFF;
   }
   .depmain-edit .depmain-list li span{
     display: block;

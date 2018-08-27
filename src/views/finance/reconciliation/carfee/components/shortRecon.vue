@@ -371,7 +371,7 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime } from '@/utils/'
+  import { pickerOptions2, parseTime,tmsMath } from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
@@ -620,6 +620,7 @@
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
+          // alert(err)
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
@@ -854,7 +855,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
+                return tmsMath._add(prev , curr)
               } else {
                 return prev
               }
@@ -904,6 +905,9 @@
         this.messageInfo.wechatAccount = item.wechatAccount
         this.messageInfo.checkStartTime = item.checkStartTime
         this.messageInfo.checkEndTime = item.checkEndTime
+        this.searchCreatTime[0].checkStartTime = item.checkStartTime
+        // alert(this.searchCreatTime[0].checkStartTime)
+        this.searchCreatTime[1].checkEndTime = item.checkEndTime
         this.messageInfo.orgName = item.orgName
         this.messageButtonInfo.companyName = item.companyName
         this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
@@ -914,7 +918,7 @@
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
-        this.searchCreatTime = this.defaultTime
+        // this.searchCreatTime = this.defaultTime
       },
       newMessageData() {
         this.searchTitle.memberName = ''

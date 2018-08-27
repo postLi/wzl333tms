@@ -349,7 +349,7 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime } from '@/utils/'
+  import { pickerOptions2, parseTime,tmsMath } from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
@@ -867,7 +867,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
+                return tmsMath._add(prev , curr)
               } else {
                 return prev
               }
