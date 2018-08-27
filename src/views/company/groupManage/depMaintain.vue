@@ -45,6 +45,7 @@
             </div>
           </div>
 
+
           <div class="depmain-edit"  v-if="hiddenEdit" v-loading="loading">
             <div class="depmain-list" >
               <ul :key="theulkey">
@@ -119,7 +120,7 @@
       directives: {
         focus: {
           // 指令的定义
-          inserted: function (el) {
+          inserted: function(el) {
             el.focus()
           }
         }
@@ -272,16 +273,15 @@
           }
         },
         editDep(item) {
-
-          const id = item.id
+      const id = item.id
           this.dictName = item.dictName
-          if(item.orgid === 0){
+          if (item.orgid === 0) {
             this.$message({
               type: 'info',
               message: '系统默认部门不能修改!'
             })
             return false
-          }else{
+          }else {
             this.loading = true
             const reqPromise = putDict(this.createrId, this.dictName, id)
             reqPromise.then(res => {
@@ -294,19 +294,18 @@
               this.theulkey = (Math.random() + '').substr(2)
             })
           }
-
-        },
+    },
         delDep(item) {
           const _id = item.id
           const deleteItem = item.dictName
 
-          if(item.orgid === 0){
+          if (item.orgid === 0) {
             this.$message({
               type: 'info',
               message: '系统默认部门不能修改!'
             })
             return false
-          }else{
+          }else {
             this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
               confirmButtonText: '删除',
               cancelButtonText: '取消',
