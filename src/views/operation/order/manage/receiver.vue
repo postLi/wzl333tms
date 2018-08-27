@@ -316,7 +316,6 @@ export default {
       return getPostlist(this.searchForm).then(data => {
         // this.usersArr = data.list
         // this.total = data.totalCount
-        
         this.loading = false
       })
     },
