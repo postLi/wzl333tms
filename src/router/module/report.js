@@ -41,7 +41,7 @@ export default {
     hidden: false,
     name: '营运统计分析',
     component: _import('report/operation/index'),
-    meta: { title: '运营统计分析', noCache: true }
+    meta: { title: '营运统计分析', noCache: true }
   },
   {
     path: '/report/incomeTotal',

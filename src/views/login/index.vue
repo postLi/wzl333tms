@@ -1,13 +1,11 @@
 <template>
-
   <div class="login-container">
     <div class="container-top">
       <div class="login-wrapper clearfix">
-        <img  class="logo-img" src="../../assets/login_images/login_03.png" alt="">
+        <img class="logo-img" src="../../assets/login_images/login_03.png" alt="">
       </div>
     </div>
     <div class="login-wrapper clearfix">
-
       <!-- <div class="container-left">
       <img src="../../assets/login_images/left.png" alt="">
       </div> -->
@@ -34,7 +32,7 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable >
+            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
               <template slot="prepend"><i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i></template>
             </el-input>
           </el-form-item>
@@ -93,7 +91,7 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (typeof value !== 'string' || value === '' || value.length < 6) {
         callback('密码不能小于6位')
-      }else {
+      } else {
         callback()
       }
     }
@@ -109,8 +107,8 @@ export default {
       // 模拟登陆信息
       loginForm: {
         // accNum: '4',
-        // username: 'fangjian',
-        // password: '123456'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', message: '请输入账号' }],
@@ -121,7 +119,20 @@ export default {
 
     }
   },
+  mounted() {
+    this.checkLocalStorage()
+    if(process.env.NODE_ENV !== 'production'){
+      this.loginForm.username = "fangjian"
+      this.loginForm.password = "123456"
+    }
+  },
   methods: {
+    checkLocalStorage() {
+      if (window.localStorage) {
+        let storage = window.localStorage
+        console.log('localStorage',storage.getItem('lastloginUsername'))
+      }
+    },
     handleLogin() {
       requestFullScreen()
       this.$refs.loginForm.validate(valid => {
@@ -169,11 +180,11 @@ export default {
     },
     username() {
       // this.holder = ''
-      this.loginError = false 
+      this.loginError = false
     },
     password() {
       // this.holder = ''
-      this.loginError = false 
+      this.loginError = false
     }
   }
 }

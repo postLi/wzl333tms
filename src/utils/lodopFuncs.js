@@ -113,7 +113,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML }
          if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML }
          if (is64IE) document.write(strHtm64_Install)
@@ -207,6 +207,26 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      obj = formatTableData(obj)
      const tableId = createTable(obj) // 重新创建打印视图table
+     LODOP = getLodop()
+     LODOP.PRINT_INIT('订货单')
+     // LODOP.SET_PRINT_STYLE("FontSize", 10);
+     // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+     // LODOP.SET_PRINT_STYLE("Bold", 1);
+     LODOP.SET_PRINT_PAGESIZE(2, 0, 0, 'A4')
+     // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+     LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
+     // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
+     LODOP.PREVIEW()
+   } catch (err) {
+     getLodop()
+   }
+ }
+  // 打印表格 普通table
+ export function PrintInSamplePage(obj) {
+   try {
+     // let tableId = createTable(data, columns) // 重新创建打印视图table
+     const tableId = obj.id // 重新创建打印视图table
      LODOP = getLodop()
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
@@ -386,6 +406,31 @@
      }
    }
  }
+ // 保存为xls文件 普通table
+ export function SaveAsSampleFile(obj) {
+   try {
+     // let tableId = createTable(data, columns) // 重新创建打印视图table
+     const tableId = obj.id // 重新创建打印视图table、
+     LODOP = getLodop()
+     LODOP.PRINT_INIT('数据表格')
+     // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+     LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+     // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+     LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+     LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+     LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+     LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+     LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+          // LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+     if (obj.name) {
+       LODOP.SAVE_TO_FILE(obj.name + '.xls')
+     } else {
+       LODOP.SAVE_TO_FILE('新文件名.xls')
+     }
+   } catch (err) {
+     getLodop()
+   }
+ }
 
  // 检查当前是否有装lodop插件
  export function CheckIsInstall() {
@@ -491,7 +536,7 @@
 
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
 
-   table.setAttribute('width', '100%')
+   table.setAttribute('width', '1200px')
    table.setAttribute('border', '1px solid #999')
    table.style.borderCollapse = 'collapse'
    table.style.fontSize = '12px'
