@@ -190,9 +190,9 @@
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
-        // this.totaMoney = tmsMath(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay)
+        // this.totaMoney = tmsMath(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay,this.dialogInfo[2].toPay,this.dialogInfo[3].toPay)
         this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
-        // console.log(this.dialogInfo[0].toPay);
+        // this.totaMoney
       },
       closeMe(done) {
         this.reset()
