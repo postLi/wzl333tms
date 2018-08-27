@@ -66,11 +66,11 @@
 
 
 
-                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index" @click="currentIndex = index">
-                  <span v-once>{{item.dictName}}</span>
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index">
+                  <!-- <span v-once>{{item.dictName}}</span> -->
                   <div class="edit-hidden">
                     <el-input
-                      v-model="item.dictName"
+                      v-model.lazy="item.dictName"
                     >
                     </el-input>
                     <div class="dep-img">
@@ -415,9 +415,27 @@
   .depmain-edit .el-input .el-input__inner{
     height: 30px;
     padding-left: 8px;
+    //  border: 1px solid transparent;
   }
-  .depmain-edit .depmain-list{
-  }
+    .depmain-edit .el-input__inner {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 40px;
+    line-height: 40px;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 100%;
+}
   .dep-maintain .depmain-edit li{
     border-bottom: 1px solid #dcdcdc;
     padding: 10px 0 10px 10px;
@@ -428,7 +446,7 @@
   }
 
   .depmain-edit .depmain-list li .edit-hidden{
-    display: none;
+    // display: none;
   }
   .depmain-edit .depmain-list .showcurrent .edit-hidden{
     display: block;
@@ -448,7 +466,7 @@
     left: -9px;;
   }
   .dep-maintain .depmain-edit .depmain-list li:focus{
-    background: #0a84ff;
+    // background: #0a84ff;
   }
   .depmain-edit .el-input.is-active .el-input__inner, .el-input__inner:focus{
 
