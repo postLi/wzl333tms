@@ -22,6 +22,7 @@
                   <icon-svg class="lll-dot-false" icon-class="lll-dot-false" ></icon-svg>
                 </span>
               </div>
+              
               <!--<el-input-->
                 <!--placeholder="请输入内容"-->
                 <!--v-model="dictName"-->
@@ -82,7 +83,7 @@
             </div>
           </div>
 
-          
+
         </div>
       </template>
       <div slot="footer" class="dialog-footer-frame" v-if="showBotton">
