@@ -67,7 +67,7 @@
       <!-- 收货客户 -->
       <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" />
       <!-- 司机管理 -->
-      <Newdriver :companyId="otherinfo.companyId" :isModify="true" :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')"/>
+      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')"/>
       <!-- 车辆管理 -->
       <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')"  />
       <!-- 承运商管理 -->

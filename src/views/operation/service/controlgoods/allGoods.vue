@@ -696,7 +696,7 @@ export default {
         fixed: false
       }, {
         label: '付款方式',
-        prop: 'shipPayWay',
+        prop: 'shipPayWayName',
         width: '120',
         fixed: false
       }, {
@@ -742,7 +742,7 @@ export default {
         prop: 'shipToCityName',
         width: '120',
         slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
         },
         fixed: false
       }, {
@@ -750,7 +750,7 @@ export default {
         prop: 'shipToCityName',
         width: '120',
         slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
         },
         fixed: false
       }, {

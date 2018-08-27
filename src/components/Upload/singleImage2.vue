@@ -225,7 +225,7 @@ export default {
 }
 .hideuploadbtn{
   .el-upload.el-upload--picture-card{
-    display: none;
+    // display: none;
   }
 }
 </style>

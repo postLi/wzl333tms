@@ -411,7 +411,8 @@ export default {
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.dataset,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name: '异常登记'
           })
           break
         // 登记

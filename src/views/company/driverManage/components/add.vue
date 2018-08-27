@@ -250,9 +250,10 @@ export default {
           data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
+          console.log(this.isModify)
           if (this.isModify) {
             promiseObj = putDriver(data)
-          } else {
+          } else if (!this.isModify) {
             promiseObj = postDriver(data)
           }
           promiseObj.then(res => {
