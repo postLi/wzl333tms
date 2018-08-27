@@ -2,93 +2,169 @@
   <div class="dashboard-container">
     <div class="wzl_caiwu-flow">
       <div class="fin1-content">
-        <el-tooltip content="现付" placement="top">
-          <el-button @click="gotoPage('Cash', '/finance/accountsReceivable/cash')">现付</el-button>
-        </el-tooltip>
-        <el-tooltip content="到付" placement="top">
-          <el-button @click="gotoPage('Arrive', '/finance/accountsReceivable/arrive')">到付</el-button>
-        </el-tooltip>
-        <el-tooltip content="月结" placement="top">
-          <el-button @click="gotoPage('Month', '/finance/accountsReceivable/month')">月结</el-button>
-        </el-tooltip>
-        <el-tooltip content="回单付" placement="top">
-          <el-button @click="gotoPage('Receipt', '/finance/accountsReceivable/receipt')">回单付</el-button>
-        </el-tooltip>
-        <el-tooltip content="异动费用" placement="top">
-          <el-button @click="gotoPage('Abnormal', '/finance/accountsReceivable/abnormal')">异动费用</el-button>
-        </el-tooltip>
+        <!-- <el-tooltip content="现付" placement="top">
+          <el-button @click="gotoPage('Cash', '/finance/accountsReceivable/cash')"><router link to="" />现付</el-button>
+        </el-tooltip> -->
+        <router-link to="/finance/accountsReceivable/cash">
+          <el-tooltip content="现付" placement="top">
+            <el-button>现付</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="/finance/accountsReceivable/arrive">
+          <el-tooltip content="到付" placement="top">
+            <el-button>到付</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="/finance/accountsReceivable/month">
+          <el-tooltip content="月结" placement="top">
+            <el-button>月结</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="/finance/accountsReceivable/receipt">
+          <el-tooltip content="回单付" placement="top">
+            <el-button>回单付</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="/finance/accountsReceivable/abnormal">
+          <el-tooltip content="异动费用" placement="top">
+            <el-button>异动费用</el-button>
+          </el-tooltip>
+        </router-link>
       </div>
       <div class="fin2-content">
         <!-- <el-tooltip content="提货费" placement="top">
           <el-button>提货费</el-button>
         </el-tooltip> -->
-        <el-tooltip content="实际提货费" placement="top">
-          <el-button>实际提货费</el-button>
-        </el-tooltip>
-        <el-tooltip content="中转费" placement="top">
-          <el-button @click="gotoPage('Transfer', './accountsPayable/waybill')">中转费</el-button>
-        </el-tooltip>
-        <el-tooltip content="回扣" placement="top">
-          <el-button @click="gotoPage('Kickback', './accountsPayable/waybill')">回扣</el-button>
-        </el-tooltip>
+        <router-link to="./accountsPayable/waybill/ticket">
+          <el-tooltip content="实际提货费" placement="top">
+            <el-button>实际提货费</el-button>
+          </el-tooltip>
+        </router-link>
+       
+        <router-link to="./accountsPayable/waybill/transfer">
+          <el-tooltip content="中转费" placement="top">
+            <el-button >中转费</el-button>
+          </el-tooltip>
+        </router-link>
+        <router-link to="./accountsPayable/waybill">
+          <el-tooltip content="回扣" placement="top">
+            <el-button>回扣</el-button>
+          </el-tooltip>
+        </router-link>
+        
         <!-- <el-tooltip content="单票提货费" placement="top">
           <el-button  @click="gotoPage('Ticket', './accountsPayable/waybill')">单票提货费</el-button>
         </el-tooltip> -->
-        <el-tooltip content="异动费用" placement="top">
-          <el-button  @click="gotoPage('Unusual', './accountsPayable/waybill')">异动费用</el-button>
-        </el-tooltip>
-        <el-tooltip content="其他支出" placement="top">
-          <el-button @click="gotoPage('Other', './accountsPayable/waybill')">其他支出</el-button>
-        </el-tooltip>
-        <el-tooltip content="送货费" placement="top">
-          <el-button @click="gotoPage('Deliver', './accountsPayable/batch')">送货费</el-button>
-        </el-tooltip>
-        <el-tooltip content="短驳费" placement="top">
-          <el-button  @click="gotoPage('Short', './accountsPayable/batch')">短驳费</el-button>
-        </el-tooltip>
-        <el-tooltip content="干线费" placement="top">
-          <el-button>干线费</el-button>
-        </el-tooltip>
-        <el-tooltip content="异常理赔" placement="top">
-          <el-button @click="gotoPage('Abnormal', './accountsPayable/waybill')">异常理赔</el-button>
-        </el-tooltip>
-        <el-tooltip content="整车保险费" placement="top">
-          <el-button @click="gotoPage('Insurance', './accountsPayable/batch')">整车保险费</el-button>
-        </el-tooltip>
-        <el-tooltip content="发车汇总" placement="top">
-          <el-button @click="gotoPage('TruckAll', './accountsPayable/batch')">发车汇总</el-button>
-        </el-tooltip>
-        <el-tooltip content="到车汇总" placement="top">
-          <el-button @click="gotoPage('ArrivalAll', './accountsPayable/batch')">到车汇总</el-button>
-        </el-tooltip>
-        <el-tooltip content="发站装卸费" placement="top">
-          <el-button @click="gotoPage('StationLoad', './accountsPayable/batch')">发站装卸费</el-button>
-        </el-tooltip>
-        <el-tooltip content="发站其他费" placement="top">
-          <el-button @click="gotoPage('StationOther', './accountsPayable/batch')">发站其他费</el-button>
-        </el-tooltip>
-        <el-tooltip content="到站装卸费" placement="top">
-          <el-button @click="gotoPage('ArriveLoad', './accountsPayable/batch')">到站装卸费</el-button>
-        </el-tooltip>
-        <el-tooltip content="到站其他费" placement="top">
-          <el-button @click="gotoPage('ArriveOther', './accountsPayable/batch')">到站其他费</el-button>
-        </el-tooltip>
+        <router-link to="./accountsPayable/waybill/unusual">
+          <el-tooltip content="异动费用" placement="top">
+            <el-button>异动费用</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/waybill/other">
+          <el-tooltip content="其他支出" placement="top">
+            <el-button>其他支出</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/deliver">
+          <el-tooltip content="送货费" placement="top">
+            <el-button>送货费</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/deliver">
+          <el-tooltip content="短驳费" placement="top">
+            <el-button>短驳费</el-button>
+          </el-tooltip>
+        </router-link>
+       
+        <router-link to="">
+          <el-tooltip content="干线费" placement="top">
+            <el-button>干线费</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/waybill/deliver">
+          <el-tooltip content="异常理赔" placement="top">
+            <el-button>异常理赔</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/insurance">
+          <el-tooltip content="整车保险费" placement="top">
+            <el-button>整车保险费</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/truckAll">
+          <el-tooltip content="发车汇总" placement="top">
+            <el-button>发车汇总</el-button>
+          </el-tooltip>
+        </router-link>
+       
+        <router-link to="./accountsPayable/batch/arrivalAll">
+          <el-tooltip content="到车汇总" placement="top">
+            <el-button>到车汇总</el-button>
+          </el-tooltip>
+        </router-link>
+       
+        <router-link to="./accountsPayable/batch/stationLoad">
+          <el-tooltip content="发站装卸费" placement="top">
+            <el-button>发站装卸费</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/stationOther">
+          <el-tooltip content="发站其他费" placement="top">
+            <el-button>发站其他费</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/arriveLoad">
+          <el-tooltip content="到站装卸费" placement="top">
+            <el-button>到站装卸费</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="./accountsPayable/batch/arriveOther">
+          <el-tooltip content="到站其他费" placement="top">
+            <el-button>到站其他费</el-button>
+          </el-tooltip>
+        </router-link>
+       
       </div>
       <div class="fin3-content">
-        <el-tooltip content="货款到账" placement="top">
-          <el-button @click="gotoPage('Accept', '/finance/payment/accept')">货款到账</el-button>
-        </el-tooltip>
-        <el-tooltip content="货款发放" placement="top">
-          <el-button @click="gotoPage('Grant', '/finance/payment/grant')">货款发放</el-button>
-        </el-tooltip>
+        <router-link to="/finance/payment/accept">
+          <el-tooltip content="货款到账" placement="top">
+            <el-button>货款到账</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="/finance/payment/grant">
+          <el-tooltip content="货款发放" placement="top">
+            <el-button>货款发放</el-button>
+          </el-tooltip>
+        </router-link>
+        
       </div>
       <div class="fin4-content">
-        <el-tooltip content="货款回收" placement="top">
-          <el-button @click="gotoPage('Recycle', '/finance/payment/recycle')">货款回收</el-button>
-        </el-tooltip>
-        <el-tooltip content="货款汇款" placement="top">
-          <el-button @click="gotoPage('Send', '/finance/payment/send')">货款汇款</el-button>
-        </el-tooltip>
+        <!-- <router-link to=""></router-link> -->
+        <router-link to="/finance/payment/recycle">
+          <el-tooltip content="货款回收" placement="top">
+            <el-button >货款回收</el-button>
+          </el-tooltip>
+        </router-link>
+        
+        <router-link to="/finance/payment/send">
+          <el-tooltip content="货款汇款" placement="top">
+            <el-button >货款汇款</el-button>
+          </el-tooltip>
+        </router-link>
       </div>
       <div class="fin5-content">
         <router-link to="/finance/accountsReceivable/all">
@@ -97,10 +173,12 @@
           </el-tooltip>
         </router-link>
         
-        <!-- <router-link to="./accountsReceivable"></router-link> -->
-        <el-tooltip content="应付账款" placement="top">
-          <el-button  @click="gotoPage('Kickback', './accountsPayable/waybill')">应付账款</el-button>
-        </el-tooltip>
+        <router-link to="./accountsPayable/waybill">
+          <el-tooltip content="应付账款" placement="top">
+            <el-button >应付账款</el-button>
+          </el-tooltip>
+        </router-link>
+        
       </div>
       <div class="fin6-content">
         <router-link to="/finance/payment/recycle">
@@ -110,14 +188,14 @@
         </router-link>
         <router-link to="./settleLogIncome">
           <el-tooltip content="记收入" placement="top">
-            <el-button  @click="gotoPage('Send', './settleLogIncome')">记收入</el-button>
+            <el-button >记收入</el-button>
           </el-tooltip>
         </router-link>
       </div>
       <div class="fin7-content">
         <router-link to="./settleLogExpandtiure">
           <el-tooltip content="记支出" placement="top">
-            <el-button  @click="gotoPage('Send', './settleLogExpandtiure')">记支出</el-button>
+            <el-button >记支出</el-button>
           </el-tooltip>
         </router-link>
       </div>

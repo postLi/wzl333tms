@@ -472,7 +472,7 @@ export default {
         fixed: false
       }, {
         label: '到达省',
-        prop: 'shipToCityName',
+        prop: 'shipToCityName1',
         width: '120',
         slot: (scope) => {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
@@ -480,7 +480,7 @@ export default {
         fixed: false
       }, {
         label: '到达市',
-        prop: 'shipToCityName',
+        prop: 'shipToCityName2',
         width: '120',
         slot: (scope) => {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
@@ -488,7 +488,7 @@ export default {
         fixed: false
       }, {
         label: '到达县',
-        prop: 'shipToCityName',
+        prop: 'shipToCityName3',
         width: '120',
         slot: (scope) => {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
@@ -539,8 +539,21 @@ export default {
       switch (type) {
          // 导出
         case 'export':
+          const arr = objectMerge2([], this.dataset) // 所有的数据
+          arr.forEach(e => {
+            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+          })
+
+          const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
+          arrSel.forEach(e => {
+            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+          })
           SaveAsFile({
-            data: this.selected.length ? this.selected : this.dataset,
+            data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
             name: '货款汇款'
           })

@@ -712,7 +712,7 @@ export default {
         fixed: false
       }, {
         label: '付款方式',
-        prop: 'shipPayWay',
+        prop: 'shipPayWayName',
         width: '120',
         fixed: false
       }, {
@@ -758,7 +758,7 @@ export default {
         prop: 'shipToCityName',
         width: '120',
         slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
         },
         fixed: false
       }, {
@@ -766,7 +766,7 @@ export default {
         prop: 'shipToCityName',
         width: '120',
         slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
         },
         fixed: false
       }, {
@@ -902,13 +902,28 @@ export default {
       })
     },
     doAction(type) {
+      if (!this.selected.length && type !== 'reg' && type !== 'export') {
+        this.$message({
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
+        return false
+      }
       switch (type) {
         // 导出
         case 'export':
+          const arr = objectMerge2([], this.dataset) // 所有的数据
+          arr.forEach(e => {
+            this.$set(e, 'status', status === 1 ? '未放货' : '已放货')
+          })
+          const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
+          arrSel.forEach(e => {
+            this.$set(e, 'status', status === 1 ? '未放货' : '已放货')
+          })
           SaveAsFile({
-            data: this.selected.length ? this.selected : this.dataset,
+            data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
-            name: '回单接收'
+            name: '已放货'
           })
           break
       }

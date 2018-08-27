@@ -146,6 +146,9 @@ export default {
         documentNum: [
           // { required: true, trigger: 'blur', validator: validateNum }
           { pattern: REGEX.ONLY_NUMBER_AND_LETTER, trigger: 'blur', message: '只能输入字母和数字' }
+        ],
+        signName: [
+          { required: true, message: '请输入签收人', trigger: 'blur' }
         ]
       }
     }
