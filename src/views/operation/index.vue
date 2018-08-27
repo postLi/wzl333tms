@@ -101,7 +101,7 @@
             <div slot="content">
               功能：对目的网点寄回的回单做接收
             </div>
-            <router-link to="/operation/order/receipt/Send">
+            <router-link to="/operation/order/receipt/Accept">
               <i class="flowicon jieshou"></i>
               <p>回单接收</p>
             </router-link>
@@ -110,7 +110,7 @@
             <div slot="content">
               功能：开单网点把回单发放给客户
             </div>
-            <router-link to="/operation/order/receipt/Recycle">
+            <router-link to="/operation/order/receipt/Grant">
               <i class="flowicon fafang"></i>
               <p>回单发放</p>
             </router-link>
@@ -121,7 +121,7 @@
             <div slot="content">
               功能：从收货人处回收回单
             </div>
-            <router-link to="/operation/order/receipt/Grant">
+            <router-link to="/operation/order/receipt/Recycle">
               <i class="flowicon huishou"></i>
               <p>回单回收</p>
             </router-link>
@@ -130,7 +130,7 @@
             <div slot="content">
               功能：目的网点把回单寄到开单网点
             </div>
-            <router-link to="/operation/order/receipt/Accept">
+            <router-link to="/operation/order/receipt/Send">
               <i class="flowicon jichu"></i>
               <p>回单寄出</p>
             </router-link>

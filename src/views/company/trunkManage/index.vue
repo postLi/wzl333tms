@@ -137,12 +137,12 @@ export default {
           fixed: false
         }, {
           label: '车辆来源',
-          prop: 'truckSource',
+          prop: 'truckSourceName',
           width: '120',
-          fixed: false,
-          slot: (scope) => {
+          fixed: false
+          /* slot: (scope) => {
             return this.getLabelName(scope.row.truckSource, this.truckSources)
-          }
+          } */
         }, {
           label: '可载重（吨）',
           prop: 'truckLoad',
@@ -167,11 +167,11 @@ export default {
           fixed: false
         }, {
           label: '车型',
-          prop: 'truckType',
-          fixed: false,
-          slot: (scope) => {
+          prop: 'truckTypeName',
+          fixed: false
+          /* slot: (scope) => {
             return this.getLabelName(scope.row.truckType, this.truckTypes)
-          }
+          } */
         }, {
           label: '车辆注册时间',
           prop: 'truckRegisterDate',

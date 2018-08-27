@@ -126,25 +126,25 @@
       <!-- 第三块 -->
       <!-- <h3 class="thetitle">回单管理</h3> -->
       <el-tooltip content="功能：开单网点把回单发放给客户" placement="bottom">
-        <router-link to="/operation/order/receipt/Recycle" class="flowitem receipt-18fafang">
+        <router-link to="/operation/order/receipt/Grant" class="flowitem receipt-18fafang">
           <i class="flowicon fafang"></i>
           <p>回单发放</p>
         </router-link>
       </el-tooltip>
       <el-tooltip content="功能：对目的网点寄回的回单做接收" placement="top">
-        <router-link to="/operation/order/receipt/Send" class="flowitem receipt-17jieshou">
+        <router-link to="/operation/order/receipt/Accept" class="flowitem receipt-17jieshou">
           <i class="flowicon jieshou"></i>
           <p>回单接收</p>
         </router-link>
       </el-tooltip>
       <el-tooltip content="功能：目的网点把回单寄到开单网点" placement="bottom">
-        <router-link to="/operation/order/receipt/Accept" class="flowitem receipt-16jichu">
+        <router-link to="/operation/order/receipt/Send" class="flowitem receipt-16jichu">
           <i class="flowicon jichu"></i>
           <p>回单寄出</p>
         </router-link>
       </el-tooltip>
       <el-tooltip content="功能：从收货人处回收回单" placement="top">
-        <router-link to="/operation/order/receipt/Grant" class="flowitem receipt-15huishou">
+        <router-link to="/operation/order/receipt/Recycle" class="flowitem receipt-15huishou">
           <i class="flowicon huishou"></i>
           <p>回单回收</p>
         </router-link>

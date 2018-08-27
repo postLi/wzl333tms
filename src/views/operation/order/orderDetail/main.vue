@@ -1394,21 +1394,6 @@ $backgroundcolor: #cbe1f7;
       padding-bottom: 2px;
       margin: 10px auto;
     }
-    .clickimg{
-      border: 1px solid #ccc;
-      padding: 2px;
-      text-align: center;
-      width: 200px;
-      height: 200px;
-      display: inline-block;
-      margin-left: 5px;
-      line-height: 200px;
-
-      img{
-        max-width: 100%;
-        max-height: 100%;
-        vertical-align: middle;
-      }
-    }
+    
   }
 </style>

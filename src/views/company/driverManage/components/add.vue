@@ -3,7 +3,7 @@
     <template class="addDriverPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="司机姓名" prop="driverName">
-          <el-input v-model.trim="form.driverName" :maxlength="10" auto-complete="off" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input v-model.trim="form.driverName" :maxlength="10" auto-complete="off" ></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
           <el-input v-numberOnly v-model="form.driverMobile" :maxlength="11" auto-complete="off"></el-input>

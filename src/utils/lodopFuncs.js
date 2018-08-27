@@ -1,3 +1,9 @@
+ import { getSummaries } from './index'
+ // import ExportJsonExcel from 'js-export-excel'
+//  const ExportJsonExcel = require('js-export-excel')
+ const ExportJsonExcel = require('./excel')
+//  console.log('ExportJsonExcel:', ExportJsonExcel)
+
  var CreatedOKLodop7766 = null
  var createTableComplate = false
  // var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
@@ -199,6 +205,7 @@
  export function PrintInFullPage(obj) {
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
+     obj = formatTableData(obj)
      const tableId = createTable(obj) // 重新创建打印视图table
      LODOP = getLodop()
      LODOP.PRINT_INIT('订货单')
@@ -296,29 +303,87 @@
    }
  }
 
+ // 格式化数据
+ function formatTableData(obj) {
+   obj.data.forEach((el, k) => {
+     obj.columns.forEach((column, j) => {
+       if (column.prop === 'id' || column.label === '序号') {
+         el[column.prop] = k + 1
+       }
+       if (typeof el[column.prop] === 'undefined') {
+         el[column.prop] = ''
+       }
+       column.width = column.width || 120
+     })
+   })
+   return obj
+ }
+
  // 保存为xls文件
  export function SaveAsFile(obj) {
-   try {
-     // let tableId = createTable(data, columns) // 重新创建打印视图table
-     const tableId = createTable(obj) // 重新创建打印视图table
-     LODOP = getLodop()
-     LODOP.PRINT_INIT('数据表格')
-     // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
-     LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
-     // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
-     LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
-     LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
-     LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
-     LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
-     LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
-     //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
-     if (obj.name) {
-       LODOP.SAVE_TO_FILE(obj.name + '.xls')
+   obj = formatTableData(obj)
+   // 如果是ie10+则用js-export-excel
+  // 否则用lodop
+   const isie = IEVersion()
+   let uselodop = false
+   if (isie !== -1) {
+     if (isie !== 'edge' && isie < 10) {
+       uselodop = true
      } else {
-       LODOP.SAVE_TO_FILE('新文件名.xls')
+       uselodop = false
      }
-   } catch (err) {
-     getLodop()
+   } else {
+     uselodop = false
+   }
+   if (!uselodop) {
+     const summaries = getSummaries(obj)
+     const sumObj = {}
+     var option = {}
+     option.fileName = obj.name
+     var optionObj = {
+       sheetData: [],
+      // sheetName:'sheet',
+       sheetFilter: [],
+       sheetHeader: []
+       // columnWidths: [20, 20]
+     }
+     obj.columns.forEach((column, index) => {
+       optionObj.sheetHeader.push(column.label)
+       // optionObj.columnWidths.push(column.width || 120)
+       optionObj.sheetFilter.push(column.prop)
+       sumObj[column.prop] = summaries[index]
+     })
+     obj.data.forEach(el => {
+       optionObj.sheetData.push(el)
+     })
+     optionObj.sheetData.push(sumObj)
+     option.datas = [optionObj]
+     var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
+    //  var toExcel = new ExportJsonExcel(option) // new
+     toExcel.saveExcel() // 保存
+   } else {
+     try {
+     // let tableId = createTable(data, columns) // 重新创建打印视图table
+       const tableId = createTable(obj) // 重新创建打印视图table
+       LODOP = getLodop()
+       LODOP.PRINT_INIT('数据表格')
+     // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+       LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+     // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+       LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+       LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+       LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+       LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+       LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+     //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+       if (obj.name) {
+         LODOP.SAVE_TO_FILE(obj.name + '.xls')
+       } else {
+         LODOP.SAVE_TO_FILE('新文件名.xls')
+       }
+     } catch (err) {
+       getLodop()
+     }
    }
  }
 
@@ -347,6 +412,35 @@
    }
  }
 
+ function IEVersion() {
+   var userAgent = navigator.userAgent // 取得浏览器的userAgent字符串
+   var isIE = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1 // 判断是否IE<11浏览器
+   var isEdge = userAgent.indexOf('Edge') > -1 && !isIE // 判断是否IE的Edge浏览器
+   var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1
+   if (isIE) {
+     var reIE = new RegExp('MSIE (\\d+\\.\\d+);')
+     reIE.test(userAgent)
+     var fIEVersion = parseFloat(RegExp['$1'])
+     if (fIEVersion == 7) {
+       return 7
+     } else if (fIEVersion == 8) {
+       return 8
+     } else if (fIEVersion == 9) {
+       return 9
+     } else if (fIEVersion == 10) {
+       return 10
+     } else {
+       return 6// IE版本<=7
+     }
+   } else if (isEdge) {
+     return 'edge'// edge
+   } else if (isIE11) {
+     return 11 // IE11
+   } else {
+     return -1// 不是ie浏览器
+   }
+ }
+
  function createTable(obj) { // 打印导出创建表格视图
    const data = obj.data // 数据表格
    const columns = obj.columns // 表格设置列
@@ -355,8 +449,11 @@
    const table = document.createElement('table')
    const thead = document.createElement('thead')
    const tbody = document.createElement('tbody')
+   const tfoot = document.createElement('tfoot')
    const theadTr = document.createElement('tr')
+   const tfootTr = document.createElement('tr')
    const colgroup = document.createElement('colgroup') // 设置列宽 无效果
+   const summaries = getSummaries(obj)
 
    for (let i = 0; i < columns.length; i++) { // 设置表头
      const th = document.createElement('td')
@@ -367,6 +464,10 @@
 
      theadTr.appendChild(th)
      colgroup.appendChild(col)
+
+     const tfoottd = document.createElement('td')
+     tfoottd.innerHTML = summaries[i]
+     tfootTr.appendChild(tfoottd)
    }
    table.appendChild(colgroup)
    table.appendChild(thead)
@@ -378,12 +479,18 @@
      for (let j = 0; j < columns.length; j++) {
        const td = tbodyTr.insertCell()
        // 处理当列没有值、宽度设置等信息时，做默认值处理
-       td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
-       td.style.width = (data[k][columns[j].width] || 120) + 'px'
+      // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
+       td.innerHTML = data[k][columns[j].prop]
+       td.style.width = data[k][columns[j].width] + 'px'
        // td.setAttribute('width', data[k][columns[j].width])
      }
    }
+
+   table.appendChild(tfoot)
+   tfoot.appendChild(tfootTr)
+
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+
    table.setAttribute('width', '100%')
    table.setAttribute('border', '1px solid #999')
    table.style.borderCollapse = 'collapse'

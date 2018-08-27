@@ -140,11 +140,23 @@ bingAppClickImageShow()
 
 Vue.directive('showPicture', {
   bind: function(el) {
+    el.classList.add('toPreviewImage')
+
     el.addEventListener('click', function(e) {
       e.preventDefault()
       e.stopPropagation()
       clickImageShowBig(el)
     })
+  },
+  inserted: function(el) {
+    const par = el.parentElement
+    if (par && par.classList.contains('clickimg')) {
+      par.addEventListener('click', function(e) {
+        e.preventDefault()
+        e.stopPropagation()
+        clickImageShowBig(el)
+      })
+    }
   },
   unbind: function(el) {
 

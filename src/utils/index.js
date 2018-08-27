@@ -2,7 +2,7 @@
  * Created by jiachenpan on 16/11/18.
  */
 
-const shouldCalcProperty = ['nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
+const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
 /**
  * 根据列表数据计算合计值
  * @param {*} param 列表数据
@@ -28,7 +28,7 @@ export function getSummaries(param, propsArr) {
     let unit = '元'
     const find = propsArr.filter(el => {
       // 完全等于属性名
-      if (el === column.property) {
+      if (el === column.property || el === column.prop) {
         prop = el
         return true
       }
@@ -36,8 +36,8 @@ export function getSummaries(param, propsArr) {
       const propArr = el.split('|')
       if (propArr.length > 1) {
         // 前缀等于属性名
-        if (propArr[0] === column.property) {
-          prop = column.property
+        if (propArr[0] === column.property || propArr[0] === column.prop) {
+          prop = column.property || column.prop
           unit = propArr[1] || ''
           return true
         }
@@ -74,7 +74,6 @@ export function getSummaries(param, propsArr) {
       sums[index] = ' - '
     }
   })
-
   return sums
 }
 
