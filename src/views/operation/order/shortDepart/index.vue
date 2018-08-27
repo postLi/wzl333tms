@@ -1,5 +1,5 @@
 <template>
-  <div class="showdepart-manager tab-wrapper" :key="key">
+  <div class="showdepart-manager tab-wrapper">
     <div class="eltab clearfix">
       <!-- 短驳管理 -->
       <router-link to="/operation/order/shortDepart/deliver"   class="tab-label" >短驳发车</router-link>

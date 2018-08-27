@@ -124,7 +124,7 @@ export default {
       {
         label: '短驳时间',
         prop: 'departureTime',
-        width: '150',
+        width: '160',
         fixed: false,
         slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`

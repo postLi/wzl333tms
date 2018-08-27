@@ -594,9 +594,11 @@ export default {
       } else {
         postAddRepertory(50, this.newData).then(data => {
             if (data.status === 200) {
-              this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
+              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
+              console.log(this.$route)
               this.$message({ type: 'success', message: '短驳入库操作成功' })
               this.message = true
+
             } else {
               this.message = false
             }
