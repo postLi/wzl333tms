@@ -48,10 +48,10 @@
           <div class="depmain-edit"  v-if="hiddenEdit" v-loading="loading">
             <div class="depmain-list" >
               <ul :key="theulkey">
-                <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  >-->
+                <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  @click="currentIndex = index">-->
                   <!--<span v-once>{{item.dictName}}</span>-->
                   <!--<div class="edit-hidden">-->
-                    <!--<input type="text"  v-model="item.dictName" />-->
+                    <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
                     <!--&lt;!&ndash;<el-input&ndash;&gt;-->
                       <!--&lt;!&ndash;v-model="item.dictName"&ndash;&gt;-->
                     <!--&lt;!&ndash;&gt;&ndash;&gt;-->
@@ -62,7 +62,10 @@
                     <!--</div>-->
                   <!--</div>-->
                 <!--</li>-->
-                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index" >
+
+
+
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index" @click="currentIndex = index">
                   <span v-once>{{item.dictName}}</span>
                   <div class="edit-hidden">
                     <el-input
@@ -119,25 +122,14 @@
       directives: {
         focus: {
           // 指令的定义
-          // inserted: function (el) {
-          //   el.focus()
-          // }
           inserted: function (el) {
-            if(obj.value){
-              el.focus()
-            }
-          },
-          componentUpdated: function(el,obj) {  //这是每当绑定的值发生改变时触发的钩子函数
-            //console.log(obj);  //可以打印看一下
-            if(obj.value) {
-              el.focus()
-            }
+            el.focus()
           }
         }
       },
       data() {
         return {
-          focusIndex: 0,
+
           theulkey: 'theulkey',
           currentIndex: 0,
           checked1: true,
@@ -208,9 +200,6 @@
         // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
       },
       methods: {
-        nextFocus(index) {
-          return this.focusIndex = index + 1;
-        },
         resetValue(item, oldvalue) {
           return () => {
             item.dictName = oldvalue
