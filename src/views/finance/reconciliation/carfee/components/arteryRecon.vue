@@ -463,7 +463,7 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime ,tmsMath} from '@/utils/'
+  import { pickerOptions2, parseTime } from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
@@ -943,7 +943,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return tmsMath._add(prev , curr)
+                return prev + curr
               } else {
                 return prev
               }
@@ -987,8 +987,6 @@
         this.messageInfo.wechatAccount = item.wechatAccount
         this.messageInfo.checkStartTime = item.checkStartTime
         this.messageInfo.checkEndTime = item.checkEndTime
-        // this.messageInfo.checkStartTime = item.checkStartTime
-        // this.messageInfo.checkEndTime = item.checkEndTime
         this.messageInfo.orgName = item.orgName
         this.messageButtonInfo.companyName = item.companyName
         this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer

@@ -314,8 +314,8 @@ export default {
     fetchAllList() {
       this.loading = true
       return getPostlist(this.searchForm).then(data => {
-        // this.usersArr = data.list
-        // this.total = data.totalCount
+        this.usersArr = data.list
+        this.total = data.totalCount
         this.loading = false
       })
     },

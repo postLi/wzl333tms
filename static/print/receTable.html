@@ -1,59 +1,141 @@
 <!DOCTYPE html>
+<!DOCTYPE border-collapse>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    /*table {*/
+      /*border-collapse: collapse;*/
+      /*margin: 0 auto;*/
+    /*}*/
+
+    table, td, th {
+      border: 1px solid black;
+    }
+    /*tbody{*/
+
+    /*}*/
+    /*tbody tr td:nth-of-type(odd){*/
+      /*width: 100px;*/
+      /*text-align: center;*/
+   /*}*/
+    /*tbody tr td:nth-of-type(even){*/
+      /*width: 150px;*/
+
+    /*}*/
+    /*tbody tr {*/
+      /*display: inline-block;*/
+
+    /*}*/
+    /*tbody tr td{*/
+      /*!*flex: 2;*!*/
+    /*}*/
+    caption{
+      background: rgb(255,255,0);
+    }
+  </style>
 </head>
 <body>
-<div id="app">
-  <ul>
-    <li v-for="(item,index) in inputs">
-      <input type="text" v-model="item.val" v-focus="focusIndex === index"  @keyup.enter="nextFocus(index)">
-    </li>
-  </ul>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script>
-  // 注册一个全局自定义指令 `v-focus`
-  Vue.directive('focus', {
-    // 当被绑定的元素插入到 DOM 中时……
-    inserted: function (el,obj) {  //这是需要页面刚加载就能进行聚焦操作使用的钩子函数,可以省略的，视具体需求而定
-      //console.log(obj);
-      if(obj.value) { //对值进行判断
-        // 聚焦元素
-        el.focus()
-      }
-    },
-    // 当指令所在组件的 VNode 及其子 VNode 全部更新后调用
-    componentUpdated: function(el,obj) {  //这是每当绑定的值发生改变时触发的钩子函数
-      //console.log(obj);  //可以打印看一下
-      if(obj.value) {
-        el.focus()
-      }
-    }
-  })
-  new Vue({
-    el: "#app",
-    data() {
-      return {
-        focusIndex: 0, //用来存放下一个应该聚焦的index值
-        inputs: [{
-          val: 1
-        },{
-          val: 2
-        },{
-          val: 3
-        },{
-          val: 4
-        }]
-      }
-    },
-    methods: {
-      nextFocus(index) {
-        return this.focusIndex = index + 1;
-      }
-    }
-  });
-</script>
+    <!--<h3 style="border-bottom: 2px solid #333;margin-left:calc(50% - 350px );margin-right:calc(50% - 200px );font-size:1.6rem;">顺丰2018年07月01日-2018年07月01日对账表</h3>-->
+    <!--<div style="text-align: right;margin-right:calc(10% );">-->
+        <!--<span>2018-01-01 &nbsp;&nbsp;</span>-->
+        <!--<span>2018-08-06</span>-->
+    <!--</div>-->
+  <table cellspacing="0">
+    <thead>
+      <tr>
+          <th>序号</th>
+          <th>中转时间</th>
+          <th>运单号</th>
+          <th>中转单号</th>
+          <th>出发城市</th>
+          <th>到达城市</th>
+          <th>货品名</th>
+          <th>件数</th>
+          <th>交接方式</th>
+          <th>异常类型</th>
+          <th>异常件数</th>
+          <th>异常费用</th>
+          <th>到付款</th>
+          <th>代收货款</th>
+          <th>小计</th>
+          <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+          <td>序号1</td>
+          <td>中转时间</td>
+          <td>运单号</td>
+          <td >中转单号 </td>
+          <td>出发城市</td>
+          <td>到达城市</td>
+          <td>货品名</td>
+          <td>件数</td>
+          <td>交接方式</td>
+          <td>异常类型</td>
+          <td>异常件数</td>
+          <td>异常费用</td>
+          <td>到付款</td>
+          <td>代收货款</td>
+          <td>小计</td>
+          <td>备注</td>
+        </tr>
+
+
+    </tbody>
+</table>
 </body>
+<script>
+    function createRec(params | params1  ) {
+        const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+        const div = document.createElement('div')
+        const h3 = document.createElement('b') // 标题【结算收款单】
+        const infoDiv = document.createElement('div')
+        const table = document.createElement('table')
+        const thead = document.createElement('thead')
+        const tbody = document.createElement('tbody')
+        // 标题
+        const tbodyStr =` <tr>
+          <td >承运商名称 </td>
+          <td>${params.memberName}</td>
+          <td>业务负责人</td>
+          <td>${params.memberName}</td>
+          <td>联系方式</td>
+          <td>${params.memberPersonPhone}</td>
+          <td >对账单编号 </td>
+          <td>${params.checkBillCode}</td>
+          <td>客户编号</td>
+          <td>${params.memberCode}</td>
+          <td>开始时间</td>
+          <td>${params.checkStartTime}</td>
+        </tr>
+        <tr>
+          <td >结束时间 </td>
+          <td>${params.checkEndTime}</td>
+          <td>结算方式</td>
+          <td>${params.settlementType}</td>
+          <td>账户账号</td>
+          <td>${params.bankAccount}</td>
+          <td >账户开户行 </td>
+          <td>${params.bankName}</td>
+          <td>财务负责人</td>
+          <td>${params.financialOfficer}</td>
+          <td>联系方式</td>
+          <td>${params.financialOfficerPhone}</td>
+        </tr>
+        <tr>
+            <td >支付宝 </td>
+            <td>${params.alipayAccount}</td>
+            <td>微信</td>
+            <td colspan="9">${params.wechatAccount}</td>
+        </tr>`
+        h3.innerHTML = '顺丰2018年07月01日-2018年07月01日对账表'
+        let tbodyStr = ''
+
+
+    }
+</script>
 </html>

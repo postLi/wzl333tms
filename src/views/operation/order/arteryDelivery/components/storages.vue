@@ -343,7 +343,7 @@
                       <el-input size="mini" disabled :value="formModel.departureTime"></el-input>
                       ，到达时间为
                       <!--<el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为-->
-                      <el-input size="mini" disabled :value="formModel.receivingTime "></el-input>
+                      <el-input size="mini" disabled :value="formModel.planArrivedTime "></el-input>
                       。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>

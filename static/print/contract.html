@@ -121,7 +121,7 @@
       <ul>
         <li><h3>甲方签章</h3></li>
       </ul>
-
+      
     </div>
     <div class="contract_form_item">
       <ul><li><h3>乙方签章</h3></li></ul>
@@ -193,7 +193,7 @@
   // 运输时间
   contractTimeStr += '六、本次发车时间为<span>' +
     data.createTime + '</span>，到达时间为<span>' +
-    data.receivingTime + '</span>。<p>司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>'
+    data.planArrivedTime + '</span>。<p>司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>'
   contract_time.innerHTML = contractTimeStr
   // 车辆备注
   remark.innerHTML = data.remark
