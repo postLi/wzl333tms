@@ -7,7 +7,7 @@
 <body>
 <div id="app">
   <ul>
-    <li v-for="(item,index) in inputs">
+    <li v-for="(item,index) in inputs" style="width:400px;background:red">
       <input type="text" v-model="item.val" v-focus="focusIndex === index"  @keyup.enter="nextFocus(index)">
     </li>
   </ul>
