@@ -21,6 +21,11 @@ export default {
       // 暂时缓存这个
       return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
     }
+  },
+  mounted () {
+    if (this.otherinfo.firstLogin === 1 ) { // 第一次登录的创建者要进入【系统检测页面】
+      this.$router.push({ path: '/checklist/index' })
+    }
   }
 }
 </script>

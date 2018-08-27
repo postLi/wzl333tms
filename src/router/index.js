@@ -86,6 +86,8 @@ export const constantRouterMap = [
     }]
   }
 ]
+
+
 // 用来展示自定义组件、指令、过滤器等
 if (process.env.NODE_ENV === 'development') {
   constantRouterMap.push(Components)

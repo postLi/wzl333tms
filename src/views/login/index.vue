@@ -34,7 +34,7 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
+            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable >
               <template slot="prepend"><i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i></template>
             </el-input>
           </el-form-item>
@@ -91,11 +91,9 @@ export default {
     //   }
     // }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码不能小于6位'))
-      } else if (!value.length) {
-        callback(new Error('请输入6位数字密码'))
-      } else {
+      if (typeof value !== 'string' || value === '' || value.length < 6) {
+        callback('密码不能小于6位')
+      }else {
         callback()
       }
     }
@@ -115,7 +113,7 @@ export default {
         // password: '123456'
       },
       loginRules: {
-        accNum: [{ required: true, trigger: 'blur' }],
+        username: [{ required: true, trigger: 'blur', message: '请输入账号' }],
         // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
