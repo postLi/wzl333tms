@@ -64,7 +64,7 @@
             <SelectType v-model="form.tmsTruck.truckType" type="truck_type" placeholder="请选择" class="pickup-way" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="司机手机" prop="tmsDriver.driverMobile">
-            <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" :disabled="isDbclick"></el-input>
+            <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" :disabled="isDbclick" ></el-input>
             <!--<querySelect search="driverMobile" type="driver"  @change="getdriverMobile" :remote="true" v-model="form.tmsDriver.driverMobile" />-->
           </el-form-item>
           <el-form-item label="车辆单位" prop="tmsTruck.truckUnit">
@@ -358,18 +358,7 @@ export default {
     filterfn(el) {
       return el.id !== 235
     },
-    getTrunkName(trunk) {
-      if (trunk) {
-        // if(this.form.tmsDriver.driverName)
-        this.form.tmsDriver.driverName = trunk.driverName
-        this.form.tmsDriver.driverMobile = trunk.dirverMobile
-        this.form.tmsDriver.driverId = trunk.driverId
-        this.form.tmsTruck.truckId = trunk.truckId
-        this.form.tmsTruck.truckType = trunk.truckType
-        this.form.tmsTruck.truckUnit = trunk.truckUnit
-        this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
-      }
-    },
+
     infoData(item) {
       this.form.tmsOrderPickup.pickupName = item.pickupName
       this.form.tmsOrderPickup.pickupAmount = item.pickupAmount
@@ -451,13 +440,45 @@ export default {
       } else {
       }
     },
+    //司机手机
+    getDriverMobile(item){
+      // console.log(item,'司机')
+    },
     // 司机姓名
     getdriverName(item, city) {
       if (item) {
-        this.form.tmsDriver.driverName = item.driverName
-        this.form.tmsDriver.driverMobile = item.driverMobile
-        this.form.tmsDriver.driverId = item.id
-      } else {
+        // console.log(item);
+        // if(this.form.tmsDriver.driverName || this.form.tmsDriver.driverMobile){
+        //   this.form.tmsDriver.driverName = Object.assign({},this.form.tmsDriver.driverName)
+        //   this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
+        //   alert('11')
+        // }
+        // else{
+          this.form.tmsDriver.driverName = item.driverName
+          this.form.tmsDriver.driverMobile = item.driverMobile
+          this.form.tmsDriver.driverId = item.id
+          // alert('22')
+        // }
+      }
+    },
+    //车牌号
+    getTrunkName(trunk) {
+      if (trunk) {
+        if(this.form.tmsDriver.driverName){
+          this.form.tmsDriver.driverName = Object.assign({},this.form.tmsDriver.driverName)
+          this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
+
+        }
+        else{
+          this.form.tmsDriver.driverName = trunk.driverName
+          this.form.tmsDriver.driverMobile = trunk.dirverMobile
+          this.form.tmsDriver.driverId = trunk.driverId
+
+        }
+        this.form.tmsTruck.truckId = trunk.truckId
+        this.form.tmsTruck.truckType = trunk.truckType
+        this.form.tmsTruck.truckUnit = trunk.truckUnit
+        this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
       }
     },
     initInfo() {

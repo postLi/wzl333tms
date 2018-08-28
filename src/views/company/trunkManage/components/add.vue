@@ -3,7 +3,7 @@
     <template class="addTruckPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="车牌号码" prop="truckIdNumber">
-          <el-input v-model="form.truckIdNumber" :maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model="form.truckIdNumber" :maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="车辆来源" prop="truckSource">
           <!-- <el-select v-model="form.truckSource" placeholder="请选择">
