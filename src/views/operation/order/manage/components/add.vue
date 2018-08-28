@@ -441,7 +441,7 @@
         },
         popTitle: '新增订单',
         orderSn: '',
-        loading: false,
+        loading: true,
         inited: false,
         // 验证
         checkShowMessage: false,
@@ -454,7 +454,7 @@
         this.inited = true
         this.initInfo()
       }
-      this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
+      // this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
     },
     watch: {
       popVisible(newVal, oldVal) {
@@ -563,43 +563,6 @@
         this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
         this.ke1yVal = Math.random()
       },
-      newinfoData() {
-        this.form.tmsOrderCargoList.cargoName = ''
-        this.form.tmsOrderCargoList.cargoAmount = ''
-        this.form.tmsOrderCargoList.cargoWeight = ''
-        this.form.tmsOrderCargoList.cargoVolume = ''
-        this.form.tmsOrderCargoList.cargoPack = ''
-        this.form.tmsOrderCargoList.description = ''
-        this.form.tmsOrderCargoList.agencyFund = ''
-        this.form.tmsOrderCargoList.commissionFee = ''
-        this.form.tmsOrderCargoList.shipFee = ''
-        this.form.tmsOrderCargoList.productPrice = ''
-        this.form.tmsOrderCargoList.id = ''
-        // 发
-        this.form.customSend.customerName = ''
-        this.form.customSend.customerMobile = ''
-        this.form.customSend.detailedAddress = ''
-        this.form.customSend.customerUnit = ''
-        this.form.customSend.customerId = ''
-        // 收
-        this.form.customRece.customerName = ''
-        this.form.customRece.customerMobile = ''
-        this.form.customRece.detailedAddress = ''
-        this.form.customRece.customerUnit = ''
-        this.form.customRece.customerId = ''
-
-        // 订单信息
-        this.form.tmsOrderPre.orderFromCityName = ''
-        this.form.tmsOrderPre.orderToCityName = ''
-        this.form.tmsOrderPre.orderRemarks = ''
-        // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
-        // this.form.tmsOrderPre.orderEffective = ''
-        this.form.tmsOrderPre.id = ''
-        this.form.tmsOrderPre.orderToOrgid = ''
-        this.form.tmsOrderPre.orderPickupMethod = 218
-        this.form.tmsOrderPre.orderEffective = 94
-        this.form.tmsOrderPre.orderPayWay = 76
-      },
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
           if (!value) {
@@ -668,7 +631,7 @@
       submitForm(ruleForm) {
         this.isChecked = true
         this.isCheckedShow = false
-        this.checkShowMessage = false
+        this.checkShowMessage = true
         this.$refs[ruleForm].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
@@ -753,7 +716,7 @@
             orderFromCityName: '',
             orderToCityCode: '',
             orderToCityName: '',
-            orderFromOrgid: '',
+            orderFromOrgid: this.otherinfo.orgid,
             orderToOrgid: '', // 目的网点
             orderPickupMethod: 218, // 提货方式
             orderEffective: 94, // 紧急度

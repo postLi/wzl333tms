@@ -614,7 +614,7 @@
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="140"
+            width="80"
             sortable
           >
           </el-table-column>
@@ -622,48 +622,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="160"
+            width="90"
             label="交接方式">
           </el-table-column>
           <el-table-column
             prop="paymentMethod"
             label="中转付款方式"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="transferCharge"
             label="中转费"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="deliveryExpense"
             label="中转送货费"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="transferOtherFee"
             label="中转其他费"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalCost"
             label="中转费合计"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width="130"
             sortable
           >
             <template slot-scope="scope">

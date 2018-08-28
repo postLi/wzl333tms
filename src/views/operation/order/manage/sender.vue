@@ -350,6 +350,9 @@ export default {
               message: '每次只能修改单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
+            return false
+
           }
           if (this.selected[0].orderStatus === 213) {
             this.eventBus.$emit('showCreateOrder', {
