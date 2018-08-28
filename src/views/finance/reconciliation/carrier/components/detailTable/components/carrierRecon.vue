@@ -120,14 +120,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="60">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="60">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                       fill="red"></icon-svg></span>
@@ -145,38 +145,38 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="160"
+            width="120"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="160"
+            width="130"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="160"
+            width="100"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="160"
+            width="100"
             label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
             prop="cargoName"
-            width="140"
+            width="100"
             label="货品名">
           </el-table-column>
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="140"
+            width="80"
             sortable
           >
           </el-table-column>
@@ -184,48 +184,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="160"
+            width="90"
             label="交接方式">
           </el-table-column>
           <el-table-column
             prop="abnormalType"
             label="异常类型"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="abnormalAmount"
             label="异常件数"
-            width="130"
+            width="90"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="registerFee"
             label="异常费用"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalFee"
             label="小计"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
@@ -270,14 +270,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="60">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="60">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                          fill="red"></icon-svg></span>
@@ -295,26 +295,26 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="160"
+            width="140"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="160"
+            width="120"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="160"
+            width="100"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="160"
+            width="100"
             label="到达城市">
           </el-table-column>
           <el-table-column
@@ -326,7 +326,7 @@
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="140"
+            width="80"
             sortable
           >
           </el-table-column>
@@ -334,48 +334,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="160"
+            width="90"
             label="交接方式">
           </el-table-column>
           <el-table-column
             prop="paymentMethod"
             label="中转付款方式"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="transferCharge"
             label="中转费"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="deliveryExpense"
             label="中转送货费"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="transferOtherFee"
             label="中转其他费"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalCost"
             label="中转费合计"
-            width="130"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width="130"
             sortable
           >
             <template slot-scope="scope">
@@ -413,14 +413,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="60">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="60">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                          fill="red"></icon-svg></span>
@@ -438,38 +438,38 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="160"
+            width="120"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="160"
+            width="130"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="160"
+            width="100"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="160"
+            width="100"
             label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
             prop="cargoName"
-            width="140"
+            width="100"
             label="货品名">
           </el-table-column>
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="140"
+            width="80"
             sortable
           >
           </el-table-column>
@@ -477,48 +477,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="160"
+            width="90"
             label="交接方式">
           </el-table-column>
           <el-table-column
             prop="abnormalType"
             label="异常类型"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="abnormalAmount"
             label="异常件数"
-            width="130"
+            width="90"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="registerFee"
             label="异常费用"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalFee"
             label="小计"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
@@ -558,14 +558,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="60">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="60">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                             fill="red"></icon-svg></span>
@@ -583,26 +583,26 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="160"
+            width="140"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="160"
+            width="120"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="160"
+            width="100"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="160"
+            width="100"
             label="出发城市">
           </el-table-column>
           <el-table-column

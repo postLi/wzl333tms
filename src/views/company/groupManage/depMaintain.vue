@@ -11,31 +11,31 @@
             </ul>
           </div>
           <!--添加-->
-          <div class="depmain-add" v-if="hiddenAdd" >
+          <div class="depmain-add" v-if="hiddenAdd">
             <div class="add-fixed">
-              <input type="text" v-focus v-model="dictName" />
+              <input type="text" v-focus v-model="dictName"/>
               <div class="addSvg">
-                <span  @click="addDep">
-                  <icon-svg class="lll-dot-true" icon-class="lll-dot-true" ></icon-svg>
+                <span @click="addDep">
+                  <icon-svg class="lll-dot-true" icon-class="lll-dot-true"></icon-svg>
                 </span>
                 <span @click="closeMe">
-                  <icon-svg class="lll-dot-false" icon-class="lll-dot-false" ></icon-svg>
+                  <icon-svg class="lll-dot-false" icon-class="lll-dot-false"></icon-svg>
                 </span>
               </div>
 
 
               <!--<el-input-->
-                <!--placeholder="请输入内容"-->
-                <!--v-model="dictName"-->
-                <!--ref="dictNameInput"-->
-                <!--v-focus-->
-                <!--@focus="addDep"-->
+              <!--placeholder="请输入内容"-->
+              <!--v-model="dictName"-->
+              <!--ref="dictNameInput"-->
+              <!--v-focus-->
+              <!--@focus="addDep"-->
               <!--&gt;-->
               <!--</el-input>-->
               <!--&lt;!&ndash;<input type="text" v-focus />&ndash;&gt;-->
               <!--<div class="dep-img">-->
-                <!--<img src="../../../assets/icom/groupManage-checked.png" @click="addDep">-->
-                <!--<img src="../../../assets/icom/groupManage-false.png" @click="closeMe">-->
+              <!--<img src="../../../assets/icom/groupManage-checked.png" @click="addDep">-->
+              <!--<img src="../../../assets/icom/groupManage-false.png" @click="closeMe">-->
               <!--</div>-->
             </div>
             <div class="depmain-list">
@@ -46,37 +46,44 @@
               </ul>
             </div>
           </div>
-          <div class="depmain-edit"  v-if="hiddenEdit" v-loading="loading">
-            <div class="depmain-list" >
+          <div class="depmain-edit" v-if="hiddenEdit" v-loading="loading">
+            <div class="depmain-list">
               <ul :key="theulkey">
                 <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  @click="currentIndex = index">-->
-                  <!--<span v-once>{{item.dictName}}</span>-->
-                  <!--<div class="edit-hidden">-->
-                    <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
-                    <!--&lt;!&ndash;<el-input&ndash;&gt;-->
-                      <!--&lt;!&ndash;v-model="item.dictName"&ndash;&gt;-->
-                    <!--&lt;!&ndash;&gt;&ndash;&gt;-->
-                    <!--&lt;!&ndash;</el-input>&ndash;&gt;-->
-                    <!--<div class="dep-img">-->
-                      <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
-                      <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >-->
-                    <!--</div>-->
-                  <!--</div>-->
+                <!--<span v-once>{{item.dictName}}</span>-->
+                <!--<div class="edit-hidden">-->
+                <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
+                <!--&lt;!&ndash;<el-input&ndash;&gt;-->
+                <!--&lt;!&ndash;v-model="item.dictName"&ndash;&gt;-->
+                <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;</el-input>&ndash;&gt;-->
+                <!--<div class="dep-img">-->
+                <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
+                <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >-->
+                <!--</div>-->
+                <!--</div>-->
                 <!--</li>-->
+                <!---->
 
 
-
-                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index">
-                   <span v-once>{{item.dictName}}</span>
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"
+                    @mouseenter="currentIndex = index">
+                  <span v-once class="firstName">{{item.dictName}}</span>
                   <div class="edit-hidden">
                     <el-input
                       v-model.lazy="item.dictName"
                     >
                     </el-input>
-                    <div class="dep-img">
-                      <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
-                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" />
+                    <div class="addSvg">
+                      <span @click="closeMe">
+                        <icon-svg class="lll-dot-false" icon-class="lll-dot-false" fill="red"></icon-svg>
+                       </span>
                     </div>
+
+                    <!--<div class="dep-img">-->
+                      <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
+                      <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" />-->
+                    <!--</div>-->
                   </div>
                 </li>
               </ul>
@@ -94,7 +101,7 @@
         <!--完成-->
         <el-button @click="editDep(item)">{{remText}}</el-button>
       </div>
-      <div slot="footer" class="dialog-footer-frame" >
+      <div slot="footer" class="dialog-footer-frame">
         <span></span>
         <!--<el-button @click="closeMe">{{remText}}</el-button>-->
       </div>
@@ -103,267 +110,272 @@
 </template>
 
 <script>
-    import PopFrame from '@/components/PopFrame/index'
-    import { getSelectDictInfo, postDict, deletePerManage, putDict } from '../../../api/company/groupManage'
-    export default {
-      components: {
-        PopFrame
-      },
-      props: {
-        popVisible: {
-          type: Boolean,
-          default: false
-        },
-        dotInfo: [Object, Array],
-        isDepMain: {
-          type: Boolean,
-          default: false
-        },
-        createrId: [Number, String]
-      },
-      directives: {
-        focus: {
-          // 指令的定义
-          inserted: function(el) {
-            el.focus()
-          }
-        }
-      },
-      data() {
-        return {
+  import PopFrame from '@/components/PopFrame/index'
+  import {getSelectDictInfo, postDict, deletePerManage, putDict} from '../../../api/company/groupManage'
 
-          theulkey: 'theulkey',
-          currentIndex: 0,
-          checked1: true,
-          popTitle: '部门',
-          loading: false,
-          getMentInfo: [
-            { dictName: '', id: '' }
-          ],
-          // 首行
-          checked: true,
-          checked2: true,
-          hiddenAdd: false,
-          hiddenEdit: false,
-          showDate: false,
-          dictName: '', // 添加
-          orderId: '',
-          resInfo: [
-            {
-              dictName: ''
-            }
-          ],
-       // 首行
-       //   底部按钮
-          addText: '添加',
-          editText: '编辑',
-          remText: '完成',
-          showBotton: false,
-          remBotton: false,
-       //   底部按钮
-
-          restaurants: []
-        }
+  export default {
+    components: {
+      PopFrame
+    },
+    props: {
+      popVisible: {
+        type: Boolean,
+        default: false
       },
-      computed: {
-        isShow: {
-          get() {
-            return this.popVisible
-          },
-          set() {
-
-          }
-        }
+      dotInfo: [Object, Array],
+      isDepMain: {
+        type: Boolean,
+        default: false
       },
-      watch: {
-        isDepMain() {
-          if (this.isDepMain) {
-            this.popTitle = '部门'
-            this.showBotton = true
-            // this.remBotton = false
-            this.hiddenAdd = false
-            this.hiddenEdit = false
-            this.showDate = true
+      createrId: [Number, String]
+    },
+    directives: {
+      focus: {
+        // 指令的定义
+        inserted: function (el) {
+          el.focus()
+        }
+      }
+    },
+    data() {
+      return {
+
+        theulkey: 'theulkey',
+        currentIndex: 0,
+        checked1: true,
+        popTitle: '部门',
+        loading: false,
+        getMentInfo: [
+          {dictName: '', id: ''}
+        ],
+        // 首行
+        checked: true,
+        checked2: true,
+        hiddenAdd: false,
+        hiddenEdit: false,
+        showDate: false,
+        dictName: '', // 添加
+        orderId: '',
+        resInfo: [
+          {
+            dictName: ''
           }
+        ],
+        // 首行
+        //   底部按钮
+        addText: '添加',
+        editText: '编辑',
+        remText: '完成',
+        showBotton: false,
+        remBotton: false,
+        //   底部按钮
+
+        restaurants: []
+      }
+    },
+    computed: {
+      isShow: {
+        get() {
+          return this.popVisible
         },
-        dotInfo(newVal) {
-          // this.getMentInfo = this.dotInfo
-        },
-        popVisible(newVal) {
-          if (this.popVisible) {
-            this.getSelectDict()
-          }
-        },
-        createrId(newVal) {
+        set() {
 
         }
-      },
-      mounted() {
-        // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
-      },
-      methods: {
-        resetValue(item, oldvalue) {
-          return () => {
-            item.dictName = oldvalue
-          }
-        },
-        getSelectDict() {
-          this.loading = true
-          getSelectDictInfo(this.createrId).then(res => {
-            this.loading = false
-            this.getMentInfo = res
-          })
-        },
-        getAddDate() {
-          this.loading = true
-          return postDict(this.createrId, this.dictName).then(res => {
-            this.loading = false
-            this.dictName = ''
-          })
-        },
-        closeMe(done) {
-          if (this.popTitle === '部门') {
-            this.$emit('close')
-            if (typeof done === 'function') {
-              done()
-            }
-          } else {
-            this.reset()
-          }
-        },
-        editMe() {
-          this.popTitle = '编辑'
-          this.remBotton = true
-          this.showBotton = false
-          this.hiddenAdd = false
-          this.hiddenEdit = true
-          this.showDate = false
-          this.currentIndex = 0
-        },
-        submitForm(ruleForm) {
-          this.popTitle = '添加'
-          // this.remBotton = true
-          this.hiddenAdd = true
-          this.showBotton = false
-          this.hiddenEdit = false
-          this.showDate = false
-        },
-        reset() {
+      }
+    },
+    watch: {
+      isDepMain() {
+        if (this.isDepMain) {
           this.popTitle = '部门'
-          this.remBotton = false
           this.showBotton = true
+          // this.remBotton = false
           this.hiddenAdd = false
           this.hiddenEdit = false
           this.showDate = true
-        },
-        addDep() {
-          if (!this.dictName) {
-            this.$message({
-              message: '请输入用户名~',
-              type: 'warning'
-            })
-            return false
-          } else {
-            const reqPromise = this.getAddDate()
-            reqPromise.then(res => {
-              this.$message({
-                type: 'success',
-                message: '添加成功!'
-              })
-              this.loading = false
-              this.getSelectDict(this.createrId)
-              this.closeMe()
-            })
-          }
-        },
-        editDep(item) {
-          const id = item.id
-          this.dictName = item.dictName
-          if (item.orgid === 0) {
-            this.$message({
-              type: 'info',
-              message: '系统默认部门不能修改!'
-            })
-            return false
-          } else {
-            this.loading = true
-            const reqPromise = putDict(this.createrId, this.dictName, id)
-            reqPromise.then(res => {
-              this.$message({
-                type: 'success',
-                message: '修改成功!'
-              })
-              this.loading = false
-              this.getSelectDict()
-              this.theulkey = (Math.random() + '').substr(2)
-            })
-          }
-        },
-        delDep(item) {
-          const _id = item.id
-          const deleteItem = item.dictName
+        }
+      },
+      dotInfo(newVal) {
+        // this.getMentInfo = this.dotInfo
+      },
+      popVisible(newVal) {
+        if (this.popVisible) {
+          this.getSelectDict()
+        }
+      },
+      createrId(newVal) {
 
-          if (item.orgid === 0) {
+      }
+    },
+    mounted() {
+      // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
+    },
+    methods: {
+      resetValue(item, oldvalue) {
+        return () => {
+          item.dictName = oldvalue
+        }
+      },
+      getSelectDict() {
+        this.loading = true
+        getSelectDictInfo(this.createrId).then(res => {
+          this.loading = false
+          this.getMentInfo = res
+        })
+      },
+      getAddDate() {
+        this.loading = true
+        return postDict(this.createrId, this.dictName).then(res => {
+          this.loading = false
+          this.dictName = ''
+        })
+      },
+      closeMe(done) {
+        if (this.popTitle === '部门') {
+          this.$emit('close')
+          if (typeof done === 'function') {
+            done()
+          }
+        } else {
+          this.reset()
+        }
+      },
+      editMe() {
+        this.popTitle = '编辑'
+        this.remBotton = true
+        this.showBotton = false
+        this.hiddenAdd = false
+        this.hiddenEdit = true
+        this.showDate = false
+        this.currentIndex = 0
+      },
+      submitForm(ruleForm) {
+        this.popTitle = '添加'
+        // this.remBotton = true
+        this.hiddenAdd = true
+        this.showBotton = false
+        this.hiddenEdit = false
+        this.showDate = false
+      },
+      reset() {
+        this.popTitle = '部门'
+        this.remBotton = false
+        this.showBotton = true
+        this.hiddenAdd = false
+        this.hiddenEdit = false
+        this.showDate = true
+      },
+      addDep() {
+        if (!this.dictName) {
+          this.$message({
+            message: '请输入用户名~',
+            type: 'warning'
+          })
+          return false
+        } else {
+          const reqPromise = this.getAddDate()
+          reqPromise.then(res => {
             this.$message({
-              type: 'info',
-              message: '系统默认部门不能修改!'
+              type: 'success',
+              message: '添加成功!'
             })
-            return false
-          } else {
-            this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
-              confirmButtonText: '删除',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              deletePerManage(_id).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
-                })
-                this.getSelectDict()
-              }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+            this.loading = false
+            this.getSelectDict(this.createrId)
+            this.closeMe()
+          })
+        }
+      },
+      editDep(item) {
+        const id = item.id
+        this.dictName = item.dictName
+        if (item.orgid === 0) {
+          this.$message({
+            type: 'info',
+            message: '系统默认部门不能修改!'
+          })
+          return false
+        } else {
+          this.loading = true
+          const reqPromise = putDict(this.createrId, this.dictName, id)
+          reqPromise.then(res => {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            })
+            this.loading = false
+            this.getSelectDict()
+            this.theulkey = (Math.random() + '').substr(2)
+          })
+        }
+      },
+      delDep(item) {
+        const _id = item.id
+        const deleteItem = item.dictName
+
+        if (item.orgid === 0) {
+          this.$message({
+            type: 'info',
+            message: '系统默认部门不能修改!'
+          })
+          return false
+        } else {
+          this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deletePerManage(_id).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
               })
-            }).catch(() => {
+              this.getSelectDict()
+            }).catch(err => {
               this.$message({
                 type: 'info',
-                message: '已取消删除'
+                message: err.errorInfo || err.text || '未知错误，请重试~'
               })
             })
-          }
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
         }
       }
     }
+  }
 </script>
 
 <style lang="scss">
-  .dep-maintain .addpopDepMain{
+  .dep-maintain .addpopDepMain {
     top: 29%;
     bottom: auto;
     min-width: 486px;
-    max-width:  486px;
+    max-width: 486px;
 
   }
-  .dep-maintain .addRelationPop-content{
+
+  .dep-maintain .addRelationPop-content {
     padding: 20px 20px 0;
     box-sizing: border-box;
   }
-  .dep-maintain .el-select .el-input__inner{
+
+  .dep-maintain .el-select .el-input__inner {
     padding-right: 15px;
   }
-.depmain-div{
-  margin: 10px 0 0 10px;
-}
+
+  .depmain-div {
+    margin: 10px 0 0 10px;
+  }
+
   /*添加*/
-/*depmain-add*/
-  .add-fixed{
+  /*depmain-add*/
+  .add-fixed {
     position: fixed;
-    background: rgba(255,255,255,1);
+    background: rgba(255, 255, 255, 1);
     top: 30px;
-    input{
+    input {
       border-color: #e4e7ed;
       width: 350px;
       /*height: 24px;*/
@@ -374,51 +386,82 @@
       padding: 2px;
 
     }
-    .addSvg{
+    .addSvg {
       display: inline-block;
-      span{
+      span {
         cursor: pointer;
 
-        .lll-dot-true{
+        .lll-dot-true {
           font-size: 20px;
           margin-right: 10px;
         }
-        .lll-dot-false{
+        .lll-dot-false {
           font-size: 20px;
           margin-right: 15px;
         }
       }
     }
   }
-.depmain-add .el-input{
-  width: 340px;
-  float: left;
+  /*depmain-edit 编辑*/
+  .depmain-edit{
+    .addSvg {
+      display: inline-block;
+      span {
+        cursor: pointer;
+        .lll-dot-false {
+          /*display: none;*/
+          font-size: 20px;
+          margin-right: 15px;
+          .svg-icon{
+            fill: #bec4d1;
 
-}
-  .depmain-add .el-input .el-input__inner{
+          }
+        }
+        .lll-dot-false:hover{
+          display: block;
+          .svg-icon{
+            fill: #bec4d1;
+          }
+          /*font-size: 20px;*/
+          /*margin-right: 15px;*/
+        }
+      }
+    }
+
+  }
+  .depmain-add .el-input {
+    width: 340px;
+    float: left;
+
+  }
+
+  .depmain-add .el-input .el-input__inner {
     height: 30px;
   }
-  .depmain-add .depmain-list{
+
+  .depmain-add .depmain-list {
     overflow: hidden;
-    ul{
-      li:nth-of-type(1){
+    ul {
+      li:nth-of-type(1) {
         margin-top: 30px;
       }
     }
   }
 
-   /*edit*/
-  .depmain-edit .el-input{
+  /*edit*/
+  .depmain-edit .el-input {
     width: 340px;
     float: left;
 
   }
-  .depmain-edit .el-input .el-input__inner{
+
+  .depmain-edit .el-input .el-input__inner {
     height: 30px;
     padding-left: 8px;
     //  border: 1px solid transparent;
   }
-    .depmain-edit .el-input__inner {
+
+  .depmain-edit .el-input__inner {
     -webkit-appearance: none;
     background-color: #fff;
     background-image: none;
@@ -433,11 +476,12 @@
     line-height: 40px;
     outline: 0;
     padding: 0 15px;
-    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    -webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
     width: 100%;
-}
-  .dep-maintain .depmain-edit li{
+  }
+
+  .dep-maintain .depmain-edit li {
     border-bottom: 1px solid #dcdcdc;
     padding: 10px 0 10px 10px;
     color: #333;
@@ -446,50 +490,61 @@
     cursor: pointer;
   }
 
-  .depmain-edit .depmain-list li .edit-hidden{
+  .depmain-edit .depmain-list li .edit-hidden {
     display: none;
   }
-  .depmain-edit .depmain-list .showcurrent .edit-hidden{
+
+  .depmain-edit .depmain-list .showcurrent .edit-hidden {
     display: block;
   }
-  .depmain-edit .depmain-list .showcurrent .edit-hidden .el-input.is-active .el-input__inner, .depmain-edit .showcurrent .el-input__inner:focus{
+
+  .depmain-edit .depmain-list .showcurrent .edit-hidden .el-input.is-active .el-input__inner, .depmain-edit .showcurrent .el-input__inner:focus {
     border-color: #409EFF;
   }
-  .depmain-edit .showcurrent:focus .dep-img img:nth-of-type(1){
-    display: block;
-  }
-  .dep-img img:nth-of-type(1){
+
+  /*.depmain-edit .showcurrent:focus .dep-img img:nth-of-type(1){*/
+  /*display: block;*/
+  /*}*/
+  .dep-img img:nth-of-type(1) {
 
   }
-  .depmain-edit .depmain-list li span{
+
+  .depmain-edit .depmain-list li span.firstName {
     display: block;
   }
-  .depmain-edit .depmain-list .showcurrent span{
+
+  .depmain-edit .depmain-list .showcurrent span.firstName {
     display: none
   }
-  .depmain-edit .depmain-list .edit-hidden{
+
+  .depmain-edit .depmain-list .edit-hidden {
     position: relative;
     top: -8px;
     left: -9px;;
   }
-  .dep-maintain .depmain-edit .depmain-list li:focus{
+
+  .dep-maintain .depmain-edit .depmain-list li:focus {
     // background: #0a84ff;
   }
-  .depmain-edit .el-input.is-active .el-input__inner, .el-input__inner:focus{
+
+  .depmain-edit .el-input.is-active .el-input__inner, .el-input__inner:focus {
 
   }
+
   /*dep-img*/
 
-  .depmain-add .add-fixed .dep-img , .depmain-edit .dep-img{
+  .depmain-add .add-fixed .dep-img, .depmain-edit .dep-img {
     display: inline-block;
     width: 26px;
     height: 26px;
   }
-  .depmain-add .add-fixed .dep-img img, .depmain-edit .dep-img img{
+
+  .depmain-add .add-fixed .dep-img img, .depmain-edit .dep-img img {
     width: 100%;
     height: 100%;
   }
-  .depmain-add .add-fixed .dep-img img:nth-of-type(1), .depmain-edit .dep-img img:nth-of-type(1){
+
+  .depmain-add .add-fixed .dep-img img:nth-of-type(1), .depmain-edit .dep-img img:nth-of-type(1) {
     position: relative;
     top: 2px;
     left: 12px;
@@ -498,36 +553,43 @@
     cursor: pointer;
     display: none;
   }
-  .depmain-add .add-fixed .dep-img img:nth-of-type(2),.depmain-edit .dep-img img:nth-of-type(2){
+
+  .depmain-add .add-fixed .dep-img img:nth-of-type(2), .depmain-edit .dep-img img:nth-of-type(2) {
     position: relative;
     top: -26px;
     left: 45px;
     width: 23px;
     height: 23px;
     cursor: pointer;
+    /*display: none;*/
   }
+
+  .depmain-edit .showcurrent .dep-img img:nth-of-type(1) {
+    display: block;
+  }
+
   /*dep-img*/
 
-  .depmain-edit .dep-img img:nth-of-type(2){
+  .depmain-edit .dep-img img:nth-of-type(2) {
     top: -25px;
   }
-   /*首行头部*/
-  .dep-maintain .depmain-content li{
+
+  /*首行头部*/
+  .dep-maintain .depmain-content li {
     border-bottom: 1px solid #dcdcdc;
     padding: 10px 0 10px 10px;
     color: #333;
     font-size: 14px;
 
   }
-  .dep-maintain .depmain-add li{
+
+  .dep-maintain .depmain-add li {
     border-bottom: 1px solid #dcdcdc;
     padding: 10px 0 10px 10px;
     color: #333;
     font-size: 14px;
-    height: 35px;
-    ;
+    height: 35px;;
   }
-
 
 
 </style>
