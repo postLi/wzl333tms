@@ -72,17 +72,17 @@ export default {
         },
         {
           label: '现付(元)',
-          prop: 'shipNowpayFee',
+          prop: 'nowPayFee',
           textAlign: 'right'
         },
         {
           label: '到付(元)',
-          prop: 'shipArrivepayFee',
+          prop: 'arrivePayFee',
           textAlign: 'right'
         },
         {
           label: '回单付(元)',
-          prop: 'shipReceiptpayFee',
+          prop: 'receiptPayFee',
           textAlign: 'right'
         },
         {
@@ -92,12 +92,13 @@ export default {
         }
       ],
       countCol: [ // 需要合计的-列
-        'shipNowpayFee',
-        'shipArrivepayFee',
+        'nowPayFee',
+        'arrivePayFee',
         'shipReceiptpayFee',
         'shipMonthpayFee',
         'totalFee',
         'brokerageFee',
+        'receiptPayFee',
         'shipTotalFee'
       ],
       countColVal: [] // 存储底部合计值

@@ -186,10 +186,10 @@ export default {
             // 处理当列没有值、宽度设置等信息时，做默认值处理
             for (let t in this.countCol) { // 保留两位小数
               if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : '0.00'
+                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
               }
             }
-            td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+            td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0  ? '' : data[k][this.columns[j].prop])
             td.style.textAlign = this.columns[j].textAlign // 设置居中方式
             td.style.padding = '2px 3px'
             td.style.fontSize = '13px'
@@ -207,10 +207,10 @@ export default {
           }
           if (data || data === 0) {
             if (label[1] && label[1] === 'integer') {
-              this.countColVal[label[0]] = data ? data : '0.00'
+              this.countColVal[label[0]] = data ? data : ''
             } else {
 
-              this.countColVal[label[0]] = data ? data.toFixed(2) : '0.00'
+              this.countColVal[label[0]] = data ? data.toFixed(2) : ''
             }
           }
         }

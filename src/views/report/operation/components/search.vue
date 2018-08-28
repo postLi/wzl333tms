@@ -71,7 +71,8 @@ export default {
       searchForm: {
         orgId: '',
         selectType: '',
-        businessType: ''
+        businessType: '',
+        shipToCityName: ''
         // currentPage: 1,
         // pageSize: 100,
         // senderCustomerName: '',
