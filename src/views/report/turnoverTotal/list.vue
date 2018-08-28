@@ -11,51 +11,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div class="info_tab_report" id="report_settleRecordTotal">
-        <table id="report_settleRecordTotal_table" width="780px" border="1px" style="border-collapse: collapse;">
-          <thead border="1">
-            <tr height="32px">
-              <th rowspan="2" bgcolor="dimGray">
-                <font color="white" size="3">序号</font>
-              </th>
-              <th rowspan="2" bgcolor="dimGray" width="270px">
-                <font color="white" size="3">费用项目</font>
-              </th>
-              <th colspan="4" bgcolor="dimGray">
-                <font color="white" size="3">应收汇总</font>
-              </th>
-              <th colspan="4" bgcolor="dimGray">
-                <font color="white" size="3">应付汇总</font>
-              </th>
-            </tr>
-            <tr height="32px">
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">应收合计</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">已收</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">未收</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">数量</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">应付合计</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">已收</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">未收</font>
-              </th>
-              <th bgcolor="dimGray"  width="50px">
-                <font color="white" size="2">数量</font>
-              </th>
-            </tr>
-          </thead>
-        </table>
+      <div class="info_tab_report" id="report_turnoverTotal">
+        <table id="report_turnoverTotal_table"></table>
       </div>
     </div>
   </div>
@@ -63,17 +20,12 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import SelectTree from '@/components/selectTree/index'
-import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
-import { getToken } from '@/utils/auth'
-import { reportSettleRecordTotal } from '@/api/report/report'
+import { reportTurnoverTotal } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
 export default {
   components: {
-    SelectTree,
-    querySelect,
     SearchForm
   },
   data() {
@@ -81,9 +33,8 @@ export default {
       chartIframe: '',
       hideiframe: 'hide',
       query: {
-        typeIds: ''
-        // currentPage: 1,
-        // pageSize: 100
+        currentPage: 1,
+        pageSize: 100
         // senderCustomerName: '',
         // shipFromOrgid: '',
         // createTimeStart: '',
@@ -100,74 +51,56 @@ export default {
           width: '70'
         },
         {
-          label: '费用项目',
-          prop: 'feeName',
+          label: '开单网点',
+          prop: 'orgidName',
           textAlign: 'center'
         },
         {
-          label: '应收合计',
-          prop: 'totalreceivableFee',
+          label: '总运费(元)',
+          prop: 'totalFee',
           textAlign: 'right'
         },
         {
-          label: '已收',
-          prop: 'receivableFee',
+          label: '实收费用(元)',
+          prop: 'shipTotalFee',
           textAlign: 'right'
         },
         {
-          label: '未收',
-          prop: 'receivablUnpaidFee',
+          label: '回扣(元)',
+          prop: 'brokerageFee',
           textAlign: 'right'
         },
         {
-          label: '数量',
-          prop: 'receivableCount',
-          textAlign: 'center'
-        },
-        {
-          label: '应付合计',
-          prop: 'totalpayableFee',
+          label: '现付(元)',
+          prop: 'shipNowpayFee',
           textAlign: 'right'
         },
         {
-          label: '已付',
-          prop: 'payableFee',
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
           textAlign: 'right'
         },
         {
-          label: '未付',
-          prop: 'payableUnpaidFee',
+          label: '回单付(元)',
+          prop: 'shipReceiptpayFee',
           textAlign: 'right'
         },
         {
-          label: '数量',
-          prop: 'payableCount',
-          textAlign: 'center'
+          label: '月结(元)',
+          prop: 'shipMonthpayFee',
+          textAlign: 'right'
         }
       ],
       countCol: [ // 需要合计的-列
-        'totalreceivableFee',
-        'receivableFee',
-        'receivablUnpaidFee',
-        'receivableCount|integer',
-        'totalpayableFee',
-        'payableFee',
-        'payableUnpaidFee',
-        'payableCount|integer'
+        'shipNowpayFee',
+        'shipArrivepayFee',
+        'shipReceiptpayFee',
+        'shipMonthpayFee',
+        'totalFee',
+        'brokerageFee',
+        'shipTotalFee'
       ],
-      countColVal: [], // 存储底部合计值
-      unCountSum: [ // 不需要计入底部合计的费用项-行
-      '其他费用收入',
-      '包装费',
-      '保险费',
-      '上楼费',
-      '叉车费',
-      '报关费',
-      '入仓费',
-      '税金',
-      '提货费',
-      '送货费'
-      ]
+      countColVal: [] // 存储底部合计值
     }
   },
   computed: {
@@ -176,28 +109,52 @@ export default {
     ])
   },
   methods: {
-    reportSettleRecordTotal() {
-      reportSettleRecordTotal(this.query).then(res => {
-        let data = res
+    report() {
+      reportTurnoverTotal(this.query).then(res => {
+        let data = res.list
         let countColVal = []
 
-        let table = document.getElementById('report_settleRecordTotal_table')
+       let table = document.getElementById('report_turnoverTotal_table')
+        let theadLen = table.getElementsByTagName('thead')
         let tbodyLen = table.getElementsByTagName('tbody')
         let tfootLen = table.getElementsByTagName('tfoot')
-        if (tbodyLen.length > 0) {
+        if (theadLen.length > 0) {
+          table.removeChild(theadLen[0])
           table.removeChild(tbodyLen[0])
           table.removeChild(tfootLen[0])
         }
+        let thead = document.createElement('thead')
         let tbody = document.createElement('tbody')
         let tfoot = document.createElement('tfoot')
+        let theadTr = document.createElement('tr')
 
+        table.appendChild(thead)
         table.appendChild(tbody)
         table.appendChild(tfoot)
+        thead.appendChild(theadTr)
         table.style.borderCollapse = 'collapse'
         table.style.border = '1px solid #d0d7e5';
         table.setAttribute('border', '1')
         table.setAttribute('font', '12px')
-        for (let k = 0; k < data.length; k++) {
+        table.setAttribute('width', '780px')
+
+        theadTr.setAttribute('height', '32px')
+        theadTr.setAttribute('width', '100%')
+
+        for(let i = 0; i < this.columns.length; i++) { // 设置表头
+          let th = document.createElement('th')
+          let font = document.createElement('font')
+          font.innerHTML = this.columns[i].label
+          font.setAttribute('size', 2)
+          font.setAttribute('color', 'white')
+          th.setAttribute('border', 1)
+          th.setAttribute('bgcolor', 'dimGray')
+          th.appendChild(font)
+          theadTr.appendChild(th)
+        }
+
+
+        for (let k = 0; k < data.length; k++) { // 填充内容数据
           const tbodyTr = tbody.insertRow()
           for (let j = 0; j < this.columns.length; j++) {
             const td = tbodyTr.insertCell()
@@ -215,18 +172,18 @@ export default {
           }
         }
         // 合计
+        let dataList = res.list
         for (let t in this.countCol) {
           let data = 0
           let label = this.countCol[t].split('|') // 取字段名
-          for (let k = 0; k < res.length; k++) {
-          	if (this.unCountSum.join(',').indexOf(res[k].feeName) === -1) { // 排除不需要合计的费用项-行
-          		data += res[k][label[0]] ? Number(res[k][label[0]]) : 0
-          	}
+          for (let k = 0; k < dataList.length; k++) {
+            data += dataList[k][label[0]] ? Number(dataList[k][label[0]]) : 0
           }
           if (data || data === 0) {
             if (label[1] && label[1] === 'integer') {
               this.countColVal[label[0]] = data ? data : '0.00'
             } else {
+
               this.countColVal[label[0]] = data ? data.toFixed(2) : '0.00'
             }
           }
@@ -248,14 +205,14 @@ export default {
       switch (type) {
         case 'print':
           PrintInSamplePage({
-            id: 'report_settleRecordTotal',
+            id: 'report_turnoverTotal',
             countCol: this.countCol
           })
           break
         case 'export':
           SaveAsSampleFile({
-            id: 'report_settleRecordTotal',
-            name: '应收应付汇总表',
+            id: 'report_turnoverTotal',
+            name: '营业额汇总表',
             countCol: this.countCol
           })
           break
@@ -266,8 +223,8 @@ export default {
       }
     },
     getSearchParam(obj) {
-      this.query = Object.assign({}, obj)
-      this.reportSettleRecordTotal()
+      this.query = Object.assign(this.query, obj)
+      this.report()
     }
   }
 }
@@ -301,30 +258,10 @@ export default {
   height: calc( 100%);
   overflow: auto;
   border: 1px solid #d0d7e5;
-  box-shadow: 1px 1px 20px #ddd; // table,
-  // table tr th,
-  // table tr td {
-  //   border: 1px solid #d0d7e5;
-  // }
-  // table tbody tr td {
-  //   text-align: right;
-  // }
-  // table tfoot tr td {
-  //   text-align: right;
-  // }
+  box-shadow: 1px 1px 20px #ddd;
   /*设置边框的*/
   table {
-    width: 100%; //   border-collapse: collapse;
-    //   width: 100%;
-    //   min-width: 1000px;
-    //   overflow: auto;
-    //   th,
-    //   td {
-    //     padding: 3px 5px;
-    //   }
-    //   td {
-    //     font-size: 13px;
-    //   }
+    width: 100%;
     tbody tr {
       background-color: #FFF;
       transition: 0.5s;
@@ -336,20 +273,13 @@ export default {
     tbody tr td:hover {
       background-color: #cdcdcd;
       transition: 0.3s;
-    } // thead {
-    //   background-color: #eaf0ff;
-    //   color: #333;
-    //   line-height: 23px;
-    //   font-size: 14px;
-    // }
+    }
     tbody,
     tfoot {
-      // background-color: #eaf0ff;
       color: #222;
       line-height: 23px;
       font-size: 13px;
       td {
-        // padding: 2px 5px;
         font-size: 13px;
       }
     }

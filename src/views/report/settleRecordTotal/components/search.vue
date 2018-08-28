@@ -6,7 +6,7 @@
         <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="开单网点" prop="orgId">
+      <el-form-item label="网点" prop="orgId">
         <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
@@ -17,9 +17,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="发货方" prop="senderId">
+     <!--  <el-form-item label="发货方" prop="senderId">
       <querySelect v-model="searchForm.senderId" valuekey="customerId" search="customerName" type="sender" label="customerName" :remote="true"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}"></querySelect>
-      </el-form-item>
+      </el-form-item> -->
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -100,8 +100,8 @@ export default {
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'startTime', this.searchTime[0])
-        this.$set(searchObj, 'endTime', this.searchTime[1])
+        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
+        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} '))
       }
       this.$emit('change', searchObj)
     },

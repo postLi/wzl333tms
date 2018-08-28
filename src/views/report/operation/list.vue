@@ -11,8 +11,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div class="info_tab_report" id="report_turnoverDaily">
-        <table id="report_turnoverDaily_table"></table>
+      <div class="info_tab_report" id="report_operation">
+        <table id="report_operation_table"></table>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@ import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
-import { reportTurnoverDaily } from '@/api/report/report'
+import { reportOperation } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
 export default {
   components: {
@@ -45,84 +45,33 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-          label: '序号',
-          prop: 'id',
-          textAlign: 'center',
-          width: '70'
-        },
-        {
-          label: '开单网点',
-          prop: 'orgidName',
-          textAlign: 'center',
-          width: '190'
-        },
-        {
-          label: '签收网点',
-          prop: 'signOrgidName',
-          textAlign: 'center',
-          width: '180'
-        },
-        {
-          label: '到达城市',
-          prop: 'shipToCityName',
-          textAlign: 'center',
-          width: '200'
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          textAlign: 'center',
-          width: '140'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
+          label: '时间',
+          prop: 'time',
           textAlign: 'center'
         },
         {
-          label: '现付(元)',
-          prop: 'shipNowpayFee',
+          label: '总运费(元)',
+          prop: 'shipFee',
           textAlign: 'right'
         },
         {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
+          label: '件数',
+          prop: 'shipAmount',
           textAlign: 'right'
         },
         {
-          label: '回单付(元)',
-          prop: 'shipReceiptpayFee',
+          label: '重量(千克)',
+          prop: 'shipWeight',
           textAlign: 'right'
         },
         {
-          label: '月结(元)',
-          prop: 'shipMonthpayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '运费合计(元)',
-          prop: 'totalFee',
-          textAlign: 'right'
-        },
-        {
-          label: '回扣(元)',
-          prop: 'brokerageFee',
-          textAlign: 'right'
-        },
-        {
-          label: '实收金额(元)',
-          prop: 'amountCollected',
+          label: '体积(方)',
+          prop: 'shipVolume',
           textAlign: 'right'
         }
       ],
       countCol: [ // 需要合计的-列
-        'shipNowpayFee',
-        'shipArrivepayFee',
-        'shipReceiptpayFee',
-        'shipMonthpayFee',
-        'totalFee',
-        'brokerageFee',
-        'amountCollected'
+        
       ],
       countColVal: [] // 存储底部合计值
     }
@@ -134,27 +83,23 @@ export default {
   },
   methods: {
     report() {
-      reportTurnoverDaily(this.query).then(res => {
-        let data = res.list
+      reportOperation(this.query).then(res => {
+        let data = res
         let countColVal = []
 
-        let table = document.getElementById('report_turnoverDaily_table')
+       let table = document.getElementById('report_operation_table')
         let theadLen = table.getElementsByTagName('thead')
         let tbodyLen = table.getElementsByTagName('tbody')
-        let tfootLen = table.getElementsByTagName('tfoot')
         if (theadLen.length > 0) {
           table.removeChild(theadLen[0])
           table.removeChild(tbodyLen[0])
-          table.removeChild(tfootLen[0])
         }
         let thead = document.createElement('thead')
         let tbody = document.createElement('tbody')
-        let tfoot = document.createElement('tfoot')
         let theadTr = document.createElement('tr')
 
         table.appendChild(thead)
         table.appendChild(tbody)
-        table.appendChild(tfoot)
         thead.appendChild(theadTr)
         table.style.borderCollapse = 'collapse'
         table.style.border = '1px solid #d0d7e5';
@@ -190,39 +135,10 @@ export default {
             }
             td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
             td.style.textAlign = this.columns[j].textAlign // 设置居中方式
-            td.style.padding = '2px 3px'
+            td.style.padding = '2px 5px'
             td.style.fontSize = '13px'
-            td.setAttribute('width', (this.columns[j].width || 120) + 'px')
-            // console.log(this.columns[j].width, data[k])
+            td.style.width = (this.columns[j].width || 120) + 'px'
           }
-        }
-        // 合计
-        let dataList = res.list
-        for (let t in this.countCol) {
-          let data = 0
-          let label = this.countCol[t].split('|') // 取字段名
-          for (let k = 0; k < dataList.length; k++) {
-            data += dataList[k][label[0]] ? Number(dataList[k][label[0]]) : 0
-          }
-          if (data || data === 0) {
-            if (label[1] && label[1] === 'integer') {
-              this.countColVal[label[0]] = data ? data : '0.00'
-            } else {
-
-              this.countColVal[label[0]] = data ? data.toFixed(2) : '0.00'
-            }
-          }
-        }
-        // 生成底部合计行
-        const tfootTr = tfoot.insertRow()
-        for (let t in this.columns) {
-          const td = tfootTr.insertCell()
-          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          td.style.textAlign = this.columns[t].textAlign
-          td.style.padding = '2px 5px'
-          td.style.fontSize = '13px'
-          td.setAttribute('bgcolor', 'gainsboro')
-          td.setAttribute('color', 'white')
         }
       })
     },
@@ -230,14 +146,14 @@ export default {
       switch (type) {
         case 'print':
           PrintInSamplePage({
-            id: 'report_turnoverDaily',
+            id: 'report_operation',
             countCol: this.countCol
           })
           break
         case 'export':
           SaveAsSampleFile({
-            id: 'report_turnoverDaily',
-            name: '营业额日报表',
+            id: 'report_operation',
+            name: '营运统计分析',
             countCol: this.countCol
           })
           break

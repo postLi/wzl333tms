@@ -17,3 +17,30 @@ export function reportTurnoverDaily(params) {
       return res.data
     })
 }
+/**
+ * 营业额汇总表
+ */
+export function reportTurnoverTotal(params) {
+  return fecth.get('/api-finance/finance/report/v1/turnoverReport?createTimeStart=' + params.createTimeStart + '&createTimeEnd=' + params.createTimeEnd + '&shipFromOrgid=' + params.shipFromOrgid)
+    .then(res => {
+      return res.data
+    })
+}
+/**
+ * 营运统计分析
+ */
+export function reportOperation(params) {
+  return fecth.get('/api-finance/finance/report/v1/findOperationReport?startTime=' + params.startTime + '&endTime=' + params.endTime + '&orgId=' + params.orgId + '&selectType=' + params.selectType + '&shipToCityName=' + params.shipToCityName + '&businessType=' + params.businessType)
+    .then(res => {
+      return res.data
+    })
+}
+/**
+ * 收入统计
+ */
+export function reportIncomeTotal(params) {
+  return fecth.get('/api-finance/finance/report/v1/findDetail?startCreatTime=' + params.startCreatTime + '&endCreatTime=' + params.endCreatTime + '&shipFromOrgid=' + params.shipFromOrgid)
+    .then(res => {
+      return res.data
+    })
+}
