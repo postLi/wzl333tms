@@ -1,6 +1,6 @@
 <template>
   <div class="truck-manager" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :truckSources="truckSources" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :truckSources="truckSources" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
@@ -36,7 +36,7 @@
               </template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
-            
+
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -46,7 +46,7 @@
           </template>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn"  />
@@ -175,7 +175,7 @@ export default {
         }, {
           label: '车辆注册时间',
           prop: 'truckRegisterDate',
-          width: '120',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return parseTime(scope.row.truckRegisterDate, '{y}-{m}-{d} {h}:{i}:{s}')
@@ -183,7 +183,7 @@ export default {
         }, {
           label: '车辆报废时间',
           prop: 'truckScrapDate',
-          width: '120',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return parseTime(scope.row.truckScrapDate, '{y}-{m}-{d} {h}:{i}:{s}')
@@ -396,7 +396,7 @@ export default {
             width: 100%;
             height: calc(100% - 68px);
             flex-grow: 1;
-            
+
             .el-table{
                 table{
                     th,td{

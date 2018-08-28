@@ -414,13 +414,14 @@
           margin-right: 15px;
           .svg-icon{
             fill: #bec4d1;
-
+            font-size: 20px;
           }
         }
         .lll-dot-false:hover{
           display: block;
           .svg-icon{
             fill: #bec4d1;
+            cursor: pointer;
           }
           /*font-size: 20px;*/
           /*margin-right: 15px;*/

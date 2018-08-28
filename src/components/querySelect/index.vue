@@ -153,7 +153,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请输入'
+      default: ''
     },
     // 搜索的表格
     type: {
