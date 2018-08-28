@@ -270,126 +270,157 @@ export default {
       }, {
         'label': '制单人',
         'prop': 'userName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货方',
         'prop': 'shipSenderUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货方',
         'prop': 'shipReceiverUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货人地址',
         'prop': 'shipSenderAddress',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货人地址',
         'prop': 'shipReceiverAddress',
+        hidden: true,
         'width': '150'
       }, {
         'label': '回单号',
         'prop': 'shipReceiptSn',
+        hidden: true,
         'width': '150'
       }, {
         'label': '回扣',
         'prop': 'brokerageFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '客户单号',
         'prop': 'shipCustomerNumber',
+        hidden: true,
         'width': '150'
       }, {
         'label': '运输方式',
         'prop': 'shipShippingTypeName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '业务类型',
         'prop': 'shipBusinessTypeName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '时效',
         'prop': 'shipEffectiveName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货批次',
         'prop': 'pickupBatchNumber',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货司机名',
         'prop': 'driverName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货车牌',
         'prop': 'truckIdNumber',
+        hidden: true,
         'width': '150'
       }, {
         'label': '送货费',
         'prop': 'deliveryFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '代收款手续费',
         'prop': 'commissionFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '声明价值',
         'prop': 'productPrice',
+        hidden: true,
         'width': '150'
       }, {
         'label': '保险费',
         'prop': 'insuranceFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '装卸费',
         'prop': 'handlingFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '包装费',
         'prop': 'packageFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货费',
         'prop': 'pickupFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '上楼费',
         'prop': 'goupstairsFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '实际提货费',
         'prop': 'shipSn',
+        hidden: true,
         'width': '150'
       }, {
         'label': '叉车费',
         'prop': 'forkliftFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '报关费',
         'prop': 'customsFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '其他费收入',
         'prop': 'otherfeeIn',
+        hidden: true,
         'width': '150'
       }, {
         'label': '其他费支出',
         'prop': 'otherfeeOut',
+        hidden: true,
         'width': '150'
       }, {
         'label': '税率',
         'prop': 'taxRate',
+        hidden: true,
         'width': '150'
       }, {
         'label': '税金',
         'prop': 'taxes',
+        hidden: true,
         'width': '150'
       }, {
         'label': '入仓费',
         'prop': 'housingFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '印花税',
         'prop': 'stampTax',
+        hidden: true,
         'width': '150'
       }],
       showtip: false

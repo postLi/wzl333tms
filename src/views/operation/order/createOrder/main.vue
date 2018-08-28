@@ -2511,6 +2511,7 @@ export default {
           // 判断运费是否符合总计
           if (tmsMath.add(this.form.tmsOrderShip.shipNowpayFee, this.form.tmsOrderShip.shipArrivepayFee, this.form.tmsOrderShip.shipMonthpayFee, this.form.tmsOrderShip.shipReceiptpayFee).result() !== parseFloat(this.form.tmsOrderShip.shipTotalFee, 10)) {
             this.$message.error('各付款方式之和与合计运费不等~')
+            this.loading = false
           } else {
             console.log('提交前数据4：', valid)
             // 再提取各个表格项里的数据

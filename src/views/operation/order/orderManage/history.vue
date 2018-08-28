@@ -265,22 +265,27 @@ export default {
       }, {
         'label': '制单人',
         'prop': 'userName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货方',
         'prop': 'shipSenderUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货方',
         'prop': 'shipReceiverUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货人地址',
         'prop': 'shipSenderAddress',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货人地址',
         'prop': 'shipReceiverAddress',
+        hidden: true,
         'width': '150'
       }],
       showtip: false

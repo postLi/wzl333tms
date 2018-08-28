@@ -103,7 +103,7 @@
         </div>
         <div class="tableSetup_tips">
           <span>拖拽，可调整上下顺序。</span>
-          <br><span>列表最多只能显示50个字段。</span>
+          <br><span>列表最多只能显示{{maxLen}}个字段。</span>
         </div>
       </div>
     </div>
@@ -143,13 +143,25 @@ export default {
     }
   },
   data() {
+    const MAXLENGTH = 50
+    // 1.检查是否有默认隐藏项
+    // 2.当显示项超过50的归类到隐藏项
     const generateData = _ => { // 初始化左边列表
       const data = []
       if (this.columns.length > 0) {
+        let inx = 0
         this.columns.forEach((e, index) => {
-          if (index > 49) {  // 默认隐藏列
-            let obj = objectMerge2(e)
+          if (e.hidden) {  // 默认隐藏列
+            const obj = objectMerge2(e)
             obj.key = index
+            data.push(obj)
+          } else {
+            inx++
+          }
+          if (inx > MAXLENGTH) {
+            const obj = objectMerge2(e)
+            obj.key = index
+            obj.hidden = true
             data.push(obj)
           }
         })
@@ -159,9 +171,12 @@ export default {
     const generateRightData = _ => { // 初始化右边的列表
       const data = []
       if (this.columns.length > 0) {
+        let inx = 0
         this.columns.forEach((e, index) => {
-          if (index > -1 && index < 50) { // 默认显示列
-            let obj = objectMerge2(e)
+          if (!e.hidden && inx < MAXLENGTH) { // 默认显示列
+            inx++
+            const obj = objectMerge2(e)
+            obj.hidden = false
             obj.key = index
             data.push(obj)
           }
@@ -169,25 +184,13 @@ export default {
       }
       return data
     }
-    const getleftListLen = _ => { // 计算左边列表的数量
-      let count = 0
-      this.columns.forEach((e, index) => {
-        if (index > 49) {
-          count++
-        }
-      })
-      return count
-    }
-    const getRightListLen = _ => { // 计算右边列表的数量
-      let count = 0
-      this.columns.forEach((e, index) => {
-        if (index > -1 && index < 50) {
-          count++
-        }
-      })
-      return count
-    }
-    const getColumnListLen = _=> { // 计算所有列的数量
+    // 计算左边列表的数量
+    const getleftListLen = generateData().length
+    // 计算右边列表的数量
+    const getRightListLen = generateRightData().length
+    // 计算所有列的数量
+    // 为啥拿个数量都要函数返回
+    const getColumnListLen = _ => {
       return this.columns.length
     }
     return {
@@ -206,16 +209,16 @@ export default {
       checkListRight: [],
       searchLeft: '',
       searchRight: '',
-      leftListLen: getleftListLen(),
-      rightListLen: getRightListLen(),
+      leftListLen: getleftListLen,
+      rightListLen: getRightListLen,
       columnListLen: getColumnListLen(),
       isCheck: true, // 判断显示列数是否超过50个，false-不可选择 true-可以选择,
-      maxLen: 50,
+      maxLen: MAXLENGTH,
       rightCheckLen: 0,
       leftCheckLen: 0
     }
   },
-  mounted () {
+  mounted() {
     this.submitForm() // 打开页面就开启表格设置
   },
   methods: {
@@ -236,7 +239,7 @@ export default {
     },
     checkRightLen() { // 判断右边列表是否超过50个字段
       if (this.showColumnData.length > this.maxLen) {
-        this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
+        this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         this.isCheck = true
       } else {
         this.isCheck = false
@@ -251,15 +254,20 @@ export default {
     },
     handChangeAllLeft(val) { // 左边列表全选
       this.checkListLeft = val ? Object.assign([], this.columnData) : []
+      // 全选时更新数量
+      // 或许用个计算属性会更好，不必手动维护？
+      this.leftCheckLen = this.checkListLeft.length
       this.isIndeterminateLeft = false
     },
     handChangeAllRight(val) { // 右边列表全选
       this.checkListRight = val ? Object.assign([], this.showColumnData) : []
+      // 全选时更新数量显示
+      this.rightCheckLen = this.checkListRight.length
       this.isIndeterminateRight = false
     },
     goRight() { // 将隐藏列勾选的项转移到显示列（左边->右边）
-      if (this.checkListLeft.length + this.rightListLen > this.maxLen || this.rightListLen > this.maxLen - 1) {
-        this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
+      if ((this.checkListLeft.length + this.rightListLen > this.maxLen) || (this.rightListLen > this.maxLen - 1)) {
+        this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         return false
       }
       this.columnData = this.columnData.filter(el => {
@@ -286,11 +294,11 @@ export default {
       this.checkListRight.forEach((e, index) => {
         this.columnData.push(e) // 将右边勾选的数据项返回到左边
         this.orgColumnData.push(e) // 搜索源数据
-        let item = this.showColumnData.indexOf(e)
+        const item = this.showColumnData.indexOf(e)
         if (item !== -1) { // 源数据减去被穿梭的数据
           this.showColumnData.splice(item, 1)
         }
-        let orgItem = this.orgShowColumnData.indexOf(e)
+        const orgItem = this.orgShowColumnData.indexOf(e)
         if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
           this.orgShowColumnData.splice(item, 1)
         }
@@ -302,7 +310,7 @@ export default {
     },
     dbCheckItemLeft(row, index, event) { // 双击-左边列表选择项（左边->右边）
       if (this.rightListLen > this.maxLen - 1) {
-        this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
+        this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         return false
       }
       this.showColumnData.push(row)
@@ -330,11 +338,11 @@ export default {
       if (queryString.label === undefined) {
         if (!this.searchLeft) { // 如果搜索框为空则恢复左边列表
           this.columnData = Object.assign([], this.orgColumnData)
-          console.log('querySearchLeft', queryString.label , this.orgColumnData)
+          console.log('querySearchLeft', queryString.label, this.orgColumnData)
         }
       }
-      let col = Object.assign([], this.orgColumnData)
-      let results = queryString ? col.filter(this.createFilter(queryString)) : col
+      const col = Object.assign([], this.orgColumnData)
+      const results = queryString ? col.filter(this.createFilter(queryString)) : col
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -345,8 +353,8 @@ export default {
           this.showColumnData = Object.assign([], this.orgShowColumnData)
         }
       }
-      let col = Object.assign([], this.orgShowColumnData)
-      let results = queryString ? col.filter(this.createFilter(queryString)) : col
+      const col = Object.assign([], this.orgShowColumnData)
+      const results = queryString ? col.filter(this.createFilter(queryString)) : col
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -391,7 +399,7 @@ export default {
     handleSwitch(obj) {},
     submitForm() {
       console.log('表格设置开启中')
-      let data = Object.assign([], this.showColumnData)
+      const data = Object.assign([], this.showColumnData)
       this.$emit('success', data)
       this.listKey = Math.random()
       this.closeMe()
