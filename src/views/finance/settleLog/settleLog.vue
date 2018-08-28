@@ -190,6 +190,14 @@ export default {
       ]
     }
   },
+  watch: {
+    $route (newVal) {
+      if (newVal) {
+        console.log('routesdfsdfs',newVal)
+        this.fetchList()
+      }
+    }
+  },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj)

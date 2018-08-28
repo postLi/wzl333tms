@@ -194,7 +194,6 @@ export default {
           e[el] = e[this.feeName.arrPayNameActual[index]]
         })
       })
-       console.log(JSON.stringify(this.loadTable))
       const szDtoList = []
       szDtoList.push(this.formModel)
       this.addIncomeInfo = Object.assign({}, this.formModel)

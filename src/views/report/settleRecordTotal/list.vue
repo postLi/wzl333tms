@@ -315,6 +315,7 @@ export default {
   /*设置边框的*/
   table {
     width: 100%; //   border-collapse: collapse;
+    min-width: 1000px;
     //   width: 100%;
     //   min-width: 1000px;
     //   overflow: auto;

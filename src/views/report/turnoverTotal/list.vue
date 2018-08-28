@@ -263,6 +263,7 @@ export default {
   /*设置边框的*/
   table {
     width: 100%;
+    min-width: 1000px;
     tbody tr {
       background-color: #FFF;
       transition: 0.5s;

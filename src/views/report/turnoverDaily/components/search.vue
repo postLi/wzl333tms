@@ -10,11 +10,12 @@
         </SelectTree>
       </el-form-item>
       <el-form-item label="发货人" prop="senderCustomerName">
-        <querySelect search="customerMobile" v-model="searchForm.senderCustomerName" type="sender" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
+        <el-input v-model="searchForm.senderCustomerName"></el-input>
+        <!-- <querySelect search="customerMobile" v-model="searchForm.senderCustomerName" type="sender" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" clearable>
           <template slot-scope="{item}">
-            {{ item.customerName }} : {{ item.customerMobile }}
+            {{ item.customerName }}
           </template>
-        </querySelect>
+        </querySelect> -->
       </el-form-item>
     </div>
     
@@ -91,9 +92,13 @@ export default {
     },
     clearForm(formName) {
       this.$nextTick(() => {
-        Object.assign(this.$data, this.$options.data())
+        // Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
+        this.searchForm = this.$options.data().searchForm
+        console.log(this.searchForm)
         this.searchForm.shipFromOrgid = this.orgid
+        // this.searchForm.senderCustomerName = ''
+        
       })
     }
   }

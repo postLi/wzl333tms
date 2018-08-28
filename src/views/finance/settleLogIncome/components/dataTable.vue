@@ -256,7 +256,10 @@ export default {
       deep: true
     }
   },
-  mounted() {
+  // mounted() {
+  //   this.getList()
+  // },
+  activated() {
     this.getList()
   },
   methods: {

@@ -12,7 +12,6 @@
       </el-form-item>
       <el-form-item label="费用项目" prop="typeIds">
         <el-select v-model="searchForm.typeIds" multiple collapse-tags placeholder="请选择" @focus="()=>{hideIframe(true)}" @visible-change="(bool)=>{hideIframe(bool)}">
-          <el-option slot="head" label="全部" value=""></el-option>
           <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.id">
           </el-option>
         </el-select>
@@ -63,7 +62,8 @@ export default {
     return {
       searchForm: {
         orgId: '',
-        senderId: ''
+        senderId: '',
+        typeIds: []
         // currentPage: 1,
         // pageSize: 100,
         // senderCustomerName: '',
@@ -110,9 +110,10 @@ export default {
     },
     clearForm(formName) {
       this.$nextTick(() => {
-        Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
+        this.searchForm = this.$options.data().searchForm
         this.searchForm.orgId = this.orgid
+        console.log(this.searchForm)
       })
     }
   }

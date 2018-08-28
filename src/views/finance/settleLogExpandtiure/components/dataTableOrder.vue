@@ -289,6 +289,7 @@ export default {
     }
   },
   activated() {
+    this.getPayName()
     this.getList()
   },
   methods: {

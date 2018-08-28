@@ -329,11 +329,12 @@ export default {
       deep: true
     }
   },
-  // activated() {
-  // this.getList()
+  // mounted() {
+  //   this.getPayName()
   // },
-  mounted() {
+  activated() {
     this.getPayName()
+    this.getList()
   },
   methods: {
     getPayName() {
