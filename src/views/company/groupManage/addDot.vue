@@ -97,7 +97,7 @@
               <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 " :maxlength="15" ></el-input>
             </el-form-item>
             <el-form-item label="网点类型" :label-width="formLabelWidth">
-              <el-select v-model="form.orgType" >
+              <el-select v-model="form.orgType" :disabled="isModify">
                 <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id" :disabled="form.status===31" ></el-option>
               </el-select>
             </el-form-item>
@@ -138,7 +138,7 @@
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth"  clearable>
+            <el-form-item label="客服电话" :label-width="formLabelWidth"  clearable maxlength="13" v-number-only>
               <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" ></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
@@ -392,13 +392,17 @@
         Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
           this.manageType = resArr[1]
           this.netWorkStatus = resArr[2]
-          if (!this.isModify) {
-            this.netWorkType = resArr[0].filter(el => {
-              return el.id !== 5
-            })
-          } else{
-            this.netWorkType = resArr[0]
-          }
+          //总公司都不会出现
+          this.netWorkType = resArr[0].filter(el => {
+            return el.id !== 5
+          })
+          // if (!this.isModify) {
+          //   this.netWorkType = resArr[0].filter(el => {
+          //     return el.id !== 5
+          //   })
+          // } else{
+          //   this.netWorkType = resArr[0]
+          // }
           this.loading = false
         })
       },

@@ -154,9 +154,9 @@
               </td>
 
               <td>
-                <el-form-item label="代收款" prop="tmsOrderCargoList.agencyFund">
+                <el-form-item label="代收款" prop="">
                   <el-input v-model="form.tmsOrderCargoList.agencyFund" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick"></el-input>
+                            :disabled="isDbclick" v-number-only:point></el-input>
                 </el-form-item>
               </td>
               <td>
@@ -174,9 +174,9 @@
               </td>
 
               <td>
-                <el-form-item label="运费" prop="tmsOrderCargoList.shipFee">
+                <el-form-item label="运费" prop="">
                   <el-input v-model="form.tmsOrderCargoList.shipFee" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick"></el-input>
+                            :disabled="isDbclick" v-number-only:point></el-input>
                 </el-form-item>
               </td>
               <td>
