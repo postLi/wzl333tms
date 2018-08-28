@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
         <div class="staff_searchinfo--input">
-          <el-form-item label="短驳时间">
+          <el-form-item label="配载时间">
             <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @keyup.enter.native="onSubmit">
             </el-date-picker>
           </el-form-item>

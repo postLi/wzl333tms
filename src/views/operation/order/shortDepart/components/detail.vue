@@ -168,13 +168,6 @@ export default {
       type: String
     }
   },
-  watch: {
-    info() {},
-    arrivalStatus() {
-      console.log(this.arrivalStatus)
-    },
-    type() {}
-  },
   data() {
     return {
       isNeedArrival: true, // true-未入库状态  false-已入库状态
@@ -394,7 +387,18 @@ export default {
         this.toggleAllRows()
         this.setTableColumn()
       }
-    }
+    },
+    info(newVal) {
+      if (newVal) {
+        this.getLoadTrack()
+        this.toggleAllRows()
+        this.setTableColumn()
+      }
+    },
+    arrivalStatus() {
+      console.log(this.arrivalStatus)
+    },
+    type() {}
   },
   created() {
     switch (this.type) {

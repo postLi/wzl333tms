@@ -5,7 +5,7 @@
       </el-date-picker>
     </el-form-item> -->
     <div class="staff_searchinfo--input">
-      <el-form-item label="发车时间">
+      <el-form-item label="配载时间">
         <el-date-picker
                @keyup.enter.native="onSubmit"
               v-model="searchTime"

@@ -145,7 +145,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.orgId
+      return this.$route.query.orgId ? this.$route.query.orgId : this.otherinfo.orgid
     }
   },
   watch: {
@@ -166,18 +166,19 @@ export default {
       this.getOrgFirstFinancialWay() // 获取收支方式信息
       getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
           this.loading = false
+          this.getSystemTime()
           this.formModel.amount = data.amount
           this.formModel.settlementSn = data.settlementSn
-          this.formModel.agent = data.szDtoList[0].agent
+          // this.formModel.agent = data.szDtoList[0].agent
+          this.formModel.agent = this.otherinfo.name
           this.formModel.financialWay = this.$const.FINANCE_WAY[data.szDtoList[0].financialWay]
           this.formModel.bankAccount = data.szDtoList[0].bankAccount
           this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
           this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
           this.formModel.remark = data.remark
-          this.getSystemTime()
         })
         .catch(error => {
-          this.$message({ type: 'error', message: error.errorInfo || error.text })
+          this.$message({ type: 'error', message: error.errorInfo || error.text || '发生未知错误！' })
         })
     },
     doAction(type) {

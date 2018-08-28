@@ -125,6 +125,14 @@ export default {
           }
         },
         {
+          label: "配载时间",
+          prop: "loadTime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
           label: "目的网点",
           prop: "endOrgName",
           width: "120"

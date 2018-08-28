@@ -126,9 +126,6 @@ export default {
       default: false
     }
   },
-  watch: {
-    info() {}
-  },
   data() {
     return {
       btnsize: 'mini',
@@ -262,12 +259,15 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.toggleAllRows()
-  },
   watch: {
     isShow() {
       if (this.isShow) {
+        this.getLoadTrack()
+        this.toggleAllRows()
+      }
+    },
+    info(newVal) {
+      if (newVal) {
         this.getLoadTrack()
         this.toggleAllRows()
       }
