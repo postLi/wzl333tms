@@ -20,21 +20,21 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="80">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
             </el-table-column>
             <el-table-column
             fixed
             sortable
             prop="date"
-            width="185"
+            width="120"
             label="费用项">
             </el-table-column>
             <el-table-column
             fixed
             sortable
             prop="toPay"
-            width="180"
+            width="265"
             label="金额">
             </el-table-column>
           </el-table>

@@ -67,15 +67,15 @@
 
 
                 <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}" @mouseenter="currentIndex = index">
-                  <!-- <span v-once>{{item.dictName}}</span> -->
+                   <span v-once>{{item.dictName}}</span>
                   <div class="edit-hidden">
                     <el-input
                       v-model.lazy="item.dictName"
                     >
                     </el-input>
                     <div class="dep-img">
-                      <img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >
-                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >
+                      <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
+                      <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" />
                     </div>
                   </div>
                 </li>
@@ -361,7 +361,8 @@
 /*depmain-add*/
   .add-fixed{
     position: fixed;
-    background: rgb(233,243,250);
+    background: rgba(255,255,255,1);
+    top: 30px;
     input{
       border-color: #e4e7ed;
       width: 350px;
@@ -446,13 +447,19 @@
   }
 
   .depmain-edit .depmain-list li .edit-hidden{
-    // display: none;
+    display: none;
   }
   .depmain-edit .depmain-list .showcurrent .edit-hidden{
     display: block;
   }
-  .depmain-edit .depmain-list .showcurrent .edit-hidden .el-input.is-active .el-input__inner, .el-input__inner:focus{
+  .depmain-edit .depmain-list .showcurrent .edit-hidden .el-input.is-active .el-input__inner, .depmain-edit .showcurrent .el-input__inner:focus{
     border-color: #409EFF;
+  }
+  .depmain-edit .showcurrent:focus .dep-img img:nth-of-type(1){
+    display: block;
+  }
+  .dep-img img:nth-of-type(1){
+
   }
   .depmain-edit .depmain-list li span{
     display: block;
@@ -489,6 +496,7 @@
     width: 26px;
     height: 25px;
     cursor: pointer;
+    display: none;
   }
   .depmain-add .add-fixed .dep-img img:nth-of-type(2),.depmain-edit .dep-img img:nth-of-type(2){
     position: relative;
