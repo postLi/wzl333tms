@@ -63,17 +63,12 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import SelectTree from '@/components/selectTree/index'
-import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
-import { getToken } from '@/utils/auth'
-import { reportSettleRecordTotal } from '@/api/report/report'
+import { reportTurnoverDaily } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
 export default {
   components: {
-    SelectTree,
-    querySelect,
     SearchForm
   },
   data() {
@@ -81,9 +76,8 @@ export default {
       chartIframe: '',
       hideiframe: 'hide',
       query: {
-        typeIds: ''
-        // currentPage: 1,
-        // pageSize: 100
+        currentPage: 1,
+        pageSize: 100
         // senderCustomerName: '',
         // shipFromOrgid: '',
         // createTimeStart: '',
@@ -100,49 +94,64 @@ export default {
           width: '20'
         },
         {
-          label: '费用项目',
-          prop: 'feeName',
+          label: '开单网点',
+          prop: 'orgidName',
           textAlign: 'center'
         },
         {
-          label: '应收合计',
-          prop: 'totalreceivableFee',
-          textAlign: 'right'
-        },
-        {
-          label: '已收',
-          prop: 'receivableFee',
-          textAlign: 'right'
-        },
-        {
-          label: '未收',
-          prop: 'receivablUnpaidFee',
-          textAlign: 'right'
-        },
-        {
-          label: '数量',
-          prop: 'receivableCount',
+          label: '签收网点',
+          prop: 'signOrgidName',
           textAlign: 'center'
         },
         {
-          label: '应付合计',
-          prop: 'totalpayableFee',
-          textAlign: 'right'
-        },
-        {
-          label: '已付',
-          prop: 'payableFee',
-          textAlign: 'right'
-        },
-        {
-          label: '未付',
-          prop: 'payableUnpaidFee',
-          textAlign: 'right'
-        },
-        {
-          label: '数量',
-          prop: 'payableCount',
+          label: '到达城市',
+          prop: 'shipToCityName',
           textAlign: 'center'
+        },
+        {
+          label: '发货人',
+          prop: 'senderCustomerName',
+          textAlign: 'center'
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          textAlign: 'center'
+        },
+        {
+          label: '现付(元)',
+          prop: 'shipNowpayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '回单付(元)',
+          prop: 'shipReceiptpayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '月结(元)',
+          prop: 'shipMonthpayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '运费合计(元)',
+          prop: 'totalFee',
+          textAlign: 'right'
+        },
+        {
+          label: '回扣(元)',
+          prop: 'brokerageFee',
+          textAlign: 'right'
+        },
+        {
+          label: '实收金额(元)',
+          prop: 'amountCollected',
+          textAlign: 'right'
         }
       ],
       countCol: [ // 需要合计的-列
@@ -177,71 +186,71 @@ export default {
   },
   methods: {
     reportSettleRecordTotal() {
-      reportSettleRecordTotal(this.query).then(res => {
+      reportTurnoverDaily(this.query).then(res => {
         let data = res
         let countColVal = []
 
-        let table = document.getElementById('report_settleRecordTotal_table')
-        let tbodyLen = table.getElementsByTagName('tbody')
-        let tfootLen = table.getElementsByTagName('tfoot')
-        if (tbodyLen.length > 0) {
-          table.removeChild(tbodyLen[0])
-          table.removeChild(tfootLen[0])
-        }
-        let tbody = document.createElement('tbody')
-        let tfoot = document.createElement('tfoot')
+        // let table = document.getElementById('report_settleRecordTotal_table')
+        // let tbodyLen = table.getElementsByTagName('tbody')
+        // let tfootLen = table.getElementsByTagName('tfoot')
+        // if (tbodyLen.length > 0) {
+        //   table.removeChild(tbodyLen[0])
+        //   table.removeChild(tfootLen[0])
+        // }
+        // let tbody = document.createElement('tbody')
+        // let tfoot = document.createElement('tfoot')
 
-        table.appendChild(tbody)
-        table.appendChild(tfoot)
-        table.setAttribute('borderCollapse', 'collapse')
-        table.style.border = '1px solid #d0d7e5';
-        table.setAttribute('border', '1')
-        table.setAttribute('font', '12px')
-        for (let k = 0; k < data.length; k++) {
-          const tbodyTr = tbody.insertRow()
-          for (let j = 0; j < this.columns.length; j++) {
-            const td = tbodyTr.insertCell()
-            // 处理当列没有值、宽度设置等信息时，做默认值处理
-            for (let t in this.countCol) { // 保留两位小数
-              if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
-              }
-            }
-            td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
-            td.style.textAlign = this.columns[j].textAlign // 设置居中方式
-            td.style.padding = '2px 5px'
-            td.style.fontSize = '13px'
-            td.style.width = (data[k][this.columns[j].width] || 120) + 'px'
-          }
-        }
-        // 合计
-        for (let t in this.countCol) {
-          let data = 0
-          let label = this.countCol[t].split('|') // 取字段名
-          for (let k = 0; k < res.length; k++) {
-          	if (this.unCountSum.join(',').indexOf(res[k].feeName) === -1) { // 排除不需要合计的费用项-行
-          		data += res[k][label[0]] ? Number(res[k][label[0]]) : 0
-          	}
-          }
-          if (data) {
-            if (label[1] && label[1] === 'integer') {
-              this.countColVal[label[0]] = data ? data : 0
-            } else {
-              this.countColVal[label[0]] = data ? data.toFixed(2) : 0
-            }
-          }
-        }
-        // 生成底部合计行
-        const tfootTr = tfoot.insertRow()
-        for (let t in this.columns) {
-          const td = tfootTr.insertCell()
-          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          td.style.textAlign = this.columns[t].textAlign
-          td.style.padding = '2px 5px'
-          td.style.fontSize = '13px'
-          td.setAttribute('bgcolor', 'gainsboro')
-          td.setAttribute('color', 'white')
-        }
+        // table.appendChild(tbody)
+        // table.appendChild(tfoot)
+        // table.setAttribute('borderCollapse', 'collapse')
+        // table.style.border = '1px solid #d0d7e5';
+        // table.setAttribute('border', '1')
+        // table.setAttribute('font', '12px')
+        // for (let k = 0; k < data.length; k++) {
+        //   const tbodyTr = tbody.insertRow()
+        //   for (let j = 0; j < this.columns.length; j++) {
+        //     const td = tbodyTr.insertCell()
+        //     // 处理当列没有值、宽度设置等信息时，做默认值处理
+        //     for (let t in this.countCol) { // 保留两位小数
+        //       if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
+        //         data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
+        //       }
+        //     }
+        //     td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+        //     td.style.textAlign = this.columns[j].textAlign // 设置居中方式
+        //     td.style.padding = '2px 5px'
+        //     td.style.fontSize = '13px'
+        //     td.style.width = (data[k][this.columns[j].width] || 120) + 'px'
+        //   }
+        // }
+        // // 合计
+        // for (let t in this.countCol) {
+        //   let data = 0
+        //   let label = this.countCol[t].split('|') // 取字段名
+        //   for (let k = 0; k < res.length; k++) {
+        //   	if (this.unCountSum.join(',').indexOf(res[k].feeName) === -1) { // 排除不需要合计的费用项-行
+        //   		data += res[k][label[0]] ? Number(res[k][label[0]]) : 0
+        //   	}
+        //   }
+        //   if (data) {
+        //     if (label[1] && label[1] === 'integer') {
+        //       this.countColVal[label[0]] = data ? data : 0
+        //     } else {
+        //       this.countColVal[label[0]] = data ? data.toFixed(2) : 0
+        //     }
+        //   }
+        // }
+        // // 生成底部合计行
+        // const tfootTr = tfoot.insertRow()
+        // for (let t in this.columns) {
+        //   const td = tfootTr.insertCell()
+        //   td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
+        //   td.style.textAlign = this.columns[t].textAlign
+        //   td.style.padding = '2px 5px'
+        //   td.style.fontSize = '13px'
+        //   td.setAttribute('bgcolor', 'gainsboro')
+        //   td.setAttribute('color', 'white')
+        // }
       })
     },
     doAction(type) {
@@ -266,7 +275,7 @@ export default {
       }
     },
     getSearchParam(obj) {
-      this.query = Object.assign({}, obj)
+      this.query = Object.assign(this.query, obj)
       this.reportSettleRecordTotal()
     }
   }

@@ -6,9 +6,11 @@
 </template>
 <script>
 import sender from './sender'
+import list from './list'
 export default {
   components: {
-    sender
+    sender,
+    list
   },
   data() {
     return {

@@ -625,8 +625,8 @@ export default {
     gotoPage() { // 操作成功后跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart', query: { pageKey: new Date().getTime() } })
-          this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart')
+          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() } })
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
           break
         case 39: // 干线
           this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() } })
