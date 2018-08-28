@@ -142,10 +142,7 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'monthpayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.monthpayState)
-        }
+        'prop': 'monthpayStateCn'
       }, {
         'label': '月结',
         'prop': 'monthpayFee'

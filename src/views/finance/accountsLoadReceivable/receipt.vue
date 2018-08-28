@@ -130,7 +130,7 @@ export default {
         label: '运单号',
         prop: 'shipSn',
         width: '120',
-        fixed: true
+        fixed: false
       },
       {
         label: '开单网点',
@@ -140,11 +140,8 @@ export default {
       },
       {
         label: '结算状态',
-        prop: 'totalStatus',
-        width: '120',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.totalStatus)
-        }
+        prop: 'totalStatusCn',
+        width: '120'
       },
       {
         label: '发货人',
@@ -163,10 +160,7 @@ export default {
         'prop': 'receiptpayFee'
       }, {
         'label': '回单付结算状态',
-        'prop': 'receiptpayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.receiptpayState)
-        }
+        'prop': 'receiptpayStateCn'
       }, {
         'label': '未结回单付',
         'prop': 'notReceiptpayFee'

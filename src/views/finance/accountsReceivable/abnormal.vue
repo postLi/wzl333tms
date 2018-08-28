@@ -142,10 +142,7 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'changeState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.changeState)
-        }
+        'prop': 'changeStateCn'
       }, {
         'label': '异动',
         'prop': 'changeFee'
@@ -296,6 +293,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

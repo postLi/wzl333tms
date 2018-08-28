@@ -142,10 +142,7 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'receiptpayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.receiptpayState)
-        }
+        'prop': 'receiptpayState'
       }, {
         'label': '回单付',
         'prop': 'receiptpayFee'

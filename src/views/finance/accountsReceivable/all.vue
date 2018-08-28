@@ -142,10 +142,7 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'totalStatus',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.totalStatus)
-        }
+        'prop': 'totalStatusCn'
       }, {
         'label': '现付',
         'prop': 'nowPayFee'

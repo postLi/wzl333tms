@@ -133,7 +133,7 @@ export default {
         label: '运单号',
         prop: 'shipSn',
         width: '120',
-        fixed: true
+        fixed: false
       },
       {
         label: '开单网点',
@@ -143,11 +143,8 @@ export default {
       },
       {
         label: '结算状态',
-        prop: 'totalStatus',
-        width: '120',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.totalStatus)
-        }
+        prop: 'totalStatusCn',
+        width: '120'
       },
       {
         label: '发货人',
@@ -166,10 +163,7 @@ export default {
         'prop': 'nowPayFee'
       }, {
         'label': '现付结算状态',
-        'prop': 'nowPayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.nowPayState)
-        }
+        'prop': 'nowPayStateCn'
       }, {
         'label': '未结现付',
         'prop': 'notNowPayFee'
@@ -189,10 +183,7 @@ export default {
         'prop': 'arrivepayFee'
       }, {
         'label': '到付结算状态',
-        'prop': 'arrivepayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.arrivepayState)
-        }
+        'prop': 'arrivepayStateCn'
       }, {
         'label': '未结到付',
         'prop': 'notArrivepayFee'
@@ -212,10 +203,7 @@ export default {
         'prop': 'receiptpayFee'
       }, {
         'label': '回单付结算状态',
-        'prop': 'receiptpayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.receiptpayState)
-        }
+        'prop': 'receiptpayStateCn'
       }, {
         'label': '未结回单付',
         'prop': 'notReceiptpayFee'
@@ -237,10 +225,7 @@ export default {
         'prop': 'monthpayFee'
       }, {
         'label': '月结结算状态',
-        'prop': 'monthpayState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.monthpayState)
-        }
+        'prop': 'monthpayStateCn'
       }, {
         'label': '未结月结',
         'prop': 'notMonthpayFee'
@@ -263,10 +248,7 @@ export default {
         'prop': 'changeFee'
       }, {
         'label': '异动结算状态',
-        'prop': 'changeState',
-        'slot': function(scope) {
-          return parseDict('count_status', scope.row.changeState)
-        }
+        'prop': 'changeStateCn'
       }, {
         'label': '未结异动',
         'prop': 'notChangeFee'
