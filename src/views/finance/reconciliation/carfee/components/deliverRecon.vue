@@ -805,6 +805,8 @@
         this.messageInfo.wechatAccount = item.wechatAccount
         this.messageInfo.checkStartTime = item.checkStartTime
         this.messageInfo.checkEndTime = item.checkEndTime
+        this.searchCreatTime[0] = item.checkStartTime
+        this.searchCreatTime[1] = item.checkEndTime
         this.messageInfo.orgName = item.orgName
         this.messageButtonInfo.companyName = item.companyName
         this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
