@@ -558,7 +558,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '100',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -571,7 +571,7 @@ export default {
       }, {
         label: '控货状态',
         prop: 'status',
-        width: '180',
+        width: '120',
         slot: (scope) => {
           return scope.row.status === 1 ? '未放货' : '已放货'
         },
@@ -579,7 +579,7 @@ export default {
       }, {
         label: '放货时间',
         prop: 'updateTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -610,7 +610,7 @@ export default {
       }, {
         label: '开单时间',
         prop: 'orderCreateTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.orderCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -653,17 +653,17 @@ export default {
       }, {
         label: '件数',
         prop: 'cargoAmount',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '重量',
         prop: 'cargoWeight',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '体积',
         prop: 'cargoVolume',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '件数单价',
@@ -718,22 +718,22 @@ export default {
       }, {
         label: '现付',
         prop: 'shipNowpayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '到付',
         prop: 'shipArrivepayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '回单付',
         prop: 'shipReceiptpayFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '月结',
         prop: 'shipMonthpayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '合计运费',
@@ -747,7 +747,7 @@ export default {
         fixed: false
       }, {
         label: '目的省',
-        prop: 'shipToCityName',
+        prop: 'shipToCityName1',
         width: '120',
         slot: (scope) => {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
@@ -755,7 +755,7 @@ export default {
         fixed: false
       }, {
         label: '目的市',
-        prop: 'shipToCityName',
+        prop: 'shipToCityName2',
         width: '120',
         slot: (scope) => {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
@@ -763,7 +763,7 @@ export default {
         fixed: false
       }, {
         label: '目的区',
-        prop: 'shipToCityName',
+        prop: 'shipToCityName3',
         width: '120',
         slot: (scope) => {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
@@ -772,7 +772,7 @@ export default {
       }, {
         label: '制单人',
         prop: 'userName',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '发货单位',
@@ -792,12 +792,12 @@ export default {
       }, {
         label: '回扣',
         prop: 'brokerageFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '送货费',
         prop: 'deliveryFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '代收手续费',
@@ -812,27 +812,27 @@ export default {
       }, {
         label: '保险费',
         prop: 'insuranceFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '装卸费',
         prop: 'handlingFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '包装费',
         prop: 'packageFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '提货费',
         prop: 'pickupFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '上楼费',
         prop: 'goupstairsFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '实际提货费',
@@ -842,7 +842,7 @@ export default {
       }, {
         label: '叉车费',
         prop: 'forkliftFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '实际装卸费',
@@ -852,7 +852,7 @@ export default {
       }, {
         label: '报关费',
         prop: 'customsFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '其他费收入',
@@ -862,22 +862,22 @@ export default {
       }, {
         label: '税率',
         prop: 'taxRate',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '税金',
         prop: 'taxes',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '入仓费',
         prop: 'housingFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '印花税',
         prop: 'stampTax',
-        width: '120',
+        width: '90',
         fixed: false
       }]
     }
@@ -915,10 +915,16 @@ export default {
           const arr = objectMerge2([], this.dataset) // 所有的数据
           arr.forEach(e => {
             this.$set(e, 'status', status === 1 ? '未放货' : '已放货')
+            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+            this.$set(e, 'shipToCityName2', e.shipToCityName.split(',')[1] ? e.shipToCityName.split(',')[1] : '')
+            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
           })
           const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
           arrSel.forEach(e => {
             this.$set(e, 'status', status === 1 ? '未放货' : '已放货')
+            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+            this.$set(e, 'shipToCityName2', e.shipToCityName.split(',')[1] ? e.shipToCityName.split(',')[1] : '')
+            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
           })
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,

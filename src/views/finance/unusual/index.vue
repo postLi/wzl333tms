@@ -391,7 +391,7 @@ export default {
       }, {
         label: '异动时间',
         prop: 'createTime',
-        width: '160',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -429,22 +429,22 @@ export default {
       }, {
         label: '货品名',
         prop: 'cargoName',
-        width: '100',
+        width: '90',
         fixed: false
       }, {
         label: '件数',
         prop: 'cargoAmount',
-        width: '60',
+        width: '80',
         fixed: false
       }, {
         label: '重量',
         prop: 'cargoWeight',
-        width: '60',
+        width: '80',
         fixed: false
       }, {
         label: '体积',
         prop: 'cargoVolume',
-        width: '60',
+        width: '80',
         fixed: false
       }, {
         label: '运单备注',
@@ -459,22 +459,22 @@ export default {
       }, {
         label: '现付',
         prop: 'nowPayFee',
-        width: '60',
+        width: '80',
         fixed: false
       }, {
         label: '到付',
         prop: 'arrivePayFee',
-        width: '60',
+        width: '80',
         fixed: false
       }, {
         label: '回单付',
         prop: 'receiptPayFee',
-        width: '80',
+        width: '90',
         fixed: false
       }, {
         label: '月结',
         prop: 'monthPayFee',
-        width: '60',
+        width: '80',
         fixed: false
       }, {
         label: '到达省',

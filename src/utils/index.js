@@ -447,9 +447,10 @@ export const pickerOptions4 = {
   },
   yesterDay(dateobj) {
     const _end = dateobj || new Date()
-    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const start1 = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const start2 = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
     const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
-    return [start, end]
+    return [start1, start2]
   },
   beforeDady(dateobj) {
     const _end = dateobj || new Date()

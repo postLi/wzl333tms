@@ -568,7 +568,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '100',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -586,7 +586,7 @@ export default {
       }, {
         label: '开单时间',
         prop: 'createTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -604,7 +604,7 @@ export default {
       }, {
         label: '签收时间',
         prop: 'signTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.signTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -632,22 +632,22 @@ export default {
       }, {
         label: '货品名',
         prop: 'cargoName',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '件数',
         prop: 'cargoAmount',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '重量',
         prop: 'cargoWeight',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '体积',
         prop: 'cargoVolume',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '发货人',
@@ -682,7 +682,7 @@ export default {
       }, {
         label: '代收款',
         prop: 'agencyFund',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '代收手续费',
@@ -720,7 +720,7 @@ export default {
       }, {
         label: '回单号',
         prop: 'shipReceiptSn',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '回单份数',
@@ -769,32 +769,32 @@ export default {
       }, {
         label: '现付',
         prop: 'shipNowpayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '到付',
         prop: 'shipArrivepayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '回单付',
         prop: 'shipReceiptpayFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '月结',
         prop: 'shipMonthpayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '运费',
         prop: 'shipFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '回扣',
         prop: 'brokerageFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '声明价值',
@@ -804,27 +804,27 @@ export default {
       }, {
         label: '保险费',
         prop: 'insuranceFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '装卸费',
         prop: 'handlingFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '包装费',
         prop: 'packageFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '提货费',
         prop: 'pickupFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '上楼费',
         prop: 'goupstairsFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '实际提货费',
@@ -834,12 +834,12 @@ export default {
       }, {
         label: '叉车费',
         prop: 'forkliftFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '报关费',
         prop: 'customsFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '其他费收入',
@@ -854,12 +854,12 @@ export default {
       }, {
         label: '税率',
         prop: 'taxRate',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '税金',
         prop: 'taxes',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '入仓费',
@@ -869,7 +869,7 @@ export default {
       }, {
         label: '印花税',
         prop: 'stampTax',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '件数单价',

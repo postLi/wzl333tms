@@ -10,8 +10,8 @@
                   type="textarea"
                   :rows="7"
                   :cols="30"
-                  :maxlength="300"
-                  placeholder="最多300个字符"
+                  :maxlength="200"
+                  placeholder="最多200个字符"
                   v-model="form.recRemark"
                   auto-complete="off"></el-input>
               </el-form-item>

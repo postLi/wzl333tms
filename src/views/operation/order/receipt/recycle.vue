@@ -363,7 +363,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '100',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -386,7 +386,7 @@ export default {
       }, {
         label: '开单日期',
         prop: 'createTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -447,22 +447,22 @@ export default {
       }, {
         label: '货品名',
         prop: 'cargoName',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '件数',
         prop: 'cargoAmount',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '重量',
         prop: 'cargoWeight',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '体积',
         prop: 'cargoVolume',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '付款方式',
@@ -472,22 +472,22 @@ export default {
       }, {
         label: '现付',
         prop: 'shipNowpayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '到付',
         prop: 'shipArrivepayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '回单付',
         prop: 'shipReceiptpayFee',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '月结',
         prop: 'shipMonthpayFee',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '中转承运商',
@@ -497,7 +497,7 @@ export default {
       }, {
         label: '中转日期',
         prop: 'transferTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },

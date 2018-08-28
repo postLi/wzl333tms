@@ -261,7 +261,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '100',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -279,7 +279,7 @@ export default {
       }, {
         label: '登记时间',
         prop: 'registerTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.registerTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -287,7 +287,7 @@ export default {
       }, {
         label: '处理时间',
         prop: 'disposeTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.disposeTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -295,7 +295,7 @@ export default {
       }, {
         label: '开单时间',
         prop: 'createTime',
-        width: '180',
+        width: '165',
         slot: (scope) => {
           return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -303,7 +303,7 @@ export default {
       }, {
         label: '货品名',
         prop: 'cargoName',
-        width: '120',
+        width: '90',
         fixed: false
       }, {
         label: '异常状态',
@@ -348,12 +348,12 @@ export default {
       }, {
         label: '包装',
         prop: 'cargoPack',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '件数',
         prop: 'cargoAmount',
-        width: '120',
+        width: '80',
         fixed: false
       }, {
         label: '异常描述',
