@@ -15,7 +15,7 @@
         <table id="report_settleRecordTotal_table" width="780px" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
-              <th rowspan="2" bgcolor="dimGray">
+              <th rowspan="2" bgcolor="dimGray" width="70px">
                 <font color="white" size="3">序号</font>
               </th>
               <th rowspan="2" bgcolor="dimGray" width="270px">
@@ -29,28 +29,28 @@
               </th>
             </tr>
             <tr height="32px">
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">应收合计</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">已收</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">未收</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">数量</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">应付合计</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">已收</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">未收</font>
               </th>
-              <th bgcolor="dimGray"  width="50px">
+              <th bgcolor="dimGray"  width="90px">
                 <font color="white" size="2">数量</font>
               </th>
             </tr>

@@ -119,6 +119,7 @@ export default {
           th.setAttribute('border', 1)
           th.setAttribute('bgcolor', 'dimGray')
           th.appendChild(font)
+          th.setAttribute('width', (this.columns[i].width || 120) + 'px')
           theadTr.appendChild(th)
         }
 
