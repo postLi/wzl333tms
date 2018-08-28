@@ -102,7 +102,7 @@
             </li>
             <li>
               <p>品种规格</p>
-              <el-form-item prop="tmsOrderCargoList.description">
+              <el-form-item prop="">
                 <el-input :maxlength="20" v-model="form.tmsOrderCargoList.description" :disabled="isDbclick"></el-input>
               </el-form-item>
             </li>

@@ -362,9 +362,9 @@
           this.popTitle = '提货派车单'
           // this.newInfoData()
           this.reset()
-          this.form.tmsTruck.truckUnit = ''
-          this.form.tmsOrderPickup.payMethod = 76
-          this.form.tmsOrderPickup.pickupStatus = 236
+          // this.form.tmsTruck.truckUnit = ''
+          // this.form.tmsOrderPickup.payMethod = 76
+          // this.form.tmsOrderPickup.pickupStatus = 236
           this.form.tmsOrderPickup.outTime = new Date()
           this.fetchGetPickUp()
           // this.valkey = Math.random()
@@ -475,21 +475,23 @@
       //车牌号
       getTrunkName(trunk) {
         if (trunk) {
+          console.log(trunk,'车牌号');
           if (this.form.tmsDriver.driverName === '' || this.form.tmsDriver.driverMobile === '') {
+            this.valkey = Math.random()
             this.form.tmsDriver.driverName = trunk.driverName
             this.form.tmsDriver.driverMobile = trunk.dirverMobile
             this.form.tmsDriver.driverId = trunk.driverId
-            console.log(this.form.tmsDriver.driverName,'为空')
           }
           else {
+            this.valkey = Math.random()
             this.form.tmsDriver.driverName = Object.assign(this.form.tmsDriver.driverName)
             this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
-            console.log(this.form.tmsDriver.driverName,"有数据")
           }
           this.form.tmsTruck.truckId = trunk.truckId
           this.form.tmsTruck.truckType = trunk.truckType
           this.form.tmsTruck.truckUnit = trunk.truckUnit
           this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
+
         }
       },
       initInfo() {
@@ -581,7 +583,7 @@
             truckFee: '', // 车费
             pickupStatus: 236, // 提货状态
             collectionFee: '', // 代收费用
-            outTime: '', // 出车时间
+            outTime: new Date(), // 出车时间
             arriveTime: ''//
           }
         }
