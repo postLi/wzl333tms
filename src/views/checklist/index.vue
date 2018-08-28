@@ -162,9 +162,9 @@ export default {
       }, {
         value: 0,
         label: 'roleCount',
-        title: '权限管理',
-        message: '系统默认' + this.valueCount + '个角色权限',
-        message1: '你还没有添加角色权限，请点击右边添加按钮',
+        title: '角色管理',
+        message: '系统默认' + this.valueCount + '个角色管理',
+        message1: '你还没有添加角色管理，请点击右边添加按钮',
         message2: '需要增加点击右边增加按钮',
         button1: '增加',
         button2: '添加'
@@ -180,7 +180,7 @@ export default {
       }, {
         value: 0,
         label: 'senderCustomerCount',
-        title: '客户管理',
+        title: '发货客户',
         message: '已经有' + this.valueCount + '位发货客户',
         message1: '你还没有添加发货客户，请点击右边添加按钮',
         message2: '需要增加点击右边增加按钮',
@@ -189,7 +189,7 @@ export default {
       }, {
         value: 0,
         label: 'receiverCustomerCount',
-        title: '客户管理',
+        title: '收货客户',
         message: '已经有' + this.valueCount + '位收货客户',
         message1: '你还没有添加收货客户，请点击右边添加按钮',
         message2: '需要增加点击右边增加按钮',

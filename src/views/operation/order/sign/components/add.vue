@@ -259,90 +259,93 @@ export default {
       this.initInfo()
     }
   },
+
   watch: {
     // dotInfo (newVal) {
     //   this.getMentInfo = this.dotInfo
     // },
-    repertoryId: {
-      handler(newVal) {
-        // this.setInfo()
-        console.log('repertoryId:', this.form, newVal, this.repertoryId)
-      },
-      deep: true
-    },
+    // repertoryId: {
+    //   handler(newVal) {
+    //     // this.setInfo()
+    //     console.log('repertoryId:', this.form, newVal, this.repertoryId)
+    //   },
+    //   deep: true
+    // },
 
     popVisible(newVal, oldVal) {
       if (!this.inited) {
         this.inited = true
-        // this.initInfo()
+        this.initInfo()
       }
       console.log('popVisible:', newVal, this.repertoryId)
       if (newVal) {
         this.setInfo()
       }
     },
-    // repertoryId(){
-
-    //     if(this.isPick){
-    //       this.popTitle = '自提修改签收'
-    //       console.log(this.isPick)
-    //     }
-    //     else if(this.isDbclick) {
-    //       this.popTitle = '查看信息'
-    //     }
-    //     else{
-    //       this.popTitle = '自提签收录入'
-    //     }
-    //     immediate: true
-    // },
-    orgid(newVal) {
-      this.form.orgid = newVal
-    },
-    isDbclick: {
-      handler(newVal) {
-        this.setTitle()
-        // this.DelModfiy()
-      },
-      immediate: true
-    },
-    isPick: {
-      handler(newVal) {
-        this.setTitle()
-        // if(this.isPick){
-        //   this.popTitle = '自提修改签收'
-        //   console.log(this.isPick)
-        // }
-        // else{
-        //   this.popTitle = '自提签收录入'
-        // }
-      },
-      immediate: true
-    },
-    isDelivery: {
-      handler(newVal) {
-        this.setTitle()
-        // console.log(this.isDelivery)
-        // if(!this.isDelivery){
-        //   this.popTitle = '送货修改签收'
-        // }else{
-        //   this.popTitle = '送货签收录入'
-        // }
+    repertoryId() {
+      for (const i in this.form) {
+        this.form[i] = ''
       }
+      if (this.isDbclick) {
+        this.popTitle = '查看信息'
+        this.setInfo()
+      } else if (this.isPick) {
+        this.popTitle = '修改签收'
+        this.setInfo()
+      } else {
+        this.popTitle = '签收录入'
+        this.setInfo()
+      }
+    //   true
+    // },
+    // orgid(newVal) {
+    //   this.form.orgid = newVal
+    // },
+    // isDbclick: {
+    //   handler(newVal) {
+    //     this.setTitle()
+    //     // this.DelModfiy()
+    //   },
+    //   immediate: true
+    // },
+    // isPick: {
+    //   handler(newVal) {
+    //     this.setTitle()
+    //     // if(this.isPick){
+    //     //   this.popTitle = '自提修改签收'
+    //     //   console.log(this.isPick)
+    //     // }
+    //     // else{
+    //     //   this.popTitle = '自提签收录入'
+    //     // }
+    //   },
+    //   immediate: true
+    // },
+    // isDelivery: {
+    //   handler(newVal) {
+    //     this.setTitle()
+    //     // console.log(this.isDelivery)
+    //     // if(!this.isDelivery){
+    //     //   this.popTitle = '送货修改签收'
+    //     // }else{
+    //     //   this.popTitle = '送货签收录入'
+    //     // }
+    //   }
     },
     immediate: true
   },
   methods: {
-    setTitle() {
-      // 查看信息1
-      if (this.isDbclick) {
-        this.popTitle = '查看信息'
-      } else if (this.isPick) {
-        this.popTitle = '修改签收'
-      } else {
-        this.popTitle = '签收录入'
-      }
-    },
-    DelModfiy() {
+    // setTitle() {
+    //   // 查看信息1
+    //   if (this.isDbclick) {
+    //     this.popTitle = '查看信息'
+    //   } else if (this.isPick) {
+    //     this.popTitle = '修改签收'
+    //   } else {
+    //     this.popTitle = '签收录入'
+    //   }
+    // },
+    // DelModfiy() {
 
       // if(this.isDelivery){
       //   this.popTitle = '送货签收录入'
@@ -350,7 +353,7 @@ export default {
       // }else{
       //   this.popTitle = '送货修改签收'
       // }
-    },
+    // },
     setInfo() {
       // this.$set('form', this.repertoryId)
       this.form = objectMerge2({}, this.form, this.repertoryId)

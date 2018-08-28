@@ -270,7 +270,7 @@ export default {
           { required: true, validator: validateNameSn }
         ],
         abnormalType: [
-          { required: true, message: '请选择异常类型', trigger: 'burl' }
+          { required: true, message: '请选择异常类型' }
         ],
         // registerFee: [
         //   { required: true, validator: validatereg }
@@ -293,9 +293,6 @@ export default {
         shipSn: [
           // { required: true, trigger: 'blur', validator: validateshipSn}
           { required: true, message: '请输入运单号' }
-        ],
-        disposeResult: [
-          { required: true, message: '必填项不能为空' }
         ]
       },
       // fileList2:[],
@@ -389,10 +386,11 @@ export default {
         GetLook(this.info.id).then(res => {
           this.form = res
           this.form.disposeTime = new Date()
-          // this.form.disposeName = this.otherinfo.name
-          if (res.abnormalStatus === 118) {
-            this.form.disposeResult = ''
-          }
+          this.form.disposeName = this.otherinfo.name
+          this.form.disposeResult = ''
+          // if (res.abnormalStatus === 118) {
+          //   this.form.disposeResult = ''
+          // }
         })
       } else if (this.isDeal) {
         this.popTitle = '异常处理'
@@ -595,18 +593,18 @@ export default {
       })
     },
     reset() {
-      const oldVal = this.form.abnormalNo
-      this.$refs['ruleForm'].resetFields()
-      if (!this.isModify) {
-        this.form.abnormalNo = oldVal
-      }
-      this.form.shipSn = ''
-      this.form.shipGoodsSn = ''
+      // const oldVal = this.form.abnormalNo
+      // this.$refs['ruleForm'].resetFields()
+      // if (!this.isModify) {
+      //   this.form.abnormalNo = oldVal
+      // }
+      // this.form.shipSn = ''
+      // this.form.shipGoodsSn = ''
     },
     closeMe(done) {
       // this.reset()
       this.$emit('update:popVisible', false)
-      // this.$emit('close')
+      this.$emit('close')
       if (typeof done === 'function') {
         done()
       }

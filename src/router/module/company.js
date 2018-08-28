@@ -44,9 +44,9 @@ export default {
     path: '/company/permissionManage',
     icon: 'quanxianguanli',
     hidden: false,
-    name: '权限管理',
+    name: '角色管理',
     component: _import('company/permissionManage/index'),
-    meta: { title: '权限管理', stitle: '权限', noCache: false }
+    meta: { title: '角色管理', stitle: '角色', noCache: false }
   },
   {
     path: '/company/employeeManage',
