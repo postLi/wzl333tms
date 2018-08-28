@@ -12,13 +12,13 @@
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div class="info_tab_report" id="report_settleRecordTotal">
-        <table id="report_settleRecordTotal_table" width="1200px" border="1px" style="border-collapse: collapse;">
+        <table id="report_settleRecordTotal_table" width="780px" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
-              <th rowspan="2" bgcolor="gray" width="100px">
+              <th rowspan="2" bgcolor="gray">
                 <font color="white" size="3">序号</font>
               </th>
-              <th rowspan="2" bgcolor="gray" width="20%">
+              <th rowspan="2" bgcolor="gray" width="270px">
                 <font color="white" size="3">费用项目</font>
               </th>
               <th colspan="4" bgcolor="gray">
@@ -29,28 +29,28 @@
               </th>
             </tr>
             <tr height="32px">
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">应收合计</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">已收</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">未收</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">数量</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">应付合计</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">已收</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">未收</font>
               </th>
-              <th bgcolor="gray">
+              <th bgcolor="gray"  width="50px">
                 <font color="white" size="2">数量</font>
               </th>
             </tr>
@@ -93,7 +93,7 @@ export default {
       bgcolorHead: 'yellow',
       btnsize: 'mini',
       isShow: true,
-      columns: [{
+      columns: [{ // 表头
           label: '序号',
           prop: 'id',
           textAlign: 'center',
@@ -122,7 +122,7 @@ export default {
         {
           label: '数量',
           prop: 'receivableCount',
-          textAlign: 'right'
+          textAlign: 'center'
         },
         {
           label: '应付合计',
@@ -142,20 +142,32 @@ export default {
         {
           label: '数量',
           prop: 'payableCount',
-          textAlign: 'right'
+          textAlign: 'center'
         }
       ],
-      countCol: [
+      countCol: [ // 需要合计的-列
         'totalreceivableFee',
         'receivableFee',
         'receivablUnpaidFee',
-        'receivableCount',
+        'receivableCount|integer',
         'totalpayableFee',
         'payableFee',
         'payableUnpaidFee',
-        'payableCount'
+        'payableCount|integer'
       ],
-      countColVal: []
+      countColVal: [], // 存储底部合计值
+      unCountSum: [ // 不需要计入底部合计的费用项-行
+      '其他费用收入',
+      '包装费',
+      '保险费',
+      '上楼费',
+      '叉车费',
+      '报关费',
+      '入仓费',
+      '税金',
+      '提货费',
+      '送货费'
+      ]
     }
   },
   computed: {
@@ -176,9 +188,6 @@ export default {
           table.removeChild(tbodyLen[0])
           table.removeChild(tfootLen[0])
         }
-
-
-        console.log(tbodyLen, tfootLen)
         let tbody = document.createElement('tbody')
         let tfoot = document.createElement('tfoot')
 
@@ -194,45 +203,49 @@ export default {
             const td = tbodyTr.insertCell()
             // 处理当列没有值、宽度设置等信息时，做默认值处理
             for (let t in this.countCol) { // 保留两位小数
-              if (this.columns[j].prop === this.countCol[t]) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop].toFixed(2) : ''
+              if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
+                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
               }
             }
             td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
-            if (this.columns[j].label !== this.countCol[j]) {
-              td.style.textAlign = this.columns[j].textAlign
-            } else {
+            td.style.textAlign = this.columns[j].textAlign // 设置居中方式
 
-              if (this.columns[j].label === '数量') {
-                td.setAttribute('xformat', '#')
-              } else {
-                td.setAttribute('xformat', '#,##0.00') // 导出保留两位小数
-              }
-            }
+            // if (this.columns[j].prop.indexOf('integer') !== -1) { // 整数
+            //   td.setAttribute('xformat', '#')
+            // } else {
+            //   td.setAttribute('xformat', '#,##0.00') // 导出保留两位小数
+            // }
 
             td.style.padding = '2px 5px'
+            td.style.fontSize = '13px'
             td.style.width = (data[k][this.columns[j].width] || 120) + 'px'
           }
         }
         // 合计
         for (let t in this.countCol) {
           let data = 0
+          let label = this.countCol[t].split('|') // 取字段名
           for (let k = 0; k < res.length; k++) {
-            data += res[k][this.countCol[t]] ? Number(res[k][this.countCol[t]]) : 0
+          	if (this.unCountSum.join(',').indexOf(res[k].feeName) === -1) { // 排除不需要合计的费用项-行
+          		data += res[k][label[0]] ? Number(res[k][label[0]]) : 0
+          	}
           }
-          this.countColVal[this.countCol[t]] = data ? data.toFixed(2) : 0
+          if (data) {
+            if (label[1] && label[1] === 'integer') {
+              this.countColVal[label[0]] = data ? data : 0
+            } else {
+              this.countColVal[label[0]] = data ? data.toFixed(2) : 0
+            }
+          }
         }
         // 生成底部合计行
         const tfootTr = tfoot.insertRow()
         for (let t in this.columns) {
           const td = tfootTr.insertCell()
           td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          if (this.columns[t].label !== this.countCol[t]) {
-            td.style.textAlign = this.columns[t].textAlign
-          }
-          td.setAttribute('xformat', '#,##0.00') // 导出保留两位小数
-
+          td.style.textAlign = this.columns[t].textAlign
           td.style.padding = '2px 5px'
+          td.style.fontSize = '13px'
           td.setAttribute('bgcolor', 'gainsboro')
           td.setAttribute('color', 'white')
         }
@@ -254,7 +267,6 @@ export default {
           })
           break
         case 'preview':
-
           break
         case 'setting':
           break
@@ -325,7 +337,11 @@ export default {
       transition: 0.5s;
     }
     tbody tr:hover {
-      background-color: #eee;
+      background-color: #ccc;
+      transition: 0.3s;
+    }
+    tbody tr td:hover {
+      background-color: #cdcdcd;
       transition: 0.3s;
     } // thead {
     //   background-color: #eaf0ff;

@@ -232,7 +232,7 @@
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
-     LODOP.SET_PRINT_PAGESIZE(2, 0, 0, 'A4')
+     LODOP.SET_PRINT_PAGESIZE(1, 0, 0, 'A4')
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
      LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
@@ -416,7 +416,7 @@
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
      LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
      // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
-     LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+     LODOP.SET_SAVE_MODE('Orientation', 1) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
      LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
      LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
      LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
