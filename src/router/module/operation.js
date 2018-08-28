@@ -30,6 +30,13 @@ export default {
       name: '运单导入',
       component: _import('operation/order/manage/receiver'),
       meta: { role: ['admin'], ptitle: '订单管理', title: '运单导入', noCache: true, istab: true }
+    },
+    {
+      path: '/operation/order/manage/networks',
+      icon: 'QQ',
+      name: '网络订单',
+      component: _import('operation/order/manage/networks'),
+      meta: { role: ['admin'], ptitle: '订单管理', title: '网络订单', noCache: true, istab: true }
     }]
   }, {
     path: '/operation/order/pickUp',

@@ -118,4 +118,19 @@ export function postModifyOrder(params) {
   })
 }
 
-
+/**
+ * 网络订单列表
+ */
+export function postNetworkList(params) {
+  return fetch.post('/api-order/order/pre/v1/networkList', params).then(res => {
+    return res.data || {}
+  })
+}
+/**
+ * 添加网络订单
+ */
+export function postAddNetworkOrder(params) {
+  return fetch.post('/api-order/order/pre/v1/addNetworkOrder', params).then(res => {
+    return res.data || {}
+  })
+}

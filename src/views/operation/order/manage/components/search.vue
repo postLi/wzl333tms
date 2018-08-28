@@ -59,6 +59,10 @@ export default {
     issender: {
       type: Boolean,
       dafault: false
+    },
+    networkFlog: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -84,9 +88,13 @@ export default {
     orgid(newVal) {
       // this.searchForm.orgid = newVal
     }
-
+    
   },
   mounted() {
+    if (this.networkFlog) {
+      this.$set(this.searchForm, 'type', 1)
+        this.$set(this.searchForm, 'orderFromOrgid', this.otherinfo.companyId)
+    }
     this.loading = true
     this.searchForm.orgid = this.orgid
     this.onSubmit()

@@ -122,7 +122,12 @@ export default {
   },
   watch: {
     id() {},
-    info() {},
+    info(newVal) {
+      if (newVal) {
+        this.getDetail()
+        this.getSystemTime()
+      }
+    },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()

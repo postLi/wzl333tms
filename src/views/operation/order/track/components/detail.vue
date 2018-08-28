@@ -103,9 +103,6 @@ export default {
       default: false
     }
   },
-  watch: {
-    info() {}
-  },
   data() {
     return {
       btnsize: 'mini',
@@ -247,6 +244,11 @@ export default {
   watch: {
     isShow() {
       if (this.isShow) {
+        this.fecthSelectLoadList()
+      }
+    },
+    info(newVal) {
+      if (newVal) {
         this.fecthSelectLoadList()
       }
     }

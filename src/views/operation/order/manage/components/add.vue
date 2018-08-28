@@ -211,7 +211,7 @@
 </template>
 <script>
   import {REGEX} from '@/utils/validate'
-  import {postAddOrder, postModifyOrder} from '@/api/operation/manage'
+  import {postAddOrder, postModifyOrder, postAddNetworkOrder} from '@/api/operation/manage'
   import popRight from '@/components/PopRight/index'
   import Upload from '@/components/Upload/singleImage'
   import SelectTree from '@/components/selectTree/index'
@@ -252,6 +252,10 @@
       issender: {
         type: Boolean,
         dafault: false
+      },
+      networkFlog: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
@@ -554,6 +558,7 @@
         this.form.customRece.customerId = item.receiverId
 
         // 订单信息
+        
         this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
         this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
         this.form.tmsOrderPre.orderRemarks = item.orderRemarks
@@ -641,6 +646,10 @@
             this.form.customerList[1] = this.form.customRece
 
             let promiseObj
+            if (this.networkFlog) { // 如果是网络订单
+          this.$set(this.form.tmsOrderPre, 'type', 1)
+          this.$set(this.form.tmsOrderPre, 'orderFromOrgid',  this.otherinfo.companyId)
+        }
             const data = objectMerge2({}, this.form)
             delete data.customSend
             delete data.customRece
@@ -654,7 +663,12 @@
               // data.id = this.form.tmsOrderPre.id
               promiseObj = postModifyOrder(data)
             } else {
-              promiseObj = postAddOrder(data)
+              
+              if (this.networkFlog) { // 添加网络订单
+                promiseObj = postAddNetworkOrder(data)
+              }else {
+                promiseObj = postAddOrder(data)
+              }
             }
 
             promiseObj.then(res => {
