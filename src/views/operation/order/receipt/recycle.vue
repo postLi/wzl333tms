@@ -1,5 +1,4 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100">
     <div class="tab-content"  @success="fetchAllreceipt" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -296,7 +295,6 @@
               </el-table-column>
             </template>
           </el-table>
-        </div>  
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>

@@ -1,5 +1,4 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100">
     <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" title="发放" type="giveout_status" status="giveoutStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -300,7 +299,6 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
-    </div>
   </div>
 </template>
 <script>

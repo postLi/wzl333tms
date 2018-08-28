@@ -1,5 +1,4 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100">
     <div class="tab-content" v-loading="loading" :issender="true">
       <SearchForm :orgid="otherinfo.orgid" title="寄出" type="send_status" status="sendStatus"  @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -283,7 +282,6 @@
             </template>
           </el-table>
         </div>
-      </div>
     </div>
     <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>

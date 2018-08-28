@@ -55,7 +55,8 @@
             </el-table-column>
           </template>
         </el-table>
-      </div>   
+      </div>
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
@@ -349,10 +350,4 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.accountsReceivable-manager .tab-content{
-  .tab_info{
-    padding-bottom: 10px;
-  }
-}
-</style>
+

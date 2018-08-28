@@ -1,6 +1,5 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100" v-loading="loading">
-    <div class="tab-content" @success="fetchAllreceipt">
+    <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
@@ -495,7 +494,6 @@
       <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
-  </div>
 </template>
 <script>
 import SearchForm from './components/search'

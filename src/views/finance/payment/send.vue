@@ -1,5 +1,4 @@
 <template>
-<div class="tab-wrapper tab-wrapper-100">
   <div class="tab-content" @success="featchAllpayment"  v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" type="funds_remittance_status" title="汇款" status="fundsRemittanceStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -264,12 +263,12 @@
             </template>
           </el-table>
         </div>  
+        <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      
       <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款汇款" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
-</div>
 </template>
 <script>
 import SearchForm from './components/search'
