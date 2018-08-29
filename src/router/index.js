@@ -58,6 +58,9 @@ export const constantRouterMap = [
     icon: 'shouye',
     // name: '首页',
     name: 'dashboard',
+    meta: {
+      'code': 'HOME_PAGE'
+    },
     hidden: true,
     children: [{
       path: '/dashboard',
@@ -66,7 +69,8 @@ export const constantRouterMap = [
       icon: 'shouye',
       meta: {
         title: '首页',
-        noCache: false
+        noCache: false,
+        'code': 'HOME_PAGE_1'
       }
     }, {
       path: '/checklist/index',
@@ -75,14 +79,15 @@ export const constantRouterMap = [
       icon: 'btn9_huidanhs',
       meta: {
         title: '系统体检',
-        noCache: false
+        noCache: false,
+        'code': 'HOME_PAGE_2'
       }
     }, {
       path: '/flows',
       name: 'flows',
       icon: 'canzhao',
       component: _import('dashboard/index'),
-      meta: { title: '流程图', noCache: true }
+      meta: { title: '流程图', noCache: true, 'code': 'HOME_PAGE_3' }
     }, {
       path: '/company/myinfo',
       icon: 'information',

@@ -142,7 +142,7 @@ export default {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
-        'fixed': true
+        'fixed': false
       }, {
         'label': '运单号',
         'prop': 'shipSn',
@@ -152,12 +152,12 @@ export default {
         'label': '中转单号',
         'prop': 'oddNumbers',
         'width': '150',
-        'fixed': true
+        'fixed': false
       }, {
         'label': '中转批次',
         'prop': 'transferBatchNo',
         'width': '150',
-        'fixed': true
+        'fixed': false
       }, {
         'label': '开单时间',
         'prop': 'ydCreateTime',
@@ -290,6 +290,10 @@ export default {
         'prop': 'shipFee',
         'width': '150'
       }, {
+        'label': '运费合计',
+        'prop': 'shipTotalFee',
+        'width': '150'
+      }, {
         'label': '目的网点',
         'prop': 'shipToOrgName',
         'width': '150'
@@ -351,10 +355,6 @@ export default {
       }, {
         'label': '月结',
         'prop': 'shipMonthpayFee',
-        'width': '150'
-      }, {
-        'label': '运费合计',
-        'prop': 'shipTotalFee',
         'width': '150'
       }, {
         'label': '制单人',

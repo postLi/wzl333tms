@@ -4,7 +4,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-plus" plain @click="doAction('add')">新增短驳</el-button>
+        <el-button type="primary" v-has:LOAD_DB_ADD :size="btnsize" icon="el-icon-plus" plain @click="doAction('add')">新增短驳</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">发车</el-button>
         <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消发车</el-button>
         <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消装车</el-button>
@@ -320,12 +320,12 @@ export default {
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
         if (data) {
-            this.dataList = data.list
-            this.total = data.total
-            this.loading = false
-          } else {
-            this.loading = false
-          }
+          this.dataList = data.list
+          this.total = data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
       })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text || '发生未知错误！')
@@ -386,10 +386,10 @@ export default {
           console.log('发车', this.commonTruck)
           putTruckDepart(this.commonTruck).then(data => {
             if (data) {
-                this.$message({ type: 'success', message: '发车成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.$message({ type: 'success', message: '发车成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text || '发生未知错误！')
@@ -412,10 +412,10 @@ export default {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
             if (data) {
-                this.$message({ type: 'success', message: '取消发车操作成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.$message({ type: 'success', message: '取消发车操作成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text || '发生未知错误！')
@@ -438,10 +438,10 @@ export default {
           console.log('取消装车', this.commonTruck)
           putTruckLoad(this.commonTruck).then(data => {
             if (data) {
-                this.$message({ type: 'success', message: '取消装车操作成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.$message({ type: 'success', message: '取消装车操作成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text || '发生未知错误！')

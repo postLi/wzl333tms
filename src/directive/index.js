@@ -166,8 +166,12 @@ Vue.directive('showPicture', {
 
 /** 权限指令**/
 Vue.directive('has', {
-  bind: function(el, binding) {
-    if (!Vue.prototype.$_has_permission(binding.value)) {
+  inserted: function(el, binding) {
+    // 判断是用value还是arg
+    // 优先使用arg
+    const val = binding.arg || binding.value
+    console.log('v-has:', val)
+    if (val && !Vue.prototype.$_has_permission(val)) {
       el.parentNode.removeChild(el)
     }
   }
@@ -184,7 +188,7 @@ Vue.prototype.$_has_permission = function(value) {
   }
   const ptree = buttonperms.permissionTrees
   for (let i = 0; i < ptree.length; i++) {
-    if (ptree[i].perms.indexOf(value) > -1) {
+    if (ptree[i].code === value) {
       isExist = true
       break
     }

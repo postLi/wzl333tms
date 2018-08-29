@@ -9,7 +9,7 @@ export default {
   name: '报表管理首页',
   noDropdown: false,
   meta: {
-    title: '报表管理'
+    title: '报表管理', code: 'REPORT'
   },
   children: [{
     path: '/report/settleRecordTotal',
@@ -17,7 +17,7 @@ export default {
     hidden: false,
     name: '应收应付汇总表',
     component: _import('report/settleRecordTotal/index'),
-    meta: { title: '应收应付汇总表', noCache: true }
+    meta: { title: '应收应付汇总表', noCache: true, code: 'FINANCE_FeeAggregation' }
   },
   {
     path: '/report/turnoverDaily',
@@ -25,7 +25,7 @@ export default {
     hidden: false,
     name: '营业额日报表',
     component: _import('report/turnoverDaily/index'),
-    meta: { title: '营业额日报表', noCache: true }
+    meta: { title: '营业额日报表', noCache: true, code: 'FINANCE_DATEREPORT' }
   },
   {
     path: '/report/turnoverTotal',
@@ -33,7 +33,7 @@ export default {
     hidden: false,
     name: '营业额汇总表',
     component: _import('report/turnoverTotal/index'),
-    meta: { title: '营业额汇总表', noCache: true }
+    meta: { title: '营业额汇总表', noCache: true, code: 'FINANCE_TURNOVERREPORT' }
   },
   {
     path: '/report/operation',
@@ -41,7 +41,7 @@ export default {
     hidden: false,
     name: '营运统计分析',
     component: _import('report/operation/index'),
-    meta: { title: '营运统计分析', noCache: true }
+    meta: { title: '营运统计分析', noCache: true, code: 'FINANCE_findOperationReport' }
   },
   {
     path: '/report/incomeTotal',
@@ -49,7 +49,7 @@ export default {
     hidden: false,
     name: '收入统计',
     component: _import('report/incomeTotal/index'),
-    meta: { title: '收入统计', noCache: true }
+    meta: { title: '收入统计', noCache: true, code: 'FINANCE_findDetail' }
   },
   {
     path: '/report/crossReport',
@@ -57,7 +57,7 @@ export default {
     hidden: false,
     name: '网点业务费用对比',
     component: _import('report/crossReport/index'),
-    meta: { title: '网点业务费用对比', noCache: true }
+    meta: { title: '网点业务费用对比', noCache: true, code: 'report1' }
   },
   {
     path: '/report/crossReport2',
@@ -65,7 +65,7 @@ export default {
     hidden: false,
     name: '网点年度费用对比',
     component: _import('report/crossReport2/index'),
-    meta: { title: '网点年度费用对比', noCache: true }
+    meta: { title: '网点年度费用对比', noCache: true, code: 'report2' }
   },
   {
     path: '/report/crossReport3',
@@ -73,7 +73,7 @@ export default {
     hidden: false,
     name: '网点业务类型',
     component: _import('report/crossReport3/index'),
-    meta: { title: '网点业务类型', noCache: true }
+    meta: { title: '网点业务类型', noCache: true, code: 'report3' }
   }
   ]
 }

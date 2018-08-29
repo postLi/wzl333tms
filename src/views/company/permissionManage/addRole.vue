@@ -33,12 +33,13 @@
                   :props="defaultProps"
                 >
                   <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <span v-if="data.type=='0'">
+                    <span v-if="data.status===0">
                       <img src="../../../assets/icom/link.png" alt="">
-                      {{ node.label }}</span>
+                      <!-- {{ node.label }} <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()"></span> -->
+                      {{ node.label }} <input type="text" :value="data.code" onmouseover="this.select()"></span>
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
-                      {{ node.label }}</span>
+                      {{ node.label }} <input type="text" :value="data.code" onmouseover="this.select()"></span>
                   </span>
                 </el-tree>
               </div>
@@ -209,7 +210,7 @@
               this.$message.success('保存成功')
               this.closeMe()
               this.$emit('success')
-          }).catch(err => {
+            }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false
             })

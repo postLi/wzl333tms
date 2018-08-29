@@ -13,7 +13,7 @@ export default {
   redirect: '/company/groupManage',
   name: '公司管理首页',
   meta: {
-    title: '公司管理'
+    title: '公司管理', code: 'SYSTEM'
   },
   icon: 'gongsiguanli',
   children: [{
@@ -30,7 +30,7 @@ export default {
     hidden: false,
     name: 'groupManage',
     component: _import('company/groupManage/index'),
-    meta: { title: '网点管理', stitle: '网点', noCache: false }
+    meta: { title: '网点管理', stitle: '网点', noCache: false, 'code': 'ORGTREELIST' }
   },
   {
     path: '/company/permissionManage',
@@ -38,7 +38,7 @@ export default {
     hidden: false,
     name: '角色管理',
     component: _import('company/permissionManage/index'),
-    meta: { title: '角色管理', stitle: '角色', noCache: false }
+    meta: { title: '角色管理', stitle: '角色', noCache: false, 'code': 'PERMISSIONLIST' }
   },
   {
     path: '/company/employeeManage',
@@ -46,7 +46,7 @@ export default {
     hidden: false,
     name: 'employeeManage',
     component: _import('company/employeeManage/index'),
-    meta: { title: '员工管理', stitle: '员工', noCache: false }
+    meta: { title: '员工管理', stitle: '员工', noCache: false, 'code': 'USERLIST' }
   },
   {
     path: '/company/customerManage',
@@ -55,20 +55,20 @@ export default {
     name: 'customerManage',
     component: _import('company/customerManage/index'),
       // redirect: '/company/customerManage/sender',
-    meta: { title: '客户管理', stitle: '客户', noCache: false },
+    meta: { title: '客户管理', stitle: '客户', noCache: false, 'code': 'CUSTOMELIST' },
     children: [{
       path: '/company/customerManage/sender',
       icon: 'QQ',
       name: '发货人',
       component: _import('company/customerManage/sender'),
-      meta: { role: ['admin'], ptitle: '客户管理', title: '发货人', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '客户管理', title: '发货人', noCache: true, istab: true, code: 'CUSTOMELIST_SENDER' }
     },
     {
       path: '/company/customerManage/receiver',
       icon: 'QQ',
       name: '收货人',
       component: _import('company/customerManage/receiver'),
-      meta: { role: ['admin'], ptitle: '客户管理', title: '收货人', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '客户管理', title: '收货人', noCache: true, istab: true, code: 'CUSTOMELIST_REVER' }
     }
     ]
       /* children: [{ path: '/company/customerManage/sender', hidden: false, name: '发货人', component: _import('company/customerManage/sender/index'), meta: { title: '发货人', noCache: true }},
@@ -80,7 +80,7 @@ export default {
     hidden: false,
     name: 'driverManage',
     component: _import('company/driverManage/index'),
-    meta: { title: '司机管理', stitle: '司机', noCache: false }
+    meta: { title: '司机管理', stitle: '司机', noCache: false, 'code': 'DRIVERLIST' }
   },
   {
     path: '/company/trunkManage',
@@ -88,7 +88,7 @@ export default {
     hidden: false,
     name: 'trunkManage',
     component: _import('company/trunkManage/index'),
-    meta: { title: '车辆管理', stitle: '车辆', noCache: false }
+    meta: { title: '车辆管理', stitle: '车辆', noCache: false, 'code': 'TRUNKLIST' }
   },
   {
     path: '/company/carrierManage',
@@ -96,9 +96,9 @@ export default {
     hidden: false,
     name: 'carrierManage',
     component: _import('company/carrierManage/index'),
-    meta: { title: '承运商管理', stitle: '承运商', noCache: false }
+    meta: { title: '承运商管理', stitle: '承运商', noCache: false, 'code': 'CARRIERLIST' }
   },
-    { path: '/company/systemSetup', icon: 'xitongshezhi', hidden: false, name: 'systemSetup', component: _import('company/systemSetup/index'), meta: { title: '系统设置', stitle: '设置', noCache: false }},
+    { path: '/company/systemSetup', icon: 'xitongshezhi', hidden: false, name: 'systemSetup', component: _import('company/systemSetup/index'), meta: { title: '系统设置', stitle: '设置', noCache: false, 'code': 'SETTING' }},
   {
     path: '/company/printManage',
     icon: 'dayin',

@@ -4,17 +4,18 @@
         class="menu-item"
         v-for="(route, index) in routes"
         :key="index"
+        
         v-if="!route.hidden"
         :class="{'is-active': route.path === $route.path}" 
         ref="sidebaritem"
         >
         <!-- 有子菜单但不展示 && 没有子菜单 -->
-        <router-link v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name" >
+        <router-link  v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name" >
           <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
         </router-link>
         <!-- 带子菜单展示 -->
         <template v-if="isFolder(route)">
-          <span class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav"  @click.stop="toggle($event)" >
+          <span  class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav"  @click.stop="toggle($event)" >
             <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
             <i class="el-icon-caret-bottom dropdownIcon" ></i>
            </span>
@@ -32,7 +33,7 @@
           </ul>
         </template>
         <!-- 带tab菜单展示 -->
-        <template v-if="route.tab">
+        <template  v-if="route.tab">
           <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
             <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
             <i class="el-icon-caret-bottom dropdownIcon" ></i>

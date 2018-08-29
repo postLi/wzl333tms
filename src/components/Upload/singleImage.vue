@@ -126,7 +126,7 @@ export default {
   methods: {
     init() {
         // 从后台获取policy
-      getUploadPolicy().then(data => {
+      return getUploadPolicy().then(data => {
         this.upload.OSSAccessKeyId = data.accessid
         this.upload.policy = data.policy
         this.upload.signature = data.signature
