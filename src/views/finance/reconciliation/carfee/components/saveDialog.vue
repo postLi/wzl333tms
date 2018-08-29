@@ -59,7 +59,7 @@
   import querySelect from '@/components/querySelect/index'
   import { postCreateBillCheckCarInfo } from '@/api/finance/fin_carfee'
   // parseTime
-  import { parseTime } from '@/utils'
+  import { parseTime ,tmsMath} from '@/utils'
   // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
 
   export default {
@@ -157,18 +157,18 @@
           this.dialogData.dealPaytota.map(el => {
             this.$set(this.dialogInfo, 0, {
               date: '应付账款',
-              toPay: this.dialogInfo[0].toPay + (el.totalPay ? +el.totalPay : 0)
+              toPay: tmsMath.add(this.dialogInfo[0].toPay ).add(el.totalPay ? +el.totalPay : 0).result()
             })
             // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
           this.dialogData.alreadyPaytota.map(el => {
             this.$set(this.dialogInfo, 1, {
               date: '已付账款',
-              toPay: this.dialogInfo[1].toPay + (el.totalPay ? +el.totalPay : 0)
+              toPay: tmsMath.add(this.dialogInfo[1].toPay ).add(el.totalPay ? +el.totalPay : 0).result()
             })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
           })
-          this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay
+          this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay , this.dialogInfo[1].toPay).result()
           if (this.sendId) {
             this.dotInfo.id = this.sendId
           } else{

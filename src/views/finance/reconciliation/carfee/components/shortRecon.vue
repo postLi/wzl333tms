@@ -371,8 +371,8 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime ,objectMerge2,tmsMath} from '@/utils/'
-  import { REGEX } from '@/utils/validate'
+  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
+  import {REGEX} from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
@@ -380,10 +380,10 @@
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import { mapGetters } from 'vuex'
+  import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
-  import { getTrucK } from '@/api/operation/load'
-  import { SaveAsFileCarfeefeeShort } from '@/utils/recLodopFuncs'
+  import {getTrucK} from '@/api/operation/load'
+  import {SaveAsFileCarfeefeeShort} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -505,15 +505,15 @@
         },
         rules: {
           'bankAccount': [
-            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
+            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ],
           'orgFinancialOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ]
         }
       }
@@ -524,7 +524,7 @@
       ])
     },
     mounted() {
-    // this.searchCreatTime = this.defaultTime
+      // this.searchCreatTime = this.defaultTime
       this.messageButtonInfo.createTime = new Date()
       this.changeOrgid(this.otherinfo, this.$route.query.id)
       if (this.$route.query.id) {
@@ -604,6 +604,7 @@
           this.alreadyPaytota = []
           this.alreadyPayInfo = data
           this.alreadyPaytota = data
+
           this.loading = false
         }).catch(err => {
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
@@ -626,27 +627,10 @@
         return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
           this.dealPayInfo = []
           this.dealPaytota = []
-          // this.dealPayInfo = data
-          // this.dealPaytota = data
+          this.dealPayInfo = data
+          this.dealPaytota = data
 
-          this.dealPayInfo.forEach((el,val) => {
-           let el1 = objectMerge2({},el,{
-              shortPay:10.01
-            })
-            this.dealPayInfo.push(el1)
-            let el2 = objectMerge2({},el,{
-              shortPay:10.01
-            })
-            this.dealPayInfo.push(el2)
-            let el3 = objectMerge2({},el,{
-              shortPay:10.01
-            })
-            this.dealPayInfo.push(el3)
-            let el4 = objectMerge2({},el,{
-              shortPay:10.01
-            })
-            this.dealPayInfo.push(el4)
-          })
+
           this.loading = false
         }).catch(err => {
           this.$message({
@@ -855,7 +839,7 @@
         }
       },
       getSummaries(param) {
-        const { columns, data } = param
+        const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
@@ -871,7 +855,8 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return tmsMath._add(prev , curr)
+                return prev + curr
+                // return tmsMath._add(prev, curr)
               } else {
                 return prev
               }

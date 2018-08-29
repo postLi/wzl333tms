@@ -438,6 +438,8 @@
         return fetchGetPickUp().then(data => {
           this.pickupBatchNumber = data.data
           this.loading = false
+        }).catch(err => {
+          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
         })
       },
       /** 收货人/发货人  tmsCustomer*/
