@@ -343,7 +343,7 @@
                       <el-input size="mini" disabled :value="formModel.departureTime"></el-input>
                       ，到达时间为
                       <!--<el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为-->
-                      <el-input size="mini" disabled :value="formModel.planArrivedTime "></el-input>
+                      <el-input size="mini" disabled :value="formModel.receivingTime "></el-input>
                       。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
@@ -815,7 +815,7 @@
         const curloadWeight = this.detailList[index].loadWeight // 配载重量
         const curloadVolume = this.detailList[index].loadVolume // 配载体积
         if (this.selectDetailList.length === 1 && curAmount === 0) {
-          console.log(this.selectDetailList.length, this.detailList.length)
+          // console.log(this.selectDetailList.length, this.detailList.length)
           this.detailList[index].actualAmount = curloadAmount
           this.detailList[index].actualWeight = curloadWeight
           this.detailList[index].actualVolume = curloadVolume
@@ -838,7 +838,7 @@
         // }
         if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
           this.$refs.multipleTable.toggleRowSelection(this.detailList[index], false)
-          console.log(this.selectDetailList.length)
+          // console.log(this.selectDetailList.length)
           if (this.selectDetailList.length === 0) {
             this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
             this.detailList[index].actualAmount = curloadAmount
@@ -1059,6 +1059,9 @@
                 this.$emit('success')
                 this.loading = false
                 // this.isHiddenBtn = false
+              }).catch(err => {
+                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this.loading = false
               })
               // this.closeMe()
             } else {
@@ -1164,7 +1167,7 @@
     flex-direction: column;
     position: relative;
     margin-top: 78px;
-    .tab_info.artDelivery_table{
+    .tab_info.artDelivery_table {
       padding: 0;
     }
     .tab_info {

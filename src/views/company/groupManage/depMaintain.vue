@@ -49,36 +49,37 @@
           <div class="depmain-edit" v-if="hiddenEdit" v-loading="loading">
             <div class="depmain-list">
               <ul :key="theulkey">
-                <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  @click="currentIndex = index">-->
-                <!--<span v-once>{{item.dictName}}</span>-->
-                <!--<div class="edit-hidden">-->
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  @click="currentIndex = index">
+                <span v-once>{{item.dictName}}</span>
+                <div class="edit-hidden">
                 <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
-                <!--&lt;!&ndash;<el-input&ndash;&gt;-->
-                <!--&lt;!&ndash;v-model="item.dictName"&ndash;&gt;-->
-                <!--&lt;!&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;</el-input>&ndash;&gt;-->
-                <!--<div class="dep-img">-->
-                <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
-                <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >-->
-                <!--</div>-->
+                <el-input
+                v-model="item.dictName"
+                >
+                </el-input>
+                <div class="dep-img">
+                <img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >
+                <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >
+                </div>
                 <!--</div>-->
                 <!--</li>-->
-                <!---->
 
 
-                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"
-                    @mouseenter="currentIndex = index">
-                  <span v-once class="firstName">{{item.dictName}}</span>
-                  <div class="edit-hidden">
-                    <el-input
-                      v-model.lazy="item.dictName"
-                    >
-                    </el-input>
-                    <div class="addSvg">
-                      <span @click="closeMe">
-                        <icon-svg class="lll-dot-false" icon-class="lll-dot-false" fill="red"></icon-svg>
-                       </span>
-                    </div>
+
+                <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"-->
+                    <!--@mouseenter="currentIndex = index">-->
+                  <!--<span v-once class="firstName">{{item.dictName}}</span>-->
+                  <!--<div class="edit-hidden">-->
+                    <!--<el-input-->
+                      <!--v-model.lazy="item.dictName"-->
+                      <!--@change="editDep(item)"-->
+                    <!--&gt;-->
+                    <!--</el-input>-->
+                    <!--<div class="addSvg">-->
+                      <!--<span @click="closeMe" class="svgSpan">-->
+                        <!--<icon-svg class="lll-dot-false" icon-class="lll-dot-false" fill="red"></icon-svg>-->
+                       <!--</span>-->
+                    <!--</div>-->
 
                     <!--<div class="dep-img">-->
                       <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
@@ -99,7 +100,7 @@
       </div>
       <div slot="footer" class="dialog-footer-frame" v-if="remBotton">
         <!--完成-->
-        <el-button @click="editDep(item)">{{remText}}</el-button>
+        <el-button @click="editDepFun()">{{remText}}</el-button>
       </div>
       <div slot="footer" class="dialog-footer-frame">
         <span></span>
@@ -165,7 +166,7 @@
         //   底部按钮
         addText: '添加',
         editText: '编辑',
-        remText: '完成',
+        remText: '关闭',
         showBotton: false,
         remBotton: false,
         //   底部按钮
@@ -210,6 +211,10 @@
       // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
     },
     methods: {
+      editDepFun(){
+        // this.editDep(item)
+        // console.log()
+      },
       resetValue(item, oldvalue) {
         return () => {
           item.dictName = oldvalue
@@ -406,12 +411,13 @@
   .depmain-edit{
     .addSvg {
       display: inline-block;
-      span {
-        cursor: pointer;
+      span.svgSpan {
+
+        /*cursor: pointer;*/
         .lll-dot-false {
           /*display: none;*/
           font-size: 20px;
-          margin-right: 15px;
+          margin: 5px 0 2px 10px;
           .svg-icon{
             fill: #bec4d1;
             font-size: 20px;
@@ -461,26 +467,26 @@
     padding-left: 8px;
     //  border: 1px solid transparent;
   }
-
-  .depmain-edit .el-input__inner {
-    -webkit-appearance: none;
-    background-color: #fff;
-    background-image: none;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    color: #606266;
-    display: inline-block;
-    font-size: inherit;
-    height: 40px;
-    line-height: 40px;
-    outline: 0;
-    padding: 0 15px;
-    -webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
-    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
-    width: 100%;
-  }
+  /**/
+  /*.depmain-edit .el-input__inner {*/
+    /*-webkit-appearance: none;*/
+    /*background-color: #fff;*/
+    /*background-image: none;*/
+    /*border-radius: 4px;*/
+    /*border: 1px solid transparent;*/
+    /*-webkit-box-sizing: border-box;*/
+    /*box-sizing: border-box;*/
+    /*color: #606266;*/
+    /*display: inline-block;*/
+    /*font-size: inherit;*/
+    /*height: 40px;*/
+    /*line-height: 40px;*/
+    /*outline: 0;*/
+    /*padding: 0 15px;*/
+    /*-webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);*/
+    /*transition: border-color .2s cubic-bezier(.645, .045, .355, 1);*/
+    /*width: 100%;*/
+  /*}*/
 
   .dep-maintain .depmain-edit li {
     border-bottom: 1px solid #dcdcdc;

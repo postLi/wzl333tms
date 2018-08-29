@@ -447,8 +447,7 @@
           this.form.manageType = 3
           // this.form.parentId = this.companyId
           this.form.parentId = this.getCheckedKeyId || this.otherinfo.orgid
-          console.log(this.getCheckedKeyId,"拿到上级的id")
-          console.log(this.otherinfo.orgid,"拿到本地级的id")
+
         }
       },
       validateIsEmpty(msg = '不能为空！') {

@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
-      
+
       <el-form-item label="配载时间">
         <el-date-picker
           v-model="searchCreatTime"
@@ -12,7 +12,7 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions2"
           value-format="timestamp"
-  
+
           >
         </el-date-picker>
       </el-form-item>
@@ -30,7 +30,7 @@
         <!--<el-form-item label="发站">-->
             <!--<SelectTree v-model="searchForm.orgid" />-->
         <!--</el-form-item>-->
-  
+
       <el-form-item label="车牌号" class="">
         <el-input
           v-model="searchForm.truckIdNumber"
@@ -134,7 +134,7 @@ export default {
         orgId: '',
         dirverName: '',
         truckIdNumber: '', // 车牌号
-        batchTypeId: 51, // 批次状态
+        batchTypeId: '', // 批次状态
         batchNo: '', // 发车批次
         loadTypeId: 39, // 配载类型
         loadEndTime: '', // 结束时间
@@ -181,6 +181,7 @@ export default {
       this.searchForm.orgId = this.orgid
       this.searchForm.truckIdNumber = ''
       this.searchForm.batchNo = ''
+      this.searchForm.batchTypeId = ''
     }
   }
 }

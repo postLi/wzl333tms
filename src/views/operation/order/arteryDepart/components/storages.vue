@@ -12,7 +12,8 @@
                 <!--<el-form-item label="网点">-->
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
                 <!--</el-form-item>-->
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="st_searchinfo clearfix" :model="formModel">
+                <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px"
+                         class="st_searchinfo clearfix" :model="formModel">
                   <el-form-item label="到达网点:">
                     <el-input v-model="formModel.arriveOrgName" :maxlength="15" clearable disabled>
                     </el-input>
@@ -51,13 +52,15 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
-                    <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea" disabled>
+                    <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea"
+                              disabled>
                     </el-input>
                   </el-form-item>
                 </el-form>
               </div>
               <div class="infos_table">
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="st_searchinfo clearfix">
+                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px"
+                         class="st_searchinfo clearfix">
                   <ul>
                     <li>
                       <p>现付运费</p>
@@ -130,26 +133,36 @@
               </div>
               <div class="tab_info artDepart_table ">
                 <div class="btns_box_send">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_print" >打印清单</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain
+                             class="table_print">打印清单
+                  </el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain
+                             class="table_import">导出清单
+                  </el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable"
+                             class="table_setup">表格设置
+                  </el-button>
                 </div>
                 <div class="infos_tab">
 
 
-
- <el-table ref="multipleTable"  :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe >
-            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
-            <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-                <template slot-scope="scope">
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
-          </el-table>
+                  <el-table ref="multipleTable" :data="usersArr" border @row-click="clickDetails"
+                            @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey"
+                            style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                    <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+                    <template v-for="column in tableColumn">
+                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label"
+                                       :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else
+                                       :width="column.width">
+                        <template slot-scope="scope">
+                          <span class="clickitem" v-if="column.click" v-html="column.slot(scope)"
+                                @click.stop="column.click(scope)"></span>
+                          <span v-else v-html="column.slot(scope)"></span>
+                        </template>
+                      </el-table-column>
+                    </template>
+                  </el-table>
 
 
                 </div>
@@ -167,7 +180,8 @@
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive"
+                           :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
                       <el-row class="stepItem">
@@ -252,9 +266,9 @@
             </div> -->
           </el-tab-pane>
           <el-tab-pane label="运输合同" name="third">
-            <div class="pact" id="contract"  >
+            <div class="pact" id="contract">
 
-              <el-form :model="formModel" >
+              <el-form :model="formModel">
 
                 <div class="pact_top">
 
@@ -291,24 +305,37 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="五、本车货物总为">
-                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>件
-                      <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>千克
-                      <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>方,全程运费
-                      <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
-                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，现付油卡
-                      <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>元，到付运费
-                      <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
-                      <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>元，回付运费
-                      <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>元，回付油卡
-                      <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>元，保险费
-                      <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>
+                      件
+                      <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
+                      千克
+                      <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
+                      方,全程运费
+                      <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
+                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
+                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
+                      元，现付油卡
+                      <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
+                      元，到付运费
+                      <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
+                      ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
+                      <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
+                      元，回付运费
+                      <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
+                      元，回付油卡
+                      <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
+                      元，保险费
+                      <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
+                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}/{m}/{d}')"></el-input>，到达时间为
-                      <el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}/{m}/{d}')"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime "></el-input>
+                      ，到达时间为
+                      <el-input size="mini" disabled :value="formModel.receivingTime "></el-input>
+                      。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
                   </div>
@@ -385,863 +412,695 @@
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'">打印合同</el-button>
       <el-button @click="closeMe">关闭</el-button>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
+                  @success="setColumn"></TableSetup>
     </div>
   </pop-right>
 </template>
 <script>
-import { REGEX } from '@/utils/validate'
-import popRight from '@/components/PopRight/index'
-import selectType from '@/components/selectType/index'
-import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
-import {postSelectLoadMainInfoList } from '@/api/operation/arteryDelivery'
-import { getExportExcel } from '@/api/company/customerManage'
-import { mapGetters } from 'vuex'
-import SelectTree from '@/components/selectTree/index'
-import TableSetup from '@/components/tableSetup'
-import { objectMerge2, parseTime, closest } from '@/utils/'
-import { PrintContract } from '@/utils/lodopFuncs'
-import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-export default {
-  data() {
-    return {
-      tablekey: 0,
-      getBatchNo: '',
-      popTitle: '查看详情',
-      activeName: 'first',
-      trackDetail: [],
-      ruleForm: {},
-      loading: false,
-      isFootEdit: false,
-      isFootSecond: false,
-      isFootOther: false,
-      isCancelEdit: false,
-      propsId: '',
-      formModel: {},
-      // formModel: {
-      //   addStatus: 1,
-      //   id: 0,
-      //   loadId: 0,
-      //   loadStatus: '',
-      //   operatorInfo: '',
-      //   operatorOrgid: 1,
-      //   operatorTime: '',
-      //   operatorUserid: 0
-      // },
-      btnsize: 'mini',
-      usersArr: [],
-      selected: [],
-      //加载状态
-      loading: true,
-      setupTableVisible: false,
-      AddCustomerVisible: false,
-      // isModify: false,
-      formMode1: {
-        // arriveOrgName:'',//到达网点
-        // truckIdNumber:'',//车牌号码
-        // dirverName:'',//司机姓名
-        // dirverMobile:'',//司机电话
-        // truckVolume:'',//可载体积
-        // truckLoad:'',//可载重量
-        // apportionTypeName:'',//分摊方式
-        // DateTimeFormat:'',//配载日期
-        // requireArrivedTime:'',//要求到达日期：
-        // remark:'',
-        //  nowpayCarriage:'',//现付运费
-        //  nowpayOilCard:'',//现付油卡
-        //  backpayCarriage:'',//回付运费
-        //  backpayOilCard:'',//回付油卡
-        //  arrivepayCarriage:'',//到付运费
-        //  arrivepayOilCard:'',//到付油卡
-        //  carloadInsuranceFee:'',//整车保险费
-        //  leaveHandlingFee:'',//发站装卸费
-        //  leaveOtherFee:'',//发站其他费
-        //  arriveHandlingFee:'',//到站装卸费
-        //  arriveOtherFee:'',//到站其他费
-        //   userName //配载人员
-      },
-      sendTypeId: {
-        typeId: 54, //等于54为干线到车确认
-      },
-      sendModel: {
-        "tmsOrderLoad": {
-          "id": ""
+  import {REGEX} from '@/utils/validate'
+  import popRight from '@/components/PopRight/index'
+  import selectType from '@/components/selectType/index'
+  import {getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList} from '@/api/operation/track'
+  import {postSelectLoadMainInfoList} from '@/api/operation/arteryDelivery'
+  import {getExportExcel} from '@/api/company/customerManage'
+  import {mapGetters} from 'vuex'
+  import SelectTree from '@/components/selectTree/index'
+  import TableSetup from '@/components/tableSetup'
+  import {objectMerge2, parseTime, closest} from '@/utils/'
+  import {PrintContract} from '@/utils/lodopFuncs'
+  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+
+  export default {
+    data() {
+      return {
+        tablekey: 0,
+        getBatchNo: '',
+        popTitle: '查看详情',
+        activeName: 'first',
+        trackDetail: [],
+        ruleForm: {},
+        loading: false,
+        isFootEdit: false,
+        isFootSecond: false,
+        isFootOther: false,
+        isCancelEdit: false,
+        propsId: '',
+        formModel: {},
+        // formModel: {
+        //   addStatus: 1,
+        //   id: 0,
+        //   loadId: 0,
+        //   loadStatus: '',
+        //   operatorInfo: '',
+        //   operatorOrgid: 1,
+        //   operatorTime: '',
+        //   operatorUserid: 0
+        // },
+        btnsize: 'mini',
+        usersArr: [],
+        selected: [],
+        //加载状态
+        loading: true,
+        setupTableVisible: false,
+        AddCustomerVisible: false,
+        // isModify: false,
+        formMode1: {
+          // arriveOrgName:'',//到达网点
+          // truckIdNumber:'',//车牌号码
+          // dirverName:'',//司机姓名
+          // dirverMobile:'',//司机电话
+          // truckVolume:'',//可载体积
+          // truckLoad:'',//可载重量
+          // apportionTypeName:'',//分摊方式
+          // DateTimeFormat:'',//配载日期
+          // requireArrivedTime:'',//要求到达日期：
+          // remark:'',
+          //  nowpayCarriage:'',//现付运费
+          //  nowpayOilCard:'',//现付油卡
+          //  backpayCarriage:'',//回付运费
+          //  backpayOilCard:'',//回付油卡
+          //  arrivepayCarriage:'',//到付运费
+          //  arrivepayOilCard:'',//到付油卡
+          //  carloadInsuranceFee:'',//整车保险费
+          //  leaveHandlingFee:'',//发站装卸费
+          //  leaveOtherFee:'',//发站其他费
+          //  arriveHandlingFee:'',//到站装卸费
+          //  arriveOtherFee:'',//到站其他费
+          //   userName //配载人员
         },
-        tmsOrderLoadFee: {
-          "id": "",
-          "arriveHandlingFee": "",
-          "arriveOtherFee": ""
+        sendTypeId: {
+          typeId: 54, //等于54为干线到车确认
         },
-        tmsOrderLoadDetailsList: [
-          // {
-          //   id:'',
-          //   actualAmount:'',
-          //   actualWeight:'',
-          //   actualVolume:''
-          // }
-        ]
-      },
-      searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "loadId": 1
-        }
-      },
-      tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      }, {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '150',
-        fixed: true
-      },{
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: true
-      },{
-        label: '子运单号',
-        prop: 'childShipSn',
-        width: '180',
-        fixed: false
-      },{
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '100',
-        fixed: false
-      },{
-        label: '配载重量',
-        prop: 'loadWeight',
-        width: '100',
-        fixed: false
-      },{
-        label: '配载体积',
-        prop: 'loadVolume',
-        width: '100',
-        fixed: false
-      },{
-        label: '运单件数',
-        prop: 'cargoAmount',
-        width: '100',
-        fixed: false
-      },{
-        label: '运单重量',
-        prop: 'cargoWeight',
-        width: '100',
-        fixed: false
-      },{
-        label: '运单体积',
-        prop: 'cargoVolume',
-        width: '100',
-        fixed: false
-      },{
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },{
-        label: '到达城市',
-        prop: 'shipToCityName',
-        width: '120',
-        fixed: false
-      },{
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },{
-        label: '发货人',
-        prop: 'shipSenderName',
-        width: '100',
-        fixed: false
-      },{
-        label: '发货人电话',
-        prop: 'shipSenderMobile',
-        width: '110',
-        fixed: false
-      },{
-        label: '收货人',
-        prop: 'shipReceiverName',
-        width: '120',
-        fixed: false
-      },{
-        label: '收货人电话',
-        prop: 'shipReceiverMobile',
-        width: '120',
-        fixed: false
-      },{
-        label: '货品名',
-        prop: 'cargoName',
-        width: '100',
-        fixed: false
-      },{
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '130',
-        fixed: false
-      },{
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '120',
-        fixed: false
-      }
-      ]
-
-    }
-  },
-  components: {
-    popRight,
-    SelectTree,
-    selectType,
-    TableSetup
-
-  },
-  computed: {
-    ...mapGetters([
-      'otherinfo'
-    ]),
-  },
-  props: {
-    popVisible: {
-      type: Boolean,
-      default: false
-    },
-    orgid: {
-      required: true
-    },
-    isModify: {
-      type: Boolean,
-      default: false
-    },
-    info: {
-      type: Object,
-      default: () => {}
-    },
-    issender: {
-      type: Boolean,
-      dafault: false
-    },
-    id: {
-      type: [String, Number],
-      dafault: false
-    }
-  },
-  watch: {
-
-    info(newVal) {
-      this.propsId = this.info.id
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
-      this.getBatchNo = this.info.batchNo
-    },
-    isModify(newVal) {
-    },
-    popVisible(newVal, oldVal) {
-      if (!this.inited) {
-        this.inited = true
-        this.initInfo()
-      }
-    },
-  },
-  mounted() {
-    this.propsId = this.info.id
-    if (this.popVisible) {
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
-    }
-  },
-  methods: {
-    fetchSelectLoadMainInfoList() {
-      this.loading = true
-      let selectMainId = this.propsId
-      this.searchQuery.vo.loadId = selectMainId
-      return postSelectLoadMainInfoList(this.searchQuery).then(data => {
-        this.formModel = data.list[0]
-        this.loading = false
-      })
-
-    },
-    fetchAllCustomer() {
-      this.loading = true
-      let _id = this.propsId
-      return getSelectLoadList(_id).then(data => {
-        this.usersArr = data
-        this.loading = false
-        this.toggleAllRows()
-        // this.$refs.multipleTable.toggleRowSelection(e, true)
-      }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
-
-    },
-    getDetail() {
-      let id = this.propsId
-      return getLoadDetail(id).then(data => {
-        this.trackDetail = Object.assign([], data)
-      })
-    },
-    toggleAllRows() {
-      this.$nextTick(() => {
-        this.usersArr.forEach((e, index) => {
-          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-          //   this.$refs.multipleTable.toggleRowSelection(e, false)
-          // } else {
-          //   this.$refs.multipleTable.toggleRowSelection(e, true)
-          // }
-          this.$refs.multipleTable.toggleRowSelection(e, true)
-        })
-      })
-    },
-    handleClick(tab, event) {
-      if (this.activeName === 'second') {
-        this.isFootSecond = true
-      } else {
-        this.isFootSecond = false
-      }
-    },
-    initInfo() {
-      this.loading = false
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          if (this.formModel.id) {
-            this.editTrack()
-          } else {
-            this.addTrack()
+        sendModel: {
+          "tmsOrderLoad": {
+            "id": ""
+          },
+          tmsOrderLoadFee: {
+            "id": "",
+            "arriveHandlingFee": "",
+            "arriveOtherFee": ""
+          },
+          tmsOrderLoadDetailsList: [
+            // {
+            //   id:'',
+            //   actualAmount:'',
+            //   actualWeight:'',
+            //   actualVolume:''
+            // }
+          ]
+        },
+        searchQuery: {
+          "currentPage": 1,
+          "pageSize": 100,
+          "vo": {
+            "loadId": 1
           }
+        },
+        tableColumn: [{
+          label: '序号',
+          prop: 'id',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        }, {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '150',
+          fixed: true
+        }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: true
+        }, {
+          label: '子运单号',
+          prop: 'childShipSn',
+          width: '180',
+          fixed: false
+        }, {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载重量',
+          prop: 'loadWeight',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载体积',
+          prop: 'loadVolume',
+          width: '100',
+          fixed: false
+        }, {
+          label: '运单件数',
+          prop: 'cargoAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '运单重量',
+          prop: 'cargoWeight',
+          width: '100',
+          fixed: false
+        }, {
+          label: '运单体积',
+          prop: 'cargoVolume',
+          width: '100',
+          fixed: false
+        }, {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '110',
+          fixed: false
+        }, {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        }, {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '130',
+          fixed: false
+        }, {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
         }
-        this.closeMe()
-      })
-    },
-    reset() {},
-    closeMe(done) {
-      this.reset()
-      this.$emit('update:popVisible', false);
-      if (typeof done === 'function') {
-        done()
-      }
-    },
-    deleteTrack(item) {
-      console.log(item)
-      return deleteTrack(item.id).then(data => {
-        this.$message({ type: 'success', message: '删除成功' })
-        this.getDetail()
-      })
-    },
-    editItem(item) {
-      this.resetForm()
-      this.formModel = Object.assign({}, item)
-      this.isCancelEdit = true
-    },
-    editTrack() {
-      console.log('修改')
-      this.formModel.transferId = 0
-      return putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-    },
-    addTrack() {
-      console.log('添加')
-      this.formModel.loadId = this.id
-      return postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-    },
-    resetForm() {
-      this.$refs['formModel'].resetFields()
-      this.isCancelEdit = false
-    },
-    fetchData() {
-      this.fetchAllCustomer()
-    },
-    showImport() {
-      // 显示导入窗口
-    },
-    doAction(type) {
+        ]
 
-      switch (type) {
+      }
+    },
+    components: {
+      popRight,
+      SelectTree,
+      selectType,
+      TableSetup
+
+    },
+    computed: {
+      ...mapGetters([
+        'otherinfo'
+      ]),
+    },
+    props: {
+      popVisible: {
+        type: Boolean,
+        default: false
+      },
+      orgid: {
+        required: true
+      },
+      isModify: {
+        type: Boolean,
+        default: false
+      },
+      info: {
+        type: Object,
+        default: () => {
+        }
+      },
+      issender: {
+        type: Boolean,
+        dafault: false
+      },
+      id: {
+        type: [String, Number],
+        dafault: false
+      }
+    },
+    watch: {
+
+      info(newVal) {
+        this.propsId = this.info.id
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
+        this.getBatchNo = this.info.batchNo
+      },
+      isModify(newVal) {
+      },
+      popVisible(newVal, oldVal) {
+        if (!this.inited) {
+          this.inited = true
+          this.initInfo()
+        }
+      },
+    },
+    mounted() {
+      this.propsId = this.info.id
+      if (this.popVisible) {
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
+      }
+    },
+    methods: {
+      fetchSelectLoadMainInfoList() {
+        this.loading = true
+        let selectMainId = this.propsId
+        this.searchQuery.vo.loadId = selectMainId
+        return postSelectLoadMainInfoList(this.searchQuery).then(data => {
+          this.formModel = data.list[0]
+          this.loading = false
+        })
+
+      },
+      fetchAllCustomer() {
+        this.loading = true
+        let _id = this.propsId
+        return getSelectLoadList(_id).then(data => {
+          this.usersArr = data
+          this.loading = false
+          this.toggleAllRows()
+          // this.$refs.multipleTable.toggleRowSelection(e, true)
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+
+      },
+      getDetail() {
+        let id = this.propsId
+        return getLoadDetail(id).then(data => {
+          this.trackDetail = Object.assign([], data)
+        })
+      },
+      toggleAllRows() {
+        this.$nextTick(() => {
+          this.usersArr.forEach((e, index) => {
+            // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+            //   this.$refs.multipleTable.toggleRowSelection(e, false)
+            // } else {
+            //   this.$refs.multipleTable.toggleRowSelection(e, true)
+            // }
+            this.$refs.multipleTable.toggleRowSelection(e, true)
+          })
+        })
+      },
+      handleClick(tab, event) {
+        if (this.activeName === 'second') {
+          this.isFootSecond = true
+        } else {
+          this.isFootSecond = false
+        }
+      },
+      initInfo() {
+        this.loading = false
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (this.formModel.id) {
+              this.editTrack()
+            } else {
+              this.addTrack()
+            }
+          }
+          this.closeMe()
+        })
+      },
+      reset() {
+      },
+      closeMe(done) {
+        this.reset()
+        this.$emit('update:popVisible', false);
+        if (typeof done === 'function') {
+          done()
+        }
+      },
+      deleteTrack(item) {
+        console.log(item)
+        return deleteTrack(item.id).then(data => {
+          this.$message({type: 'success', message: '删除成功'})
+          this.getDetail()
+        })
+      },
+      editItem(item) {
+        this.resetForm()
+        this.formModel = Object.assign({}, item)
+        this.isCancelEdit = true
+      },
+      editTrack() {
+        console.log('修改')
+        this.formModel.transferId = 0
+        return putUpdateTrack(this.formModel).then(data => {
+          this.$message({type: 'success', message: '修改成功'})
+          this.getDetail()
+          this.resetForm()
+        })
+      },
+      addTrack() {
+        console.log('添加')
+        this.formModel.loadId = this.id
+        return postAddTrack(this.formModel).then(data => {
+          this.$message({type: 'success', message: '添加成功'})
+          this.getDetail()
+          this.resetForm()
+        })
+      },
+      resetForm() {
+        this.$refs['formModel'].resetFields()
+        this.isCancelEdit = false
+      },
+      fetchData() {
+        this.fetchAllCustomer()
+      },
+      showImport() {
+        // 显示导入窗口
+      },
+      doAction(type) {
+
+        switch (type) {
           // 导出数据table_import
-        // 导出
-        case 'export':
-          PrintInFullPage({
-            data: this.usersArr,
-            columns: this.tableColumn
-          })
-          break
+          // 导出
+          case 'export':
+            PrintInFullPage({
+              data: this.usersArr,
+              columns: this.tableColumn
+            })
+            break
           // 打印
-        case 'print':
-           SaveAsFile({
-            data:  this.usersArr,
-            columns: this.tableColumn
-          })
-          break
-      }
-      // 清除选中状态，避免影响下个操作
-      this.$refs.multipleTable.clearSelection()
-    },
-    setTable() {
-      this.setupTableVisible = true
-    },
-    closeSetupTable() {
-      this.setupTableVisible = false
-    },
-    openAddCustomer() {
-      this.AddCustomerVisible = true
-    },
-    closeAddCustomer() {
-      this.AddCustomerVisible = false
-    },
-    clickDetails(row, event, column) {
-      this.$refs.multipleTable.toggleRowSelection(row)
-    },
-    getSelection(selection) {
-      this.selected = selection
-    },
-    // 取消高亮样式
-    offThisActive(e) {
-      let p = closest(e.target, ".el-step")
-      if (p) {
-        p.classList.remove("trackactive")
-      }
-    },
-    // 设置高亮样式
-    setThisActive(e) {
-      let p = closest(e.target, ".el-step")
-      if (p) {
-        p.classList.add("trackactive")
-      }
-    },
-    print () { // 打印合同
-       let str = '?'
-      for (let item in this.formModel) {
-        str += item + '=' + this.formModel[item] + '&'
-      }
-      // JSON.stringify(this.formModel)
-      let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html'+ str + new Date().getTime()
-      PrintContract(encodeURI(path))
-    },
-    setColumn(obj) { // 重绘表格列表
-      this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
-    },
+          case 'print':
+            SaveAsFile({
+              data: this.usersArr,
+              columns: this.tableColumn
+            })
+            break
+        }
+        // 清除选中状态，避免影响下个操作
+        this.$refs.multipleTable.clearSelection()
+      },
+      setTable() {
+        this.setupTableVisible = true
+      },
+      closeSetupTable() {
+        this.setupTableVisible = false
+      },
+      openAddCustomer() {
+        this.AddCustomerVisible = true
+      },
+      closeAddCustomer() {
+        this.AddCustomerVisible = false
+      },
+      clickDetails(row, event, column) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      },
+      getSelection(selection) {
+        this.selected = selection
+      },
+      // 取消高亮样式
+      offThisActive(e) {
+        let p = closest(e.target, ".el-step")
+        if (p) {
+          p.classList.remove("trackactive")
+        }
+      },
+      // 设置高亮样式
+      setThisActive(e) {
+        let p = closest(e.target, ".el-step")
+        if (p) {
+          p.classList.add("trackactive")
+        }
+      },
+      print() { // 打印合同
+        let str = '?'
+        for (let item in this.formModel) {
+          str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
+
+        }
+        // JSON.stringify(this.formModel)
+        let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
+
+        PrintContract(encodeURI(path))
+      },
+      setColumn(obj) { // 重绘表格列表
+        this.tableColumn = obj
+        this.tablekey = Math.random() // 刷新表格视图
+      },
+    }
+    // }
   }
-  // }
-}
 
 </script>
 <style lang="scss">
-._tabs-cont {
-  // height: calc(100%);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  margin-top: 80px;
-  .tab_info.artDepart_table{
-    /*padding-right: 10px;*/
-    padding: 0;
-
-  }
-  .tab_info {
-
-    padding: 0 10px;
-    height: 100%;
-    flex-grow: 1;
+  ._tabs-cont {
+    // height: calc(100%);
     display: flex;
     flex-direction: column;
-
-    .btns_box_send {
-      border-top: 2px dotted #dcdfe6;
-      padding: 10px 10px 0 0 ;
-      margin-bottom: 10px;
-      position:relative;
-
-      .el-button.table_print{
-        position: absolute;
-        right: 220px;
-      }
-      .el-button.table_import{
-        position: absolute;
-        right: 110px;
-      }
-      .el-button {
-        margin-right: 0;
-      }
-      .table_setup {
-        float: right;
-        margin-right: 0;
-      }
-
-    }
-    .infos_tab {
-      width: 100%;
-      height: calc(100vh - 570px);
-      flex-grow: 1;
-      padding: 0 10px;
-      .el-table {
-        table {
-          th,
-          td {
-            text-align: center;
-          }
-        }
-        .unauth {
-          color: #f00;
-        }
-      }
-      .el-table td,
-      .el-table th {
-        padding: 5px 0;
-      }
-
-    }
-  }
-  .infos_tab_footer {
-    padding-left: 20px;
-    background: #eee;
-    height: 40px;
-    line-height: 40px;
-    box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
     position: relative;
-    z-index: 10;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
+    margin-top: 80px;
+    .tab_info.artDepart_table {
+      /*padding-right: 10px;*/
+      padding: 0;
 
-  .show_pager {
-    float: right;
-    line-height: 40px;
-    height: 40px;
-    overflow: hidden;
-  }
-  .info_form {
-    /*margin-top: 85px;*/
-    /*padding-bottom: 10px;*/
-    .st_searchinfo {
-      .el-form-item {
-        margin-right: 35px;
-        margin-bottom: 15px;
-      }
-      .el-form-item:nth-of-type(3){
-        margin-right: 0;
-      }
-      .el-form-item:nth-of-type(6){
-        margin-right: 0;
-      }
-      .el-form-item:nth-of-type(9){
-        margin-right: 0;
-      }
-      .el-form-item.art_remk{
-        width: 100%;
-        .el-form-item__content{
-          width: 88%;
-        }
-      }
     }
-  }
-  .infos_table {
-    padding: 0 10px 10px 10px;
-    margin-top: 10px;
-    border-color: #dcdfe6;
-    .st_searchinfo{
-      border-left: 1px solid #d4d4d4;
-      border-right: 1px solid #d4d4d4;
-      ul {
-        /*border-top: 2px dotted #bbbbbb;
-          margin: 10px -10px -10px 0;
-          padding: 5px 10px 10px 10px;
-          /*background-color: #fbfbfb;*/
-        width: 100%;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        li:nth-of-type(1) {
-          padding-left: 0;
+    .tab_info {
+
+      padding: 0 10px;
+      height: 100%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+
+      .btns_box_send {
+        border-top: 2px dotted #dcdfe6;
+        padding: 10px 10px 0 0;
+        margin-bottom: 10px;
+        position: relative;
+
+        .el-button.table_print {
+          position: absolute;
+          right: 220px;
         }
-        li:last-of-type {
-          border-right: none;
+        .el-button.table_import {
+          position: absolute;
+          right: 110px;
         }
-        li {
-          border: 1px solid #eee;
-          width: 10%;
-          border-bottom: none;
-          border-left: none;
-          p {
-            font-size: 14px;
-            text-align: center;
-            line-height: 34px;
-          }
-        }
-        .el-form-item {
-          margin-bottom: 0;
+        .el-button {
           margin-right: 0;
         }
+        .table_setup {
+          float: right;
+          margin-right: 0;
+        }
+
+      }
+      .infos_tab {
+        width: 100%;
+        height: calc(100vh - 570px);
+        flex-grow: 1;
+        padding: 0 10px;
+        .el-table {
+          table {
+            th,
+            td {
+              text-align: center;
+            }
+          }
+          .unauth {
+            color: #f00;
+          }
+        }
+        .el-table td,
+        .el-table th {
+          padding: 5px 0;
+        }
+
+      }
+    }
+    .infos_tab_footer {
+      padding-left: 20px;
+      background: #eee;
+      height: 40px;
+      line-height: 40px;
+      box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
+      position: relative;
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .show_pager {
+      float: right;
+      line-height: 40px;
+      height: 40px;
+      overflow: hidden;
+    }
+    .info_form {
+      /*margin-top: 85px;*/
+      /*padding-bottom: 10px;*/
+      .st_searchinfo {
+        .el-form-item {
+          margin-right: 35px;
+          margin-bottom: 15px;
+        }
+        .el-form-item:nth-of-type(3) {
+          margin-right: 0;
+        }
+        .el-form-item:nth-of-type(6) {
+          margin-right: 0;
+        }
+        .el-form-item:nth-of-type(9) {
+          margin-right: 0;
+        }
+        .el-form-item.art_remk {
+          width: 100%;
+          .el-form-item__content {
+            width: 88%;
+          }
+        }
+      }
+    }
+    .infos_table {
+      padding: 0 10px 10px 10px;
+      margin-top: 10px;
+      border-color: #dcdfe6;
+      .st_searchinfo {
+        border-left: 1px solid #d4d4d4;
+        border-right: 1px solid #d4d4d4;
+        ul {
+          /*border-top: 2px dotted #bbbbbb;
+            margin: 10px -10px -10px 0;
+            padding: 5px 10px 10px 10px;
+            /*background-color: #fbfbfb;*/
+          width: 100%;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-direction: row;
+          flex-direction: row;
+          li:nth-of-type(1) {
+            padding-left: 0;
+          }
+          li:last-of-type {
+            border-right: none;
+          }
+          li {
+            border: 1px solid #eee;
+            width: 10%;
+            border-bottom: none;
+            border-left: none;
+            p {
+              font-size: 14px;
+              text-align: center;
+              line-height: 34px;
+            }
+          }
+          .el-form-item {
+            margin-bottom: 0;
+            margin-right: 0;
+          }
+        }
+      }
+
+    }
+  }
+
+  .tabs-content {
+    .info_form,
+    .infos_table {
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+      }
+    }
+  }
+
+  /*批次详情*/
+
+  ._storagesPop {
+    left: auto;
+    top: 50px;
+    bottom: auto;
+    min-width: 1000px;
+    max-width: 1000px;
+    .st_searchinfo {
+      .el-input.is-disabled {
+        .el-input__inner {
+          color: #3e9ff1;
+          background-color: transparent;
+
+          /*text-align: center;*/
+        }
+      }
+      .el-textarea.is-disabled {
+        .el-textarea__inner {
+          color: #3e9ff1;
+          background-color: transparent;
+        }
       }
     }
 
-  }
-}
-
-.tabs-content {
-  .info_form,
-  .infos_table {
-    .el-input.is-disabled .el-input__inner {
-      background-color: #fff;
-    }
-  }
-}
-
-
-/*批次详情*/
-
-._storagesPop {
-  left: auto;
-  top: 50px;
-  bottom: auto;
-  min-width: 1000px;
-  max-width: 1000px;
-  .st_searchinfo{
-    .el-input.is-disabled {
-      .el-input__inner{
-        color: #3e9ff1;
-        background-color: transparent;
-
-        /*text-align: center;*/
-      }
-    }
-    .el-textarea.is-disabled{
-      .el-textarea__inner {
-        color: #3e9ff1;
-        background-color: transparent;
+    .infos_table {
+      .el-input.is-disabled {
+        .el-input__inner {
+          border-radius: 0;
+          text-align: center;
+        }
       }
     }
   }
 
-
-  .infos_table{
-    .el-input.is-disabled{
-      .el-input__inner{
-        border-radius: 0;
-        text-align: center;
-      }
-    }
+  .batchTypeNo {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    background: rgb(223, 233, 245);
+    padding-left: 15px;
+    position: fixed;
+    top: 30px;
+    left: 0;
+    z-index: 34;
   }
-}
 
-.batchTypeNo {
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  font-size: 14px;
-  background: rgb(223, 233, 245);
-  padding-left: 15px;
-  position: fixed;
-  top: 30px;
-  left: 0;
-  z-index: 34;
-}
-
-.icon_blank {
-  background-size: 15px;
-  display: inline-block;
-  width: 14px;
-  height: 16px;
-  vertical-align: middle;
-}
-
-.content_head {
-  background-color: #E9F3FA;
-  line-height: 36px;
-  height: 36px;
-  padding: 0 10px;
-}
-
-.stepFrom {
-  background-color: #f2f2f2;
-  box-shadow: -1px -1px 10px #bbb;
-  text-align: left;
-  padding: 0 10px;
-  .el-form-item__content {
+  .icon_blank {
+    background-size: 15px;
+    display: inline-block;
+    width: 14px;
+    height: 16px;
     vertical-align: middle;
   }
-}
 
-.storagesInfoPop_content {
-  .tab-card {
-    .el-tabs__content {
-      padding: 0 !important;
-    }
-  }
-  .tab_descript {}
-  .el-tabs__header {
-    position: fixed;
-    z-index: 34;
-    top: 66px;
-    left: 0;
+  .content_head {
+    background-color: #E9F3FA;
+    line-height: 36px;
+    height: 36px;
     padding: 0 10px;
-    background-color: #ffffff;
-    width: 100%;
-  }
-  .info {
-    background-color: rgb(238, 241, 246);
-    margin-top: -30px;
-    padding: 10px;
-  }
-  .info p {
-    font-weight: 900;
-    font-size: 16px;
-    margin-bottom: 0px;
-  }
-  .info-content {
-    margin-top: 10px;
-    padding: 20px 10px 10px;
-    background-color: #FFF;
-    border: 2px dotted rgb(238, 241, 246);
-  }
-  .itemRecharge {
-    background-color: rgb(238, 241, 246);
-    padding: 10px;
-  }
-  .deliveryinfo_box {
-    margin: 76px 10px 0 10px;
-    display: flex;
-    flex-direction: column;
-    /* 覆盖ele样式 */
-    .el-form--inline .el-form-item {
-      margin-bottom: 0;
-    }
-    .el-step.is-vertical .el-step__head {
-      width: 18px;
-      position: relative;
-      top: 0px;
-    }
-    .el-step.is-vertical .el-step__line {
-      left: 8px;
-    }
-    .el-step__icon.is-text {
-      border-color: transparent;
-      border: 0;
-      width: 18px;
-      height: 18px;
-    }
-    .el-steps--vertical {
-      height: auto;
-    }
-    .el-step__main {
-      padding-bottom: 10px;
-    }
-    .el-step__description {
-      padding-right: 0;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .textcenter {
-      text-align: center;
-    }
-    .typebox {
-      background: url("../../../../../assets/png/track-bg.png") no-repeat;
-      width: 118px;
-      height: 24px;
-      padding-left: 16px;
-      text-align: center;
-      color: #333;
-      display: inline-block;
-      line-height: 24px;
-    }
-    .location {
-      background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-    }
-    .modifybtn,
-    .deletebtn {
-      display: inline-block;
-      display: none;
-      vertical-align: middle;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      margin-right: 3px;
-      background: url("../../../../../assets/png/delete-icon.png") no-repeat;
-
-      &:hover {}
-    }
-    /* 鼠标划过样式 */
-    .trackactive{
-    .modifybtn, .deletebtn{
-        display: inline-block;
-      }
-    }
-    .trackactive,.firstactive {
-      .typebox {
-        background: url("../../../../../assets/png/track-active.png") no-repeat;
-        color: #fff;
-      }
-      .location {
-        background: url("../../../../../assets/png/active-point.png") no-repeat;
-      }
-      .el-step__line {
-        background-color: #3e9ff1;
-      }
-    }
-    .modifybtn {
-      margin-left: 10px;
-      background: url("../../../../../assets/png/edit-icon.png") no-repeat;
-      margin-right: 8px;
-    }
-    .steptitle {
-      font-size: 14px;
-      color: #333;
-      height: 34px;
-    }
-    .stepItem_title {
-      color: #333;
-      margin-top: 10px;
-      padding-left: 28px;
-      height: 34px;
-      .el-col {
-        text-align: left;
-      }
-      .tracktype {
-        text-align: left;
-        text-indent: 20px;
-      }
-    }
-
-    .stepItem {
-      /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
-      .el-col>p {
-        min-width: 1px;
-        min-height: 1px;
-      }
-    }
-    .stepinfo {
-      flex: 1;
-      overflow: auto;
-    }
-    .stepinfo-footer {
-      border-top: 1px solid #d8d8d8;
-      height: 70px;
-      padding-top: 30px;
-    }
   }
 
   .stepFrom {
@@ -1254,173 +1113,346 @@ export default {
     }
   }
 
-  /*货物运输合同*/
-  .pact {
-    margin-top:85px;
-    padding-left: 20px;
-    .pact_top {
-      position: relative;
-      height: 40px;
-      margin-bottom: 10px;
-      h3 {
+  .storagesInfoPop_content {
+    .tab-card {
+      .el-tabs__content {
+        padding: 0 !important;
+      }
+    }
+    .tab_descript {
+    }
+    .el-tabs__header {
+      position: fixed;
+      z-index: 34;
+      top: 66px;
+      left: 0;
+      padding: 0 10px;
+      background-color: #ffffff;
+      width: 100%;
+    }
+    .info {
+      background-color: rgb(238, 241, 246);
+      margin-top: -30px;
+      padding: 10px;
+    }
+    .info p {
+      font-weight: 900;
+      font-size: 16px;
+      margin-bottom: 0px;
+    }
+    .info-content {
+      margin-top: 10px;
+      padding: 20px 10px 10px;
+      background-color: #FFF;
+      border: 2px dotted rgb(238, 241, 246);
+    }
+    .itemRecharge {
+      background-color: rgb(238, 241, 246);
+      padding: 10px;
+    }
+    .deliveryinfo_box {
+      margin: 76px 10px 0 10px;
+      display: flex;
+      flex-direction: column;
+      /* 覆盖ele样式 */
+      .el-form--inline .el-form-item {
+        margin-bottom: 0;
+      }
+      .el-step.is-vertical .el-step__head {
+        width: 18px;
+        position: relative;
+        top: 0px;
+      }
+      .el-step.is-vertical .el-step__line {
+        left: 8px;
+      }
+      .el-step__icon.is-text {
+        border-color: transparent;
+        border: 0;
+        width: 18px;
+        height: 18px;
+      }
+      .el-steps--vertical {
+        height: auto;
+      }
+      .el-step__main {
+        padding-bottom: 10px;
+      }
+      .el-step__description {
+        padding-right: 0;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .textcenter {
         text-align: center;
-        color: rgba(0, 0, 0, 0.85);
-        font-weight: 500;
       }
-      .top_num {
-        position: absolute;
-        right: 10px;
-        top: -18px;
-        .el-form-item {
-          display: flex;
+      .typebox {
+        background: url("../../../../../assets/png/track-bg.png") no-repeat;
+        width: 118px;
+        height: 24px;
+        padding-left: 16px;
+        text-align: center;
+        color: #333;
+        display: inline-block;
+        line-height: 24px;
+      }
+      .location {
+        background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+      }
+      .modifybtn,
+      .deletebtn {
+        display: inline-block;
+        display: none;
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        margin-right: 3px;
+        background: url("../../../../../assets/png/delete-icon.png") no-repeat;
+
+        &:hover {
         }
       }
-      .top_no {
-        position: absolute;
-        right: 10px;
-        top: -5px;
-        .el-form-item {
-          display: flex;
-          .el-form-item__content {
-            .el-input.is-disabled {
-              .el-input__inner {
-                background-color: #fff;
-                border-color: #fff;
-              }
-            }
-          }
-        }
-      }
-    }
-    .cont_styles {
-      color: #606266;
-      font-size: 14px;
-    }
-    .pact_content {
-      .pact_title {
-        color: #606266;
-        font-size: 14px;
-        margin: 10px 0 0 25px;
-        p {
+      /* 鼠标划过样式 */
+      .trackactive {
+        .modifybtn, .deletebtn {
           display: inline-block;
-          width: 250px;
-          border-bottom: 1px solid;
-          padding-left: 10px;
         }
       }
-      .p_cont,
-      .p_input {
-        color: #606266;
+      .trackactive, .firstactive {
+        .typebox {
+          background: url("../../../../../assets/png/track-active.png") no-repeat;
+          color: #fff;
+        }
+        .location {
+          background: url("../../../../../assets/png/active-point.png") no-repeat;
+        }
+        .el-step__line {
+          background-color: #3e9ff1;
+        }
+      }
+      .modifybtn {
+        margin-left: 10px;
+        background: url("../../../../../assets/png/edit-icon.png") no-repeat;
+        margin-right: 8px;
+      }
+      .steptitle {
         font-size: 14px;
+        color: #333;
+        height: 34px;
       }
-      .p_cont {
-        .p_textarea.el-form-item {
-          display: inline-flex;
-          padding-left: 25px;
-          margin-bottom: 0;
-          .el-textarea {
-            width: 250%;
-          }
+      .stepItem_title {
+        color: #333;
+        margin-top: 10px;
+        padding-left: 28px;
+        height: 34px;
+        .el-col {
+          text-align: left;
         }
-        p.p_about {
-          padding-left: 25px;
-          margin: 5px 0 5px 0;
-        }
-        p {
-          margin-bottom: 2px;
+        .tracktype {
+          text-align: left;
+          text-indent: 20px;
         }
       }
-      p.p_salf {
-        color: #606266;
-        font-size: 14px;
-        padding-left: 25px;
-        margin: 5px 0 10px 0;
-      }
-      .p_input {
-        .el-form-item {
-          margin-bottom: 0;
-          .el-form-item__label {
-            padding: 0;
-            line-height: 28px
-          }
-          .el-form-item__content {
-            line-height: 30px;
-            .el-input.el-input--mini.is-disabled {
-              width: 13%;
-              .el-input__inner {
-                background: #fff;
-                border-top-color: transparent;
-                border-left-color: transparent;
-                border-right-color: transparent;
-              }
-            }
-          }
-        }
-      }
-      .p_table {
-        float: left;
-        padding-left: 80px;
-        width: 400px;
-        margin-bottom: 150px;
-        .el-form-item {
-          margin-bottom: 0;
-          .el-form-item__content {
-            line-height: 30px;
-            .el-input.el-input--mini.is-disabled {
-              width: 59%;
 
-              .el-input__inner {
-                width: 200px;
-                background-color: #fff;
-                color:#000 ;
-                border-top-color: transparent;
-                border-left-color: transparent;
-                border-right-color: transparent;
-              }
-            }
-            .el-input.el-input--mini {
-              width: 59%;
-              input.el-input__inner {
-                width: 200px;
-              }
-            }
-
-            /*.el-input.el-input--mini.is-disabled{*/
-            /*width: 20%*/
-            /*}*/
-          }
-        }
-        .el-form-item:last-of-type {
-          margin-bottom: 20px;
+      .stepItem {
+        /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
+        .el-col > p {
+          min-width: 1px;
+          min-height: 1px;
         }
       }
-      .p_table:last-of-type {
-        /*<!--top:-204px;-->*/
-        /*left: 550px;*/
-        float: right;
-        padding-left: 0;
-        /*padding-left: 300px;*/
-        .el-form-item:last-of-type {
-          margin-bottom: 50px;
-        }
-        span {
-          margin-bottom: 100px;
-        }
+      .stepinfo {
+        flex: 1;
+        overflow: auto;
+      }
+      .stepinfo-footer {
+        border-top: 1px solid #d8d8d8;
+        height: 70px;
+        padding-top: 30px;
       }
     }
 
+    .stepFrom {
+      background-color: #f2f2f2;
+      box-shadow: -1px -1px 10px #bbb;
+      text-align: left;
+      padding: 0 10px;
+      .el-form-item__content {
+        vertical-align: middle;
+      }
+    }
 
+    /*货物运输合同*/
+    .pact {
+      margin-top: 85px;
+      padding-left: 20px;
+      .pact_top {
+        position: relative;
+        height: 40px;
+        margin-bottom: 10px;
+        h3 {
+          text-align: center;
+          color: rgba(0, 0, 0, 0.85);
+          font-weight: 500;
+        }
+        .top_num {
+          position: absolute;
+          right: 10px;
+          top: -18px;
+          .el-form-item {
+            display: flex;
+          }
+        }
+        .top_no {
+          position: absolute;
+          right: 10px;
+          top: -5px;
+          .el-form-item {
+            display: flex;
+            .el-form-item__content {
+              .el-input.is-disabled {
+                .el-input__inner {
+                  background-color: #fff;
+                  border-color: #fff;
+                }
+              }
+            }
+          }
+        }
+      }
+      .cont_styles {
+        color: #606266;
+        font-size: 14px;
+      }
+      .pact_content {
+        .pact_title {
+          color: #606266;
+          font-size: 14px;
+          margin: 10px 0 0 25px;
+          p {
+            display: inline-block;
+            width: 250px;
+            border-bottom: 1px solid;
+            padding-left: 10px;
+          }
+        }
+        .p_cont,
+        .p_input {
+          color: #606266;
+          font-size: 14px;
+        }
+        .p_cont {
+          .p_textarea.el-form-item {
+            display: inline-flex;
+            padding-left: 25px;
+            margin-bottom: 0;
+            .el-textarea {
+              width: 250%;
+            }
+          }
+          p.p_about {
+            padding-left: 25px;
+            margin: 5px 0 5px 0;
+          }
+          p {
+            margin-bottom: 2px;
+          }
+        }
+        p.p_salf {
+          color: #606266;
+          font-size: 14px;
+          padding-left: 25px;
+          margin: 5px 0 10px 0;
+        }
+        .p_input {
+          .el-form-item {
+            margin-bottom: 0;
+            .el-form-item__label {
+              padding: 0;
+              line-height: 28px
+            }
+            .el-form-item__content {
+              line-height: 30px;
+              .el-input.el-input--mini.is-disabled {
+                width: 13%;
+                .el-input__inner {
+                  background: #fff;
+                  border-top-color: transparent;
+                  border-left-color: transparent;
+                  border-right-color: transparent;
+                }
+              }
+            }
+          }
+        }
+        .p_table {
+          float: left;
+          padding-left: 80px;
+          width: 400px;
+          margin-bottom: 150px;
+          .el-form-item {
+            margin-bottom: 0;
+            .el-form-item__content {
+              line-height: 30px;
+              .el-input.el-input--mini.is-disabled {
+                width: 59%;
 
-    .pact_bottom {}
+                .el-input__inner {
+                  width: 200px;
+                  background-color: #fff;
+                  color: #000;
+                  border-top-color: transparent;
+                  border-left-color: transparent;
+                  border-right-color: transparent;
+                }
+              }
+              .el-input.el-input--mini {
+                width: 59%;
+                input.el-input__inner {
+                  width: 200px;
+                }
+              }
+
+              /*.el-input.el-input--mini.is-disabled{*/
+              /*width: 20%*/
+              /*}*/
+            }
+          }
+          .el-form-item:last-of-type {
+            margin-bottom: 20px;
+          }
+        }
+        .p_table:last-of-type {
+          /*<!--top:-204px;-->*/
+          /*left: 550px;*/
+          float: right;
+          padding-left: 0;
+          /*padding-left: 300px;*/
+          .el-form-item:last-of-type {
+            margin-bottom: 50px;
+          }
+          span {
+            margin-bottom: 100px;
+          }
+        }
+      }
+
+      .pact_bottom {
+      }
+    }
   }
-}
 
-.cont_rules .el-input--mini .el-input__inner {
-  background: #409eff;
-}
+  .cont_rules .el-input--mini .el-input__inner {
+    background: #409eff;
+  }
 
-.p_table .el-input--mini .el-input__inner {
-  width: 200px;
-}
+  .p_table .el-input--mini .el-input__inner {
+    width: 200px;
+  }
 
 </style>

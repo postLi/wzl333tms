@@ -151,6 +151,7 @@
           this.loading = true
           Promise.all([getSelectDictInfo(this.createrId), this.fetchSelectDict(this.createrId)]).then( resArr => {
             this.getMentInfo = resArr[0]
+            console.log(this.getMentInfo,'接口')
             this.getMentInfo = resArr[1]
             this.loading = false
             // console.log(resArr);
