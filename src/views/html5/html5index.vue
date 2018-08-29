@@ -52,6 +52,7 @@
                     <img src="../../assets/checkImg/sjx.png"/>
                   </i>
                 </div> -->
+                
               </li>
               <li>短驳发车:<span>{{ thedata.shortSend }}</span>单<Arrow :value="thedata.shortSendCent" /></li>
               <li>短驳到车:<span>{{ thedata.shortArrive }}</span>单<Arrow :value="thedata.shortArriveCent" /></li>
