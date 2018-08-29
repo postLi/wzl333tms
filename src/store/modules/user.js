@@ -79,6 +79,9 @@ const user = {
           commit('SET_COMPANY', data.orgName)
           setOrgId(data.orgid)
           commit('SET_AVATAR', require('../../assets/role.png'))
+          data.roleTree = JSON.parse(data.jsonTree) || null
+
+          // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
 
           getAllSetting({
             orgid: data.orgid,

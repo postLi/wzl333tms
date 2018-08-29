@@ -83,10 +83,16 @@ export const constantRouterMap = [
       icon: 'canzhao',
       component: _import('dashboard/index'),
       meta: { title: '流程图', noCache: true }
+    }, {
+      path: '/company/myinfo',
+      icon: 'information',
+      hidden: true,
+      name: '个人中心',
+      component: _import('company/myinfo/index'),
+      meta: { title: '个人中心', noCache: true }
     }]
   }
 ]
-
 
 // 用来展示自定义组件、指令、过滤器等
 if (process.env.NODE_ENV === 'development') {
@@ -105,8 +111,5 @@ export const asyncRouterMap = [
   Report,
   Company,
   Service,
-  /*   {
-      path: '/createOrder', hidden: true, icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/pop'), meta: { role: ['admin'], title: '创建运单', noCache: true }
-    }, */
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -25,14 +25,6 @@ export default {
     meta: { title: '公司管理', stitle: '公司', noCache: true }
   },
   {
-    path: '/company/myinfo',
-    icon: 'information',
-    hidden: true,
-    name: '个人中心',
-    component: _import('company/myinfo/index'),
-    meta: { title: '个人中心', noCache: true }
-  },
-  {
     path: '/company/groupManage',
     icon: 'zuzhijiagou',
     hidden: false,
