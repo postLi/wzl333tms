@@ -997,6 +997,9 @@
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
+        this.searchCreatTime = this.defaultTime
+        this.searchCreatTime[0] = item.checkStartTime
+        this.searchCreatTime[1] = item.checkEndTime
       },
       newMessageData() {
         this.searchTitle.memberName = ''

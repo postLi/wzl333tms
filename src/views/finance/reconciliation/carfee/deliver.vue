@@ -1,5 +1,4 @@
 <template>
-  <!--v-loading="loading"-->
   <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" title="
 送货" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
@@ -297,6 +296,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                     message: '已取消对账~'
                   })
                   this.fetchData()
+                  this.loading = false
                 }).catch(err => {
                   this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                   this.loading = false
@@ -331,6 +331,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                     message: '删除成功~'
                   })
                   this.fetchData()
+                  this.loading = false
                 }).catch(err => {
                   this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                   this.loading = false

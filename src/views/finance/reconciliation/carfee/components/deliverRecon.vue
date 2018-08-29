@@ -804,8 +804,6 @@
         this.messageInfo.wechatAccount = item.wechatAccount
         this.messageInfo.checkStartTime = item.checkStartTime
         this.messageInfo.checkEndTime = item.checkEndTime
-        this.searchCreatTime[0] = item.checkStartTime
-        this.searchCreatTime[1] = item.checkEndTime
         this.messageInfo.orgName = item.orgName
         this.messageButtonInfo.companyName = item.companyName
         this.messageButtonInfo.orgBusinessOfficer = item.orgBusinessOfficer
@@ -816,6 +814,9 @@
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
+        this.searchCreatTime = this.defaultTime
+        this.searchCreatTime[0] = item.checkStartTime
+        this.searchCreatTime[1] = item.checkEndTime
       },
       newMessageData() {
         this.searchTitle.memberName = ''
@@ -839,9 +840,6 @@
         this.messageButtonInfo.remark = ''
         this.messageButtonInfo.totalCount = ''
         this.checkBillName = ''
-        // this.searchCreatTime = ''
-        // this.searchCreatTime[0] = ''
-        // this.searchCreatTime[1] = ''
       },
       infoSearchTime(startTime, endTime) {
         this.searchTitle.startTime = startTime

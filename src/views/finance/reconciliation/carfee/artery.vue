@@ -1,5 +1,4 @@
 <template>
-  <!--v-loading="loading"-->
   <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" title="发车" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -76,8 +75,6 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
         total: 0,
         trackId: '',
         batchTypeId: '', // 批次状态
-        // 加载状态
-        // loading: true,
         setupTableVisible: false,
         AddCustomerVisible: false,
         isModify: false,
@@ -291,7 +288,6 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                 _data.id = this.selected[0].id
                 this.loading = true
                 postUpdateBillCheckSelective(_data).then(res => {
-                  this.loading = false
                   this.$message({
                     type: 'success',
                     message: '已取消对账~'
@@ -326,7 +322,6 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                 const id = this.selected[0].id
                 this.loading = true
                 deleteCarShort(id).then(res => {
-                  this.loading = false
                   this.$message({
                     type: 'success',
                     message: '删除成功~'
