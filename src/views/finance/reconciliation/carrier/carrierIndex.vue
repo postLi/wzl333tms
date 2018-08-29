@@ -138,6 +138,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch(err => {
+        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this.loading = false
       })
     },
     fetchData() {

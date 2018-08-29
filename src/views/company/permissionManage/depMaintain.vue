@@ -92,7 +92,7 @@
         return {
           checked1: true,
           popTitle: '部门',
-          loading:false,
+          loading:true,
           getMentInfo:[],
           getMentInfo:[],
           //首行
@@ -147,14 +147,21 @@
         }
       },
       mounted() {
-        Promise.all([getSelectDictInfo(this.createrId), this.fetchSelectDict(this.createrId)]).then( resArr => {
-          this.loading = false
-          this.getMentInfo = resArr[0]
-          this.getMentInfo = resArr[1]
-          console.log(resArr);
-        })
-        console.log(this.dictName);
-        this.getAddDate(this.createrId,this.dictName)
+        if(this.popVisible){
+          this.loading = true
+          Promise.all([getSelectDictInfo(this.createrId), this.fetchSelectDict(this.createrId)]).then( resArr => {
+            this.getMentInfo = resArr[0]
+            this.getMentInfo = resArr[1]
+            this.loading = false
+            // console.log(resArr);
+          }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this.loading = false
+          })
+          // console.log(this.dictName);
+          this.getAddDate(this.createrId,this.dictName)
+        }
+
       },
       methods: {
         // fetchSelectDict (orgid, username, mobilephone) {
@@ -164,9 +171,13 @@
         getAddDate(orgid,dictName) {
           this.createrId = orgid
           this.dictName = dictName
+          this.loading = true
           postDict(this.createrId , this.dictName).then(res => {
-            this.loading = true
-            console.log(res);
+            // console.log(res);
+            this.loading = false
+          }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this.loading = false
           })
 
         },

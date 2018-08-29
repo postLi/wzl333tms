@@ -6,7 +6,7 @@
         :key="item.id"
         :label="item.name"
         :value="item.id"
-        
+
         >
         <div :class="'indent indent'+item.index"><span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span></div>
         </el-option>
@@ -161,7 +161,8 @@ export default {
         this.groups = data
         this.listdata = []
       }).catch(err => {
-        this.inited = false
+        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        // this.loading = false
       })
     },
     getData(type) {

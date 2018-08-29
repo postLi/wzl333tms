@@ -250,6 +250,7 @@ export default {
       }).catch(err => {
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
+      this.loading = false
     },
     fetchData() {
       this.fetchAllCustomer()
@@ -345,6 +346,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
+                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                 this.loading = false
               })
             } else {
@@ -376,6 +378,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
+                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                 this.loading = false
               })
             } else {
