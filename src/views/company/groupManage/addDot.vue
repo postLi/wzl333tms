@@ -138,8 +138,8 @@
             <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
               <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
             </el-form-item>
-            <el-form-item label="客服电话" :label-width="formLabelWidth"  clearable maxlength="13" v-number-only>
-              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" ></el-input>
+            <el-form-item label="客服电话" :label-width="formLabelWidth"  clearable >
+              <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" maxlength="13" v-number-only></el-input>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
               <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" ></el-input>

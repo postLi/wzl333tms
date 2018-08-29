@@ -738,7 +738,6 @@
   import {postCarrierinitialize, getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
   import {mapGetters} from 'vuex'
-  // import {objectMerge2,tmsMath} from '@/utils/index'
   import SaveDialog from './saveDialog'
   import { SaveAsFileCarrier} from '@/utils/recLodopFuncs'
   // import
@@ -888,17 +887,23 @@
           if (data.carrierDetailDtoList.length > 0) {
             data.carrierDetailDtoList.forEach((el, val) => {
               if (el.type === 1) {
-                // el.cargoAmount = 40.11
                 this.dealInfo.push(el)
+                //虚拟
+                // // el.cargoAmount = 40.11
+                // //
+                // let el1 = objectMerge2({},el,{
+                //   totalFee: 11000.01
+                // })
+                // this.dealInfo.push(el1)
                 // let el2 = objectMerge2({},el,{
-                //   cargoAmount: 13.01
+                //   totalFee: 1300.01
                 // })
                 // this.dealInfo.push(el2)
                 // let el3 = objectMerge2({},el,{
-                //   cargoAmount: 10.01
+                //   totalFee: 11110.01
                 // })
                 // this.dealInfo.push(el3)
-                this.dealInfoData.push(el)
+                // this.dealInfoData.push(el)
               } else if (el.type === 2) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)

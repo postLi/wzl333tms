@@ -34,7 +34,7 @@
             fixed
             sortable
             prop="toPay"
-            width="265"
+            width="230"
             label="金额">
             </el-table-column>
           </el-table>
@@ -134,8 +134,9 @@
         this.dialogInfo[1].toPay = this.dotInfo.payableFee
         this.dialogInfo[2].toPay = this.dotInfo.receivedFee
         this.dialogInfo[3].toPay = this.dotInfo.paidFee
-        // this.totaMoney = tmsMath(this.dotInfo.receivableFee,this.dotInfo.payableFee,this.dotInfo.payableFee,this.dotInfo.paidFee)
-        this.dotInfo.receivableFee + this.dotInfo.payableFee + this.dotInfo.receivedFee + this.dotInfo.paidFee
+
+        // this.totaMoney = tmsMath(this.dotInfo.receivableFee,this.dotInfo.payableFee,this.dotInfo.payableFee,this.dotInfo.paidFee).result()
+        // this.dotInfo.receivableFee + this.dotInfo.payableFee + this.dotInfo.receivedFee + this.dotInfo.paidFee
         this.popTitle = this.dotInfo.checkBillName
       },
         popVisible (newVal) {

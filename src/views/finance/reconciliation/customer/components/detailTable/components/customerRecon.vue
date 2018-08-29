@@ -789,13 +789,11 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime} from '@/utils/'
+  import {pickerOptions2, parseTime,objectMerge2,tmsMath} from '@/utils/'
   import {REGEX} from '@/utils/validate'
-
   import {postCFinanceinitialize, getCustomerdetail} from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
   import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
   import SaveDialog from './saveDialog'
   import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
 
@@ -936,8 +934,21 @@
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
               } else if (el.type === 2) {
-                this.dealPayInfo.push(el)
-                this.dealPayInfoData.push(el)
+                // this.dealPayInfo.push(el)
+                // this.dealPayInfoData.push(el)
+
+                let el1 = objectMerge2({},el,{
+                  totalFee:13.01
+                })
+                this.dealPayInfo.push(el1)
+                let el2 = objectMerge2({},el,{
+                  totalFee:10.01
+                })
+                this.dealPayInfo.push(el2)
+                let el3 = objectMerge2({},el,{
+                  totalFee:3010.01
+                })
+                this.dealPayInfo.push(el3)
               } else if (el.type === 3) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
@@ -966,6 +977,8 @@
             if (el.type === 1) {
               this.dealInfo.push(el)
               this.dealInfoData.push(el)
+            //
+
             } else if (el.type === 2) {
               this.dealPayInfo.push(el)
               this.dealPayInfoData.push(el)
@@ -1030,7 +1043,7 @@
                 }) : []
                 this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
-                  a.totalFee = el.totalFee
+                  a.totalFee = tmsMath._add( el.totalFee)
                   return a
                 }) : []
                 this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
@@ -1138,7 +1151,8 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
+                return tmsMath._add(prev , curr)
+                // return prev + curr
               } else {
                 return prev
               }

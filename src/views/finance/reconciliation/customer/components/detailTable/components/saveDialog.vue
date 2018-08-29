@@ -54,6 +54,7 @@
 </template>
 
 <script>
+  import {tmsMath} from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
@@ -172,6 +173,8 @@
           this.$set(this.dialogInfo, 1, {
             date: '应付清单',
             toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
+            // toPay: tmsMath.add(this.dialogInfo[1].toPay).add(el.totalFee ? +el.totalFee : 0).result()
+
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
@@ -189,7 +192,8 @@
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
-        this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
+        this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay , this.dialogInfo[1].toPay , this.dialogInfo[2].toPay , this.dialogInfo[3].toPay).result()
+        // this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
       },
       closeMe(done) {
         this.reset()
