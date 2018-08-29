@@ -43,11 +43,11 @@ export function getUploadPolicy() {
     })
   } else {
     return fetch.get('/anfacommonservice/common/oss/v1/policy').then(res => {
-      window.UPLOADPOLICYDATA = res.data || {}
+      window.UPLOADPOLICYDATA = res.data || ''
       // 定时清除旧数据
       window.UPLOADPOLICYDATA_timer = setTimeout(() => {
         window.UPLOADPOLICYDATA = ''
-      }, 1 * 30 * 1000)
+      }, 1 * 60 * 1000)
       return window.UPLOADPOLICYDATA
     })
   }

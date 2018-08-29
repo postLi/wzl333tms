@@ -4,6 +4,7 @@ import Clipboard from './clipboard'
 import DragDialog from './el-dragDialog'
 import Waves from './waves'
 import vueSticky from './sticky'
+import { getUserInfo } from '@/utils/auth'
 
 Clipboard.install()
 DragDialog.install()
@@ -162,3 +163,31 @@ Vue.directive('showPicture', {
 
   }
 })
+
+/** 权限指令**/
+Vue.directive('has', {
+  bind: function(el, binding) {
+    if (!Vue.prototype.$_has_permission(binding.value)) {
+      el.parentNode.removeChild(el)
+    }
+  }
+})
+// 权限检查方法
+Vue.prototype.$_has_permission = function(value) {
+  let isExist = false
+  const buttonperms = getUserInfo()
+  if (buttonperms == undefined || buttonperms == null) {
+    return false
+  }
+  if (!buttonperms.permissionTrees || !buttonperms.permissionTrees.length) {
+    return false
+  }
+  const ptree = buttonperms.permissionTrees
+  for (let i = 0; i < ptree.length; i++) {
+    if (ptree[i].perms.indexOf(value) > -1) {
+      isExist = true
+      break
+    }
+  }
+  return isExist
+}

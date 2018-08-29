@@ -411,7 +411,7 @@
         Promise.all([getNetWorkTypeInfo(this.form.parentId), getManageTypeInfo(this.form.parentId), getNetworkStatusInfo(this.form.parentId)]).then(resArr => {
           this.manageType = resArr[1]
           this.netWorkStatus = resArr[2]
-          //总公司都不会出现
+          // 总公司都不会出现
           this.netWorkType = resArr[0].filter(el => {
             return el.id !== 5
           })
@@ -447,7 +447,6 @@
           this.form.manageType = 3
           // this.form.parentId = this.companyId
           this.form.parentId = this.getCheckedKeyId || this.otherinfo.orgid
-
         }
       },
       validateIsEmpty(msg = '不能为空！') {
@@ -513,9 +512,7 @@
               reqPromise = postOrgSaveDate(this.form)
             }
             reqPromise.then(res => {
-              this.$emit('success')
-
-              this.closeMe()
+              this.$emit('success', this.isModify)
               this.$message.success('保存成功')
               this.loading = false
             }).catch(err => {

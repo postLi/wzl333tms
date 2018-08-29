@@ -132,9 +132,7 @@ export default {
         this.upload.signature = data.signature
         this.uploadUrl = data.host
         this.dir = data.dir
-        this.timer = setTimeout(() => {
-          this.init()
-        }, 3 * 60 * 1000) // 每3分钟自动获取凭证
+
         // this.upload.key = data.dir + this.random_string() + type
       }).catch(() => {
       })
@@ -204,9 +202,15 @@ export default {
           this.$message.error('上传头像图片大小不能超过 5MB!')
           reject(false)
         } else {
+          // 上传前统一获取下凭证
+          this.init().then(res => {
             // 设置文件名
-          this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
-          resolve(true)
+            this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
+            resolve(true)
+          }).catch(err => {
+            this.$message.error('未知错误：' + JSON.stringify(err))
+            resolve(false)
+          })
         }
       })
     }

@@ -149,7 +149,7 @@
         <div class="side_right_bottom clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addPeople')">
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" v-if="form.status ===32" plain @click="doAction('addPeople')">
               新增员工
             </el-button>
             <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>
@@ -157,7 +157,7 @@
             </el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain>修改网点
             </el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain>
+            <el-button v-if="form.status ===32" type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain>
               新增网点
             </el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain>部门维护
@@ -244,8 +244,7 @@
         </div>
       </div>
       <AddDot :dotInfo="getform" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId"
-              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="fetchOrg(getOrgId)"
-              :popVisible="addDoTotVisible" @close="closeAddDot"/>
+              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="updateSuccess" :popVisible="addDoTotVisible" @close="closeAddDot"/>
       <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid"
                  @success="fetchOrgId(getOrgId)"/>
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep"
@@ -267,13 +266,13 @@
   import AddPeople from '../employeeManage/add'
   import AddDot from './addDot'
   import DepMaintain from './depMaintain'
-  import {getOrgId} from '../../../api/company/groupManage'
-  import {getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo} from '../../../api/company/employeeManage'
+  import { getOrgId } from '../../../api/company/groupManage'
+  import { getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo } from '../../../api/company/employeeManage'
 
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {getUserInfo} from '../../../utils/auth'
-  import {objectMerge2} from '@/utils/index'
+  import { getUserInfo } from '../../../utils/auth'
+  import { objectMerge2 } from '@/utils/index'
 
   export default {
     name: 'groupManage',
@@ -354,7 +353,6 @@
           benchmark: '',
           warningQuota: '',
           lockMachineQuota: '',
-          detailedAddr: '',
           manageType: 3,
           remarks: '',
           // 默认值
@@ -393,6 +391,12 @@
           }
         })
       },
+updateSuccess(isModify) {
+        this.fetchOrg(this.getOrgId)
+        if (isModify) {
+          this.getOrgInfo(this.getOrgId)
+        }
+      },
       // 左边树形数据
       fetchOrg() {
         this.loading = true
@@ -403,11 +407,10 @@
           this.loading = false
           // console.log(data)
         })
-
       },
       // 处理返回的节点数据
       handleOrgInfo(data) {
-        this.form = data //顶部隐藏页面
+        this.form = data // 顶部隐藏页面
         this.getform = objectMerge2({}, this.form)
         // console.log(this.getform)
       },
@@ -441,14 +444,17 @@
           this.loading = false
         } else {
           this.loading = true
-          getOrgId(id).then(res => {
-            // console.log(res,"滴400行")
-            this.orgInfoCache[id] = res.data
-            this.handleOrgInfo(res.data)
-            this.loading = false
-          })
+          this.getOrgInfo(id)
         }
         this.loading = false
+      },
+      getOrgInfo(id) {
+        getOrgId(id).then(res => {
+          // console.log(res,"滴400行")
+          this.orgInfoCache[id] = res.data
+          this.handleOrgInfo(res.data)
+          this.loading = false
+        })
       },
       fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {
         this.loading = true
