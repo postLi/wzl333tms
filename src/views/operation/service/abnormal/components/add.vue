@@ -620,11 +620,12 @@ export default {
   bottom: auto;
   min-width: 880px;
   max-width:  880px;
-   
+ 
   .box1{
     border:1px solid #C6E2FF;
     border-top:none;
     margin:10px;
+    
     .el-form--inline .el-form-item{
       margin-right: -17px;
       width: 50%;

@@ -1,10 +1,10 @@
 <template>
-  <div class="dashboard-container">
+  <!-- <div class="dashboard-container">
     <div class="wzl_caiwu-flow">
       <div class="fin1-content">
-        <!-- <el-tooltip content="现付" placement="top">
+        <el-tooltip content="现付" placement="top">
           <el-button @click="gotoPage('Cash', '/finance/accountsReceivable/cash')"><router link to="" />现付</el-button>
-        </el-tooltip> -->
+        </el-tooltip>
         <router-link to="/finance/accountsReceivable/cash">
           <el-tooltip content="现付" placement="top">
             <el-button>现付</el-button>
@@ -36,9 +36,9 @@
         </router-link>
       </div>
       <div class="fin2-content">
-        <!-- <el-tooltip content="提货费" placement="top">
+        <el-tooltip content="提货费" placement="top">
           <el-button>提货费</el-button>
-        </el-tooltip> -->
+        </el-tooltip>
         <router-link to="./accountsPayable/waybill/ticket">
           <el-tooltip content="实际提货费" placement="top">
             <el-button>实际提货费</el-button>
@@ -56,9 +56,9 @@
           </el-tooltip>
         </router-link>
         
-        <!-- <el-tooltip content="单票提货费" placement="top">
+        <el-tooltip content="单票提货费" placement="top">
           <el-button  @click="gotoPage('Ticket', './accountsPayable/waybill')">单票提货费</el-button>
-        </el-tooltip> -->
+        </el-tooltip>
         <router-link to="./accountsPayable/waybill/unusual">
           <el-tooltip content="异动费用" placement="top">
             <el-button>异动费用</el-button>
@@ -153,7 +153,7 @@
         
       </div>
       <div class="fin4-content">
-        <!-- <router-link to=""></router-link> -->
+        <router-link to=""></router-link>
         <router-link to="/finance/payment/recycle">
           <el-tooltip content="货款回收" placement="top">
             <el-button >货款回收</el-button>
@@ -207,6 +207,29 @@
         </router-link>
       </div>
     </div>	
+  </div> -->
+   <div class="finace-container">
+    <div class="finace_flow">
+      <div class="finace_flow_item1">
+        <el-tooltip placement="bottom">
+          <!-- <div slot="content">
+            功能：安排车辆上门提货
+          </div> -->
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i>
+            <p>提货</p>
+          </router-link>
+        </el-tooltip>
+      </div>
+      <div class="finace_flow_item2">
+      </div>
+      <div class="finace_flow_item3">
+      </div>
+      <div class="finace_flow_item4">
+      </div>
+      <div class="finace_flow_item5">
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -236,7 +259,6 @@ export default {
 </script>
 <style lang="scss">
 @media (min-width: 1024px){
-// body{background:red;}
   .dashboard {
     &-container {
       padding: 30px;
@@ -427,6 +449,57 @@ export default {
       }
     }
   }  
+  .finace_flow{
+    display: block;
+    margin:0 auto !important;
+    width: 1228px;
+    height: 789px;
+    margin: 53px auto 0;
+    position: relative;
+    background: url("../../assets/flow/index31.png") no-repeat;
+    // background-size: auto 2000;
+    position: relative;
+    .finace_flow_item1{
+      width: 897px;
+      height: 101px;
+      // background: red;
+      position: absolute;
+      top: 34px;
+      left: 208px;
+    }
+    .finace_flow_item2{
+      width: 863px;
+      height: 104px;
+      // background: red;
+      position: absolute;
+      top: 211px;
+      left: 225px;
+    }
+    .finace_flow_item3{
+      width: 862px;
+      height: 208px;
+      // background: red;
+      position: absolute;
+      top: 356px;
+      left: 226px;
+    }
+    .finace_flow_item4{
+      width: 272px;
+      height: 102px;
+      // background: red;
+      position: absolute;
+      top: 664px;
+      left: 326px;
+    }
+    .finace_flow_item5{
+      width: 272px;
+      height: 102px;
+      // background: red;
+      position: absolute;
+      top: 664px;
+      left: 716px;
+    }
+  }
 }
 
 </style>

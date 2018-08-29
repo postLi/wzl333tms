@@ -230,16 +230,21 @@ export default {
 }
 </style>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss">
     @import "src/styles/mixin.scss";
-    
+    .el-dialog__wrapper{
+      .el-dialog{
+        margin-top: 10vh !important;
+        width: 40% !important;
+      }
+    }
     .box_container {
         width: 100%;
         position: relative;
         @include clearfix;
 
         .el-upload .el-upload-dragger{
-            height: 116px;
+            height: 132px;
         }
         .image-uploader {
             width: 100%;
