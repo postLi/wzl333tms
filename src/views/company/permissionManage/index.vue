@@ -75,6 +75,7 @@
     <AddRole :dotInfo="getTreeArr" :isModify="isModify" :reference="isReference" :popVisible="addDoRoleVisible" @close="closeAddRole" :createrId ="otherinfo.id" :theUser="theUser" @success="getSeachInfo"></AddRole>
     <RelationPer :popRelatVisible="addRelatVisible" :dotInfo="thePer" :thePerAllUserInfo="thePerAllUser" @close="closeAddDot" @success="getSeachInfo"></RelationPer>
     <div class="info_table_footer">
+
       <div class="total_footer">共计:{{ usersArr.length }}</div>
 <!--       <div class="show_pager">
         <Pager :total="total" @change="handlePageChange"/>

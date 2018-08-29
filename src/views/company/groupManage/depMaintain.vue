@@ -13,7 +13,11 @@
           <!--添加-->
           <div class="depmain-add" v-if="hiddenAdd">
             <div class="add-fixed">
-              <input type="text" v-focus v-model="dictName"/>
+              <el-input ref="svginput"
+                        v-model="dictName"
+              >
+              </el-input>
+              <!--<input type="text" v-focus v-model="dictName" placeholder="请输入"/>-->
               <div class="addSvg">
                 <span @click="addDep" class="svgSpan">
                   <icon-svg class="lll-dot-true" icon-class="lll-dot-true"></icon-svg>
@@ -23,20 +27,6 @@
                 </span>
               </div>
 
-
-              <!--<el-input-->
-              <!--placeholder="请输入内容"-->
-              <!--v-model="dictName"-->
-              <!--ref="dictNameInput"-->
-              <!--v-focus-->
-              <!--@focus="addDep"-->
-              <!--&gt;-->
-              <!--</el-input>-->
-              <!--&lt;!&ndash;<input type="text" v-focus />&ndash;&gt;-->
-              <!--<div class="dep-img">-->
-              <!--<img src="../../../assets/icom/groupManage-checked.png" @click="addDep">-->
-              <!--<img src="../../../assets/icom/groupManage-false.png" @click="closeMe">-->
-              <!--</div>-->
             </div>
             <div class="depmain-list">
               <ul>
@@ -46,7 +36,7 @@
               </ul>
             </div>
           </div>
-          <div class="depmain-edit" v-if="hiddenEdit" v-loading="loading">
+          <div class="depmain-edit" v-if="hiddenEdit">
             <div class="depmain-list">
               <ul :key="theulkey">
                 <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"
@@ -54,41 +44,19 @@
                   <span v-once class="firstName">{{item.dictName}}</span>
                   <div class="edit-hidden">
                     <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
-                    <el-input
+                    <el-input ref="svginput1"
                       v-model="item.dictName"
                     >
                     </el-input>
                     <div class="addSvg">
-                      <span @click="editDep(item)" class="svgSpan">
+                      <span @click="editDep(item)" class="svgSpan1">
                         <icon-svg class="lll-dot-true" icon-class="lll-dot-true"></icon-svg>
                       </span>
-                      <span @click="delDep(item)" class="svgSpan">
+                      <span @click="delDep(item)" class="svgSpan2">
                         <icon-svg class="lll-dot-false" icon-class="lll-dot-false"></icon-svg>
                       </span>
                     </div>
-                    <!--</div>-->
-                    <!--</li>-->
 
-
-                    <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"-->
-                    <!--@mouseenter="currentIndex = index">-->
-                    <!--<span v-once class="firstName">{{item.dictName}}</span>-->
-                    <!--<div class="edit-hidden">-->
-                    <!--<el-input-->
-                    <!--v-model.lazy="item.dictName"-->
-                    <!--@change="editDep(item)"-->
-                    <!--&gt;-->
-                    <!--</el-input>-->
-                    <!--<div class="addSvg">-->
-                    <!--<span @click="closeMe" class="svgSpan">-->
-                    <!--<icon-svg class="lll-dot-false" icon-class="lll-dot-false" fill="red"></icon-svg>-->
-                    <!--</span>-->
-                    <!--</div>-->
-
-                    <!--<div class="dep-img">-->
-                    <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
-                    <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" />-->
-                    <!--</div>-->
                   </div>
                 </li>
               </ul>
@@ -149,7 +117,7 @@
         currentIndex: 0,
         checked1: true,
         popTitle: '部门',
-        loading: false,
+        loading: true,
         getMentInfo: [
           {dictName: '', id: ''}
         ],
@@ -212,7 +180,7 @@
       }
     },
     mounted() {
-      // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
+
     },
     methods: {
       editDepFun() {
@@ -227,15 +195,20 @@
       getSelectDict() {
         this.loading = true
         getSelectDictInfo(this.createrId).then(res => {
-          this.loading = false
           this.getMentInfo = res
+          this.loading = false
+          this.theulkey = (Math.random() + '').substr(2)
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       getAddDate() {
         this.loading = true
         return postDict(this.createrId, this.dictName).then(res => {
-          this.loading = false
           this.dictName = ''
+          this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       closeMe(done) {
@@ -256,6 +229,7 @@
         this.hiddenEdit = true
         this.showDate = false
         this.currentIndex = 0
+        // this.
       },
       submitForm(ruleForm) {
         this.popTitle = '添加'
@@ -264,6 +238,11 @@
         this.showBotton = false
         this.hiddenEdit = false
         this.showDate = false
+        setTimeout(()=>{
+          this.$refs['svginput'].focus()
+        },100)
+
+
       },
       reset() {
         this.popTitle = '部门'
@@ -281,15 +260,19 @@
           })
           return false
         } else {
+          this.loading = true
           const reqPromise = this.getAddDate()
           reqPromise.then(res => {
             this.$message({
               type: 'success',
               message: '添加成功!'
             })
-            this.loading = false
+
             this.getSelectDict(this.createrId)
             this.closeMe()
+            this.loading = false
+          }).catch(err => {
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       },
@@ -311,9 +294,12 @@
               message: '修改成功!'
             })
             this.closeMe()
-            this.loading = false
+
             this.getSelectDict()
             this.theulkey = (Math.random() + '').substr(2)
+            this.loading = false
+          }).catch(err => {
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       },
@@ -328,17 +314,21 @@
           })
           return false
         } else {
+
           this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.loading = true
             deletePerManage(_id).then(res => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               })
               this.getSelectDict()
+              this.theulkey = (Math.random() + '').substr(2)
+              this.loading = false
             }).catch(err => {
               this.$message({
                 type: 'info',
@@ -388,12 +378,10 @@
     input {
       border-color: #e4e7ed;
       width: 350px;
-      /*height: 24px;*/
-      /*line-height: 24px;*/
       margin: 5px 20px 5px 10px;
-      color: #3e9ff1;
-      /*background: transparent;*/
-      padding: 2px;
+      color: #999;
+      padding: 8px 0 2px 10px;
+      font-size: 14px;
 
     }
     .addSvg {
@@ -403,7 +391,7 @@
 
         .lll-dot-true {
           font-size: 20px;
-          margin-right: 10px;
+          margin: 2px 6px 1px 16px;
         }
         .lll-dot-false {
           font-size: 20px;
@@ -417,13 +405,20 @@
   .depmain-edit {
     .addSvg {
       display: inline-block;
-      span.svgSpan {
+      span.svgSpan1 {
+
         .lll-dot-true {
           font-size: 20px;
           margin: 4px 10px 2px 50px;
+          cursor: pointer;
         }
+
+      }
+      span.svgSpan2{
         .lll-dot-false {
           font-size: 20px;
+          cursor: pointer;
+          margin: 3px 9px 2px 0;
           .svg-icon {
             fill: #bec4d1;
             font-size: 20px;

@@ -4,7 +4,7 @@
     <div class="company-box">
       <div class="side_left">
         <el-tree
-          :data="dataTree"
+          :data="getDataTree"
           node-key="id"
           :default-expanded-keys="[1]"
           :props="defaultProps"
@@ -13,11 +13,9 @@
           @node-click="getCheckedKeys"
 
         >
-            <span class="custom-tree-node" slot-scope="{ node, data }" >
+            <span class="custom-tree-node" slot-scope="{ node, data }">
              <span v-bind:class="[data.status === 31 ? 'treeClass' : 'treeAct'] ">{{ node.label }}</span>
         </span>
-
-
 
 
         </el-tree>
@@ -246,17 +244,18 @@
         </div>
       </div>
       <AddDot :dotInfo="getform" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId"
-              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="fetchOrg(getOrgId)" :popVisible="addDoTotVisible" @close="closeAddDot"/>
+              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="fetchOrg(getOrgId)"
+              :popVisible="addDoTotVisible" @close="closeAddDot"/>
       <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid"
                  @success="fetchOrgId(getOrgId)"/>
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep"
                    :createrId="otherinfo.orgid"></DepMaintain>
     </div>
     <div class="info_news_footer">
-      <!--<div class="checked_footer">-->
-        <!--<el-checkbox :checked="checkedInput">过滤失效网点</el-checkbox>-->
-        <!--&lt;!&ndash;<p> 密码：123456</p>&ndash;&gt;-->
-      <!--</div>-->
+      <div class="checked_footer">
+        <el-checkbox v-model="checkedInput">过滤失效网点</el-checkbox>
+        <!--<p> 密码：123456</p>-->
+      </div>
       <div class="total_footer">共计:{{ total }}</div>
       <div class="show_pager">
         <Pager :total="total" @change="handlePageChange"/>
@@ -275,6 +274,7 @@
   import Pager from '@/components/Pagination/index'
   import {getUserInfo} from '../../../utils/auth'
   import {objectMerge2} from '@/utils/index'
+
   export default {
     name: 'groupManage',
     components: {
@@ -286,7 +286,10 @@
     computed: {
       ...mapGetters([
         'otherinfo'
-      ])
+      ]),
+      getDataTree() {
+        return this.checkedInput ? this.dataTreeFn(objectMerge2([],this.dataTree)) : this.dataTree
+      }
     },
     data() {
       return {
@@ -296,8 +299,8 @@
         // treeAct: {
         //   background: '#c0c4cc'
         // },
-        checkedInput:false,//过滤失效网点
-        getCheckedKeyId:'',
+        checkedInput: false,//过滤失效网点
+        getCheckedKeyId: '',
         btnsize: 'mini',
         // 加载状态
         loading: true,
@@ -378,6 +381,18 @@
       //  部门维护
     },
     methods: {
+      dataTreeFn(arr) {
+        return arr.filter((el, val) => {
+          if(el.status !== 31){
+            if(el.children){
+              el.children = this.dataTreeFn(el.children)
+            }
+            return true
+          } else {
+            return false
+          }
+        })
+      },
       // 左边树形数据
       fetchOrg() {
         this.loading = true
@@ -569,16 +584,18 @@
   @import "../../../styles/mixin.scss";
   @import "./index.css";
 
-  /*.info_news_footer .total_footer {*/
-    /*float: left;*/
-    /*padding-left: 80px;*/
-  /*}*/
-  /*.info_news_footer .checked_footer {*/
-    /*float: left;*/
-    /*padding-left: 10px;*/
-  /*}*/
-  .info_news_footer .total_footer{
+  .info_news_footer .total_footer {
     float: left;
-    padding-left: 200px;
+    padding-left: 80px;
   }
+
+  .info_news_footer .checked_footer {
+    float: left;
+    padding-left: 10px;
+  }
+
+  /*.info_news_footer .total_footer{*/
+  /*float: left;*/
+  /*padding-left: 200px;*/
+  /*}*/
 </style>
