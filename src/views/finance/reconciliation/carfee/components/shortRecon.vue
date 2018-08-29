@@ -855,8 +855,8 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
-                // return tmsMath._add(prev, curr)
+                // return prev + curr
+                return tmsMath._add(prev, curr)
               } else {
                 return prev
               }
@@ -917,6 +917,8 @@
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
+        this.searchCreatTime[0] = item.checkStartTime
+        this.searchCreatTime[1] = item.checkEndTime
       },
       newMessageData() {
         this.searchTitle.memberName = ''

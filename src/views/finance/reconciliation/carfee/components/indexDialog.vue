@@ -34,7 +34,7 @@
             fixed
             sortable
             prop="toPay"
-            width="265"
+            width="250"
             label="金额">
             </el-table-column>
           </el-table>

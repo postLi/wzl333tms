@@ -1,6 +1,6 @@
 <template>
   <!--v-loading="loading"-->
-  <div class="tab-content" >
+  <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" title="发车" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -16,143 +16,6 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <!-- <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="100">
-            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="120"
-            label="发车网点">
-          </el-table-column>
-          <el-table-column
-            prop="memberName"
-            width="130"
-            sortable
-            label="车牌号">
-          </el-table-column>
-          <el-table-column
-            prop="memberPerson"
-            sortable
-            width="120"
-            label="司机">
-          </el-table-column>
-          <el-table-column
-            prop="createTime"
-            sortable
-            width="160"
-            label="创建时间">
-          </el-table-column>
-
-          <el-table-column
-            sortable
-            prop="payAmount"
-            width="120"
-            label="应付账款">
-          </el-table-column>
-          <el-table-column
-            prop="hadPayAmount"
-            label="已付账款"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="memberPersonPhone"
-            sortable
-            width="120"
-            label="司机电话">
-          </el-table-column>
-          <el-table-column
-            prop="checkStartTime"
-            label="开始时间"
-            width="160"
-            sortable
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="checkEndTime"
-            label="结束时间"
-            width="160"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="totalCount"
-            label="运输总数"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="checkStatusZh"
-            label="对账状态"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="bankAccount"
-            label="银行卡号"
-            width="180"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="开户行"
-            width="120"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="wechatAccount"
-            label="微信"
-            width="150"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="alipayAccount"
-            label="支付宝"
-            width="150"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="130"
-            sortable
-          >
-          </el-table-column>
-
-
-        </el-table> -->
 
  <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
@@ -207,7 +70,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
     data() {
       return {
         tablekey: 0,
-        loading: false,
+        loading: true,
         btnsize: 'mini',
         usersArr: [],
         total: 0,
@@ -335,6 +198,9 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           this.usersArr = data.list
           this.total = data.total
           this.loading = false
+        }).catch(err => {
+          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this.loading = false
         })
       },
       fetchData() {
@@ -392,6 +258,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                 message: '只能选择一条数据进行跟踪设置~',
                 type: 'warning'
               })
+              this.$refs.multipleTable.clearSelection()
               return false
             } else {
               if (this.selected[0].checkStatus === 0) {
@@ -422,14 +289,17 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   checkStatus: 0
                 }
                 _data.id = this.selected[0].id
+                this.loading = true
                 postUpdateBillCheckSelective(_data).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '保存成功~'
+                    message: '已取消对账~'
                   })
                   this.fetchData()
+                  this.loading = false
                 }).catch(err => {
+                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                   this.loading = false
                 })
               } else {
@@ -449,18 +319,22 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                 message: '只能选择一条数据进行跟踪设置~',
                 type: 'warning'
               })
+              this.$refs.multipleTable.clearSelection()
               return false
             } else {
               if (this.selected[0].checkStatus === 0) {
                 const id = this.selected[0].id
+                this.loading = true
                 deleteCarShort(id).then(res => {
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '保存成功~'
+                    message: '删除成功~'
                   })
                   this.fetchData()
+                  this.loading = false
                 }).catch(err => {
+                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                   this.loading = false
                 })
               } else {

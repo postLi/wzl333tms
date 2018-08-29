@@ -463,7 +463,7 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime } from '@/utils/'
+  import { pickerOptions2, parseTime,tmsMath ,objectMerge2} from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
@@ -473,7 +473,6 @@
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
-  import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
   import { getTrucK } from '@/api/operation/load'
   import { SaveAsFileCarfeefeeArt } from '@/utils/recLodopFuncs'
@@ -943,7 +942,8 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
+                return tmsMath._add(prev , curr)
+                // return prev + curr
               } else {
                 return prev
               }
