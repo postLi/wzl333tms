@@ -88,11 +88,13 @@
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
+  // import DepMaintain from './depMaintain'
   export default {
     name: 'permissionManage',
     components: {
       AddRole,
       RelationPer
+      // DepMaintain
     },
     computed: {
       ...mapGetters([
