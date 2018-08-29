@@ -371,7 +371,7 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime } from '@/utils/'
+  import { pickerOptions2, parseTime ,objectMerge2,tmsMath} from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
@@ -381,7 +381,6 @@
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
-  import { objectMerge2 } from '@/utils/index'
   import SaveDialog from './saveDialog'
   import { getTrucK } from '@/api/operation/load'
   import { SaveAsFileCarfeefeeShort } from '@/utils/recLodopFuncs'
@@ -616,7 +615,6 @@
         this.sendId = this.$route.query.id
         return postCarfDtoById(this.sendId).then(data => {
           this.messageArr = data.data
-
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
@@ -628,8 +626,27 @@
         return postCarfBillCheckCarUpdateList(this.moiffyDealPay).then(data => {
           this.dealPayInfo = []
           this.dealPaytota = []
-          this.dealPayInfo = data
-          this.dealPaytota = data
+          // this.dealPayInfo = data
+          // this.dealPaytota = data
+
+          this.dealPayInfo.forEach((el,val) => {
+           let el1 = objectMerge2({},el,{
+              shortPay:10.01
+            })
+            this.dealPayInfo.push(el1)
+            let el2 = objectMerge2({},el,{
+              shortPay:10.01
+            })
+            this.dealPayInfo.push(el2)
+            let el3 = objectMerge2({},el,{
+              shortPay:10.01
+            })
+            this.dealPayInfo.push(el3)
+            let el4 = objectMerge2({},el,{
+              shortPay:10.01
+            })
+            this.dealPayInfo.push(el4)
+          })
           this.loading = false
         }).catch(err => {
           this.$message({
@@ -682,7 +699,7 @@
           //   this.searchCreatTime = this.defaultTime
           //   console.log(this.searchCreatTime,"打印")
           // }
-          console.log(this.searchCreatTime, '打印')
+          // console.log(this.searchCreatTime, '打印')
           const searchObj = {}
           // debugger
           // this.searchCreatTime = this.defaultTime
@@ -854,7 +871,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
+                return tmsMath._add(prev , curr)
               } else {
                 return prev
               }

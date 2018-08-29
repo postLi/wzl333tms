@@ -934,21 +934,21 @@
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
               } else if (el.type === 2) {
-                // this.dealPayInfo.push(el)
-                // this.dealPayInfoData.push(el)
+                this.dealPayInfo.push(el)
+                this.dealPayInfoData.push(el)
 
-                let el1 = objectMerge2({},el,{
-                  totalFee:13.01
-                })
-                this.dealPayInfo.push(el1)
-                let el2 = objectMerge2({},el,{
-                  totalFee:10.01
-                })
-                this.dealPayInfo.push(el2)
-                let el3 = objectMerge2({},el,{
-                  totalFee:3010.01
-                })
-                this.dealPayInfo.push(el3)
+                // let el1 = objectMerge2({},el,{
+                //   totalFee:13.01
+                // })
+                // this.dealPayInfo.push(el1)
+                // let el2 = objectMerge2({},el,{
+                //   totalFee:10.01
+                // })
+                // this.dealPayInfo.push(el2)
+                // let el3 = objectMerge2({},el,{
+                //   totalFee:3010.01
+                // })
+                // this.dealPayInfo.push(el3)
               } else if (el.type === 3) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)

@@ -20,21 +20,21 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="80">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
             </el-table-column>
             <el-table-column
             fixed
             sortable
             prop="date"
-            width="185"
+            width="120"
             label="费用项">
             </el-table-column>
             <el-table-column
             fixed
             sortable
             prop="toPay"
-            width="189"
+            width="250"
             label="金额">
             </el-table-column>
           </el-table>
@@ -165,15 +165,15 @@
         this.dialogData.dealtota.map(el => {
           this.$set(this.dialogInfo, 0, {
             date: '应收清单',
-            toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
+            toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
             // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.dialogData.dealPaytota.map(el => {
           this.$set(this.dialogInfo, 1, {
             date: '应付清单',
-            toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
-            // toPay: tmsMath.add(this.dialogInfo[1].toPay).add(el.totalFee ? +el.totalFee : 0).result()
+            // toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
+            toPay: tmsMath.add(this.dialogInfo[1].toPay).add(el.totalFee ? +el.totalFee : 0).result()
 
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
@@ -181,18 +181,19 @@
         this.dialogData.alreadytota.map(el => {
           this.$set(this.dialogInfo, 2, {
             date: '已收清单',
-            toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
+            toPay: tmsMath.add(this.dialogInfo[2].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.dialogData.alreadyPaytota.map(el => {
           this.$set(this.dialogInfo, 3, {
             date: '已付清单',
-            toPay: this.dialogInfo[3].toPay + (el.totalFee ? +el.totalFee : 0)
+            toPay: tmsMath.add(this.dialogInfo[3].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay , this.dialogInfo[1].toPay , this.dialogInfo[2].toPay , this.dialogInfo[3].toPay).result()
+        // console.log(this.dialogData[1].toPay,"应付清单")
         // this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
       },
       closeMe(done) {

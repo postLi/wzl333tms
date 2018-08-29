@@ -475,7 +475,7 @@
       //车牌号
       getTrunkName(trunk) {
         if (trunk) {
-          console.log(trunk,'车牌号');
+          // console.log(trunk,'车牌号');
           if (this.form.tmsDriver.driverName === '' || this.form.tmsDriver.driverMobile === '') {
             this.valkey = Math.random()
             this.form.tmsDriver.driverName = trunk.driverName
@@ -541,7 +541,11 @@
               this.$message.success('保存成功')
               this.loading = false
             }).catch(err => {
-              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+              if(err.text === "提货批次已存在"){
+                this.fetchGetPickUp()
+              }else{
+                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+              }
               this.loading = false
             })
           } else {

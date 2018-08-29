@@ -17,13 +17,16 @@
 .add-role-top{
   position: fixed;
   z-index: 34;
-  top: 30px;
+  top: 25px;
   left: 0;
-  padding: 10px 10px;
-  background-color:rgba(255,255,255,1);
+  padding: 5px 10px;
+  /*background-color:rgba(255,255,255,1);*/
   width: 100%;
   /*margin-top: 10px;*/
 
+}
+.add-role-top .demo-form-inline{
+  background-color: rgba(255,255,255,1);
 }
 .add-role .add-role-top .el-form--inline .el-form-item:first-of-type{
   margin-bottom: 20px;
@@ -57,7 +60,7 @@
 /*中部树形*/
 .add-role-tree{
   /*1*/
-  margin-top: 55px;
+  margin-top: 30px;
 }
 .add-role-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
   background: rgb(195,232,255);
