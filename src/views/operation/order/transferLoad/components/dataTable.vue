@@ -13,35 +13,35 @@
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号">
+        <el-table-column prop="shipSn" label="运单号" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="120">
+        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="110">
         </el-table-column>
-        <el-table-column prop="shipReceiverName" sortable label="收货人" width="120">
+        <el-table-column prop="shipReceiverName" sortable label="收货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
+        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="110">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
+        <el-table-column prop="repertoryAmount" sortable label="库存件数" width="100">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="120">
+        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="100">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="120">
+        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="100">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="运单件数" width="100">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量" width="100">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积" width="100">
         </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
@@ -99,27 +99,27 @@
             @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
           </template>
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="运单件数" width="100">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量" width="100">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积" width="100">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="120">
+        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="110">
         </el-table-column>
-        <el-table-column prop="shipReceiverName" sortable label="收货人" width="120">
+        <el-table-column prop="shipReceiverName" sortable label="收货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
+        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="110">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>

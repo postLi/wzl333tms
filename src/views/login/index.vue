@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="container-top">
-      <div class="login-wrapper clearfix">
+      <div class="login-top-wrapper clearfix">
         <img class="logo-img" src="../../assets/login_images/login_03.png" alt="">
       </div>
     </div>
@@ -47,17 +47,20 @@
           </div>
         </el-form>
       </div>
-    </div>
-    <div class="button-cont">
-      <ul>
-        <li>广州安发网络科技有限公司</li>
-        <li>地址：天河区天河路石牌桥丰兴广场B座1804</li>
-        <li>电话 ：020-38856254 </li>
-        <li>网址：www.anfanet.com </li>
-      </ul>
-      <div class="down">
-        <img src="../../assets/login_images/code.png" alt="">
-        <p>扫描二维码下载app</p>
+
+    <!-- </div>
+    <div class="login-wrapper clearfix"> -->
+      <div class="button-cont">
+        <ul>
+          <li>广州安发网络科技有限公司</li>
+          <li>地址：天河区天河路石牌桥丰兴广场B座1804</li>
+          <li>电话 ：020-38856254 </li>
+          <li>网址：www.anfanet.com </li>
+        </ul>
+        <div class="down">
+          <img src="../../assets/login_images/code.png" alt="">
+          <p>扫描二维码下载app</p>
+        </div>
       </div>
     </div>
     <setApiUrl />
@@ -121,7 +124,7 @@ export default {
   },
   mounted() {
     this.checkLocalStorage()
-    if(process.env.NODE_ENV !== 'production'){
+    if (process.env.NODE_ENV !== 'production') {
       this.loginForm.username = "fangjian"
       this.loginForm.password = "123456"
     }
@@ -130,7 +133,7 @@ export default {
     checkLocalStorage() {
       if (window.localStorage) {
         let storage = window.localStorage
-        console.log('localStorage',storage.getItem('lastloginUsername'))
+        console.log('localStorage', storage.getItem('lastloginUsername'))
       }
     },
     handleLogin() {

@@ -330,16 +330,30 @@ export default {
     display: flex;
     flex-direction: column;
     
-    .loadFrom {
-      padding: 0 20px 10px 0;
-      .el-form-item {
-        margin-bottom: 10px;
-      }
+    // .loadFrom {
+    //   padding: 0 10px 10px 0;
+    //   .el-form-item {
+    //     margin-bottom: 10px;
+    //   }
+    //   .loadFrom-type {
+    //     position: absolute;
+    //     z-index: 33;
+    //     right: 40px;
+    //     top: 20px;
+    //   }
+    // }
+     .loadFrom {
+      margin-bottom: 10px;
       .loadFrom-type {
         position: absolute;
         z-index: 33;
         right: 40px;
         top: 20px;
+      }
+      .formItemTextDanger {
+        .el-form-item__label {
+          color: #ef0000;
+        }
       }
     }
     .addCarrierInput{
@@ -364,7 +378,7 @@ export default {
     }
     .el-collapse-item__header {
       background-color: #E9F3FA;
-      padding: 2px 0 0 60px;
+      padding: 0px 0 0 10px;
       height: 42px;
       line-height: 42px;
       font-size: 16px;
@@ -375,7 +389,7 @@ export default {
     }
     .el-collapse-item__arrow {
       position: absolute;
-      left: 20px;
+      left: 10px;
       top: 5px;
     }
     .el-collapse-item__content {

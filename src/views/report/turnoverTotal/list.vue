@@ -87,7 +87,7 @@ export default {
         },
         {
           label: '月结(元)',
-          prop: 'shipMonthpayFee',
+          prop: 'monthpayFee',
           textAlign: 'right'
         }
       ],
@@ -95,7 +95,7 @@ export default {
         'nowPayFee',
         'arrivePayFee',
         'shipReceiptpayFee',
-        'shipMonthpayFee',
+        'monthpayFee',
         'totalFee',
         'brokerageFee',
         'receiptPayFee',
