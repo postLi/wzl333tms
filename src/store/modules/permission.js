@@ -6,8 +6,8 @@ import { asyncRouterMap, constantRouterMap } from '@/router/index'
  * @param route
  */
 function hasPermission(roles, route) {
-  if (route.meta && route.meta.role) {
-    return roles.some(role => route.meta.role.indexOf(role) >= 0)
+  if (route.meta && route.meta.code) {
+    return roles.some(role => route.meta.code === role.code)
   } else {
     return true
   }
@@ -58,7 +58,8 @@ const permission = {
           accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         } */
         // 暂时给于全部权限，等后台权限体系建立好再对接设置
-        accessedRouters = asyncRouterMap
+       // accessedRouters = asyncRouterMap
+        accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

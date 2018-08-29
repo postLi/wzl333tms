@@ -58,7 +58,7 @@ export default {
     icon: 'yygl0_chuangjian',
     name: 'createOrder22',
     component: _import('operation/order/createOrder/index'),
-    meta: { role: ['admin'], title: '创建运单', noCache: false }
+    meta: { role: ['admin'], title: '创建运单', noCache: false, code: 'ORDER_MADD' }
   },
   {
     path: '/operation/order/modifyOrder',
@@ -66,7 +66,7 @@ export default {
     icon: 'yygl0_chuangjian',
     name: 'modifyOrder22',
     component: _import('operation/order/createOrder/modify'),
-    meta: { role: ['admin'], title: '改单', noCache: false }
+    meta: { role: ['admin'], title: '改单', noCache: false, code: 'ORDER_MEDIT5' }
   },
   {
     path: '/operation/order/orderManage',

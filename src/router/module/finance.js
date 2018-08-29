@@ -223,7 +223,7 @@ export default {
     hidden: true,
     name: '资金流水明细',
     component: _import('finance/settleLog/index'),
-    meta: { role: ['admin'], title: '资金流水明细', noCache: false }
+    meta: { role: ['admin'], title: '资金流水明细', code: 'FINANCE_FLOW', noCache: false }
   },
   {
     path: '/finance/reconciliation',
@@ -338,7 +338,7 @@ export default {
     icon: 'QQ',
     name: 'handAccountDetail',
     component: _import('finance/handAccount/detail'),
-    meta: { role: ['admin'], title: '交账明细', noCache: false }
+    meta: { role: ['admin'], title: '交账明细', noCache: false, code: 'FINANCE_ACCOUNT' }
   },
   {
     path: '/finance/accountsLoadReceivable',
@@ -346,7 +346,7 @@ export default {
     hidden: true,
     name: 'accountsLoadReceivable',
     component: _import('finance/accountsLoadReceivable/index'),
-    meta: { role: ['admin'], title: '账款结算', noCache: false }
+    meta: { role: ['admin'], title: '账款结算', noCache: false, code: 'FINANCE_REC' }
   },
   {
     path: '/finance/settleLogIncome',
@@ -354,7 +354,7 @@ export default {
     hidden: true,
     name: 'settleLogIncome',
     component: _import('finance/settleLogIncome/index'),
-    meta: { role: ['admin'], title: '记收入', noCache: false }
+    meta: { role: ['admin'], title: '记收入', noCache: false, code: 'FLOW_IN' }
   },
   {
     path: '/finance/settleLogExpandtiure',
@@ -362,7 +362,7 @@ export default {
     hidden: true,
     name: 'settleLogExpandtiure',
     component: _import('finance/settleLogExpandtiure/index'),
-    meta: { role: ['admin'], title: '记支出', noCache: false }
+    meta: { role: ['admin'], title: '记支出', noCache: false, code: 'FLOW_OUT' }
   },
   {
     path: '/finance/IOManage',
@@ -377,7 +377,7 @@ export default {
     hidden: true,
     name: '承运商对账明细',
     component: _import('finance/reconciliation/carrier/components/detailTable/index'),
-    meta: { role: ['admin'], title: '承运商对账', noCache: false }
+    meta: { role: ['admin'], title: '承运商对账', noCache: false, code: 'FINANCE_CARRIERDETAIL' }
   },
   {
     path: '/finance/reconciliation/customer/detailTable',
@@ -385,7 +385,7 @@ export default {
     hidden: true,
     name: '客户对账明细',
     component: _import('finance/reconciliation/customer/components/detailTable/index'),
-    meta: { role: ['admin'], title: '客户对账', noCache: false }
+    meta: { role: ['admin'], title: '客户对账', noCache: false, code: 'FINANCE_CUSTOMERDETAIL' }
   },
     // 承运商对账-创建对账
   {

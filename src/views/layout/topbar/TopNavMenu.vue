@@ -4,7 +4,7 @@
       mode="horizontal" 
       :default-active="current"
       :router="true">
-      <el-menu-item key="/dashboard" index="/dashboard">
+      <el-menu-item key="/dashboard" index="/">
         <icon-svg icon-class="shouye" /> 首页
       </el-menu-item>
       <template v-for="(menu, index) in permission_routers">
@@ -25,31 +25,31 @@ export default {
       'permission_routers'
     ])
   },
-  data () {
+  data() {
     return {
       current: '',
       prevPath: ''
     }
   },
   watch: {
-    $route () {
+    $route() {
       this.setNavHightlight()
     }
   },
-  mounted(){
+  mounted() {
     this.setNavHightlight()
   },
   methods: {
     /**
      * 设置与当前页匹配的菜单高亮
      */
-    setNavHightlight(){
-      let find = this.permission_routers.filter(route => {
-          return route.path !=='/' && this.$route.path.indexOf(route.path) === 0
-        })
-      let current = find[0] || this.$route
+    setNavHightlight() {
+      const find = this.permission_routers.filter(route => {
+        return route.path !== '/' && this.$route.path.indexOf(route.path) === 0
+      })
+      const current = find[0] || this.$route
       this.current = current.path
-      if(this.prevPath!==this.current){
+      if (this.prevPath !== this.current) {
         this.prevPath = this.current
         this.$store.dispatch('GenerateSidebarRoutes', current.name)
       }

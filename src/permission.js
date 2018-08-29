@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
       // 如果没有当前角色权限信息，则请求获取
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => {
-          const roles = res.data.rolesIdList
+          const roles = res.data.permissionTrees
           store.dispatch('GenerateRoutes', { roles }).then(() => {
             router.addRoutes(store.getters.addRouters)
             next({ ...to, replace: true })

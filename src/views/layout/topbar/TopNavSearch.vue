@@ -1,5 +1,5 @@
 <template>
-  <div class="topNav-search" ref="topNavSearch">
+  <div class="topNav-search" v-has:ORDER_ALL ref="topNavSearch">
     <div class="topNavSearch-trigger" @click="showmini">
       <i class="el-icon-search"></i>
     </div>
