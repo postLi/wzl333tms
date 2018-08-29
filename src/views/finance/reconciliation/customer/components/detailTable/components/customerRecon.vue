@@ -1043,7 +1043,7 @@
                 }) : []
                 this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
-                  a.totalFee = tmsMath._add( el.totalFee)
+                  a.totalFee = el.totalFee
                   return a
                 }) : []
                 this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
