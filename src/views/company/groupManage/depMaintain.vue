@@ -15,10 +15,10 @@
             <div class="add-fixed">
               <input type="text" v-focus v-model="dictName"/>
               <div class="addSvg">
-                <span @click="addDep">
+                <span @click="addDep" class="svgSpan">
                   <icon-svg class="lll-dot-true" icon-class="lll-dot-true"></icon-svg>
                 </span>
-                <span @click="closeMe">
+                <span @click="closeMe" class="svgSpan">
                   <icon-svg class="lll-dot-false" icon-class="lll-dot-false"></icon-svg>
                 </span>
               </div>
@@ -49,41 +49,45 @@
           <div class="depmain-edit" v-if="hiddenEdit" v-loading="loading">
             <div class="depmain-list">
               <ul :key="theulkey">
-                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"  @click="currentIndex = index">
-                <span v-once>{{item.dictName}}</span>
-                <div class="edit-hidden">
-                <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
-                <el-input
-                v-model="item.dictName"
-                >
-                </el-input>
-                <div class="dep-img">
-                <img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >
-                <img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" >
-                </div>
-                <!--</div>-->
-                <!--</li>-->
+                <li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"
+                    @click="currentIndex = index">
+                  <span v-once class="firstName">{{item.dictName}}</span>
+                  <div class="edit-hidden">
+                    <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
+                    <el-input
+                      v-model="item.dictName"
+                    >
+                    </el-input>
+                    <div class="addSvg">
+                      <span @click="editDep(item)" class="svgSpan">
+                        <icon-svg class="lll-dot-true" icon-class="lll-dot-true"></icon-svg>
+                      </span>
+                      <span @click="delDep(item)" class="svgSpan">
+                        <icon-svg class="lll-dot-false" icon-class="lll-dot-false"></icon-svg>
+                      </span>
+                    </div>
+                    <!--</div>-->
+                    <!--</li>-->
 
 
-
-                <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"-->
+                    <!--<li :key="index" v-for="(item, index) in getMentInfo" :class="{'showcurrent': index === currentIndex}"-->
                     <!--@mouseenter="currentIndex = index">-->
-                  <!--<span v-once class="firstName">{{item.dictName}}</span>-->
-                  <!--<div class="edit-hidden">-->
+                    <!--<span v-once class="firstName">{{item.dictName}}</span>-->
+                    <!--<div class="edit-hidden">-->
                     <!--<el-input-->
-                      <!--v-model.lazy="item.dictName"-->
-                      <!--@change="editDep(item)"-->
+                    <!--v-model.lazy="item.dictName"-->
+                    <!--@change="editDep(item)"-->
                     <!--&gt;-->
                     <!--</el-input>-->
                     <!--<div class="addSvg">-->
-                      <!--<span @click="closeMe" class="svgSpan">-->
-                        <!--<icon-svg class="lll-dot-false" icon-class="lll-dot-false" fill="red"></icon-svg>-->
-                       <!--</span>-->
+                    <!--<span @click="closeMe" class="svgSpan">-->
+                    <!--<icon-svg class="lll-dot-false" icon-class="lll-dot-false" fill="red"></icon-svg>-->
+                    <!--</span>-->
                     <!--</div>-->
 
                     <!--<div class="dep-img">-->
-                      <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
-                      <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" />-->
+                    <!--<img src="../../../assets/icom/groupManage-checked.png" @click="editDep(item)" >-->
+                    <!--<img src="../../../assets/icom/groupManage-false.png" @click="delDep(item)" :data-id="item.id" />-->
                     <!--</div>-->
                   </div>
                 </li>
@@ -100,7 +104,7 @@
       </div>
       <div slot="footer" class="dialog-footer-frame" v-if="remBotton">
         <!--完成-->
-        <el-button @click="editDepFun()">{{remText}}</el-button>
+        <el-button @click="closeMe">{{remText}}</el-button>
       </div>
       <div slot="footer" class="dialog-footer-frame">
         <span></span>
@@ -211,7 +215,7 @@
       // this.$nextTick(() => {this.$ref['dictNameInput'].focus()})
     },
     methods: {
-      editDepFun(){
+      editDepFun() {
         // this.editDep(item)
         // console.log()
       },
@@ -306,6 +310,7 @@
               type: 'success',
               message: '修改成功!'
             })
+            this.closeMe()
             this.loading = false
             this.getSelectDict()
             this.theulkey = (Math.random() + '').substr(2)
@@ -393,8 +398,8 @@
     }
     .addSvg {
       display: inline-block;
-      span {
-        cursor: pointer;
+      span.svgSpan {
+        /*cursor: pointer;*/
 
         .lll-dot-true {
           font-size: 20px;
@@ -407,35 +412,35 @@
       }
     }
   }
+
   /*depmain-edit 编辑*/
-  .depmain-edit{
+  .depmain-edit {
     .addSvg {
       display: inline-block;
       span.svgSpan {
-
-        /*cursor: pointer;*/
-        .lll-dot-false {
-          /*display: none;*/
+        .lll-dot-true {
           font-size: 20px;
-          margin: 5px 0 2px 10px;
-          .svg-icon{
+          margin: 4px 10px 2px 50px;
+        }
+        .lll-dot-false {
+          font-size: 20px;
+          .svg-icon {
             fill: #bec4d1;
             font-size: 20px;
           }
         }
-        .lll-dot-false:hover{
-          display: block;
-          .svg-icon{
+        .lll-dot-false:hover {
+          /*display: block;*/
+          .svg-icon {
             fill: #bec4d1;
             cursor: pointer;
           }
-          /*font-size: 20px;*/
-          /*margin-right: 15px;*/
         }
       }
     }
 
   }
+
   .depmain-add .el-input {
     width: 340px;
     float: left;
@@ -467,25 +472,26 @@
     padding-left: 8px;
     //  border: 1px solid transparent;
   }
+
   /**/
   /*.depmain-edit .el-input__inner {*/
-    /*-webkit-appearance: none;*/
-    /*background-color: #fff;*/
-    /*background-image: none;*/
-    /*border-radius: 4px;*/
-    /*border: 1px solid transparent;*/
-    /*-webkit-box-sizing: border-box;*/
-    /*box-sizing: border-box;*/
-    /*color: #606266;*/
-    /*display: inline-block;*/
-    /*font-size: inherit;*/
-    /*height: 40px;*/
-    /*line-height: 40px;*/
-    /*outline: 0;*/
-    /*padding: 0 15px;*/
-    /*-webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);*/
-    /*transition: border-color .2s cubic-bezier(.645, .045, .355, 1);*/
-    /*width: 100%;*/
+  /*-webkit-appearance: none;*/
+  /*background-color: #fff;*/
+  /*background-image: none;*/
+  /*border-radius: 4px;*/
+  /*border: 1px solid transparent;*/
+  /*-webkit-box-sizing: border-box;*/
+  /*box-sizing: border-box;*/
+  /*color: #606266;*/
+  /*display: inline-block;*/
+  /*font-size: inherit;*/
+  /*height: 40px;*/
+  /*line-height: 40px;*/
+  /*outline: 0;*/
+  /*padding: 0 15px;*/
+  /*-webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);*/
+  /*transition: border-color .2s cubic-bezier(.645, .045, .355, 1);*/
+  /*width: 100%;*/
   /*}*/
 
   .dep-maintain .depmain-edit li {
@@ -494,7 +500,7 @@
     color: #333;
     font-size: 14px;
     height: 35px;
-    cursor: pointer;
+    /*cursor: pointer;*/
   }
 
   .depmain-edit .depmain-list li .edit-hidden {
