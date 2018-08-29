@@ -213,6 +213,7 @@ export default {
     },
     initDetailDtoList() {
       this.formModel = Object.assign({}, this.settlementInfo)
+      console.log(this.formModel)
       if (this.formModel.flowFeeMidList.length > 0) {
         this.formModel.flowFeeMidList.forEach((e, index) => {
           let data = e.amount.toFixed(2).toString().split('').reverse()

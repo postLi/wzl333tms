@@ -15,7 +15,7 @@
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
-          <querySelect :orgid="otherinfo.orgid" v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
+          <querySelect :orgid="otherinfo.orgid" v-model="formModel.settlementBy"  show="select" :size="btnsize" valuekey="name" search="name" label="name" />
         </div>
       </div>
       <div class="receiptDialog_table">
@@ -111,7 +111,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="110">
             <template slot-scope="props">
-              <querySelect :orgid="otherinfo.orgid" v-model="props.row.agent" :size="btnsize" valuekey="id" search="name" label="name" />
+              <querySelect :orgid="otherinfo.orgid" v-model="props.row.agent"  show="select" :size="btnsize" valuekey="name" search="name" label="name" />
             </template>
           </el-table-column>
         </el-table>
@@ -377,7 +377,7 @@ export default {
           accountApi.postCreateFee(this.$route.query.searchQuery.vo.ascriptionOrgId, this.submitData).then(data => {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
-            this.eventBus.$emit('replaceCurrentView','/finance/accountsReceivable')
+            this.eventBus.$emit('replaceCurrentView','/finance/accountsReceivable/'+this.$route.query.currentPage)
             // 当添加结算时更新列表
             this.eventBus.$emit('updateAccountsReceivableList')
           })

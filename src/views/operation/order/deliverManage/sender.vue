@@ -27,7 +27,7 @@
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
-              </template>
+              </template>x
             </el-table-column>
           </template>
         </el-table>
@@ -399,6 +399,7 @@ export default {
     sendInfo(obj) { // 孙子-打开签收弹出框
       // console.log('祖父',JSON.stringify(obj))
       this.dotInfo = objectMerge2({}, obj)
+      console.log(this.dotInfo, 'sdfsdfsdfhwuiefhsuihf')
       this.$nextTick(() => {
         this.signVisible = true
       })

@@ -280,7 +280,6 @@ export default {
     },
     activeName: {
       handler(cval, oval) {
-        console.log(cval)
         if (cval === 'second') {
           this.getList()
         }
@@ -330,7 +329,6 @@ export default {
           arrPayNameActual: this.arrPayNameActual
         }
         this.$emit('feeName', obj)
-        console.log(obj)
       }
     },
     initCount(cval, oval) { // 对智能结算进行操作
@@ -343,6 +341,7 @@ export default {
       this.$emit('loadTable', this.rightTable)
       if (this.rightTable.length === 0) {
         this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
+        this.leftTable = objectMerge2([], this.orgLeftTable)
         return false
       }
 
@@ -376,7 +375,6 @@ export default {
 
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
           this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
-          console.log('el', el, feeActual, feeNo)
           isCopyLastData = true
           this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分结算的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
@@ -555,9 +553,9 @@ export default {
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
-            return el.shipSn !== e.shipSn 
-          })
+          // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
+          //   return el.shipSn !== e.shipSn 
+          // })
           this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
@@ -570,7 +568,7 @@ export default {
     },
     goRight() { // 数据从右边穿梭到左边
       if (this.selectedLeft.length === 0) {
-        this.$message({ type: 'warning', message: '请在右边表格选择数据' })
+        this.$message({ type: 'warning', message: '请在右边表格 选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
@@ -581,6 +579,7 @@ export default {
           })
         })
         this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
+        this.countOrgLeftTable = this.uniqueArray(objectMerge2(this.countOrgLeftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         this.selectedLeft = [] // 清空选择列表
         this.getPayName()
         this.$emit('loadTable', this.rightTable)

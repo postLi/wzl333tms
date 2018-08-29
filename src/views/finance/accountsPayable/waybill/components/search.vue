@@ -6,11 +6,15 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="开单网点" prop="shipFromOrgid">
-        <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel"></SelectTree>
+        <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel || isAbnormal"></SelectTree>
         <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
       </el-form-item>
-      <el-form-item label="中转网点" prop="transferOrgid" v-show="isTransferSel">
+      <el-form-item label="中转网点" prop="transferOrgid" v-if="isTransferSel">
         <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid">
+        </SelectTree>
+      </el-form-item>
+      <el-form-item label="结算网点" prop="orgid" v-if="isAbnormal">
+        <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
       <el-form-item label="结算状态" prop="status">
@@ -71,6 +75,10 @@ export default {
     isTransferSel: {
       type: Boolean,
       default: false
+    },
+    isAbnormal: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -88,6 +96,7 @@ export default {
       maxlength: 25,
       searchForm: {
         shipFromOrgid: '',
+        orgid: '',
         // feeType: 8, // 8-应付回扣 10-实际提货费 13-其他费用支出
         // endTime: '',
         // id: 0,
@@ -120,6 +129,9 @@ export default {
   mounted() {
     if (this.isTransferSel) {
       this.searchForm.transferOrgid = this.orgid
+    }
+    if (this.isAbnormal) {
+      this.searchForm.orgid = this.orgid
     }
     this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()

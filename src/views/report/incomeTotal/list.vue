@@ -61,7 +61,7 @@ export default {
         },
         {
           label: '回单付(元)',
-          prop: 'shipWeight',
+          prop: 'receiptPayFee',
           textAlign: 'right'
         },
         {

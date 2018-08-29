@@ -84,6 +84,7 @@ export default {
       this.selectVal = type // 当前选择输入的对象
       for (let item in this.searchForm) {
         if (this.searchForm[item] === undefined || this.searchForm[item] === '') {
+
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }

@@ -392,6 +392,7 @@ export default {
       this.selectedList = list
     },
     showDetail(order) {
+      // this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
       // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {

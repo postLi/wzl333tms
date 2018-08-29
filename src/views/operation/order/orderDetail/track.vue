@@ -39,9 +39,9 @@
           </el-row>
         </template>
       </el-step>
-      <el-step>
+      <!-- <el-step>
         <span slot="icon" class="location" ></span>
-      </el-step>
+      </el-step> -->
     </el-steps>
     </div>
     <div class="stepinfo-footer">

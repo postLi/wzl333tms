@@ -334,7 +334,8 @@ export default {
       })
     },
     showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.id)
+      console.log('order',order)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {
       this.setupTableVisible = true

@@ -374,7 +374,6 @@ export default {
           arrPayNameActual: this.arrPayNameActual
         }
         this.$emit('feeName', obj)
-        console.log(obj)
       }
     },
     initCount(cval, oval) { // 对智能结算进行操作
@@ -385,8 +384,10 @@ export default {
       this.leftTable = []
       this.rightTable = objectMerge2([], cval) // 被智能挑选到的数据 右边表格
       this.$emit('loadTable', this.rightTable)
+
       if (this.rightTable.length === 0) {
         this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
+        this.leftTable = objectMerge2([], this.orgLeftTable)
         return false
       }
 
@@ -452,6 +453,7 @@ export default {
       
       this.$emit('loadTable', this.rightTable)
       this.countOrgLeftTable = objectMerge2([], this.leftTable)
+      console.log(this.countOrgLeftTable.length)
 
     },
     uniqueArray(array, key, fee) { // 去重算法 fee-需要合并值的字段 key-合并判断标识 array-数据列
@@ -490,7 +492,6 @@ export default {
         this.$emit('loadTable', this.rightTable)
       } else {
         this.$set(obj, 'orgId', this.orgId)
-        console.log(this.orgId)
         this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
         this.$set(obj, 'settlementId', this.settlementId)
@@ -556,9 +557,9 @@ export default {
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.batchNo !== e.batchNo
           })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
-            return el.batchNo !== e.batchNo
-          })
+          // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
+          //   return el.batchNo !== e.batchNo
+          // })
           this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
             return el.batchNo !== e.batchNo
           })
@@ -568,6 +569,7 @@ export default {
         this.selectedRight = [] // 清空选择列表
         this.getPayName()
         this.$emit('loadTable', this.rightTable)
+        console.log('-', this.countOrgLeftTable.length)
         
       }
     },
@@ -584,10 +586,12 @@ export default {
           })
         })
         this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'batchNo', this.arrLastPartActualFeeName) // 去重并合并合计的值
+        this.countOrgLeftTable = this.uniqueArray(objectMerge2(this.countOrgLeftTable), 'batchNo', this.arrLastPartActualFeeName) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         this.getPayName()
         this.$emit('loadTable', this.rightTable)
+        console.log('+', this.countOrgLeftTable.length)
       }
     },
     addItem(row, index) { // 添加单行

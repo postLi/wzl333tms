@@ -109,7 +109,7 @@ export default {
         this.form = newVal
         // this.setSystemTime()
         this.form.signTime = new Date()
-        this.form.signName = this.otherinfo.name
+        this.form.signName = newVal.signName
         this.form.signTypeId = 99
         this.form.signCocumentTypeId = 96
         this.orderNum = newVal.shipIds.length

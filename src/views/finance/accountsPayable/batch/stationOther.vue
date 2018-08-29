@@ -284,7 +284,8 @@ export default {
       console.log(this.selectListBatchNos)
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {
       this.setupTableVisible = true

@@ -368,6 +368,8 @@ export default {
       
       if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.transferOrgid)
+      }else if (this.dataName === '异常理赔'){
+        this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.orgid)
       }else {
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.shipFromOrgid)
       }

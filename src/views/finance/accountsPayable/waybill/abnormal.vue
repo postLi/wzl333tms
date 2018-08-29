@@ -2,7 +2,7 @@
   <!-- 异常理赔 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isAbnormal="true"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
@@ -349,7 +349,7 @@ export default {
       })
     },
     showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.shipSn, order.id, true)
     },
     setTable() {
       this.setupTableVisible = true

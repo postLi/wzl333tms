@@ -3,18 +3,18 @@
   <el-dialog :title="'智能结算-'+title" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
     <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" label-width="70px">
       <el-form-item label="发货人" prop="shipSenderName" v-if="settlementId===178">
-        <el-select v-model="formModel.shipSenderName" filterable placeholder="搜索发货人" clearable>
-          <el-option v-for="item in senderOptions" :key="item.customerId" :label="item.customerName" :value="item.customerName">
-          </el-option>
-        </el-select>
-        <!-- <querySelect search="customerName" type="sender" valuekey="customerName" label="customerName" v-model="formModel.shipSenderName" :remote="true" /> -->
+        <el-autocomplete popper-class="my-autocomplete" v-model="formModel.shipSenderName" :fetch-suggestions="querySearchSender" placeholder="发货人搜索" size="mini" @select="handleSelectSender" auto-complete="off" :maxlength="8">
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.customerName }}</div>
+          </template>
+        </el-autocomplete>
       </el-form-item>
       <el-form-item label="车牌号" prop="truckIdNumber" v-else>
-        <el-select v-model="formModel.truckIdNumber" filterable placeholder="搜索车牌号" clearable>
-          <el-option v-for="item in truckOptions" :key="item.truckId" :label="item.truckIdNumber" :value="item.truckIdNumber">
-          </el-option>
-        </el-select>
-        <!-- <querySelect search="truckIdNumber" type="trunk" valuekey="truckIdNumber" label="truckIdNumber" v-model="formModel.truckIdNumber" :remote="true" /> -->
+        <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码搜索" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8">
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.truckIdNumber }}</div>
+          </template>
+        </el-autocomplete>
       </el-form-item>
       <el-form-item label="支出金额" prop="autoTotalAmount">
         <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount" @keyup.enter.native="onSubmit('formModel')"></el-input>
@@ -47,7 +47,7 @@ import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import querySelect from '@/components/querySelect/index'
 import { getFeeTypeDict, getOrderShipList } from '@/api/finance/settleLog'
 import { getAllCustomer } from '@/api/company/customerManage'
-import { getAllTrunk} from '@/api/company/trunkManage'
+import { getTrucK } from '@/api/operation/load'
 export default {
   components: {
     querySelect
@@ -157,20 +157,42 @@ export default {
       getAllCustomer(searchQuery).then(data => {
         this.senderOptions = data.list
       })
+      .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '未知错误~')
+        })
     },
-    getAllTrunk () { // 获取车牌号
-      let searchQuery = {
-        currentPage: 1,
-        pageSize: 200,
-        vo: {
-          orgid: this.otherinfo.orgid,
-          truckIdNumber: '',
-          truckSource: ''
+    getAllTrunk() { // 获取车牌号
+      getTrucK().then(data => {
+          this.truckOptions = data.data
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '未知错误~')
+        })
+    },
+    querySearchTruck(queryString, cb) {
+      const truckList = this.truckOptions
+      const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
+      // 调用 callback 返回车辆列表的数据
+      cb(results)
+    },
+    querySearchSender(queryString, cb) {
+      const senderList = this.senderOptions
+      const results = queryString ? senderList.filter(this.createFilter(new RegExp(queryString, "gi"), 'truckIdNumber')) : senderList
+      // 调用 callback 返回发货人列表的数据
+      cb(results)
+    },
+    createFilter(queryString, prop) {
+      return (data) => {
+        if (data[prop]) {
+          return (queryString.test(data[prop]))
         }
       }
-      getAllTrunk(searchQuery).then(data => {
-        this.truckOptions = data.list
-      })
+    },
+    handleSelectTruck(item) {
+      this.formModel.truckIdNumber = item.truckIdNumber
+    },
+    handleSelectSender(item) {
+      this.formModel.shipSenderName = item.customerName
     },
     getFeeTypeDict() {
       // this.settlementId = 178
@@ -183,7 +205,7 @@ export default {
         if (valid) {
           this.$set(this.formModel, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
           this.$set(this.formModel, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
-          this.$set(this.formModel, 'orgId', this.otherinfo.orgid)
+          this.$set(this.formModel, 'orgId', this.$route.query.orgId)
           this.$set(this.formModel, 'incomePayType', this.incomePayType)
           if (this.settlementId === 178) {
             this.$set(this.formModel, 'settlementId', this.settlementId)

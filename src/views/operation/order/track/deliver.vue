@@ -98,13 +98,13 @@ export default {
         {
           label: "批次状态",
           prop: "batchTypeName",
-          width: "120",
+          width: "100",
           fixed: true
         },
         {
           label: "送货时间",
           prop: "loadTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -112,12 +112,12 @@ export default {
         {
           label: "完成时间",
           prop: "departureTime",
-          width: "120"
+          width: "160"
         },
         {
           label: "车牌号",
-          prop: "batchTypeName",
-          width: "120"
+          prop: "truckIdNumber",
+          width: "100"
         },
         // {
         //   label: "发车时间",

@@ -148,7 +148,7 @@ export default {
     goTransferList() {
       // this.$router.push({ path: '././transfer', query: {pageKey: new Date().getTime()} })
       // 跳转到中转管理页面
-      this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
+      this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer/transfered')
     },
     // 获取批次详细信息
     getUpdateTransferDetail() {

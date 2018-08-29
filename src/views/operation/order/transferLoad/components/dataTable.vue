@@ -1,5 +1,6 @@
 <template>
   <transferTable>
+    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn2">
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
@@ -168,6 +169,9 @@ export default {
   mounted() {
   },
   methods: {
+    getList () {
+      this.$emit('regetList')
+    },
     getSum(param, type) {
       const propsArr = ['_index|1|单', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
       return getSummaries(param, propsArr)

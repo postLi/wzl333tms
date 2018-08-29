@@ -73,8 +73,8 @@ export default {
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
-        this.$set(searchObj, 'startCreatTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
-        this.$set(searchObj, 'endCreatTime', parseTime(this.searchTime[1], '{y}-{m}-{d} '))
+        this.$set(searchObj, 'startCreatTime', parseTime(this.searchTime[0], '{y}-{m}-{d}'))
+        this.$set(searchObj, 'endCreatTime', parseTime(this.searchTime[1], '{y}-{m}-{d}'))
       }
       this.$emit('change', searchObj)
     },

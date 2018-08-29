@@ -162,13 +162,13 @@ export default {
         },
         {
           label: '已结异常理赔',
-          prop: 'unpaidFee',
+          prop: 'closeFee',
           width: '150',
           fixed: false
         },
         {
           label: '未结异常理赔',
-          prop: 'closeFee',
+          prop: 'unpaidFee',
           width: '150',
           fixed: false
         },
@@ -280,13 +280,13 @@ export default {
         },
         {
           label: '已结异常理赔',
-          prop: 'unpaidFee',
+          prop: 'closeFee',
           width: '150',
           fixed: false
         },
         {
           label: '未结异常理赔',
-          prop: 'closeFee',
+          prop: 'unpaidFee',
           width: '150',
           fixed: false
         },
@@ -395,7 +395,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-
+      this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')

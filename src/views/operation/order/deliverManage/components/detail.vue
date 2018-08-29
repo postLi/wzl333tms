@@ -319,9 +319,11 @@ export default {
       this.$set(data, 'orgIds', [])
       this.$set(data, 'childShipIds', [])
       this.$set(data, 'loadIds', [])
+      this.$set(data, 'signName', '')
+      let nameArr = []
       if (list.length > 0) {
         this.selectDetailList = objectMerge2([], list)
-        this.selectDetailList.forEach(e => {
+        this.selectDetailList.forEach((e, index) => {
           data.shipIds.push(e.shipId)
           if (!e.childShipId || e.childShipId === '') {
             e.childShipId = null
@@ -329,10 +331,19 @@ export default {
           if (!e.orgid || e.orgid === '') {
             e.orgid = null
           }
+          nameArr[index] = e.shipReceiverName
           data.childShipIds.push(e.childShipId)
           data.orgIds.push(e.orgid)
           data.loadIds.push(this.loadId)
         })
+        nameArr = nameArr.filter((v, i) => { return nameArr.indexOf(v) === i })
+        if (nameArr.length > 1 && nameArr[0] !== nameArr[1]) { // 设置签收人
+          data.signName = ''
+        }
+        if (nameArr.length === 1) {
+          data.signName = nameArr[0]
+        }
+        console.log(data.signName)
         // data.shipIds = data.shipIds.join(',')
         // data.childShipIds = data.childShipIds.join(',')
       } else {
@@ -342,8 +353,9 @@ export default {
       this.signData.childShipIds = data.childShipIds
       this.signData.orgIds = data.orgIds
       this.signData.loadIds = data.loadIds
+      this.signData.signName = data.signName
       data = {}
-      console.log('select', this.signData)
+      console.log('signData', this.signData)
     },
     toggleAllRows() {
       this.$nextTick(() => {

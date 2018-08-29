@@ -595,7 +595,7 @@ export default {
             amount: e.inputChangeFee,
             inputChangeFee: e.inputChangeFee,
             shipSn: e.shipSn,
-            dataName: '中转费'
+            dataName: '异动费用'
           }
            if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
             this.tableReceiptInfo.push(item)

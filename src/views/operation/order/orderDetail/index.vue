@@ -128,7 +128,7 @@ export default {
         cancelButtonText: '关闭',
         type: 'warning'
       }).then(() => {
-        this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+        this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage/All')
       }).catch(() => {
           if (this.output.iswindow) {
             this.eventBus.$emit('closeCurrentView')

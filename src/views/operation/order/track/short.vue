@@ -9,7 +9,7 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -98,7 +98,7 @@ export default {
         {
           label: "批次状态",
           prop: "batchTypeName",
-          width: "120",
+          width: "100",
           fixed: true
         },
         {
@@ -119,7 +119,7 @@ export default {
         {
           label: "短驳时间",
           prop: "departureTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -127,7 +127,7 @@ export default {
         {
           label: "配载时间",
           prop: "loadTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -140,7 +140,7 @@ export default {
         {
           label: "接收时间",
           prop: "receivingTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }

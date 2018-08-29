@@ -122,7 +122,7 @@
         </el-table-column>
         <el-table-column prop="hadBackPay" sortable label="已结回单付" width="100">
         </el-table-column>
-        <el-table-column prop="backPayActual" sortable label="实结回单付" width="90">
+        <el-table-column prop="backPayActual" sortable label="实结回单付" width="100">
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
@@ -130,7 +130,7 @@
         </el-table-column>
         <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="110">
         </el-table-column>
-        <el-table-column prop="unusualPayActual" sortable label="实结异动费用" width="90">
+        <el-table-column prop="unusualPayActual" sortable label="实结异动费用" width="110">
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
@@ -256,9 +256,9 @@ export default {
       deep: true
     }
   },
-  // mounted() {
-  //   this.getList()
-  // },
+  mounted() {
+    this.getList()
+  },
   activated() {
     this.getList()
   },
@@ -300,7 +300,6 @@ export default {
           arrPayNameActual: this.arrPayNameActual
         }
         this.$emit('feeName', obj)
-        console.log(obj)
       }
     },
     initCount(cval, oval) { // 对智能结算进行操作
@@ -313,10 +312,11 @@ export default {
       this.$emit('loadTable', this.rightTable)
       if (this.rightTable.length === 0) {
         this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
+        this.leftTable = objectMerge2([], this.orgLeftTable)
         return false
       }
-
-      this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据 
+      console.log('orgLeftTable',this.orgLeftTable.length)
+      this.leftTable = Object.assign([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据 
         if (this.rightTable[index]) {
           return el.shipSn !== this.rightTable[index].shipSn
         } else {
@@ -441,7 +441,6 @@ export default {
         this.$emit('loadTable', this.rightTable)
       } else {
         this.$set(obj, 'orgId', this.orgId)
-        console.log(this.orgId)
         this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
         this.$set(obj, 'settlementId', this.settlementId)
@@ -489,11 +488,13 @@ export default {
     dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)
+      console.log('selectedRight', this.selectedRight.length)
       this.doAction('goLeft')
     },
     dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
+      console.log('selectedLeft',  this.selectedLeft.length)
       this.doAction('goRight')
     },
     uniqueArray(array, key, fee) {
@@ -527,9 +528,9 @@ export default {
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
-            return el.shipSn !== e.shipSn
-          })
+          // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
+          //   return el.shipSn !== e.shipSn
+          // })
           this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
@@ -553,13 +554,9 @@ export default {
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
-          // let item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn',  this.arrLastPartActualFeeName) // 去重
+        this.countOrgLeftTable = this.uniqueArray(objectMerge2(this.countOrgLeftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         this.getPayName()
@@ -590,7 +587,7 @@ export default {
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay','hadBackPay','hadArrivalPay','hadOnPay','noArrivalPay','hadMonthPay','noMonthPay','noBackPay','hadUnusualPay','noUnusualPay','hadBackPay','hadArrivalPay','arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','noShipFeeTotal', 'noShipFeeTotal', 'hadShipFeeTotal','hadShipFeeTotal']
+      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay','hadBackPay','hadArrivalPay','hadOnPay','noArrivalPay','hadMonthPay','noMonthPay','noBackPay','hadUnusualPay','noUnusualPay','hadBackPay','hadArrivalPay','arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','noShipFeeTotal', 'noShipFeeTotal', 'hadShipFeeTotal','hadShipFeeTotal', 'onPayActual', 'arrivalPayActual', 'backPayActual', 'unusualPayActual', 'monthPayActual']
       return getSummaries(param, propsArr)
     }
   }

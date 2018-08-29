@@ -3,7 +3,6 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :networkFlog="true" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新建</el-button>
           <el-button type="success" :size="btnsize" icon="el-icon-success" @click="doAction('acceptance')" plain>受理</el-button>
           <el-button type="warning" :size="btnsize" icon="el-icon-error" @click="doAction('refuse')" plain>拒绝</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>

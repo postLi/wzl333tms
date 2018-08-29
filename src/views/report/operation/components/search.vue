@@ -122,8 +122,8 @@ export default {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
-        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
-        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} '))
+        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d}'))
+        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d}'))
         // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
