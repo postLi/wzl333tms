@@ -139,17 +139,17 @@ export default {
         },
         {
           label: "送货件数",
-          prop: "actualAmountall",
+          prop: "loadAmountall",
           width: "120"
         },
         {
           label: "送货重量",
-          prop: "actualWeigntall",
+          prop: "loadWeightall",
           width: "120"
         },
         {
           label: "送货体积",
-          prop: "actualVolumeall",
+          prop: "loadVolumeall",
           width: "120"
         },
         // {

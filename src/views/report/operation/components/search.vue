@@ -5,8 +5,8 @@
         <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="开单网点" prop="orgId">
-        <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
+      <el-form-item label="网点" prop="orgId">
+        <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
         </SelectTree>
       </el-form-item>
       <el-form-item label="到达城市" prop="shipToCityName">
@@ -122,8 +122,8 @@ export default {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} '))
-        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d}'))
-        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d}'))
+        this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }

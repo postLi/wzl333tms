@@ -152,27 +152,27 @@ export default {
         },
         {
           label: "总件数",
-          prop: "actualAmount",
+          prop: "shipAmount",
           width: "120"
         },
         {
           label: "总重量",
-          prop: "actualWeight",
+          prop: "shipWeightall",
           width: "120"
         },
         {
           label: "总体积",
-          prop: "actualVolume",
+          prop: "shipVolumeall",
           width: "120"
         },
         {
           label: "重量装载率",
-          prop: "weightRate",
+          prop: "weightLoadRate",
           width: "120"
         },
         {
           label: "体积装载率",
-          prop: "volumeRate",
+          prop: "volumeLoadRate",
           width: "120"
         },
         {

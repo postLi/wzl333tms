@@ -109,7 +109,7 @@ export default {
         },
          {
           label: "开单网点",
-          prop: "shipFromOrgid",
+          prop: "shipFromOrgidName",
           width: "110"
         },
         {

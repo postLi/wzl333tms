@@ -3,51 +3,51 @@
     <el-form ref="formModel" :model="formModel" :rules="rules">
       <div id="settlementWaybill">
         <div class="receiptDialog_head">
-        <div class="receiptDialog_head_item">
-          <label>单据号</label>
-          <el-input v-model="formModel.settlementSn" placeholder="请输入" :size="btnsize" disabled></el-input>
+          <div class="receiptDialog_head_item">
+            <label>单据号</label>
+            <el-input v-model="formModel.settlementSn" placeholder="请输入" :size="btnsize" disabled></el-input>
+          </div>
+          <div class="receiptDialog_head_item">
+            <label>发生时间</label>
+            <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
+            </el-date-picker>
+          </div>
+          <div class="receiptDialog_head_item">
+            <label>经办人</label>
+            <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
+            <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="name" show="select" search="name" label="name"></querySelect>
+          </div>
         </div>
-        <div class="receiptDialog_head_item">
-          <label>发生时间</label>
-          <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
-          </el-date-picker>
+        <div class="receiptDialog_table">
+          <el-table :data="formModel.detailDtoList2" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
+            <el-table-column prop="date" label="序号" type="index" width="70">
+            </el-table-column>
+            <el-table-column prop="dataName" label="费用项">
+            </el-table-column>
+            <el-table-column>
+              <el-table-column prop="tenMillion" label="千" width="40">
+              </el-table-column>
+              <el-table-column prop="million" label="百" width="40">
+              </el-table-column>
+              <el-table-column prop="oneHundrenThousand" label="十" width="40">
+              </el-table-column>
+              <el-table-column prop="tenThousand" label="万" width="40">
+              </el-table-column>
+              <el-table-column prop="thousand" label="千" width="40">
+              </el-table-column>
+              <el-table-column prop="hundren" label="百" width="40">
+              </el-table-column>
+              <el-table-column prop="ten" label="十" width="40">
+              </el-table-column>
+              <el-table-column prop="yuan" label="元" width="40">
+              </el-table-column>
+              <el-table-column prop="jiao" label="角" width="40">
+              </el-table-column>
+              <el-table-column prop="fen" label="分" width="40">
+              </el-table-column>
+            </el-table-column>
+          </el-table>
         </div>
-        <div class="receiptDialog_head_item">
-          <label>经办人</label>
-          <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
-          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="name" show="select" search="name" label="name"></querySelect>
-        </div>
-      </div>
-      <div class="receiptDialog_table">
-        <el-table :data="formModel.detailDtoList2" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
-          <el-table-column prop="date" label="序号" type="index" width="70">
-          </el-table-column>
-          <el-table-column prop="dataName" label="费用项">
-          </el-table-column>
-          <el-table-column>
-            <el-table-column prop="tenMillion" label="千" width="40">
-            </el-table-column>
-            <el-table-column prop="million" label="百" width="40">
-            </el-table-column>
-            <el-table-column prop="oneHundrenThousand" label="十" width="40">
-            </el-table-column>
-            <el-table-column prop="tenThousand" label="万" width="40">
-            </el-table-column>
-            <el-table-column prop="thousand" label="千" width="40">
-            </el-table-column>
-            <el-table-column prop="hundren" label="百" width="40">
-            </el-table-column>
-            <el-table-column prop="ten" label="十" width="40">
-            </el-table-column>
-            <el-table-column prop="yuan" label="元" width="40">
-            </el-table-column>
-            <el-table-column prop="jiao" label="角" width="40">
-            </el-table-column>
-            <el-table-column prop="fen" label="分" width="40">
-            </el-table-column>
-          </el-table-column>
-        </el-table>
-      </div>
       </div>
       <div class="receiptDialog_todo">
         <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
@@ -64,8 +64,7 @@
                   <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
                 </template>
               </querySelect> -->
-              <el-autocomplete popper-class="querySelectItem" v-model="props.row.financialWay" :size="btnsize" :fetch-suggestions="querySearch" placeholder="支付方式" 
-              @select="(item) => sender(item,props.$index)">
+              <el-autocomplete popper-class="querySelectItem" v-model="props.row.financialWay" :size="btnsize" :fetch-suggestions="querySearch" placeholder="支付方式" @select="(item) => sender(item,props.$index)">
                 <template slot-scope="{item}">
                   <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
                 </template>
@@ -84,7 +83,7 @@
           </el-table-column>
           <el-table-column prop="bankAccountName" label="开户人" width="80">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankAccountName" :size="btnsize" :maxlength="maxlength" ></el-input>
+              <el-input v-model="props.row.bankAccountName" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="chequeNumber" label="支票号码">
@@ -109,7 +108,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="80">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name" show="select" search="name" label="name" :maxlength="maxlength" ></querySelect>
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name" show="select" search="name" label="name" :maxlength="maxlength"></querySelect>
             </template>
           </el-table-column>
         </el-table>
@@ -148,7 +147,7 @@ export default {
         callback()
       }
     }
-    
+
     return {
       maxlength: 30,
       amount: 0,
@@ -205,7 +204,7 @@ export default {
           return '异动费用结算'
       }
     },
-    currentPage () {
+    currentPage() {
       let currentPage = this.$route.query.currentPage
       return currentPage.substr(7, currentPage.length)
     }
@@ -242,10 +241,10 @@ export default {
     })
   },
   methods: {
-    valueNumber (val) {
-      return val.replace(/[^\d]/g,'')
+    valueNumber(val) {
+      return val.replace(/[^\d]/g, '')
     },
-    print () {
+    print() {
       let data = Object.assign(this.formModel)
       this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
       PrintSettlement(data)
@@ -306,7 +305,7 @@ export default {
     initDetailDtoList() {
       this.formModel.amount = 0
       this.formModel.detailDtoList = objectMerge2([], this.info)
-       // 设置费用项
+      // 设置费用项
       let obj = {}
       this.formModel.detailDtoList.map(el => {
         if (obj[el.dataName]) {
@@ -318,8 +317,8 @@ export default {
       for (const i in obj) {
         this.formModel.detailDtoList2.push(obj[i])
       }
-      obj= {}
-      
+      obj = {}
+
       this.formModel.detailDtoList2.forEach((e, index) => {
         this.formModel.amount += e.amount
         let data = Number(e.amount).toFixed(2).toString().split('').reverse() // 默认保留两位小数 toFixed(2)
@@ -345,8 +344,8 @@ export default {
         this.amount.splice(apoint, 1)
       }
     },
-    sender (item, index) {
-      this.$set( this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index],item))
+    sender(item, index) {
+      this.$set(this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index], item))
     },
     getSystemTime() {
       getSystemTime().then(data => {
@@ -365,12 +364,12 @@ export default {
       let shipPayableFeeDtos = []
       // this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       // this.$set(this.submitData, 'settlementId', this.settlementId)
-      
+
       if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.transferOrgid)
-      }else if (this.dataName === '异常理赔'){
+      } else if (this.dataName === '异常理赔') {
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.orgid)
-      }else {
+      } else {
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.shipFromOrgid)
       }
       this.$set(capitalFlow, 'settlementSn', this.formModel.settlementSn)
@@ -392,11 +391,13 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          console.log('submitData',this.submitData)
+          console.log('submitData', this.submitData)
           let orgid = ''
           if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
             orgid = this.getRouteInfo.vo.transferOrgid
-          }else {
+          } else if (this.dataName === '异常理赔') {
+            orgid = this.getRouteInfo.vo.orgid
+          } else {
             orgid = this.getRouteInfo.vo.shipFromOrgid
           }
           // return false /////////////////////////////////////////////
@@ -405,10 +406,10 @@ export default {
               this.closeMe()
               // this.$router.push({ path: './accountsPayable/waybill', query:{name: this.currentPage} })
               let currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-              this.$router.push({ path: './accountsPayable/waybill/'+currentPage })
+              this.$router.push({ path: './accountsPayable/waybill/' + currentPage })
             })
             .catch(error => {
-              this.$message({ type: 'error', message:  error.errorInfo || error.text })
+              this.$message({ type: 'error', message: error.errorInfo || error.text })
             })
         }
       })

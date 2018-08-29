@@ -135,17 +135,17 @@ export default {
         // },
         {
           label: "实载总件数",
-          prop: "actualAmountall",
+          prop: "loadAmountall",
           width: "120"
         },
         {
           label: "实载总重量",
-          prop: "actualWeigntall",
+          prop: "loadWeightall",
           width: "120"
         },
         {
           label: "实载总体积",
-          prop: "actualVolumeall",
+          prop: "loadVolumeall",
           width: "120"
         },
         {
@@ -155,7 +155,7 @@ export default {
         },
         {
           label: "运单总重量",
-          prop: "shipWeigntall",
+          prop: "shipWeightall",
           width: "120"
         },
         {
