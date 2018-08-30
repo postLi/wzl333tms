@@ -25,7 +25,7 @@
            
             <th>送货费</th>
             <td>
-              <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.deliveryFee" :size="btnsize" disabled></el-input>
             </td>
             <th>分摊方式</th>
             <td>
