@@ -20,7 +20,7 @@
           <tr>
              <th>可载重量</th>
             <td>
-              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
             </td>
             <th>车牌号码</th>
             <td>
@@ -32,13 +32,13 @@
             </td> -->
             <th>分摊方式</th>
             <td>
-              <el-input v-model="info.apportionTypeName" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.apportionType" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
             <th>可载体积</th>
             <td>
-              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.truckVolume" :size="btnsize" disabled></el-input>
             </td>
             <th>配载日期</th>
             <td>

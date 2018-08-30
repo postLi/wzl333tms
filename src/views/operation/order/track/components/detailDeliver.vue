@@ -29,7 +29,7 @@
             </td>
             <th>分摊方式</th>
             <td>
-              <el-input v-model="info.apportionTypeName" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.apportionType" :size="btnsize" disabled></el-input>
             </td>
             <th>送货日期</th>
             <td>
@@ -39,11 +39,11 @@
           <tr>
              <th>可载重量</th>
             <td>
-              <el-input v-model="info.loadWeightall" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
             </td>
             <th>可载体积</th>
             <td>
-              <el-input v-model="info.loadVolumeall" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.truckVolume" :size="btnsize" disabled></el-input>
             </td>
             
             <th>要求到达时间</th>

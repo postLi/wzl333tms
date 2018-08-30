@@ -250,6 +250,21 @@ export default {
         //   width: "120"
         // },
         {
+          label: "分摊方式",
+          prop: "apportionType",
+          width: "120"
+        },
+        {
+          label: "可载重量",
+          prop: "truckLoad",
+          width: "120"
+        },
+        {
+          label: "可载体积",
+          prop: "truckVolume",
+          width: "120"
+        },
+        {
           label: "备注",
           prop: "remark",
           width: "120"

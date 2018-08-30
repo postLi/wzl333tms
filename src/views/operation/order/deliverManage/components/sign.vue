@@ -98,6 +98,7 @@ export default {
         // signPic: ''
       },
       rules: {
+        signName: [{ required: true, trigger: 'blur', message: '签收人不能为空！'}]
         // documentNum: [{ required: true, trigger: 'blur', validator: validateNum }]
       }
     }
