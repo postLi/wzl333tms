@@ -35,7 +35,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="归属部门" :label-width="formLabelWidth" prop="departmentId">
-          <SelectType v-model="form.departmentId" type="department_type" filterable placeholder="请选择部门" />
+          <SelectType :orgid="otherinfo.orgid" v-model="form.departmentId" type="department_type" filterable placeholder="请选择部门" />
           <!-- <el-select v-model="form.departmentId" placeholder="请选择部门">
             <el-option v-for="item in departments" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
           </el-select> -->
