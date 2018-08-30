@@ -149,7 +149,8 @@
         <div class="side_right_bottom clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" v-if="form.status ===32" plain @click="doAction('addPeople')">
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" v-if="form.status ===32" plain
+                       @click="doAction('addPeople')">
               新增员工
             </el-button>
             <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>
@@ -157,7 +158,8 @@
             </el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain>修改网点
             </el-button>
-            <el-button v-if="form.status ===32" type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain>
+            <el-button v-if="form.status ===32" type="primary" :size="btnsize" icon="el-icon-circle-plus"
+                       @click="doAction('addNot')" plain>
               新增网点
             </el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain>部门维护
@@ -244,7 +246,8 @@
         </div>
       </div>
       <AddDot :dotInfo="getform" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId"
-              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="updateSuccess" :popVisible="addDoTotVisible" @close="closeAddDot"/>
+              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="updateSuccess"
+              :popVisible="addDoTotVisible" @close="closeAddDot"/>
       <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid"
                  @success="fetchOrgId(getOrgId)"/>
       <DepMaintain :popVisible.sync="addDepMaintainisible" :isDepMain="isDepMain" :dotInfo="usersArr" @close="closeDep"
@@ -266,13 +269,13 @@
   import AddPeople from '../employeeManage/add'
   import AddDot from './addDot'
   import DepMaintain from './depMaintain'
-  import { getOrgId } from '../../../api/company/groupManage'
-  import { getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo } from '../../../api/company/employeeManage'
+  import {getOrgId} from '../../../api/company/groupManage'
+  import {getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo} from '../../../api/company/employeeManage'
 
-  import { mapGetters } from 'vuex'
+  import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import { getUserInfo } from '../../../utils/auth'
-  import { objectMerge2 } from '@/utils/index'
+  import {getUserInfo} from '../../../utils/auth'
+  import {objectMerge2} from '@/utils/index'
 
   export default {
     name: 'groupManage',
@@ -287,7 +290,7 @@
         'otherinfo'
       ]),
       getDataTree() {
-        return this.checkedInput ? this.dataTreeFn(objectMerge2([],this.dataTree)) : this.dataTree
+        return this.checkedInput ? this.dataTreeFn(objectMerge2([], this.dataTree)) : this.dataTree
       }
     },
     data() {
@@ -381,8 +384,8 @@
     methods: {
       dataTreeFn(arr) {
         return arr.filter((el, val) => {
-          if(el.status !== 31){
-            if(el.children){
+          if (el.status !== 31) {
+            if (el.children) {
               el.children = this.dataTreeFn(el.children)
             }
             return true
@@ -391,7 +394,7 @@
           }
         })
       },
-updateSuccess(isModify) {
+      updateSuccess(isModify) {
         this.fetchOrg(this.getOrgId)
         if (isModify) {
           this.getOrgInfo(this.getOrgId)

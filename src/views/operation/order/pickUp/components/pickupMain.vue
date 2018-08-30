@@ -97,6 +97,7 @@
           }
         },
         dotInfo (newVal) {
+          console.log(this.dotInfo)
           this.getMentInfo.pickupId = this.dotInfo.id
         },
         popVisible (newVal) {

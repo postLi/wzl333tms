@@ -45,7 +45,7 @@
                   <div class="edit-hidden">
                     <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
                     <el-input ref="svginput1"
-                      v-model="item.dictName"
+                              v-model="item.dictName"
                     >
                     </el-input>
                     <div class="addSvg">
@@ -238,9 +238,9 @@
         this.showBotton = false
         this.hiddenEdit = false
         this.showDate = false
-        setTimeout(()=>{
+        setTimeout(() => {
           this.$refs['svginput'].focus()
-        },100)
+        }, 100)
 
 
       },
@@ -384,6 +384,10 @@
       font-size: 14px;
 
     }
+    .el-input{
+      width: 340px;
+      float: left;
+    }
     .addSvg {
       display: inline-block;
       span.svgSpan {
@@ -391,7 +395,7 @@
 
         .lll-dot-true {
           font-size: 20px;
-          margin: 2px 6px 1px 16px;
+          margin: 10px 6px 1px 60px;
         }
         .lll-dot-false {
           font-size: 20px;
@@ -414,7 +418,7 @@
         }
 
       }
-      span.svgSpan2{
+      span.svgSpan2 {
         .lll-dot-false {
           font-size: 20px;
           cursor: pointer;
@@ -436,11 +440,7 @@
 
   }
 
-  .depmain-add .el-input {
-    width: 340px;
-    float: left;
 
-  }
 
   .depmain-add .el-input .el-input__inner {
     height: 30px;

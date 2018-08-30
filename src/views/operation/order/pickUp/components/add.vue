@@ -33,9 +33,9 @@
             <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" :disabled="isDbclick"
                       :maxlength="8"></el-input>
           </el-form-item>
-          <el-form-item label="体积" prop="tmsOrderPickup.pickupVolume">
+          <el-form-item label="体积" prop="">
             <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+                      :maxlength="8" v-number-only:point></el-input>
           </el-form-item>
           <el-form-item label="重量" prop="tmsOrderPickup.pickupWeight">
             <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick"
