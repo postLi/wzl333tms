@@ -125,7 +125,6 @@ export default {
     initChartWeight() {
       const surweight = this.baseInfo.totalWeight - this.baseInfo.weight
       this.baseInfo.surplusWeight = surweight
-      console.log(this.baseInfo.surplusWeight)
       if (this.popVisible) {
         this.chart = echarts.init(this.$refs.echartWeight)
         this.chart.setOption({
@@ -139,8 +138,12 @@ export default {
             x: 'center',
             bottom: '0px'
           },
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
           series: [{
-            name: '注册信息',
+            name: '总载重',
             type: 'pie',
             radius: '40%',
             label: {
@@ -155,19 +158,19 @@ export default {
               }
             },
             data: [{
-              value: this.baseInfo.weight,
-              name: '已配载',
-              itemStyle: {
+                value: this.baseInfo.weight,
+                name: '已配载',
+                itemStyle: {
                   color: '#FFCC66'
                 }
-            },
-            {
-              value: this.baseInfo.surplusWeight,
-              name: '可配载',
-              itemStyle: {
+              },
+              {
+                value: this.baseInfo.surplusWeight,
+                name: '可配载',
+                itemStyle: {
                   color: '#79F7C1'
                 }
-            }
+              }
             ]
           }]
         })
@@ -189,8 +192,12 @@ export default {
             x: 'center',
             bottom: '0px'
           },
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
           series: [{
-            name: '注册信息',
+            name: '总载立方',
             type: 'pie',
             radius: '40%',
             label: {
@@ -205,19 +212,19 @@ export default {
               }
             },
             data: [{
-              value: this.baseInfo.volume,
-              name: '已配载',
-              itemStyle: {
+                value: this.baseInfo.volume,
+                name: '已配载',
+                itemStyle: {
                   color: '#FFCC66'
                 }
-            },
-            {
-              value: this.baseInfo.surplusVolume,
-              name: '可配载',
-              itemStyle: {
+              },
+              {
+                value: this.baseInfo.surplusVolume,
+                name: '可配载',
+                itemStyle: {
                   color: '#79F7C1'
                 }
-            }
+              }
             ]
           }]
         })

@@ -4,8 +4,8 @@
     <div class="print_aside">
       <div class="print_aside_head">
         <span>字段列表 {{formModel.labelList.length}} </span>
-        <el-button type="warning" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">保存设置</el-button>
-        <el-button type="success" @click="resetForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">全部重置</el-button>
+        <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">保存设置</el-button>
+        <el-button @click="resetForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">全部重置</el-button>
       </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
         <ul class="print_aside_content">
@@ -16,27 +16,27 @@
               <el-switch v-model="item.isshow===1?true:false" :active-text="item.isshow?'显示':'隐藏'" @change="handleSwitch(item)" v-if="item.filedValue!=='setting'"></el-switch>
               <div class="print_aside_content_itemSet">
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.leftx" placeholder="X轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.leftx" v-numberOnly placeholder="X轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">X</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.topy" placeholder="Y轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.topy" v-numberOnly placeholder="Y轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">Y</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.width" placeholder="宽度" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.width" v-numberOnly placeholder="宽度" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">宽</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input :size="btnsize" v-model="item.height" placeholder="高度" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.height" v-numberOnly placeholder="高度" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">高</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item v-if="item.filedValue!=='setting'">
-                  <el-input :size="btnsize" v-model="item.fontsize" placeholder="字号" @change="(obj) => {changeValue(obj, item,index)}">
+                  <el-input :size="btnsize" v-model="item.fontsize" v-numberOnly placeholder="字号" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">字号</template>
                   </el-input>
                 </el-form-item>
