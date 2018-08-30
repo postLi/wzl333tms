@@ -16,7 +16,9 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
-                    <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point :maxlength="8"></el-input>
+                    <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point :maxlength="8">
+                      <template slot="append">元</template>
+                    </el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
@@ -61,13 +63,17 @@
               </div>
               <div class="loadFrom-type-baseInfo">
                 <div>
-                  <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model.number="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8"></el-input>
+                  <el-form-item label="可载体积" prop="truckVolume">
+                    <el-input size="mini" v-model.number="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8">
+                      <template slot="append">方</template>
+                    </el-input>
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8"></el-input>
+                  <el-form-item label="可载重量" prop="truckLoad">
+                    <el-input size="mini" v-model.number="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
+                      <template slot="append">千克</template>
+                    </el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -107,67 +113,67 @@
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
               <ul class="feeList_lyy">
                 <li>
-                  <p>现付运费</p>
+                  <p>现付运费(元)</p>
                   <el-form-item prop="nowpayCarriage">
                     <el-input v-model="formFee.nowpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>现付油卡</p>
+                  <p>现付油卡(元)</p>
                   <el-form-item prop="nowpayOilCard">
                     <el-input v-model="formFee.nowpayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>回付运费</p>
+                  <p>回付运费(元)</p>
                   <el-form-item prop="backpayCarriage">
                     <el-input v-model="formFee.backpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>回付油卡</p>
+                  <p>回付油卡(元)</p>
                   <el-form-item prop="backpayOilCard">
                     <el-input v-model="formFee.backpayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>到付运费</p>
+                  <p>到付运费(元)</p>
                   <el-form-item prop="arrivepayCarriage">
                     <el-input v-model="formFee.arrivepayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>到付油卡</p>
+                  <p>到付油卡(元)</p>
                   <el-form-item prop="arrivepayOilCard">
                     <el-input v-model="formFee.arrivepayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>整车保险费</p>
+                  <p>整车保险费(元)</p>
                   <el-form-item prop="carloadInsuranceFee">
                     <el-input v-model="formFee.carloadInsuranceFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>发站装卸费</p>
+                  <p>发站装卸费(元)</p>
                   <el-form-item prop="leaveHandlingFee">
                     <el-input v-model="formFee.leaveHandlingFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>发站其他费</p>
+                  <p>发站其他费(元)</p>
                   <el-form-item prop="leaveOtherFee">
                     <el-input v-model="formFee.leaveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>到站装卸费</p>
+                  <p>到站装卸费(元)</p>
                   <el-form-item prop="arriveHandlingFee">
                     <el-input v-model="formFee.arriveHandlingFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>到站其他费</p>
+                  <p>到站其他费(元)</p>
                   <el-form-item prop="arriveOtherFee">
                     <el-input v-model="formFee.arriveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>

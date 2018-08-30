@@ -38,15 +38,15 @@
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="120">
+        <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="140">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="120">
+        <el-table-column prop="repertoryVolume" sortable label="库存体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量(千克)" width="120">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
@@ -72,27 +72,27 @@
             <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
+        <el-table-column prop="loadWeight" sortable label="配载重量(千克)" width="120">
           <template slot-scope="scope">
             <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
+        <el-table-column prop="loadVolume" sortable label="配载体积(方)" width="120">
           <template slot-scope="scope">
             <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="120">
+        <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="120">
+        <el-table-column prop="repertoryVolume" sortable label="库存体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量(千克)" width="120">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>

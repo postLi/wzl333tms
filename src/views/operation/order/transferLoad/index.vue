@@ -8,14 +8,14 @@
             中转信息&nbsp; <b>中转批次：{{formModel.transferBatchNo}}</b>
           </template>
           <div class="clearfix loadFrom">
-            <el-form :model="formModel" ref="formModel" class="demo-form-inline" :inline="true" label-width="110px" :rules="formModelRules">
+            <el-form :model="formModel" ref="formModel" class="demo-form-inline" :inline="true" label-width="90px" :rules="formModelRules">
               <!-- 基本信息 -->
               <el-form-item label="承运商" class="addCarrierInput" prop="carrierId">
                 <i class="el-icon-plus el-input__icon" @click="doAction('addTruck')"></i>
                 <querySelect size="mini" show='select' search="carrierName" :remote="true" :name="carrierName" v-model="formModel.carrierId" type="carrier" valuekey="carrierId"  @change="getCarrier" >
                 </querySelect>
               </el-form-item>
-              <el-form-item prop="transferTime" label="中转日期">
+              <el-form-item prop="transferTime" label="中转日期"  class="formItemTextDanger">
                 <el-date-picker size="mini" v-model="formModel.transferTime" value-format="yyyy-MM-dd hh:mm:ss" type="datetime" placeholder="中转日期">
                 </el-date-picker>
               </el-form-item>
@@ -42,7 +42,7 @@
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
-      <dataTable :leftData="leftData" :rightData="rightData"  @loadTable="getLoadTable"></dataTable>
+      <dataTable :leftData="leftData" :rightData="rightData"  @loadTable="getLoadTable" @regetList="regetList"></dataTable>
       </div>
       
     </div>
@@ -101,6 +101,12 @@ export default {
     this.init()
   },
   methods: {
+    regetList () {
+     // 刷新数据
+     this.rightData = []
+     this.leftData = []
+     this.getSelectAddLoadRepertoryList()
+    },
     init() {
       const transferId = this.$route.query.transferId
       this.reset()
@@ -337,7 +343,7 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
-    
+
     // .loadFrom {
     //   padding: 0 10px 10px 0;
     //   .el-form-item {
@@ -352,6 +358,12 @@ export default {
     // }
      .loadFrom {
       margin-bottom: 10px;
+      .el-form--inline .el-form-item{
+        margin-bottom: 0px;
+      }
+      .el-input__inner{
+        width: 200px;
+      }
       .loadFrom-type {
         position: absolute;
         z-index: 33;
@@ -365,6 +377,7 @@ export default {
       }
     }
     .addCarrierInput{
+
       .el-form-item__content{
         position: relative;
       }
@@ -382,10 +395,11 @@ export default {
       }
     }
     .el-collapse {
-      border: 1px solid #E0E0E0;
+      border: 2px solid #cdf;
     }
     .el-collapse-item__header {
-      background-color: #E9F3FA;
+      border-bottom: 2px solid #cdf;
+      background-color: #FFFFFF;
       padding: 0px 0 0 10px;
       height: 42px;
       line-height: 42px;

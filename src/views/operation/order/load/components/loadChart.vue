@@ -130,7 +130,7 @@ export default {
         this.chart.setOption({
           title: {
             text: '总载重: ' + this.baseInfo.totalWeight,
-            subtext: '单位：吨',
+            subtext: '单位：千克',
             subtextStyle: {
               fontSize: 14,
               color: '#666666'
@@ -149,7 +149,7 @@ export default {
             label: {
               normal: {
                 show: true,
-                formatter: '{b}:\n\n{c}吨\n\n{d}%',
+                formatter: '{b}:\n\n{c}千克\n\n{d}%',
                 textStyle: {
                   fontWeight: 'normal',
                   fontSize: 16,

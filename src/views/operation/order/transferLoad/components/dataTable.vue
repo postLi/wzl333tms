@@ -3,7 +3,7 @@
     <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn2">
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
+      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%"  @row-dblclick="dclickAddItem" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed :render-header="setHeader" width="50">
@@ -50,7 +50,7 @@
     </div>
     <!-- 右边表格区 -->
     <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn2">
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
+      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%"  @row-dblclick="dclickMinusItem" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50" :render-header="setHeader2">
@@ -267,6 +267,16 @@ export default {
       this.selectedRight = []
       this.selectedRight[index] = row
       this.doAction('goLeft')
+    },
+    dclickAddItem (row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
+    },
+    dclickMinusItem (row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
     },
     setHeader(h, { column }) {
       return h('el-button', {
