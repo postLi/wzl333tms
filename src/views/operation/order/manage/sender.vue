@@ -3,13 +3,13 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" >新建</el-button>
-          <el-button type="success" :size="btnsize" icon="el-icon-success" @click="doAction('acceptance')" plain >受理</el-button>
-          <el-button type="warning" :size="btnsize" icon="el-icon-error" @click="doAction('refuse')" plain >拒绝</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain >修改</el-button>
-          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain >作废</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain >删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain >导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:ORDERMANGER_ADD>新建</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-success" @click="doAction('acceptance')" plain v-has:ORDERMANGER_REVER>受理</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-error" @click="doAction('refuse')" plain v-has:ORDERMANGER_CANCEL>拒绝</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:ORDERMANGER_EDIT>修改</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain v-has:ORDERMANGER_NO>作废</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:ORDERMANGER_DEL>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:ORDERMANGER_EXP>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
