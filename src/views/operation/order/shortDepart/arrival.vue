@@ -4,13 +4,13 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">短驳到车</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('repertory')">短驳入库</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消到车</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消入库</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printPaper')" plain>打印清单</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printList')" plain>打印批次</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')" v-has:LOAD_DB_ARRIVE>短驳到车</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('repertory')" v-has:LOAD_DB_REPERTORY>短驳入库</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')" v-has:LOAD_DB_CANCEL>取消到车</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')" v-has:LOAD_DB_CALCELREPE>取消入库</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printPaper')" plain v-has:LOAD_DB_PRINT2>打印清单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printList')" plain v-has:LOAD_DB_PRINTBATCH>打印批次</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_DB_EXPORT2>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>
