@@ -611,10 +611,10 @@ export default {
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].shipSn
           // =>todo 删除多个
-          let ids = this.selected.map(item => {
+          const ids = this.selected.map(item => {
             return item.id
           })
-          ids = ids.join(',')
+          // ids = ids.join(',')
           console.log(ids + 'wzl')
           if (this.selected[0].status !== 'NOSETTLEMENT') {
             this.$message.warning('已结算或者部分结算的单据不能删除')
@@ -624,7 +624,7 @@ export default {
               confirmButtonText: '删除',
               cancelButtonText: '取消',
               type: 'warning'
-            }).then((ids) => {
+            }).then(() => {
               Delete(ids).then(res => {
                 this.$message({
                   type: 'success',
