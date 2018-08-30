@@ -192,7 +192,7 @@ export default {
           meta: { role: ['admin'], ptitle: '车费结算', title: '到站装卸费', noCache: true, istab: true, code: 'PAY_LOADLIST8' }
         },
         {
-          path: '/finance/accountsPayable/batch/arriveOther',
+          path: '/finance/accountsPayable/batch/arrivalOther',
           icon: 'QQ',
           name: '到站其他费',
           component: _import('finance/accountsPayable/batch/arriveOther'),

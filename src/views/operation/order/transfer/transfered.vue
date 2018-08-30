@@ -146,7 +146,7 @@ export default {
       }, {
         'label': '运单号',
         'prop': 'shipSn',
-        'width': '100',
+        'width': '130',
         'fixed': true
       }, {
         'label': '中转单号',
@@ -161,14 +161,14 @@ export default {
       }, {
         'label': '开单时间',
         'prop': 'ydCreateTime',
-        'width': '180',
+        'width': '160',
         'slot': function(scope) {
           return `${parseTime(scope.row.ydCreateTime)}`
         }
       }, {
         'label': '中转时间',
         'prop': 'transferTime',
-        'width': '180',
+        'width': '160',
         'slot': function(scope) {
           return `${parseTime(scope.row.transferTime)}`
         }
@@ -227,19 +227,19 @@ export default {
       }, {
         'label': '件数',
         'prop': 'cargoAmount',
-        'width': '150'
+        'width': '100'
       }, {
         'label': '重量',
         'prop': 'cargoWeight',
-        'width': '150'
+        'width': '100'
       }, {
         'label': '体积',
         'prop': 'cargoVolume',
-        'width': '150'
+        'width': '100'
       }, {
         'label': '包装',
         'prop': 'cargoPack',
-        'width': '150'
+        'width': '100'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks',

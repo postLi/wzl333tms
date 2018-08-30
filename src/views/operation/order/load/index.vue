@@ -609,13 +609,18 @@ export default {
       }
     },
     finishLoadInfo() {
+       if(this.loading){
+        return false
+      }
       this.formValidate() // 表单验证
       if (this.submitvalidate) {
         this.setData() // 处理数据
         this.$nextTick(() => {
           if (this.isEdit) {
+            this.loading = true
             console.log('这里是编辑完成配载', this.loadInfo)
             putLoadInfo(this.loadInfo).then(data => {
+              this.loading = false
                 this.$message({ type: 'success', message: '修改配载信息成功' })
                 this.resetFieldsForm()
                 this.$nextTick(() => {
@@ -623,11 +628,14 @@ export default {
                 })
               })
               .catch(error => {
+                this.loading = false
                 this.$message.error(error.errorInfo || error.text)
               })
           } else {
             console.log('这里是添加完成配载', this.loadInfo)
+            this.loading = true
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
+              this.loading = false
                 this.$message({ type: 'success', message: '插入配载信息成功' })
                 this.resetFieldsForm()
                 this.$nextTick(() => {
@@ -635,6 +643,7 @@ export default {
                 })
               })
               .catch(error => {
+                this.loading = false
                 this.$message.error(error.errorInfo || error.text)
               })
           }
@@ -642,11 +651,16 @@ export default {
       }
     },
     finishTruckInfo() {
+      if(this.loading){
+        return false
+      }
       this.formValidate() // 表单验证
       if (this.submitvalidate) {
         this.setDataFinishTruck() // 处理数据
         this.$nextTick(() => {
+          this.loading = true
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
+            this.loading = false
               this.$message({ type: 'success', message: '保存成功' })
               this.resetFieldsForm()
               this.$nextTick(() => {
@@ -654,6 +668,7 @@ export default {
               })
             })
             .catch(error => {
+              this.loading = false
               this.$message.error(error.errorInfo || error.text)
             })
         })

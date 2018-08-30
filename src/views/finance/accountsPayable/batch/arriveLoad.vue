@@ -245,7 +245,7 @@ export default {
         path: '../../accountsLoad',
         query: {
           tab: '到站装卸费结算',
-          currentPage: 'batchArrivalLoad', // 本页面标识符
+          currentPage: 'batchArriveLoad', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }

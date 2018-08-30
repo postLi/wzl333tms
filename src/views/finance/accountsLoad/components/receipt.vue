@@ -190,7 +190,7 @@ export default {
           return 179
         case 'batchStationOther':
           return 179
-        case 'batchArrivalLoad':
+        case 'batchArriveLoad':
           return 179
         case 'batchArrivalOther':
           return 179
@@ -211,7 +211,7 @@ export default {
           return '发站装卸费'
         case 'batchStationOther':
           return '发站其他费'
-        case 'batchArrivalLoad':
+        case 'batchArriveLoad':
           return '到站装卸费'
         case 'batchArrivalOther':
           return '到站其他费'
@@ -399,7 +399,9 @@ export default {
               this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
               let currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
+              console.log(currentPage)
               this.$router.push({ path: './accountsPayable/batch/'+currentPage })
+              console.log('./accountsPayable/batch/'+currentPage)
             })
             .catch(error => {
               this.$message({ type: 'error', message: error.errorInfo || error.text })

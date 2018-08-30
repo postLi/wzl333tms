@@ -38,7 +38,7 @@
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
         <!-- <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button> -->
-        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成中转</el-button>
+        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')" :loading="loading">完成中转</el-button>
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
@@ -205,6 +205,9 @@ export default {
       }
     },
     finishLoadInfo() {
+      if(this.loading){
+        return false
+      }
       this.$refs['formModel'].validate((valid) => {
         if (valid) {
           if (this.loadTableInfo.length < 1) {
@@ -233,11 +236,14 @@ export default {
               return item
             })
             if (this.isModify) {
+              this.loading = true
               PromiseObj = transferManageApi.putModifyTransfer(data)
             } else {
+              this.loading = true
               PromiseObj = transferManageApi.postNewTransfer(data)
             }
             PromiseObj.then(res => {
+              this.loading = false
               if (this.isModify) {
                 // this.reset()
               }
@@ -246,6 +252,7 @@ export default {
               
               this.goTransferList()
             }).catch(err => {
+              this.loading = false
               this.$message.error(err.text || '未知错误')
             })
           }
@@ -316,7 +323,8 @@ export default {
 
   .load_btn_boxs {
       position: relative;
-      top: 10px;
+      top: 18px;
+      right:10px;
       z-index: 33;
       text-align: right;
       height: 0;

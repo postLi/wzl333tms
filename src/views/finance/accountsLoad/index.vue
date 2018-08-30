@@ -67,7 +67,7 @@ export default {
           return 'batchStationLoad'
         case 'batchStationOther':
           return 'batchStationOther'
-        case 'batchArrivalLoad':
+        case 'batchArriveLoad':
           return 'batchArrivalLoad'
         case 'batchArrivalOther':
           return 'batchArrivalOther'
@@ -108,7 +108,7 @@ export default {
         case 'batchStationOther':
           name = '发站其他费'
           break
-        case 'batchArrivalLoad':
+        case 'batchArriveLoad':
           name = '到站装卸费'
           break
         case 'batchArrivalOther':

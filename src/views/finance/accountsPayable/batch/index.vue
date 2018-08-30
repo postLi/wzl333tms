@@ -9,7 +9,7 @@
       <router-link to="/finance/accountsPayable/batch/stationLoad" class="tab-label">发站装卸费</router-link>
       <router-link to="/finance/accountsPayable/batch/stationOther" class="tab-label">发站其他费</router-link>
       <router-link to="/finance/accountsPayable/batch/arriveLoad" class="tab-label">到站装卸费</router-link>
-      <router-link to="/finance/accountsPayable/batch/arriveOther" class="tab-label">到站其他费</router-link>
+      <router-link to="/finance/accountsPayable/batch/arrivalOther" class="tab-label">到站其他费</router-link>
     </div>
     <keep-alive>
       <router-view></router-view>
