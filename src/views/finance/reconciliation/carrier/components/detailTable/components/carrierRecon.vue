@@ -1024,6 +1024,7 @@
                     message: '各款项不能为空~',
                     type: 'error'
                   })
+                  
                   this.closeVisibleDialog()
                   return false
                 } else {
