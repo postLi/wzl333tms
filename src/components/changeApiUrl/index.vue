@@ -1,5 +1,5 @@
 <template>
-  <el-select class="apiurlchange" @change="setApiurl" size="mini" v-model="apiurl" placeholder="请选择" v-if="showapi">
+  <el-select class="apiurlchange" @visible-change="detectUrl" @change="setApiurl" size="mini" v-model="apiurl" placeholder="请选择" v-if="showapi">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -81,10 +81,16 @@ export default {
       this.showapi = true
       this.apiurl = localStorage.tms_testapiurl || 'api'
       window.tms_testapiurl = this.apiurl
-      this.checkUrl()
     }
   },
   methods: {
+    // 优化检测机制，不点开就不开始检测
+    detectUrl() {
+      if (!this.ischecked) {
+        this.ischecked = true
+        this.checkUrl()
+      }
+    },
     setApiurl(url) {
       window.tms_testapiurl = url
       localStorage.tms_testapiurl = url

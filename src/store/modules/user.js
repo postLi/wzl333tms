@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { login, logout, getInfo } from '@/api/login'
 import { getAllSetting } from '@/api/company/systemSetup'
 import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername, setUserInfo, removeUserInfo, removeUsername, removeOrgId } from '@/utils/auth'
@@ -82,19 +83,29 @@ const user = {
           data.roleTree = JSON.parse(data.jsonTree) || null
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
-
-          getAllSetting({
-            orgid: data.orgid,
-            type: '',
-            module: 'order'
-          }).then(res => {
-            data.systemSetup = res
+          if (Vue.prototype.$_has_permission('SETTING')) {
+            getAllSetting({
+              orgid: data.orgid,
+              type: '',
+              module: 'order'
+            }).then(res => {
+              data.systemSetup = res
+              commit('SET_OTHERINFO', data)
+              setUserInfo(data)
+              resolve({ data })
+            }).catch(error => {
+              data.systemSetup = {}
+              commit('SET_OTHERINFO', data)
+              setUserInfo(data)
+              resolve({ data })
+              // reject(error)
+            })
+          } else {
+            data.systemSetup = {}
             commit('SET_OTHERINFO', data)
             setUserInfo(data)
             resolve({ data })
-          }).catch(error => {
-            reject(error)
-          })
+          }
         }).catch(error => {
           reject(error)
         })

@@ -69,7 +69,7 @@ export default {
           loadJs('http://api.map.baidu.com/api?v=2.0&ak=ycTgY5YTSnk5PsqumqZboxtXaKU6Io6K&callback=initialize').then(() => {
             const fn = () => {
               if (!window.initBaiduMap) {
-                seTimeout(() => {
+                setTimeout(() => {
                   fn()
                 }, 200)
               } else {

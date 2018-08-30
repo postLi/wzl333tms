@@ -10,8 +10,8 @@
       <div class="nologin">
         <!-- <a :href="'http://192.168.1.157:9528/?access_token='+token">
         <el-button size="large" type="primary">TMS系统</el-button></a><br> -->
-        <a :href="'http://192.168.1.188:9526/?from=28tms&access_token=' + token" v-has:CAPACITY_CENTER><el-button size="large" type="success">运力中心</el-button></a><br>
-        <a :href="'http://192.168.1.170/member/loginbytoken.php?from=28tms&access_token='+token" v-has:WEBSITE_SYSTEM><el-button size="large" type="warning">官网系统</el-button></a>
+        <a :href="'http://member.56lines.cn/?from=28tms&access_token=' + token" v-has:CAPACITY_CENTER><el-button size="large" type="success">运力中心</el-button></a><br>
+        <!-- <a :href="'http://www.56lines.cn/member/loginbytoken.php?from=28tms&access_token='+token" v-has:WEBSITE_SYSTEM><el-button size="large" type="warning">官网系统</el-button></a> -->
       </div>
       <div @mouseover="showSubnav" @mouseout="hideSubnav" class="subNavWrapper"></div>
   </div>
