@@ -185,14 +185,14 @@ export default {
         callback(new Error('费用不能小于0'))
       }
     }
-    
+
     // const validateshipSn = function(rule, value, callback) {
     //   if (value === '' || value === null || !value || value === undefined) {
     //     callback(new Error('请输入运单号'))
     //   } else {
     //     callback()
     //   }
-    
+
 
     // }
     return {

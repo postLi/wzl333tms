@@ -8,7 +8,7 @@
         </el-form-item><br>
         <el-form-item label="到付合计:" prop="shipArrivepayFee">
           <!-- <p class="tp">{{this.form.shipArrivepayFee}}元</p> -->
-          <el-input :maxlength="20" :placeholder=" form.shipArrivepayFee +'元'" auto-complete="off" :disabled="true"></el-input>
+          <el-input :maxlength="20" v-number-only:point :placeholder=" form.shipArrivepayFee +'元'" auto-complete="off" :disabled="true"></el-input>
         </el-form-item><br>
         <el-form-item label="代收款合计:" prop="agencyFund">
           <!-- <p class="tp">{{this.form.agencyFund}}元</p> -->
@@ -171,13 +171,13 @@ export default {
       this.dotInfo.map(el => {
         total += el.shipArrivepayFee ? el.shipArrivepayFee : 0
       })
-      this.form.shipArrivepayFee = total
+      this.form.shipArrivepayFee = total.toFixed(2)
 
       total = 0
       this.dotInfo.map(el => {
         total += el.agencyFund ? el.agencyFund : 0
       })
-      this.form.agencyFund = total
+      this.form.agencyFund = total.toFixed(2)
     },
 
     // searchQuery(newVal){

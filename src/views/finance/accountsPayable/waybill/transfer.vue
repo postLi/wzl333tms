@@ -6,10 +6,10 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET2>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI2>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP2>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain >表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
@@ -125,8 +125,8 @@ export default {
           width: '150',
           fixed: false,
           slot: function(scope) {
-          return parseShipStatus(scope.row.shipIdentifying)
-        }
+            return parseShipStatus(scope.row.shipIdentifying)
+          }
         },
         {
           label: '出发城市',
@@ -163,8 +163,8 @@ export default {
           prop: 'createTime',
           width: '160',
           slot: (scope) => {
-          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-        },
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          },
           fixed: false
         },
         {

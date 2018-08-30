@@ -171,7 +171,7 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码' }
+          { required: true, message: '请输入11位手机号码', pattern: REGEX.MOBILE }
           // { validator: validateFormNumber, trigger: 'change' }
         ],
         driverCardid: [
@@ -276,7 +276,7 @@ export default {
       this.form.idcardPicture = ''
     },
     closeMe(done) {
-      this.reset()
+      // this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
