@@ -960,7 +960,10 @@ export default {
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getDbClick() {}
+    getDbClick(order) {
+      // this.eventBus.$emit('showOrderDetail', order.id)
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+    }
   }
 }
 </script>

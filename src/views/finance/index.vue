@@ -287,11 +287,11 @@
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：异常赔礼
+            功能：异常礼赔
           </div>
           <router-link to="/finance/accountsPayable/waybill/abnormal">
             <i class="flowicon1 ycpl"></i><br>
-            <span>异常赔礼</span>
+            <span>异常礼赔</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
