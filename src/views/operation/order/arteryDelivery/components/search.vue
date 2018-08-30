@@ -38,7 +38,7 @@
       <el-form-item label="到车网点">
         <SelectTree v-model="searchForm.arriveOrgid" clearable :orgid="otherinfo.orgid"/>
       </el-form-item>
-      <el-form-item label="发车批次" prop="batchNo">
+      <el-form-item label="发车批次" prop="">
         <el-input v-model.trim="searchForm.batchNo"
           maxlength="15"
           clearable>
