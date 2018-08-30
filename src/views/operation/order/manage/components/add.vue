@@ -679,10 +679,10 @@
             }
 
             promiseObj.then(res => {
-              this.loading = false
-              this.$message.success('保存成功')
-              this.closeMe()
               this.$emit('success')
+              this.closeMe()
+              this.$message.success('保存成功')
+              this.loading = false
             }).catch(err => {
               this.$message({
                 type: 'info',
