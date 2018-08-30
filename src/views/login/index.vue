@@ -56,6 +56,7 @@
           <li>地址：天河区天河路石牌桥丰兴广场B座1804</li>
           <li>电话 ：020-38856254 </li>
           <li>网址：www.anfanet.com </li>
+          <li class="hoverLink"><a href="http://www.miitbeian.gov.cn">粤ICP备16061301号-5</a></li>
         </ul>
         <div class="down">
           <img src="../../assets/login_images/code.png" alt="">
@@ -196,5 +197,8 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 @import "../../styles/mixin.scss";
 @import "../../styles/login-index.css";
+.hoverLink:hover{
+  border-bottom: 1px solid #eee;
+}
 
 </style>

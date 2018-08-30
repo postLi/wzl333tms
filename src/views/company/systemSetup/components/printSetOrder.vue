@@ -15,32 +15,32 @@
               <i :class="item.isshow===1? 'el-icon-circle-check showLabel' : 'el-icon-circle-close hideLabel'"></i> <b>{{item.filedName}}</b> <span>{{item.filedValue}}</span>
               <el-switch v-model="item.isshow===1?true:false" :active-text="item.isshow?'显示':'隐藏'" @change="handleSwitch(item)" v-if="item.filedValue!=='setting'"></el-switch>
               <div class="print_aside_content_itemSet">
-                <el-form-item>
+                <el-form-item v-if=" item.filedValue!=='setting'">
                   <el-input :size="btnsize" v-model="item.leftx" placeholder="X轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">X</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item v-if=" item.filedValue!=='setting'">
                   <el-input :size="btnsize" v-model="item.topy" placeholder="Y轴坐标" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">Y</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item v-if="item.filedValue !== 'urgent' && item.filedValue !== 'common'">
                   <el-input :size="btnsize" v-model="item.width" placeholder="宽度" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">宽</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item v-if="item.filedValue !== 'urgent' && item.filedValue !== 'common'">
                   <el-input :size="btnsize" v-model="item.height" placeholder="高度" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">高</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item v-if="item.filedValue!=='setting'">
+                <el-form-item v-if=" item.filedValue!=='setting' && item.filedValue !== 'urgent' && item.filedValue !== 'common'">
                   <el-input :size="btnsize" v-model="item.fontsize" placeholder="字号" @change="(obj) => {changeValue(obj, item,index)}">
                     <template slot="prepend">字号</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item v-if="item.filedValue!=='setting'">
+                <el-form-item v-if=" item.filedValue!=='setting' && item.filedValue !== 'urgent' && item.filedValue !== 'common'">
                   <el-select v-model="item.bold" placeholder="粗细" size="mini">
                      <el-option
                       v-for="item in fontWeightOptions"
@@ -50,7 +50,7 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item v-if="item.filedValue!=='setting'">
+                <el-form-item v-if=" item.filedValue!=='setting' && item.filedValue !== 'urgent' && item.filedValue !== 'common'">
                   <el-select v-model="item.alignment" placeholder="位置" size="mini">
                      <el-option
                       v-for="item in alignmentOptions"
@@ -138,7 +138,8 @@ export default {
       {
         value: 2,
         label: '加粗'
-      }]
+      }],
+      noShowFontAndPositionAndHold: false
     }
   },
   watch: {

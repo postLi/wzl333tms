@@ -52,7 +52,7 @@
                   <el-input :value='form.manageType ===4 ? "加盟" : "自营"' disabled></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" :label-width="formLabelWidth" >
-                  <!--<el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
+                  <el-input :value="new Date(form.createTime).toLocaleString()" disabled></el-input>
                  <el-input :value=" form.createTime| parseTime('{y}/{m}/{d}')" disabled></el-input>
                 </el-form-item> -->
                 <el-form-item label="公司代码" :label-width="formLabelWidth">
@@ -149,20 +149,17 @@
         <div class="side_right_bottom clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" v-if="form.status ===32" plain
-                       @click="doAction('addPeople')">
-              新增员工
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" v-if="form.status ===32" plain @click="doAction('addPeople')" v-has:ORGTREELIST_ADD>              新增员工
             </el-button>
-            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>
+            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain v-has:ORGTREELIST_DELETE>
               删除员工
             </el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain>修改网点
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modifyNot')" plain v-has:ORGTREELIST_UPDATE>修改网点
             </el-button>
-            <el-button v-if="form.status ===32" type="primary" :size="btnsize" icon="el-icon-circle-plus"
-                       @click="doAction('addNot')" plain>
+            <el-button v-if="form.status ===32" type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('addNot')" plain v-has:ORGTREELIST_ADDWD>
               新增网点
             </el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain>部门维护
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('depMain')" plain v-has:ORGTREELIST_EDIT>部门维护
             </el-button>
             <el-col class="org-name"><p>{{form.orgName}}</p></el-col>
             <!--表格功能-->

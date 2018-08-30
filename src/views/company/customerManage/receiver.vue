@@ -3,11 +3,11 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:REVER_ADD>新增</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:REVER_UP>修改</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:REVER_DEL>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REVER_EXP>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain v-has:REVER_EOP>批量导入</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">

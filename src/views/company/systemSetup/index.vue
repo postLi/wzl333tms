@@ -3,7 +3,7 @@
     <div class="system-setup-table">
       <el-form :model="form" ref="ruleForm" :inline="true" label-position="right" size="mini">
       <el-collapse v-model="activeNames">
-        <el-collapse-item name="setup1">
+        <el-collapse-item name="setup1" v-has:SETTINGS_SHIPNO>
           <template slot="title">
             单号规则
           </template>
@@ -60,7 +60,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item name="setup2" title="运费合计规则">
+        <el-collapse-item name="setup2" title="运费合计规则" v-has:SETTINGS_SHIPFEE>
           <!-- 运费合计规则 -->
           <div class="clearfix setup-table">
             <div class="setup-left">运费合计</div>
@@ -115,7 +115,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item name="setup3" title="运单功能设置">
+        <el-collapse-item name="setup3" title="运单功能设置" v-has:SETTINGS_SHIPFUNC>
           <!-- 运单页面 -->
           <div class="clearfix setup-table">
             <div class="setup-left">运单页面</div>
@@ -184,7 +184,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item name="setup4" title="打印设置">
+        <el-collapse-item name="setup4" title="打印设置" v-has:SETTINGS_PRINT>
           <div class="clearfix setup-table">
             <div class="setup-left">打印机设置</div>
             <div class="setup-right">
@@ -209,7 +209,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item name="setup5" title="打印模板设置">
+        <el-collapse-item name="setup5" title="打印模板设置" v-has:SETTINGS_TEMPLATE>
           <div class="clearfix setup-table">
             <div class="setup-left">运单标签设置</div>
             <div class="setup-right">
@@ -281,7 +281,7 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6'],
       shipField: [
         {
           key: 'shipFromCityName',

@@ -16,11 +16,11 @@
         <div class="btns_box clearfix">
           <!--表格功能-->
           <div class="btns_box_lrl clearfix">
-            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addRole')">新增角色</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('roleNot')" plain>修改</el-button>
-            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain>删除</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain>参照</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain>关联员工</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('addRole')" v-has:PERMISSION_ADD>新增角色</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('roleNot')" plain v-has:PERMISSION_EDIT>修改</el-button>
+            <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain v-has:PERMISSION_DELETE>删除</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain v-has:PERMISSION_COPY>参照</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain v-has:PERMISSION_LINK>关联员工</el-button>
             <!--表格功能-->
           </div>
         </div>

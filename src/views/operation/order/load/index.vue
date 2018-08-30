@@ -41,17 +41,9 @@
                     <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" :maxlength="10">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>   
                       <template slot-scope="{ item }">
-                        <!-- <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
-                          <div class="name">{{ item.truckIdNumber }}</div>
-                          <span class="addr">{{ item.driverName }}</span>
-                          <br>
-                          <span class="addr">{{ item.dirverMobile}}</span>
-                        </div> -->
-                        <!-- <div v-else> -->
                           <div class="name">{{ item.driverName }}</div>
-                          <span class="addr">{{ item.driverMobile }}</span>
+                          <span class="addr">{{ item.driverMobile }}</span><br>
                           <span class="addr">{{ item.truckIdNumber }}</span>
-                        <!-- </div> -->
                       </template>
                     </el-autocomplete>
                   </el-form-item>
@@ -370,16 +362,6 @@ export default {
       this.formModel.arriveOrgid = newVal
     },
     orgid() {},
-    // loadTruckInfo() {
-    //    const data = Object.assign({}, this.formModel)
-    //   if (!data.truckLoad) {
-    //     this.$set(data, 'truckLoad', 0)
-    //   }
-    //   if (!data.truckVolume) {
-    //     this.$set(data, 'truckVolume', 0)
-    //   }
-    //   return data
-    //  },
     loadInfoPercent() {
       const data = Object.assign([], this.loadInfoPercentOrg)
       return data
@@ -472,8 +454,6 @@ export default {
       }
     },
     initIsEdit() {
-      // this.orgData = JSON.parse(JSON.stringify(this.$data.orgData))
-      // this.formFee = JSON.parse(JSON.stringify(this.$data.formFee))
       this.orgData = objectMerge2({}, this.$options.data().orgData)
       this.formFee = objectMerge2({}, this.$options.data().orgData)
 
@@ -571,22 +551,10 @@ export default {
           this.showPercent()
           break
         case 'finish': // 完成配载
-          // this.$confirm('此操作将完成配载, 是否继续?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
           this.finishLoadInfo()
-          // })
           break
         case 'finishTruck': // 完成并发车
-          // this.$confirm('此操作将完成并发车, 是否继续?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
           this.finishTruckInfo()
-          // })
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -840,20 +808,6 @@ export default {
           this.cacheDriverList[orgid] = data.data
           console.log('Drivers', this.Drivers)
         })
-        // getAllDriver({
-        //     "currentPage": 1,
-        //     "pageSize": 200,
-        //     "vo": {
-        //       "orgid": orgid
-        //     }
-        //   }).then(data => {
-        //     this.Drivers = data.list
-        //     this.cacheDriverList[orgid] = data.list
-        //     console.log('Drivers', this.Drivers)
-        //   })
-        //   .catch(error => {
-        //     this.$message.error(error.errorInfo || error.text)
-        //   })
       }
     },
     getTrucks(orgid) {
@@ -890,17 +844,10 @@ export default {
       // this.formModel.truckVolume = item.truckVolume
     },
     querySearch(queryString, cb) {
-      // if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
-      //   const truckList = this.Trucks
-      //   const results = queryString ? truckList.filter(this.createFilterTruck(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
-      //   // 调用 callback 返回车辆列表的数据
-      //   cb(results)
-      // } else {
         let driverList = this.Drivers
         let results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, "gi"), 'driverName')) : driverList
         // 调用 callback 返回司机列表的数据
         cb(results)
-      // }
     },
     querySearchTruck(queryString, cb) {
       const truckList = this.Trucks
