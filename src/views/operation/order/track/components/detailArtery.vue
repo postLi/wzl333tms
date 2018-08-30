@@ -18,14 +18,18 @@
             </td>
           </tr>
           <tr>
+             <th>可载重量</th>
+            <td>
+              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+            </td>
             <th>车牌号码</th>
             <td>
               <el-input v-model="info.truckIdNumber" :size="btnsize" disabled></el-input>
             </td>
-            <th>短驳费</th>
+           <!--  <th>短驳费</th>
             <td>
               <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input>
-            </td>
+            </td> -->
             <th>分摊方式</th>
             <td>
               <el-input v-model="info.apportionTypeName" :size="btnsize" disabled></el-input>
@@ -36,28 +40,57 @@
             <td>
               <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
             </td>
-            <th>短驳日期</th>
+            <th>配载日期</th>
             <td>
               <el-input :value="info.departureTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
-            <th>要求到达时间</th>
+            <th>预计到达时间</th>
             <td>
               <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
-            <th>可载重量</th>
-            <td>
-              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
-            </td>
+           
             <th>备注</th>
-            <td colspan="3">
+            <td colspan="5">
               <el-input v-model="info.remark" :size="btnsize" disabled :maxlength="300"></el-input>
             </td>
           </tr>
         </tbody>
       </table>
     </el-form>
+    <table class="detailTables_info_artery">
+      <thead>
+        <tr>
+          <th>现付运费(元)</th>
+          <th>现付油卡(元)</th>
+          <th>回付运费(元)</th>
+          <th>回付油卡(元)</th>
+          <th>到付运费(元)</th>
+          <th>到付油卡(元)</th>
+          <th>整车保险费(元)</th>
+          <th>发站装卸费(元)</th>
+          <th>发站其他费(元)</th>
+          <th>到站装卸费(元)</th>
+          <th>到站其他费(元)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{info.nowpayCarriage}}</td>
+          <td>{{info.nowpayOilCard}}</td>
+          <td>{{info.backpayCarriage}}</td>
+          <td>{{info.backpayOilCard}}</td>
+          <td>{{info.arrivepayCarriage}}</td>
+          <td>{{info.arrivepayOilCard}}</td>
+          <td>{{info.carloadInsuranceFee}}</td>
+          <td>{{info.leaveHandlingFee}}</td>
+          <td>{{info.leaveOtherFee}}</td>
+          <td>{{info.arriveHandlingFee}}</td>
+          <td>{{info.arriveOtherFee}}</td>
+        </tr>
+      </tbody>
+    </table>
     <div class="tab_infos">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -314,7 +347,7 @@ export default {
         tr {
           font-size: 14px;
           th {
-            color: #999;
+            color: #666;
             width: 12%;
             height: 36px;
           }
@@ -323,11 +356,30 @@ export default {
             padding: 0 3px;
             .el-input.is-disabled .el-input__inner {
               background-color: #fff;
-              color: #999;
+              color: #3e9ff1;
             }
           }
         }
       }
+    }
+  }
+  .detailTables_info_artery {
+    margin-top:10px;
+    tr th {
+      font-size: 12px;
+      color: #666;
+    }
+    tr td{
+      font-size: 13px;
+      color: #3e9ff1;
+    }
+    tr td,
+    tr th {
+      
+      padding: 10px 5px;
+      border: 1px solid #d0d7e5;
+      border-collapse: collapse;
+      text-align: center;
     }
   }
   .tab_infos {

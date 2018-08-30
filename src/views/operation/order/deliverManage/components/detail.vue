@@ -403,7 +403,7 @@ export default {
             padding: 0 3px;
             .el-input.is-disabled .el-input__inner {
               background-color: #fff;
-              color: #999;
+              color: #3e9ff1;
             }
           }
         }
