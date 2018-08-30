@@ -412,43 +412,6 @@
           this.manageType = resArr[1]
           this.netWorkStatus = resArr[2]
           this.netWorkType = resArr[0]
-          // // 总公司都不会出现：
-          // //1.总公司修改的时候显示总公司 2.总公司新建的时候不显总公司
-          // if (!this.isModify) {
-          //   this.netWorkType = resArr[0].filter(el => {
-          //     return el.id !== 5
-          //   })
-          //   alert('1')
-          // }else{
-          //   this.form.orgTypeName = this.dotInfo.orgTypeName
-          //   this.changeDate(this.dotInfo)
-          //   console.log(this.dotInfo,'其他情况')
-          //   alert('2')
-          //
-          // }
-          // v-if="companyId === form.id"
-          // if (this.companyId === this.form.id && !this.isModify) {
-          //   this.netWorkType = resArr[0].filter(el => {
-          //     return el.id !== 5
-          //   })
-          //   alert('1')
-          // } else if (this.isModify) {
-          //   // this.netWorkType = resArr[0].filter(el => {
-          //   //   return el.id !== 5
-          //   // })
-          //   console.log(this.form.orgType,'修改的时候')
-          //   this.changeDate(this.dotInfo)
-          //   // this.form.orgType = this.dotInfo.orgType
-          //
-          //   alert('2')
-          // } else {
-          //   this.netWorkType = resArr[0].filter(el => {
-          //     return el.id !== 5
-          //   })
-          //   alert('3')
-          // }
-
-          // console.log(this.netWorkType,"时间");
           this.loading = false
         }).catch(err => {
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
