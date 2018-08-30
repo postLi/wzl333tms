@@ -91,6 +91,11 @@ module.exports = {
         target: 'http://119.23.201.233:9528/api',
         pathRewrite: { '^/aliyun': '' },
         changeOrigin: true
+      },
+      '/79service': {
+        target: 'http://192.168.1.79:7010',
+        pathRewrite: { '^/79service': '' },
+        changeOrigin: true
       }
     },
     // vue-cli

@@ -495,6 +495,9 @@ export default {
   methods: {
     initPrinter() {
       this.printers = Object.assign([], CreatePrinterList())
+       for(let item in this.printers) {
+        this.printers[item] = this.printers[item].replace(/%^/g, '\\')
+      }
     },
     doAction(type) {
       switch (type) {
@@ -529,6 +532,11 @@ export default {
         this.form = data
         this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
         this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
+        for(let item in this.form.printSetting) {
+
+        this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
+        console.log(this.form.printSetting[item])
+      }
       })
     },
     setShipNo() {
@@ -568,7 +576,15 @@ export default {
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
     },
     saveData() {
-      return putSetting(this.form).then(res => {
+      // 转译一下打印的\\字符
+      let formPrintSetting = Object.assign({}, this.form.printSetting)
+      for(let item in formPrintSetting) {
+        formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
+      }
+      let form = Object.assign({}, this.form)
+      form.printSetting = Object.assign({}, formPrintSetting)
+      console.log(form)
+      putSetting(form).then(res => {
         this.otherinfo.systemSetup = this.form
         this.$message({
           message: '保存成功',

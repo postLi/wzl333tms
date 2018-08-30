@@ -54,6 +54,7 @@ service.interceptors.request.use(config => {
         // config.url = '/fangjian' + config.url
         // config.url = '/aliyun' + config.url
         // config.url = '/lingzhiying' + config.url
+        // config.url = '/79service' + config.url
       }
     }
   }

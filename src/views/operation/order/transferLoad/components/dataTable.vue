@@ -8,7 +8,8 @@
         </el-table-column>
         <el-table-column fixed :render-header="setHeader" width="50">
           <template slot-scope="scope">
-            <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+            <!-- <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button> -->
+            <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
@@ -54,7 +55,8 @@
         </el-table-column>
         <el-table-column fixed width="50" :render-header="setHeader2">
           <template slot-scope="scope">
-            <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+            <!-- <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button> -->
+            <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
@@ -269,7 +271,7 @@ export default {
     setHeader(h, { column }) {
       return h('el-button', {
         props: {
-          icon: 'el-icon-plus',
+          // icon: 'el-icon-plus',
           size: 'mini'
         },
         'class': {
@@ -283,11 +285,11 @@ export default {
     setHeader2(h, { column }) {
       return h('el-button', {
         props: {
-          icon: 'el-icon-minus',
+          // icon: 'el-icon-minus',
           size: 'mini'
         },
         'class': {
-          'tableItemBtn': true
+          'tableItemBtnMinus': true
         },
         on: {
           click: this.minusAllList
@@ -312,20 +314,65 @@ export default {
 
 </script>
 <style lang="scss">
+
 .tableHeadItemBtn2 {
+  height: 100%;
   position: relative;
-  .tableItemBtn {
-    width: 30px;
-    padding-left: 8px;
+  .el-button {
+    border: none;
   }
+  .el-button--mini,
+  .el-button--mini.is-round {
+    padding: 5px 9px;
+  }
+  .tableItemBtnMinus,
+  .tableItemBtn {
+    width: 18px;
+    height: 18px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+  }
+  .tableAllBtnMinus,
   .tableAllBtn {
-    width: 30px;
-    padding-left: 8px;
+    width: 18px;
+    height: 18px;
     position: absolute;
     z-index: 33;
-    top: 8px;
-    left: 61px;
+    top: 10px;
+    left: 67px;
+    background-size: 18px;
+    background-repeat: no-repeat;
   }
+  .tableAllBtn,
+  .tableItemBtn {
+    background-image: url('../../../../../assets/png/01zengjia-c.png');
+  }
+  .tableAllBtn:hover,
+  .tableItemBtn:hover {
+    background-image: url('../../../../../assets/png/02zengjia.png');
+  }
+
+  .tableAllBtnMinus,
+  .tableItemBtnMinus {
+    background-image: url('../../../../../assets/png/03shanqu-c.png');
+  }
+  .tableAllBtnMinus:hover,
+  .tableItemBtnMinus:hover {
+    background-image: url('../../../../../assets/png/04shanqu.png');
+  }
+  // position: relative;
+  // .tableItemBtn {
+  //   width: 30px;
+  //   padding-left: 8px;
+  // }
+  // .tableAllBtn {
+  //   width: 30px;
+  //   padding-left: 8px;
+  //   position: absolute;
+  //   z-index: 33;
+  //   top: 8px;
+  //   left: 61px;
+  // }
   .showAllTable {
     width: calc(100% - 100px);
   }

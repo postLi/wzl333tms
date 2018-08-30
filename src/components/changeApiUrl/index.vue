@@ -71,6 +71,11 @@ export default {
           value: 'lingzhiying',
           label: '凌梓颖',
           online: true
+        },
+        {
+          value: '79service',
+          label: '79服务器',
+          online: true
         }
       ]
     }
