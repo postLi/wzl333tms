@@ -11,9 +11,10 @@
                       :maxlength="15"></el-input>
           </el-form-item>
           <el-form-item label="网点类型" :label-width="formLabelWidth">
-            <el-select v-model="form.orgType" :disabled="companyId === form.id || form.status===31">
-              <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
-            </el-select>
+            <SelectType v-model="form.orgType" type="network_type" placeholder="请选择" class="" :disabled="companyId === form.id || form.status===31"/>
+            <!--<el-select v-model="form.orgType" :disabled="companyId === form.id || form.status===31">-->
+              <!--<el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>-->
+            <!--</el-select>-->
           </el-form-item>
           <el-form-item label="公司状态" :label-width="formLabelWidth" disabled="disabled">
             <el-select v-model="form.status"
@@ -55,8 +56,6 @@
             <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"></el-input>
           </el-form-item>
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
-
-
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
                          :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city"
                          :remote="true" clearable/>
@@ -106,10 +105,11 @@
                       :maxlength="15"></el-input>
           </el-form-item>
           <el-form-item label="网点类型" :label-width="formLabelWidth">
-            <el-select v-model="form.orgType" :disabled="isModify">
-              <el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"
-                         :disabled="form.status===31"></el-option>
-            </el-select>
+            <SelectType v-model="form.orgType" type="network_type" placeholder="请选择" class="" :disabled="isModify"/>
+            <!--<el-select v-model="form.orgType" :disabled="isModify">-->
+              <!--<el-option v-for="item in netWorkType" :key="item.id" :label="item.dictName" :value="item.id"-->
+                         <!--:disabled="form.status===31"></el-option>-->
+            <!--</el-select>-->
           </el-form-item>
           <el-form-item label="网点状态" :label-width="formLabelWidth" disabled="disabled">
             <el-select v-model="form.status" :disabled="isModify ? false : true">
@@ -238,13 +238,15 @@
   import {REGEX} from '../../../utils/validate'
   import {objectMerge2} from '@/utils/index'
   import {mapGetters} from 'vuex'
+  import SelectType from '@/components/selectType/index'
   // import {Obj}
   export default {
     components: {
       popRight,
       SelectTree,
       SelectCity,
-      querySelect
+      querySelect,
+      SelectType
     },
     computed: {
       ...mapGetters([
@@ -499,6 +501,9 @@
               }
               this.form.id = this.dotInfo.id
               this.form.createTime = +new Date(this.form.createTime)
+              if (this.form.orgType === '总公司'){
+                this.form.orgType = 5
+              }
               reqPromise = putOrgData(this.form)
             } else {
               if (this.form.accountStatus === true) {
@@ -511,6 +516,7 @@
             reqPromise.then(res => {
               this.$emit('success', this.isModify)
               this.$message.success('保存成功')
+              this.closeMe()
               this.loading = false
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
@@ -540,12 +546,15 @@
         this.form.warningQuota = item.warningQuota
         this.form.lockMachineQuota = item.lockMachineQuota
         this.form.remarks = item.remarks
-        this.form.orgType = item.orgType
         this.form.status = item.status
         this.form.accountStatus = item.accountStatus
         this.form.manageType = item.manageType
         this.form.createTime = item.createTime
-        console.log(this.form.orgType, "修改的");
+        if(item.orgType === 5){
+          this.form.orgType = '总公司'
+        }else{
+          this.form.orgType = item.orgType
+        }
       }
     }
   }

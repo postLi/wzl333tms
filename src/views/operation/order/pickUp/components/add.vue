@@ -636,7 +636,6 @@
       },
       reset() {
         this.watchInfo()
-
       },
       closeMe(done) {
         this.reset()

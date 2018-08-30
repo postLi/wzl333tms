@@ -470,7 +470,7 @@
       },
       orgid(newVal) {
       },
-      info(val) {
+      info() {
           if (this.isModify) {
             this.popTitle = '修改订单'
             this.orderSn = this.info.orderSn
@@ -485,7 +485,7 @@
             this.reset()
           }
       },
-      isModify(val) {
+      isModify() {
           if (this.isModify) {
             this.popTitle = '修改订单'
             this.orderSn = this.info.orderSn
@@ -495,14 +495,25 @@
             this.popTitle = '查看订单'
             this.orderSn = this.info.orderSn
             this.infoData(this.info)
-            // this.ke1yVal = Math.random()
           } else {
             this.popTitle = '新增订单'
             this.reset()
-            // this.newinfoData()
           }
-          // this.ke1yVal = Math.random()
+      },
+      isDbclick() {
+        if (this.isModify) {
+          this.popTitle = '修改订单'
+          this.orderSn = this.info.orderSn
 
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
+          this.popTitle = '查看订单'
+          this.orderSn = this.info.orderSn
+          this.infoData(this.info)
+        } else {
+          this.popTitle = '新增订单'
+          this.reset()
+        }
       }
     },
     methods: {
@@ -522,7 +533,8 @@
           // this.ke1yVal = Math.random()
         } else {
           this.popTitle = '新增订单'
-          this.reset()
+          this.newinfoData()
+          this.ke1yVal = Math.random()
           // this.newinfoData()
         }
         // this.ke1yVal = Math.random()
@@ -683,7 +695,7 @@
           }
         })
       },
-      reset() {
+      newinfoData(){
         this.form = {
           customSend: {
             // 发货人
@@ -739,7 +751,9 @@
             // cargoId,senderId,receiverId
           }
         }
-        this.ke1yVal = Math.random()
+      },
+      reset() {
+       this.watchData()
       },
       closeMe(done) {
         this.reset()
