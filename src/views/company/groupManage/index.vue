@@ -588,7 +588,7 @@
 
 <style type="text/css" lang="scss">
   @import "../../../styles/mixin.scss";
-  @import "./index.css";
+  @import "../../../styles/gmIndex.css";
 
   .info_news_footer .total_footer {
     float: left;
