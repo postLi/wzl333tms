@@ -5,14 +5,14 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增送货</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('edit')">修改</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancelDeliver')" plain>取消送货</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deliverFinish')" plain>送货完成</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:LOAD_SH_ADD>新增送货</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('edit')" v-has:LOAD_SH_UPDATE>修改</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancelDeliver')" plain v-has:LOAD_SH_CANCELTRUCK>取消送货</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deliverFinish')" plain v-has:LOAD_SH_COMPLETE>送货完成</el-button>
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button> -->
-        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain v-has:LOAD_SH_EXPORT>导出</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_SH_PRINT>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>

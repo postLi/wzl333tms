@@ -3,12 +3,12 @@
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam"  :isAllOrg="true" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('deal')">处理</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('deal')" v-has:ABNO_UPDATE>处理</el-button>
             <!-- <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>异常修改</el-button> -->
-            <el-button type="primary" :size="btnsize"  icon="el-icon-news" @click="doAction('check')" plain>查看明细</el-button>
+            <el-button type="primary" :size="btnsize"  icon="el-icon-news" @click="doAction('check')" plain v-has:ABNO_GET>查看明细</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:ABNO_EXP2>导出</el-button>
+
             <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -196,7 +196,7 @@
             </template>
           </el-table>
         </div>
-        <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+        <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
         <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :isCheck="isCheck" :isDeal="isDeal" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
         <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
       </div>

@@ -3,11 +3,11 @@
       <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('accept')">回单接收</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消接收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_GETCANCEL>取消接收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('print')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP3>导出</el-button>
+            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('print')" plain v-has:RECE_PRI3>打印</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -96,7 +96,7 @@
               sortable
               >
             </el-table-column>
-            
+
             <el-table-column
               prop="shipReceiptRequireName"
               label="回单类型"
@@ -195,7 +195,7 @@
               sortable
               >
             </el-table-column>
-         
+
             <el-table-column
               prop=""
               label="多笔付"
@@ -230,7 +230,7 @@
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>
             </el-table-column>
             <el-table-column
               label="到达市"
@@ -274,7 +274,7 @@
               sortable
               >
             </el-table-column>
-            
+
             <el-table-column
               prop="recRemark"
               label="回收备注"
@@ -302,10 +302,10 @@
               </el-table-column>
             </template>
           </el-table>
-        </div> 
+        </div>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-    <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery" @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept" />    
+    <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery" @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept" />
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </div>
 </template>

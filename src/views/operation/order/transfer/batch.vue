@@ -1,11 +1,11 @@
 <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :isbatch="true" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :isbatch="true" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain>取消中转</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain v-has:TRANSFER_DELETE2>取消中转</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:TRANSFER_EXPORT2>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:TRANSFER_PRINT2>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
@@ -22,7 +22,7 @@
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          
+
           <el-table-column
             fixed
             sortable
@@ -54,7 +54,7 @@
           </template>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddOrder @action="setAction" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />

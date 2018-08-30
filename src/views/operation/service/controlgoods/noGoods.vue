@@ -3,8 +3,8 @@
       <SearchForm :orgid="otherinfo.orgid" :allId="allId" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-goods" plain @click="doAction('haveGoods')">放货</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2"  @click="doAction('export')" plain>导出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-goods" plain @click="doAction('haveGoods')" v-has:CONTR_UP>放货</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2"  @click="doAction('export')" plain v-has:CONTR_EXP1>导出</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -252,7 +252,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="shipTotalFee"
               label="合计运费"
@@ -273,21 +273,21 @@
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template> 
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>
             </el-table-column>
             <el-table-column
               label="目的市"
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template> 
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
             </el-table-column>
             <el-table-column
               label="目的区"
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template> 
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
             </el-table-column>
             <el-table-column
               prop="userName"
@@ -296,7 +296,7 @@
               sortable
               >
             </el-table-column>
-        
+
             <el-table-column
               prop="senderCustomerUnit"
               label="发货单位"
@@ -318,8 +318,8 @@
               sortable
               >
             </el-table-column>
-            
-          
+
+
             <el-table-column
               prop="receiverDetailedAddress"
               label="收货地址"
@@ -327,7 +327,7 @@
               sortable
               >
             </el-table-column>
-            
+
             <el-table-column
               prop="brokerageFee"
               label="回扣"
@@ -335,7 +335,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="deliveryFee"
               label="送货费"
@@ -350,7 +350,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="productPrice"
               label="声明价值"
@@ -365,7 +365,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="handlingFee"
               label="装卸费"
@@ -387,7 +387,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="goupstairsFee"
               label="上楼费"
@@ -395,7 +395,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="shipFee"
               label="实际提货费"
@@ -403,7 +403,7 @@
               sortable
               >
             </el-table-column>
-          
+
             <el-table-column
               prop="forkliftFee"
               label="叉车费"

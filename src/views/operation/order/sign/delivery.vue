@@ -3,10 +3,10 @@
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-check-outline" plain @click="doAction('pick')">签收</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain>取消签收</el-button>
-        <el-button type="primary" :size="btnsize"  icon="el-icon-edit" plain @click="doAction('amend')">修改</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-check-outline" plain @click="doAction('pick')" v-has:ORDERSIGN_ADD2>签收</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain v-has:ORDERSIGN_CANCEL2>取消签收</el-button>
+        <el-button type="primary" :size="btnsize"  icon="el-icon-edit" plain @click="doAction('amend')" v-has:ORDERSIGN_EDIT2>修改</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:ORDERSIGN_EXP2>导出</el-button>
         <!-- <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>打印</el-button> -->
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -175,7 +175,7 @@
             sortable
             >
           </el-table-column>
-         
+
           <el-table-column
             prop="signTypeName"
             label="签收类型"
@@ -237,7 +237,7 @@
           width="120"
           sortable
           >
-            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
+            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>
           </el-table-column>
           <el-table-column
             label="到达市"
@@ -295,7 +295,7 @@
             sortable
             >
           </el-table-column>
-          
+
           <el-table-column
             prop="shipFee"
             label="运费"
@@ -331,7 +331,7 @@
             sortable
             >
           </el-table-column>
-        
+
           <el-table-column
             prop="handlingFee"
             label="装卸费"
@@ -353,7 +353,7 @@
             sortable
             >
           </el-table-column>
-        
+
           <el-table-column
             prop="goupstairsFee"
             label="上楼费"
@@ -361,7 +361,7 @@
             sortable
             >
           </el-table-column>
-        
+
           <el-table-column
             prop="forkliftFee"
             label="叉车费"

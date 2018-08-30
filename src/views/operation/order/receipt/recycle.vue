@@ -3,11 +3,11 @@
       <SearchForm :orgid="otherinfo.orgid" type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('recycle')">回单回收</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消回收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('recycle')" v-has:RECE_BACK>回单回收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_CANCEL>取消回收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP>导出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:RECE_PRI>打印</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
@@ -193,7 +193,7 @@
                 sortable
                 >
               </el-table-column>
-            
+
               <el-table-column
                 prop=""
                 label="多笔付"
@@ -223,13 +223,13 @@
                 sortable
                 >
               </el-table-column>
-             
+
               <el-table-column
                 label="到达省"
                 width="200"
                 sortable
                 >
-                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
+                <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>
               </el-table-column>
               <el-table-column
                 label="到达市"
@@ -273,7 +273,7 @@
                 sortable
                 >
               </el-table-column>
-              
+
               <el-table-column
                 prop="recRemark"
                 label="回收备注"
@@ -281,7 +281,7 @@
                 sortable
                 >
               </el-table-column>
-              
+
             </el-table> -->
           <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>

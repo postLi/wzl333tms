@@ -5,11 +5,11 @@
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
         <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('reg')">异常登记</el-button>
-          <el-button type="primary" :size="btnsize"  icon="el-icon-edit" @click="doAction('xiugai')" plain>异常修改</el-button>
-          <el-button type="primary" :size="btnsize"  icon="el-icon-news" @click="doAction('check')" plain>查看明细</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('reg')" v-has:ABNO_ADD>异常登记</el-button>
+          <el-button type="primary" :size="btnsize"  icon="el-icon-edit" @click="doAction('xiugai')" plain v-has:ABNO_PUT>异常修改</el-button>
+          <el-button type="primary" :size="btnsize"  icon="el-icon-news" @click="doAction('check')" plain v-has:ABNO_SELECT>查看明细</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:ABNO_DEL>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:ABNO_EXP1>导出</el-button>
 
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>

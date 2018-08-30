@@ -5,7 +5,7 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK4>在途跟踪</el-button>
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo" :key="tablekey">
@@ -127,7 +127,7 @@ export default {
           prop: "arrivalMobile",
           width: "120"
         },
-        
+
         // {
         //   label: "中转批次",
         //   prop: "batchTypeId",

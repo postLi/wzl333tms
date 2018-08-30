@@ -3,22 +3,22 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增配载
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:LOAD_GX_ADD>新增配载
         </el-button>
 
-        <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('depart')">发车
+        <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('depart')" v-has:LOAD_GX_LOADDEPART>发车
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline
-" @click="doAction('deselectCar')" plain>取消发车
+" @click="doAction('deselectCar')" plain v-has:LOAD_GX_CANCELDEPART>取消发车
         </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('sure')">修改</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('sure')" v-has:LOAD_GX_UPDATE>修改</el-button>
         <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline
-" @click="doAction('deleteStor')" plain>取消装车
+" @click="doAction('deleteStor')" plain v-has:LOAD_GX_CANCELTRUCK>取消装车
         </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_GX_EXPORT>导出
         </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印合同
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_GX_PRINT>打印</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain v-has:LOAD_GX_PRINTCONTRACT>打印合同
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
           表格设置
