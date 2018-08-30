@@ -167,13 +167,8 @@ export default {
     },
     getDetail() {
       const transferId = this.id
-      console.log('id', this.id)
       return getTransferTrack(transferId).then(data => {
         this.trackDetail = objectMerge2([], data)
-        console.log(data)
-        // this.$nextTick(() => {
-        //   console.log('获取列表：', this.trackDetail[this.trackDetail.length - 1].operatorTime)
-        // })
       })
     },
     closeMe(done) {

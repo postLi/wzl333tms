@@ -5,9 +5,11 @@
         批次号： {{info.batchNo}}
       </div>
       <div class="editInfoPop_content">
-        <el-tabs v-model="activeName" @tab-click="handleClick"  type="card">
+        <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
           <el-tab-pane label="批次详情" name="first">
-            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
+            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight" v-if="detailType==='detailShort'"></Detail>
+            <DetailArtery :info="info" :isShow="popVisible" class="animated fadeInRight" v-else-if="detailType==='detailArtery'"></DetailArtery>
+            <DetailDeliver :info="info" :isShow="popVisible" class="animated fadeInRight" v-else></DetailDeliver>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="info_box" v-loading="loading">
@@ -38,7 +40,7 @@
                         <el-col :span="3" class="">
                           <p>{{item.orgName}}</p>
                         </el-col>
-                         <el-col :span="4">
+                        <el-col :span="4">
                           <p>
                             <i class="track-human" v-if="item.addStatus===1"></i>
                             <i class="icon_blank" v-else></i> {{item.operatorUsername}}
@@ -50,7 +52,7 @@
                       </el-row>
                     </template>
                   </el-step>
-                 <!--  <el-step>
+                  <!--  <el-step>
                     <span slot="icon" class="location"></span>
                   </el-step> -->
                 </el-steps>
@@ -92,12 +94,16 @@ import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
+import DetailArtery from './detailArtery'
+import DetailDeliver from './detailDeliver'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 import { getSystemTime } from '@/api/common'
 export default {
   components: {
     popRight,
-    Detail
+    Detail,
+    DetailArtery,
+    DetailDeliver
   },
   props: {
     popVisible: {
@@ -113,6 +119,10 @@ export default {
     info: {
       type: Object,
       default: {}
+    },
+    detailType: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -162,8 +172,8 @@ export default {
     getSystemTime() { // 获取系统时间
       if (!this.formModel.id) {
         getSystemTime().then(data => {
-          this.formModel.operatorTime = parseTime(data.trim())
-        })
+            this.formModel.operatorTime = parseTime(data.trim())
+          })
           .catch(error => {
             this.$message({ type: 'error', message: '获取系统时间失败' })
           })
@@ -211,12 +221,12 @@ export default {
         type: 'warning'
       }).then(() => {
         return deleteTrack(item.id).then(data => {
-          this.$message({ type: 'success', message: '删除成功' })
-          this.getDetail()
-          this.resetForm()
-        })
+            this.$message({ type: 'success', message: '删除成功' })
+            this.getDetail()
+            this.resetForm()
+          })
           .catch(error => {
-             this.$message.error(error.errorInfo || error.text ||  '删除失败')
+            this.$message.error(error.errorInfo || error.text || '删除失败')
           })
       })
     },
@@ -229,25 +239,25 @@ export default {
       this.formModel.transferId = 0
       this.formModel.operatorTime = parseTime(this.formModel.operatorTime)
       return putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-      .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
-      })
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     addTrack() { // 添加跟踪信息
       console.log('添加')
       this.formModel.loadId = this.id
       return postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-      .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
-      })
+          this.$message({ type: 'success', message: '添加成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     handleClick() { // 底部按钮区显示
       if (this.activeName === 'second') {
@@ -391,12 +401,14 @@ export default {
     &:hover {}
   }
   /* 鼠标划过样式 */
-  .trackactive{
-    .modifybtn, .deletebtn{
+  .trackactive {
+    .modifybtn,
+    .deletebtn {
       display: inline-block;
     }
   }
-  .trackactive,.firstactive {
+  .trackactive,
+  .firstactive {
     .typebox {
       background: url("../../../../../assets/png/track-active.png") no-repeat;
       color: #fff;
@@ -451,12 +463,12 @@ export default {
 }
 
 .stepFrom {
-  background-color:#f2f2f2;
-  box-shadow:-1px -1px 10px #bbb;
-  text-align:left;
-  padding:0 10px;
-  .el-form-item__content{
-    vertical-align:middle;
+  background-color: #f2f2f2;
+  box-shadow: -1px -1px 10px #bbb;
+  text-align: left;
+  padding: 0 10px;
+  .el-form-item__content {
+    vertical-align: middle;
   }
 }
 
