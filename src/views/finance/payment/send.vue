@@ -3,7 +3,7 @@
       <SearchForm :orgid="otherinfo.orgid" type="funds_remittance_status" title="汇款" status="fundsRemittanceStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('send')">货款汇款</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sort" plain @click="doAction('send')">货款汇款</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消汇款</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
