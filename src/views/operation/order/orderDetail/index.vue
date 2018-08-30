@@ -10,6 +10,9 @@
       <el-tab-pane name="three" label="运单跟踪">
         <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
+      <el-tab-pane name="six" label="运单轨迹">
+        <trunk v-if="activeTab.six" :orderid="output.orderid" />
+      </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
         <abnormal v-if="activeTab.four" :orderid="output.orderid" />
       </el-tab-pane>
@@ -29,6 +32,7 @@ import fee from './fee'
 import ordertrack from './track'
 import abnormal from './abnormal'
 import log from './log'
+import trunk from './trunk'
 
 export default {
   name: 'orderDetail',
@@ -48,7 +52,8 @@ export default {
     fee,
     ordertrack,
     abnormal,
-    log
+    log,
+    trunk
   },
   watch: {
     '$route'(to, from) {
@@ -82,7 +87,8 @@ export default {
         'two': false,
         'three': false,
         'four': false,
-        'five': false
+        'five': false,
+        'six': false
       },
       output: {
         orderid: ''
@@ -130,12 +136,12 @@ export default {
       }).then(() => {
         this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage/All')
       }).catch(() => {
-          if (this.output.iswindow) {
-            this.eventBus.$emit('closeCurrentView')
-          } else {
-            this.eventBus.$emit('hideOrderDetail')
-          }
-        })
+        if (this.output.iswindow) {
+          this.eventBus.$emit('closeCurrentView')
+        } else {
+          this.eventBus.$emit('hideOrderDetail')
+        }
+      })
     },
     initOrder() {
       this.activeIndex = 'one'
