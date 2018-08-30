@@ -31,7 +31,7 @@
           <div v-if="tip" class="upload__tip">{{ tip }}</div>
         </slot>
       </el-upload>
-      <el-dialog :visible.sync="dialogVisible" :append-to-body="true">
+      <el-dialog custom-class="singleimage2" :visible.sync="dialogVisible" :append-to-body="true">
         <img width="100%" :src="dialogImageUrl" alt="">
       </el-dialog>
     </div>
@@ -232,11 +232,9 @@ export default {
 
 <style lang="scss">
     @import "src/styles/mixin.scss";
-    .el-dialog__wrapper{
-      .el-dialog{
-        margin-top: 10vh !important;
-        width: 40% !important;
-      }
+    .singleimage2{
+      margin-top: 10vh !important;
+      width: 40% !important;
     }
     .box_container {
         width: 100%;
