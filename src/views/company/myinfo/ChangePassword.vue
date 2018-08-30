@@ -60,6 +60,13 @@ export default {
         callback()
       }
     }
+    const validatePwd = (rule, value, callback) => {
+      if (typeof value !== 'string' || value === '' || value.length < 6) {
+        callback('密码不能小于6位')
+      } else {
+        callback()
+      }
+    }
     return {
       isCheck: '',
       form: {
@@ -82,10 +89,10 @@ export default {
           }
         ],
         pwd: [
-          { required: true, message: '请输入新密码', trigger: 'blur' }
+          { required: true, message: '请输入新密码', trigger: 'blur', validator: validatePwd }
         ],
         re_pwd: [
-          { required: true, message: '请再次输入新密码', trigger: 'blur' },
+          { required: true, message: '请再次输入新密码', trigger: 'change' },
           { validator: validatePass2, trigger: 'blur' }
         ]
       }

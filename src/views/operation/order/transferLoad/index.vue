@@ -10,7 +10,7 @@
           <div class="clearfix loadFrom">
             <el-form :model="formModel" ref="formModel" class="demo-form-inline" :inline="true" label-width="90px" :rules="formModelRules">
               <!-- 基本信息 -->
-              <el-form-item label="承运商" class="addCarrierInput" prop="carrierId">
+              <el-form-item label="承运商" class="addCarrierInput" prop="carrierId" :key="carrierKey">
                 <i class="el-icon-plus el-input__icon" @click="doAction('addTruck')"></i>
                 <querySelect size="mini" show='select' search="carrierName" :remote="true" :name="carrierName" v-model="formModel.carrierId" type="carrier" valuekey="carrierId"  @change="getCarrier" >
                 </querySelect>
@@ -47,7 +47,7 @@
       
     </div>
     <!-- 添加承运商信息 -->
-      <addCraieer :orgid="otherinfo.orgid" :popVisible.sync="addCarrierVisible"></addCraieer>
+      <addCraieer :orgid="otherinfo.orgid" :popVisible.sync="addCarrierVisible"  @success="fetchCarrierData"></addCraieer>
   </div>
 </template>
 <script>
@@ -88,9 +88,10 @@ export default {
       },
       loadTruck: 'loadTruckOne',
       isModify: false,
-      addCarrierVisible: false,
+      addCarrierVisible: false, 
       loading: false,
       carrierName: '',
+      carrierKey: 0,
       // 缓存数据
       dataCache: {},
       cache: {}
@@ -106,6 +107,9 @@ export default {
      this.rightData = []
      this.leftData = []
      this.getSelectAddLoadRepertoryList()
+    },
+    fetchCarrierData () {
+      this.carrierKey = Math.random()
     },
     init() {
       const transferId = this.$route.query.transferId
