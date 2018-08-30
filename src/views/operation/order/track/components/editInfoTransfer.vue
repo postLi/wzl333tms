@@ -170,9 +170,10 @@ export default {
       console.log('id', this.id)
       return getTransferTrack(transferId).then(data => {
         this.trackDetail = objectMerge2([], data)
-        this.$nextTick(() => {
-          console.log('获取列表：', this.trackDetail[this.trackDetail.length - 1].operatorTime)
-        })
+        console.log(data)
+        // this.$nextTick(() => {
+        //   console.log('获取列表：', this.trackDetail[this.trackDetail.length - 1].operatorTime)
+        // })
       })
     },
     closeMe(done) {
