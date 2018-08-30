@@ -173,6 +173,11 @@ export default {
           width: "120"
         },
         {
+          label: "现付运费",
+          prop: "nowpayCarriage",
+          width: "120"
+        },
+        {
           label: "现付油卡",
           prop: "nowpayOilCard",
           width: "120"
@@ -194,7 +199,7 @@ export default {
         },
         {
           label: "回付运费",
-          prop: "backpayOilCard",
+          prop: "backpayCarriage",
           width: "120"
         },
         // {

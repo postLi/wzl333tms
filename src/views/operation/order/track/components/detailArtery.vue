@@ -364,7 +364,7 @@ export default {
     }
   }
   .detailTables_info_artery {
-    margin-top:10px;
+    margin-top:5px;
     tr th {
       font-size: 12px;
       color: #666;
