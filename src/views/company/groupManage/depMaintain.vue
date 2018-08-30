@@ -36,6 +36,7 @@
               </ul>
             </div>
           </div>
+          <!--编辑-->
           <div class="depmain-edit" v-if="hiddenEdit">
             <div class="depmain-list">
               <ul :key="theulkey">
@@ -44,7 +45,7 @@
                   <span v-once class="firstName">{{item.dictName}}</span>
                   <div class="edit-hidden">
                     <!--<input type="text" v-focus="focusIndex === index" v-model="item.dictName" />-->
-                    <el-input ref="svginput1"
+                    <el-input ref="svginputEdit"
                               v-model="item.dictName"
                     >
                     </el-input>
@@ -229,7 +230,9 @@
         this.hiddenEdit = true
         this.showDate = false
         this.currentIndex = 0
-        // this.
+        setTimeout(() => {
+          this.$refs['svginputEdit'].focus()
+        }, 100)
       },
       submitForm(ruleForm) {
         this.popTitle = '添加'
@@ -241,8 +244,6 @@
         setTimeout(() => {
           this.$refs['svginput'].focus()
         }, 100)
-
-
       },
       reset() {
         this.popTitle = '部门'

@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item label="体积" prop="">
             <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8" v-number-only:point></el-input>
+                      :maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="重量" prop="tmsOrderPickup.pickupWeight">
             <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick"
@@ -356,23 +356,61 @@
         } else if (this.isDbclick) {
           this.popTitle = '查看派车单'
           this.infoData(this.info)
-
-
         } else {
           this.popTitle = '提货派车单'
-          // this.newInfoData()
           this.reset()
-          // this.form.tmsTruck.truckUnit = ''
-          // this.form.tmsOrderPickup.payMethod = 76
-          // this.form.tmsOrderPickup.pickupStatus = 236
-          this.form.tmsOrderPickup.outTime = new Date()
           this.fetchGetPickUp()
-          // this.valkey = Math.random()
+        }
+
+      },
+      isModify() {
+        this.$refs['ruleForm'].resetFields()
+        this.checkShowMessage = false
+        if (this.isModify) {
+          this.popTitle = '修改派车单'
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
+          this.popTitle = '查看派车单'
+          this.infoData(this.info)
+        } else {
+          this.popTitle = '提货派车单'
+          this.reset()
+          this.fetchGetPickUp()
+        }
+
+      },
+      isDbclick() {
+        this.$refs['ruleForm'].resetFields()
+        this.checkShowMessage = false
+        if (this.isModify) {
+          this.popTitle = '修改派车单'
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
+          this.popTitle = '查看派车单'
+          this.infoData(this.info)
+        } else {
+          this.popTitle = '提货派车单'
+          this.reset()
+          this.fetchGetPickUp()
         }
 
       }
     },
     methods: {
+      watchInfo() {
+        if (this.isModify) {
+          this.popTitle = '修改派车单'
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
+          this.popTitle = '查看派车单'
+          this.infoData(this.info)
+        } else {
+          this.popTitle = '提货派车单'
+          this.newInfoData()
+          this.fetchGetPickUp()
+          this.valkey = Math.random()
+        }
+      },
       filterfn(el) {
         return el.id !== 235
       },
@@ -417,6 +455,7 @@
           }
         }
       },
+
       showMessage(msg) {
         if (this.isChecked && !this.isCheckedShow) {
           this.isCheckedShow = true
@@ -543,9 +582,9 @@
               this.$message.success('保存成功')
               this.loading = false
             }).catch(err => {
-              if(err.text === "提货批次已存在"){
+              if (err.text === "提货批次已存在") {
                 this.fetchGetPickUp()
-              }else{
+              } else {
                 this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               }
               this.loading = false
@@ -596,8 +635,8 @@
 
       },
       reset() {
-        this.newInfoData()
-        this.valkey = Math.random()
+        this.watchInfo()
+
       },
       closeMe(done) {
         this.reset()

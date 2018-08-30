@@ -486,11 +486,6 @@
           }
       },
       isModify(val) {
-        // handler() {
-        //   this.watchData()
-        // },
-        // immediate: true
-
           if (this.isModify) {
             this.popTitle = '修改订单'
             this.orderSn = this.info.orderSn
@@ -558,7 +553,7 @@
         this.form.customRece.customerId = item.receiverId
 
         // 订单信息
-        
+
         this.form.tmsOrderPre.orderFromCityName = this.info.orderFromCityName
         this.form.tmsOrderPre.orderToCityName = this.info.orderToCityName
         this.form.tmsOrderPre.orderRemarks = item.orderRemarks
@@ -663,7 +658,7 @@
               // data.id = this.form.tmsOrderPre.id
               promiseObj = postModifyOrder(data)
             } else {
-              
+
               if (this.networkFlog) { // 添加网络订单
                 promiseObj = postAddNetworkOrder(data)
               }else {
