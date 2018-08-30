@@ -212,12 +212,66 @@
     <div class="finace_flow">
       <div class="finace_flow_item1">
         <el-tooltip placement="bottom">
-          <!-- <div slot="content">
+          <div slot="content">
             功能：安排车辆上门提货
-          </div> -->
+          </div>
           <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i>
-            <p>提货</p>
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：安排车辆上门提货
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：安排车辆上门提货
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：安排车辆上门提货
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：安排车辆上门提货
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：安排车辆上门提货
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：安排车辆上门提货
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon tihuo"></i><br>
+            <span>提货</span>
           </router-link>
         </el-tooltip>
       </div>
@@ -457,15 +511,26 @@ export default {
     margin: 53px auto 0;
     position: relative;
     background: url("../../assets/flow/index31.png") no-repeat;
+    background-color: yellow;
+    
     // background-size: auto 2000;
     position: relative;
     .finace_flow_item1{
       width: 897px;
       height: 101px;
-      // background: red;
+      display: flex;
+      justify-content:  flex-start;
+      //  align-content: center;
+      flex-direction: row;
+      text-align: center;
+      background: red;
       position: absolute;
       top: 34px;
       left: 208px;
+      .el-tooltip{
+        padding-top:15px;
+        flex-grow: 1;
+      }
     }
     .finace_flow_item2{
       width: 863px;
