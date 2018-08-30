@@ -12,7 +12,10 @@ const getters = {
   otherinfo: state => state.user.otherinfo,
   permission_routers: state => state.permission.routers,
   sidebarRouters: state => state.permission.sidebarRouters,
+  // 返回角色所对应的router
   addRouters: state => state.permission.addRouters,
+  // 返回所有的router
+  allRouters: state => state.permission.routers,
   errorLogs: state => state.errorLog.logs
 }
 export default getters
