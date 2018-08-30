@@ -215,7 +215,7 @@
           <div slot="content">
             功能：现付
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsReceivable/cash">
             <i class="flowicon1 xf"></i><br>
             <span>现付</span>
           </router-link>
@@ -224,7 +224,7 @@
           <div slot="content">
             功能：到付
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsReceivable/arrive">
             <i class="flowicon1 df"></i><br>
             <span>到付</span>
           </router-link>
@@ -233,7 +233,7 @@
           <div slot="content">
             功能：回单付
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsReceivable/receipt">
             <i class="flowicon1 hdf"></i><br>
             <span>回单付</span>
           </router-link>
@@ -242,7 +242,7 @@
           <div slot="content">
             功能：异动费用
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsPayable/waybill/unusual">
             <i class="flowicon1 ydfy"></i><br>
             <span>异动费用</span>
           </router-link>
@@ -253,7 +253,7 @@
           <div slot="content">
             功能：实际提货费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/waybill/ticket">
             <i class="flowicon1 sjthf"></i><br>
             <span>实际提货费</span>
           </router-link>
@@ -262,7 +262,7 @@
           <div slot="content">
             功能：中转费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/waybill/transfer">
             <i class="flowicon1 zzf"></i><br>
             <span>中转费</span>
           </router-link>
@@ -271,7 +271,7 @@
           <div slot="content">
             功能：回扣
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/waybill">
             <i class="flowicon1 hk"></i><br>
             <span>回扣</span>
           </router-link>
@@ -280,7 +280,7 @@
           <div slot="content">
             功能：异动费用
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsReceivable/abnormal">
             <i class="flowicon1 ydfy"></i><br>
             <span>异动费用</span>
           </router-link>
@@ -289,7 +289,7 @@
           <div slot="content">
             功能：异常赔礼
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsPayable/waybill/abnormal">
             <i class="flowicon1 ycpl"></i><br>
             <span>异常赔礼</span>
           </router-link>
@@ -298,7 +298,7 @@
           <div slot="content">
             功能：其他费支出
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/waybill/other">
             <i class="flowicon1 qtfzc"></i><br>
             <span>其他费支出</span>
           </router-link>
@@ -309,7 +309,7 @@
           <div slot="content">
             功能：发车汇总
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/truckAll">
             <i class="flowicon1 fchz"></i><br>
             <span>发车汇总</span>
           </router-link>
@@ -318,7 +318,7 @@
           <div slot="content">
             功能：到车汇总
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/arrivalAll">
             <i class="flowicon1 dchz"></i><br>
             <span>到车汇总</span>
           </router-link>
@@ -327,25 +327,25 @@
           <div slot="content">
             功能：整车保险费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/insurance">
             <i class="flowicon1 zcbxf"></i><br>
             <span>整车保险费</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：发车装卸费
+            功能：发站装卸费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/stationLoad">
             <i class="flowicon1 fczxf"></i><br>
-            <span>发车装卸费</span>
+            <span>发站装卸费</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
             功能：发站其他费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/stationOther">
             <i class="flowicon1 fzqtf"></i><br>
             <span>发站其他费</span>
           </router-link>
@@ -354,7 +354,7 @@
           <div slot="content">
             功能：到站其他费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/arriveOther">
             <i class="flowicon1 dzqtf"></i><br>
             <span>到站其他费</span>
           </router-link>
@@ -363,7 +363,7 @@
           <div slot="content">
             功能：短驳费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/accountsPayable/batch/short">
             <i class="flowicon1 dbf"></i><br>
             <span>短驳费</span>
           </router-link>
@@ -372,7 +372,7 @@
           <div slot="content">
             功能：送货费
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="./accountsPayable/batch/deliver">
             <i class="flowicon1 shf"></i><br>
             <span>送货费</span>
           </router-link>
@@ -383,7 +383,7 @@
           <div slot="content">
             功能：货款到账
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/payment/accept">
             <i class="flowicon1 hkdz"></i><br>
             <span>货款到账</span>
           </router-link>
@@ -392,7 +392,7 @@
           <div slot="content">
             功能：货款发放
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/payment/grant">
             <i class="flowicon1 hkff"></i><br>
             <span>货款发放</span>
           </router-link>
@@ -403,7 +403,7 @@
           <div slot="content">
             功能：货款回收
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/payment/recycle">
             <i class="flowicon1 hkhs"></i><br>
             <span>货款回收</span>
           </router-link>
@@ -412,7 +412,7 @@
           <div slot="content">
             功能：货款汇款
           </div>
-          <router-link to="./order/pickUp">
+          <router-link to="/finance/payment/send">
             <i class="flowicon1 hkhk"></i><br>
             <span>货款汇款</span>
           </router-link>

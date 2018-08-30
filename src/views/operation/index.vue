@@ -161,10 +161,12 @@ export default {
 }
 
 .operation_flow {
-  width: 1178px;
+  // width: 1178px;
+  width: 1228px;
   height: 752px;
   margin: 53px auto 0;
-  background-image: url("../../assets/flow/operation.png");
+  // background-image: url("../../assets/flow/operation.png");
+  background-image: url("../../assets/flow/index2.png");
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
