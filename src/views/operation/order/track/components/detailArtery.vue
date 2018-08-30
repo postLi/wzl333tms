@@ -375,7 +375,7 @@ export default {
     }
     tr td,
     tr th {
-      
+      height: 35px;
       padding: 10px 5px;
       border: 1px solid #d0d7e5;
       border-collapse: collapse;
