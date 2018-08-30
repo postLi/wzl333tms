@@ -213,75 +213,210 @@
       <div class="finace_flow_item1">
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：安排车辆上门提货
+            功能：现付
           </div>
           <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
+            <i class="flowicon1 xf"></i><br>
+            <span>现付</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：安排车辆上门提货
+            功能：到付
           </div>
           <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
+            <i class="flowicon1 df"></i><br>
+            <span>到付</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：安排车辆上门提货
+            功能：回单付
           </div>
           <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
+            <i class="flowicon1 hdf"></i><br>
+            <span>回单付</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
-            功能：安排车辆上门提货
+            功能：异动费用
           </div>
           <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
-          </router-link>
-        </el-tooltip>
-        <el-tooltip placement="bottom">
-          <div slot="content">
-            功能：安排车辆上门提货
-          </div>
-          <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
-          </router-link>
-        </el-tooltip>
-        <el-tooltip placement="bottom">
-          <div slot="content">
-            功能：安排车辆上门提货
-          </div>
-          <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
-          </router-link>
-        </el-tooltip>
-        <el-tooltip placement="bottom">
-          <div slot="content">
-            功能：安排车辆上门提货
-          </div>
-          <router-link to="./order/pickUp">
-            <i class="flowicon tihuo"></i><br>
-            <span>提货</span>
+            <i class="flowicon1 ydfy"></i><br>
+            <span>异动费用</span>
           </router-link>
         </el-tooltip>
       </div>
       <div class="finace_flow_item2">
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：实际提货费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 sjthf"></i><br>
+            <span>实际提货费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：中转费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 zzf"></i><br>
+            <span>中转费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：回扣
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 hk"></i><br>
+            <span>回扣</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：异动费用
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 ydfy"></i><br>
+            <span>异动费用</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：异常赔礼
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 ycpl"></i><br>
+            <span>异常赔礼</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：其他费支出
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 qtfzc"></i><br>
+            <span>其他费支出</span>
+          </router-link>
+        </el-tooltip>
       </div>
       <div class="finace_flow_item3">
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：发车汇总
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 fchz"></i><br>
+            <span>发车汇总</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：到车汇总
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 dchz"></i><br>
+            <span>到车汇总</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：整车保险费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 zcbxf"></i><br>
+            <span>整车保险费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：发车装卸费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 fczxf"></i><br>
+            <span>发车装卸费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：发站其他费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 fzqtf"></i><br>
+            <span>发站其他费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：到站其他费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 dzqtf"></i><br>
+            <span>到站其他费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：短驳费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 dbf"></i><br>
+            <span>短驳费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：送货费
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 shf"></i><br>
+            <span>送货费</span>
+          </router-link>
+        </el-tooltip>
       </div>
       <div class="finace_flow_item4">
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：货款到账
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 hkdz"></i><br>
+            <span>货款到账</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：货款发放
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 hkff"></i><br>
+            <span>货款发放</span>
+          </router-link>
+        </el-tooltip>
       </div>
       <div class="finace_flow_item5">
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：货款回收
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 hkhs"></i><br>
+            <span>货款回收</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：货款汇款
+          </div>
+          <router-link to="./order/pickUp">
+            <i class="flowicon1 hkhk"></i><br>
+            <span>货款汇款</span>
+          </router-link>
+        </el-tooltip>
       </div>
     </div>
   </div>
@@ -503,16 +638,17 @@ export default {
       }
     }
   }  
+  .finace-container {
+    padding-top:20px;
+  }
   .finace_flow{
     display: block;
     margin:0 auto !important;
-    width: 1228px;
+    width: 1325px;
     height: 789px;
-    margin: 53px auto 0;
+    // margin: 53px auto 0;
     position: relative;
     background: url("../../assets/flow/index31.png") no-repeat;
-    background-color: yellow;
-    
     // background-size: auto 2000;
     position: relative;
     .finace_flow_item1{
@@ -520,15 +656,13 @@ export default {
       height: 101px;
       display: flex;
       justify-content:  flex-start;
-      //  align-content: center;
       flex-direction: row;
       text-align: center;
-      background: red;
       position: absolute;
       top: 34px;
       left: 208px;
       .el-tooltip{
-        padding-top:15px;
+        padding-top:20px;
         flex-grow: 1;
       }
     }
@@ -539,6 +673,14 @@ export default {
       position: absolute;
       top: 211px;
       left: 225px;
+      display: flex;
+      justify-content:  flex-start;
+      flex-direction: row;
+      text-align: center;
+       .el-tooltip{
+        padding-top:20px;
+        flex-grow: 1;
+      }
     }
     .finace_flow_item3{
       width: 862px;
@@ -547,6 +689,18 @@ export default {
       position: absolute;
       top: 356px;
       left: 226px;
+       display: flex;
+      // justify-content:  flex-start;
+      // align-content: space-between;
+      flex-direction: row;
+      text-align: center;
+      flex-wrap:wrap;
+       .el-tooltip{
+        //  flex-grow: 1;
+         width: 20%;
+        padding-top:20px;
+        
+      }
     }
     .finace_flow_item4{
       width: 272px;
@@ -555,6 +709,14 @@ export default {
       position: absolute;
       top: 664px;
       left: 326px;
+      display: flex;
+      justify-content:  flex-start;
+      flex-direction: row;
+      text-align: center;
+       .el-tooltip{
+        padding-top:20px;
+        flex-grow: 1;
+      }
     }
     .finace_flow_item5{
       width: 272px;
@@ -563,7 +725,23 @@ export default {
       position: absolute;
       top: 664px;
       left: 716px;
+      display: flex;
+      justify-content:  flex-start;
+      flex-direction: row;
+      text-align: center;
+       .el-tooltip{
+        padding-top:20px;
+        flex-grow: 1;
+      }
     }
+    .flowicon1 {
+  transition: 0.5s;
+}
+
+.flowicon1:hover {
+  transform: scale(1.2);
+  transition: 0.3s;
+}
   }
 }
 
