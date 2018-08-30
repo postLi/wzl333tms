@@ -1019,7 +1019,6 @@
                   a.totalCost = el.totalCost
                   return a
                 }) : []
-
                 if (!this.form.carrierDetailDtoList.length) {
                   this.$message({
                     message: '各款项不能为空~',
