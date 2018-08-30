@@ -38,19 +38,20 @@
                 </div>
                 <div>
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" @blur="blurDriver" :maxlength="10">
-                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" :maxlength="10">
+                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>   
                       <template slot-scope="{ item }">
-                        <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
+                        <!-- <div v-if="formModel.truckIdNumber===undefined || formModel.truckIdNumber===''">
                           <div class="name">{{ item.truckIdNumber }}</div>
                           <span class="addr">{{ item.driverName }}</span>
                           <br>
                           <span class="addr">{{ item.dirverMobile}}</span>
-                        </div>
-                        <div v-else>
+                        </div> -->
+                        <!-- <div v-else> -->
                           <div class="name">{{ item.driverName }}</div>
                           <span class="addr">{{ item.driverMobile }}</span>
-                        </div>
+                          <span class="addr">{{ item.truckIdNumber }}</span>
+                        <!-- </div> -->
                       </template>
                     </el-autocomplete>
                   </el-form-item>
@@ -215,7 +216,7 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK } from '@/api/operation/load'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
 // import { getAllTrunk } from '@/api/company/trunkManage'
 import selectType from '@/components/selectType/index'
@@ -291,7 +292,8 @@ export default {
         planArrivedTime: '',
         orgid: '',
         dirverName: '',
-        dirverMobile: ''
+        dirverMobile: '',
+        truckIdNumber: ''
         // truckLoad: '',
         // truckVolume: ''
       },
@@ -833,33 +835,31 @@ export default {
       if (this.cacheDriverList[orgid]) {
         this.Drivers = this.cacheDriverList[orgid]
       } else {
-        getAllDriver({
-            "currentPage": 1,
-            "pageSize": 200,
-            "vo": {
-              "orgid": orgid
-            }
-          }).then(data => {
-            this.Drivers = data.list
-            this.cacheDriverList[orgid] = data.list
-            console.log('Drivers', this.Drivers)
-          })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text)
-          })
+        getDrivers().then(data => {
+          this.Drivers = data.data
+          this.cacheDriverList[orgid] = data.data
+          console.log('Drivers', this.Drivers)
+        })
+        // getAllDriver({
+        //     "currentPage": 1,
+        //     "pageSize": 200,
+        //     "vo": {
+        //       "orgid": orgid
+        //     }
+        //   }).then(data => {
+        //     this.Drivers = data.list
+        //     this.cacheDriverList[orgid] = data.list
+        //     console.log('Drivers', this.Drivers)
+        //   })
+        //   .catch(error => {
+        //     this.$message.error(error.errorInfo || error.text)
+        //   })
       }
     },
     getTrucks(orgid) {
       if (this.cacheTruckList[orgid]) {
         this.Trucks = this.cacheTruckList[orgid]
       } else {
-        // getAllTrunk({
-        //   "currentPage": 1,
-        //   "pageSize": 200,
-        //   "vo": {
-        //     "orgid": orgid
-        //   }
-        // })
         getTrucK().then(data => {
             this.Trucks = data.data
             this.cacheTruckList[orgid] = data.data
@@ -890,17 +890,17 @@ export default {
       // this.formModel.truckVolume = item.truckVolume
     },
     querySearch(queryString, cb) {
-      if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
-        const truckList = this.Trucks
-        const results = queryString ? truckList.filter(this.createFilterTruck(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
-        // 调用 callback 返回车辆列表的数据
-        cb(results)
-      } else {
+      // if (this.formModel.truckIdNumber === '' || this.formModel.truckIdNumber === undefined) {
+      //   const truckList = this.Trucks
+      //   const results = queryString ? truckList.filter(this.createFilterTruck(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
+      //   // 调用 callback 返回车辆列表的数据
+      //   cb(results)
+      // } else {
         let driverList = this.Drivers
         let results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, "gi"), 'driverName')) : driverList
         // 调用 callback 返回司机列表的数据
         cb(results)
-      }
+      // }
     },
     querySearchTruck(queryString, cb) {
       const truckList = this.Trucks
