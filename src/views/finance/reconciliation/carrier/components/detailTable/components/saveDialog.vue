@@ -1,5 +1,5 @@
 <template>
-  <div class="saveDialog-maintain">
+  <div class="saveDialog-maintain" >
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
@@ -8,11 +8,11 @@
           对账总金额：<span>{{totaMoney}}元</span>
           </div>
           <el-table
+          :key="popKey"
             ref="multipleTable"
             :data="dialogInfo"
             stripe
             border
-            height="160"
             tooltip-effect="dark"
             :default-sort = "{prop: 'id', order: 'ascending'}"
             style="width: 100%">
@@ -27,7 +27,6 @@
             fixed
             sortable
             prop="date"
-            width="120"
             label="费用项">
             </el-table-column>
             <el-table-column
@@ -38,7 +37,6 @@
             label="金额">
             </el-table-column>
           </el-table>
-
 
         </div>
       </template>
@@ -67,6 +65,10 @@
       querySelect
     },
     props: {
+      popKey: {
+        type: [String, Number],
+        default: 0
+      },
       popVisible: {
         type: Boolean,
         default: false
@@ -129,14 +131,16 @@
     watch: {
       tota: {
         handler(newVal) {
-          this.watchData()
+          if (newVal) {
+            this.watchData()
+          }
         },
         deep: true
       },
       dotInfo: {
         handler(newVal) {
-          this.popTitle = this.dotInfo.tmsFinanceBillCheckDto.checkBillName
-          this.watchData()
+          this.popTitle = newVal.tmsFinanceBillCheckDto.checkBillName
+          // this.watchData()
         },
         deep: true
       },
@@ -150,6 +154,11 @@
       },
 
       urlId() {
+      },
+      popKey (newVal) {
+        console.log('==========popKey', newVal)
+        console.log(this.tota)
+        return newVal
       }
     },
 
@@ -157,43 +166,55 @@
     },
     methods: {
       watchData() {
-        this.dialogInfo[0].toPay = 0
-        this.dialogInfo[1].toPay = 0
-        this.dialogInfo[2].toPay = 0
-        this.dialogInfo[3].toPay = 0
-        this.dialogData = this.tota
-        this.dialogData.dealtota.map(el => {
-          this.$set(this.dialogInfo, 0, {
-            date: '应收清单',
-            toPay: tmsMath.add(this.dialogInfo[0].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
-            // toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
+        this.dialogData = Object.assign(this.tota)
+        let count = []
+        for (let item in this.dialogData) {
+           let data = 0
+            this.dialogData[item].forEach(el => {
+              data += Number(el.totalFee)
           })
-            // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+            count.push(data)
+            data = 0
+        }
+        count.forEach((e, index) => {
+          this.dialogInfo[index].toPay = e
         })
-        this.dialogData.dealPaytota.map(el => {
-          this.$set(this.dialogInfo, 1, {
-            date: '应付清单',
-            // toPay: this.dialogInfo[1].toPay + (el.totalCost ? +el.totalCost : 0)
-            toPay: tmsMath.add(this.dialogInfo[1].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
-          })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-        })
-        this.dialogData.alreadytota.map(el => {
-          this.$set(this.dialogInfo, 2, {
-            date: '已收清单',
-            toPay: tmsMath.add(this.dialogInfo[2].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
-            // toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
-          })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-        })
-        this.dialogData.alreadyPaytota.map(el => {
-          this.$set(this.dialogInfo, 3, {
-            date: '已付清单',
-            // toPay: this.dialogInfo[3].toPay + (el.totalCost ? +el.totalCost : 0)
-            toPay: tmsMath.add(this.dialogInfo[3].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
-          })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
-        })
+        // this.dialogInfo[0].toPay = 0
+        // this.dialogInfo[1].toPay = 0
+        // this.dialogInfo[2].toPay = 0
+        // this.dialogInfo[3].toPay = 0
+        // this.dialogData.dealtota.map(el => {
+        //   this.$set(this.dialogInfo, 0, {
+        //     date: '应收清单',
+        //     toPay: tmsMath.add(this.dialogInfo[0].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
+        //     // toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
+        //   })
+        //     // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        // })
+        // this.dialogData.dealPaytota.map(el => {
+        //   this.$set(this.dialogInfo, 1, {
+        //     date: '应付清单',
+        //     // toPay: this.dialogInfo[1].toPay + (el.totalCost ? +el.totalCost : 0)
+        //     toPay: tmsMath.add(this.dialogInfo[1].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
+        //   })
+        //     // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        // })
+        // this.dialogData.alreadytota.map(el => {
+        //   this.$set(this.dialogInfo, 2, {
+        //     date: '已收清单',
+        //     toPay: tmsMath.add(this.dialogInfo[2].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
+        //     // toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
+        //   })
+        //     // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        // })
+        // this.dialogData.alreadyPaytota.map(el => {
+        //   this.$set(this.dialogInfo, 3, {
+        //     date: '已付清单',
+        //     // toPay: this.dialogInfo[3].toPay + (el.totalCost ? +el.totalCost : 0)
+        //     toPay: tmsMath.add(this.dialogInfo[3].toPay ).add(el.totalCost ? +el.totalCost : 0).result()
+        //   })
+        //     // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
+        // })
         this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay,this.dialogInfo[2].toPay,this.dialogInfo[3].toPay).result()
         // this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
         // this.totaMoney
@@ -206,7 +227,7 @@
         }
       },
       reset() {
-        this.dotInfo = {}
+        // this.dotInfo = {}
       },
 
       submitForm(formName) {
@@ -225,7 +246,9 @@
           promiseObj = postCreatesaveCarrierDetail(data)
           this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId)
         }
-
+        if (this.totaMoney === 0) {
+          
+        }
         promiseObj.then(res => {
           this.loading = false
           this.$message({

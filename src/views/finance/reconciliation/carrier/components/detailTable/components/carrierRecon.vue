@@ -728,7 +728,7 @@
     </div>
     <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form" @close="oopenVisibleDialog" :tota="tota"
                 :sendId="sendId" :memberId="messageInfo.memberId" @success="fetchList"
-                :urlId="$route.query.urlId"></SaveDialog>
+                :urlId="$route.query.urlId" :popKey="popKey"></SaveDialog>
   </div>
 </template>
 
@@ -851,7 +851,8 @@
           carrierId: '', //
           startTime: '',
           endTime: ''
-        }
+        },
+        popKey: 0 // 用于刷新弹出框数据
       }
     },
 
@@ -998,27 +999,29 @@
                 this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 //
-                this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
-                  const a = {}
-                  a.totalFee = el.totalFee
-
-                  return a
-                }) : []
-                this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                  const a = {}
-                  a.totalCost = el.totalCost
-                  return a
-                }) : []
-                this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
-                  const a = {}
-                  a.totalFee = el.totalFee
-                  return a
-                }) : []
-                this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                  const a = {}
-                  a.totalCost = el.totalCost
-                  return a
-                }) : []
+                // this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
+                //   const a = {}
+                //   a.totalFee = el.totalFee
+                  
+                //   return a
+                // }) : []
+                // this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
+                //   const a = {}
+                //   a.totalCost = el.totalCost
+                 
+                //   return a
+                // }) : []
+                // this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
+                //   const a = {}
+                //   a.totalFee = el.totalFee
+                //   return a
+                // }) : []
+                // this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
+                //   const a = {}
+                //   a.totalCost = el.totalCost
+                //   return a
+                // }) : []
+                 this.countTotal() // 计算合计
                 if (!this.form.carrierDetailDtoList.length) {
                   this.$message({
                     message: '各款项不能为空~',
@@ -1036,6 +1039,30 @@
             return false
           }
         })
+      },
+      countTotal () {
+        this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
+                  const a = {}
+                  a.totalFee = el.totalFee
+                  
+                  return a
+                }) : []
+                this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
+                  const a = {}
+                  a.totalFee = el.totalCost
+                 
+                  return a
+                }) : []
+                this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
+                  const a = {}
+                  a.totalFee = el.totalFee
+                  return a
+                }) : []
+                this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
+                  const a = {}
+                  a.totalFee = el.totalCost
+                  return a
+                }) : []
       },
       sendData() {
         this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
@@ -1126,12 +1153,16 @@
         this.dealInfo = this.dealInfo.filter((el, inx) => {
           return inx !== index
         })
+        this.countTotal()
+        this.popKey = Math.random()
         this.delCont()
       },
       iconDeleteDealPay(index) {
         this.dealPayInfo = this.dealPayInfo.filter((el, inx) => {
           return inx !== index
         })
+        this.countTotal()
+        this.popKey = Math.random()
         this.delCont()
       },
 
@@ -1139,12 +1170,16 @@
         this.alreadyInfo = this.alreadyInfo.filter((el, inx) => {
           return inx !== index
         })
+        this.countTotal()
+        this.popKey = Math.random()
         this.delCont()
       },
       iconDeleteAlreadyPay(index) {
         this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
           return inx !== index
         })
+        this.countTotal()
+        this.popKey = Math.random()
         this.delCont()
       },
       delCont() {
