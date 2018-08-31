@@ -12,7 +12,6 @@
             :data="dialogInfo"
             stripe
             border
-            height="160"
             tooltip-effect="dark"
             :default-sort="{prop: 'id', order: 'ascending'}"
             style="width: 100%">

@@ -170,7 +170,7 @@ Vue.directive('has', {
     // 判断是用value还是arg
     // 优先使用arg
     const val = binding.arg || binding.value
-    console.log('v-has:', val)
+    // console.log('v-has:', val)
     if (val && !Vue.prototype.$_has_permission(val)) {
       el.parentNode.removeChild(el)
     }

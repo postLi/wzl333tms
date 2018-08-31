@@ -30,8 +30,8 @@
           </el-form-item>
           <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-else>
             <el-select v-model="searchTitle.memberName" clearable>
-              <el-option v-for="item in memberNameType" :label="item.truckIdNumber"
-                         :value="item.truckIdNumber"></el-option>
+              <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
+                         :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
 
             <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" show="select" @change="getTrunkName"  v-model="searchTitle.memberName" clearable/>-->

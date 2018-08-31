@@ -1,61 +1,38 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
-      <div class="staff_searchinfo--input">
-        <el-form-item label="出车时间">
-          <div class="block">
-            <el-date-picker
-              v-model="searchCreatTime"
-              type="daterange"
-              align="right"
-              :picker-options="pickerOptions2"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              unlink-panels
-            >
-            </el-date-picker>
-          </div>
-        </el-form-item>
-        <el-form-item label="提货状态">
-          <SelectType v-model="searchForm.pickupStatus" type="pickup_status" />
-        </el-form-item>
-        <el-form-item label="提货批次">
-            <el-input
-                v-numberOnly
-                placeholder=""
-                maxlength="15"
-                v-model="searchForm.pickupBatchNumber"
-                clearable>
-            </el-input>
-        </el-form-item>
+    <div class="staff_searchinfo--input">
+      <el-form-item label="出车时间">
+        <div class="block">
+          <el-date-picker v-model="searchCreatTime" type="daterange" align="right" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期" unlink-panels>
+          </el-date-picker>
+        </div>
+      </el-form-item>
+      <el-form-item label="提货状态">
+        <SelectType v-model="searchForm.pickupStatus" type="pickup_status" />
+      </el-form-item>
+      <el-form-item label="提货批次">
+        <el-input v-numberOnly placeholder="" maxlength="15" v-model="searchForm.pickupBatchNumber" clearable>
+        </el-input>
+      </el-form-item>
       <el-form-item label="车牌号">
-        <el-input
-          placeholder=""
-          maxlength="8"
-          v-model="searchForm.truckIdNumber"
-          clearable>
+        <el-input placeholder="" maxlength="8" v-model="searchForm.truckIdNumber" clearable>
         </el-input>
       </el-form-item>
       <el-form-item label="司机姓名">
-        <el-input
-          
-          placeholder=""
-          maxlength="8"
-          v-model="searchForm.driverName"
-          clearable>
+        <el-input placeholder="" maxlength="8" v-model="searchForm.driverName" clearable>
         </el-input>
       </el-form-item>
-      </div>
-      <el-form-item class="staff_searchinfo--btn">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="info" @click="clearForm" plain>清空</el-button>
-      </el-form-item>
+    </div>
+    <el-form-item class="staff_searchinfo--btn">
+      <el-button type="primary" @click="onSubmit">查询</el-button>
+      <el-button type="info" @click="clearForm" plain>清空</el-button>
+    </el-form-item>
   </el-form>
 </template>
-
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectType from '@/components/selectType/index'
-import { parseTime, pickerOptions2 } from '@/utils/'
+import { parseTime, pickerOptions } from '@/utils/'
 export default {
   components: {
     SelectType
@@ -98,7 +75,7 @@ export default {
     }
 
     return {
-      searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+      searchCreatTime: [+new Date(), +new Date() + 60 * 24 * 60 * 60 * 1000],
       searchForm: {
         pickupStatus: 235,
         pickupBatchNumber: '',
@@ -108,11 +85,14 @@ export default {
       rules: {
         mobile: [{
           // validator: validateFormMobile, trigger: 'blur'
-          validator: validateFormNumber, trigger: 'change'
+          validator: validateFormNumber,
+          trigger: 'change'
         }]
       },
-      pickerOptions2: {
-        shortcuts: pickerOptions2
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 3600 * 1000 * 24
+        }
       }
     }
   },
@@ -148,4 +128,5 @@ export default {
     }
   }
 }
+
 </script>

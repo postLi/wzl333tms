@@ -159,7 +159,7 @@ export default {
   },
   computed: {
     listdata() {
-      console.log('this.queryFn', this.queryFn)
+      // console.log('this.queryFn', this.queryFn)
       return this.types.filter(this.queryFn)
     }
   },

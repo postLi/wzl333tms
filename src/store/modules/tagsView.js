@@ -12,7 +12,7 @@ const tagsView = {
       } else {
         if (state.visitedViews.some(v => v.path === view.path)) return
       }
-      console.log('add view:', view.query.tab, view.name)
+      // console.log('add view:', view.query.tab, view.name)
       // 针对tab子页面
       if (view.meta.istab && state.visitedViews.some(v => v.title === view.meta.ptitle)) {
         // 如果已存在相同的父级，则更新其链接，不新增tab

@@ -2537,8 +2537,10 @@ export default {
               }
             }
             // 处理城市信息
-            data.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName.replace(/,$/, '')
-            data.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName.replace(/,$/, '')
+              data.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName ? data.tmsOrderShip.shipFromCityName.replace(/,$/, '') : ''
+              data.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName ? data.tmsOrderShip.shipToCityName.replace(/,$/, '') : ''
+
+            
 
             // 判断收发货人信息
             let changeSender = false
@@ -2722,6 +2724,9 @@ export default {
         }
         CreatePrintPageEnable(libData) // 调打印接口
       })
+      .catch(err => {
+        this.$message.error(err.errorInfo || err.text || '发生未知错误~')
+      })
     },
     print() { // 打印运单
       getEnableOrderSetting().then(data => {
@@ -2737,10 +2742,16 @@ export default {
         }
         CreatePrintPageEnable(data)
       })
+      .catch(err => {
+        this.$message.error(err.errorInfo || err.text || '发生未知错误~')
+      })
     },
     printSave() { // 打印保存的运单
       getPrintOrderItems(this.resOrderId).then(data => {
         CreatePrintPage(data)
+      })
+      .catch(err => {
+        this.$message.error(err.errorInfo || err.text || '发生未知错误~')
       })
     },
     getSelectType() { // 获取提货方式中文

@@ -193,7 +193,6 @@ export default {
   watch: {
     $route(newVal) {
       if (newVal) {
-        console.log('routesdfsdfs', newVal)
         this.fetchList()
       }
     }

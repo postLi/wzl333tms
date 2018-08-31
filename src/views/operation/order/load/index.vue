@@ -64,14 +64,14 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model.number="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8">
+                    <el-input size="mini" v-model="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8">
                       <template slot="append">方</template>
                     </el-input>
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model.number="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
+                    <el-input size="mini" v-model="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
                       <template slot="append">千克</template>
                     </el-input>
                   </el-form-item>
