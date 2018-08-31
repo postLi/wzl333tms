@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-info" plain @click="doAction('detail')">查看明细</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-info" plain @click="doAction('detail')" v-has:FINANCE_ACCOUNT1>查看明细</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" class="table_setup" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" class="table_setup" @click="doAction('print')" plain>打印</el-button>

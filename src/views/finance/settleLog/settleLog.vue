@@ -6,13 +6,13 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" @click="doAction('income')" plain>记收入</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort-up" @click="doAction('expandtiure')" plain>记支出</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain>取消结算</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain>查看结算单</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain>查看明细</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" @click="doAction('income')" plain v-has:FLOW_IN>记收入</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort-up" @click="doAction('expandtiure')" plain v-has:FLOW_OUT>记支出</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>取消结算</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>查看结算单</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
@@ -191,9 +191,9 @@ export default {
     }
   },
   watch: {
-    $route (newVal) {
+    $route(newVal) {
       if (newVal) {
-        console.log('routesdfsdfs',newVal)
+        console.log('routesdfsdfs', newVal)
         this.fetchList()
       }
     }

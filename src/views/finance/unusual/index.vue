@@ -4,11 +4,11 @@
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" class="el-icon-circle-plus"  plain @click="doAction('reg')">异动登记</el-button>
-          <el-button type="primary" :size="btnsize" class="el-icon-edit" @click="doAction('xiugai')" plain>修改</el-button>
+          <el-button type="primary" :size="btnsize" class="el-icon-circle-plus"  plain @click="doAction('reg')" v-has:FINANCE_ABNORMAL_ADD>异动登记</el-button>
+          <el-button type="primary" :size="btnsize" class="el-icon-edit" @click="doAction('xiugai')" plain v-has:FINANCE_ABNORMAL_EDIT>修改</el-button>
           <!-- <el-button type="primary" :size="btnsize"  @click="doAction('check')" plain>查看明细</el-button> -->
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" class="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:FINANCE_ABNORMAL_DEL>删除</el-button>
+          <el-button type="primary" :size="btnsize" class="el-icon-upload2" @click="doAction('export')" plain v-has:FINANCE_ABNORMAL_PRI>导出</el-button>
 
           <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>

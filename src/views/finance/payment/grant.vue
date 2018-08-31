@@ -3,10 +3,10 @@
       <SearchForm :orgid="otherinfo.orgid" type="funds_giveout_status" title="发放" status="fundsGiveoutStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort" plain @click="doAction('send')">货款发放</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sort" plain @click="doAction('send')" v-has:GOODSFUNDS_BACK4>货款发放</el-button>
             <!-- <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain>取消汇款</el-button> -->
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain>导出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:GOODSFUNDS_EXP4>导出</el-button>
             <!-- <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>

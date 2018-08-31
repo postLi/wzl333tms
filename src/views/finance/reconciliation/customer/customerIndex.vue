@@ -5,9 +5,9 @@
     <div class="tab_info">
       <div class="btns_box">
 
-          <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('storage')">对账明细</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('storage')" v-has:FINANCE_CUSTOMERDETAIL>对账明细</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CUSTOMERDETAIL>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CUSTOMERPRI>打印</el-button>
 
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -59,7 +59,6 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-
   },
   data() {
     return {

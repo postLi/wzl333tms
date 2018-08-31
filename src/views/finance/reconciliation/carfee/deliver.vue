@@ -5,13 +5,13 @@
     <div class="tab_info">
       <div class="btns_box">
 
-        <el-button type="primary" :size="btnsize" icon="el-icon-plus" plain @click="doAction('storage')">创建对账单</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-tickets" plain @click="doAction('completion')">对账完成</el-button>
-        <el-button type="info" :size="btnsize" icon="el-icon-error" plain @click="doAction('cancelCom')">取消完成</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')">修改查看</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')">删除</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-plus" plain @click="doAction('storage')" v-has:FINANCE_CARCREAT3>创建对账单</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-tickets" plain @click="doAction('completion')" v-has:FINANCE_CARFINISHI3>对账完成</el-button>
+        <el-button type="info" :size="btnsize" icon="el-icon-error" plain @click="doAction('cancelCom')" v-has:FINANCE_CARCANCEL3>取消完成</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')" v-has:FINANCE_CARFIND3>修改查看</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')" v-has:FINANCE_CARDEL3>删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CAREXP3>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CARPRI3>打印</el-button>
 
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -325,8 +325,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                 const id = this.selected[0].id
                 this.loading = true
                 deleteCarShort(id).then(res => {
-
-                  this.$message({
+                this.$message({
                     type: 'success',
                     message: '删除成功~'
                   })
