@@ -133,7 +133,7 @@ export default {
       icon: 'QQ',
       name: '车费结算',
       component: _import('finance/accountsPayable/batch/index'),
-      meta: { role: ['admin'], title: '车费结算', noCache: false, code: 'PAY_LOAD' },
+      meta: { role: ['admin'], title: '车费结算', noCache: false, 'code': 'PAY_LOAD' },
       children: [
         {
           path: '/finance/accountsPayable/batch/short',
