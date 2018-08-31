@@ -143,7 +143,7 @@ export default {
         'prop': 'shipToCityName'
       }, {
         'label': '结算状态',
-        'prop': 'receiptpayState'
+        'prop': 'receiptpayStateCn'
       }, {
         'label': '回单付',
         'prop': 'receiptpayFee'
