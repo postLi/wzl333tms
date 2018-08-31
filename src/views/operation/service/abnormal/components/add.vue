@@ -88,7 +88,7 @@
         <!--异常处理-->
         <div class="box1 control" v-if="isDeal" style="height:400px">
           <div class="titles">
-              <h4>异常处理</h4>
+              <h4 class="h4">异常处理</h4>
               <el-form-item label="处理结果：" prop="disposeResult" class="result label">
                 <SelectType v-model="form.disposeResult" type="dispose_result" :disabled="isCheck ? true : false"/>
               </el-form-item>
@@ -386,7 +386,9 @@ export default {
           this.form = res
           this.form.disposeTime = new Date()
           this.form.disposeName = this.otherinfo.name
-          this.form.disposeResult = ''
+          this.form.disposeResult = res.disposeResultName
+          console.log(res.disposeResultName)
+          // this.form.disposeResult = ''
           // if (res.abnormalStatus === 118) {
           //   this.form.disposeResult = ''
           // }
@@ -723,11 +725,13 @@ export default {
       color:black;
       position: relative;
       background: #e9f3fa;
-      h4{
+      .h4{
         font-size: 14px;
-        color:black;
-        float:left;
-       
+        color: black;
+        float: left;
+        height: 20px;
+        line-height: 20px;
+        margin-top: 5px;
       }
       .el-form-item__label{
         width:44px;

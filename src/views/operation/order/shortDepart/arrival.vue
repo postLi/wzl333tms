@@ -88,8 +88,8 @@ export default {
         width: '80',
         fixed: true,
         slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
       },
       {
         label: '发货批次',
@@ -127,8 +127,8 @@ export default {
         width: '160',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到达网点',
@@ -148,8 +148,8 @@ export default {
         width: '160',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '短驳费',
@@ -412,12 +412,12 @@ export default {
       }
       return postLoadList(this.searchQuery).then(data => {
         if (data) {
-            this.infoList = data.list
-            this.total = data.total
-            this.loading = false
-          } else {
-            this.loading = false
-          }
+          this.infoList = data.list
+          this.total = data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
       })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text)

@@ -30,7 +30,7 @@
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
-            <el-input v-model="form.tmsOrderPickup.pickupAmount" auto-complete="off" :disabled="isDbclick"
+            <el-input v-model="form.tmsOrderPickup.pickupAmount" v-numberOnly auto-complete="off" :disabled="isDbclick"
                       :maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="体积" prop="">
@@ -136,15 +136,15 @@
 
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
-  import {fetchGetPickUp, putUpdatePickup, postAddPickup} from '@/api/operation/pickup'
+  import { REGEX } from '@/utils/validate'
+  import { fetchGetPickUp, putUpdatePickup, postAddPickup } from '@/api/operation/pickup'
   import popRight from '@/components/PopRight/index'
   import Upload from '@/components/Upload/singleImage'
   import SelectType from '@/components/selectType/index'
   import SelectCity from '@/components/selectCity/index'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { mapGetters } from 'vuex'
+  import { objectMerge2 } from '@/utils/index'
 
   export default {
     components: {
@@ -189,14 +189,14 @@
     },
     data() {
       const _this = this
-      const validatePickupNum = function (rule, value, callback) {
+      const validatePickupNum = function(rule, value, callback) {
         if (REGEX.ONLY_NUMBER.test(value) || !value) {
           callback()
         } else {
           callback(new Error('只能输入数字'))
         }
       }
-      const validatetruckFee = function (rule, value, callback) {
+      const validatetruckFee = function(rule, value, callback) {
         if (REGEX.Number_point.test(value) || !value) {
           callback()
         } else {
@@ -216,56 +216,56 @@
       return {
         rules: {
           'tmsOrderPickup.pickupName': [
-            {required: true, validator: this.validateIsEmpty('货品名不能为空')}
+            { required: true, validator: this.validateIsEmpty('货品名不能为空') }
           ],
           'tmsOrderPickup.pickupAmount': [
-            {validator: validatePickupNum, trigger: 'blur'},
-            {required: true, validator: this.validateIsEmpty('件数不能为空')}
+            { validator: validatePickupNum, trigger: 'blur' },
+            { required: true, validator: this.validateIsEmpty('件数不能为空') }
           ],
           'tmsOrderPickup.pickupVolume': [
-            {validator: validatePickupNum, trigger: 'blur'}
+            { validator: validatePickupNum, trigger: 'blur' }
           ],
           'tmsOrderPickup.pickupWeight': [
-            {validator: validatePickupNum, trigger: 'blur'}
+            { validator: validatePickupNum, trigger: 'blur' }
           ],
           'tmsOrderPickup.carriage': [
-            {validator: validatetruckFee, mtrigger: 'blur'}
+            { validator: validatetruckFee, mtrigger: 'blur' }
             // { max: 8, message: '运费最多可输入8个字符', trigger: 'blur' }
           ],
           'tmsOrderPickup.remark': [
-            {max: 300, message: '备注最多可输入300个字符', trigger: 'blur'}
+            { max: 300, message: '备注最多可输入300个字符', trigger: 'blur' }
           ],
           'tmsOrderPickup.truckFee': [
-            {validator: validatetruckFee, trigger: 'blur'}
+            { validator: validatetruckFee, trigger: 'blur' }
             // { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.collectionFee': [
-            {validator: validatePickupNum, trigger: 'blur'}
+            { validator: validatePickupNum, trigger: 'blur' }
             // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
           ],
           'tmsTruck.truckIdNumber': [
             // {  validator: this.validateIsEmpty('车牌号不能为空')}
-            {required: true, validator: this.validateIsEmpty('车牌号不能为空')}
+            { required: true, validator: this.validateIsEmpty('车牌号不能为空') }
             // { max: 8, message: '车牌号最多可输入8个字符' }
           ],
           'tmsDriver.driverName': [
             // { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
-            {required: true, validator: this.validateIsEmpty('司机姓名不能为空')}
+            { required: true, validator: this.validateIsEmpty('司机姓名不能为空') }
           ],
           'tmsDriver.driverMobile': [
-            {validator: validateMobile, trigger: 'change'}
+            { validator: validateMobile, trigger: 'change' }
           ],
           'tmsTruck.truckUnit': [
-            {max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur'}
+            { max: 18, message: '车辆单位最多可输入18个字符', trigger: 'blur' }
           ],
           'tmsOrderPickup.arriveTime': [
-            {required: true, validator: this.validateIsEmpty('要求到达时间不能为空')}
+            { required: true, validator: this.validateIsEmpty('要求到达时间不能为空') }
           ],
           'tmsCustomer.customerMobile': [
-            {required: true, validator: this.validateIsEmpty('发货人手机号不能为空')}
+            { required: true, validator: this.validateIsEmpty('发货人手机号不能为空') }
           ],
           'tmsCustomer.detailedAddress': [
-            {required: true, validator: this.validateIsEmpty('提货地址不能为空')}
+            { required: true, validator: this.validateIsEmpty('提货地址不能为空') }
           ]
         },
         pickOption: {
@@ -361,7 +361,6 @@
           this.reset()
           this.fetchGetPickUp()
         }
-
       },
       isModify() {
         this.$refs['ruleForm'].resetFields()
@@ -377,7 +376,6 @@
           this.reset()
           this.fetchGetPickUp()
         }
-
       },
       isDbclick() {
         this.$refs['ruleForm'].resetFields()
@@ -393,7 +391,6 @@
           this.reset()
           this.fetchGetPickUp()
         }
-
       }
     },
     methods: {
@@ -504,16 +501,14 @@
         if (item) {
           if (this.form.tmsDriver.driverMobile) {
             this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
-          }
-          else {
+          } else {
             this.form.tmsDriver.driverName = item.driverName
             this.form.tmsDriver.driverMobile = item.driverMobile
             this.form.tmsDriver.driverId = item.id
           }
-
         }
       },
-      //车牌号
+      // 车牌号
       getTrunkName(trunk) {
         if (trunk) {
           // console.log(trunk,'车牌号');
@@ -522,8 +517,7 @@
             this.form.tmsDriver.driverName = trunk.driverName
             this.form.tmsDriver.driverMobile = trunk.dirverMobile
             this.form.tmsDriver.driverId = trunk.driverId
-          }
-          else {
+          } else {
             this.valkey = Math.random()
             this.form.tmsDriver.driverName = Object.assign(this.form.tmsDriver.driverName)
             this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
@@ -532,7 +526,6 @@
           this.form.tmsTruck.truckType = trunk.truckType
           this.form.tmsTruck.truckUnit = trunk.truckUnit
           this.form.tmsTruck.truckIdNumber = trunk.truckIdNumber
-
         }
       },
       initInfo() {
@@ -582,7 +575,7 @@
               this.$message.success('保存成功')
               this.loading = false
             }).catch(err => {
-              if (err.text === "提货批次已存在") {
+              if (err.text === '提货批次已存在') {
                 this.fetchGetPickUp()
               } else {
                 this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
@@ -632,7 +625,6 @@
             arriveTime: ''//
           }
         }
-
       },
       reset() {
         this.watchInfo()

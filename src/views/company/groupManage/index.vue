@@ -252,7 +252,7 @@
     </div>
     <div class="info_news_footer">
       <div class="checked_footer">
-        <el-checkbox v-model="checkedInput">过滤失效网点</el-checkbox>
+        <el-checkbox v-model="checkedInput" value="checkbox" checked="checked" >过滤失效网点</el-checkbox>
         <!--<p> 密码：123456</p>-->
       </div>
       <div class="total_footer">共计:{{ total }}</div>
@@ -266,13 +266,13 @@
   import AddPeople from '../employeeManage/add'
   import AddDot from './addDot'
   import DepMaintain from './depMaintain'
-  import {getOrgId} from '../../../api/company/groupManage'
-  import {getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo} from '../../../api/company/employeeManage'
+  import { getOrgId } from '../../../api/company/groupManage'
+  import { getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo } from '../../../api/company/employeeManage'
 
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {getUserInfo} from '../../../utils/auth'
-  import {objectMerge2} from '@/utils/index'
+  import { getUserInfo } from '../../../utils/auth'
+  import { objectMerge2 } from '@/utils/index'
 
   export default {
     name: 'groupManage',
@@ -298,7 +298,7 @@
         // treeAct: {
         //   background: '#c0c4cc'
         // },
-        checkedInput: false,//过滤失效网点
+        checkedInput: false, // 过滤失效网点
         getCheckedKeyId: '',
         btnsize: 'mini',
         // 加载状态

@@ -447,302 +447,301 @@ export default {
 }
 </script>
 <style lang="scss">
-@media (min-width: 1024px){
+// @media (min-width: 1024px){
   .dashboard {
     &-container {
       padding: 30px;
     }
   }
-  .wzl_caiwu-flow{
-    width: 1223px;
-    height: 603px;
-    margin: 53px auto 0;
-    position: relative;
-    background: url("../../assets/flow/cw1.png") no-repeat;
-    .el-button{
-      display: inline-block;
-      // width: 88px;
-      width: 110px;
-      margin:5px;
-      padding: none;
-      text-align: center;
-      background-color: #cbebff;
-      border-radius: 2px;
-      border: solid 1px #39bbff;
-      font-weight: bold;
-      font-size: 13px;
-      user-select: none;//避免选中的时候有默认样式
-    }
-    .fin1-content{
-      width:680px;
-      height: 75px;
-      line-height: 75px;
-      border-radius: 10px;
-      text-align: center;
-      // background: red;
-      position: absolute;
-      top:5px;
-      left:347px;
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-      :hover span{
-        color:#fff;
-      }
-    }
-    .fin2-content{
-      width: 681px;
-      height: 223px;
-      padding-top: 10px;
-      // background: red;
-      position: absolute;
-      top: 110px;
-      right: 195px;
-      border-radius: 10px;
-      padding-left:33px;
-      // text-align: center;
-      :hover.el-button{
-        background-color: #39bbff;
-        // transform: translate(8px,5px)
-        transform:scale(1.1,1.1)
+  // .wzl_caiwu-flow{
+  //   width: 1223px;
+  //   height: 603px;
+  //   margin: 53px auto 0;
+  //   position: relative;
+  //   background: url("../../assets/flow/cw1.png") no-repeat;
+  //   .el-button{
+  //     display: inline-block;
+  //     // width: 88px;
+  //     width: 110px;
+  //     margin:5px;
+  //     padding: none;
+  //     text-align: center;
+  //     background-color: #cbebff;
+  //     border-radius: 2px;
+  //     border: solid 1px #39bbff;
+  //     font-weight: bold;
+  //     font-size: 13px;
+  //     user-select: none;//避免选中的时候有默认样式
+  //   }
+  //   .fin1-content{
+  //     width:680px;
+  //     height: 75px;
+  //     line-height: 75px;
+  //     border-radius: 10px;
+  //     text-align: center;
+  //     // background: red;
+  //     position: absolute;
+  //     top:5px;
+  //     left:347px;
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
+  //   }
+  //   .fin2-content{
+  //     width: 681px;
+  //     height: 223px;
+  //     padding-top: 10px;
+  //     // background: red;
+  //     position: absolute;
+  //     top: 110px;
+  //     right: 195px;
+  //     border-radius: 10px;
+  //     padding-left:33px;
+  //     // text-align: center;
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       // transform: translate(8px,5px)
+  //       transform:scale(1.1,1.1)
       
-      }
-      :hover span{
-        color:#fff;
-      }
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
       
-    }
-    .fin3-content{
-      // background: red;
-      width: 268px;
-      height: 80px;
-      line-height: 80px;
-      border-radius: 10px;
-      position: absolute;
-      left: 413px;
-      top: 388px;
-      text-align: center;
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-      :hover span{
-        color:#fff;
-      }
-    }
-    .fin4-content{
-      // background:yellow;
-      width: 268px;
-      height: 80px;
-      line-height: 80px;
-      border-radius: 10px;
-      position: absolute;
-      left: 693px;
-      top: 388px;
-      text-align: center;
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-      :hover span{
-        color:#fff;
-      }
-    }
-    .fin5-content{
-      // background: red;
-      width: 118px;
-      height: 308px;
-      position: absolute;
-      left: 184px;
-      top: 16px;
-      .el-button{
-        display: inline-block;
-        width: 110px;
-        margin-top: 9px;
-        margin-bottom: 127px;
-        padding: none;
-        text-align: center;
-        background-color: #cbebff;
-        border-radius: 2px;
-        border: solid 1px #2ca3f1;
-        font-weight: bold;
-      }
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-      :hover span{
-        color:#fff;
-      }
-    }
-    .fin6-content{
-      // background: yellow;
-      width: 118px;
-      height: 308px;
-      position: absolute;
-      left: 184px;
-      top: 371px;
-      .el-button{
-        display: inline-block;
-        width: 110px;
-        margin-top: 28px;
-        margin-bottom: 88px;
-        padding: none;
-        text-align: center;
-        background-color: #cbebff;
-        border-radius: 2px;
-        border: solid 1px #2ca3f1;
-        font-weight: bold;
-      }
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-      :hover span{
-        color:#fff;
-      }
-    }
-    .fin7-content{
-      // background: yellow;
-      width: 121px;
-      height: 50px;
-      position: absolute;
-      bottom: 3px;
-      left: 338px;
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-      :hover span{
-        color:#fff;
-      }
-    }
-    .fin8-content{
-      // background:red;
-      width: 121px;
-      height: 50px;
-      position:absolute;
-      right:-5px;
-      bottom: 257px;
-      cursor: pointer;
-      .el-button{
-        height: 42px;
-       background-color: #13a5f2;
-       border:none;
-       color:#fff;
-      }
-      :hover.el-button{
-        background-color: #39bbff;
-        transform:scale(1.1,1.1)
-      }
-    }
-  }  
-  .finace-container {
+  //   }
+  //   .fin3-content{
+  //     // background: red;
+  //     width: 268px;
+  //     height: 80px;
+  //     line-height: 80px;
+  //     border-radius: 10px;
+  //     position: absolute;
+  //     left: 413px;
+  //     top: 388px;
+  //     text-align: center;
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
+  //   }
+  //   .fin4-content{
+  //     // background:yellow;
+  //     width: 268px;
+  //     height: 80px;
+  //     line-height: 80px;
+  //     border-radius: 10px;
+  //     position: absolute;
+  //     left: 693px;
+  //     top: 388px;
+  //     text-align: center;
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
+  //   }
+  //   .fin5-content{
+  //     // background: red;
+  //     width: 118px;
+  //     height: 308px;
+  //     position: absolute;
+  //     left: 184px;
+  //     top: 16px;
+  //     .el-button{
+  //       display: inline-block;
+  //       width: 110px;
+  //       margin-top: 9px;
+  //       margin-bottom: 127px;
+  //       padding: none;
+  //       text-align: center;
+  //       background-color: #cbebff;
+  //       border-radius: 2px;
+  //       border: solid 1px #2ca3f1;
+  //       font-weight: bold;
+  //     }
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
+  //   }
+  //   .fin6-content{
+  //     // background: yellow;
+  //     width: 118px;
+  //     height: 308px;
+  //     position: absolute;
+  //     left: 184px;
+  //     top: 371px;
+  //     .el-button{
+  //       display: inline-block;
+  //       width: 110px;
+  //       margin-top: 28px;
+  //       margin-bottom: 88px;
+  //       padding: none;
+  //       text-align: center;
+  //       background-color: #cbebff;
+  //       border-radius: 2px;
+  //       border: solid 1px #2ca3f1;
+  //       font-weight: bold;
+  //     }
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
+  //   }
+  //   .fin7-content{
+  //     // background: yellow;
+  //     width: 121px;
+  //     height: 50px;
+  //     position: absolute;
+  //     bottom: 3px;
+  //     left: 338px;
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //     :hover span{
+  //       color:#fff;
+  //     }
+  //   }
+  //   .fin8-content{
+  //     // background:red;
+  //     width: 121px;
+  //     height: 50px;
+  //     position:absolute;
+  //     right:-5px;
+  //     bottom: 257px;
+  //     cursor: pointer;
+  //     .el-button{
+  //       height: 42px;
+  //      background-color: #13a5f2;
+  //      border:none;
+  //      color:#fff;
+  //     }
+  //     :hover.el-button{
+  //       background-color: #39bbff;
+  //       transform:scale(1.1,1.1)
+  //     }
+  //   }
+  // }  
+// }
+.finace-container {
     padding-top:45px;
+    min-width: 1190px;
+    .finace_flow{
+      display: block;
+      margin:0 auto !important;
+      width: 1325px;
+      height: 789px;
+      // margin: 53px auto 0;
+      position: relative;
+      background: url("../../assets/flow/index31.png") no-repeat;
+      // background-size: auto 2000;
+      position: relative;
+      .finace_flow_item1{
+        width: 897px;
+        height: 101px;
+        display: flex;
+        justify-content:  flex-start;
+        flex-direction: row;
+        text-align: center;
+        position: absolute;
+        top: 34px;
+        left: 208px;
+        .el-tooltip{
+          padding-top:20px;
+          flex-grow: 1;
+        }
+      }
+      .finace_flow_item2{
+        width: 863px;
+        height: 104px;
+        // background: red;
+        position: absolute;
+        top: 211px;
+        left: 225px;
+        display: flex;
+        justify-content:  flex-start;
+        flex-direction: row;
+        text-align: center;
+        .el-tooltip{
+          padding-top:20px;
+          flex-grow: 1;
+        }
+      }
+      .finace_flow_item3{
+        width: 862px;
+        height: 208px;
+        // background: red;
+        position: absolute;
+        top: 356px;
+        left: 226px;
+        display: flex;
+        // justify-content:  flex-start;
+        // align-content: space-between;
+        flex-direction: row;
+        text-align: center;
+        flex-wrap:wrap;
+        .el-tooltip{
+          //  flex-grow: 1;
+          width: 20%;
+          padding-top:20px;
+          
+        }
+      }
+      .finace_flow_item4{
+        width: 272px;
+        height: 102px;
+        // background: red;
+        position: absolute;
+        top: 664px;
+        left: 326px;
+        display: flex;
+        justify-content:  flex-start;
+        flex-direction: row;
+        text-align: center;
+        .el-tooltip{
+          padding-top:20px;
+          flex-grow: 1;
+        }
+      }
+      .finace_flow_item5{
+        width: 272px;
+        height: 102px;
+        // background: red;
+        position: absolute;
+        top: 664px;
+        left: 716px;
+        display: flex;
+        justify-content:  flex-start;
+        flex-direction: row;
+        text-align: center;
+        .el-tooltip{
+          padding-top:20px;
+          flex-grow: 1;
+        }
+      }
+      .flowicon1 {
+        transition: 0.5s;
+      }
+      .flowicon1:hover {
+        transform: scale(1.2);
+        transition: 0.3s;
+      }
+    }
   }
-  .finace_flow{
-    display: block;
-    margin:0 auto !important;
-    width: 1325px;
-    height: 789px;
-    // margin: 53px auto 0;
-    position: relative;
-    background: url("../../assets/flow/index31.png") no-repeat;
-    // background-size: auto 2000;
-    position: relative;
-    .finace_flow_item1{
-      width: 897px;
-      height: 101px;
-      display: flex;
-      justify-content:  flex-start;
-      flex-direction: row;
-      text-align: center;
-      position: absolute;
-      top: 34px;
-      left: 208px;
-      .el-tooltip{
-        padding-top:20px;
-        flex-grow: 1;
-      }
-    }
-    .finace_flow_item2{
-      width: 863px;
-      height: 104px;
-      // background: red;
-      position: absolute;
-      top: 211px;
-      left: 225px;
-      display: flex;
-      justify-content:  flex-start;
-      flex-direction: row;
-      text-align: center;
-       .el-tooltip{
-        padding-top:20px;
-        flex-grow: 1;
-      }
-    }
-    .finace_flow_item3{
-      width: 862px;
-      height: 208px;
-      // background: red;
-      position: absolute;
-      top: 356px;
-      left: 226px;
-       display: flex;
-      // justify-content:  flex-start;
-      // align-content: space-between;
-      flex-direction: row;
-      text-align: center;
-      flex-wrap:wrap;
-       .el-tooltip{
-        //  flex-grow: 1;
-         width: 20%;
-        padding-top:20px;
-        
-      }
-    }
-    .finace_flow_item4{
-      width: 272px;
-      height: 102px;
-      // background: red;
-      position: absolute;
-      top: 664px;
-      left: 326px;
-      display: flex;
-      justify-content:  flex-start;
-      flex-direction: row;
-      text-align: center;
-       .el-tooltip{
-        padding-top:20px;
-        flex-grow: 1;
-      }
-    }
-    .finace_flow_item5{
-      width: 272px;
-      height: 102px;
-      // background: red;
-      position: absolute;
-      top: 664px;
-      left: 716px;
-      display: flex;
-      justify-content:  flex-start;
-      flex-direction: row;
-      text-align: center;
-       .el-tooltip{
-        padding-top:20px;
-        flex-grow: 1;
-      }
-    }
-    .flowicon1 {
-  transition: 0.5s;
-}
-
-.flowicon1:hover {
-  transform: scale(1.2);
-  transition: 0.3s;
-}
-  }
-}
-
 </style>
