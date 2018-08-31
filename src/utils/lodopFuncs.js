@@ -308,11 +308,16 @@
      let arr = new Array()
      arr = Object.assign([], info)
      let str = ''
+     for(let item in arr){ // 没有传值的项设置位空字符串
+      if (arr[item].value === undefined || arr[item].value === null) {
+        arr[item].value = ''
+      }
+     }
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
-         str += 'LODOP.PRINT_INIT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流流托运单打印");'
+         str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
        } else {
-         str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.filedName + ':' + e.value + '");'
+         str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
          str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
        }
      })
