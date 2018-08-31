@@ -16,7 +16,7 @@
                       placeholder=""
                       :maxlength="300"
                       >
-                      <!--:autosize="{ minRows: 2}"-->
+                      <!-- :autosize="{ minRows: 2}" -->
                     </el-input>
                   </el-form-item>
 
@@ -35,12 +35,12 @@
                   <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span v-if="data.status===0">
                       <img src="../../../assets/icom/link.png" alt="">
-                      <!-- {{ node.label }} <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()"></span> -->
+                      {{ node.label }} <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()">
                       {{ node.label }}
                       </span>
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
-                      {{ node.label }} <!-- <input type="text" :value="data.code" v-clipboard:copy='data.code' onmouseover="this.select()"></span> -->
+                      {{ node.label }} <input type="text" :value="data.code" v-clipboard:copy='data.code' onmouseover="this.select()">
                       </span>
                   </span>
                 </el-tree>
