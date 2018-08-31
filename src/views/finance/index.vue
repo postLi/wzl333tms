@@ -639,7 +639,7 @@ export default {
     }
   }  
   .finace-container {
-    padding-top:20px;
+    padding-top:45px;
   }
   .finace_flow{
     display: block;

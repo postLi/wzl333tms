@@ -15,7 +15,7 @@
           <!-- <span class="center_title"  v-for="(item,index) in countList" :key="index" >当前检查：{{item.title}}</span> -->
           <ul >
             <!-- <li v-for="(item,index) in countList" :key="index" >当前检查：{{item.title}}</li> -->
-            <li>{{contTitle}}</li>
+            <li v-if="contTitleNull">{{contTitle}}</li>
           </ul>
         </div>
       </div>
@@ -222,7 +222,17 @@ export default {
         message1: '打印机连接还没连接，请点击右边设置按钮',
         button1: '设置',
         button2: '设置'
-      }]
+      }],
+      contTitleNull: false
+    }
+  },
+  watch: {
+    contTitle() {
+      if (this.contTitle.length === 0) {
+        this.contTitleNull = false
+      } else {
+        this.contTitleNull = true
+      }
     }
   },
   mounted() {
@@ -231,7 +241,6 @@ export default {
 
     getInitializationCheck().then(data => {
       this.dataset = data
-
       var totals = 0
       for (const total in data) {
         if (data[total] === 0) {
@@ -322,6 +331,7 @@ export default {
             var j = 0
             const self = this
             self.timer = setInterval(() => {
+              this.contTitleNull = true
               if (idx < len) {
               // console.log(idx, len, arr[j].title, 666666)
                 self.contTitle = arr[j++].title

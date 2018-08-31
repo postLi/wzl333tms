@@ -64,7 +64,7 @@
             <SelectType v-model="form.abnormalType" type="abnormal_type" :disabled="isCheck || isDeal ? true : false"/>
           </el-form-item>
           <el-form-item label="异常件数"  prop="abnormalAmount" >
-            <el-input v-model="form.abnormalAmount" v-numberOnly :maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
+            <el-input v-model.trim="form.abnormalAmount" v-numberOnly :maxlength="5" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item>
           <el-form-item label="处理网点" prop="disposeOrgId" class="label">
             <SelectTree v-model="form.disposeOrgId" :disabled="isCheck || isDeal ? true : false"/>
@@ -204,8 +204,6 @@ export default {
     const validateNameSn = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('请输入异常件数'))
-      } else if (value.length > 5) {
-        callback(new Error('最多可输入5位'))
       } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
         callback()
       } else {
@@ -268,9 +266,10 @@ export default {
       rules: {
         abnormalAmount: [
           { required: true, validator: validateNameSn }
+          // { required: true, pattern: REGEX.ONLY_NUMBER_GT, message: '件数格式不正确' }
         ],
         abnormalType: [
-          { required: true, message: '请选择异常类型' }
+          { required: true, message: '请选择异常类型', trigger: 'blur' }
         ],
         // registerFee: [
         //   { required: true, validator: validatereg }
@@ -288,7 +287,7 @@ export default {
           { required: true, message: '请选择处理网点' }
         ],
         disposeOpinion: [
-          { required: true, message: '必填' }
+          { required: true, message: '必填', trigger: 'blur' }
         ],
         shipSn: [
           // { required: true, trigger: 'blur', validator: validateshipSn}
