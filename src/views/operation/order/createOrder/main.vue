@@ -888,7 +888,8 @@ export default {
       tmsOrderShipId: '', // 运单保存后返回的运单ID,
       isSavePrint: false, // false-不保存并打印 true-保存并打印,
       printDataObject: {},
-      cargoKey: 'init'
+      cargoKey: 'init',
+      resOrderId: '' // 开单成功后返回的运单id
     }
   },
   computed: {
@@ -2645,6 +2646,7 @@ export default {
 
                 return */
               orderManage.postNewOrder(data).then(res => {
+                this.resOrderId = res.data // 获取开单后返回的运单id
                 this.$message.success('成功创建运单！')
                 this.eventBus.$emit('saveOrderSuccess')
                 data.tmsOrderShip.id = res.data
@@ -2666,8 +2668,8 @@ export default {
                   this.batchSaveList[this.currentBatch].issave = true
                   this.goNextEditBatch()
                 }
-                if (this.isSavePrint) { // 判断是否要 保存并打印
-                  this.print() // 执行成功后打印运单
+                if (this.isSavePrint) {
+                  this.printSave() // 执行成功后打印运单
                 }
               }).catch(err => {
                 this.loading = false
@@ -2698,8 +2700,10 @@ export default {
           this.isSavePrint = false // false-不保存并打印，只保存
           break
         case 'savePrintKey':
+         this.isSavePrint = true // true-保存并打印
           this.submitForm()
-          this.isSavePrint = true // true-保存并打印
+         
+          
           // this.$message.info('正在开发中，敬请期待。')
           break
       }
@@ -2732,6 +2736,11 @@ export default {
           })
         }
         CreatePrintPageEnable(data)
+      })
+    },
+    printSave() { // 打印保存的运单
+      getPrintOrderItems(this.resOrderId).then(data => {
+        CreatePrintPage(data)
       })
     },
     getSelectType() { // 获取提货方式中文

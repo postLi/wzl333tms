@@ -244,10 +244,13 @@ export default {
       // if (value === '' || value === null || !value || value === undefined) {
       //   callback(new Error('不能为空'))
       // } else
-      if (REGEX.FLOAT2ING.test(value)) {
-        callback()
-      } else {
+      let reg = /^\d+(\.([1-9]|\d[1-9]))?$/
+      if (!reg.test(value)&& value !== undefined) {
         callback(new Error('请输入最多两位小数'))
+      } else if (value === '' || value === undefined){
+        callback()
+      }else {
+        callback()
       }
     }
     const validateFormMobile = function(rule, value, callback) {
@@ -277,6 +280,7 @@ export default {
         callback()
       }
     }
+
     return {
       driverKey: 0,
       truckKey: 0,
@@ -344,19 +348,20 @@ export default {
         truckIdNumber: [{ required: true, trigger: 'change', validator: validateStringEight }],
         dirverName: [{ required: true, trigger: 'change', validator: validateStringTen }],
         dirverMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }]
+        // truckVolume: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
       formFeeRules: {
-        // nowpayCarriage: [{ trigger: 'change', validator: validateInt }],
-        // nowpayOilCard: [{ trigger: 'change', validator: validateInt }],
-        // backpayCarriage: [{ trigger: 'change', validator: validateBigDecimal }],
-        // backpayOilCard: [{ trigger: 'change', validator: validateBigDecimal }],
-        // arrivepayCarriage: [{ trigger: 'change', validator: validateBigDecimal }],
-        // arrivepayOilCard: [{ trigger: 'change', validator: validateBigDecimal }],
-        // carloadInsuranceFee: [{ trigger: 'change', validator: validateBigDecimal }],
-        // leaveHandlingFee: [{ trigger: 'change', validator: validateBigDecimal }],
-        // leaveOtherFee: [{ trigger: 'change', validator: validateBigDecimal }],
-        // arriveHandlingFee: [{ trigger: 'change', validator: validateBigDecimal }],
-        // arriveOtherFee: [{ trigger: 'change', validator: validateBigDecimal }]
+        // nowpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // nowpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // backpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // backpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arrivepayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arrivepayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // carloadInsuranceFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // leaveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
       }
     }
   },

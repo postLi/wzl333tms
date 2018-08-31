@@ -152,6 +152,11 @@ export default {
           prop: "loadVolumeall",
           width: "120"
         },
+        {
+          label: "要求到达时间",
+          prop: "requireArrivedTime",
+          width: "160"
+        },
         // {
         //   label: "运单总件数",
         //   prop: "shipAmount",
