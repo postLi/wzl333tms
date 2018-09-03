@@ -106,7 +106,7 @@ export default {
         {
           label: '序号',
           prop: 'id',
-          width: '120',
+          width: '70',
           fixed: true,
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -134,27 +134,27 @@ export default {
         }, {
           label: '对账编号',
           prop: 'checkBillCode',
-          width: '150',
+          width: '140',
           fixed: false
         }, {
           label: '对账开始时间',
           prop: 'checkStartTime',
-          width: '160',
+          width: '150',
           fixed: false
         }, {
           label: '对账结束时间',
           prop: 'checkEndTime',
-          width: '160',
+          width: '150',
           fixed: false
         }, {
           label: '应收应付对账合计',
           prop: 'totalCountFee',
-          width: '180',
+          width: '160',
           fixed: false
         }, {
           label: '应收账款',
           prop: 'receivableFee',
-          width: '150',
+          width: '120',
           fixed: false
         }, {
           label: '应付账款',
