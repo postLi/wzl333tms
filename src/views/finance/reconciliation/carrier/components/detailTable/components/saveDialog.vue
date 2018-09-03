@@ -166,7 +166,7 @@
     },
     methods: {
       watchData() {
-        this.dialogData = this.tota
+
         // console.log(this.tota)
         // this.dialogData = Object.assign(this.tota)
         // let count = []
@@ -186,7 +186,7 @@
         // })
 
 
-
+        this.dialogData = this.tota
         this.dialogInfo[0].toPay = 0
         this.dialogInfo[1].toPay = 0
         this.dialogInfo[2].toPay = 0
