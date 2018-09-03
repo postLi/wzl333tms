@@ -996,6 +996,7 @@
         this.messageButtonInfo.createTime = item.createTime
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
+        this.messageButtonInfo.checkStatus = item.checkStatus
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
         this.searchCreatTime[0] = item.checkStartTime

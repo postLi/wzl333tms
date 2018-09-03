@@ -316,7 +316,7 @@
         orgArr: [],
         rolesArr: [],
         departmentArr: [],
-        loading: false,
+        loading: true,
         roles: [],
         departments: [],
         groups: [],
@@ -396,6 +396,8 @@
           GetLook(this.info.id).then(res => {
             this.form = res
             this.form.disposeTime = new Date()
+          }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           })
         } else if (this.isCheck) {
           this.popTitle = '查看明细'
@@ -410,6 +412,8 @@
             // if (res.abnormalStatus === 118) {
             //   this.form.disposeResult = ''
             // }
+          }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           })
         } else if (this.isDeal) {
           this.popTitle = '异常处理'
@@ -428,7 +432,6 @@
           this.dengji()
           this.popTitle = '异常登记'
           this.hidBut = false
-          console.log(this.hidBut,'异常')
           for (const i in this.form) {
             this.form[i] = ''
           }
@@ -474,13 +477,18 @@
       //   }
       // },
       dengji() {
+        this.loading = true
         return GetAbnormalNo().then(res => {
           // this.form = res;
           this.form.abnormalNo = res
           this.form.registerName = this.otherinfo.name
           this.form.registerTime = this.searchCreatTime
           this.form.orgId = this.orgid
+          this.loading = false
           // console.log(res, 'this.form.abnormalNo: ', this.form)
+        }).catch(err => {
+          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this.loading = false
         })
       },
       querySearch(queryString, cb) {
@@ -500,9 +508,13 @@
         this.form.registerName = item.name
       },
       initInfo() {
-        this.loading = false
+        this.loading = true
         getAllUser(this.orgid, '', '').then(res => {
           this.resInfo = res.list
+          this.loading = false
+        }).catch(err => {
+          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this.loading = false
         })
       },
       getOrgid(id) {
@@ -596,18 +608,20 @@
             }
 
             promiseObj.then(res => {
-              this.loading = false
+
               this.$message({
                 message: '保存成功~',
                 type: 'success'
               })
               this.closeMe()
               this.$emit('success')
+              this.loading = false
             }).catch(err => {
               this.$message({
                 type: 'error',
                 message: err.errorInfo || err.text || '未知错误，请重试~'
               })
+              this.loading = false
             })
           } else {
             return false

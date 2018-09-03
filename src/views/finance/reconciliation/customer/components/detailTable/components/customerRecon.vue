@@ -54,7 +54,7 @@
           <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="12" v-numberOnly
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" v-numberOnly
                     disabled></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
@@ -122,14 +122,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                       fill="red"></icon-svg></span>
@@ -276,14 +276,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                          fill="red"></icon-svg></span>
@@ -438,14 +438,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                          fill="red"></icon-svg></span>
@@ -598,14 +598,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                             fill="red"></icon-svg></span>
@@ -1142,7 +1142,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7) {
+          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 18) {
             sums[index] = ''
             return
           }

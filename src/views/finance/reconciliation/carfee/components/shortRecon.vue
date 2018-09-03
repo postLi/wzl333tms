@@ -118,14 +118,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDelete(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                   fill="red"></icon-svg></span>
@@ -187,7 +187,7 @@
           <el-table-column
             prop="shortPay"
             label="短驳费"
-            width="130"
+            width="180"
             sortable
           >
           </el-table-column>
@@ -227,14 +227,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAl(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                     fill="red"></icon-svg></span>
@@ -296,7 +296,7 @@
           <el-table-column
             prop="shortPay"
             label="短驳费"
-            width="130"
+            width="180"
             sortable
           >
           </el-table-column>
@@ -915,6 +915,7 @@
         this.messageButtonInfo.createTime = item.createTime
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
+        this.messageButtonInfo.checkStatus = item.checkStatus
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
         this.searchCreatTime[0] = item.checkStartTime

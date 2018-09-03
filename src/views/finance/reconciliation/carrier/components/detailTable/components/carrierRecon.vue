@@ -47,50 +47,135 @@
     <div class="sMessageTop">
       <el-form :inline="true" :size="btnsize" label-position="center" :model="messageInfo" label-width="100px"
                class=" clearfix" ref="formName2" :rules="rules">
+        <ul>
+          <li>
+            <el-form-item label="承运商名称">
+              <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
+              </el-form-item>
+                </li>
+          <li>
+            <el-form-item label="业务负责人">
+              <el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="联系方式" prop="memberPersonPhone">
+              <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="对账单编号">
+              <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
+            </el-form-item>
+          </li>
 
-        <el-form-item label="承运商名称">
-          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="业务负责人">
-          <el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="memberPersonPhone">
-          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="对账单编号">
-          <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="客户编号">
-          <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="开始时间">
-          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="结算方式">
-          <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="账户账号" prop="bankAccount">
-          <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="账户开户行">
-          <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="财务负责人">
-          <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="financialOfficerPhone">
-          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>
-        </el-form-item>
-        <el-form-item label="支付宝">
-          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="微信" class="sWetPay">
-          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>
-        </el-form-item>
+
+        </ul>
+        <ul>
+          <li>
+            <el-form-item label="客户编号">
+              <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="开始时间">
+              <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="结束时间">
+              <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="结算方式">
+              <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
+            </el-form-item>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <el-form-item label="账户账号" prop="bankAccount">
+              <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="账户开户行">
+            <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="财务负责人">
+              <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="联系方式" prop="financialOfficerPhone">
+              <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>
+            </el-form-item>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <el-form-item label="支付宝">
+            <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="微信" class="sWetPay">
+            <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>
+            </el-form-item>
+          </li>
+        </ul>
       </el-form>
+
+
+      <!--<el-form :inline="true" :size="btnsize" label-position="center" :model="messageInfo" label-width="100px"-->
+               <!--class=" clearfix" ref="formName2" :rules="rules">-->
+
+        <!--<el-form-item label="承运商名称">-->
+          <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="业务负责人">-->
+          <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="联系方式" prop="memberPersonPhone">-->
+          <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="对账单编号">-->
+          <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="客户编号">-->
+          <!--<el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="开始时间">-->
+          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="结束时间">-->
+          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="结算方式">-->
+          <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="账户账号" prop="bankAccount">-->
+          <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="账户开户行">-->
+          <!--<el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="财务负责人">-->
+          <!--<el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="联系方式" prop="financialOfficerPhone">-->
+          <!--<el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="支付宝">-->
+          <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="微信" class="sWetPay">-->
+          <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
+        <!--</el-form-item>-->
+      <!--</el-form>-->
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
@@ -152,7 +237,7 @@
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="130"
+            width="120"
             label="中转单号">
           </el-table-column>
           <el-table-column
@@ -445,7 +530,7 @@
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="130"
+            width="120"
             label="中转单号">
           </el-table-column>
           <el-table-column
@@ -677,11 +762,11 @@
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
+
+
+
         <el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"
                  class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
-          <!--<el-form-item label="总计">-->
-          <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
-          <!--</el-form-item>-->
           <el-form-item label="备注">
             <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>
           </el-form-item>
@@ -713,7 +798,7 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
-            <!--<el-input v-model="messageButtonInfo.createTime" auto-complete="off" :maxlength="8"></el-input>-->
+
           </el-form-item>
         </el-form>
       </div>
@@ -998,29 +1083,6 @@
                 this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
-                //
-                // this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
-                //   const a = {}
-                //   a.totalFee = el.totalFee
-
-                //   return a
-                // }) : []
-                // this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                //   const a = {}
-                //   a.totalCost = el.totalCost
-
-                //   return a
-                // }) : []
-                // this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
-                //   const a = {}
-                //   a.totalFee = el.totalFee
-                //   return a
-                // }) : []
-                // this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                //   const a = {}
-                //   a.totalCost = el.totalCost
-                //   return a
-                // }) : []
                  this.countTotal() // 计算合计
                 if (!this.form.carrierDetailDtoList.length) {
                   this.$message({
@@ -1123,7 +1185,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 10) {
+          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 10 || index === 16) {
             sums[index] = ''
             return
           }
@@ -1326,10 +1388,68 @@
         vertical-align: middle;
       }
     }
-    .sMessageTop {
+    .sMessageTop{
+      ul{
+        display: flex;
+        li{
+          border: 1px solid #b4b4b4;
+          flex: 1;
+          .el-form-item{
+            margin-bottom:0;
+            margin-right:0;
+            .el-form-item__label{
+              text-align: left;
+              padding-left: 10px;
+            }
+            .el-input__inner{
+              border-radius: 0;
+              border-left-color: #b4b4b4;
+              border-right-color: transparent;
+              border-bottom-color: transparent;
+              border-top-color: transparent;
+            }
+          }
+
+
+          .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+            border-left-color: #b4b4b4;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-top-color: transparent;
+          }
+
+          .el-input.is-active .el-input__inner, .el-input__inner:focus {
+            border-left-color: #b4b4b4;
+            border-top-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            outline: 0;
+          }
+
+          .el-input.is-disabled .el-input__inner {
+            background-color: transparent;
+            border-left-color: #b4b4b4;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-top-color: transparent;
+          }
+
+        }
+      }
+    }
+    @media screen and (max-width: 1375px) {
+      .sMessageTop{
+        ul{
+          li{
+
+          }
+        }
+      }
+    }
+   /* .sMessageTop {
       border: 1px solid #b4b4b4;
-      /*border-top: transparent;*/
-      /*border-bottom: transparent;*/
+      /*border-top: transparent;
+      /*border-bottom: transparent;
       .el-form-item {
         margin-bottom: 0;
         margin-right: -5px;
@@ -1380,7 +1500,7 @@
         background-color: transparent;
         color: #666666;
       }
-    }
+    }*/
     .sMessageCont {
       .sMessageCont_info {
         background-color: #e2eaff;
@@ -1427,6 +1547,9 @@
         cursor: pointer;
       }
     }
+
+
+
     .sBottom {
       border-right: 1px solid #b4b4b4;
       border-left: 1px solid #b4b4b4;

@@ -143,8 +143,7 @@ export default {
   },
   mounted() {
     this.init()
-    console.log(this.hidBut,"隐藏1")
-    // console.log(this.showBut,"显示1")
+
   },
   methods: {
     init() {

@@ -229,10 +229,12 @@ export default {
     }
   },
   mounted() {
+    this.loading = true
     this.searchQuery.vo.disposeOrgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       // this.loading = false
       this.licenseTypes = resArr[1]
+      this.loading = false
     })
   },
   data() {
@@ -390,7 +392,9 @@ export default {
         this.dataset = data.list
         this.total = data.total
         this.loading = false
-        console.log(data)
+        // console.log(data)
+      }).catch(err => {
+        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
       })
     },
     fetchData() {
@@ -431,7 +435,7 @@ export default {
           break
         // 异常处理
         case 'deal':
-          console.log(this.selected[0].abnormalStatus)
+          // console.log(this.selected[0].abnormalStatus)
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能处理单条数据',

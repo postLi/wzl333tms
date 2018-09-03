@@ -253,13 +253,12 @@
         }
 
         promiseObj.then(res => {
+          this.loading = false
+          this.reset()
           this.$message({
             message: '保存成功~',
             type: 'success'
           })
-
-          this.reset()
-          this.loading = false
         }).catch(err => {
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           this.loading = false
