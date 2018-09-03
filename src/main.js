@@ -9,6 +9,7 @@ import '@/icons' // icon
 import './errorLog'// error
 import '@/permission' // permission
 import * as $const from './utils/constant'
+// import * as $lodop from './utils/LodopFuncs'
 
 import * as filters from './filters'
 
@@ -24,6 +25,7 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 Vue.prototype.$const = $const
+// Vue.prototype.$lodop = $lodop
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

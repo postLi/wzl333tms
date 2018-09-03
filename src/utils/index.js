@@ -2,6 +2,81 @@
  * Created by jiachenpan on 16/11/18.
  */
 
+const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
+/**
+ * 根据列表数据计算合计值
+ * @param {*} param 列表数据
+ * 计算的语法
+ * 属性名 单位为元
+ * 属性名|单位
+ * _index|索引（|单位）
+ */
+export function getSummaries(param, propsArr) {
+  const { columns, data } = param
+  const sums = []
+  // 获取需要计算的属性值列表
+  propsArr = propsArr || shouldCalcProperty
+
+  // console.log(columns, data)
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '总计'
+      return
+    }
+    let prop = ''
+
+    let unit = '元'
+    const find = propsArr.filter(el => {
+      // 完全等于属性名
+      if (el === column.property || el === column.prop) {
+        prop = el
+        return true
+      }
+
+      const propArr = el.split('|')
+      if (propArr.length > 1) {
+        // 前缀等于属性名
+        if (propArr[0] === column.property || propArr[0] === column.prop) {
+          prop = column.property || column.prop
+          unit = propArr[1] || ''
+          return true
+        }
+        // 索引位置相等
+        if (propArr[0] === '_index' && parseInt(propArr[1], 10) === index) {
+          prop = '_index'
+          unit = propArr[2] || ''
+          return true
+        }
+      } else {
+        // 没有匹配
+        return false
+      }
+    })
+
+    // if (!values.every(value => isNaN(value))) {
+    if (find.length) {
+      if (prop === '_index') {
+        sums[index] = data.length + unit
+      } else {
+        const values = data.map(item => Number(item[prop]))
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            // return prev + curr
+            return tmsMath._add(prev, curr)
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] += ' ' + unit
+      }
+    } else {
+      sums[index] = ' - '
+    }
+  })
+  return sums
+}
+
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null
@@ -14,9 +89,22 @@ export function parseTime(time, cFormat) {
   if (typeof time === 'object') {
     date = time
   } else {
+    // 判断时毫秒还是字符串
     time = typeof time === 'number' ? time : ('' + time).trim()
-    if (('' + time).length === 10) time = parseInt(time) * 1000
+    // 如果是秒级单位则转成毫秒
+    if (/^\d{10}$/.test(time)) {
+      time = parseInt(time) * 1000
+    } else if (/(\d){4}-(\d){2}-(\d){2}\s+(\d){2}:(\d){2}:(\d){2}/.test(time)) {
+      // IE需要标准格式
+      // time = time.replace(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6Z')
+      time = time.replace(/-/g, '/')
+    }
+
     date = new Date(time)
+  }
+  // 如果不能正确转换，则返回原有的数据
+  if (date.toString().indexOf('Invalid') !== -1) {
+    return time
   }
   const formatObj = {
     y: date.getFullYear(),
@@ -61,7 +149,7 @@ export function formatTime(time, option) {
   }
 }
 
-// 格式化时间
+// 获取链接参数对象
 export function getQueryObject(url) {
   url = url == null ? window.location.href : url
   const search = url.substring(url.lastIndexOf('?') + 1)
@@ -300,7 +388,6 @@ export function scrollTo(element, to, duration) {
   const difference = to - element.scrollTop
   const perTick = difference / duration * 10
   setTimeout(() => {
-    console.log(new Date())
     element.scrollTop = element.scrollTop + perTick
     if (element.scrollTop === to) return
     scrollTo(element, to, duration - 10)
@@ -319,6 +406,101 @@ export function toggleClass(element, className) {
     classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length)
   }
   element.className = classString
+}
+
+export const pickerOptions4 = {
+  currentMonth(dateobj) {
+    const end = dateobj || new Date()
+    const start = new Date(end.getFullYear(), end.getMonth(), 1)
+    return [start, end]
+  },
+  currentAllMonth(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth() + 1, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastMonth(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth() - 1, 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth(), 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastDay(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  today(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  yesterDay(dateobj) {
+    const _end = dateobj || new Date()
+    const start1 = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const start2 = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
+    return [start1, start2]
+  },
+  beforeDady(dateobj) {
+    const _end = dateobj || new Date()
+    const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 2)
+    return [start, end]
+  },
+  currentWeek(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastWeek(dateobj) {
+    const _end = dateobj || new Date()
+    const end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay() - 7)
+    return [start, end]
+  },
+  currentAllWeek(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay())
+    _end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - _end.getDay() + 7)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  currentYear(dateobj) {
+    const _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), 0, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  currentAllYear(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear(), 0, 1)
+    _end = new Date(_end.getFullYear() + 1, 0, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  },
+  lastYear(dateobj) {
+    let _end = dateobj || new Date()
+    const start = new Date(_end.getFullYear() - 1, 0, 1)
+    _end = new Date(_end.getFullYear(), 0, 1)
+
+    // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    return [start, _end]
+  }
 }
 
 export const pickerOptions2 = [{
@@ -355,8 +537,11 @@ export const pickerOptions2 = [{
 }, {
   text: '本月',
   onClick(picker) {
-    const end = new Date()
-    const start = new Date(end.getFullYear(), end.getMonth(), 1)
+    let _end = new Date()
+    const start = new Date(_end.getFullYear(), _end.getMonth(), 1)
+    _end = new Date(_end.getFullYear(), _end.getMonth() + 1, 1)
+
+    const end = new Date(_end.getTime() - 3600 * 1000 * 24)
     picker.$emit('pick', [start, end])
   }
 }, {
@@ -520,7 +705,8 @@ export function exportWithIframe(url) {
 // 只计算小数点后两位
 export function getTotal() {
   const args = Array.from(arguments)
-  let total = 0
+  return tmsMath._calc('_add', args).result()
+  /* let total = 0
   // 先处理成俩位
   // 然后乘以10000
   // 再计算
@@ -533,5 +719,181 @@ export function getTotal() {
     total += parseInt(el, 10)
   })
   console.log('total args:', args, total, 'final:', (total / 10000))
-  return (total / 10000)
+  return (total / 10000) */
+}
+
+/**
+ * 加载js
+ * 返回promise对象
+ */
+export function loadJs(src, callback) {
+  return new Promise((resolve, reject) => {
+    var doc = document
+    var script = doc.createElement('script')
+    var head = doc.head || doc.getElementsByTagName('head')[0] || doc.documentElement
+    script.async = 'async'
+
+    script.onload = script.onreadystatechange = function() {
+      if (!script.readyState || /loaded|complete/.test(script.readyState)) {
+      // Handle memory leak in IE
+        script.onload = script.onreadystatechange = null
+
+      // Remove the script
+        if (head && script.parentNode) {
+          head.removeChild(script)
+        }
+
+      // Dereference the script
+        script = undefined
+
+      // Callback if not abort
+        if (callback) {
+          callback()
+        }
+        resolve()
+      }
+    }
+
+    script.onerror = function(err) {
+      reject('加载失败:' + JSON.stringify(err))
+    }
+
+    script.src = src
+    head.insertBefore(script, head.firstChild)
+  })
+}
+
+// 数学计算
+export const tmsMath = {
+  _result: 0,
+  _isCalc: false,
+  _add(a, b) {
+    var c, d, e
+    try {
+      c = a.toString().split('.')[1].length
+    } catch (f) {
+      c = 0
+    }
+    try {
+      d = b.toString().split('.')[1].length
+    } catch (f) {
+      d = 0
+    }
+    return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) + this._mul(b, e)) / e
+  },
+  _sub(a, b) {
+    var c, d, e
+    try {
+      c = a.toString().split('.')[1].length
+    } catch (f) {
+      c = 0
+    }
+    try {
+      d = b.toString().split('.')[1].length
+    } catch (f) {
+      d = 0
+    }
+    return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) - this._mul(b, e)) / e
+  },
+  _mul(a, b) {
+    // console.log(a, b)
+    var c = 0,
+      d = a.toString(),
+      e = b.toString()
+
+    try {
+      c += d.split('.')[1].length
+    } catch (f) {}
+    try {
+      c += e.split('.')[1].length
+    } catch (f) {}
+    return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c)
+  },
+  _div(a, b) {
+    var c, d, e = 0,
+      f = 0
+    try {
+      e = a.toString().split('.')[1].length
+    } catch (g) {}
+    try {
+      f = b.toString().split('.')[1].length
+    } catch (g) {}
+    return c = Number(a.toString().replace('.', '')), d = Number(b.toString().replace('.', '')), this._mul(c / d, Math.pow(10, f - e))
+  },
+  _calc(type, arg) {
+    const len = arg.length
+    var i = 0
+    if (!this._isCalc) {
+      this._result = 0
+    }
+
+    // 如果第一个是除法或者减法计算，则将第一个参数当做除数/减数
+    if ((type === '_div' || type === '_sub') && !this._isCalc) {
+      this._result = arg[0]
+      i = 1
+    }
+
+    this._isCalc = true
+
+    let total = this._result
+
+    for (; i < len; i++) {
+      // console.log('before calc:' + type, total, arg[i])
+      // 当为非数值对象时，则将其转为0
+      total = this[type](total, Number(arg[i]) || 0)
+      // console.log('calc result:' + type, total)
+    }
+
+    this._result = total
+    return this
+  },
+  clear() {
+    this._result = 0
+    this._isCalc = false
+    return this
+  },
+  result(num = 2) {
+    const res = parseFloat(this._result, 10).toFixed(num) || 0
+    this._result = 0
+    this._isCalc = false
+    return parseFloat(res, 10)
+  },
+  add() {
+    this._calc('_add', arguments)
+    return this
+  },
+  sub() {
+    this._calc('_sub', arguments)
+    return this
+  },
+  mul() {
+    this._calc('_mul', arguments)
+    return this
+  },
+  div() {
+    this._calc('_div', arguments)
+    return this
+  }
+}
+/**
+ * json 数组去重 合计fee
+ * @param  {[type]} array [description]
+ * @param  {[type]} key   [description]
+ */
+export const uniqueArray = (array, key) => {
+  const result = [array[0]]
+  for (let i = 1; i < array.length; i++) {
+    const item = array[i]
+    let repeat = false
+    for (let j = 0; j < result.length; j++) {
+      if (item[key] === result[j][key]) {
+        repeat = true
+        break
+      }
+    }
+    if (!repeat) {
+      result.push(item)
+    }
+  }
+  return result
 }

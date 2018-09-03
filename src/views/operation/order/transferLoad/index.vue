@@ -8,14 +8,14 @@
             中转信息&nbsp; <b>中转批次：{{formModel.transferBatchNo}}</b>
           </template>
           <div class="clearfix loadFrom">
-            <el-form :model="formModel" ref="formModel" class="demo-form-inline" :inline="true" label-width="110px" :rules="formModelRules">
+            <el-form :model="formModel" ref="formModel" class="demo-form-inline" :inline="true" label-width="90px" :rules="formModelRules">
               <!-- 基本信息 -->
-              <el-form-item label="承运商" class="addCarrierInput" prop="carrierId">
+              <el-form-item label="承运商" class="addCarrierInput" prop="carrierId" :key="carrierKey">
                 <i class="el-icon-plus el-input__icon" @click="doAction('addTruck')"></i>
-                <querySelect size="mini" show='select' search="carrierName" :name="carrierName" v-model="formModel.carrierId" type="carrier" valuekey="carrierId" :filterable="false" @change="getCarrier" >
+                <querySelect size="mini" show='select' search="carrierName" :remote="true" :name="carrierName" v-model="formModel.carrierId" type="carrier" valuekey="carrierId"  @change="getCarrier" >
                 </querySelect>
               </el-form-item>
-              <el-form-item prop="transferTime" label="中转日期">
+              <el-form-item prop="transferTime" label="中转日期"  class="formItemTextDanger">
                 <el-date-picker size="mini" v-model="formModel.transferTime" value-format="yyyy-MM-dd hh:mm:ss" type="datetime" placeholder="中转日期">
                 </el-date-picker>
               </el-form-item>
@@ -24,11 +24,11 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="到站电话" prop="arrivalMobile">
-                <el-input size="mini" maxlength="13" v-model="formModel.arrivalMobile" v-number-only placeholder="到站电话">
+                <el-input size="mini" :maxlength="13" v-model="formModel.arrivalMobile" v-number-only placeholder="到站电话">
                 </el-input>
               </el-form-item>
               <el-form-item label="备注" prop="remark">
-                <el-input size="mini" maxlength="250" v-model="formModel.remark" placeholder="备注">
+                <el-input size="mini" :maxlength="300" v-model="formModel.remark" placeholder="备注">
                 </el-input>
               </el-form-item>
             </el-form>
@@ -38,13 +38,16 @@
       <!-- 操作按钮区 -->
       <div class="load_btn_boxs">
         <!-- <el-button size="mini" icon="el-icon-delete" plain type="warning" @click="doAction('reset')">全部清空</el-button> -->
-        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')">完成中转</el-button>
+        <el-button size="mini" icon="el-icon-sort" plain type="primary" @click="doAction('finish')" :loading="loading">完成中转</el-button>
       </div>
-      <!-- 穿梭框 -->
-      <dataTable :leftData="leftData" :rightData="rightData"  @loadTable="getLoadTable"></dataTable>
+      <div class="load_btn_transferTable">
+        <!-- 穿梭框 -->
+      <dataTable :leftData="leftData" :rightData="rightData"  @loadTable="getLoadTable" @regetList="regetList"></dataTable>
+      </div>
+      
     </div>
     <!-- 添加承运商信息 -->
-      <addCraieer :orgid="otherinfo.orgid" :popVisible.sync="addCarrierVisible"></addCraieer>
+      <addCraieer :orgid="otherinfo.orgid" :popVisible.sync="addCarrierVisible"  @success="fetchCarrierData"></addCraieer>
   </div>
 </template>
 <script>
@@ -56,6 +59,7 @@ import addCraieer from '@/views/company/carrierManage/components/add'
 import dataTable from './components/dataTable'
 
 export default {
+  name: 'ordertransferLoad',
   components: {
     dataTable,
     addCraieer,
@@ -84,9 +88,10 @@ export default {
       },
       loadTruck: 'loadTruckOne',
       isModify: false,
-      addCarrierVisible: false,
+      addCarrierVisible: false, 
       loading: false,
       carrierName: '',
+      carrierKey: 0,
       // 缓存数据
       dataCache: {},
       cache: {}
@@ -97,6 +102,15 @@ export default {
     this.init()
   },
   methods: {
+    regetList () {
+     // 刷新数据
+     this.rightData = []
+     this.leftData = []
+     this.getSelectAddLoadRepertoryList()
+    },
+    fetchCarrierData () {
+      this.carrierKey = Math.random()
+    },
     init() {
       const transferId = this.$route.query.transferId
       this.reset()
@@ -142,8 +156,9 @@ export default {
       }
     },
     goTransferList() {
+      // this.$router.push({ path: '././transfer', query: {pageKey: new Date().getTime()} })
       // 跳转到中转管理页面
-      this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
+      this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer/transfered')
     },
     // 获取批次详细信息
     getUpdateTransferDetail() {
@@ -200,6 +215,9 @@ export default {
       }
     },
     finishLoadInfo() {
+      if(this.loading){
+        return false
+      }
       this.$refs['formModel'].validate((valid) => {
         if (valid) {
           if (this.loadTableInfo.length < 1) {
@@ -228,18 +246,23 @@ export default {
               return item
             })
             if (this.isModify) {
+              this.loading = true
               PromiseObj = transferManageApi.putModifyTransfer(data)
             } else {
+              this.loading = true
               PromiseObj = transferManageApi.postNewTransfer(data)
             }
             PromiseObj.then(res => {
+              this.loading = false
               if (this.isModify) {
                 // this.reset()
               }
 
-              this.$message.success('操作成功！')
-              this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
+              this.$message.success('保存成功！')
+              
+              this.goTransferList()
             }).catch(err => {
+              this.loading = false
               this.$message.error(err.text || '未知错误')
             })
           }
@@ -264,7 +287,9 @@ export default {
     },
     // 获取选中的承运商
     getCarrier(item) {
-      this.formModel.carrierMobile = item.carrierMobile
+      if (item) {
+        this.formModel.carrierMobile = item.carrierMobile
+      }
     },
     // 显示新增承运商
     addCarrier() {
@@ -283,25 +308,33 @@ export default {
   height: 100%;
   position: relative;
 
-  .transferTable{
-    flex:1;
-    display: flex;
+  // .transferTable{
+  //   flex:1;
+  //   display: flex;
+  //   flex-direction: column;
+  //   height: auto;
+  //   margin-top: 0;
+  // }
+  // 
+  .load_btn_transferTable{
+    display:flex;
     flex-direction: column;
-    height: auto;
-    margin-top: 0;
+    flex: 1;
+    height:100%;
   }
 
-  .transferTable .transferTable_content{
-    height: auto;
-    flex: 1;
-  }
+  // .transferTable .transferTable_content{
+  //   height: auto;
+  //   flex: 1;
+  // }
 
   .el-collapse{
   }
 
   .load_btn_boxs {
       position: relative;
-      top: 10px;
+      top: 18px;
+      right:10px;
       z-index: 33;
       text-align: right;
       height: 0;
@@ -314,11 +347,26 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
-    
-    .loadFrom {
-      padding: 0 20px 10px 0;
-      .el-form-item {
-        margin-bottom: 10px;
+
+    // .loadFrom {
+    //   padding: 0 10px 10px 0;
+    //   .el-form-item {
+    //     margin-bottom: 10px;
+    //   }
+    //   .loadFrom-type {
+    //     position: absolute;
+    //     z-index: 33;
+    //     right: 40px;
+    //     top: 20px;
+    //   }
+    // }
+     .loadFrom {
+      margin-bottom: 10px;
+      .el-form--inline .el-form-item{
+        margin-bottom: 0px;
+      }
+      .el-input__inner{
+        width: 200px;
       }
       .loadFrom-type {
         position: absolute;
@@ -326,8 +374,14 @@ export default {
         right: 40px;
         top: 20px;
       }
+      .formItemTextDanger {
+        .el-form-item__label {
+          color: #ef0000;
+        }
+      }
     }
     .addCarrierInput{
+
       .el-form-item__content{
         position: relative;
       }
@@ -345,11 +399,12 @@ export default {
       }
     }
     .el-collapse {
-      border: 1px solid #E0E0E0;
+      border: 2px solid #cdf;
     }
     .el-collapse-item__header {
-      background-color: #E9F3FA;
-      padding: 2px 0 0 60px;
+      border-bottom: 2px solid #cdf;
+      background-color: #FFFFFF;
+      padding: 0px 0 0 10px;
       height: 42px;
       line-height: 42px;
       font-size: 16px;
@@ -360,7 +415,7 @@ export default {
     }
     .el-collapse-item__arrow {
       position: absolute;
-      left: 20px;
+      left: 10px;
       top: 5px;
     }
     .el-collapse-item__content {

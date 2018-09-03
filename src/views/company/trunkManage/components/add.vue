@@ -3,7 +3,7 @@
     <template class="addTruckPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="车牌号码" prop="truckIdNumber">
-          <el-input v-model="form.truckIdNumber" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model="form.truckIdNumber" :maxlength="8" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="车辆来源" prop="truckSource">
           <!-- <el-select v-model="form.truckSource" placeholder="请选择">
@@ -17,46 +17,46 @@
           </el-select> -->
           <SelectType v-model="form.truckType" type="truck_type" placeholder="请选择" />
         </el-form-item>
-        
+
         <el-form-item label="可载重" prop="truckLoad">
-          <el-input v-model.number="form.truckLoad" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLoad" v-numberOnly :maxlength="18" auto-complete="off">
             <template slot="append">吨</template>
           </el-input>
         </el-form-item>
-        
+
         <el-form-item label="可载体积" prop="truckVolume">
-          <el-input v-model.number="form.truckVolume" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckVolume" v-number-only:point :maxlength="18" auto-complete="off">
             <template slot="append">方</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车长" prop="truckLength">
-          <el-input v-model.number="form.truckLength" maxlength="18" auto-complete="off">
+          <el-input v-model.number="form.truckLength" v-number-only:point :maxlength="18" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车宽" prop="truckWidth">
-          <el-input v-model.number="form.truckWidth" maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckWidth" v-number-only:point :maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="车高" prop="truckHeight">
-          <el-input v-model.number="form.truckHeight" maxlength="20" auto-complete="off">
+          <el-input v-model.number="form.truckHeight" v-number-only:point :maxlength="20" auto-complete="off">
             <template slot="append">米</template>
           </el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" @change="getTreeOrgid" />
+          <SelectTree :disabled="isModify" v-model="form.orgid" @change="getTreeOrgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
 
         <el-form-item label="车辆品牌" prop="truckBrand">
-          <el-input maxlength="20" v-model="form.truckBrand" auto-complete="off"></el-input>
+          <el-input :maxlength="20" v-model="form.truckBrand" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="车辆注册时间" prop="truckRegisterDate">
           <el-date-picker
             v-model="form.truckRegisterDate"
             align="right"
             type="date"
-            :picker-options="pickOption2"
+            :picker-options="pickOption"
             placeholder="选择日期"
             value-format="timestamp"
             >
@@ -74,24 +74,24 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.truckRemarks"></el-input>
+          <el-input type="textarea" :maxlength="300" v-model="form.truckRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <div class="hr"></div>
         <el-form-item label="车辆单位" prop="truckUnit">
-          <el-input v-model="form.truckUnit" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.truckUnit" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="单位电话" prop="truckUnitMobile">
-          <el-input v-numberOnly v-model="form.truckUnitMobile" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.truckUnitMobile" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机" prop="driverId">
-          <el-select v-model="form.driverId" filterable placeholder="请选择">
+          <el-select  @change="getDriverPhone" v-model="form.driverId" filterable placeholder="请选择司机" clearable>
             <el-option v-for="item in DriverList" :key="item.id" :label="item.driverName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="司机电话" prop="driverMobile">
-          <el-input maxlength="20" v-numberOnly v-model="form.driverMobile" auto-complete="off"></el-input>
+        <el-form-item label="司机电话" prop="dirverMobile">
+          <el-input :maxlength="20" v-numberOnly v-model="form.dirverMobile" auto-complete="off" disabled></el-input>
         </el-form-item>
         <div class="hr"></div>
         <el-form-item class="clearfix uploadcard">
@@ -114,7 +114,7 @@
   </pop-right>
 </template>
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import { postTrunk, putTrunk } from '@/api/company/trunkManage'
 import { getAllDriver } from '@/api/company/driverManage'
 import popRight from '@/components/PopRight/index'
@@ -156,25 +156,25 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ])
+    ...mapGetters([
+      'otherinfo'
+    ])
   },
-  data () {
+  data() {
     const _this = this
+    // const _this = this
 
+    // const validateFormMobile = function(rule, value, callback) {
+    //   if (REGEX.MOBILE.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
 
-    const validateFormMobile = function (rule, value, callback) {
-      if(REGEX.MOBILE.test(value)){
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
-
-    const createValidate = function (max, tip) {
-      return function (rule, value, callback) {
-        if(value > max){
+    const createValidate = function(max, tip) {
+      return function(rule, value, callback) {
+        if (value > max) {
           callback(new Error(tip))
         } else {
           callback()
@@ -182,30 +182,30 @@ export default {
       }
     }
 
-
     return {
+
       form: {
-        "driverMobile": "", // 司机电话 11
-        "driverId": '', // 司机ID
-        "orgid": '', // 所属机构
-        "truckBrand": "", // 车辆品牌 20
-        "truckHeight": '', // 车高
+        'dirverMobile': '', // 司机电话 11
+        'driverId': '', // 司机ID
+        'orgid': '', // 所属机构
+        'truckBrand': '', // 车辆品牌 20
+        'truckHeight': '', // 车高
         // "truckId": 0, // 车辆ID
-        "truckIdNumber": "", // 车牌号码 12
-        "truckLength": '', // 车长
-        "truckLoad": '', // 可载重
-        "truckRegisterDate": "", // 车辆注册时间
-        "truckRemarks": "", // 备注 50
-        "truckScrapDate": "", // 车辆报废时间
-        "truckSource": '', // 车牌来源
-        "truckType": '', // 车型
-        "truckUnit": "", // 车辆单位 50
-        "truckUnitMobile": "", // 单位电话 11
-        "truckVolume": '', // 可载体积
-        "truckWidth": '', // 车宽
-        "drivingLicense": '', //行驶证
-        "operatingLicense": '', //营运执照
-        "vehiclePic": '' //车辆照片
+        'truckIdNumber': '', // 车牌号码 12
+        'truckLength': '', // 车长
+        'truckLoad': '', // 可载重
+        'truckRegisterDate': '', // 车辆注册时间
+        'truckRemarks': '', // 备注 50
+        'truckScrapDate': '', // 车辆报废时间
+        'truckSource': '', // 车牌来源
+        'truckType': '', // 车型
+        'truckUnit': '', // 车辆单位 50
+        'truckUnitMobile': '', // 单位电话 11
+        'truckVolume': '', // 可载体积
+        'truckWidth': '', // 车宽
+        'drivingLicense': '', // 行驶证
+        'operatingLicense': '', // 营运执照
+        'vehiclePic': '' // 车辆照片
       },
       formLabelWidth: '100px',
       tooltip: false,
@@ -213,8 +213,11 @@ export default {
         truckIdNumber: [
           { required: true, message: '请输入车牌号码', trigger: 'blur' }
         ],
+        // driverId: [
+        //   { required: true, message: '司机名称不能为空' }
+        // ],
         orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+          { required: true, message: '请选择所属机构' }
         ],
         driverMobile: [
           { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
@@ -223,16 +226,16 @@ export default {
           { validator: createValidate(1000, '吨数不能超过1000吨'), type: 'number' }
         ],
         truckVolume: [
-          { validator: createValidate(1000, '体积不能超过1000方'), type: 'number'}
+          { validator: createValidate(1000, '体积不能超过1000方'), type: 'number' }
         ],
         truckLength: [
-          { validator: createValidate(100, '车长不能超过100米'),type: 'number'}
+          { validator: createValidate(100, '车长不能超过100米'), type: 'number' }
         ],
         truckHeight: [
-          { validator: createValidate(20, '车高不能超过20米'),type: 'number'}
+          { validator: createValidate(20, '车高不能超过20米'), type: 'number' }
         ],
         truckWidth: [
-          { validator: createValidate(10, '车宽不能超过10米'),type: 'number'}
+          { validator: createValidate(10, '车宽不能超过10米'), type: 'number' }
         ]
       },
       popTitle: '新增车辆',
@@ -244,73 +247,117 @@ export default {
       departments: [],
       groups: [],
       inited: false,
-
-      pickOption2: {
-        firstDayOfWeek:1
-      },
       cacheDriverList: {},
-      DriverList: []
-
+      DriverList: [],
+      pickOption: {
+        firstDayOfWeek: 1,
+        disabledDate(time) {
+          // 小于终止日
+          return _this.form.truckScrapDate ? time.getTime() > _this.form.truckScrapDate : false
+        }
+      },
+      pickOption2: {
+        firstDayOfWeek: 1,
+        disabledDate(time) {
+          // 大于起始日
+          return _this.form.truckRegisterDate ? time.getTime() < _this.form.truckRegisterDate : false
+        }
+      }
     }
   },
-  mounted () {
-    this.form.orgid = this.orgid
-    if(!this.inited){
+  mounted() {
+    this.form.orgid = this.otherinfo.orgid
+    if (!this.inited) {
       this.inited = true
       this.initInfo()
+      this.getDriverPhone()
+    }
+    if (this.isModify) {
+      this.initPanel()
     }
   },
+  
   watch: {
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
+    popVisible(newVal, oldVal) {
+      if (!this.inited) {
         this.inited = true
         this.initInfo()
+        this.getDriverPhone()
       }
     },
-    orgid (newVal, oldVal) {
+    orgid(newVal, oldVal) {
       this.form.orgid = newVal
-      if(oldVal !== newVal){
-        
+      if (oldVal !== newVal) {
       }
     },
-    info () {
-      if(this.isModify){
+    info: {
+      handler() {
+        this.initPanel()
+      },
+      deep: true
+    }
+  },
+  activated () {
+    this.initDriverList()
+  },
+  methods: {
+    initDriverList () {
+      this.DriverList = this.$options.data().DriverList
+      this.cacheDriverList = []
+      this.getTreeOrgid(this.orgid)
+    },
+    // 给一个change事件把列表的数据带出来回填
+    getDriverPhone(id) {
+      const find = this.DriverList.filter(el => el.id === id)
+      if (find[0]) {
+        this.form.dirverMobile = find[0].driverMobile
+      }
+    },
+    initPanel() {
+      if (this.isModify) {
         this.popTitle = '修改车辆'
-        let data = Object.assign({},this.info)
-        for(let i in this.form){
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
           this.form[i] = data[i]
+        }
+        if (this.form.truckRegisterDate) {
+          this.form.truckRegisterDate = +new Date(this.form.truckRegisterDate)
+          // this.form.truckRegisterDate = new Date(this.form.truckRegisterDate.replace(/-/g, '/'))
+        }
+        if (this.form.truckScrapDate) {
+          this.form.truckScrapDate = +new Date(this.form.truckScrapDate)
+          // this.form.truckScrapDate = new Date(this.form.truckScrapDate.replace(/-/g, '/'))
         }
         this.form.truckId = data.truckId
       } else {
         this.popTitle = '新增车辆'
-        for(let i in this.form){
+        for (const i in this.form) {
           this.form[i] = typeof this.form[i] === 'string' ? '' : ''
         }
         delete this.form.truckId
         this.form.orgid = this.orgid
+        this.form.truckSource = 143
       }
-    }
-  },
-  methods: {
-    getTreeOrgid (orgid) {
+    },
+    getTreeOrgid(orgid) {
       // 切换组织了列表时更新司机列表信息
       this.getDriverList(orgid)
     },
-    initInfo () {
+    initInfo() {
       this.loading = false
       this.getTreeOrgid(this.orgid)
     },
-    getOrgid (id) {
+    getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({},this.form)
+          const data = Object.assign({}, this.form)
           let promiseObj
           // 判断操作，调用对应的函数
-          if(this.isModify){
+          if (this.isModify) {
             promiseObj = putTrunk(data)
           } else {
             promiseObj = postTrunk(data)
@@ -318,47 +365,47 @@ export default {
 
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            });
+            this.$message.success('保存成功')
+            this.closeMe()
+            this.$emit('success')
           }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
           })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    reset () {
+    reset() {
       this.$refs['ruleForm'].resetFields()
     },
-    closeMe (done) {
+    closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
-      if(typeof done === 'function'){
+      this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
         done()
       }
     },
-    getDriverList(orgid){
-      //缓存数据，减少切换组织列表造成的请求
-      //切换组织列表时，需要重置司机信息，避免不同组织的车辆司机混搭？
-      //还是可以绑定所有司机？
-      if(this.cacheDriverList[orgid]){
+    getDriverList(orgid) {
+      console.log('//////////////////////=this.DriverList', this.DriverList)
+      // 缓存数据，减少切换组织列表造成的请求
+      // 切换组织列表时，需要重置司机信息，避免不同组织的车辆司机混搭？
+      // 还是可以绑定所有司机？
+      if (this.cacheDriverList[orgid]) {
         this.DriverList = this.cacheDriverList[orgid]
       } else {
+        this.loading = true
         getAllDriver({
-          "currentPage": 1,
-          "pageSize": 200,
-          "vo": {
-            "orgid": orgid
+          'currentPage': 1,
+          'pageSize': 200,
+          'vo': {
+            'orgid': orgid
           }
         }).then(data => {
           this.DriverList = data.list
           this.cacheDriverList[orgid] = data.list
+          this.loading = false
         })
       }
     }

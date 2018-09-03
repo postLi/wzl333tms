@@ -23,30 +23,82 @@ import Components from './module/componentsDemo'
 
 Vue.use(Router)
 
- /**
-  * icon : the icon show in the sidebar
-  * hidden : if `hidden:true` will not show in the sidebar
-  * redirect : if `redirect:noredirect` will not redirct in the levelbar
-  * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
-  * meta : `{ role: ['admin'] }`  will control the page role
-  **/
+/**
+ * icon : the icon show in the sidebar
+ * hidden : if `hidden:true` will not show in the sidebar
+ * redirect : if `redirect:noredirect` will not redirct in the levelbar
+ * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
+ * meta : `{ role: ['admin'] }`  will control the page role
+ * noCache 设定是否被缓存默认为 true
+ **/
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
+  /*   {
+      component: Layout,
+      redirect: '/checklist/index',
+      noDropdown: true,
+      hidden: false,
+      path: '/checklist',
+      children: [{
+        path: '/checklist/index',
+        component: _import('checklist/index'),
+        name: 'checklistpage',
+        meta: {
+          title: '初始化',
+          noCache: false
+        }
+      }]
+    }, */
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     noDropdown: true,
     icon: 'shouye',
-    name: '首页',
+    // name: '首页',
+    name: 'dashboard',
+    meta: {
+      'code': 'HOME_PAGE'
+    },
     hidden: true,
     children: [{
-      path: 'dashboard', name: '首页', icon: 'shouye', component: _import('dashboard/index'),
-      meta: { title: '首页', noCache: true }
+      path: '/dashboard',
+      component: _import('html5/html5index'),
+      name: 'dashboard',
+      icon: 'shouye',
+      meta: {
+        title: '首页',
+        noCache: false,
+        'code': 'HOME_PAGE_1'
+      }
+    }, {
+      path: '/checklist/index',
+      component: _import('checklist/index'),
+      name: 'checklistpage',
+      icon: 'btn9_huidanhs',
+      meta: {
+        title: '系统体检',
+        noCache: false,
+        'code': 'HOME_PAGE_2'
+      }
+    }, {
+      path: '/flows',
+      name: 'flows',
+      icon: 'canzhao',
+      component: _import('dashboard/index'),
+      meta: { title: '流程图', noCache: true, 'code': 'HOME_PAGE_3' }
+    }, {
+      path: '/company/myinfo',
+      icon: 'information',
+      hidden: true,
+      name: '个人中心',
+      component: _import('company/myinfo/index'),
+      meta: { title: '个人中心', noCache: true }
     }]
   }
 ]
+
 // 用来展示自定义组件、指令、过滤器等
 if (process.env.NODE_ENV === 'development') {
   constantRouterMap.push(Components)
@@ -64,8 +116,5 @@ export const asyncRouterMap = [
   Report,
   Company,
   Service,
-/*   {
-    path: '/createOrder', hidden: true, icon: 'QQ', name: '创建运单', component: _import('operation/order/createOrder/pop'), meta: { role: ['admin'], title: '创建运单', noCache: true }
-  }, */
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -6,14 +6,28 @@
   max-width:  820px;
 
 }
-.popRight-content{
+.add-role-pop-content .popRight-content{
   padding: 20px 20px 0;
   box-sizing: border-box;
 }
-.el-select .el-input__inner{
+.add-role-pop-content .el-select .el-input__inner{
   padding-right: 15px;
 }
 /*头部输入框*/
+.add-role-top{
+  position: fixed;
+  z-index: 34;
+  top: 25px;
+  left: 0;
+  padding: 5px 10px;
+  /*background-color:rgba(255,255,255,1);*/
+  width: 100%;
+  /*margin-top: 10px;*/
+
+}
+.add-role-top .demo-form-inline{
+  background-color: rgba(255,255,255,1);
+}
 .add-role .add-role-top .el-form--inline .el-form-item:first-of-type{
   margin-bottom: 20px;
 }
@@ -44,11 +58,15 @@
 }
 /*头部输入框*/
 /*中部树形*/
+.add-role-tree{
+  /*1*/
+  margin-top: 30px;
+}
 .add-role-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
   background: rgb(195,232,255);
 }
 
-.el-tree-node__content:hover {
+.add-role-tree .el-tree-node__content:hover {
   background-color: rgb(195,232,255);
 }
 /*.add-role-tree .el-tree .el-tree-node:first-of-type > div.el-tree-node__content{*/

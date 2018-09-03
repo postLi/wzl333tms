@@ -4,7 +4,9 @@ var path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
+    //index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../tmpdist/index.html'),
+    assetsRootTemp: path.resolve(__dirname, '../tmpdist'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -22,47 +24,77 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report,
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
-    devtool: '#source-map',
+    devtool: '#source-map'
   },
-  test:{
-    env: require('./test.env'),
+  test: {
+    env: require('./test.env')
   },
   dev: {
     env: require('./dev.env'),
-    host: 'http://192.168.1.198',
+    host: '192.168.1.198',
     port: 9528,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api' : {
-        target: "http://192.168.1.157:7010",
-        pathRewrite: {'^/api': ''},
+      '/api': {
+        target: 'http://192.168.1.157:7010',
+        pathRewrite: { '^/api': '' },
         changeOrigin: true
       },
-      '/localapi' : {
-        target: "http://192.168.1.233:7010",
-        // target: 'http://192.168.1.23:7010',
-        pathRewrite: {'^/localapi': ''}
+      '/localapi': {
+        target: 'http://192.168.1.233:7010',
+        pathRewrite: { '^/localapi': '' },
+        changeOrigin: true
       },
       '/wukunzhi': {
-        target: "http://192.168.1.42:7010",
-        pathRewrite: {'^/wukunzhi': ''},
+        target: 'http://192.168.1.42:7010',
+        pathRewrite: { '^/wukunzhi': '' },
+        changeOrigin: true
+      },
+      '/lingzhiying': {
+        target: 'http://192.168.1.34:7010',
+        pathRewrite: { '^/lingzhiying': '' },
         changeOrigin: true
       },
       '/huangyuwen': {
-        target: "http://192.168.1.23:7010",
-        pathRewrite: {'^/huangyuwen': ''},
+        target: 'http://192.168.1.23:7010',
+        pathRewrite: { '^/huangyuwen': '' },
         changeOrigin: true
       },
       '/dingfei': {
-        target: "http://192.168.1.34:7010",
-        pathRewrite: {'^/dingfei': ''},
+        target: 'http://192.168.1.34:7010',
+        pathRewrite: { '^/dingfei': '' },
         changeOrigin: true
       },
       '/ceshi': {
-        target: "http://192.168.1.78:7010",
-        pathRewrite: {'^/ceshi': ''},
+        target: 'http://192.168.1.78:7010',
+        pathRewrite: { '^/ceshi': '' },
+        changeOrigin: true
+      },
+      '/chenrongtao': {
+        target: 'http://192.168.1.127:7010',
+        pathRewrite: { '^/chenrongtao': '' },
+        changeOrigin: true
+      },
+      '/home': {
+        target: 'http://frp.nanedo.com:8080',
+        pathRewrite: { '^/home': '' },
+        changeOrigin: true
+      },
+      '/fangjian': {
+        target: 'http://192.168.1.25:7010',
+        pathRewrite: { '^/fangjian': '' },
+        changeOrigin: true
+      },
+      '/aliyun': {
+        target: 'http://119.23.201.233:9528/api',
+        pathRewrite: { '^/aliyun': '' },
+        changeOrigin: true
+      },
+      '/79service': {
+        target: 'http://192.168.1.79:7010',
+        pathRewrite: { '^/79service': '' },
         changeOrigin: true
       }
     },
@@ -92,6 +124,6 @@ module.exports = {
     useEslint: true,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
-    showEslintErrorsInOverlay: false,
+    showEslintErrorsInOverlay: false
   }
 }

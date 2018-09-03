@@ -33,21 +33,22 @@ export function getSystemTime() {
         "expire": "1527005100"
     }
  */
-let UPLOADPOLICYDATA // 用来缓存上传policy
+window.UPLOADPOLICYDATA = '' // 用来缓存上传policy
+window.UPLOADPOLICYDATA_timer = '' // 加个定时器变量，防止没有引用的定时器被自动回收
 export function getUploadPolicy() {
   // 后期可添加是否过期的验证
-  if (UPLOADPOLICYDATA) {
+  if (window.UPLOADPOLICYDATA) {
     return new Promise((resolve) => {
-      resolve(UPLOADPOLICYDATA)
+      resolve(window.UPLOADPOLICYDATA)
     })
   } else {
     return fetch.get('/anfacommonservice/common/oss/v1/policy').then(res => {
-      UPLOADPOLICYDATA = res.data || {}
+      window.UPLOADPOLICYDATA = res.data || ''
       // 定时清除旧数据
-      setTimeout(() => {
-        UPLOADPOLICYDATA = ''
-      }, 3 * 60 * 1000)
-      return UPLOADPOLICYDATA
+      window.UPLOADPOLICYDATA_timer = setTimeout(() => {
+        window.UPLOADPOLICYDATA = ''
+      }, 1 * 60 * 1000)
+      return window.UPLOADPOLICYDATA
     })
   }
 }
@@ -57,13 +58,48 @@ export function getUploadPolicy() {
  * @param {*} type 下拉类型
  * @param {*} orgid 网点id
  */
-export function getSelectType(type = '', orgid) {
+export function getSelectType(type = '', orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: type,
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []
   })
+}
+
+/**
+ * 下载常用插件
+ */
+export function downloadFile(type) {
+  let fileUrl = ''
+  switch (type) {
+    case 'lodop': // lodop 云打印插件
+      fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/28tms_win32_cLodop_20180821.exe'
+      break
+    case 'supcan': // supcan 硕正报表插件
+      fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/28tms_win32_supcan_20180821.exe'
+      break
+  }
+  // const fileUrl = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
+  return fileUrl
+}
+
+/**
+ * 初始化系统
+ */
+export function getInitializationCheck() {
+  return fetch.get('/api-system/system/setting/v1/InitializationCheck/').then(res => {
+    return res.data
+  })
+}
+
+export function postImportExcel(data) {
+  return fetch.post('/api-system/system/excel/v1/importExcel/', data).then(res => {
+    return res.data
+  })
+    .catch(error => {
+      return error.data
+    })
 }

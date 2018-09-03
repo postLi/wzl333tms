@@ -5,15 +5,16 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增送货</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('edit')">修改</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancelDeliver')" plain>取消送货</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deliverFinish')" plain>送货完成</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:LOAD_SH_ADD>新增送货</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('edit')" v-has:LOAD_SH_UPDATE>修改</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancelDeliver')" plain v-has:LOAD_SH_CANCELTRUCK>取消送货</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('deliverFinish')" plain v-has:LOAD_SH_COMPLETE>送货完成</el-button>
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button> -->
-        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain v-has:LOAD_SH_EXPORT>导出</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_SH_PRINT>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
@@ -26,7 +27,7 @@
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
-              </template>
+              </template>x
             </el-table-column>
           </template>
         </el-table>
@@ -53,8 +54,9 @@ import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, loadJs } from '@/utils/index'
 import SignFrom from './components/sign'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -80,6 +82,7 @@ export default {
     // })
   },
   data() {
+    let LODOP
     return {
       loading: false,
       btnsize: 'mini',
@@ -121,10 +124,12 @@ export default {
         }
       },
       tableColumn: [{
-          label: "ID",
-          prop: "id",
-          width: "180",
-          fixed: true
+          label: "序号",
+          width: "80",
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
         },
         {
           label: "送货批次",
@@ -154,18 +159,18 @@ export default {
         },
         {
           label: "送货时间",
-          prop: "departureTime",
-          width: "150",
+          prop: "loadTime",
+          width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
           label: "完成时间",
-          prop: "receivingTime",
-          width: "150",
+          prop: "departureTime",
+          width: "180",
           slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -209,11 +214,17 @@ export default {
     fetchAllData() {
       this.loading = true
       this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
+      if (this.searchQuery.vo.batchTypeId === 56) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
-        this.infoList = data.list
-        this.total = data.total
-        this.loading = false
-      })
+          this.infoList = data.list
+          this.total = data.total
+          this.loading = false
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     fetchData() {
       this.fetchAllData()
@@ -227,7 +238,6 @@ export default {
       if (!this.searchQuery.vo.orgId) {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
       }
-      console.log('sumit', this.searchQuery.vo)
       this.fetchAllData()
     },
     getSelection(selection) {
@@ -236,7 +246,7 @@ export default {
     },
     doAction(type) {
       let isWork = false
-      if (this.selected.length < 1 && type !== 'add') { // 判断是否有选中项
+      if (this.selected.length < 1 && type !== 'add' && type !== 'print' && type !== 'export') { // 判断是否有选中项
         // this.closeAddCustomer()
         this.$message({
           message: '请选择要操作的项~',
@@ -264,11 +274,19 @@ export default {
             this.cancelDeliver()
           }
           break
-        case 'export': // 导入
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'export': // 导出
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
         case 'print': // 打印
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
       }
       // 清除选中状态，避免影响下个操作
@@ -293,7 +311,7 @@ export default {
       data = {}
     },
     add() {
-      this.$router.push({ path: '././load', query: { loadTypeId: 40 } })
+      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货' } })
     },
     edit() {
       if (this.selected.length !== 1) {
@@ -306,18 +324,18 @@ export default {
         this.$message({ type: 'warning', message: '送货中状态才可以编辑' })
       } else if (this.selected.length === 1) {
         this.selectInfo = this.selected[0]
-        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random() } })
+        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货' } })
       }
     },
     deliverFinish() { // 送货完成
       this.setData(57) //57-送货中
       if (this.isBatch) {
         putCompleteDelivery(this.commonData).then(data => {
-            this.$message({ type: 'success', message: '操作成功' })
+            this.$message({ type: 'success', message: '保存成功' })
             this.fetchData()
           })
           .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
+            this.$message.error(error.errorInfo || error.text || '操作失败')
           })
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以送货完成' })
@@ -328,11 +346,11 @@ export default {
       this.setData(57)
       if (this.isBatch) {
         putDeliverLoad(this.commonData).then(data => {
-            this.$message({ type: 'success', message: '操作成功' })
+            this.$message({ type: 'success', message: '保存成功' })
             this.fetchData()
           })
           .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
+            this.$message.error(error.errorInfo || error.text || '操作失败')
           })
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以取消送货' })
@@ -381,6 +399,7 @@ export default {
     sendInfo(obj) { // 孙子-打开签收弹出框
       // console.log('祖父',JSON.stringify(obj))
       this.dotInfo = objectMerge2({}, obj)
+      console.log(this.dotInfo, 'sdfsdfsdfhwuiefhsuihf')
       this.$nextTick(() => {
         this.signVisible = true
       })

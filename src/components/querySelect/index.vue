@@ -2,24 +2,28 @@
 <span class="autocomplete-input">
 <el-autocomplete
   v-if="show === 'input'"
-  :popper-class="'query-input-autocomplete ' + customCss"
+  :popper-class="'query-input-autocomplete ' + setCustomCss"
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
-  @focus="initData"
+  @focus="()=>{$emit('focus'),initData()}"
+  @change="(val)=>{$emit('change' ,handleSelect(val))}"
+  @blur="()=>{$emit('blur')}"
   :placeholder="place"
   ref="myautocomplete"
   @select="handleSelect"
-  select-when-unmatched
   v-bind="$attrs"
   >
+  <i slot="suffix" v-if="suffix" :class="[suffix]" class="el-input__icon el-icon-date"></i>
+  <i slot="prefix" v-if="prefix" :class="[prefix]" class="el-input__icon el-icon-search"></i>
+  <slot name="head"></slot>
   <template slot-scope="{ item }">
     <slot v-bind:item="item">
       <!-- 回退的内容 -->
       <template v-if="type === 'sender' || type === 'receiver'">
-        <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+        <span class="query-input-customer-org" :title="item.customerUnit" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" :title="item.customerName" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" :title="item.detailedAddress" v-html="highLight(item,'detailedAddress')"></span>
       </template>
-      <template v-else-if="type === 'city'">
+      <template v-else-if="type === 'city' || type === 'fromcity' || type === 'tocity'">
         <div class="query-input-city-info">
           <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
         </div>
@@ -34,10 +38,11 @@
 <el-select
     v-if="show === 'select' && remote"
     v-model="handlevalue"
-    popper-class="query-select-autocomplete"
+    :popper-class="'query-input-autocomplete ' + setCustomCss"
     :filterable="filterable"
-    @change="handleSelect"
-    @focus="initData"
+    @change="(val) => {$emit('focus'),handleSelect(val)}"
+    @focus="()=>{$emit('focus'),initData()}"
+    @blur="()=>{$emit('blur')}"
     :value-key="showkey"
     remote
     :placeholder="place"
@@ -46,6 +51,7 @@
     :loading="loading"
     v-bind="$attrs"
     >
+    <slot name="select-remote-head"></slot>
     <el-option
       v-for="item in searchData"
       :key="item[valuekey]"
@@ -53,22 +59,34 @@
       :value="item[valuekey]">
         <slot name="select-remote" v-bind:item="item">
           <!-- 回退的内容 -->
-          {{ item[showkey] }}
+          <template v-if="type === 'sender' || type === 'receiver'">
+            <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+          </template>
+          <template v-else-if="type === 'city' || type === 'fromcity' || type === 'tocity'">
+            <div class="query-input-city-info">
+              <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
+            </div>
+          </template>
+          <template v-else>
+            <span v-html="highLight(item, showkey)"></span>
+          </template>
         </slot>
     </el-option>
   </el-select>
   <el-select
     v-if="show === 'select' && !remote"
     v-model="handlevalue"
-    @change="handleSelect"
-    @focus="initData"
+    @change="(val) => {$emit('change'),handleSelect(val)}"
+    @focus="()=>{$emit('focus'),initData()}"
+    @blur="()=>{$emit('blur')}"
     :value-key="showkey"
-    popper-class="query-select-autocomplete"
+    :popper-class="'query-input-autocomplete ' + setCustomCss"
     :filterable="filterable"
     :placeholder="place"
     ref="myautocomplete"
     v-bind="$attrs"
     >
+    <slot name="select-head"></slot>
     <el-option
       v-for="item in allData"
       :key="item[valuekey]"
@@ -76,7 +94,17 @@
       :value="item[valuekey]">
         <slot name="select" v-bind:item="item">
           <!-- 回退的内容 -->
-          {{ item[showkey] }}
+          <template v-if="type === 'sender' || type === 'receiver'">
+            <span class="query-input-customer-org" v-html="highLight(item,'customerUnit')"> </span><span class="query-input-customer-name" v-html="highLight(item,'customerName')"></span><span class="query-input-customer-mobile" v-html="highLight(item,'customerMobile')"></span><span class="query-input-customer-addr" v-html="highLight(item,'detailedAddress')"></span>
+          </template>
+          <template v-else-if="type === 'city' || type === 'fromcity' || type === 'tocity'">
+            <div class="query-input-city-info">
+              <span class="query-input-city-query" v-html="highLightCity(item, true)"> </span><span class="query-input-city-name" v-html="highLightCity(item)"></span>
+            </div>
+          </template>
+          <template v-else>
+            <span v-html="highLight(item, showkey)"></span>
+          </template>
         </slot>
     </el-option>
   </el-select>
@@ -94,7 +122,7 @@ import { getAllCustomer } from '@/api/company/customerManage'
 // 获取司机信息
 import { getAllDriver } from '@/api/company/driverManage'
 // 获取员工信息
-import { getAllUser } from '@/api/company/employeeManage'
+import { getAllUser, getAllOrgUser } from '@/api/company/employeeManage'
 // 获取车辆信息
 import { getAllTrunk } from '@/api/company/trunkManage'
 // 获取异常列表、控货列表信息
@@ -109,6 +137,8 @@ import { fetchPostlist } from '@/api/operation/pickup'
 import { postReceipt } from '@/api/operation/receipt'
 // 获取库存列表
 import { postAllOrderRepertory } from '@/api/operation/repertory'
+// 获取收支方式列表
+import { postTmsFfinancialwayList2 } from '@/api/finance/financefinancialway'
 
 export default {
   props: {
@@ -123,7 +153,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请输入'
+      default: '请选择'
     },
     // 搜索的表格
     type: {
@@ -185,41 +215,69 @@ export default {
     filterable: {
       type: Boolean,
       default: true
+    },
+    popClass: {
+      type: String,
+      default: ''
+    },
+    getinput: {
+      type: Boolean,
+      default: false
+    },
+    suffix: {
+      type: String,
+      default: ''
+    },
+    prefix: {
+      type: String,
+      default: ''
+    },
+    showlastinput: {
+      type: [Boolean, String],
+      default: 'nonono'
     }
   },
   watch: {
     name: {
       handler(newVal) {
-        // 转成字符串格式
-        if (newVal) {
-          this.handlevalue = newVal + ''
-        } else {
-          this.handlevalue = ''
+        if (!this.inited) {
+          this.findName(newVal)
         }
       },
-      immediate: true
+      immediate: false
     },
     value: {
       handler(newVal) {
         // 当绑定值跟搜索字段一致时，响应绑定值的变化
         // 当被清空时
         // 转成字符串格式
-        newVal = newVal ? newVal + '' : ''
+        /* newVal = newVal ? newVal + '' : ''
         if (this.search === this.valuekey || !newVal) {
           this.handlevalue = newVal
-          console.log('handkler: value')
+          console.log('handkler: ', newVal)
+        }
+        console.log('handkler2: ', newVal) */
+        if (!this.inited) {
+          this.findValue(newVal)
         }
       },
-      immediate: true
+      immediate: false
     },
     handlevalue(newVal) {
       if (this.search === this.valuekey) {
+        console.log('handlevalue:', this.handlevalue)
         this.$emit('input', this.handlevalue)
       }
-      this.$emit('change', '', this.handlevalue)
+      if (this.getinput) {
+        // this.$emit('change', '', this.handlevalue)
+      }
+        //
     }
   },
   computed: {
+    setCustomCss() {
+      return this.popClass + ' ' + this.customCss
+    },
     place() {
       return this.show === 'select' ? '请选择' : this.placeholder
     },
@@ -237,16 +295,31 @@ export default {
           this.queryParam.vo.mobilephone = ''
           this.queryParam.vo.name = ''
 
-          fn = getAllUser
+          fn = getAllOrgUser
           break
+        case 'tocity':
+          this.preFn = orderManageApi.getRecently('5')
+
+        case 'fromcity':
+          if (this.type !== 'tocity') {
+            this.preFn = orderManageApi.getRecently('4')
+          }
         case 'city':
+          if (this.preFn) {
+            this.preFn.then(res => {
+              this.preData = this.formatToCityData(res.data || [])
+            })
+          }
           this.queryParam = ''
           fn = getCityInfo
           this.customCss = 'query-input-city'
           this.showlabel = this.label || 'last'
+          // 判断是否需要显示最近输入的记录
+          this.lastinput = this.showlastinput === 'nonono' ? true : this.showlastinput
           break
         case 'carrier':
           fn = getAllCarrier
+          this.queryParam.vo.orgid = this.getOrgid
           break
         case 'sender':
           this.queryParam.vo.customerType = 1
@@ -308,15 +381,35 @@ export default {
           this.queryParam = '2'
           fn = orderManageApi.getRecently
           break
+        /* case 'fromcity':
+          this.canchangeparam = false
+          this.lastQuery = ''
+          this.queryParam = '4'
+          fn = orderManageApi.getRecently
+          break
+        case 'tocity':
+          this.canchangeparam = false
+          this.lastQuery = ''
+          this.queryParam = '5'
+          fn = orderManageApi.getRecently
+          break */
         case 'remark':
           this.canchangeparam = false
           this.lastQuery = ''
-          this.queryParam = ''
+          this.queryParam = '3'
           fn = orderManageApi.getRemarkList
+          break
+        case 'payway':
+          this.canchangeparam = false
+          this.queryParam = {}
+          this.queryParam.orgId = this.getOrgid
+          // this.queryParam.vo.orgId = this.getOrgid
+          // this.queryParam.vo.status = 0
+          fn = postTmsFfinancialwayList2
           break
       }
       // 设定pageSize参数
-      if (typeof this.queryParam === 'object') {
+      if (typeof this.queryParam === 'object' && this.canchangeparam) {
         this.queryParam.pageSize = this.count
         // 处理传过来的额外参数
         if (typeof this.queryParam.vo === 'object') {
@@ -338,6 +431,8 @@ export default {
   },
   data() {
     return {
+      preFn: '',
+      preData: [], // 用来组合数据用的
       showlabel: '',
       customCss: '',
       handlevalue: '',
@@ -353,7 +448,7 @@ export default {
       },
       canchangeparam: true,
       // 缓存最近一次的请求数据
-      lastQuery: '*',
+      lastQuery: '\\*',
       lastRequest: []
     }
   },
@@ -362,26 +457,63 @@ export default {
     this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
 
+    if (this.value || this.name) {
+      this.initFindItem()
+    }
+
     this.initEvent()
   },
   methods: {
     initEvent() {
       eventBus.$on('closepopbox', () => {
-        console.log('closepopbox querySelect:')
-        this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose()
+        if (this.$refs.myautocomplete) {
+          this.$refs.myautocomplete.close ? this.$refs.myautocomplete.close() : this.$refs.myautocomplete.handleClose ? this.$refs.myautocomplete.handleClose() : ''
+        }
       })
+    },
+    initFindItem() {
+      this.initData().then(res => {
+        if (this.value) {
+          // 遍历已有的数据
+          // 假如请求的数据没有包含这个数据呢？
+          this.findValue(this.value)
+        }
+        if (this.name) {
+          this.findName(this.name)
+        }
+      })
+    },
+    findItem(value, name) {
+      if (this.inited) {
+        let isfind = false
+        this.allData.map(el => {
+          if (el[name] === value) {
+            this.handlevalue = el[this.showkey]
+            isfind = true
+          }
+        })
+        // 当查找不到时，回显到输入框
+        this.handlevalue = !isfind ? value + '' : this.handlevalue
+      } else {
+        this.initFindItem()
+      }
+    },
+    findName(value) {
+      this.findItem(value, this.showkey)
+    },
+    findValue(value) {
+      this.findItem(value, this.valuekey)
     },
     initData() {
       if (!this.inited) {
         this.inited = true
         // 判断是否需要每次都请求
-        if (!this.remote) {
-          this.fetchFn().then(data => {
-            this.allData = data
-            this.searchData = data
-          })
-        }
+        return this.fetchFn().then(data => {
+          this.allData = data
+          this.searchData = data
+        })
       }
+      return Promise.resolve([])
     },
     // 高亮城市选择项
     highLightCity(item, ishightlight) {
@@ -394,6 +526,7 @@ export default {
       }
     },
     setHightLight(str, key) {
+      str = str || ''
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
     highLight(item, key) {
@@ -404,7 +537,7 @@ export default {
       }
     },
     formatList(arr) {
-      if (this.type === 'city') {
+      if (this.type.indexOf('city') !== -1) {
         arr = arr.map(el => {
           const addr = el.longAddr.split(',')
           el.last = addr[2] || addr[1] || addr[0]
@@ -413,16 +546,39 @@ export default {
       }
       return arr
     },
+    formatToCityData(arr) {
+      return arr.map((el, index) => {
+        const arr = el.value.split(',')
+        const obj = {
+          id: index,
+          province: arr[0] || '',
+          city: arr[1] || '',
+          area: arr[2] || '',
+          longAddr: el.value
+        }
+        return obj
+      })
+    },
     fetchFn() {
       return this.remoteFn(this.queryParam).then(res => {
         const data = res.data ? res.data : res
-        const list = (data.list ? data.list : data) || []
+        let list = (data.list ? data.list : data) || []
+        list = Array.isArray(list) ? list : []
+        // 针对最近记录输入控件的一些判断
+        if (this.preData && this.preData.length && !this._lastQuery) {
+          // 如果没有输入任何值，则显示最近记录（假如有）
+          list = this.preData
+        }
+        /* if (this.preData && this.preData.length) {
+          list = this.preData.concat(list)
+        } */
         return this.formatList(list)
       })
     },
     querySearch(queryString = '', cb = () => {}) {
       // 缓存最近一次请求数据
       // 如果设定了不修改参数，则不缓存记录
+      this._lastQuery = queryString
       if (queryString === this.lastQuery && this.canchangeparam) {
         cb(this.lastRequest)
       } else {
@@ -440,6 +596,9 @@ export default {
             // 如果有自定义的搜索函数，则调用其进行判断
           if (typeof this.searchFn === 'function') {
             return this.searchFn(el, queryString)
+          }
+          if (queryString === '') {
+            return true
           }
             // 字符串  布尔值 空值 数值
             // 模糊匹配 全等于
@@ -466,7 +625,6 @@ export default {
             this.lastRequest = this.allData.filter(searchFunction)
           }
 
-          console.log('this.allData, this.lastRequest:', this.allData, this.lastRequest)
           cb(this.lastRequest)
         }
       }
@@ -481,7 +639,7 @@ export default {
         info = info[0] || old
       }
 
-      this.$emit('input', info[this.valuekey] || info || '')
+      this.$emit('input', info ? (info[this.valuekey] || info.value || info) : '')
 
       this.$emit('change', info)
     }
@@ -493,6 +651,9 @@ export default {
   .highlight{
     font-style: normal;
     color: #f00;
+  }
+  &.el-autocomplete-suggestion li.highlighted, &.el-autocomplete-suggestion li:hover{
+    background: rgb(203,225,247);
   }
 }
 .query-input-customer, .query-input-city{
@@ -509,24 +670,24 @@ export default {
       text-overflow: ellipsis;
       min-height: 28px;
     }
-    
+
   }
   .query-input-customer-org{
-    width: 60px;
+    width: 100px;
     border-right: 1px solid #ddd;
   }
   .query-input-customer-name{
-    width: 80px;
+    width: 100px;
     border-right: 1px solid #ddd;
     padding-left: 5px;
   }
   .query-input-customer-mobile{
-    width: 85px;
+    width: 100px;
     border-right: 1px solid #ddd;
     padding-left: 5px;
   }
   .query-input-customer-addr{
-    min-width: 137px;
+    min-width: 200px;
     padding-left: 5px;
   }
 }

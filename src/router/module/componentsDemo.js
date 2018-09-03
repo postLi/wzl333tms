@@ -7,6 +7,16 @@ export default {
   hidden: true,
   children: [
     {
+      path: '/components/utils',
+      name: '工具类函数',
+      component: _import('componentsDemo/utils')
+    },
+    {
+      path: '/components/events',
+      name: '全局事件',
+      component: _import('componentsDemo/events')
+    },
+    {
       path: '/components/dirctive',
       name: '自定义指令',
       component: _import('componentsDemo/dirctive')
@@ -55,6 +65,21 @@ export default {
       path: '/components/querySelect',
       name: '下拉框查询',
       component: _import('componentsDemo/querySelect')
+    },
+    {
+      path: '/components/tableSetup',
+      name: '表格设置',
+      component: _import('componentsDemo/tableSetup')
+    },
+    {
+      path: '/components/print',
+      name: '打印导出',
+      component: _import('componentsDemo/print')
+    },
+    {
+      path: '/components/import',
+      name: '批量导入',
+      component: _import('componentsDemo/import')
     }
   ]
 }

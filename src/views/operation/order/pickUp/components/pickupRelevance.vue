@@ -28,7 +28,7 @@
             height="160"
             tooltip-effect="dark"
             :default-sort = "{prop: 'id', order: 'ascending'}"
-            style="width: 100%">
+            style="width: 560px">
             <el-table-column
               fixed
               sortable
@@ -46,14 +46,14 @@
               fixed
               sortable
               prop="shipGoodsSn"
-              width="150"
+              width="160"
               label="货号">
             </el-table-column>
             <el-table-column
               fixed
               sortable
               prop="pickupFee"
-              width="150"
+              width="160"
               label="实际提货费">
             </el-table-column>
           </el-table>
@@ -86,7 +86,7 @@
   import { REGEX } from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
+  import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
 
   export default {
     components: {
@@ -106,92 +106,90 @@
         type: Object,
         default: false
       },
-      createrId: [Number,String]
+      createrId: [Number, String]
     },
     data() {
       let hasOne = false
-      let validateShipNum = (rule,value,callback) =>{
-        if(this.formInline.shipSn ==='' && this.formInline.shipGoodsSn ===''){
+      const validateShipNum = (rule, value, callback) => {
+        if (this.formInline.shipSn === '' && this.formInline.shipGoodsSn === '') {
           hasOne = false
         } else {
           hasOne = true
         }
-        if(!hasOne){
-          console.log(value, hasOne, this.formInline.shipSn, this.formInline.shipGoodsSn)
+        if (!hasOne) {
           callback(new Error('运单号或货号必填其中一项'))
-        }
-        else{
+        }      else {
           callback()
         }
-
-      }
+    }
 
       return {
         selected: [],
-        rules:{
-          shipSn:[
-            { validator:validateShipNum, trigger: ['blur','change'] }
+        rules: {
+          shipSn: [
+            { validator: validateShipNum, trigger: 'blur' }
           ],
-          shipGoodsSn:[
-            { validator:validateShipNum, trigger: ['blur','change']}
+          shipGoodsSn: [
+            { validator: validateShipNum, trigger: 'blur' }
           ]
         },
-        formLabelWidth:'90',
+        formLabelWidth: '90',
         usersArr: [],
         checked1: true,
         popTitle: '关联运单',
-        loading:false,
+        loading: false,
         formInline: {
           shipSn: '',
           shipGoodsSn: '',
           pickupFee: ''
         },
         getMentInfo:
-          {
-            pickupBatchNumber:'',
-            truckFee:'',//派车费用
-            truckIdNumber:'',//车牌
-            driverName:''//司机姓名
-          },
-        sendId:{
-          pickupId:'',
-          shipId:'',
-          pickupFee:''
+        {
+          pickupBatchNumber: '',
+          truckFee: '', // 派车费用
+          truckIdNumber: '', // 车牌
+          driverName: ''// 司机姓名
+        },
+        sendId: {
+          pickupId: '',
+          shipId: '',
+          pickupFee: ''
         }
       }
     },
     computed: {
       isShow: {
-        get(){
+        get() {
           return this.popVisible
         },
-        set(){
+        set() {
         }
       }
     },
     watch: {
-      dotInfo (newVal) {
+      dotInfo(newVal) {
         this.infoData(this.dotInfo)
       },
-      popVisible (newVal) {
+      popVisible(newVal) {
         this.fetchData()
-      },
+      }
     },
     mounted() {
-      if(this.popVisible){
+      if (this.popVisible) {
         this.sendId.pickupId = this.dotInfo.id
       }
     },
     methods: {
-      infoData(item){
+      infoData(item) {
         this.getMentInfo.pickupBatchNumber = item.pickupBatchNumber
         this.getMentInfo.driverName = item.driverName
+        this.getMentInfo.truckIdNumber = item.truckIdNumber
         this.getMentInfo.getMentInfo = item.getMentInfo
         this.getMentInfo.truckFee = item.truckFee
         this.sendId.pickupId = item.id
       },
-      search (item) {
-        return item.pickupBatchNumber ? false : true
+      search(item) {
+        return !item.pickupBatchNumber
       },
       fetchFindByShipSnOrGoodSn() {
         this.loading = true
@@ -203,38 +201,46 @@
       fetchData() {
         this.fetchFindByShipSnOrGoodSn()
       },
-      getShipSn(order){
-        if(order){
+      getShipSn(order) {
+        if (order) {
           this.formInline.shipGoodsSn = order.shipGoodsSn
           this.sendId.shipId = order.id
         }
       },
-      getShipGoodsSn(order){
-        if(order){
+      getShipGoodsSn(order) {
+        if (order) {
           this.formInline.shipSn = order.shipSn
           this.sendId.shipId = order.id
         }
       },
-      closeMe (done) {
+      closeMe(done) {
         this.reset()
-        this.$emit('update:popVisible', false);
-        if(typeof done === 'function'){
+        this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
           done()
         }
       },
-      reset(){
+      reset() {
+        // this.formInline = this.setObject(this.formInline)
+        this.formInline = Object.assign({}, this.formInline)
+
         this.formInline.shipSn = ''
         this.formInline.shipGoodsSn = ''
         this.formInline.pickupFee = ''
       },
-
+      setObject(obj1, obj2) {
+        for (var i in obj1) {
+          obj1[i] = obj2 ? obj2[i] : ''
+        }
+        return obj1
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true
             this.sendId.pickupFee = this.formInline.pickupFee
-            let pickupFee =this.sendId.pickupFee || ''
-            let promiseObj = putRelevancyShip(this.sendId.pickupId,this.sendId.shipId,pickupFee)
+            const pickupFee = this.sendId.pickupFee || ''
+            const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
 
             promiseObj.then(res => {
               this.loading = false
@@ -245,54 +251,50 @@
               delete this.sendId.shipId
               this.fetchData()
               this.reset()
+              this.$emit('success')
             }).catch(err => {
+              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false
             })
           } else {
-            return false;
-          }
-        });
-      },
-      removeList(){
-        if(!this.selected.length){
+            return false
+        }
+        })
+    },
+      removeList() {
+        if (!this.selected.length) {
           this.$message({
             message: '请选择要操作的列表项~',
             type: 'warning'
           })
           return false
-        }else{
-          if(this.selected.length>1){
+        }else {
+          if (this.selected.length > 1) {
             this.$message({
               message: '每次只能选择单条数据~',
               type: 'warning'
             })
             return false
-          }
-          else{
-            let _this = this
-            console.log(this.selected[0].id);
-            console.log(this.selected[0].shipId);
-            let promiseObj = putRremoveShip(this.selected[0].id,this.selected[0].shipId)
+          }        else {
+            const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
             promiseObj.then(res => {
               this.loading = false
-              this.$alert('操作成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.fetchData()
-                }
-              });
-            }).catch(err => {
+              this.$message.success("保存成功")
+              this.fetchData()
+              this.$emit('success')
+          }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false
             })
           }
         }
       },
-      clickDetails(row, event, column){
+      clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
       },
-      getSelection (selection) {
+      getSelection(selection) {
         this.selected = selection
-      },
+      }
     }
   }
 </script>
@@ -301,12 +303,12 @@
   .pick-maintain .pickpopDepMain{
     top: 29%;
     bottom: auto;
-    min-width: 580px;
-    max-width:  580px;
+    min-width: 600px;
+    max-width:  600px;
 
   }
   .pick-maintain .popRight-content{
-    padding: 20px 0 5px 10px;
+    padding: 5px 10px 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{
       margin-right: -8px;
@@ -332,6 +334,17 @@
       font-size: 14px;
 
     }
+    .el-input.is-disabled {
+      .el-input__inner {
+
+        background-color: #fff;
+        /*border-color: #e4e7ed;*/
+        color: #606266;
+        /*cursor: not-allowed;*/
+      }
+
+    }
+
   }
 
   .pick_center{

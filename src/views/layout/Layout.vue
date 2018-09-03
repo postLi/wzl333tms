@@ -2,9 +2,11 @@
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <div class="navbar-wrapper">
         <navbar></navbar>
+        <img src="../../assets/png/ce.png" v-show="otherinfo.isTest===1" class="navbar-wrapper-ce">
     </div>
     <div class="sidebar-wrapper">
       <sidebar></sidebar>
+
     </div>
     <div class="main-container">
       <TagsView></TagsView>
@@ -13,12 +15,14 @@
       </div>
     </div>
     <LockScreen></LockScreen>
-    <el-dialog top="0" width="90%" :close-on-click-modal="false" class="showDetailPop" v-if="showDetail" title="订单详情" :visible.sync="showDetailVisible">
+    <el-dialog top="0" width="90%" :close-on-click-modal="false" class="showDetailPop" v-if="showDetail" title="运单详情" :visible.sync="showDetailVisible">
         <OrderDetail :ispop="true" :orderid="orderid" />
     </el-dialog>
-    <el-dialog top="0" :close-on-click-modal="false" width="90%" class="showDetailPop" v-if="showCreate" title="创建订单" :visible.sync="showCreateVisible">
+    <el-dialog top="0" :close-on-click-modal="false" width="90%" class="showDetailPop" v-if="showCreate" title="创建运单" :visible.sync="showCreateVisible">
         <CreateOrder :ispop="true" :orderobj="orderobj" />
     </el-dialog>
+    <!-- <iframe src="http://192.168.1.170/member/autologin.php" frameborder="0" style="width:0;height:0;"></iframe> -->
+    <setApiUrl />
   </div>
 </template>
 
@@ -29,6 +33,7 @@ import LockScreen from '@/components/LockScreen/index'
 import OrderDetail from '@/views/operation/order/orderDetail/index'
 import CreateOrder from '@/views/operation/order/createOrder/main'
 import { Navbar, Sidebar, AppMain, TagsView } from '@/views/layout'
+import setApiUrl from '@/components/changeApiUrl/index'
 
 export default {
   name: 'layout',
@@ -39,24 +44,25 @@ export default {
     TagsView,
     LockScreen,
     CreateOrder,
-    OrderDetail
+    OrderDetail,
+    setApiUrl
   },
-  data () {
-      return {
-          theRefreshKey: '',
-          orderid: '',
-          orderobj: {
-            orderid: '',
-            batchid: '',
-            preid: '',
-            ordernum: 1,
-            batchobj: {}
-          },
-          showDetail: false,
-          showCreate: false,
-          showDetailVisible: false,
-          showCreateVisible: false
-      }
+  data() {
+    return {
+      theRefreshKey: '',
+      orderid: '',
+      orderobj: {
+        orderid: '',
+        batchid: '',
+        preid: '',
+        ordernum: 1,
+        batchobj: {}
+      },
+      showDetail: false,
+      showCreate: false,
+      showDetailVisible: false,
+      showCreateVisible: false
+    }
   },
   computed: {
     sidebar() {
@@ -64,40 +70,45 @@ export default {
     }
   },
   mounted() {
-      this.eventBus.$on('showOrderDetail', (orderid) => {
+      // 通过标签打开的方式
+    this.eventBus.$on('showOrderDetail', (orderid, shipSn, isTab) => {
           // 避免重复触发的事件
-          if(!this.showDetailVisible){
-            console.log('showOrderDetail:', orderid)
-            this.orderid = orderid || ''
-            this.showDetail = true
-            this.showDetailVisible = true
-          }
-
-      })
-      this.eventBus.$on('hideOrderDetail', (orderid) => {
-          this.showDetailVisible = false
-      })
+      if (isTab) {
+        this.$router.push('/operation/order/orderDetail?orderid=' + orderid + '&tab=查看运单' + shipSn)
+        /* this.$router.push({ path: '/operation/order/orderDetail', query: {
+          orderid
+        }}) */
+      } else if (!this.showDetailVisible) {
+        console.log('showOrderDetail:', orderid)
+        this.orderid = orderid || ''
+        this.showDetail = true
+        this.showDetailVisible = true
+      }
+    })
+    this.eventBus.$on('hideOrderDetail', (orderid) => {
+      this.showDetailVisible = false
+    })
       // 如果传过来orderid，表示修改该订单
-      this.eventBus.$on('showCreateOrder', (orderobj) => {
+    this.eventBus.$on('showCreateOrder', (orderobj) => {
           // 避免重复触发的事件
-          if(!this.showCreateVisible){
-            let data = objectMerge2(this._orderobj, orderobj)
-            console.log('showCreateOrder:', orderobj, data)
-            this.orderobj = data
-            this.showCreate = true
-            this.showCreateVisible = true
-          }
-
-      })
-      this.eventBus.$on('hideCreateOrder', (orderid) => {
-          this.showCreateVisible = false
-      })
-      this._orderobj = objectMerge2({}, this.orderobj)
+      if (!this.showCreateVisible) {
+        const data = objectMerge2(this._orderobj, orderobj)
+        console.log('showCreateOrder:', orderobj, data)
+        this.orderobj = data
+        this.showCreate = true
+        this.showCreateVisible = true
+      }
+    })
+    this.eventBus.$on('hideCreateOrder', (orderid) => {
+      this.showCreateVisible = false
+    })
+    this._orderobj = objectMerge2({}, this.orderobj)
   },
   methods: {
-      refreshKey(){
-          this.theRefreshKey = Math.random()
-      }
+    refreshKey() {
+      this.theRefreshKey = Math.random()
+    }
+    
   }
 }
 </script>
@@ -175,6 +186,10 @@ export default {
             background: #373d41;
             z-index: 1009;
             min-width: 1180px;
+            .navbar-wrapper-ce{
+              height:46px;
+              vertical-align: middle;
+            }
         }
     }
 </style>

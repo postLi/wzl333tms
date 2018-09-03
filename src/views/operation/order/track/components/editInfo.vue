@@ -5,9 +5,11 @@
         批次号： {{info.batchNo}}
       </div>
       <div class="editInfoPop_content">
-        <el-tabs v-model="activeName" @tab-click="handleClick"  type="card">
+        <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
           <el-tab-pane label="批次详情" name="first">
-            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight"></Detail>
+            <Detail :info="info" :isShow="popVisible" class="animated fadeInRight" v-if="detailType==='detailShort'"></Detail>
+            <DetailArtery :info="info" :isShow="popVisible" class="animated fadeInRight" v-else-if="detailType==='detailArtery'"></DetailArtery>
+            <DetailDeliver :info="info" :isShow="popVisible" class="animated fadeInRight" v-else></DetailDeliver>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="info_box" v-loading="loading">
@@ -15,12 +17,12 @@
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
                 <el-col :span="3">操作网点</el-col>
-                <el-col :span="2">操作人</el-col>
-                <el-col :span="6">操作信息</el-col>
+                <el-col :span="4">操作人</el-col>
+                <el-col :span="8">操作信息</el-col>
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" v-for="(item, index) in trackDetail" :key="index">
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
                       <el-row class="stepItem">
@@ -31,14 +33,14 @@
                             <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
                           </template>
                         </el-col>
-                        <el-col :span="4" class="textcenter">
+                        <el-col :span="4" class="">
                           <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p> -->
                           <p>{{item.operatorTime }}</p>
                         </el-col>
-                        <el-col :span="3" class="textcenter">
+                        <el-col :span="3" class="">
                           <p>{{item.orgName}}</p>
                         </el-col>
-                         <el-col :span="4">
+                        <el-col :span="4">
                           <p>
                             <i class="track-human" v-if="item.addStatus===1"></i>
                             <i class="icon_blank" v-else></i> {{item.operatorUsername}}
@@ -50,9 +52,9 @@
                       </el-row>
                     </template>
                   </el-step>
-                  <el-step>
+                  <!--  <el-step>
                     <span slot="icon" class="location"></span>
-                  </el-step>
+                  </el-step> -->
                 </el-steps>
               </div>
             </div>
@@ -63,14 +65,14 @@
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootEdit">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
         <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
+          <el-input :maxlength="10" v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker v-model.trim="formModel.operatorTime" value-format="yyyy-MM-dd hh:mm:ss" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+          <el-input :maxlength="250" v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
@@ -92,12 +94,16 @@ import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
+import DetailArtery from './detailArtery'
+import DetailDeliver from './detailDeliver'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 import { getSystemTime } from '@/api/common'
 export default {
   components: {
     popRight,
-    Detail
+    Detail,
+    DetailArtery,
+    DetailDeliver
   },
   props: {
     popVisible: {
@@ -113,6 +119,10 @@ export default {
     info: {
       type: Object,
       default: {}
+    },
+    detailType: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -145,7 +155,12 @@ export default {
   },
   watch: {
     id() {},
-    info() {},
+    info(newVal) {
+      if (newVal) {
+        this.getDetail()
+        this.getSystemTime()
+      }
+    },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()
@@ -153,17 +168,12 @@ export default {
       }
     }
   },
-  mounted() {
-    if (this.popVisible) {
-      this.getDetail()
-    }
-  },
   methods: {
     getSystemTime() { // 获取系统时间
       if (!this.formModel.id) {
         getSystemTime().then(data => {
-          this.formModel.operatorTime = new Date(data.trim())
-        })
+            this.formModel.operatorTime = parseTime(data.trim())
+          })
           .catch(error => {
             this.$message({ type: 'error', message: '获取系统时间失败' })
           })
@@ -211,12 +221,12 @@ export default {
         type: 'warning'
       }).then(() => {
         return deleteTrack(item.id).then(data => {
-          this.$message({ type: 'success', message: '删除成功' })
-          this.getDetail()
-          this.resetForm()
-        })
+            this.$message({ type: 'success', message: '删除成功' })
+            this.getDetail()
+            this.resetForm()
+          })
           .catch(error => {
-            this.$message({ type: 'success', message: '删除失败' })
+            this.$message.error(error.errorInfo || error.text || '删除失败')
           })
       })
     },
@@ -229,19 +239,25 @@ export default {
       this.formModel.transferId = 0
       this.formModel.operatorTime = parseTime(this.formModel.operatorTime)
       return putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     addTrack() { // 添加跟踪信息
       console.log('添加')
       this.formModel.loadId = this.id
       return postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-      })
+          this.$message({ type: 'success', message: '添加成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     handleClick() { // 底部按钮区显示
       if (this.activeName === 'second') {
@@ -390,6 +406,9 @@ export default {
     .deletebtn {
       display: inline-block;
     }
+  }
+  .trackactive,
+  .firstactive {
     .typebox {
       background: url("../../../../../assets/png/track-active.png") no-repeat;
       color: #fff;
@@ -414,10 +433,10 @@ export default {
   .stepItem_title {
     color: #333;
     margin-top: 10px;
-    padding-left: 34px;
+    padding-left: 28px;
     height: 34px;
     .el-col {
-      text-align: center;
+      text-align: left;
     }
     .tracktype {
       text-align: left;
@@ -444,12 +463,12 @@ export default {
 }
 
 .stepFrom {
-  background-color:#f2f2f2;
-  box-shadow:-1px -1px 10px #bbb;
-  text-align:left;
-  padding:0 10px;
-  .el-form-item__content{
-    vertical-align:middle;
+  background-color: #f2f2f2;
+  box-shadow: -1px -1px 10px #bbb;
+  text-align: left;
+  padding: 0 10px;
+  .el-form-item__content {
+    vertical-align: middle;
   }
 }
 

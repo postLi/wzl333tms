@@ -1,17 +1,18 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content">
     <!-- 短驳到货 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')">短驳到车</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('repertory')">短驳入库</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')">取消到车</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')">取消入库</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printPaper')" plain>打印清单</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printList')" plain>打印批次</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('truck')" v-has:LOAD_DB_ARRIVE>短驳到车</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-document" plain @click="doAction('repertory')" v-has:LOAD_DB_REPERTORY>短驳入库</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelTruck')" v-has:LOAD_DB_CANCEL>取消到车</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')" v-has:LOAD_DB_CALCELREPE>取消入库</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printPaper')" plain v-has:LOAD_DB_PRINT2>打印清单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printList')" plain v-has:LOAD_DB_PRINTBATCH>打印批次</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_DB_EXPORT2>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark" :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
@@ -35,8 +36,8 @@
           <Pager :total="total" @change="handlePageChange" />
         </div>
       </div>
-      <!-- 在途跟踪 -->
-      <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess"></editInfo>
+      <!-- 批次详情 -->
+      <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" :type="'arrival'"></editInfo>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
@@ -50,6 +51,7 @@ import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     Pager,
@@ -81,133 +83,140 @@ export default {
           arriveOrgid: 0
         }
       },
-      tableColumn: [
-        {
-          label: "序号",
-          prop: "id",
-          width: "180",
-          fixed: true
-        },
-        {
-          label: "发货批次",
-          prop: "batchNo",
-          width: "110",
-          fixed: true
-        },
-        {
-          label: "批次状态",
-          prop: "bathStatusName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "车牌号",
-          prop: "truckIdNumber",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "司机",
-          prop: "dirverName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "司机电话",
-          prop: "dirverMobile",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "短驳时间",
-          prop: "loadTime",
-          width: "180",
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "目的网点",
-          prop: "endOrgName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "接收时间",
-          prop: "receivingTime",
-          width: "180",
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "短驳费",
-          prop: "shortFee",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "实到件数",
-          prop: "actualAmount",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "实到重量",
-          prop: "actualWeight",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "实到体积",
-          prop: "actualVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载总件数",
-          prop: "amountall",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载总重量",
-          prop: "weightall",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载总体积",
-          prop: "volumeall",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "重量装载率",
-          prop: "weightRate",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "体积装载率",
-          prop: "volumeRate",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "短驳经办人",
-          prop: "username",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "备注",
-          prop: "remark",
-          width: "120",
-          fixed: false
+      tableColumn: [{
+        label: '序号',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
+      },
+      {
+        label: '发货批次',
+        prop: 'batchNo',
+        width: '110',
+        fixed: true
+      },
+      {
+        label: '批次状态',
+        prop: 'bathStatusName',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '司机',
+        prop: 'dirverName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '短驳时间',
+        prop: 'departureTime',
+        width: '160',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '到达网点',
+        prop: 'endOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '接收时间',
+        prop: 'receivingTime',
+        width: '160',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '短驳费',
+        prop: 'shortFee',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '实到重量',
+        prop: 'actualWeight',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '实到体积',
+        prop: 'actualVolume',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '配载总件数',
+        prop: 'amountall',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '配载总重量',
+        prop: 'weightall',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '配载总体积',
+        prop: 'volumeall',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '重量装载率',
+        prop: 'weightRate',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '体积装载率',
+        prop: 'volumeRate',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '短驳经办人',
+        prop: 'username',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      }
       ]
     }
   },
@@ -220,21 +229,24 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-    this.getAllList()
+    // this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+    // this.getAllList()
     this.eventBus.$on('updateCurrentData')
   },
   methods: {
     getSearchParam(obj) { // 获取搜索框表单内容
-      this.searchQuery.vo = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
-      if (!this.searchQuery.vo.arriveOrgid) {
-        this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-      }
+      // if (obj.batchTypeId === 46) {
+      //   obj.batchTypeId = undefined
+      // }
+      this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
+      // if (!this.searchQuery.vo.arriveOrgid) {
+      //   this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
+      // }
       this.getAllList()
     },
     doAction(type) {
       let isWork = false
-      if (this.selected.length !== 1) {
+      if (this.selected.length !== 1 && type !== 'export' && type !== 'printList') {
         this.$message({
           message: '请选择一条数据~',
           type: 'warning'
@@ -246,13 +258,7 @@ export default {
       switch (type) {
         case 'truck': // 短驳到车
           if (isWork) {
-            this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.truck()
-            })
+            this.truck()
           }
           break
         case 'repertory': // 短驳入库
@@ -262,34 +268,30 @@ export default {
           break
         case 'chanelTruck': // 取消到车
           if (isWork) {
-            this.$confirm('此操作将取消到车, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.chanelTruck()
-            })
+            this.chanelTruck()
           }
           break
         case 'chanelRepertory': // 取消入库
           if (isWork) {
-            this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.chanelRepertory()
-            })
+            this.chanelRepertory()
           }
           break
         case 'printPaper':
           this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
           break
-        case 'printList':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'export': // 导出
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '短驳到货'
+          })
           break
-        case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'printList': // 打印
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.infoList,
+            columns: this.tableColumn,
+            name: '短驳到货'
+          })
           break
       }
     },
@@ -302,7 +304,7 @@ export default {
     closeSetupTable() {
       this.setupTableVisible = false
     },
-    clickDetails(row) { //勾选列 toggle
+    clickDetails(row) { // 勾选列 toggle
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) { // 获取列表勾选项
@@ -321,27 +323,32 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     truck() { // 短驳到车确认
-      let data = {}
+      const data = {}
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'typeId', 49) // 49为短驳到车，54为干线到车
       if (this.loadInfo.bathStatusName === '短驳中') {
-        postConfirmToCar(data).then(data => {
+        this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          postConfirmToCar(data).then(data => {
             this.$message({ type: 'success', message: '短驳到车操作成功' })
             this.getAllList()
             this.clearInfo()
           })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-            this.clearInfo()
-          })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text)
+              this.clearInfo()
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
         this.clearInfo()
       }
-
     },
     repertory() { // 短驳入库-打开弹出框
-      if (this.loadInfo.bathStatusName === '短驳中' || this.loadInfo.bathStatusName === '已到车') {
+      if (this.loadInfo.bathStatusName === '短驳中' || this.loadInfo.bathStatusName === '已到车' || this.loadInfo.bathStatusName === '部分入库') {
         this.setInfo()
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳入库' })
@@ -349,39 +356,50 @@ export default {
       }
     },
     chanelTruck() { // 取消到车
-      let data = {}
+      const data = {}
       this.$set(data, 'id', this.loadInfo.id)
       this.$set(data, 'loadType', 38) // 装载类型：38-短驳
       if (this.loadInfo.bathStatusName === '已到车') {
-        postCancelLoad(data).then(data => {
+        this.$confirm('此操作将取消到车, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          postCancelLoad(data).then(data => {
             this.$message({ type: 'success', message: '取消到车成功' })
             this.getAllList()
             this.clearInfo()
           })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-            this.clearInfo()
-          })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text)
+              this.clearInfo()
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消到车' })
         this.clearInfo()
       }
-
     },
     chanelRepertory() { // 取消入库
-      let data = {}
+      const data = {}
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       if (this.loadInfo.bathStatusName === '已入库') {
-        postCancelPut(data).then(data => {
+        this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          postCancelPut(data).then(data => {
             this.$message({ type: 'success', message: '取消入库成功' })
             this.getAllList()
             this.clearInfo()
           })
-          .catch(error => {
-            this.$message({ type: 'error', message: '操作失败' })
-            this.clearInfo()
-          })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text)
+              this.clearInfo()
+            })
+        })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许取消入库' })
         this.clearInfo()
@@ -389,6 +407,9 @@ export default {
     },
     getAllList() { // 获取短驳到货列表
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 46) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postLoadList(this.searchQuery).then(data => {
         if (data) {
           this.infoList = data.list
@@ -398,6 +419,9 @@ export default {
           this.loading = false
         }
       })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     closeMe() { // 关闭弹出框
       this.editInfoVisible = false

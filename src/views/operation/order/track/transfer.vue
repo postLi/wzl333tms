@@ -5,7 +5,7 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK4>在途跟踪</el-button>
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo" :key="tablekey">
@@ -88,9 +88,28 @@ export default {
           // truckIdNumber: ''
         }
       },
-      tableColumn: [{
+      tableColumn: [
+      {
+          label: "中转单号",
+          prop: "oddNumbers",
+          width: "140",
+          fixed: true
+        },
+      {
+          label: "运单号",
+          prop: "shipSn",
+          width: "120",
+          fixed: true
+        },
+        {
+          label: "运单状态",
+          prop: "shipStatusName",
+          width: "100",
+          fixed: true
+        },
+         {
           label: "开单网点",
-          prop: "shipFromOrgid",
+          prop: "shipFromOrgidName",
           width: "110"
         },
         {
@@ -108,21 +127,7 @@ export default {
           prop: "arrivalMobile",
           width: "120"
         },
-        {
-          label: "运单状态",
-          prop: "shipStatusName",
-          width: "120"
-        },
-        {
-          label: "运单号",
-          prop: "shipSn",
-          width: "120"
-        },
-        {
-          label: "中转单号",
-          prop: "oddNumbers",
-          width: "120"
-        },
+
         // {
         //   label: "中转批次",
         //   prop: "batchTypeId",
@@ -131,7 +136,7 @@ export default {
         {
           label: "开单时间",
           prop: "createTime",
-          width: "120",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -139,7 +144,7 @@ export default {
         {
           label: "中转时间",
           prop: "transferTime",
-          width: "120",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -417,6 +422,10 @@ export default {
     }
   },
   activated() {
+    this.editInfoVisible = false
+    if (this.$route.query.transfer) {
+      this.editInfoVisible = true
+    }
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     this.fetchList()
   },
@@ -432,14 +441,12 @@ export default {
     getSelection(list) {
       if (this.$route.query.transfer) {
         this.transferId = this.$route.query.transfer
-        console.log(this.transferId)
       } else {
         if (list.length === 1) {
           this.selectInfo = Object.assign([], list)
           this.isDisBtn = false
           // let tid = this.selectInfo[0].transferId
           this.transferId = this.selectInfo[0].transferId
-          console.log(this.transferId)
           this.trackInfo = Object.assign({}, this.selectInfo[0])
         } else if (list.length > 1) {
           this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
@@ -484,11 +491,15 @@ export default {
           this.loading = false
         }
       })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
+      })
       this.isTransferTrack()
     },
     isTransferTrack() {
       if (this.$route.query.transfer) {
         console.log('transfer', this.$route.query.transfer)
+        this.getSelection()
         this.setInfo()
       } else {
         this.closeMe()

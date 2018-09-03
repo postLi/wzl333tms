@@ -12,3 +12,262 @@ $dialogHeader_bgcolor: #e6e6e6;
     .el-transfer {}
   }
 }
+
+
+.tms_dialog_print {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  .showLabel {
+    color: #67C23A;
+  }
+  .hideLabel {
+    color: #F56C6C;
+  }
+  .el-dialog__header {
+    background-color: #409EFF;
+    .el-dialog__title {
+      color: #ffffff;
+    }
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #FFFFFF;
+    }
+  }
+  .el-dialog__body {
+    padding: 0;
+    height: calc(100% - 60px);
+    width: 100%;
+    background-color: #f9f9f9;
+  }
+  .el-dialog__footer {
+    background-color: $dialogHeader_bgcolor;
+  }
+  .print_aside {
+    background-color: #f2f2f2;
+    float: left;
+    width: 500px;
+    overflow: auto;
+    height: calc(100% - 48px;
+    );
+    position: relative;
+    top: 48px;
+    .print_aside_head {
+      position: fixed;
+      top: 54px;
+      left: 0;
+      padding: 0 20px;
+      line-height: 48px;
+      background-color: #ffffff;
+      display: block;
+      width: 500px;
+      height: 48px;
+      box-shadow: 1px 3px 10px #eee;
+    }
+    ul.print_aside_content {
+      background-color: #fbfbfb;
+      li {
+        padding: 0 10px 5px;
+        min-height: 48px;
+        line-height: 36px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        position: relative;
+        transition: 0.5s;
+        .el-switch {
+          position: absolute;
+          right: 40px;
+          top: 8px;
+          .el-switch__core {
+            width: 63px !important;
+          }
+          .el-switch__label * {
+            font-size: 10px;
+          }
+          .el-switch__label--right {
+            margin-left: -44px;
+            color: #fff;
+            z-index: 2;
+          }
+        }
+        .print_aside_content_itemSet {
+          position: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          width: 100%;
+          .el-form-item {
+            margin-bottom: 0;
+            width: 24%;
+            display: inline-block;
+          }
+          .el-input {
+            .el-input-group__append,
+            .el-input-group__prepend {
+              padding: 0 5px;
+            }
+          }
+        }
+      }
+    }
+    li:hover {
+      background-color: #dcdfe6;
+      transition: 0.1s;
+    }
+  }
+  .print_main {
+    padding: 48px 10px 10px 10px;
+    border: 1px solid #eee;
+    height: calc(100%);
+    overflow: auto;
+    position: relative;
+    text-align: center;
+    background-color: #eee;
+    .print_main_head {
+      position: fixed;
+      top: 54px;
+      left: 510px;
+      padding: 0 20px;
+      line-height: 48px; // background-color: #ffffff;
+      display: block;
+      width: calc(100% - 520px);
+      height: 48px;
+      box-shadow: 1px 3px 10px #eee;
+    }
+    .print_main_content {
+      margin: 20px auto 0;
+      background-color: #fff;
+      box-shadow: 1px 1px 20px #ddd;
+      display: block;
+      position: relative;
+      .previewBlock {
+        padding: 0;
+        display: block;
+        position: absolute;
+        background-color: rgba(64, 158, 255, 0.2);
+        border-radius: 3px;
+        color: #666;
+        box-shadow: 1px 1px 10px #87CEFA;
+        font-size: 14px;
+      }
+    }
+  }
+  .sortable-ghost {
+    border: 1px dashed #f00;
+    background: #ffe;
+  }
+}
+
+.tms_dialog_import {
+  .el-dialog__body {
+    min-height:350px;
+    max-height:500px;
+    height:100%;
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .import_result{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction: column;
+    overflow:auto;
+    p{
+      // padding:0 0 10px 0 ;
+    }
+  }
+  .bigIconBtn_success,
+  .bigIconBtn_primary {
+    padding: 40px 0;
+    cursor: pointer;
+    text-align: center;
+    i {
+      margin:10px auto;
+    }
+  }
+  .icon-export-btn,
+  .icon-import-btn {
+    display: block;
+    width: 70px;
+    height: 70px;
+  }
+  .icon-import-btn {
+    background-image: url('./assets/png/img-import.png');
+    background-repeat: no-repeat;
+  }
+  .icon-export-btn {
+    background-image: url('./assets/png/img-export.png');
+    background-repeat: no-repeat;
+  }
+  ul.importTips {
+    li {
+      text-align: left;
+      position: relative;
+      color: #999;
+      padding: 3px 0 3px 30px;
+      font-size: 14px;
+    }
+    li:nth-child(1):before {
+      content: '注：';
+      position: absolute;
+      left: 0px;
+      top: 3px;
+    }
+  }
+}
+
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
+}
+
+
+.tms_dialog_count{
+  .el-dialog__body{
+    padding: 15px;
+  }
+  .el-input__inner{
+    width: 200px;
+  }
+  // .el-range-editor--mini.el-input__inner{
+  //   width:200px;
+  // }
+  p{
+    margin-top:20px;
+    color:#999;
+  }
+}

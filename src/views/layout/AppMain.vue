@@ -1,12 +1,12 @@
 <template>
   <section class="app-main">
-    <transition name="fade" mode="out-in">
-      <!-- <keep-alive :include="cachedViews"> -->
-      <keep-alive>
-        <router-view :key="key"></router-view>
-        <!-- <router-view></router-view> -->
+    <!-- <transition name="fade" mode="out-in"> -->
+      <keep-alive :include="cachedViews">
+      <!-- <keep-alive> -->
+        <!-- <router-view :key="key"></router-view> -->
+        <router-view></router-view>
       </keep-alive>
-    </transition>
+    <!-- </transition> -->
   </section>
 </template>
 
@@ -20,6 +20,11 @@ export default {
     key() {
       // 暂时缓存这个
       return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
+    }
+  },
+  mounted () {
+    if (this.otherinfo.firstLogin === 1 ) { // 第一次登录的创建者要进入【系统检测页面】
+      this.$router.push({ path: '/checklist/index' })
     }
   }
 }

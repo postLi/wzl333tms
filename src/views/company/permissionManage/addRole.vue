@@ -14,8 +14,9 @@
                       type="textarea"
                       v-model="formInline.remark"
                       placeholder=""
+                      :maxlength="300"
                       >
-                      <!--:autosize="{ minRows: 2}"-->
+                      <!-- :autosize="{ minRows: 2}" -->
                     </el-input>
                   </el-form-item>
 
@@ -32,12 +33,15 @@
                   :props="defaultProps"
                 >
                   <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <span v-if="data.type=='0'">
+                    <span v-if="data.status===0">
                       <img src="../../../assets/icom/link.png" alt="">
-                      {{ node.label }}</span>
+                      {{ node.label }} <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()">
+                      {{ node.label }}
+                      </span>
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
-                      {{ node.label }}</span>
+                      {{ node.label }} <input type="text" :value="data.code" v-clipboard:copy='data.code' onmouseover="this.select()">
+                      </span>
                   </span>
                 </el-tree>
               </div>
@@ -56,12 +60,12 @@
   /**
    * 将多层级树结构展开未扁平数组
    */
-  function expandGroups (data) {
+  function expandGroups(data) {
     let res = []
     data.map(el => {
-      if(el.isSelected){
+      if (el.isSelected) {
         res.push(el.id)
-      } else if(el.children){
+      } else if (el.children) {
         res = res.concat(expandGroups(el.children))
       }
     })
@@ -69,8 +73,8 @@
   }
 
   import popRight from '@/components/PopRight/index'
-  import { postRoleInfo,putRoleInfo} from '@/api/company/permissionManage'
-  import {objectMerge2} from '@/utils/index'
+  import { postRoleInfo, putRoleInfo } from '@/api/company/permissionManage'
+  import { objectMerge2 } from '@/utils/index'
   export default {
     components: {
       popRight
@@ -78,53 +82,51 @@
     props: {
       popVisible: {
         type: Boolean,
-        default:false
+        default: false
       },
       isModify: {
         type: Boolean,
-        default:false
+        default: false
       },
       reference: {
         type: Boolean,
-        default:false
+        default: false
       },
       dotInfo: Array,
       theUser: Object,
-      createrId: [Number,String]
+      createrId: [Number, String]
     },
     watch: {
-      dotInfo (newVal) {
+      dotInfo(newVal) {
         this.treeData = this.dotInfo
         this.$refs.tree.setCheckedKeys(expandGroups(this.treeData))
       },
-      theUser (newVal) {
-        if(this.isModify) {
+      theUser(newVal) {
+        if (this.isModify) {
           this.popTitle = '修改角色'
-          this.formInline = objectMerge2(this.theUser)
+          this.formInline = objectMerge2(this.theUser || {})
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
-        if(this.reference){
-
+        if (this.reference) {
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
-        }
-        else{
+        } else {
           this.popTitle = '新增角色'
           this.formInline = {
             roleName: '',
             remark: '',
             menusId: '',
-            createrId : this.createrId
+            createrId: this.createrId
           }
         }
       },
-      reference(){
-        if(this.reference){
+      reference() {
+        if (this.reference) {
           this.formInline = {
             roleName: '',
             remark: '',
             menusId: this.theUser.id,
-            createrId : this.createrId
+            createrId: this.createrId
           }
           this.popTitle = '新增角色'
         }
@@ -132,10 +134,10 @@
     },
     computed: {
       isShow: {
-        get(){
+        get() {
           return this.popVisible
         },
-        set(){
+        set() {
 
         }
       }
@@ -152,13 +154,13 @@
         callback()
       }
       return {
-        rules:{
+        rules: {
           roleName: [
-            { required: true, message: '请输入角色名称', validator: roleName,trigger: 'blur' },
-            { max: 12, message: '最多可输入12个字符', trigger: 'blur' }
+            { required: true, message: '请输入角色名称', validator: roleName },
+            { max: 12, message: '最多可输入12个字符' }
           ],
           remarks: [
-            { validator: remarks,trigger: 'blur' },
+            { validator: remarks, trigger: 'blur' },
             { max: 250, message: '最多可输入250个字符', trigger: 'blur' }
           ]
         },
@@ -171,7 +173,7 @@
           roleName: '',
           remark: '',
           menusId: [],
-          createrId : this.createrId
+          createrId: this.createrId
         },
         popTitle: '新增角色',
         loading: false
@@ -181,49 +183,46 @@
       this.treeData = this.dotInfo
     },
     methods: {
-      closeMe(done){
+      closeMe(done) {
         this.$emit('close')
         this.$refs['formName'].resetFields()
-        if(typeof done === 'function'){
+        if (typeof done === 'function') {
           done()
         }
       },
       getCheckedNodes(formName) {
-        this.$refs[formName].validate((valid) =>{
-          if(valid){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
             this.loading = true
-            let getNodeId = this.$refs.tree.getCheckedNodes()
+            const getNodeId = this.$refs.tree.getCheckedNodes()
             let promiseObj
             this.formInline.menusId = getNodeId.map(el => {
               return el.id
             })
-            let data = Object.assign({},this.formInline)
-            if(this.isModify){
+            const data = Object.assign({}, this.formInline)
+            if (this.isModify) {
               promiseObj = putRoleInfo(data)
-            }else if(this.reference){
+            } else if (this.reference) {
               promiseObj = postRoleInfo(data)
-            }else{
+            } else {
               promiseObj = postRoleInfo(data)
             }
             promiseObj.then(res => {
               this.loading = false
-              this.$alert('操作成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.closeMe()
-                  this.$emit('success')
-                }
-              });
+              this.$message.success('保存成功')
+              this.closeMe()
+              this.$emit('success')
             }).catch(err => {
+              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false
             })
-          }else{
+          } else {
             return false
           }
         })
       }
     }
-  };
+  }
 
 </script>
 

@@ -6,15 +6,15 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -47,6 +47,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -82,44 +83,48 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
+      selectedList: [],
       selectListBatchNos: [],
       loading: false,
       setupTableVisible: false,
       tableColumn: [
-      // {
-      //     label: '序号',
-      //     prop: 'id',
-      //     width: '110',
-      //     fixed: true
-      //   },
+        {
+          label: '序号',
+          prop: 'id',
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },
         {
           label: '送货批次',
           prop: 'batchNo',
-          width: '150',
+          width: '130',
           fixed: true
         },
         {
           label: '结算状态',
           prop: 'statusName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '发车网点',
           prop: 'orgName',
-          width: "120",
+          width: '120',
           fixed: false
         },
         {
           label: '目的网点',
           prop: 'arriveOrgName',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '送货时间',
           prop: 'loadTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -128,55 +133,55 @@ export default {
         {
           label: '送货费',
           prop: 'fee',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '已结送货费',
           prop: 'paidFee',
-          width: '180',
+          width: '100',
           fixed: false
         },
         {
           label: '未结送货费',
           prop: 'unpaidFee',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '车牌号',
           prop: 'truckIdNumber',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '司机名称',
           prop: 'dirverName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '司机电话',
           prop: 'dirverMobile',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
           label: '送货件数',
           prop: 'loadAmountall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '送货重量',
           prop: 'loadWeightall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '送货体积',
           prop: 'loadVolumeall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -205,6 +210,7 @@ export default {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
     setTable() {},
@@ -214,18 +220,48 @@ export default {
           this.count()
           break
         case 'export':
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-送货费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-送货费'
+          })
           break
       }
     },
     count() {
+      let count = 0
+      if (this.selectedList.length !== 0) {
+        objectMerge2([], this.selectedList).forEach(e => {
+          objectMerge2([], this.selectedList).forEach(el => {
+            console.log(e.ascriptionOrgid, el.ascriptionOrgid)
+            if (e.ascriptionOrgid !== el.ascriptionOrgid) {
+              count++
+            }
+          })
+        })
+      }
+      if (count > 0) {
+        count = 0
+        this.$message({ type: 'warning', message: '不能同时结算两个不同的网点' })
+        return false
+      }
+      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点
+        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
+      }
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
+          tab: '送货费结算',
           currentPage: 'batchDeliver', // 本页面标识符
-          searchQuery: this.searchQuery, // 搜索项
-          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
       })
     },
@@ -237,10 +273,12 @@ export default {
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })
+      this.selectedList = list
       console.log(this.selectListBatchNos)
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {
       this.setupTableVisible = true

@@ -1,4 +1,5 @@
 .DS_Store
+.gitkeep
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -15,3 +16,4 @@ dist/
 .vscode
 .project
 /.history
+.cache

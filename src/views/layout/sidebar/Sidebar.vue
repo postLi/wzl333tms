@@ -7,6 +7,12 @@
       <SidebarMenuSearch :searchItem="sidebarRouters" />
       <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
       <sidebar-item ref="sidebaritem" :routes='sidebarRouters'></sidebar-item>
+      <div class="nologin">
+        <!-- <a :href="'http://192.168.1.157:9528/?access_token='+token">
+        <el-button size="large" type="primary">TMS系统</el-button></a><br> -->
+        <a :href="'http://member.56lines.cn/?from=28tms&access_token=' + token" v-has:CAPACITY_CENTER><el-button size="large" type="success">运力中心</el-button></a><br>
+        <!-- <a :href="'http://www.56lines.cn/member/loginbytoken.php?from=28tms&access_token='+token" v-has:WEBSITE_SYSTEM><el-button size="large" type="warning">官网系统</el-button></a> -->
+      </div>
       <div @mouseover="showSubnav" @mouseout="hideSubnav" class="subNavWrapper"></div>
   </div>
   
@@ -17,6 +23,7 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import SidebarMenuSearch from './SidebarMenuSearch'
 import Hamburger from '@/components/Hamburger'
+import { getToken } from '@/utils/auth'
 
 export default {
   components: { SidebarItem, Hamburger, SidebarMenuSearch },
@@ -27,14 +34,22 @@ export default {
       'permission_routers'
     ])
   },
+  data() {
+    return {
+      token: ''
+    }
+  },
+  mounted() {
+    this.token = getToken()
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },
-    showSubnav () {
+    showSubnav() {
       this.$refs.sidebaritem.clearTimer()
     },
-    hideSubnav () {
+    hideSubnav() {
       this.$refs.sidebaritem.hideSubNav()
     }
   }
@@ -108,5 +123,32 @@ export default {
     overflow: auto;
   }
 }
+.nologin{
+  position: absolute;
+  width: 168px;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  .el-button2{
+    margin-bottom: 10px;
+    width: 150px;
+  }
+  .el-button{
+    width: 100%;
+    height: 50px;
+    background-color: #002038;
+    border: 4px solid #000;
+    border-top-color: rgb(5,55,93);
+    border-right-color: rgb(5,55,93);
+    border-left-color: rgb(5,21,39);
+    border-bottom-color: rgb(5,21,39);
+    border-radius: 0;
+    font-size: 16px;
+    color: rgba(255,255,255,.65);
 
+    &:hover{
+      opacity: 1;
+    }
+  }
+}
 </style>

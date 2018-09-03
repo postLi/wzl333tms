@@ -7,7 +7,7 @@
 
     <el-table :key="tablekey"></el-table>
 
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
 
     //script
       import TableSetup from '@/components/tableSetup'
@@ -21,7 +21,7 @@
             tablekey: 0, // 初始化表格视图key
             tableColumn: [] // 后台接口获取到的列表数据
           }
-        }
+        },
         methods: {
           setTable() {
             this.setupTableVisible = true
@@ -36,12 +36,13 @@
         }
      }
   -->
-  <el-dialog title="表格设置" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
+  <el-dialog title="表格设置" :visible.sync="isShow" append-to-body :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog">
     <div class="tableSetup_warp">
       <!-- 左边列表 -->
       <div class="tableSetup_list">
         <div class="tableSetup_head">
-          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列 {{leftCheckLen}} / {{leftListLen}}</el-checkbox>
+          <div class="tableSetup_head_select">选择：{{leftCheckLen}}</div>
+          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列  {{leftListLen}} / {{columnListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchLeft" :fetch-suggestions="querySearchLeft" placeholder="请输入内容" @select="handleSearchLeft" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -75,7 +76,8 @@
       <!-- 右边列表 -->
       <div class="tableSetup_list">
         <div class="tableSetup_head">
-          <el-checkbox :indeterminate="isIndeterminateRight" v-model="checkAllRight" @change="handChangeAllRight">显示列 {{rightCheckLen}} / {{rightListLen}}</el-checkbox>
+          <div class="tableSetup_head_select">选择：{{rightCheckLen}}</div>
+          <el-checkbox :indeterminate="isIndeterminateRight" v-model="checkAllRight" @change="handChangeAllRight">显示列 {{rightListLen}} / {{columnListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchRight" :fetch-suggestions="querySearchRight" placeholder="请输入内容" @select="handleSearchRight" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -101,12 +103,12 @@
         </div>
         <div class="tableSetup_tips">
           <span>拖拽，可调整上下顺序。</span>
-          <br><span>列表最多只能显示50个字段。</span>
+          <br><span>列表最多只能显示{{maxLen}}个字段。</span>
         </div>
       </div>
     </div>
     <div slot="footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button type="primary" @click="submitForm()">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </el-dialog>
@@ -141,19 +143,26 @@ export default {
     }
   },
   data() {
+    const MAXLENGTH = 50
+    // 1.检查是否有默认隐藏项
+    // 2.当显示项超过50的归类到隐藏项
     const generateData = _ => { // 初始化左边列表
       const data = []
       if (this.columns.length > 0) {
+        let inx = 0
         this.columns.forEach((e, index) => {
-          if (!e.fixed) { // 除去固定列
-            data.push({
-              label: e.label,
-              key: index,
-              fixed: e.fixed,
-              prop: e.prop,
-              width: e.width,
-              slot: e.slot
-            })
+          if (e.hidden) {  // 默认隐藏列
+            const obj = objectMerge2(e)
+            obj.key = index
+            data.push(obj)
+          } else {
+            inx++
+          }
+          if (inx > MAXLENGTH) {
+            const obj = objectMerge2(e)
+            obj.key = index
+            obj.hidden = true
+            data.push(obj)
           }
         })
       }
@@ -162,37 +171,27 @@ export default {
     const generateRightData = _ => { // 初始化右边的列表
       const data = []
       if (this.columns.length > 0) {
+        let inx = 0
         this.columns.forEach((e, index) => {
-          if (e.fixed) { // 选择固定列
-            data.push({
-              label: e.label,
-              key: index,
-              fixed: e.fixed,
-              prop: e.prop,
-              slot: e.slot
-            })
+          if (!e.hidden && inx < MAXLENGTH) { // 默认显示列
+            inx++
+            const obj = objectMerge2(e)
+            obj.hidden = false
+            obj.key = index
+            data.push(obj)
           }
         })
       }
       return data
     }
-    const getleftListLen = _ => { // 计算左边列表的长度
-      let count = 0
-      this.columns.forEach(e => {
-        if (!e.fixed) {
-          count++
-        }
-      })
-      return count
-    }
-    const getRightListLen = _ => { // 计算右边列表的长度
-      let count = 0
-      this.columns.forEach(e => {
-        if (e.fixed) {
-          count++
-        }
-      })
-      return count
+    // 计算左边列表的数量
+    const getleftListLen = generateData().length
+    // 计算右边列表的数量
+    const getRightListLen = generateRightData().length
+    // 计算所有列的数量
+    // 为啥拿个数量都要函数返回
+    const getColumnListLen = _ => {
+      return this.columns.length
     }
     return {
       orgColumnData: generateData(),
@@ -210,13 +209,17 @@ export default {
       checkListRight: [],
       searchLeft: '',
       searchRight: '',
-      leftListLen: getleftListLen(),
-      rightListLen: getRightListLen(),
-      isCheck: true, // false-不可选择 true-可以选择,
-      maxLen: 50,
+      leftListLen: getleftListLen,
+      rightListLen: getRightListLen,
+      columnListLen: getColumnListLen(),
+      isCheck: true, // 判断显示列数是否超过50个，false-不可选择 true-可以选择,
+      maxLen: MAXLENGTH,
       rightCheckLen: 0,
       leftCheckLen: 0
     }
+  },
+  mounted() {
+    this.submitForm() // 打开页面就开启表格设置
   },
   methods: {
     sort(array) { // 从小到大排序
@@ -235,8 +238,8 @@ export default {
       }
     },
     checkRightLen() { // 判断右边列表是否超过50个字段
-      if (this.showColumnData.length > 50) {
-        this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
+      if (this.showColumnData.length > this.maxLen) {
+        this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         this.isCheck = true
       } else {
         this.isCheck = false
@@ -246,20 +249,25 @@ export default {
     setColumnLen() { // 更新数据
       this.leftListLen = this.columnData.length
       this.rightListLen = this.showColumnData.length
-      this.orgShowColumnData = objectMerge2([], this.showColumnData)
-      this.orgColumnData = objectMerge2([], this.columnData)
+      // this.orgShowColumnData = objectMerge2([], this.showColumnData)
+      // this.orgColumnData = objectMerge2([], this.columnData)
     },
     handChangeAllLeft(val) { // 左边列表全选
       this.checkListLeft = val ? Object.assign([], this.columnData) : []
+      // 全选时更新数量
+      // 或许用个计算属性会更好，不必手动维护？
+      this.leftCheckLen = this.checkListLeft.length
       this.isIndeterminateLeft = false
     },
     handChangeAllRight(val) { // 右边列表全选
       this.checkListRight = val ? Object.assign([], this.showColumnData) : []
+      // 全选时更新数量显示
+      this.rightCheckLen = this.checkListRight.length
       this.isIndeterminateRight = false
     },
     goRight() { // 将隐藏列勾选的项转移到显示列（左边->右边）
-      if (this.checkListLeft.length + this.rightListLen > this.maxLen || this.rightListLen > this.maxLen - 1) {
-        this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
+      if ((this.checkListLeft.length + this.rightListLen > this.maxLen) || (this.rightListLen > this.maxLen - 1)) {
+        this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         return false
       }
       this.columnData = this.columnData.filter(el => {
@@ -270,6 +278,14 @@ export default {
           return false
         }
       })
+      this.orgColumnData = this.orgColumnData.filter(el => {
+        if (this.checkListLeft.indexOf(el) === -1) {
+          return true
+        } else {
+          this.orgShowColumnData.push(el)
+          return false
+        }
+      })
       this.checkListLeft = [] // 清空左边勾选列表
       this.setColumnLen()
       this.leftCheckLen = 0
@@ -277,9 +293,14 @@ export default {
     goLeft() { // 将显示列勾选的项转移到隐藏列（右边->左边）
       this.checkListRight.forEach((e, index) => {
         this.columnData.push(e) // 将右边勾选的数据项返回到左边
-        let item = this.showColumnData.indexOf(e)
+        this.orgColumnData.push(e) // 搜索源数据
+        const item = this.showColumnData.indexOf(e)
         if (item !== -1) { // 源数据减去被穿梭的数据
           this.showColumnData.splice(item, 1)
+        }
+        const orgItem = this.orgShowColumnData.indexOf(e)
+        if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+          this.orgShowColumnData.splice(item, 1)
         }
       })
       this.sort(this.columnData)
@@ -289,16 +310,20 @@ export default {
     },
     dbCheckItemLeft(row, index, event) { // 双击-左边列表选择项（左边->右边）
       if (this.rightListLen > this.maxLen - 1) {
-        this.$message({ type: 'warning', message: '列表最多只能显示50个字段。' })
+        this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         return false
       }
       this.showColumnData.push(row)
+      this.orgShowColumnData.push(row)
       this.columnData.splice(index, 1)
+      this.orgColumnData.splice(index, 1)
       this.setColumnLen()
     },
     dbCheckItemRight(row, index, event) { // 双击-右边列表选择项（右边->左边）
       this.columnData.push(row)
+      this.orgColumnData.push(row)
       this.showColumnData.splice(index, 1)
+      this.orgShowColumnData.splice(index, 1)
       this.setColumnLen()
       this.sort(this.columnData)
     },
@@ -312,11 +337,12 @@ export default {
       this.searchLeft = queryString
       if (queryString.label === undefined) {
         if (!this.searchLeft) { // 如果搜索框为空则恢复左边列表
-          this.columnData = objectMerge2([], this.orgColumnData)
+          this.columnData = Object.assign([], this.orgColumnData)
+          console.log('querySearchLeft', queryString.label, this.orgColumnData)
         }
       }
-      let col = this.orgColumnData
-      let results = queryString ? col.filter(this.createFilter(queryString)) : col
+      const col = Object.assign([], this.orgColumnData)
+      const results = queryString ? col.filter(this.createFilter(queryString)) : col
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -324,11 +350,11 @@ export default {
       this.searchRight = queryString
       if (queryString.label === undefined) {
         if (!this.searchRight) { // 如果搜索框为空则恢复右边列表
-          this.showColumnData = objectMerge2([], this.orgShowColumnData)
+          this.showColumnData = Object.assign([], this.orgShowColumnData)
         }
       }
-      let col = this.orgShowColumnData
-      let results = queryString ? col.filter(this.createFilter(queryString)) : col
+      const col = Object.assign([], this.orgShowColumnData)
+      const results = queryString ? col.filter(this.createFilter(queryString)) : col
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -368,11 +394,12 @@ export default {
       }
     },
     handleChange(value, direction, movedKeys) {
-      this.rightList = objectMerge2([], value)
+      this.rightList = Object.assign([], value)
     },
     handleSwitch(obj) {},
-    submitForm(formName) {
-      let data = Object.assign([], this.showColumnData)
+    submitForm() {
+      console.log('表格设置开启中')
+      const data = Object.assign([], this.showColumnData)
       this.$emit('success', data)
       this.listKey = Math.random()
       this.closeMe()
@@ -428,9 +455,16 @@ export default {
     }
 
     .tableSetup_head {
+      width:100%;
       background-color: #eee;
       padding: 10px 10px 5px 10px;
       box-shadow: 1px 3px 10px #eee;
+      position:relative;
+      .tableSetup_head_select{
+        position:absolute;
+        right:10px;
+        top:10px;
+      }
     }
     .tableSetup_content {
       overflow: auto;

@@ -1,62 +1,62 @@
 <template>
   <div class="relation-per" v-loading="loading">
-  <pop-right :title='popTitle' :isShow="popRelatVisible" @close="closeMe" class='addRelationPop'>
-    <template class='addRelationPop-content' slot="content">
-          <el-form  ref="formName"  class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-            <table>
-              <thead>
-              <tr>
-                <th>角色</th>
-                <th>员工</th>
-                <th>手机号码</th>
-              </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <el-input
-                      v-model="inputInfo.roleName"
-                      clearable
-                      disabled>
-                    </el-input>
-                  </td>
-                    <el-autocomplete
-                      popper-class="my-autocomplete"
-                     v-model="selectInfo.name"
-                      :fetch-suggestions="querySearch"
-                      placeholder="请选择员工~"
-                      @select="handleSelect">
-                      <i
-                        class="el-icon-edit el-input__icon"
-                        @click="handleIconClick">
-                      </i>
-                      <template slot-scope="{ item }">
-                        <div class="name">{{ item.name }}</div>
-                      </template>
-                    </el-autocomplete>
-                  <td>
-                    <el-input
-                      placeholder=""
-                      v-model="selectInfo.mobilephone"
-                      disabled >
-                    </el-input>
-                  </td>
-                </tr>
-              </tbody>
+    <pop-right :title='popTitle' :isShow="popRelatVisible" @close="closeMe" class='addRelationPop'>
+      <template class='addRelationPop-content' slot="content">
+        <el-form ref="formName" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+          <table>
+            <thead>
+            <tr>
+              <th>角色</th>
+              <th>员工</th>
+              <th>手机号码</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <el-input
+                  v-model="inputInfo.roleName"
+                  clearable
+                  disabled>
+                </el-input>
+              </td>
+              <el-autocomplete
+                popper-class="my-autocomplete"
+                v-model="selectInfo.name"
+                :fetch-suggestions="querySearch"
+                placeholder="请选择员工~"
+                @select="handleSelect">
+                <i
+                  class="el-icon-edit el-input__icon"
+                  @click="handleIconClick">
+                </i>
+                <template slot-scope="{ item }">
+                  <div class="name">{{ item.name }}</div>
+                </template>
+              </el-autocomplete>
+              <td>
+                <el-input
+                  placeholder=""
+                  v-model="selectInfo.mobilephone"
+                  disabled>
+                </el-input>
+              </td>
+            </tr>
+            </tbody>
 
-            </table>
-          </el-form>
-    </template>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="submitForm('formName')">保存</el-button>
-            <el-button @click="closeMe">取 消</el-button>
-          </div>
-  </pop-right>
+          </table>
+        </el-form>
+      </template>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm('formName')">保存</el-button>
+        <el-button @click="closeMe">取 消</el-button>
+      </div>
+    </pop-right>
   </div>
 </template>
 
 <script>
-  import { putEmployeerAuth} from '@/api/company/employeeManage'
+  import {putEmployeerAuth} from '@/api/company/employeeManage'
   import popRight from '@/components/PopRight/index'
 
   export default {
@@ -65,27 +65,27 @@
     },
     props: {
       popRelatVisible: {
-        type:Boolean,
-        default:false
+        type: Boolean,
+        default: false
       },
       dotInfo: Object,
-      thePerAllUserInfo: [Object,Array],
+      thePerAllUserInfo: [Object, Array],
     },
     computed: {
       isShow: {
-        get(){
+        get() {
           return this.popRelatVisible
         },
-        set(){
+        set() {
 
         }
       }
     },
     watch: {
-      dotInfo (newVal) {
+      dotInfo(newVal) {
         this.inputInfo = this.dotInfo
       },
-      thePerAllUserInfo (newVal) {
+      thePerAllUserInfo(newVal) {
         this.resInfo = this.thePerAllUserInfo
       }
     },
@@ -93,20 +93,20 @@
       return {
         //输入框
         inputInfo: {
-          roleName:''
+          roleName: ''
         },
         //下拉
         restaurants: [],
-        resInfo:[
+        resInfo: [
           {
-            name:''
+            name: ''
           }
         ],
-        selectInfo:{
-          name:'',
-          mobilephone:'',
-          rolesId:[],
-          id:''
+        selectInfo: {
+          name: '',
+          mobilephone: '',
+          rolesId: [],
+          id: ''
         },
         //
         loading: false,
@@ -115,7 +115,7 @@
         dialogVisible: 'false'
       }
     },
-    mounted(){
+    mounted() {
       this.resInfo = this.thePerAllUserInfo
     },
     methods: {
@@ -139,33 +139,32 @@
         console.log(ev);
       },
       //
-      closeMe(done){
+      closeMe(done) {
         this.$emit('close')
         // this.$refs['ruleForm'].resetFields()
-        if(typeof done === 'function'){
+        if (typeof done === 'function') {
           done()
         }
       },
-      submitForm(formName){
+      submitForm(formName) {
         // this.$refs[formName].validate((valid) => {
         //   if(valid){
-            this.loading = true
-            let data = []
-              data.push({
-                "id": this.selectInfo.id,
-                "rolesId": this.selectInfo.rolesId
-              })
-            putEmployeerAuth(data).then(res=>{
-              this.$alert('保存成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  this.loading = false
-                  this.closeMe()
-                  this.$emit('success')
-                }
-              })
+        this.loading = true
+        let data = []
+        data.push({
+          "id": this.selectInfo.id,
+          "rolesId": this.selectInfo.rolesId
+        })
+        putEmployeerAuth(data).then(res => {
+          this.$message.success("保存成功")
+          this.closeMe()
+          this.$emit('success')
+          this.loading = false
 
-            })
+
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
         //   }else{
         //     return false
         //   }

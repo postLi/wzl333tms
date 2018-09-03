@@ -6,10 +6,10 @@
           <p class="tp">{{orderNum}}单</p>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input maxlength="250" v-model.trim="form.signName" auto-complete="off" placeholder="签收人"></el-input>
+          <el-input :maxlength="250" v-model.trim="form.signName" auto-complete="off" placeholder="签收人"></el-input>
         </el-form-item>
         <el-form-item label="签收时间:" prop="signTime">
-          <el-date-picker v-model="form.signTime" align="right" type="date" placeholder="选择日期" value-format="timestamp">
+          <el-date-picker v-model="form.signTime" align="right" type="date" placeholder="选择日期" value-format="timestamp" format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="签收类型:" prop="signTypeId">
@@ -19,10 +19,10 @@
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" />
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码"></el-input>
+          <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off" placeholder="证件号码" v-numberOnly></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
-          <el-input maxlength="250" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
+          <el-input :maxlength="300" v-model.trim="form.remark" auto-complete="off" placeholder="备注"></el-input>
         </el-form-item>
       </div>
     </el-form>
@@ -36,7 +36,7 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { REGEX } from '@/utils/validate'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import { postBatchSign } from '@/api/operation/deliverManage'
 import { getSystemTime } from '@/api/common'
 export default {
@@ -88,7 +88,8 @@ export default {
       form: {
         shipIds: [],
         childShipIds: [],
-        signTime: '',
+        orgIds: [],
+        signTime: new Date(),
         signName: '',
         signCocumentTypeId: 0,
         documentNum: '',
@@ -97,7 +98,8 @@ export default {
         // signPic: ''
       },
       rules: {
-        documentNum: [{ required: true, trigger: 'blur', validator: validateNum }]
+        signName: [{ required: true, trigger: 'blur', message: '签收人不能为空！'}]
+        // documentNum: [{ required: true, trigger: 'blur', validator: validateNum }]
       }
     }
   },
@@ -106,7 +108,11 @@ export default {
     dotInfo(newVal) {
       if (newVal) {
         this.form = newVal
-        this.form.signTime = +new Date()
+        // this.setSystemTime()
+        this.form.signTime = new Date()
+        this.form.signName = newVal.signName
+        this.form.signTypeId = 99
+        this.form.signCocumentTypeId = 96
         this.orderNum = newVal.shipIds.length
         if (this.orderNum === 0) {
           this.orderNum = newVal.childShipIds.length
@@ -143,30 +149,30 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
-          let data = objectMerge2({}, this.form)
-          console.log(data)
-          this.$confirm('此操作将签到, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
+          // this.form.signTime = parseTime(this.form.signTime, '{y}-{m}-{d}')
+          const data = Object.assign({}, this.form)
+          // this.$confirm('此操作将签到, 是否继续?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
             postBatchSign(data).then(data => {
-                this.$message({ type: 'success', message: '签收成功' })
-                this.message = true
-                this.closeMe()
-                this.$emit('message', this.message)
-              })
+              this.$message({ type: 'success', message: '签收成功' })
+              this.message = true
+              this.closeMe()
+              this.$emit('message', this.message)
+            })
               .catch(error => {
-                this.$message({ type: 'error', message: '签收失败' })
+                this.$message({ type: 'error', message: error.text || error.errorInfo || '操作失败' })
                 this.message = false
                 this.closeMe()
                 this.$emit('message', this.message)
               })
-          })
+          // })
         }
       })
     }
-  },
+  }
 }
 
 </script>

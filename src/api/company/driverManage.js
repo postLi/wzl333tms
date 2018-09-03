@@ -33,7 +33,7 @@ import fetch from '../../utils/fetch'
  */
 export function getAllDriver(params) {
   return fetch.post('/api-system/system/Driver/v1/DriverList', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || { list: [], total: 0 }
   })
 }
 /**
@@ -50,11 +50,11 @@ export function getDriverInfo(id) {
  * 获取司机驾照类型
  * @param {*} orgid 网点id
  */
-export function getDriverLiceseType(orgid) {
+export function getDriverLiceseType(orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: 'driving_type',
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []

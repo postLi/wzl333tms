@@ -1,35 +1,16 @@
 <template>
   <div class="customer-manager tab-wrapper">
     <div class="eltab clearfix">
-      <span @click="component = 'Sender'" class="tab-label" :class="{'active-tab': component.indexOf('ender')!==-1}">发货人</span>
-      <span @click="component = 'Receiver'" class="tab-label" :class="{'active-tab': component.indexOf('eceiver')!==-1}">收货人</span>
+      <router-link v-has:CUSTOMELIST_SENDER to="/company/customerManage/sender" class="tab-label" >发货人</router-link>
+      <router-link v-has:CUSTOMELIST_REVER to="/company/customerManage/receiver" class="tab-label" >收货人</router-link>
     </div>
     <keep-alive>
-      <component v-bind:is="component"></component>
+      <router-view></router-view>
     </keep-alive>
   </div>
 </template>
-
 <script>
-import Sender from './sender'
-import Receiver from './receiver'
-
 export default {
-  components: {
-    Sender,
-    Receiver
-  },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      component: 'Sender'
-    }
-  }
+  name: 'customerManage'
 }
 </script>
-

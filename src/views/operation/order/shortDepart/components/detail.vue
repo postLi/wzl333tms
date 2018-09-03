@@ -6,9 +6,11 @@
           <tr>
             <th>到达网点</th>
             <td v-if="info.arriveOrgName">
+              <!-- 短驳发车 -->
               <el-input v-model="info.arriveOrgName" :size="btnsize" disabled></el-input>
             </td>
             <td v-else>
+              <!-- 短驳到货 -->
               <el-input v-model="info.endOrgName" :size="btnsize" disabled></el-input>
             </td>
             <th>司机名称</th>
@@ -27,7 +29,7 @@
             </td>
             <th>短驳费</th>
             <td>
-              <el-input v-model="info.shortFee" :size="btnsize"></el-input>
+              <el-input v-model="info.shortFee" :size="btnsize" disabled></el-input>
             </td>
             <th>分摊方式</th>
             <td>
@@ -65,39 +67,43 @@
     </el-form>
     <div class="tab_infos">
       <div class="btns_box">
-        <el-button v-if="info.endOrgName" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
+        <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
       </div>
       <div class="detailinfo_tab">
-        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+        <!-- <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50" sortable type="selection"></el-table-column>
+          <el-table-column sortable width="130" prop="shipSn" label="运单号" fixed></el-table-column>
+          <el-table-column sortable width="130" prop="childShipSn" label="子运单号" fixed></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="运单号"></el-table-column>
+          <el-table-column sortable width="120" prop="loadAmount" label="应到件数" v-if="!isEditActual"></el-table-column>
+          <el-table-column sortable width="120" prop="loadWeight" label="应到重量" v-if="!isEditActual"></el-table-column>
+          <el-table-column sortable width="120" prop="loadVolume" label="应到体积" v-if="!isEditActual"></el-table-column>
           <el-table-column sortable width="110" prop="actualAmount" label="实到件数" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isWareStatus(scope.$index, scope.row)" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="110" prop="actualWeight" label="实到重量" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isWareStatus(scope.$index, scope.row)" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="actualVolume" sortable label="实到体积" width="110" v-if="!isEditActual">
             <template slot-scope="scope">
-              <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
+              <el-input type="number" :disabled="isWareStatus(scope.$index, scope.row)" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
             </template>
           </el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
-          <!-- <el-table-column sortable width="120" prop="cargoAmount" label="运单件数"></el-table-column>
+          <el-table-column sortable width="120" prop="cargoAmount" label="运单件数"></el-table-column>
           <el-table-column sortable width="120" prop="cargoWeight" label="运单重量"></el-table-column>
-          <el-table-column sortable width="120" prop="cargoVolume" label="运单体积"></el-table-column> -->
+          <el-table-column sortable width="120" prop="cargoVolume" label="运单体积"></el-table-column>
           <el-table-column sortable width="160" prop="shipFromCityName" label="出发城市"></el-table-column>
           <el-table-column sortable width="160" prop="shipToCityName" label="到达城市"></el-table-column>
           <el-table-column sortable width="120" prop="shipSenderName" label="发货人"></el-table-column>
@@ -105,18 +111,46 @@
           <el-table-column sortable width="120" prop="shipReceiverName" label="收货人"></el-table-column>
           <el-table-column sortable width="120" prop="shipReceiverMobile" label="收货人电话"></el-table-column>
           <el-table-column sortable width="200" prop="cargoName" label="货品名"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="货号"></el-table-column>
+          <el-table-column sortable width="180" prop="shipGoodsSn" label="货号"></el-table-column>
           <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
+        </el-table> -->
+        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <!-- 普通列 -->
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" sortable>
+            </el-table-column>
+            <!-- 有返回值的列 -->
+            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else sortable>
+              <template slot-scope="scope">
+                <!-- 有输入框的列 -->
+                <div v-if="column.expand">
+                  <el-input type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                </div>
+                <!-- 有返回值的列 -->
+                <div v-else>
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </div>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
     </div>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
 import { getSelectLoadDetailList } from '@/api/operation/load'
 import { postAddRepertory } from '@/api/operation/shortDepart'
 import { objectMerge2 } from '@/utils/index'
+import TableSetup from '@/components/tableSetup'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
+  components: {
+    TableSetup
+  },
   props: {
     info: {
       type: Array,
@@ -125,15 +159,23 @@ export default {
     isShow: {
       type: Boolean,
       default: false
+    },
+    arrivalStatus: {
+      type: String,
+      default: ''
+    },
+    type: {
+      type: String
     }
-  },
-  watch: {
-    info() {}
   },
   data() {
     return {
+      isNeedArrival: true, // true-未入库状态  false-已入库状态
+      setupTableVisible: false,
+      tablekey: 0,
       btnsize: 'mini',
       loadId: '',
+      selected: [],
       detailList: [],
       newData: {
         tmsOrderLoadFee: [],
@@ -141,7 +183,7 @@ export default {
         tmsOrderLoad: {}
       },
       selectDetailList: [],
-      isEditActual: false,
+      isEditActual: true,
       message: false,
       query: {
         arriveOrgid: 0,
@@ -156,27 +198,236 @@ export default {
         loadTypeId: 0,
         orgId: 0,
         truckIdNumber: ''
-      }
+      },
+      tableColumn: [],
+      tableColumnArrival: [{
+          label: "运单号",
+          prop: "shipSn",
+          width: "130",
+          fixed: true
+        },
+        {
+          label: "子运单号",
+          prop: "childShipSn",
+          width: "130",
+          fixed: true
+        },
+        {
+          label: "开单网点",
+          prop: "shipFromOrgName",
+          width: "120",
+          fixed: false
+        },
+        // {
+        //   label: "应到件数",
+        //   prop: "loadAmount",
+        //   width: "120",
+        //   fixed: false,
+        //   hide: true
+        // },
+        // {
+        //   label: "应到重量",
+        //   prop: "loadWeight",
+        //   width: "120",
+        //   fixed: false,
+        //   hide: true
+        // },
+        // {
+        //   label: "应到体积",
+        //   prop: "loadVolume",
+        //   width: "120",
+        //   fixed: false,
+        //   hide: true
+        // },
+        {
+          label: "实到件数",
+          prop: "actualAmount",
+          width: "120",
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.actualAmount
+          }
+        },
+        {
+          label: "实到重量",
+          prop: "actualWeight",
+          width: "120",
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.actualWeight
+          }
+        },
+        {
+          label: "实到体积",
+          prop: "actualVolume",
+          width: "120",
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.actualVolume
+          }
+        },
+        {
+          label: "配载件数",
+          prop: "loadAmount",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "配载重量",
+          prop: "loadWeight",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "配载体积",
+          prop: "loadVolume",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "运单件数",
+          prop: "cargoAmount",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "运单重量",
+          prop: "cargoWeight",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "运单体积",
+          prop: "cargoVolume",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "出发城市",
+          prop: "shipFromCityName",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "到达城市",
+          prop: "shipToCityName",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "配载体积",
+          prop: "loadVolume",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "发货人",
+          prop: "shipSenderName",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "发货人电话",
+          prop: "shipSenderMobile",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "收货人",
+          prop: "shipReceiverName",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "收货人电话",
+          prop: "shipReceiverMobile",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "货品名",
+          prop: "cargoName",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "货号",
+          prop: "shipGoodsSn",
+          width: "120",
+          fixed: false
+        },
+        {
+          label: "运单备注",
+          prop: "shipRemarks",
+          width: "200",
+          fixed: false
+        }
+      ],
+      tableColumnDeiver: []
     }
   },
   mounted() {
     this.toggleAllRows()
+    // this.setTableColumn()
   },
   watch: {
     isShow() {
       if (this.isShow) {
+
+        if (this.arrivalStatus === '已入库') {
+          this.isNeedArrival = false
+        } else {
+          this.isNeedArrival = true
+        }
+        console.log('type', this.type)
         this.getLoadTrack()
         this.toggleAllRows()
-        if (this.info.arriveOrgName) {
-          this.isEditActual = true
-        }else {
-          this.isEditActual = false
-        }
+        this.setTableColumn()
       }
+    },
+    info(newVal) {
+      if (newVal) {
+        this.getLoadTrack()
+        this.toggleAllRows()
+        this.setTableColumn()
+      }
+    },
+    arrivalStatus() {
+      console.log(this.arrivalStatus)
+    },
+    type() {}
+  },
+  created() {
+    switch (this.type) {
+      case 'deliver':
+        this.isEditActual = true // 短驳发车
+        break
+      case 'arrival':
+        this.isEditActual = false // 短驳到货
+        break
     }
+    this.setTableColumn()
   },
   methods: {
-    setTable() {},
+    setTableColumn() { // 设置表格列
+      let arrTableColumn = []
+      objectMerge2([], this.tableColumnArrival).forEach(e => {
+        if (!e.hide) {
+          if (e.expand) {
+            e.expand = false
+          }
+          arrTableColumn.push(e)
+        }
+      })
+      this.tableColumnDeiver = objectMerge2([], arrTableColumn)
+      this.tableColumn = this.isEditActual ? Object.assign([], this.tableColumnDeiver) : Object.assign([], this.tableColumnArrival)
+    },
+    setTable() {
+      this.setupTableVisible = true
+    },
     doAction(type) {
       switch (type) {
         case 'add': // 短驳入库
@@ -188,26 +439,63 @@ export default {
             this.postAddRepertory()
           })
           break
-        case 'print':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'print': // 打印
+          PrintInFullPage({
+            data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
-        case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'export': // 导出
+          SaveAsFile({
+            data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
       }
     },
-    changeData(newVal) { // 判断当行
-      let curAmount = this.detailList[newVal].actualAmount // 实到件数
-      let curWeight = this.detailList[newVal].actualWeight // 实到重量
-      let curVolume = this.detailList[newVal].actualVolume // 实到体积
-      let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
-      let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
-      let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+    changeInputData(index, prop, newVal) { // 判断当行-新
+      let curVal = this.detailList[index][prop] // 实到值
+      let loadName = 'load' + prop.substring(6) // 配载名称
+      let loadVal = this.detailList[index][loadName] // 配载值
+      const _this = this
+      curVal = Number(newVal)
+      this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
+        [prop]: curVal
+      }))
+
+      if (prop === 'actualAmount' && curVal === 0) {
+        curVal = Number(loadVal)
+        this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
+          [prop]: curVal
+        }))
+        this.$notify({
+          title: '提示',
+          message: '实到件数不能为0',
+          type: 'warning'
+        })
+      }
+
+      console.log(index, prop, loadName, curVal, loadVal, this.detailList[index].actualAmount)
+      return curVal
+
+    },
+    changeData(newVal) { // 判断当行-废
+      console.log(newVal, this.detailList[newVal].actualWeight)
+      const curAmount = this.detailList[newVal].actualAmount // 实到件数
+      const curWeight = this.detailList[newVal].actualWeight // 实到重量
+      const curVolume = this.detailList[newVal].actualVolume // 实到体积
+      const curloadAmount = this.detailList[newVal].loadAmount // 配载件数
+      const curloadWeight = this.detailList[newVal].loadWeight // 配载重量
+      const curloadVolume = this.detailList[newVal].loadVolume // 配载体积
+      const curactualVolume = this.detailList[newVal].actualVolume // 应到体积
+      const curactualWeight = this.detailList[newVal].actualWeight // 应到重量
+      const curactualAmount = this.detailList[newVal].actualAmount // 应到件数
       if (this.selectDetailList.length === 1 && curAmount === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
         this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
+        // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$notify({
           title: '提示',
           message: '实到件数不能为0',
@@ -215,19 +503,17 @@ export default {
         })
       }
       if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$notify({
-          title: '提示',
-          message: '实到重量和实到体积不能同时为0',
-          type: 'warning'
-        })
+        // this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
+        // this.$notify({
+        //   title: '提示',
+        //   message: '实到重量和实到体积不能同时为0',
+        //   type: 'warning'
+        // })
       }
       if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
-        console.log(this.selectDetailList.length)
         if (this.selectDetailList.length === 0) {
           this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
           this.detailList[newVal].actualAmount = curloadAmount
@@ -240,23 +526,23 @@ export default {
           type: 'warning'
         })
       } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
-        this.$notify({
-          title: '提示',
-          message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
-          type: 'warning'
-        })
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
+        // this.$notify({
+        //   title: '提示',
+        //   message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+        //   type: 'warning'
+        // })
+        // this.detailList[newVal].actualAmount = curloadAmount - curactualAmount
+        // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
+        // this.detailList[newVal].actualVolume = curloadVolume - curactualVolume
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       } else {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
       }
+      console.log(this.detailList[newVal].actualAmount, this.detailList[newVal].actualWeight, this.detailList[newVal].actualVolume)
       return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
     },
     setData() {
-      console.log('info', this.info)
-      let dataFee = {} // 配载费用
+      const dataFee = {} // 配载费用
       dataFee.arriveHandlingFee = this.info.arriveHandlingFee
       dataFee.arriveOtherFee = this.info.arriveOtherFee
       dataFee.arrivepayCarriage = this.info.arrivepayCarriage
@@ -272,7 +558,7 @@ export default {
       dataFee.nowpayCarriage = this.info.nowpayCarriage
       dataFee.nowpayOilCard = this.info.nowpayOilCard
       dataFee.shortFee = this.info.shortFee
-      let dataLoad = {} // 配载信息
+      const dataLoad = {} // 配载信息
       dataLoad.actualAmountall = this.info.loadAmount
       dataLoad.actualVolumeall = this.info.loadVolume
       dataLoad.actualWeigntall = this.info.loadWeight
@@ -281,8 +567,6 @@ export default {
       dataLoad.batchNo = this.info.batchNo
       dataLoad.batchTypeId = this.info.batchTypeId
       dataLoad.contractNo = this.info.contractNo
-      // dataLoad.createTime = this.info.createTime
-      // dataLoad.departureTime = this.info.departureTime
       dataLoad.dirverMobile = this.info.dirverMobile
       dataLoad.dirverName = this.info.dirverName
       dataLoad.id = this.info.id
@@ -292,34 +576,14 @@ export default {
       dataLoad.loadVolumeall = this.info.loadVolumeall
       dataLoad.loadWeightall = this.info.loadWeightall
       dataLoad.orgid = this.info.orgid
-      // dataLoad.planArrivedTime = this.info.planArrivedTime
       dataLoad.receivedUserId = this.info.receivedUserId
-      // dataLoad.receivingTime = this.info.receivingTime
       dataLoad.remark = this.info.remark
-      // dataLoad.requireArrivedTime = this.info.requireArrivedTime
       dataLoad.truckIdNumber = this.info.truckIdNumber
       dataLoad.truckLoad = this.info.truckLoad
       dataLoad.truckUserId = this.info.truckUserId
       dataLoad.truckVolume = this.info.truckVolume
       dataLoad.updateTime = this.info.updateTime
       dataLoad.userId = this.info.userId
-      // 实到体积/重量/件数
-      // this.detailList.forEach((e, index) => {
-      //   e.actualWeight = e.loadWeight
-      //   e.actualVolume = e.loadVolume
-      //   e.actualAmount = e.loadAmount
-      // })
-      // setData 后台需要的数据结构
-      // this.selectDetailList.forEach(e => {
-      //   if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-      //     console.log('not select')
-      //     this.$refs.multipleTable.toggleRowSelection(e, false)
-      //     let item = this.selectDetailList.indexOf(e)
-      //     if (item !== -1) {
-      //       this.selectDetailList.splice(item, 1)
-      //     }
-      //   }
-      // })
 
       this.newData.tmsOrderLoad = objectMerge2({}, dataLoad)
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
@@ -329,60 +593,80 @@ export default {
       this.setData()
       if (this.newData.tmsOrderLoadDetailsList.length === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[0], true)
-        this.$message({type: 'warning', message: '至少要有一条数据'})
+        this.$message({ type: 'warning', message: '至少要有一条数据' })
         return false
-      }else {
+      } else {
         postAddRepertory(50, this.newData).then(data => {
-          if (data.status === 200) {
-            this.$router.push({ path: '././shortDepart', query: { tableKey: Math.random() } })
-            this.$message({ type: 'success', message: '短驳入库操作成功' })
-            this.message = true
-          } else {
-            this.message = false
-          }
-          this.$emit('isSuccess', this.message)
-        })
-        .catch(error => {
-          this.message = false
-          this.$emit('isSuccess', this.message)
+            if (data.status === 200) {
+              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
+              console.log(this.$route)
+              this.$message({ type: 'success', message: '短驳入库操作成功' })
+              this.message = true
 
-        })
+            } else {
+              this.message = false
+            }
+            this.$emit('isSuccess', this.message)
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text)
+            this.message = false
+            this.$emit('isSuccess', this.message)
+          })
       }
     },
     getLoadTrack() {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-        if (data) {
-          this.detailList = data.data
-          this.setData()
-          this.toggleAllRows()
-          this.$nextTick(() => { // 默认设置实到数量为配载数量
-            this.detailList.forEach(e => {
-              e.actualAmount = e.loadAmount
-              e.actualWeight = e.loadWeight
-              e.actualVolume = e.loadVolume
+          if (data) {
+            this.detailList = data.data
+            this.setData()
+            this.toggleAllRows()
+            this.$nextTick(() => {
+              this.detailList.forEach(e => {
+                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                  e.actualAmount = e.loadAmount
+                  e.actualWeight = e.loadWeight
+                  e.actualVolume = e.loadVolume
+                } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+                }
+              })
             })
-          })
-        }
-      })
+          }
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text)
+        })
     },
     clickDetails(row) {
-      // this.$refs.multipleTable.toggleRowSelection(row)
+      this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
       this.selectDetailList = Object.assign([], list)
-      console.log('select', this.selectDetailList)
     },
     toggleAllRows() {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
-          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-            this.$refs.multipleTable.toggleRowSelection(e, false)
-          } else {
-            this.$refs.multipleTable.toggleRowSelection(e, true)
-          }
+          this.$refs.multipleTable.toggleRowSelection(e, true)
+          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+          //   this.$refs.multipleTable.toggleRowSelection(e, false)
+          // } else {
+          //   this.$refs.multipleTable.toggleRowSelection(e, true)
+          // }
         })
       })
+    },
+    isWareStatus(index, row) {
+      if (!this.isNeedArrival) {
+        return true
+      }
+      if (row.warehouStatus === 1) {
+        return true
+      }
+    },
+    setColumn(obj) { // 打开表格设置
+      this.tableColumn = obj
+      this.tablekey = Math.random()
     }
   }
 }
@@ -416,7 +700,7 @@ export default {
             padding: 0 3px;
             .el-input.is-disabled .el-input__inner {
               background-color: #fff;
-              color: #999;
+              color: #3e9ff1;
             }
           }
         }
@@ -443,6 +727,13 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+        color: #222;
+        text-align: center;
+        border: none;
+        font-size: 13px;
+      }
     }
   }
 }

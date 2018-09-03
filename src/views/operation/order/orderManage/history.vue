@@ -1,16 +1,23 @@
 <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_E2>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_P1>打印</el-button>
+          <span class="viewtip">
+            双击查看详情
+          </span>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
-      <div class="info_tab">
+      <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
+        <div slot="content">双击查看运单详情</div> -->
+      <div @mouseover="showtip = true"
+          @mouseout="showtip = false" class="info_tab">
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -20,7 +27,7 @@
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          
+
           <el-table-column
             fixed
             sortable
@@ -45,25 +52,28 @@
               v-else
               :width="column.width">
               <template slot-scope="scope" v-html="true">
-                  {{ column.slot(scope) }}
+                  <div v-html="column.slot(scope)"></div>
               </template>
             </el-table-column>
           </template>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <!-- </el-tooltip> -->
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
 </template>
 <script>
 import orderManageApi from '@/api/operation/orderManage'
 import SearchForm from './components/search2'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime } from '@/utils/index'
+import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   components: {
@@ -111,6 +121,7 @@ export default {
         }
       },
       // 默认sort值为true
+      tablekey: '',
       tableColumn: [{
         'label': '运单号',
         'prop': 'shipSn',
@@ -120,11 +131,14 @@ export default {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
-        'fixed': true
+        'fixed': false
       }, {
         'label': '运单标识',
         'prop': 'shipIdentifying',
-        'width': '150'
+        'width': '150',
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
       }, {
         'label': '旧值',
         'prop': 'old_value',
@@ -150,23 +164,23 @@ export default {
         'prop': 'createTime',
         'width': '180',
         'slot': function(scope) {
-          return `${parseTime(scope.row.createTime, '{y}{m}{d}')}`
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d}')}`
         }
       }, {
         'label': '发货人',
-        'prop': 'senderCustomerName',
+        'prop': 'shipSenderName',
         'width': '150'
       }, {
         'label': '发货人电话',
-        'prop': 'senderCustomerMobile',
+        'prop': 'shipSenderMobile',
         'width': '150'
       }, {
         'label': '收货人',
-        'prop': 'receiverCustomerName',
+        'prop': 'shipReceiverName',
         'width': '150'
       }, {
         'label': '收货人电话',
-        'prop': 'receiverCustomerMobile',
+        'prop': 'shipReceiverMobile',
         'width': '150'
       }, {
         'label': '交接方式',
@@ -251,24 +265,30 @@ export default {
       }, {
         'label': '制单人',
         'prop': 'userName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货方',
-        'prop': 'senderCustomerUnit',
+        'prop': 'shipSenderUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货方',
-        'prop': 'receiverCustomerUnit',
+        'prop': 'shipReceiverUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货人地址',
-        'prop': 'senderDetailedAddress',
+        'prop': 'shipSenderAddress',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货人地址',
-        'prop': 'receiverDetailedAddress',
+        'prop': 'shipReceiverAddress',
+        hidden: true,
         'width': '150'
-      }]
+      }],
+      showtip: false
     }
   },
   methods: {
@@ -295,7 +315,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.closeAddOrder()
         this.$message({
           message: '请选择要操作的项~',
@@ -318,9 +338,9 @@ export default {
           this.isModify = true
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能修改单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
           }
           this.selectInfo = this.selected[0]
           this.openAddOrder()
@@ -329,9 +349,9 @@ export default {
         case 'delete':
           if (this.selected.length > 1) {
             this.$message({
-                      message: '每次只能操作单条数据~',
-                      type: 'warning'
-                    })
+              message: '每次只能操作单条数据~',
+              type: 'warning'
+            })
           }
           const deleteItem = this.selected[0].shipSn
           const id = this.selected[0].id
@@ -341,32 +361,32 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-                    orderManageApi.deleteOrderInfoById(id).then(res => {
-                      this.$message({
-                          type: 'success',
-                          message: '删除成功!'
-                        })
-                      this.fetchData()
-                    }).catch(err => {
-                        this.$message({
-                          type: 'info',
-                          message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                        })
-                      })
-                  }).catch(() => {
-                    this.$message({
-                      type: 'info',
-                      message: '已取消删除'
-                    })
-                  })
+            orderManageApi.deleteOrderInfoById(id).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
           break
           // 作废运单
         case 'cancel':
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能操作单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能操作单条数据~',
+              type: 'warning'
+            })
           }
           const cancelItem = this.selected[0].shipSn
           const theid = this.selected[0].id
@@ -375,35 +395,38 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-                orderManageApi.deleteCancleOrderById(theid).then(res => {
-                      this.$message({
-                          type: 'success',
-                          message: '作废成功!'
-                        })
-                      this.fetchData()
-                    }).catch(err => {
-                        this.$message({
-                          type: 'info',
-                          message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
-                        })
-                      })
-              }).catch(() => {
-                    this.$message({
-                      type: 'info',
-                      message: '已取消作废'
-                    })
-                  })
+            orderManageApi.deleteCancleOrderById(theid).then(res => {
+              this.$message({
+                type: 'success',
+                message: '作废成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消作废'
+            })
+          })
           break
           // 导出数据
         case 'export':
-          const ids2 = this.selected.map(el => {
-            return el.customerId
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '改单记录-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
-          orderManageApi.getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-                  type: 'success',
-                  message: '即将自动下载!'
-                })
+          break
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '改单记录'
           })
           break
       }
@@ -415,6 +438,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddOrder() {
       this.AddOrderVisible = true
@@ -429,7 +456,8 @@ export default {
       this.selected = selection
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     }
   }
 }

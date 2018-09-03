@@ -3,6 +3,8 @@
     <el-popover
       ref="popoveruser"
       placement="bottom-end"
+      @show="showChart"
+      @hide="hideChart"
       :popper-options="{'preventOverflow.padding': 0}"
       width="360"
       popper-class="popoveruser"
@@ -12,12 +14,12 @@
           <img class="user-avatar" :src="avatar">
         </el-col>
         <el-col :span="16">
-          {{ name }}
-          <br>
-          <br>
-          <br>
-          <br>
-          {{ company }}
+          <div class="popoveruser_info_lyy">
+            <p>{{ otherinfo.name }}</p>
+            <p>{{ company }}</p>
+            <p  v-show="otherinfo.associatedUsername">当前环境：{{otherinfo.isTest===0?'生产环境':'测试环境'}}<br>
+             <el-button type="primary" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'测试环境':'生产环境'}}</el-button></p>
+          </div>
         </el-col>
         <el-col class="popover-btns" :span="24">
           <el-button-group>
@@ -29,10 +31,11 @@
           </el-button-group>
         </el-col>
       </el-row>
+      <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
     </el-popover>
     <div class="avatar-wrapper" v-popover:popoveruser>
       <img class="user-avatar" :src="avatar">
-      <span class="user-name">{{ name }}</span>
+      <span class="user-name">{{ otherinfo.name }}</span>
     </div>
   </div>
 </template>
@@ -43,18 +46,59 @@ export default {
   computed: {
     ...mapGetters([
       'avatar',
-      'name',
       'company'
     ])
   },
+  mounted() {
+    var agnt = navigator.userAgent.toLowerCase()
+    if (agnt.indexOf('msie') > 0 || agnt.indexOf('trident') > 0) {
+      this.showit = true
+    }
+  },
+  data() {
+    return {
+      popperHide: false,
+      showit: false
+    }
+  },
   methods: {
+    showChart() {
+      this.popperHide = false
+      this.eventBus.$emit('hideSupcanChart')
+    },
+    hideChart() {
+      this.popperHide = true
+      this.eventBus.$emit('showSupcanChart')
+    },
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()  // 为了重新实例化vue-router对象 避免bug
       })
     },
-    lockScreen () {
+    lockScreen() {
       this.$store.dispatch('LockScreen')
+    },
+    changeLogin(loginForm) {
+      this.$store.dispatch('Login', loginForm).then(() => {
+        location.href = '/'
+      })
+        .catch(error => {
+          this.$message({
+            message: error.errorInfo || error.text || '您的账号或者密码有误~',
+            type: 'warning'
+          })
+        })
+    },
+    changeView() {
+      if (this.otherinfo.isTest === 0 && typeof this.otherinfo.associatedUsername === 'string') {
+        const loginFormTest = {
+          username: this.otherinfo.associatedUsername,
+          password: this.otherinfo.name + '#test#' + this.otherinfo.orgid
+        }
+        this.changeLogin(loginFormTest) // 切换到测试环境
+      } else if (this.otherinfo.isTest === 1 && typeof this.otherinfo.associatedUsername === 'string') {
+        this.logout()
+      }
     }
   }
 }
@@ -112,6 +156,20 @@ export default {
   }
   .popoveruser{
     padding: 10px 0 0;
+    .popoveruser_info_lyy{
+      p {
+        line-height:32px;
+        font-size: 16px;
+      }
+    }
+    iframe{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
   }
   .popoveruser-avatar{
     text-align: center;

@@ -1,37 +1,13 @@
 <template>
   <div class="payment-manager tab-wrapper">
     <div class="eltab clearfix">
-        <span @click="component = 'shortDepart'" class="tab-label" :class="{'active-tab': component.indexOf('shortDepart')!==-1}">短驳对账</span>
-        <span @click="component = 'artery'" class="tab-label" :class="{'active-tab': component.indexOf('artery')!==-1}">干线对账</span>
-        <span @click="component = 'deliver'" class="tab-label" :class="{'active-tab': component.indexOf('deliver')!==-1}">送货对账</span>
+        <router-link to="/finance/reconciliation/carfee/shortDepart"  class="tab-label">短驳对账</router-link>
+        <router-link to="/finance/reconciliation/carfee/artery" class="tab-label">干线对账</router-link>
+        <router-link to="/finance/reconciliation/carfee/deliver" class="tab-label">送货对账</router-link>
     </div>
     <keep-alive>
-        <component v-bind:is="component"></component>
+        <router-view></router-view>
     </keep-alive>
   </div>
-  
+
 </template>
-
-<script>
-import artery from './artery'// 寄出
-import shortDepart from './shortDepart'// 回收
-import deliver from './deliver'// 发放
-// import Flow from './flow'
-export default {
-  components: {
-    artery,
-    shortDepart,
-    deliver
-  },
-  mounted() {
-  },
-  data() {
-    return {
-      component: 'shortDepart'
-    }
-  },
-  methods: {
-  }
-
-}
-</script>

@@ -5,7 +5,7 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK3>在途跟踪</el-button>
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfo>
+      <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"  :detailType="'detailDeliver'"></editInfo>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
@@ -92,39 +92,41 @@ export default {
       tableColumn: [{
           label: "送货批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
           prop: "batchTypeName",
-          width: "120"
+          width: "100",
+          fixed: true
         },
         {
           label: "送货时间",
-          prop: "departureTime",
-          width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "完成时间",
-          prop: "arriveOrgName",
-          width: "120"
-        },
-        {
-          label: "车牌号",
-          prop: "batchTypeName",
-          width: "120"
-        },
-        {
-          label: "发车时间",
-          prop: "departureTime",
-          width: "180",
+          prop: "loadTime",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
+        {
+          label: "完成时间",
+          prop: "departureTime",
+          width: "160"
+        },
+        {
+          label: "车牌号",
+          prop: "truckIdNumber",
+          width: "100"
+        },
+        // {
+        //   label: "发车时间",
+        //   prop: "departureTime",
+        //   width: "180",
+        //   slot: (scope) => {
+        //     return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        //   }
+        // },
         {
           label: "司机",
           prop: "dirverName",
@@ -137,18 +139,23 @@ export default {
         },
         {
           label: "送货件数",
-          prop: "actualAmountall",
+          prop: "loadAmountall",
           width: "120"
         },
         {
           label: "送货重量",
-          prop: "actualWeigntall",
+          prop: "loadWeightall",
           width: "120"
         },
         {
           label: "送货体积",
-          prop: "actualVolumeall",
+          prop: "loadVolumeall",
           width: "120"
+        },
+        {
+          label: "要求到达时间",
+          prop: "requireArrivedTime",
+          width: "160"
         },
         // {
         //   label: "运单总件数",
@@ -229,22 +236,37 @@ export default {
         //   prop: "arriveOtherFee",
         //   width: "120"
         // },
+        // {
+        //   label: "配载时间",
+        //   prop: "loadTime",
+        //   width: "120",
+        //   slot: (scope) => {
+        //     return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        //   }
+        // },
+        // {
+        //   label: "配载人",
+        //   prop: "username",
+        //   width: "120"
+        // },
+        // {
+        //   label: "发车人",
+        //   prop: "truckUsername",
+        //   width: "120"
+        // },
         {
-          label: "配载时间",
-          prop: "loadTime",
-          width: "120",
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "配载人",
-          prop: "username",
+          label: "分摊方式",
+          prop: "apportionType",
           width: "120"
         },
         {
-          label: "发车人",
-          prop: "truckUsername",
+          label: "可载重量",
+          prop: "truckLoad",
+          width: "120"
+        },
+        {
+          label: "可载体积",
+          prop: "truckVolume",
           width: "120"
         },
         {
@@ -310,6 +332,9 @@ export default {
     },
     getAllList() {
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 56) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postTrackList(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
@@ -319,6 +344,9 @@ export default {
         } else {
           this.loading = false
         }
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
       })
     },
     setColumn(obj) { // 重绘表格列表

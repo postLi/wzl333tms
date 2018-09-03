@@ -3,17 +3,18 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:DRIVER_ADD>新增</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:DRIVER_UPDATE>修改</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:DRIVER_DEL>删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:DRIVER_EXP>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain v-has:DRIVER_EOP>批量导入</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -28,121 +29,58 @@
             type="selection"
             width="50">
           </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            label="序号"
-            width="80">
-            <template slot-scope="scope">
-              {{ (searchQuery.currentPage - 1)*searchQuery.pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orgName"
-            width="120"
-            label="归属网点">
-          </el-table-column>
-          <el-table-column
-            prop="driverName"
-            sortable
-            width="120"
-            label="司机姓名">
-          </el-table-column>
-          <el-table-column
-            prop="driverMobile"
-            sortable
-            width="120"
-            label="司机电话">
-          </el-table-column>
-          <el-table-column
-            sortable
-            width="200"
-            prop="driverCardid"
-            label="身份证号码">
-          </el-table-column>
-          <el-table-column
-            label="驾驶证类型"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">
-              {{ getLicenType(scope.row.licenseType) }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="驾驶证有效期"
-            width="180"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.validityDate | parseTime('{y}{m}{d}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="bankCardNumber"
-            label="银行卡号"
-            width="200"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="银行名称"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="openBank"
-            label="开户行"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="driverAddress"
-            label="地址"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="driverRemarks"
-            label="备注"
-            sortable
-            >
-          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.ispic" :width="column.width">
+              <template slot-scope="scope">
+                <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span>
+              </template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
+            
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
     </div>
     <AddCustomer :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn"  />
+    <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'driver'"></ImportDialog>
   </div>
 </template>
 <script>
 import { getAllDriver, deleteSomeDriverInfo, getExportExcel, getDriverLiceseType } from '@/api/company/driverManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
+import ImportDialog from '@/components/importDialog'
+import { objectMerge2, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
+  name: 'driverManage',
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    ImportDialog
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ]),
+      'otherinfo'
+    ]),
     orgid() {
-        console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-      }
+      console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
   },
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
@@ -158,6 +96,7 @@ export default {
       total: 0,
       // 加载状态
       loading: true,
+      importDialogVisible: false,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -173,13 +112,77 @@ export default {
           driverName: ''
         }
       },
-      licenseTypes: []
+      licenseTypes: [],
+      tablekey: '',
+      tableColumn: [{
+        label: '序号',
+        prop: 'id',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
+        label: '归属网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '司机姓名',
+        prop: 'driverName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '司机电话',
+        prop: 'driverMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '身份证号码',
+        prop: 'driverCardid',
+        width: '120',
+        fixed: false
+      }, {
+        label: '驾驶证类型',
+        prop: 'licenseTypeName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '驾驶证有效期',
+        prop: 'validityDate',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          return parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}')
+        }
+      }, {
+        label: '银行卡号',
+        prop: 'bankCardNumber',
+        width: '180'
+      }, {
+        label: '银行名称',
+        prop: 'bankName',
+        fixed: false
+      }, {
+        label: '开户行',
+        prop: 'openBank',
+        fixed: false
+      }, {
+        label: '地址',
+        prop: 'driverAddress',
+        fixed: false
+      }, {
+        label: '备注',
+        prop: 'driverRemarks',
+        width: '180',
+        fixed: false
+      }]
     }
   },
   methods: {
     getLicenType(id) {
       const info = this.licenseTypes.filter(item => {
-        console.log(item, id)
+        // console.log(item, id)
         return parseInt(item.id, 10) === id
       })
       return info[0] ? info[0].dictName : id
@@ -188,7 +191,7 @@ export default {
       this.loading = true
       return getAllDriver(this.searchQuery).then(data => {
         this.usersArr = data.list
-        this.total = data.totalCount
+        this.total = data.total
         this.loading = false
       })
     },
@@ -209,22 +212,17 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'import' && type !== 'export') {
         this.closeAddCustomer()
         this.$message({
-            message: '请选择要操作的项~',
-            type: 'warning'
-          })
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
         return false
       }
 
       console.log('this.selected:', this.selected)
-
 
       switch (type) {
           // 添加客户
@@ -234,61 +232,60 @@ export default {
           this.openAddCustomer()
           break
           // 修改客户信息
-          case 'modify':
+        case 'modify':
           this.isModify = true
           if (this.selected.length > 1) {
-                this.$message({
-                    message: '每次只能修改单条数据~',
-                    type: 'warning'
-                  })
-              }
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          }
           this.selectInfo = this.selected[0]
           this.openAddCustomer()
           break
           // 删除客户
-          case 'delete':
-          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].driverName
+        case 'delete':
+          var deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].driverName
                   // =>todo 删除多个
-          let ids = this.selected.map(item => {
-                    return item.id
-                  })
+          var ids = this.selected.map(item => {
+            return item.id
+          })
           ids = ids.join(',')
 
-          this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                  }).then(() => {
-                    deleteSomeDriverInfo(ids).then(res => {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                          })
-                        this.fetchData()
-                      }).catch(err => {
-                        this.$message({
-                            type: 'info',
-                            message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
-                          })
-                      })
-                  }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                      })
-                  })
+          this.$confirm('确定要删除 ' + deleteItem + ' 司机吗？', '提示', {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteSomeDriverInfo(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this.$message({
+                type: 'info',
+                message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+              })
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
           break
           // 导出数据
-          case 'export':
-          const ids2 = this.selected.map(el => {
-                return el.id
-              })
-          getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '即将自动下载!'
-                })
-              })
+        case 'export':
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '司机列表-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
+          break
+        case 'import':
+          this.importDialogVisible = true
           break
       }
       // 清除选中状态，避免影响下个操作
@@ -299,6 +296,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true

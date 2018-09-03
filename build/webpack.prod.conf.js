@@ -8,9 +8,9 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 
 var env = process.env.BUILD_ENV === 'test' ? config.test.env : config.build.env
-console.log('process.env.BUILD_ENV： ', process.env.BUILD_ENV, env)
 
 function resolveApp(relativePath) {
     return path.resolve(relativePath);
@@ -23,9 +23,10 @@ var webpackConfig = merge(baseWebpackConfig, {
       extract: true
     })
   },
-  devtool: config.build.productionSourceMap ? '#source-map' : false,
+ // devtool: config.build.productionSourceMap ? '#source-map' : false,
+  devtool: false,
   output: {
-    path: config.build.assetsRoot,
+    path: config.build.assetsRootTemp,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
@@ -34,11 +35,22 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new webpack.optimize.UglifyJsPlugin({
+    /* new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       },
       sourceMap: false
+    }), */
+    new ParallelUglifyPlugin({
+      cacheDir: '.cache/',
+      uglifyJS:{
+        output: {
+          comments: false
+        },
+        compress: {
+          warnings: false
+        }
+      }
     }),
     // extract css into its own file
     /* new ExtractTextPlugin({
@@ -76,10 +88,13 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
     // cache Module Identifiers
     new webpack.HashedModuleIdsPlugin(),
+    
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
+      chunks:['app'],
       minChunks: function (module, count) {
+
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
@@ -90,12 +105,21 @@ var webpackConfig = merge(baseWebpackConfig, {
         )
       }
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'polyfills',
+      filename: 'polyfills.js',
+      chunks:['polyfills']
+    }),
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       chunks: ['vendor']
-    }),
+    }), 
+/*     new webpack.optimize.CommonsChunkPlugin({
+      name:'polyfills', // 上面入口定义的节点组
+      filename:'polyfills.js' //最后生成的文件名
+     }), */
     // copy custom static assets
     new CopyWebpackPlugin([
       {

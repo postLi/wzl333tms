@@ -1,46 +1,48 @@
 <template>
   <transferTable>
+    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn2">
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
+      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%"  @row-dblclick="dclickAddItem" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed :render-header="setHeader" width="50">
           <template slot-scope="scope">
-            <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+            <!-- <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button> -->
+            <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号">
+        <el-table-column prop="shipSn" label="运单号" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="120">
+        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="110">
         </el-table-column>
-        <el-table-column prop="shipReceiverName" sortable label="收货人" width="120">
+        <el-table-column prop="shipReceiverName" sortable label="收货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
+        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="110">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
+        <el-table-column prop="repertoryAmount" sortable label="库存件数" width="100">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="120">
+        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="100">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="120">
+        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="100">
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="运单件数" width="100">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量" width="100">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积" width="100">
         </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
@@ -48,12 +50,13 @@
     </div>
     <!-- 右边表格区 -->
     <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn2">
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
+      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%"  @row-dblclick="dclickMinusItem" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50" :render-header="setHeader2">
           <template slot-scope="scope">
-            <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+            <!-- <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button> -->
+            <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
@@ -98,27 +101,27 @@
             @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
           </template>
         </el-table-column>
-        <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
+        <el-table-column prop="cargoAmount" sortable label="运单件数" width="100">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量" width="100">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积" width="100">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
         </el-table-column>
-        <el-table-column prop="shipSenderName" sortable label="发货人" width="120">
+        <el-table-column prop="shipSenderName" sortable label="发货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="120">
+        <el-table-column prop="shipSenderMobile" sortable label="发货人电话" width="110">
         </el-table-column>
-        <el-table-column prop="shipReceiverName" sortable label="收货人" width="120">
+        <el-table-column prop="shipReceiverName" sortable label="收货人" width="90">
         </el-table-column>
-        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
+        <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="110">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
@@ -129,7 +132,7 @@
 <script>
 import transferTable from '@/components/transferTable'
 import selectType from '@/components/selectType/index'
-import { getTotal } from '@/utils/'
+import { getTotal, getSummaries } from '@/utils/'
 
 export default {
   props: {
@@ -168,50 +171,12 @@ export default {
   mounted() {
   },
   methods: {
+    getList () {
+      this.$emit('regetList')
+    },
     getSum(param, type) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (type !== 'left') {
-          if (index === 1 || index === 2 || index === 10) {
-            sums[index] = data.length + '单'
-            return
-          }
-          if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9) {
-            sums[index] = ''
-            return
-          }
-        } else {
-          if (index === 1 || index === 2) {
-            sums[index] = data.length + '单'
-            return
-          }
-          if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19) {
-            sums[index] = ''
-            return
-          }
-        }
-
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+      const propsArr = ['_index|1|单', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
+      return getSummaries(param, propsArr)
     },
     getSumRight(param) { // 右边表格合计-自定义显示
       return this.getSum(param, 'right')
@@ -252,7 +217,10 @@ export default {
       current[filed] = val
       // 计算总费用
       current['totalCost'] = getTotal(current['transferCharge'], current['deliveryExpense'], current['transferOtherFee'])
-      _this.rightTable[index].totalCost = current['totalCost']
+      this.$set(_this.rightTable, index, Object.assign(_this.rightTable[index], {
+        totalCost: current['totalCost']
+      }))
+      // _this.rightTable[index].totalCost = current['totalCost']
       _this.$emit('loadTable', _this.rightTable)
     },
     goLeft() { // 数据从左边穿梭到右边
@@ -264,6 +232,8 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
+          e.oddNumbers = e.oddNumbers || e.shipSn
+          e.paymentId = e.paymentId || 16
           this.rightTable.push(e)
           const item = this.leftTable.indexOf(e)
           if (item !== -1) {
@@ -298,10 +268,20 @@ export default {
       this.selectedRight[index] = row
       this.doAction('goLeft')
     },
+    dclickAddItem (row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
+    },
+    dclickMinusItem (row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
+    },
     setHeader(h, { column }) {
       return h('el-button', {
         props: {
-          icon: 'el-icon-plus',
+          // icon: 'el-icon-plus',
           size: 'mini'
         },
         'class': {
@@ -315,11 +295,11 @@ export default {
     setHeader2(h, { column }) {
       return h('el-button', {
         props: {
-          icon: 'el-icon-minus',
+          // icon: 'el-icon-minus',
           size: 'mini'
         },
         'class': {
-          'tableItemBtn': true
+          'tableItemBtnMinus': true
         },
         on: {
           click: this.minusAllList
@@ -344,20 +324,65 @@ export default {
 
 </script>
 <style lang="scss">
+
 .tableHeadItemBtn2 {
+  height: 100%;
   position: relative;
-  .tableItemBtn {
-    width: 30px;
-    padding-left: 8px;
+  .el-button {
+    border: none;
   }
+  .el-button--mini,
+  .el-button--mini.is-round {
+    padding: 5px 9px;
+  }
+  .tableItemBtnMinus,
+  .tableItemBtn {
+    width: 18px;
+    height: 18px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+  }
+  .tableAllBtnMinus,
   .tableAllBtn {
-    width: 30px;
-    padding-left: 8px;
+    width: 18px;
+    height: 18px;
     position: absolute;
     z-index: 33;
-    top: 8px;
-    left: 61px;
+    top: 10px;
+    left: 67px;
+    background-size: 18px;
+    background-repeat: no-repeat;
   }
+  .tableAllBtn,
+  .tableItemBtn {
+    background-image: url('../../../../../assets/png/01zengjia-c.png');
+  }
+  .tableAllBtn:hover,
+  .tableItemBtn:hover {
+    background-image: url('../../../../../assets/png/02zengjia.png');
+  }
+
+  .tableAllBtnMinus,
+  .tableItemBtnMinus {
+    background-image: url('../../../../../assets/png/03shanqu-c.png');
+  }
+  .tableAllBtnMinus:hover,
+  .tableItemBtnMinus:hover {
+    background-image: url('../../../../../assets/png/04shanqu.png');
+  }
+  // position: relative;
+  // .tableItemBtn {
+  //   width: 30px;
+  //   padding-left: 8px;
+  // }
+  // .tableAllBtn {
+  //   width: 30px;
+  //   padding-left: 8px;
+  //   position: absolute;
+  //   z-index: 33;
+  //   top: 8px;
+  //   left: 61px;
+  // }
   .showAllTable {
     width: calc(100% - 100px);
   }

@@ -11,15 +11,14 @@
           <el-date-picker :size="btnsize" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="date">
           </el-date-picker>
         </div>
-
         <div class="receiptDialog_head_item">
           <label>经办人</label>
           <!-- <el-input v-model="formModel.settlementBy" placeholder="请输入" :size="btnsize"></el-input> -->
-          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="id" search="name" label="name" />
+          <querySelect v-model="formModel.settlementBy" :size="btnsize" valuekey="name" show="select" search="name" label="name" />
         </div>
       </div>
       <div class="receiptDialog_table">
-        <el-table :data="formModel.detailDtoList" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
+        <el-table :data="formModel.detailDtoList2" style="width: 100%; height:100%;" height="100%" stripe show-summary :summary-method="getSum">
           <el-table-column prop="date" label="序号" type="index" width="70">
           </el-table-column>
           <el-table-column prop="dataName" label="费用项">
@@ -49,68 +48,78 @@
         </el-table>
       </div>
       <div class="receiptDialog_todo">
-        <el-button icon="el-icon-plus" type="primary" plain class="tableAllBtn" size="mini" @click="plusItem"></el-button>
+        <el-button class="tableBtnAdd" size="mini" @click="plusItem"></el-button>
         <el-table :data="formModel.szDtoList" border style="width: 100%;" height="100%" stripe>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-minus" type="danger" plain class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="financialWay" label="收支方式" width="100">
+          <el-table-column prop="financialWay" label="收支方式" width="80">
             <template slot-scope="props">
-              <el-input v-model="props.row.financialWay" :size="btnsize" disabled></el-input>
+              <!-- <querySelect v-model="props.row.financialWay" :popClass="'querySelectItem'" search="financialWay" keyvalue="financialWay" type="payway" :size="btnsize"  @change="(item) => sender(item,props.$index)">
+                <template slot-scope="{item}">
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
+                </template>
+              </querySelect> -->
+              <el-autocomplete popper-class="querySelectItem" v-model="props.row.financialWay" :size="btnsize" :fetch-suggestions="querySearch" placeholder="支付方式" 
+              @select="(item) => sender(item,props.$index)">
+                <template slot-scope="{item}">
+                  <span v-for="obj in BANK_INFO">{{item[obj]}}</span>
+                </template>
+              </el-autocomplete>
             </template>
           </el-table-column>
           <el-table-column prop="bankName" label="银行名称">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankName" :size="btnsize"></el-input>
+              <el-input v-model="props.row.bankName" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="bankAccount" label="银行卡号">
+          <el-table-column prop="bankAccount" label="银行卡号" width="200">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankAccount" :size="btnsize"></el-input>
+              <el-input v-model="props.row.bankAccount" :size="btnsize" :maxlength="maxlength" v-numberOnly></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="bankAccountName" label="开户人">
+          <el-table-column prop="bankAccountName" label="开户人" width="80">
             <template slot-scope="props">
-              <el-input v-model="props.row.bankAccountName" :size="btnsize"></el-input>
+              <el-input v-model="props.row.bankAccountName" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="chequeNumber" label="支票号码">
             <template slot-scope="props">
-              <el-input v-model="props.row.chequeNumber" :size="btnsize"></el-input>
+              <el-input v-model="props.row.chequeNumber" :size="btnsize" :maxlength="maxlength" v-numberOnly></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="receivableNumber" label="汇款号码">
             <template slot-scope="props">
-              <el-input v-model="props.row.receivableNumber" :size="btnsize"></el-input>
+              <el-input v-model="props.row.receivableNumber" :size="btnsize" :maxlength="maxlength" v-numberOnly></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="wechatAccount" label="微信号">
             <template slot-scope="props">
-              <el-input v-model="props.row.wechatAccount" :size="btnsize"></el-input>
+              <el-input v-model="props.row.wechatAccount" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="alipayAccount" label="支付宝号">
             <template slot-scope="props">
-              <el-input v-model="props.row.alipayAccount" :size="btnsize"></el-input>
+              <el-input v-model="props.row.alipayAccount" :size="btnsize" :maxlength="maxlength"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="agent" label="经办人" width="110">
+          <el-table-column prop="agent" label="经办人" width="80">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" search="driverName" type="driver" label="driverName" :remote="true" :size="btnsize" />
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name"  show="select" search="name" label="name" :maxlength="maxlength" />
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="receiptDialog_remark">
         <label>备注</label>
-        <el-input v-model="formModel.remark" placeholder="最多可输入300个字符" :size="btnsize"></el-input>
+        <el-input v-model="formModel.remark" placeholder="最多可输入300个字符" :size="btnsize" :maxlength="300"></el-input>
       </div>
     </el-form>
     <div slot="footer">
       <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-document">保存</el-button>
-      <el-button type="primary" @click="submitForm('formModel')" :size="btnsize" icon="el-icon-printer" disabled>保存并打印</el-button>
+      <el-button type="primary" @click="print" :size="btnsize" icon="el-icon-printer">保存并打印</el-button>
       <el-button type="danger" @click="closeMe" :size="btnsize" icon="el-icon-circle-close-outline">取 消</el-button>
     </div>
   </el-dialog>
@@ -123,6 +132,8 @@ import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { smalltoBIG } from '@/filters/'
 import querySelect from '@/components/querySelect/index'
+import { PrintSettlement } from '@/utils/lodopFuncs'
+import { postTmsFfinancialwayList } from '@/api/finance/financefinancialway'
 export default {
   components: {
     querySelect
@@ -136,14 +147,19 @@ export default {
       }
     }
     return {
+      maxlength: 30,
       amount: 0,
       amountMessage: '',
-      formModel: {},
+      formModel: {
+        detailDtoList2: []
+      },
+      financialWalList: [],
       loading: true,
       rules: {},
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
+      BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
@@ -159,45 +175,53 @@ export default {
       set() {}
     },
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
-    settlementTypeId () {
+    settlementTypeId() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchShort':
-        return 180
+          return 180
         case 'batchDeliver':
-        return 181
+          return 181
         case 'batchInsurance':
-        return 179
+          return 179
         case 'batchStationLoad':
-        return 179
+          return 179
         case 'batchStationOther':
-        return 179
-        case 'batchArrivalLoad':
-        return 179
+          return 179
+        case 'batchArriveLoad':
+          return 179
         case 'batchArrivalOther':
-        return 179
+          return 179
+        case 'batchArrivalAll':
+          return 179
       }
     },
-    dataName () {
+    dataName() {
       let currentPage = this.$route.query.currentPage
-      switch(currentPage) {
+      switch (currentPage) {
         case 'batchShort':
-        return '短驳费'
+          return '短驳费'
         case 'batchDeliver':
-        return '送货费'
+          return '送货费'
         case 'batchInsurance':
-        return '整车保险费'
+          return '整车保险费'
         case 'batchStationLoad':
-        return '发站装卸费'
+          return '发站装卸费'
         case 'batchStationOther':
-        return '发站其他费'
-        case 'batchArrivalLoad':
-        return '到站装卸费'
+          return '发站其他费'
+        case 'batchArriveLoad':
+          return '到站装卸费'
         case 'batchArrivalOther':
-        return '到站其他费'
+          return '到站其他费'
+        case 'waybillKickback':
+          return '回扣'
       }
+    },
+    currentPage() {
+      let currentPage = this.$route.query.currentPage
+      return currentPage.substr(5, currentPage.length)
     }
   },
   props: {
@@ -218,19 +242,59 @@ export default {
       } else {
         this.isShow = false
       }
-    },
-    info(newVal) {
-      if (newVal) {
-        return this.info
-      }
     }
+    // info(newVal) {
+    //   if (newVal) {
+    //     console.log('sdfsdfsd',this.info)
+    //     return this.info
+    //   }
+    // }
   },
   mounted() {
+    this.postTmsFfinancialwayList()
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
+    print() {
+      let data = Object.assign({}, this.formModel)
+      this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
+      PrintSettlement(data)
+      this.submitForm('formModel')
+    },
+    postTmsFfinancialwayList() {
+      let query = {
+        currentPage: 1,
+        pageSize: 100,
+        vo: {
+          financialWay: '',
+          financialWayTypeId: '',
+          orgId: this.otherinfo.orgid,
+          status: ''
+        }
+      }
+      postTmsFfinancialwayList(query).then(data => {
+        this.financialWalList = []
+        data.list.forEach(e => {
+          if (e.statusStr === '启用') {
+            this.financialWalList.push(e)
+          }
+        })
+      })
+    },
+    querySearch(queryString, cb) {
+
+      let dataList = this.financialWalList
+      let results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (res) => {
+        return (res.financialWay.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
     init() {
       this.loading = false
     },
@@ -238,16 +302,39 @@ export default {
       let orgId = this.otherinfo.orgid
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
-        this.formModel.settlementTime = parseTime(new Date()) 
+        this.formModel.detailDtoList2 = []
+        this.formModel.settlementTime = parseTime(new Date())
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
+        this.formModel.szDtoList.forEach(e => {
+          e.agent = this.otherinfo.name
+        })
+        if (this.formModel.szDtoList.length < 1) { // 默认显示一条收支方式
+          this.plusItem()
+        }
       })
     },
     initDetailDtoList() {
       this.formModel.amount = 0
-      this.formModel.detailDtoList = Object.assign([],this.info)
-      this.formModel.detailDtoList.forEach((e, index) => {
+      this.formModel.detailDtoList = objectMerge2([], this.info)
+
+      // 设置费用项
+
+      let obj = {}
+      this.formModel.detailDtoList.map(el => {
+        if (obj[el.dataName]) {
+          obj[el.dataName].amount += el.amount
+        } else {
+          obj[el.dataName] = el
+        }
+      })
+      for (let i in obj) {
+        this.formModel.detailDtoList2.push(obj[i])
+      }
+      obj = {}
+
+      this.formModel.detailDtoList2.forEach((e, index) => {
         e.dataName = this.dataName
         this.formModel.amount += e.amount
         let data = e.amount.toFixed(2).toString().split('').reverse()
@@ -267,11 +354,14 @@ export default {
         e.tenMillion = data[9]
       })
       this.amountMessage = smalltoBIG(this.formModel.amount)
-      this.amount = this.formModel.amount.toFixed(2).toString().split('')
+      this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse()
       let apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
-         this.amount.splice(apoint, 1)
+        this.amount.splice(apoint, 1)
       }
+    },
+    sender(item, index) {
+      this.$set(this.formModel.szDtoList, index, Object.assign(this.formModel.szDtoList[index], item))
     },
     getSystemTime() {
       getSystemTime().then(data => {
@@ -285,26 +375,36 @@ export default {
       }
     },
     setData() {
-      this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+
+      if (this.dataName === '到站装卸费' && this.dataName === '到站其他费') {
+        this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      } else {
+        this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid) // 不是到付的进入结算页面,结算网点ascriptionOrgid默认为搜索的发车网点
+      }
       this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
       this.$set(this.submitData, 'settlementSn', this.formModel.settlementSn)
       this.$set(this.submitData, 'settlementBy', this.formModel.settlementBy)
       this.$set(this.submitData, 'settlementTime', this.formModel.settlementTime)
       this.$set(this.submitData, 'remark', this.formModel.remark)
-      this.$set(this.submitData, 'tmsFinanceSettlementList', this.formModel.detailDtoList)
+      this.$set(this.submitData, 'tmsFinanceSettlementList', Object.assign([], this.info))
       this.$set(this.submitData, 'tmsFinanceFinancialWayLogList', this.formModel.szDtoList)
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
+          console.log(this.dataName, this.submitData)
+          // return false ////////////////////////////////////////////
           postLoadSettlement(this.submitData).then(data => {
-              this.$message({ type: 'success', message: '操作成功' })
+              this.$message({ type: 'success', message: '保存成功' })
               this.closeMe()
-              this.$router.push({ path: './accountsPayable/batch' })
+              let currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
+              console.log(currentPage)
+              this.$router.push({ path: './accountsPayable/batch/'+currentPage })
+              console.log('./accountsPayable/batch/'+currentPage)
             })
             .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+              this.$message({ type: 'error', message: error.errorInfo || error.text })
             })
         }
       })
@@ -317,7 +417,7 @@ export default {
     },
     plusItem() {
       let data = {
-        agent: '',
+        agent: this.otherinfo.name,
         alipayAccount: '',
         bankAccount: '',
         bankAccountName: '',
@@ -334,8 +434,7 @@ export default {
     getSum(param) { // 表格合计-自定义显示
       const { columns, data } = param
       const sums = []
-      this.$nextTick(() => {
-      })
+      this.$nextTick(() => {})
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '合计'
@@ -345,9 +444,11 @@ export default {
           sums[index] = this.amountMessage
           return
         }
-        for(let i = 13; i > -1; i--) {
+        let count = -2 // 从第3列开始显示
+        for (let i = 12; i > 2; i--) {
+          count++
           if (index === i) {
-            sums[index] = this.amount[i-6]
+            sums[index] = this.amount[count]
             return
           }
         }
@@ -372,112 +473,3 @@ export default {
 }
 
 </script>
-<style lang="scss">
-$borderColor: #999;
-.receiptDialog {
-  .el-dialog {
-    width: 70%;
-    min-width: 985px;
-    max-width: 1200px;
-    .el-dialog__header {
-      text-align: center;
-      .el-dialog__title {
-        font-size: 24px;
-        padding: 0 10px;
-        border-bottom: 2px solid $borderColor;
-      }
-    }
-    .el-dialog__body {
-      padding: 10px;
-    }
-  }
-  .receiptDialog_head {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    .receiptDialog_head_item {
-      display: flex;
-      flex-direction: row;
-      label {
-        padding: 10px 10px 0 0;
-        width: 120px;
-        text-align: right;
-      }
-      .el-input__inner {
-        border-radius: 0;
-        border: none;
-        border-bottom: 1px solid $borderColor; // padding: 0 10px;
-        width: auto;
-      }
-      .el-input.is-disabled .el-input__inner {
-        color: $borderColor;
-        background-color: rgba(0, 0, 0, 0);
-      }
-    }
-  }
-  .receiptDialog_table {
-    margin-top: 10px;
-    width: 100%;
-    padding: 0 30px;
-    height: 200px;
-    .el-table--border td,
-    .el-table--border th,
-    .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,
-    .el-table--border,
-    .el-table--group,
-    .el-table td,
-    .el-table th.is-leaf {
-      border-color: $borderColor;
-    }
-  }
-
-  .receiptDialog_todo {
-    margin-top: 20px;
-    width: 100%;
-    height: 231px;
-    padding: 0 30px; // height: 100px;
-    position: relative;
-    .el-table--border td,
-    .el-table--border th,
-    .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,
-    .el-table--border,
-    .el-table--group,
-    .el-table td,
-    .el-table th.is-leaf {
-      border-color: $borderColor;
-    }
-    .tableItemBtn {
-      width: 30px;
-      padding-left: 8px;
-    }
-    .tableAllBtn {
-      width: 30px;
-      padding-left: 8px;
-      position: absolute;
-      z-index: 33;
-      top: 4px;
-      left: 41px;
-    }
-  }
-  .receiptDialog_remark {
-    width: 100%;
-    margin: 20px 20px 0 0;
-    padding-right: 30px;
-    display: flex;
-    flex-direction: row;
-    label {
-      padding: 10px 10px 0 0;
-      width: 80px;
-      text-align: right;
-    }
-    .el-input__inner {
-      width: 100%;
-      border-radius: 0;
-      border: none;
-      border-bottom: 1px solid $borderColor;
-      padding: 0 10px;
-    }
-  }
-}
-
-</style>

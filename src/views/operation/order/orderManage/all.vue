@@ -1,35 +1,45 @@
 <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">创建运单</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>运单修改</el-button>
-          <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain>运单作废</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('delete')" plain>运单删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:ORDER_MADD>创建运单</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:ORDER_MEDIT5>运单修改</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain v-has:ORDER_MDEL2>运单作废</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('delete')" plain v-has:ORDER_MDEL>运单删除</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_MEXP>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_MPRI>打印</el-button>
+          <span class="viewtip">
+            双击查看详情
+          </span>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
-      <div class="info_tab">
+      <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
+        <div slot="content">双击查看运单详情</div> -->
+
+      <div @mouseover="showtip = true"
+          @mouseout="showtip = false" class="info_tab">
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
           @row-dblclick="showDetail"
           @selection-change="getSelection"
           height="100%"
+          :summary-method="getSumLeft"
+          show-summary
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          
+
           <el-table-column
             fixed
             sortable
             type="selection"
-            width="50">
+            width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column
@@ -48,25 +58,28 @@
               :label="column.label"
               v-else
               :width="column.width">
-              <template slot-scope="scope" v-html="true">
-                  {{ column.slot(scope) }}
+              <template slot-scope="scope">
+                  <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
             </el-table-column>
           </template>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>    
+      <!-- </el-tooltip> -->
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
 </template>
 <script>
 import orderManageApi from '@/api/operation/orderManage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { parseTime } from '@/utils/index'
+import { parseTime, getSummaries } from '@/utils/index'
+import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   components: {
@@ -112,20 +125,24 @@ export default {
         }
       },
       // 默认sort值为true
+      tablekey: '',
       tableColumn: [{
         'label': '运单号',
         'prop': 'shipSn',
-        'width': '100',
+        'width': '150',
         'fixed': true
       }, {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
-        'fixed': true
+        'fixed': false
       }, {
         'label': '运单标识',
         'prop': 'shipIdentifying',
-        'width': '150'
+        'width': '150',
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
       }, {
         'label': '开单网点',
         'prop': 'fromOrgName',
@@ -143,19 +160,19 @@ export default {
         }
       }, {
         'label': '发货人',
-        'prop': 'senderCustomerName',
+        'prop': 'shipSenderName',
         'width': '150'
       }, {
         'label': '发货人电话',
-        'prop': 'senderCustomerMobile',
+        'prop': 'shipSenderMobile',
         'width': '150'
       }, {
         'label': '收货人',
-        'prop': 'receiverCustomerName',
+        'prop': 'shipReceiverName',
         'width': '150'
       }, {
         'label': '收货人电话',
-        'prop': 'receiverCustomerMobile',
+        'prop': 'shipReceiverMobile',
         'width': '150'
       }, {
         'label': '交接方式',
@@ -207,8 +224,11 @@ export default {
         'width': '150'
       }, {
         'label': '等通知放货',
-        'prop': 'shipIsControll',
-        'width': '150'
+        'prop': 'status',
+        'width': '150',
+        'slot': function(scope) {
+          return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'
+        }
       }, {
         'label': '回单要求',
         'prop': 'shipReceiptRequireName',
@@ -253,6 +273,7 @@ export default {
         'label': '到达省',
         'prop': 'shipToCityName',
         'width': '150',
+        hidden: true,
         slot: function(scope) {
           return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '')
         }
@@ -260,6 +281,7 @@ export default {
         'label': '到达市',
         'prop': 'shipToCityName',
         'width': '150',
+        hidden: true,
         slot: function(scope) {
           return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '')
         }
@@ -267,137 +289,174 @@ export default {
         'label': '到达县区',
         'prop': 'shipToCityName',
         'width': '150',
+        hidden: true,
         slot: function(scope) {
           return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '')
         }
       }, {
-        'label': '制单人',
+        'label': '业务员',
         'prop': 'userName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货方',
-        'prop': 'senderCustomerUnit',
+        'prop': 'shipSenderUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货方',
-        'prop': 'receiverCustomerUnit',
+        'prop': 'shipReceiverUnit',
+        hidden: true,
         'width': '150'
       }, {
         'label': '发货人地址',
-        'prop': 'senderDetailedAddress',
+        'prop': 'shipSenderAddress',
+        hidden: true,
         'width': '150'
       }, {
         'label': '收货人地址',
-        'prop': 'receiverDetailedAddress',
+        'prop': 'shipReceiverAddress',
+        hidden: true,
         'width': '150'
       }, {
         'label': '回单号',
         'prop': 'shipReceiptSn',
+        hidden: true,
         'width': '150'
       }, {
         'label': '回扣',
         'prop': 'brokerageFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '客户单号',
         'prop': 'shipCustomerNumber',
+        hidden: true,
         'width': '150'
       }, {
         'label': '运输方式',
         'prop': 'shipShippingTypeName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '业务类型',
         'prop': 'shipBusinessTypeName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '时效',
         'prop': 'shipEffectiveName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货批次',
         'prop': 'pickupBatchNumber',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货司机名',
         'prop': 'driverName',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货车牌',
         'prop': 'truckIdNumber',
+        hidden: true,
         'width': '150'
       }, {
         'label': '送货费',
         'prop': 'deliveryFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '代收款手续费',
         'prop': 'commissionFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '声明价值',
         'prop': 'productPrice',
+        hidden: true,
         'width': '150'
       }, {
         'label': '保险费',
         'prop': 'insuranceFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '装卸费',
         'prop': 'handlingFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '包装费',
         'prop': 'packageFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '提货费',
         'prop': 'pickupFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '上楼费',
         'prop': 'goupstairsFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '实际提货费',
-        'prop': 'shipSn',
+        'prop': 'realityhandlingFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '叉车费',
         'prop': 'forkliftFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '报关费',
         'prop': 'customsFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '其他费收入',
         'prop': 'otherfeeIn',
+        hidden: true,
         'width': '150'
       }, {
         'label': '其他费支出',
         'prop': 'otherfeeOut',
+        hidden: true,
         'width': '150'
       }, {
         'label': '税率',
         'prop': 'taxRate',
+        hidden: true,
         'width': '150'
       }, {
         'label': '税金',
         'prop': 'taxes',
+        hidden: true,
         'width': '150'
       }, {
         'label': '入仓费',
         'prop': 'housingFee',
+        hidden: true,
         'width': '150'
       }, {
         'label': '印花税',
         'prop': 'stampTax',
+        hidden: true,
         'width': '150'
-      }]
+      }],
+      showtip: false
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      const propsArr = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
+      return getSummaries(param, propsArr)
+    },
     viewDetails(row) {
       this.$router.push({
         path: '/operation/order/createOrder',
@@ -409,7 +468,8 @@ export default {
       })
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+      // this.eventBus.$emit('showOrderDetail', order.id)
+      this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
     },
     fetchAllOrder() {
       this.loading = true
@@ -434,7 +494,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -449,27 +509,47 @@ export default {
         case 'add':
           this.isModify = false
           this.selectInfo = {}
-          this.$router.push({ path: '/operation/order/createOrder/' })
+          this.$router.push({ path: '/operation/order/createOrder' })
           break
           // 修改运单信息
         case 'modify':
           this.isModify = true
-          if (this.selected.length > 1) {
+          var thelist = this.selected.filter(el => {
+            return el.shipStatus !== 67
+          })
+          if (thelist.length > 1) {
             this.$message({
               message: '每次只能修改单条数据~',
               type: 'warning'
             })
-          }
-          this.selectInfo = this.selected[0]
-          this.$router.push({
-            path: '/operation/order/createOrder',
-            query: {
-              orderid: this.selectInfo.id,
-              type: 'modify',
-                  // tab: '修改' + this.selectInfo.shipSn
-              tab: '改单'
+          } else if (thelist.length < 1) {
+            this.$message({
+              message: '已签收项不能被修改~',
+              type: 'warning'
+            })
+          } else {
+            this.selectInfo = thelist[0]
+            var canModify = true
+            // 判断是否有权限
+            if (this.otherinfo.systemSetup.shipPermission.onlyUpdateOwnShip === '1') {
+              // 只能修改自己的运单
+              canModify = thelist[0].userid === this.otherinfo.id
             }
-          })
+            if (canModify) {
+              this.$router.push({
+                path: '/operation/order/modifyOrder',
+                query: {
+                  orderid: this.selectInfo.id,
+                  type: 'modify',
+                      // tab: '修改' + this.selectInfo.shipSn
+                  tab: '改单'
+                }
+              })
+            } else {
+              this.$message.warning('只能修改自己的运单~')
+            }
+          }
+
           break
           // 删除运单
         case 'delete':
@@ -487,30 +567,40 @@ export default {
               type: 'info'
             })
           } else {
-            var id = this.deleteItem[0].id
-            this.$confirm('确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？', '提示', {
-              confirmButtonText: '删除',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              orderManageApi.deleteOrderInfoById(id).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
+            var canDelete = true
+            // 判断是否有权限
+            if (this.otherinfo.systemSetup.shipPermission.onlyDeleteOwnShip === '1') {
+              // 只能删除自己的运单
+              canDelete = deleteItem[0].userid === this.otherinfo.id
+            }
+            if (canDelete) {
+              var id = deleteItem[0].id
+              this.$confirm('确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？', '提示', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                orderManageApi.deleteOrderInfoById(id).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  })
+                  this.fetchData()
+                }).catch(err => {
+                  this.$message({
+                    type: 'info',
+                    message: '删除失败，原因：' + (err.text ? err.text : err)
+                  })
                 })
-                this.fetchData()
-              }).catch(err => {
+              }).catch(() => {
                 this.$message({
                   type: 'info',
-                  message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '已取消删除'
                 })
               })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消删除'
-              })
-            })
+            } else {
+              this.$message.warning('只能删除自己的运单~')
+            }
           }
           break
           // 作废运单
@@ -529,44 +619,57 @@ export default {
               type: 'info'
             })
           } else {
-            var theid = cancelItem[0].id
+            var canCancel = true
+            if (this.otherinfo.systemSetup.shipPermission.onlyInvalidOwnShip === '1') {
+              // 只能修改自己的运单
+              canCancel = cancelItem[0].userid === this.otherinfo.id
+            }
 
-            this.$confirm('确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？', '提示', {
-              confirmButtonText: '作废',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              orderManageApi.deleteCancleOrderById(theid).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '作废成功!'
+            if (canCancel) {
+              var theid = cancelItem[0].id
+
+              this.$confirm('确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？', '提示', {
+                confirmButtonText: '作废',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                orderManageApi.deleteCancleOrderById(theid).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '作废成功!'
+                  })
+                  this.fetchData()
+                }).catch(err => {
+                  this.$message({
+                    type: 'info',
+                    message: '作废失败，原因：' + err.text ? err.text : err
+                  })
                 })
-                this.fetchData()
-              }).catch(err => {
+              }).catch(() => {
                 this.$message({
                   type: 'info',
-                  message: '作废失败，原因：' + err.errorInfo ? err.errorInfo : err
+                  message: '已取消作废'
                 })
               })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消作废'
-              })
-            })
+            } else {
+              this.$message.warning('只能作废自己的运单~')
+            }
           }
 
           break
-          // 导出数据
+        // 导出数据
         case 'export':
-          var ids2 = this.selected.map(el => {
-            return el.customerId
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '全部运单-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
-          orderManageApi.getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          break
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '全部运单'
           })
           break
       }
@@ -578,6 +681,10 @@ export default {
     },
     closeSetupTable() {
       this.setupTableVisible = false
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

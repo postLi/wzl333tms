@@ -3,11 +3,11 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('accept')">受理</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('accept')" v-has:ORDERMANGER_REVER2>受理</el-button>
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
-        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>导入运单</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:ORDERMANGER_DEL2>删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDERMANGER_EXP2>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain v-has:ORDERMANGER_IN>导入运单</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')">新增</el-button>-->
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>-->
@@ -251,7 +251,7 @@
 import { getAllCustomer, deleteSomeCustomerInfo, getExportExcel } from '@/api/company/customerManage'
 import { getPostlist } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -314,8 +314,8 @@ export default {
     fetchAllList() {
       this.loading = true
       return getPostlist(this.searchForm).then(data => {
-        this.usersArr = data.list
-        this.total = data.totalCount
+        // this.usersArr = data.list
+        // this.total = data.totalCount
         this.loading = false
       })
     },
@@ -332,14 +332,15 @@ export default {
     },
     showImport () {
       // 显示导入窗口
+      this.$message({type: 'warning', message: '该功能尚在开发中！'})
     },
     doAction (type) {
       if(type==='import'){
         this.showImport()
-        return false
+        // return false
       }
       // 判断是否有选中项
-      if(!this.selected.length && type !== 'accept'){
+      if(!this.selected.length && type !== 'accept' && type!=='import'){
           this.closeAddCustomer()
           this.$message({
               message: '请选择要操作的项~',
@@ -403,7 +404,7 @@ export default {
                       }).catch(err=>{
                           this.$message({
                               type: 'info',
-                              message: '删除失败，原因：' + err.errorInfo ? err.errorInfo : err
+                              message: err.errorInfo || err.text || '未知错误，请重试~'
                           })
                       })
 

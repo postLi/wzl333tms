@@ -1,18 +1,20 @@
 <template>
-  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
-      <el-form-item label="所属网点:">
-          <SelectTree v-model="searchForm.orgId" />
+  <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
+      <div class="staff_searchinfo--input">
+        <el-form-item label="所属网点">
+            <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" />
+        </el-form-item>
+        <el-form-item label="收支方式">
+          <SelectType @change="finitem" v-model="searchForm.financialWayTypeId" type="financial_way_type" placeholder="请选择" class="pickup-way" />
+        </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="searchForm.status">
+          <el-option label="启用" :value="0"></el-option>
+          <el-option label="停用" :value="1"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="收支方式:">
-        <SelectType v-model="searchForm.financialWayTypeId" type="financial_way_type" placeholder="请选择" class="pickup-way" />
-      </el-form-item>
-    <el-form-item label="状态:">
-      <el-select v-model="searchForm.status">
-        <el-option label="启用" :value="0"></el-option>
-        <el-option label="停用" :value="1"></el-option>
-      </el-select>
-    </el-form-item>
-      <el-form-item class="staff_searchinfo_tn art_marginTop" >
+      </div>
+      <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" @click="clearForm" plain>清空</el-button>
       </el-form-item>
@@ -41,15 +43,15 @@ export default {
     }
   },
   computed: {
-    title () {
+    title() {
 
     }
   },
-  data () {
+  data() {
     return {
       searchForm: {
         orgId: '',
-        financialWayTypeId:'',
+        financialWayTypeId: '',
         status: ''
       },
       rules: {
@@ -58,19 +60,22 @@ export default {
     }
   },
   watch: {
-    orgid(newVal){
+    orgid(newVal) {
       this.searchForm.orgid = newVal
     }
   },
-  mounted () {
+  mounted() {
     this.searchForm.orgId = this.orgid
     // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
-    onSubmit () {
+    finitem(item) {
+      console.log(typeof item)
+    },
+    onSubmit() {
       this.$emit('change', this.searchForm)
     },
-    clearForm () {
+    clearForm() {
       this.searchForm.orgId = this.orgid
       this.searchForm.financialWayTypeId = ''
       this.searchForm.status = ''
@@ -78,13 +83,3 @@ export default {
   }
 }
 </script>
-<style type="text/css" lang="scss">
-  .staff_searchinfo{
-    .staff_searchinfo_tn.el-form-item:last-of-type{
-      width: 10%;
-      float: right;
-    }
-  }
-
-</style>
-

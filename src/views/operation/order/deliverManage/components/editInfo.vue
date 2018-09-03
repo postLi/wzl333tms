@@ -15,12 +15,12 @@
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
                 <el-col :span="3">操作网点</el-col>
-                <el-col :span="2">操作人</el-col>
-                <el-col :span="6">操作信息</el-col>
+                <el-col :span="4">操作人</el-col>
+                <el-col :span="8">操作信息</el-col>
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" v-for="(item, index) in trackDetail" :key="index">
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
                       <el-row class="stepItem">
@@ -31,11 +31,11 @@
                             <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
                           </template>
                         </el-col>
-                        <el-col :span="4" class="textcenter">
+                        <el-col :span="4" class="">
                           <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p> -->
                           <p>{{item.operatorTime }}</p>
                         </el-col>
-                        <el-col :span="3" class="textcenter">
+                        <el-col :span="3" class="">
                           <p>{{item.orgName}}</p>
                         </el-col>
                         <el-col :span="4">
@@ -50,9 +50,9 @@
                       </el-row>
                     </template>
                   </el-step>
-                  <el-step>
+                  <!-- <el-step>
                     <span slot="icon" class="location"></span>
-                  </el-step>
+                  </el-step> -->
                 </el-steps>
               </div>
             </div>
@@ -63,14 +63,14 @@
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootEdit">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
         <el-form-item label="类型" prop="trackNode">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
+          <el-input :maxlength="10" v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="createTime">
           <el-date-picker v-model.trim="formModel.operatorTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="trackInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+          <el-input :maxlength="250" v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return {
-      popTitle: '在途跟踪',
+      popTitle: '查看详情',
       loading: false,
       isModify: false,
       infoId: {},
@@ -144,18 +144,17 @@ export default {
   },
   watch: {
     id() {},
-    info() {},
+    info(newVal) {
+      if (newVal) {
+        this.getDetail()
+        this.getSystemTime()
+      }
+    },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()
       }
     }
-  },
-  mounted() {
-    if (this.popVisible) {
-      this.getDetail()
-    }
-    this.getSystemTime()
   },
   methods: {
     getSystemTime() {
@@ -171,10 +170,10 @@ export default {
           if (this.formModel.id) {
             console.log('edit')
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
                 this.editTrack()
               })
               .catch(() => {
@@ -183,10 +182,10 @@ export default {
           } else {
             console.log('add')
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
                 this.addTrack()
               })
               .catch(() => {
@@ -210,14 +209,17 @@ export default {
     },
     deleteTrack(item) {
       this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
           return deleteTrack(item.id).then(data => {
-            this.$message({ type: 'success', message: '删除成功' })
-            this.getDetail()
-          })
+              this.$message({ type: 'success', message: '删除成功' })
+              this.getDetail()
+            })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text || '删除失败')
+            })
         })
         .catch(() => {
           this.$message({ type: 'warning', message: '取消操作' })
@@ -231,19 +233,25 @@ export default {
     editTrack() { // 修改
       this.formModel.transferId = 0
       putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '操作失败')
+        })
     },
     addTrack() { // 添加
       this.formModel.loadId = this.id
       postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-        this.getSystemTime()
-      })
+          this.$message({ type: 'success', message: '添加成功' })
+          this.getDetail()
+          this.resetForm()
+          this.getSystemTime()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '操作失败')
+        })
     },
     handleClick() {
       if (this.activeName === 'second') {
@@ -393,11 +401,13 @@ export default {
       &:hover {}
     }
     /* 鼠标划过样式 */
-    .trackactive {
-      .modifybtn,
-      .deletebtn {
+    .trackactive{
+    .modifybtn, .deletebtn{
         display: inline-block;
       }
+    }
+    .trackactive,
+    .firstactive {
       .typebox {
         background: url("../../../../../assets/png/track-active.png") no-repeat;
         color: #fff;
@@ -422,10 +432,10 @@ export default {
     .stepItem_title {
       color: #333;
       margin-top: 10px;
-      padding-left: 34px;
+      padding-left: 28px;
       height: 34px;
       .el-col {
-        text-align: center;
+        text-align: left;
       }
       .tracktype {
         text-align: left;

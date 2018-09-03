@@ -7,6 +7,8 @@
 // 页面基本样式
 @import './page.scss';
 @import './dialog.scss';
+@import './accountLoadTable.scss'; // 财务结算 左右穿梭框样式
+@import './financeReceipt.scss'; // 财务结算 结算单样式
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -101,11 +103,11 @@ table{
   }
 }
 
-.info-require::before{
-  content: '*';
-  color: #f56c6c;
-  margin-right: 4px;
-}
+// .info-require::before{
+//   content: '*';
+//   color: #f56c6c;
+//   margin-right: 4px;
+// }
 
 //main-container全局样式
 #app{
@@ -135,7 +137,97 @@ table{
   height: 16px;
   vertical-align: middle;
 }
+.ship-zhuan,.ship-chai,.ship-gai,.ship-kong,.ship-yi{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.ship-zhuan{
+  background: url("./assets/icom/shipStatus/zhuan.png") no-repeat;;
+}
+.ship-chai{
+  background: url("./assets/icom/shipStatus/chai.png") no-repeat;;
+}
+.ship-gai{
+  background: url("./assets/icom/shipStatus/gai.png") no-repeat;;
+}
+.ship-kong{
+  background: url("./assets/icom/shipStatus/kong.png") no-repeat;;
+}
+.ship-yi{
+  background: url("./assets/icom/shipStatus/yi.png") no-repeat;;
+}
+// 运单费用状态
+.shipstatus{
+  position: absolute;
+  width: 166px;
+  height: 91px;
+  top: 120px;
+  right: 110px;
+  display: none;
+  vertical-align: middle;
+  z-index: 999;
+  pointer-events: none;
+}
+.ship-bufenjiesuan{
+  display: block;
+  background: url("./assets/icom/shipFeeStatus/bufenjiesuan.png") no-repeat;;
+}
+.ship-yunfeiweijie{
+  display: block;
+  background: url("./assets/icom/shipFeeStatus/yunfeiweijie.png") no-repeat;;
+}
+.ship-yunfeiyijie{
+  display: block;
+  background: url("./assets/icom/shipFeeStatus/yunfeiyijie.png") no-repeat;;
+}
+
 // 弹窗大图样式
+.clickimg{
+  border: 1px solid #ccc;
+  padding: 2px;
+  text-align: center;
+  width: 150px;
+  height: 150px;
+  display: inline-block;
+  margin-left: 5px;
+  line-height: 150px;
+  position: relative;
+  cursor: pointer;
+
+  &:hover:before{
+    display: block;
+  }
+
+  &:before{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    content: "\E641";
+    left: 0;
+    top: 0;
+    display: none;
+    font-family: element-icons!important;
+    cursor: pointer;
+    color: #fff;
+    font-size: 32px;
+  }
+
+  img{
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle;
+  }
+}
+
 .showPictureWrapper{
   width: auto;
   min-width: 100px;
@@ -154,3 +246,6 @@ table{
   }
 }
 
+.popperHide{
+  display: none !important;
+}

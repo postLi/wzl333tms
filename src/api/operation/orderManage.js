@@ -107,7 +107,17 @@ export default {
 }
    */
   getAllShip(param) {
-    return fetch.post('/api-order/order/v1/findAllShip', param).then(checkStatus).then(res => {
+    const vo = param.vo
+    let url = '/api-order/order/v1/findAllShip'
+    // 如果是草稿箱
+    if (vo.shipDelete === 3) {
+      url = '/api-order/order/v1/draft'
+    }
+    // 如果是修改记录
+    if (vo.shipIsUpdate === 1) {
+      url = '/api-order/order/v1/change'
+    }
+    return fetch.post(url, param).then(checkStatus).then(res => {
       return res.data ? res.data : { total: 0, list: [] }
     })
   },

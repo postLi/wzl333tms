@@ -12,15 +12,28 @@ const tagsView = {
       } else {
         if (state.visitedViews.some(v => v.path === view.path)) return
       }
-      console.log('add view:', view.query.tab, view.name)
-      state.visitedViews.push({
-        name: view.query.tab || view.name,
-        path: view.path,
-        fullPath: view.fullPath,
-        tab: view.query.tab || '',
-        lock: false,
-        title: view.query.tab || view.meta.title || '未命名'
-      })
+      // console.log('add view:', view.query.tab, view.name)
+      // 针对tab子页面
+      if (view.meta.istab && state.visitedViews.some(v => v.title === view.meta.ptitle)) {
+        // 如果已存在相同的父级，则更新其链接，不新增tab
+        state.visitedViews.forEach(ele => {
+          if (ele.title === view.meta.ptitle) {
+            ele.path = view.path
+            ele.fullPath = view.fullPath
+          }
+        })
+      } else {
+        state.visitedViews.push({
+          name: view.query.tab || view.name,
+          path: view.path,
+          fullPath: view.fullPath,
+          tab: view.query.tab || '',
+          lock: false,
+          title: view.query.tab || view.meta.ptitle || view.meta.title || '未命名',
+          istab: view.meta.istab
+        })
+      }
+
       if (!view.meta.noCache) {
         state.cachedViews.push(view.name)
       }

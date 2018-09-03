@@ -1,48 +1,14 @@
 <template>
   <div class="controlgoods-manager tab-wrapper">
     <div class="eltab clearfix">
-        <span @click="component = 'NoGoods'" class="tab-label" :class="{'active-tab': component.indexOf('NoGoods')!==-1}">未放货</span>
-        <span @click="component = 'HaveGoods'" class="tab-label" :class="{'active-tab': component.indexOf('HaveGoods')!==-1}">已放货</span>
+      <router-link to="/operation/service/controlgoods/allGoods" class="tab-label" >全部</router-link>
+      <router-link to="/operation/service/controlgoods/noGoods" class="tab-label" >未放货</router-link>
+      <router-link to="/operation/service/controlgoods/haveGoods" class="tab-label" >已放货</router-link>
     </div>
     <keep-alive>
-        <component v-bind:is="component"></component>
+        <router-view></router-view>
     </keep-alive>
   </div>
   
 </template>
-
-<script>
-import NoGoods from './noGoods'// 登记
-import HaveGoods from './haveGoods'// 处理
-export default {
-  components: {
-    NoGoods,
-    HaveGoods
-  },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-
-  },
-  mounted() {
-        // this.searchQuery.vo.orgid = this.otherinfo.orgid
-            // this.fetchAllCustomer(this.otherinfo.orgid).then(res => {
-                // this.loading = false
-            // })
-  },
-  data() {
-    return {
-      btnsize: 'mini',
-      component: 'NoGoods'
-    }
-  },
-  methods: {
-  }
-
-}
-</script>
 

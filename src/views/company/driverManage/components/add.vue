@@ -3,16 +3,16 @@
     <template class="addDriverPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="司机姓名" prop="driverName">
-          <el-input v-model="form.driverName" maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.driverName" :maxlength="10" auto-complete="off" ></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
-          <el-input v-numberOnly v-model="form.driverMobile" maxlength="11" auto-complete="off"></el-input>
+          <el-input v-numberOnly v-model="form.driverMobile" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid" />
+          <SelectTree v-model="form.orgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="身份证号" prop="driverCardid">
-          <el-input v-model="form.driverCardid" maxlength="18" auto-complete="off"></el-input>
+          <el-input v-model="form.driverCardid" :maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         
         <el-form-item label="驾驶证类型" prop="licenseType">
@@ -30,19 +30,19 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
-          <el-input v-model="form.bankCardNumber" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.bankCardNumber" v-numberOnly :maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="银行名称" prop="bankName">
-          <el-input v-model="form.bankName" maxlength="20" auto-complete="off"></el-input>
+          <el-input v-model="form.bankName" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开户行" prop="openBank">
-          <el-input maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
+          <el-input :maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="司机地址" prop="driverAddress">
-          <el-input v-model="form.driverAddress" maxlength="50" auto-complete="off"></el-input>
+          <el-input v-model="form.driverAddress" :maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
-          <el-input type="textarea" maxlength="125" v-model="form.driverRemarks"></el-input>
+          <el-input type="textarea" :maxlength="300" v-model.trim="form.driverRemarks"></el-input>
         </el-form-item>
         <!-- 个人信息 -->
         <el-form-item class="clearfix uploadcard">
@@ -65,7 +65,7 @@
   </pop-right>
 </template>
 <script>
-import { REGEX }  from '@/utils/validate'
+import { REGEX } from '@/utils/validate'
 import { postDriver, putDriver } from '@/api/company/driverManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
@@ -102,68 +102,80 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-          'otherinfo'
-      ])
+    ...mapGetters([
+      'otherinfo'
+    ])
   },
-  data () {
+  data() {
     const _this = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       } else {
         if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
+          this.$refs.ruleForm2.validateField('checkPass')
         }
-        callback();
-      }
-    }
-
-    const validateFormMobile = function (rule, value, callback) {
-      if(REGEX.MOBILE.test(value)){
         callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
       }
     }
 
-    const validateFormNumber = function (rule, value, callback) {
+    // const validateFormMobile = function(rule, value, callback) {
+    //   if (REGEX.MOBILE.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
+
+    const validateFormNumber = function(rule, value, callback) {
       console.log('rule:', rule)
       _this.form[rule.field] = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
 
+    // const validatedriverCardid = function(rule, value, callback) {
+    //   if (value === '') {
+    //     callback(new Error('请输入身份证号'))
+    //   } else if (REGEX.ONLY_NUMBER_AND_LETTER.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('身份证号码只能输入英文和数字'))
+    //   }
+    // }
     return {
       form: {
-        "bankCardNumber": "", // 银行卡号 20
-        "bankName": "", // 银行名称 20
-        "certification": "", // 从业资格证图片地址 125
-        "driverAddress": "", // 地址 50
-        "driverCardid": "", // 身份证号码 18
-        "driverMobile": "", // 手机号码 11
-        "driverName": "", // 司机姓名 10
-        "driverRemarks": "", // 备注 125
-        "drivingPicture": "", // 驾驶证图片地址 125
+        'bankCardNumber': '', // 银行卡号 20
+        'bankName': '', // 银行名称 20
+        'certification': '', // 从业资格证图片地址 125
+        'driverAddress': '', // 地址 50
+        'driverCardid': '', // 身份证号码 18
+        'driverMobile': '', // 手机号码 11
+        'driverName': '', // 司机姓名 10
+        'driverRemarks': '', // 备注 125
+        'drivingPicture': '', // 驾驶证图片地址 125
         // "id": 0, // 司机ID 11
-        "idcardPicture": "", // 身份证图片地址 125
-        "licenseType": '', // 驾驶证类型 18
-        "licenseTypeName": "",
-        "openBank": "", // 开户行 20
-        "validityDate": "", // 驾驶证有效期
-        "orgid": 0 // 所属机构 11
+        'idcardPicture': '', // 身份证图片地址 125
+        'licenseType': '', // 驾驶证类型 18
+        'licenseTypeName': '',
+        'openBank': '', // 开户行 20
+        'validityDate': '', // 驾驶证有效期
+        'orgid': 0 // 所属机构 11
       },
       formLabelWidth: '100px',
       tooltip: false,
       rules: {
         driverName: [
-          { required: true, message: '请输入司机名称', trigger: 'blur' }
+          { required: true, message: '请输入司机名称' }
         ],
         orgid: [
-          { required: true, message: '请选择所属机构', trigger: 'blur' }
+          { required: true, message: '请选择所属机构' }
         ],
         driverMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
-          // { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入11位手机号码', pattern: REGEX.MOBILE }
+          // { validator: validateFormNumber, trigger: 'change' }
+        ],
+        driverCardid: [
+          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, message: '身份证号码只能输入字母和数字' }
         ]
       },
       popTitle: '新增司机',
@@ -177,7 +189,7 @@ export default {
       inited: false,
 
       pickOption2: {
-        firstDayOfWeek:1,
+        firstDayOfWeek: 1,
         disabledDate(time) {
           return time.getTime() < Date.now()
         }
@@ -185,34 +197,37 @@ export default {
 
     }
   },
-  mounted () {
+  mounted() {
     this.form.orgid = this.orgid
-    if(!this.inited){
+    if (!this.inited) {
       this.inited = true
       this.initInfo()
     }
   },
   watch: {
-    popVisible (newVal, oldVal) {
-      if(!this.inited){
+    popVisible(newVal, oldVal) {
+      if (!this.inited) {
         this.inited = true
         this.initInfo()
       }
     },
-    orgid (newVal) {
+    orgid(newVal) {
       this.form.orgid = newVal
     },
-    info () {
-      if(this.isModify){
+    info() {
+      if (this.isModify) {
         this.popTitle = '修改司机'
-        let data = Object.assign({},this.info)
-        for(let i in this.form){
+        const data = Object.assign({}, this.info)
+        for (const i in this.form) {
           this.form[i] = data[i]
+        }
+        if (this.form.validityDate) {
+          this.form.validityDate = +new Date(this.form.validityDate)
         }
         this.form.id = data.id
       } else {
         this.popTitle = '新增司机'
-        for(let i in this.form){
+        for (const i in this.form) {
           this.form[i] = ''
         }
         delete this.form.id
@@ -221,53 +236,52 @@ export default {
     }
   },
   methods: {
-    initInfo () {
+    initInfo() {
       this.loading = false
     },
-    getOrgid (id) {
+    getOrgid(id) {
       this.form.orgid = id
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          let data = Object.assign({},this.form)
+          const data = Object.assign({}, this.form)
           data.fixPhone = this.fixPhone
           let promiseObj
           // 判断操作，调用对应的函数
-          if(this.isModify){
+          console.log(this.isModify)
+          if (this.isModify) {
             promiseObj = putDriver(data)
-          } else {
+          } else if (!this.isModify) {
             promiseObj = postDriver(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
-            this.$alert('操作成功', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.closeMe()
-                this.$emit('success')
-              }
-            });
+            this.$message.success('保存成功')
+            this.closeMe()
+            this.$emit('success')
           }).catch(err => {
+            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
           })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    reset () {
+    reset() {
       this.$refs['ruleForm'].resetFields()
+      this.form.driverMobile = ''
+      this.form.idcardPicture = ''
     },
-    closeMe (done) {
-      this.reset()
-      this.$emit('update:popVisible', false);
-      if(typeof done === 'function'){
+    closeMe(done) {
+      // this.reset()
+      this.$emit('update:popVisible', false)
+      if (typeof done === 'function') {
         done()
       }
-    },
+    }
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <div class="detailTable">
-    <el-form inline v-model="info" label-width="100" class="detailTable_info">
+  <div class="detailTablePop">
+    <el-form inline v-model="info" label-width="100" class="detailTablePop_info">
       <table>
         <tbody>
           <tr>
@@ -28,14 +28,14 @@
             </td>
             <th>可载重量</th>
             <td>
-              <el-input v-model="info.actualVolumeall" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
             <th>分摊方式</th>
             <td>
               <!-- {{info.truckLoad}} -->
-              <el-input v-model="info.apportionTypeName" :size="btnsize"  disabled></el-input>
+              <el-input v-model="info.apportionTypeName" :size="btnsize" disabled></el-input>
             </td>
             <th>送货日期</th>
             <td>
@@ -43,13 +43,13 @@
             </td>
             <th>要求到达时间</th>
             <td>
-              <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
             <th>备注</th>
             <td colspan="5">
-               <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
+              <el-input v-model="info.remark" :size="btnsize" disabled></el-input>
             </td>
           </tr>
         </tbody>
@@ -64,11 +64,25 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+        <!-- <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50" sortable type="selection"></el-table-column>
           <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-          <el-table-column sortable width="120" prop="shipId" label="运单号"></el-table-column>
+          <el-table-column sortable width="120" prop="shipSn" label="运单号"></el-table-column>
+          <el-table-column sortable width="120" prop="signStatus" label="签收状态"></el-table-column>
           <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
           <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
           <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
@@ -82,11 +96,13 @@
           <el-table-column sortable width="120" prop="shipReceiverName" label="收货人"></el-table-column>
           <el-table-column sortable width="120" prop="shipReceiverMobile" label="收货人电话"></el-table-column>
           <el-table-column sortable width="200" prop="cargoName" label="货品名"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="货号"></el-table-column>
+          <el-table-column sortable width="120" prop="shipGoodsSn" label="货号"></el-table-column>
           <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
-        </el-table>
+        </el-table> -->
       </div>
     </div>
+    <!-- 表格设置弹出框 -->
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     <!-- <Addbatch :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="closeAddBacth" :isModify="isModify" :isSongh="isSongh"></Addbatch> -->
   </div>
 </template>
@@ -94,8 +110,12 @@
 import { getSelectLoadDetailList } from '@/api/operation/load'
 // import { postBatchSign } from '@/api/operation/deliverManage'
 import { objectMerge2 } from '@/utils/index'
-// import Addbatch from './sign'
+import TableSetup from '@/components/tableSetup'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
+  components: {
+    TableSetup
+  },
   props: {
     info: {
       type: Array,
@@ -106,19 +126,20 @@ export default {
       default: false
     }
   },
-  watch: {
-    info() {}
-  },
   data() {
     return {
       btnsize: 'mini',
+      setupTableVisible: false,
       loadId: '',
+      tablekey: 0,
       detailList: [],
       selectDetailList: [],
       message: false,
       signData: {
         shipIds: [],
+        orgIds: [],
         childShipIds: [],
+        loadIds: [],
         signTime: '',
         signName: '',
         signCocumentTypeId: 0,
@@ -126,11 +147,117 @@ export default {
         signTypeId: 0,
         remark: '',
         signPic: ''
-      }
+      },
+      tableColumn: [{
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单重量',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单体积',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '130',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
+        }
+      ]
     }
-  },
-  mounted() {
-    this.toggleAllRows()
   },
   watch: {
     isShow() {
@@ -138,35 +265,42 @@ export default {
         this.getLoadTrack()
         this.toggleAllRows()
       }
+    },
+    info(newVal) {
+      if (newVal) {
+        this.getLoadTrack()
+        this.toggleAllRows()
+      }
     }
   },
   methods: {
-    setTable() {},
+    setTable() {
+      this.setupTableVisible = true
+    },
     doAction(type) {
       switch (type) {
         case 'add': // 签收
           this.openSignVisible()
           break
-        case 'print':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'print': // 打印
+          PrintInFullPage({
+            data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
-        case 'export':
-          this.$message({ type: 'warning', message: '暂无此功能，敬请期待~' })
+        case 'export': // 导出
+          SaveAsFile({
+            data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
+            columns: this.tableColumn,
+            name: '送货管理'
+          })
           break
       }
     },
-    setData() {},
-    // postBatchSign() {
-    // postBatchSign(data).then(data => {
-    //     this.$router.push({ path: '././deliverManage', query: { tableKey: Math.random() } })
-    //     this.$message({ type: 'success', message: '签收操作成功' })
-    //     this.message = true
-    //   })
-    //   .catch(error => {
-    //     this.message = false
-    //   })
-    // this.$emit('isSuccess', this.message)
-    // },
+    setData() {
+      // this.setupTableVisible = true
+    },
     getLoadTrack() {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
@@ -182,18 +316,34 @@ export default {
     getSelection(list) {
       let data = {}
       this.$set(data, 'shipIds', [])
+      this.$set(data, 'orgIds', [])
       this.$set(data, 'childShipIds', [])
+      this.$set(data, 'loadIds', [])
+      this.$set(data, 'signName', '')
+      let nameArr = []
       if (list.length > 0) {
         this.selectDetailList = objectMerge2([], list)
-        this.selectDetailList.forEach(e => {
-          // data.shipIds = e.shipId
-          // data.childShipIds = e.childShipIds
+        this.selectDetailList.forEach((e, index) => {
           data.shipIds.push(e.shipId)
-          if (!e.childShipIds || e.childShipIds === '') {
-            e.childShipIds = null
+          if (!e.childShipId || e.childShipId === '') {
+            e.childShipId = null
           }
-          data.childShipIds.push(e.childShipIds)
+          if (!e.orgid || e.orgid === '') {
+            e.orgid = null
+          }
+          nameArr[index] = e.shipReceiverName
+          data.childShipIds.push(e.childShipId)
+          data.orgIds.push(e.orgid)
+          data.loadIds.push(this.loadId)
         })
+        nameArr = nameArr.filter((v, i) => { return nameArr.indexOf(v) === i })
+        if (nameArr.length > 1 && nameArr[0] !== nameArr[1]) { // 设置签收人
+          data.signName = ''
+        }
+        if (nameArr.length === 1) {
+          data.signName = nameArr[0]
+        }
+        console.log(data.signName)
         // data.shipIds = data.shipIds.join(',')
         // data.childShipIds = data.childShipIds.join(',')
       } else {
@@ -201,8 +351,11 @@ export default {
       }
       this.signData.shipIds = data.shipIds
       this.signData.childShipIds = data.childShipIds
+      this.signData.orgIds = data.orgIds
+      this.signData.loadIds = data.loadIds
+      this.signData.signName = data.signName
       data = {}
-      console.log('select', this.signData)
+      console.log('signData', this.signData)
     },
     toggleAllRows() {
       this.$nextTick(() => {
@@ -214,13 +367,17 @@ export default {
     openSignVisible() {
       console.log('批次详情页', this.signData)
       this.$emit('sendInfoData', this.signData)
+    },
+    setColumn(obj) {
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
 
 </script>
 <style lang="scss">
-.detailTable {
+.detailTablePop {
   margin-top: 75px;
   display: flex;
   flex-direction: column;
@@ -228,7 +385,7 @@ export default {
   padding: 0 10px;
   position: relative;
 
-  .detailTable_info {
+  .detailTablePop_info {
     border-bottom: 2px dotted #eee;
     background-color: #fff;
     table {
@@ -246,7 +403,7 @@ export default {
             padding: 0 3px;
             .el-input.is-disabled .el-input__inner {
               background-color: #fff;
-              color: #999;
+              color: #3e9ff1;
             }
           }
         }

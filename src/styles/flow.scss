@@ -1,24 +1,25 @@
 .flowicon { 
+	display:inline-block;
   background: url('./assets/flow/flowicon.png') no-repeat top left;  
-&.15huishou { background-position: 0px 0px; width: 56px; height: 60px;  } 
-&.16jichu { background-position: 0px -70px; width: 55px; height: 60px;  } 
-&.17jieshou { background-position: 0px -140px; width: 51px; height: 60px;  } 
-&.18fafang { background-position: 0px -210px; width: 55px; height: 60px;  } 
-&.19songhuoshangmen { background-position: 0px -280px; width: 62px; height: 52px;  } 
-&.01tihuo { background-position: 0px -342px; width: 62px; height: 52px;  } 
-&.02daoru { background-position: 0px -404px; width: 62px; height: 52px;  } 
-&.03dingdna { background-position: 0px -466px; width: 62px; height: 52px;  } 
-&.04yundan { background-position: 0px -528px; width: 62px; height: 52px;  } 
-&.04zhongzhuan { background-position: 0px -590px; width: 62px; height: 52px;  } 
-&.06fahuokc { background-position: 0px -652px; width: 62px; height: 52px;  } 
-&.07duanbo { background-position: 0px -714px; width: 62px; height: 52px;  } 
-&.08peizai { background-position: 0px -776px; width: 62px; height: 52px;  } 
-&.09daohuo { background-position: 0px -838px; width: 62px; height: 52px;  } 
-&.10kucun { background-position: 0px -900px; width: 62px; height: 52px;  } 
-&.11duobofache { background-position: 0px -962px; width: 62px; height: 52px;  } 
-&.12ziti { background-position: 0px -1024px; width: 39px; height: 79px;  } 
-&.13songhuosm { background-position: 0px -1113px; width: 62px; height: 52px;  } 
-&.14qianshou { background-position: 0px -1175px; width: 62px; height: 52px;  }
+&.huishou { background-position: 0px 0px; width: 56px; height: 60px;  } 
+&.jichu { background-position: 0px -70px; width: 55px; height: 60px;  } 
+&.jieshou { background-position: 0px -140px; width: 51px; height: 60px;  } 
+&.fafang { background-position: 0px -210px; width: 55px; height: 60px;  } 
+&.songhuoshangmen { background-position: 0px -280px; width: 62px; height: 52px;  } 
+&.tihuo { background-position: 0px -342px; width: 62px; height: 52px;  } 
+&.daoru { background-position: 0px -404px; width: 62px; height: 52px;  } 
+&.dingdna { background-position: 0px -466px; width: 62px; height: 52px;  } 
+&.yundan { background-position: 0px -528px; width: 62px; height: 52px;  } 
+&.zhongzhuan { background-position: 0px -590px; width: 62px; height: 52px;  } 
+&.fahuokc { background-position: 0px -652px; width: 62px; height: 52px;  } 
+&.duanbo { background-position: 0px -714px; width: 62px; height: 52px;  } 
+&.peizai { background-position: 0px -776px; width: 62px; height: 52px;  } 
+&.daohuo { background-position: 0px -838px; width: 62px; height: 52px;  } 
+&.kucun { background-position: 0px -900px; width: 62px; height: 52px;  } 
+&.duobofache { background-position: 0px -962px; width: 62px; height: 52px;  } 
+&.ziti { background-position: 0px -1024px; width: 39px; height: 79px;  } 
+&.songhuosm { background-position: 0px -1113px; width: 62px; height: 52px;  } 
+&.qianshou { background-position: 0px -1175px; width: 62px; height: 52px;  }
 
 }
 .flowitem{
@@ -34,4 +35,33 @@
     width: 108px;
     height: 38px;
   }
+}
+.flowicon1{
+  display:inline-block;
+  background: url('./assets/flow/flowicon2.png') no-repeat top left;
+// .sprite { background: url('sprite.png') no-repeat top left;  } 
+&.xf { background-position: 0px 0px; width: 33px; height: 41px;  } 
+&.df { background-position: 0px -51px; width: 36px; height: 34px;  } 
+&.yj { background-position: 0px -95px; width: 38px; height: 37px;  } 
+&.hdf { background-position: 0px -142px; width: 43px; height: 40px;  } 
+&.ydfy { background-position: 0px -192px; width: 54px; height: 41px;  } 
+&.sjthf { background-position: 0px -243px; width: 33px; height: 41px;  } 
+&.zzf { background-position: 0px -294px; width: 39px; height: 44px;  } 
+&.hk { background-position: 0px -348px; width: 38px; height: 41px;  } 
+&.ydfy { background-position: 0px -192px; width: 54px; height: 41px;  } 
+&.ycpl { background-position: 0px -399px; width: 41px; height: 41px;  } 
+&.qtfzc { background-position: 0px -450px; width: 41px; height: 42px;  } 
+&.fchz { background-position: 0px -502px; width: 57px; height: 41px;  } 
+&.dchz { background-position: 0px -553px; width: 65px; height: 47px;  } 
+&.zcbxf { background-position: 0px -610px; width: 35px; height: 44px;  } 
+&.fczxf { background-position: 0px -664px; width: 55px; height: 52px;  } 
+&.fzqtf { background-position: 0px -726px; width: 51px; height: 43px;  } 
+&.dzzxf { background-position: 0px -779px; width: 43px; height: 43px;  } 
+&.dzqtf { background-position: 0px -832px; width: 48px; height: 40px;  } 
+&.dbf { background-position: 0px -882px; width: 56px; height: 55px;  } 
+&.shf { background-position: 0px -947px; width: 71px; height: 48px;  } 
+&.hkdz { background-position: 0px -1005px; width: 47px; height: 42px;  } 
+&.hkff { background-position: 0px -1057px; width: 51px; height: 42px;  } 
+&.hkhs { background-position: 0px -1109px; width: 48px; height: 42px;  } 
+&.hkhk { background-position: 0px -1161px; width: 52px; height: 42px;  } 
 }

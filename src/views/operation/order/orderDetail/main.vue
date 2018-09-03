@@ -1,5 +1,12 @@
 <template>
   <div class="OrderDetail-main" v-loading="loading">
+    <!-- 各种状态显示 -->
+    <div class="order-status-info">
+      <span class="order-status-name">{{ form.tmsOrderShipInfo.shipIsSeparate !== 1 ? form.tmsOrderShipInfo.shipStatusName : '已拆单' }}</span><span class="order-status-org" v-if="form.tmsOrderShipInfo.shipIsSeparate !== 1">{{form.tmsOrderShipInfo.shipOrgidName}}</span>
+    </div>
+
+    <div class="shipstatus" :class="[shipStatus]"></div>
+
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
@@ -24,13 +31,17 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">出发城市</span>
-            <el-input :value="form.tmsOrderShipInfo.shipFromCityName" disabled size="mini" />
+            <el-form-item >
+              <el-input :value="form.tmsOrderShipInfo.shipFromCityName" disabled size="mini" />
+            </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
-            <el-input :value="form.tmsOrderShipInfo.shipToCityName" disabled size="mini" />
+            <el-form-item >
+              <el-input :value="form.tmsOrderShipInfo.shipToCityName" disabled size="mini" />
+            </el-form-item>
           </div>
         </el-col>
         <el-col :span="4">
@@ -52,7 +63,7 @@
         <el-col :span="4">
           <div class="order-form-item">
             <span class="order-form-label">货号</span>
-            <el-input size="mini" maxlength="20" disabled :value="form.tmsOrderShipInfo.shipGoodsSn" />
+            <el-input size="mini" :maxlength="20" disabled :value="form.tmsOrderShipInfo.shipGoodsSn" />
           </div>
         </el-col>
       </el-row>
@@ -268,7 +279,7 @@
             <div class="order-form-item">
               <span class="order-form-label">车牌号</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.truckIdNumber" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipTruckIdNumber" />
               </el-form-item>
             </div>
           </el-col>
@@ -297,7 +308,7 @@
             <div class="order-form-item">
               <span class="order-form-label">备注</span>
               <el-form-item >
-                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipRemarks" />
+                <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipRemarks" :maxlength="300" />
               </el-form-item>
             </div>
           </el-col>
@@ -326,39 +337,39 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(item,index) in form.tmsOrderTransferList" :key="index">
             <td>
-              {{ form.tmsOrderTransfer ? form.tmsOrderTransfer.createTime : '' }}
+              {{ item.createTime}}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.oddNumbers }}
+              {{ item.oddNumbers }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.carrierName }}
+              {{ item.carrierName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.carrierMobile }}
+              {{ item.carrierMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.arrivalMobile }}
+              {{ item.arrivalMobile }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.transferCharge }}
+              {{ item.transferCharge }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.deliveryExpense }}
+              {{ item.deliveryExpense }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.codService }}
+              {{ item.transferOtherFee }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.totalCost }}
+              {{ item.totalCost }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.paymentName }}
+              {{ item.paymentName }}
             </td>
             <td>
-              {{ form.tmsOrderTransfer.remark }}
+              {{ item.remark }}
             </td>
           </tr>
         </tbody>
@@ -374,13 +385,13 @@
           <tr>
             <th>短驳批次</th>
             <th>短驳时间</th>
-            <th>接受时间</th>
+            <th>接收时间</th>
             <th>车牌号</th>
             <th>司机</th>
             <th>司机电话</th>
             <th>短驳费</th>
-            <th>短驳接收人</th>
-            <th>接收网点</th>
+            <th>发车网点</th>
+            <th>到达网点</th>
             <th>接收人</th>
           </tr>
         </thead>
@@ -408,7 +419,7 @@
               {{ item.shortFee }}
             </td>
             <td>
-              {{ item.receivedUserName }}
+              {{ item.orgidName }}
             </td>
             <td>
               {{ item.arriveOrgidName }}
@@ -432,8 +443,8 @@
             <th>车牌号</th>
             <th>司机</th>
             <th>司机电话</th>
-            <th>发站</th>
-            <th>到站</th>
+            <th>发车网点</th>
+            <th>到达网点</th>
             <th>发车时间</th>
             <th>到车时间</th>
             <th>配载员</th>
@@ -484,16 +495,12 @@
       <table >
         <thead>
           <tr>
-            <th>发车批次</th>
+            <th>送货批次</th>
             <th>车牌号</th>
             <th>司机</th>
             <th>司机电话</th>
-            <th>发站</th>
-            <th>到站</th>
-            <th>发车时间</th>
-            <th>到车时间</th>
+            <th>送货时间</th>
             <th>配载员</th>
-            <th>到车确定人</th>
           </tr>
         </thead>
         <tbody>
@@ -511,24 +518,11 @@
               {{ item.dirverMobile }}
             </td>
             <td>
-              {{ item.arrivalMobile }}
+              {{ item.departureTime }}
             </td>
             <td>
-              {{ item.transferCharge }}
-            </td>
-            <td>
-              {{ item.createTime }}
-            </td>
-            <td>
-              {{ item.codService }}
-            </td>
-            <td>
-              {{ item.totalCost }}
-            </td>
-            <td>
-              <SelectType disabled size="mini" v-model="item.paymentId" type="payment_type" />
-            </td>
-            
+              {{ item.loadName }}
+            </td>      
           </tr>
         </tbody>
       </table>
@@ -549,31 +543,31 @@
             <th>签收描述</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-for="(item, index) in form.tmsOrderShipSignList" :key="index">
           <tr>
             <td>
-              {{ form.tmsOrderShipSign.signName }}
+              {{ item.signName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signTime }}
+              {{ item.signTime }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signStatusName }}
+              {{ item.signStatusName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signTypeName }}
+              {{ item.signTypeName }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signCertificateName }}
+              {{ item.documentNum }}
             </td>
             <td>
-              {{ form.tmsOrderShipSign.signRemark }}
+              {{ item.remark }}
             </td>
           </tr>
           <tr>
             <td colspan="6">
               <div class="clickimglist">
-              <span class="clickimg" v-for="(item, index) in (form.tmsOrderShipSign.signPic ? form.tmsOrderShipSign.signPic.split(',') : [])" :key="index">
+              <span class="clickimg" v-for="(item, index) in (item.signPic ? item.signPic.split(',') : [])" :key="index">
               <img v-showPicture  :src="item" />
               </span>
               </div>
@@ -583,7 +577,13 @@
       </table>
       </div>
     </div>
-
+    <!-- 打印区域 -->
+    <el-row :gutter="12">
+      <el-col :span="12" :offset="10" style="margin-top: 20px;">
+        <el-button @click="doAction('printLibkey')" icon="el-icon-printer" type="success" >打印标签</el-button>
+        <el-button @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" >打印运单</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -596,6 +596,10 @@ import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
+// 打印插件
+import { CreatePrintPage } from '@/utils/lodopFuncs'
+// 获取打印位置参数接口
+import { getPrintOrderItems, getPrintLibItems } from '@/api/operation/print'
 
 export default {
   components: {
@@ -729,11 +733,23 @@ export default {
           'transferTime': '',
           'updateTime': ''
         },
+        tmsOrderTransferList: [],
         tmsOrderShipSign: {},
         tmsShLoadsList: [],
         tmsGxLoadsList: [],
-        tmsDbLoadsList: []
+        tmsDbLoadsList: [],
+        shipFeeStatusDto: {
+          agencyFundStatus: false,
+          brokerageFeeStatus: false,
+          otherfeeOutStatus: false,
+          realityhandlingFeeStatus: false,
+          shipReceivableFeeStatus: 'NOSETTLEMENT',
+          shipTotalFeeStatus: false,
+          transferTotalFeeStatus: false
+        }
       },
+      // 运单结算样式
+      shipStatus: 'ship-yunfeiweijie',
       // 系统设置
       config: {},
       // 费用设置
@@ -765,6 +781,22 @@ export default {
       if (newVal) {
         this.initIndex()
       }
+    },
+    'form.shipFeeStatusDto.shipReceivableFeeStatus'(newVal) {
+      switch (newVal) {
+        case 'NOSETTLEMENT':
+          this.shipStatus = 'ship-yunfeiweijie'
+          break
+        case 'PARTSETTLEMENT':
+          this.shipStatus = 'ship-bufenjiesuan'
+          break
+        case 'ALLSETTLEMENT':
+          this.shipStatus = 'ship-yunfeiyijie'
+          break
+        default:
+          this.shipStatus = ''
+          break
+      }
     }
   },
   mounted() {
@@ -777,11 +809,11 @@ export default {
     // 为了方便缓存数据，重新包装各个接口
     // 获取货物设置
     getCargoSetting() {
-      if (this.dataCache['cargoSeting']) {
-        return Promise.resolve(this.dataCache['cargoSeting'])
-      } else {
-        return orderManage.getCargoSetting(this.otherinfo.orgid)
-      }
+      // if (this.dataCache['cargoSeting']) {
+      //   return Promise.resolve(this.dataCache['cargoSeting'])
+      // } else {
+      return orderManage.getCargoSetting(this.otherinfo.orgid)
+      // }
     },
     // 获取基本设置信息
     getBaseSetting() {
@@ -840,8 +872,9 @@ export default {
         this.form.tmsOrderShipInfo[i] = data.tmsOrderShipInfo[i]
       }
       // 设置城市名称
-      this.fromCityName = data.tmsOrderShipInfo.shipFromCityName
-      this.toCityName = data.tmsOrderShipInfo.shipToCityName
+      this.fromCityName = data.tmsOrderShipInfo.shipFromCityName || ''
+      this.toCityName = data.tmsOrderShipInfo.shipToCityName || ''
+      // this.fromCityName = this.fromCityName.replace(/,$/,'')
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
       // 设置收发货人信息
@@ -856,18 +889,27 @@ export default {
         }
       }
 
+      this.form.shipFeeStatusDto = data.shipFeeStatusDto
+
+      // 回显控货
+      this.shipOther = this.form.tmsOrderShipInfo.shipOther.split(',') || []
+      console.log('回显控货:', this.shipOther)
+
       this.form.customerList = data.customerList
       console.log('setOrderInfo:', data, this.form)
       // 设置中转信息
-      // 设置运单信息
-      if (data.tmsOrderTransfer) {
-        for (const i in this.form.tmsOrderTransfer) {
+      if (data.tmsOrderTransferList && data.tmsOrderTransferList.length) {
+        this.form.tmsOrderTransferList = data.tmsOrderTransferList
+      } else if (data.tmsOrderTransfer) {
+        for (const i in data.tmsOrderTransfer) {
           this.form.tmsOrderTransfer[i] = data.tmsOrderTransfer[i]
         }
-        console.log('setOrderInfo2:', data.tmsOrderTransfer, this.form.tmsOrderTransfer)
+        this.form.tmsOrderTransferList = [this.form.tmsOrderTransfer]
       }
 
+      // 设置运单信息
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
+      this.form.tmsOrderShipSignList = data.tmsOrderShipSignList || []
       this.form.tmsShLoadsList = data.tmsShLoadsList || [{}]
       this.form.tmsGxLoadsList = data.tmsGxLoadsList || [{}]
       this.form.tmsDbLoadsList = data.tmsDbLoadsList || [{}]
@@ -896,6 +938,20 @@ export default {
       this.form.tmsOrderShipInfo = this.resetObj(this.form.tmsOrderShipInfo)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
       // this.setOrderDate()
+    },
+    doAction(type) {
+      switch (type) {
+        case 'printLibkey':
+          getPrintLibItems(this.form.tmsOrderShipInfo.id).then(data => {
+            CreatePrintPage(data)
+          })
+          break
+        case 'printShipKey':
+          getPrintOrderItems(this.form.tmsOrderShipInfo.id).then(data => {
+            CreatePrintPage(data)
+          })
+          break
+      }
     }
   }
 }
@@ -1312,5 +1368,32 @@ $backgroundcolor: #cbe1f7;
         }
       }
     }
+    // 各种状态控制显示
+    .order-status-info{
+      position: absolute;
+      top: 0;
+      left: 140px;
+      color: #ef0000;
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+      font-family: "宋体",serif;
+      span{
+        display: block;
+      }
+      .order-status-name{
+        margin-bottom: 5px;
+      }
+      .order-status-org{
+      }
+    }
+    // 签收图片
+    .clickimglist{
+      width: 100%;
+      overflow: auto;
+      padding-bottom: 2px;
+      margin: 10px auto;
+    }
+    
   }
 </style>

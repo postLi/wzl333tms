@@ -13,7 +13,14 @@ import batchStationLoad from './batchStationLoad' // 发站装卸费
 import batchStationOther from './batchStationOther' // 发站其他费
 import batchArrivalLoad from './batchArrivalLoad' // 到站装卸费
 import batchArrivalOther from './batchArrivalOther' // 到站其他费
-
+import batchTruckAll from './batchTruckAll' // 到车汇总
+import batchArrivalAll from './batchArrivalAll' // 发车汇总
+import waybillKickback from './waybillKickback' // 回扣
+import waybillTicket from './waybillTicket' // 单票提货费
+import waybillOther from './waybillOther' // 其他费用支出
+import waybillTransfer from './waybillTransfer' // 中转费
+import waybillAbnormal from './waybillAbnormal' // 异常理赔
+import waybillUnusual from './waybillUnusual' // 异动费用
 export default {
   components: {
     batchShort,
@@ -22,7 +29,15 @@ export default {
     batchStationLoad,
     batchStationOther,
     batchArrivalLoad,
-    batchArrivalOther
+    batchArrivalOther,
+    batchArrivalAll,
+    batchTruckAll,
+    waybillKickback,
+    waybillTicket,
+    waybillOther,
+    waybillTransfer,
+    waybillAbnormal,
+    waybillUnusual
   },
   props: {
     isShow: {
@@ -52,10 +67,26 @@ export default {
           return 'batchStationLoad'
         case 'batchStationOther':
           return 'batchStationOther'
-        case 'batchArrivalLoad':
+        case 'batchArriveLoad':
           return 'batchArrivalLoad'
         case 'batchArrivalOther':
-        return 'batchArrivalOther'
+          return 'batchArrivalOther'
+        case 'batchArrivalAll':
+          return 'batchArrivalAll'
+        case 'batchTruckAll':
+          return 'batchTruckAll'
+        case 'waybillKickback':
+          return 'waybillKickback'
+        case 'waybillTicket':
+          return 'waybillTicket'
+        case 'waybillOther':
+          return 'waybillOther'
+        case 'waybillTransfer':
+          return 'waybillTransfer'
+        case 'waybillAbnormal':
+          return 'waybillAbnormal'
+        case 'waybillUnusual':
+          return 'waybillUnusual'
       }
     },
     pageName() {
@@ -77,30 +108,41 @@ export default {
         case 'batchStationOther':
           name = '发站其他费'
           break
-        case 'batchArrivalLoad':
+        case 'batchArriveLoad':
           name = '到站装卸费'
           break
         case 'batchArrivalOther':
-        name = '到站其他费'
-        break
+          name = '到站其他费'
+          break
+        case 'batchArrivalAll':
+          name = '发车汇总'
+          break
+        case 'batchTruckAll':
+          name = '到车汇总'
+          break
+        case 'waybillKickback':
+          name = '回扣'
+          break
+        case 'waybillTicket':
+          name = '单票提货费'
+          break
+        case 'waybillOther':
+          name = '其他费用支出'
+          break
+        case 'waybillTransfer':
+          name = '中转费'
+          return
+        case 'waybillAbnormal':
+          name = '异常理赔'
+          return
+        case 'waybillUnusual':
+          name = '异动费用'
+          return
       }
       return name
     }
   },
-  created() {
-    // this.getParentPage()
-  },
   methods: {
-    getParentPage() {
-      this.$route.matched.forEach(e => {
-        let str = '/finance/accountsLoad'
-        if (e.path.indexOf(str) !== -1) {
-          e.meta.title = this.pageName
-          e.name = this.pageName
-          console.log(e.path)
-        }
-      })
-    }
   }
 }
 

@@ -1,24 +1,24 @@
 <template>
   <!-- 到站装卸费结算页面 -->
   <div class="accountsLoad_table">
+    <!-- 搜索框 -->
+    <div class="transferTable_search clearfix">
+      <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
+    </div>
     <transferTable style="height: calc(100% - 40px);padding:10px">
-      <!-- 搜索框 -->
-      <div slot="search">
-        <querySelect search="shipSn" type="order" size="mini" @change="searchShip" />
-      </div>
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
         <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">到站装卸费结算</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-        <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-        <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+        <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
+        <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnLeft">
@@ -41,13 +41,13 @@
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
-        <el-button icon="el-icon-minus" class="tableAllBtn" size="mini" @click="minusAllList"></el-button>
-        <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+        <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
+        <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
           <el-table-column fixed type="index" width="50">
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
-              <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnRight">
@@ -56,7 +56,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="scope.row.amount" :size="btnsize" @change="changLoadData(scope.$index)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -82,7 +82,16 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
+import currentSearch from './components/currentSearch'
+import { getSummaries } from '@/utils/'
 export default {
+  components: {
+    transferTable,
+    querySelect,
+    Receipt,
+    Pager,
+    currentSearch
+  },
   data() {
     return {
       tablekey: '',
@@ -99,6 +108,7 @@ export default {
       selectedRight: [],
       selectedLeft: [],
       isGoReceipt: true,
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
@@ -326,7 +336,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -334,12 +344,6 @@ export default {
     totalRight() {
       return this.rightTable.length
     }
-  },
-  components: {
-    transferTable,
-    querySelect,
-    Receipt,
-    Pager
   },
   mounted() {
     this.getList()
@@ -350,19 +354,25 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
-        this.$router.push({ path: './accountsPayable/batch' })
-        this.isFresh = true
-      } else {
-        this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+       this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
         this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-        this.isFresh = false
-      }
+      // if (!this.$route.query.searchQuery.vo) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
+      //   // this.$router.push({ path: './accountsPayable/batch' })
+      //   this.isFresh = true
+      // } else {
+      //   this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      //   this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      //   this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      //   this.isFresh = false
+      // }
     },
     getList() {
-      let selectListBatchNos = objectMerge2([], this.$route.query.selectListBatchNos)
+      let sns = this.$route.query.selectListBatchNos
+      let selectListBatchNos = objectMerge2([], sns)
       if (this.$route.query.selectListBatchNos) {
         this.isModify = true
       } else {
@@ -371,9 +381,10 @@ export default {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      if (!this.isFresh) {
+      // if (!this.isFresh) {
         postPayListByOne(this.searchQuery).then(data => {
           this.leftTable = Object.assign([], data.list)
           selectListBatchNos.forEach(e => {
@@ -395,21 +406,27 @@ export default {
             }
             e.amount = e.unpaidFee
           })
+          this.orgLeftTable = objectMerge2([], this.leftTable)
         })
 
-      }
+      // }
     },
-    changLoadData(newVal) {
-      let unpay = this.rightTable[newVal].unpaidFee
-      let curpay = this.rightTable[newVal].amount
-      if (curpay > unpay || curpay < 0) {
-        this.$notify({
-          title: '提示',
-          message: '不能大于未结小于0',
-          type: 'warning'
-        })
-        this.rightTable[newVal].amount = unpay
+    changLoadData(index, prop, newVal) {
+      this.rightTable[index][prop] = Number(newVal)
+      let unpaidName = 'unpaidFee' // 未结费用名
+      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      let paidVal = this.rightTable[index][prop]
+      if (paidVal < 0 || paidVal > unpaidVal) {
+        this.isGoReceipt = true
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+      } else {
+        this.isGoReceipt = false
+        // this.rightTable[index][prop] = Number(newVal)
+        this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
+          [prop]: this.rightTable[index][prop]
+        }))
       }
+      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -438,16 +455,30 @@ export default {
     },
     goLeft() { // 数据从左边穿梭到右边
       if (this.selectedRight.length === 0) {
-        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
+        // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
           e.amount = e.unpaidFee
           this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 源数据减去被穿梭的数据
+          let item = -1
+          this.leftTable.map((el, index) => {
+            if (el.batchNo === e.batchNo) {
+              item = index
+            }
+          })
+          if (item !== -1) {
             this.leftTable.splice(item, 1)
+            this.orgLeftTable.splice(item, 1)
           }
+          // let item = this.leftTable.indexOf(e)
+          // if (item !== -1) { // 源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          // }
+          // let orgItem = this.orgLeftTable.indexOf(e)
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          //   this.orgLeftTable.splice(item, 1)
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -463,6 +494,7 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
+          this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
           let item = this.rightTable.indexOf(e)
           if (item !== -1) {
             // 源数据减去被穿梭的数据
@@ -476,7 +508,19 @@ export default {
       } else {
         this.isGoReceipt = false
       }
-
+    },
+    selectCurrent (obj, index) {
+      this.addItem(obj, index)
+    },
+    dclickAddItem (row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
+    },
+    dclickMinusItem (row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []
@@ -508,143 +552,33 @@ export default {
     goReceipt() {
       this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
-        let data = []
-
-        console.log('rightTable', this.rightTable)
         this.rightTable.forEach((e, index) => {
           let item = {
-            id: '',
-            amount: 0,
-            feeTypeId: ''
+            id: e.id,
+            amount: e.amount,
+            feeTypeId: e.feeTypeId
           }
-          item.id = e.id
-          item.feeTypeId = e.feeTypeId
-          item.amount = e.amount
-          this.tableReceiptInfo.push(item)
+          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+            this.tableReceiptInfo.push(item)
+          }
           item = {}
         })
-        this.openDialog()
-        data = []
+        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+          this.openDialog()
+        } else {
+          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        }
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+      let propsArr = ['_index|2|单','fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
-      columns.forEach((column, index) => {
-
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2 || index === 3) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+       let propsArr = ['_index|2|单','fee', 'unpaidFee', 'paidFee', 'loadAmountall|','amount', 'loadWeightall|', 'loadVolumeall|']
+      return getSummaries(param, propsArr)
     }
   }
 }
 
 </script>
-<style lang="scss" scoped>
-.tableHeadItemBtn {
-  height: 100%;
-  position: relative;
-  .tableItemBtn {
-    width: 30px;
-    padding-left: 8px;
-  }
-  .tableAllBtn {
-    width: 30px;
-    padding-left: 8px;
-    position: absolute;
-    z-index: 33;
-    top: 8px;
-    left: 61px;
-  }
-}
-
-.accountsLoad_table {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100;
-  overflow: hidden;
-  height: 100%;
-  .accountsLoad_table_pager {
-    display: flex;
-    flex-direction: columns;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    background-color: #eee;
-    padding: 5px 5px 10px 10px;
-    b {
-      font-weight: 400;
-      color: #333; // font-size:14px;
-      line-height: 36px;
-    }
-  }
-}
-
-</style>

@@ -154,7 +154,7 @@ export default {
       data.userId = this.userId
       return OrderApi.putPersonalSetup(data).then(res => {
         this.$message("修改成功！")
-        this.$emit('success')
+        this.$emit('success', data)
         this.close()
       })
     },

@@ -45,11 +45,18 @@ export function getGroupName(orgid) {
 } */
 /**
  * 获取所有网点的信息，树形结构
+ * 过滤掉无效的网点
  */
 const LocalAllOrgInfo = {}
 export function getAllOrgInfo(orgId, isRefresh) {
+  return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
+    const data = res.data || []
+    LocalAllOrgInfo[orgId] = data
+    return data
+  })
+
   // 如果是强制刷新或者无本地缓存则请求服务器
-  if (isRefresh || (!LocalAllOrgInfo[orgId])) {
+  /* if (isRefresh || (!LocalAllOrgInfo[orgId])) {
     return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
       const data = res.data || []
       LocalAllOrgInfo[orgId] = data
@@ -59,7 +66,7 @@ export function getAllOrgInfo(orgId, isRefresh) {
     return new Promise(resolve => {
       resolve(LocalAllOrgInfo[orgId])
     })
-  }
+  }*/
 
   /* return fetch.get('/api-system/system/org/v1/tree').then(res => {
     let data = res.data
@@ -69,15 +76,23 @@ export function getAllOrgInfo(orgId, isRefresh) {
     return data || []
   }) */
 }
+/** 返回全部的数据 */
+export function postAllOrgInfo(orgId, isRefresh) {
+  return fetch.post('/api-system/system/org/v1/tree/' + orgId).then(res => {
+    const data = res.data || []
+    LocalAllOrgInfo[orgId] = data
+    return data
+  })
+}
 /**
  * 获取指定网点的部门信息
  * @param {*} orgid 网点id
  */
-export function getDepartmentInfo(orgid) {
+export function getDepartmentInfo(orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: 'department_type',
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []
@@ -115,6 +130,24 @@ export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage
     }
   }
   return fetch.post('/api-system/system/user/v1/findAllInfo', params).then(res => {
+    return res.data || { total: 0, list: [] }
+  })
+}
+
+/**
+ * 获取当前网点的全部用户
+ * @param {*} name 姓名
+ * @param {*} orgid 组织ID
+ */
+export function getAllOrgUser(orgid, name, mobilephone, pageSize = 100, currentPage = 1) {
+  let params = orgid
+  if (typeof orgid !== 'object') {
+    params = { pageSize, currentPage, vo: {
+      name, orgid, mobilephone
+    }
+    }
+  }
+  return fetch.post('/api-system/system/user/v1/findAllInfoByOrgId', params).then(res => {
     return res.data || { total: 0, list: [] }
   })
 }

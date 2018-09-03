@@ -2,19 +2,19 @@
   <!-- 整车保险费 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :isAllOrg="false" :isArrivalSel="false" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -47,6 +47,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -83,43 +84,47 @@ export default {
       total: 0,
       dataList: [],
       selectListBatchNos: [],
+      selectedList: [],
       loading: false,
       setupTableVisible: false,
       tableColumn: [
-      {
+        {
           label: '序号',
           prop: 'id',
-          width: '110',
-          fixed: true
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
         },
         {
           label: '发车批次',
           prop: 'batchNo',
-          width: '150',
+          width: '120',
           fixed: true
         },
         {
           label: '结算状态',
           prop: 'statusName',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '发车网点',
           prop: 'orgName',
-          width: "120",
+          width: '120',
           fixed: false
         },
         {
           label: '到达网点',
           prop: 'arriveOrgName',
-          width: '150',
+          width: '120',
           fixed: false
         },
         {
           label: '发车时间',
           prop: 'departureTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -128,7 +133,7 @@ export default {
         {
           label: '到达时间',
           prop: 'receivingTime',
-          width: '180',
+          width: '160',
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -137,55 +142,55 @@ export default {
         {
           label: '整车保险费',
           prop: 'fee',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '已结整车保险费',
           prop: 'paidFee',
-          width: '180',
+          width: '125',
           fixed: false
         },
         {
           label: '未结整车保险费',
           prop: 'unpaidFee',
-          width: '150',
+          width: '125',
           fixed: false
         },
         {
           label: '车牌号',
           prop: 'truckIdNumber',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '司机名称',
           prop: 'dirverName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '司机电话',
           prop: 'dirverMobile',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
           label: '配载件数',
           prop: 'loadAmountall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '配载重量',
           prop: 'loadWeightall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '配载体积',
           prop: 'loadVolumeall',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
@@ -197,68 +202,101 @@ export default {
       ]
     }
   },
- methods: {
-    getSearchParam(obj) {
+  methods: {
+   getSearchParam(obj) {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
-    handlePageChange(obj) {
+   handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
-    fetchList() {
+   fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
       })
     },
-    setTable() {},
-    doAction(type) {
+   setTable() {},
+   doAction(type) {
       switch (type) {
         case 'count':
           this.count()
           break
         case 'export':
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-整车保险费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '车费结算-整车保险费'
+          })
           break
       }
     },
-    count() {
+   count() {
+      let count = 0
+      if (this.selectedList.length !== 0) {
+        objectMerge2([], this.selectedList).forEach(e => {
+          objectMerge2([], this.selectedList).forEach(el => {
+            console.log(e.ascriptionOrgid, el.ascriptionOrgid)
+            if (e.ascriptionOrgid !== el.ascriptionOrgid) {
+              count++
+            }
+          })
+        })
+      }
+      if (count > 0) {
+        count = 0
+        this.$message({ type: 'warning', message: '不能同时结算两个不同的网点' })
+        return false
+      }
+      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点
+        this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
+      }
       this.$router.push({
-        path: '../accountsLoad',
+        path: '../../accountsLoad',
         query: {
+          tab: '整车保险费结算',
           currentPage: 'batchInsurance', // 本页面标识符
-          searchQuery: this.searchQuery, // 搜索项
-          selectListBatchNos: this.selectListBatchNos // 列表选择项的批次号batchNo
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
         }
       })
     },
-    clickDetails(row) {
+   clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getSelection(list) {
+   getSelection(list) {
       this.selectListBatchNos = []
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })
+      this.selectedList = list
       console.log(this.selectListBatchNos)
     },
-    showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+   showDetail(order) {
+    // this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
-    setTable() {
+   setTable() {
       this.setupTableVisible = true
     },
-    closeSetupTable() {
+   closeSetupTable() {
       this.setupTableVisible = false
     },
-    setColumn(obj) { // 重绘表格列表
+   setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     }
-  }
+ }
 }
 
 </script>

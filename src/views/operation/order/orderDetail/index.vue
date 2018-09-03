@@ -10,6 +10,9 @@
       <el-tab-pane name="three" label="运单跟踪">
         <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
+      <el-tab-pane name="six" label="运单轨迹">
+        <trunk v-if="activeTab.six" :orderid="output.orderid" />
+      </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
         <abnormal v-if="activeTab.four" :orderid="output.orderid" />
       </el-tab-pane>
@@ -29,8 +32,10 @@ import fee from './fee'
 import ordertrack from './track'
 import abnormal from './abnormal'
 import log from './log'
+import trunk from './trunk'
 
 export default {
+  name: 'orderDetail',
   // 当作为弹窗时使用
   props: {
     orderid: {
@@ -47,24 +52,28 @@ export default {
     fee,
     ordertrack,
     abnormal,
-    log
+    log,
+    trunk
   },
   watch: {
-    '$route'(to, from){
-      if(to.path.indexOf('/operation/order/orderDetail') !== -1){
+    '$route'(to, from) {
+      if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
-        if(!this.orderid){
+        if (!this.orderid) {
           this.init()
         }
       }
     },
-    orderid(newVal){
-      if(newVal){
+    orderid(newVal) {
+      if (newVal) {
         this.init()
       }
     }
   },
-  mounted(){
+  activated() {
+    this.init()
+  },
+  mounted() {
     this.init()
   },
   data() {
@@ -73,12 +82,13 @@ export default {
       canview: true,
       dataCache: {},
       orderdata: {},
-      activeIndex:'one',
+      activeIndex: 'one',
       activeTab: {
-        "two": false,
-        "three": false,
-        "four": false,
-        "five": false
+        'two': false,
+        'three': false,
+        'four': false,
+        'five': false,
+        'six': false
       },
       output: {
         orderid: ''
@@ -87,54 +97,54 @@ export default {
   },
   methods: {
     // 获取运单数据
-    getOrderInfo(orderId){
+    getOrderInfo(orderId) {
       return orderManage.getOrderInfoById(orderId)
     },
-    setTabShow (tab){
+    setTabShow(tab) {
       this.activeTab[tab.name] = true
     },
-    init () {
+    init() {
       this.loading = true
 
-      let route = this.$route
+      const route = this.$route
       // 是否可以点击查看其它tab页
       this.canview = true
 
-      if(this.ispop){
+      if (this.ispop) {
         // 在弹窗中访问
         this.output.orderid = this.orderid
         this.output.ispop = true
       } else {
         // 在窗口访问
-        this.output.orderid = this.$route.query.orderid || ""
+        this.output.orderid = this.$route.query.orderid || ''
         this.output.iswindow = true
       }
       // 如果没有运单id信息
-      if(!this.output.orderid) {
+      if (!this.output.orderid) {
         this.canview = false
         this.showError()
         return false
       }
-      
+
       this.initOrder()
     },
     showError() {
       this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
-          confirmButtonText: '返回运单列表页',
-          cancelButtonText: '关闭',
-          type: 'warning'
-        }).then(() => {
-          this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
-        }).catch(() => {
-          if(this.output.iswindow){
-            this.eventBus.$emit('closeCurrentView')
-          } else {
-            this.eventBus.$emit('hideOrderDetail')
-          }
-        })
+        confirmButtonText: '返回运单列表页',
+        cancelButtonText: '关闭',
+        type: 'warning'
+      }).then(() => {
+        this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage/All')
+      }).catch(() => {
+        if (this.output.iswindow) {
+          this.eventBus.$emit('closeCurrentView')
+        } else {
+          this.eventBus.$emit('hideOrderDetail')
+        }
+      })
     },
-    initOrder () {
-      this.activeIndex = "one"
+    initOrder() {
+      this.activeIndex = 'one'
       this.getOrderInfo(this.output.orderid).then(res => {
         this.orderdata = res.data
         this.loading = false
@@ -145,7 +155,7 @@ export default {
     },
     // 当前运单是否有效且含有信息
     // 当无效时，禁止浏览后面的tab
-    canViewOther(){
+    canViewOther() {
       // return false
       return this.canview
     }

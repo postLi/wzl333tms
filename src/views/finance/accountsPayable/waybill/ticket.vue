@@ -6,15 +6,15 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET3>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI3>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP3>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -46,6 +46,8 @@ import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
+import { parseShipStatus } from '@/utils/dict'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
@@ -55,14 +57,16 @@ export default {
   data() {
     return {
       btnsize: 'mini',
+      feeType: 10,
+      selectListShipSns: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          feeType: 10,
+          // feeType: 8,
           // endTime: '',
           // id: 0,
-          incomePayType: 'PAYABLE',
+          // incomePayType: 'PAYABLE',
           // incomePayTypeValue: '',
           // orgAllId: '',
           // senderCompanyName: '',
@@ -85,22 +89,17 @@ export default {
       dataList: [],
       loading: false,
       setupTableVisible: false,
-      tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '110',
-          fixed: true
-        },
+      tableColumn: [
         {
           label: '运单号',
-          prop: 'shipId',
-          width: "120",
+          prop: 'shipSn',
+          width: '120',
           fixed: false
         },
         {
           label: '开单网点',
           prop: 'shipFromOrgName',
-          width: '150',
+          width: '120',
           fixed: true
         },
         {
@@ -112,31 +111,52 @@ export default {
         {
           label: '结算状态',
           prop: 'statusName',
-          width: '150',
+          width: '90',
           fixed: false
+        },
+        {
+          label: '运单标识',
+          prop: 'shipIdentifying',
+          width: '150',
+          fixed: false,
+          slot: function(scope) {
+            return parseShipStatus(scope.row.shipIdentifying)
+          }
         },
         {
           label: '出发城市',
           prop: 'shipFromCityName',
-          width: '150',
+          width: '140',
           fixed: false
         },
         {
           label: '到达城市',
           prop: 'shipToCityName',
-          width: '150',
+          width: '140',
           fixed: false
         },
         {
-          label: '单票提货费',
-          prop: 'pickupFee',
-          width: '150',
+          label: '实际提货费',
+          prop: 'fee',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '已结实际提货费',
+          prop: 'closeFee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '未结实际提货费',
+          prop: 'unpaidFee',
+          width: '120',
           fixed: false
         },
         {
           label: '开单日期',
           prop: 'createTime',
-          width: '180',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
@@ -144,62 +164,56 @@ export default {
         },
         {
           label: '发货方',
-          prop: 'senderCompanyName',
-          width: '150',
+          prop: 'senderUnit',
+          width: '100',
           fixed: false
         },
         {
           label: '发货人',
           prop: 'senderCustomerName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '收货方',
-          prop: 'receiverCompanyName',
-          width: '150',
+          prop: 'receiverUnit',
+          width: '100',
           fixed: false
         },
         {
           label: '收货人',
           prop: 'receiverCustomerName',
-          width: '150',
+          width: '100',
           fixed: false
         },
-        {
-          label: '结算操作人',
-          prop: 'settlementBy',
-          width: '150',
-          fixed: false
-        },
+        // {
+        //   label: '结算操作人',
+        //   prop: 'settlementBy',
+        //   width: '100',
+        //   fixed: false
+        // },
         {
           label: '货品名',
           prop: 'cargoName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '件数',
           prop: 'cargoAmount',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '重量(kg)',
           prop: 'cargoWeight',
-          width: '150',
+          width: '90',
           fixed: false
         },
         {
           label: '体积(方)',
           prop: 'cargoVolume',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '运单标识',
-          prop: 'shipIdentifying',
-          width: '150',
+          width: '90',
           fixed: false
         },
         // {
@@ -211,19 +225,19 @@ export default {
         {
           label: '付款方式',
           prop: 'shipPayWayName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '制单人',
           prop: 'userName',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '发货人电话',
           prop: 'senderCustomerMobile',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
@@ -235,7 +249,7 @@ export default {
         {
           label: '收货人电话',
           prop: 'receiverCustomerMobile',
-          width: '150',
+          width: '110',
           fixed: false
         },
         {
@@ -246,14 +260,14 @@ export default {
         },
         {
           label: '交接方式',
-          prop: 'shipDeliveryMethod',
-          width: '150',
+          prop: 'shipDeliveryMethodName',
+          width: '100',
           fixed: false
         },
         {
           label: '时效',
-          prop: 'shipEffective',
-          width: '150',
+          prop: 'shipEffectiveName',
+          width: '90',
           fixed: false
         },
         {
@@ -265,22 +279,23 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.fetchList()
-  },
   methods: {
     getSearchParam(obj) {
-      this.$set(this.searchQuery.vo, 'feeType', 10) // 8-应付回扣 10-实际提货费 13-其他费用支出
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType) // 8-应付回扣 10-实际提货费 13-其他费用支出
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchList()
     },
     fetchList() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
+        this.total = data.total
+        console.log(this.dataList)
       })
     },
     setTable() {},
@@ -290,19 +305,44 @@ export default {
           this.count()
           break
         case 'export':
+          SaveAsFile({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '运单结算-实际提货费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
           break
         case 'print':
+          PrintInFullPage({
+            data: this.dataList,
+            columns: this.tableColumn,
+            name: '运单结算-实际提货费'
+          })
           break
       }
     },
-    count () {
-      this.$router.push({path: '../accountsLoad'})
-      console.log('router',this.$router)
+    count() {
+      this.$router.push({
+        path: '../../accountsLoad',
+        query: {
+          tab: '实际提货费结算',
+          currentPage: 'waybillTicket', // 本页面标识符
+          searchQuery: JSON.stringify(this.searchQuery), // 搜索项
+          selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
+        }
+      })
     },
-    clickDetails(row) {},
-    getSelection(list) {},
-    showDetail (order) {
-      this.eventBus.$emit('showOrderDetail', order.id)
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectListShipSns = []
+      list.forEach((e, index) => {
+        this.selectListShipSns.push(e.shipSn)
+      })
+    },
+    showDetail(order) {
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
+      // this.eventBus.$emit('showOrderDetail', order.id)
     },
     setTable() {
       this.setupTableVisible = true

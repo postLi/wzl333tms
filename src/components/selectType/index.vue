@@ -1,11 +1,13 @@
 <template>
-  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" v-bind="$attrs">
+  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" :filterable="filterable" :filter-method="makefilter" v-bind="$attrs" @focus="focus" @blur="blur">
     <slot name="head"></slot>
-    <template v-for="item in types">
+    <template v-for="item in listdata">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
       <slot v-bind:item="item">
         <!-- 回退的内容 -->
-        <el-option :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+        <el-option :key="item.id" :label="item.dictName" :value="item.id">
+          <span class="query-input-myautocomplete" v-html="highLight(item,'dictName')"> </span>
+        </el-option>
       </slot>
     </template>
     <slot name="foot"></slot>
@@ -17,6 +19,7 @@ import { eventBus } from '@/eventBus'
 import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
 import CACHE from '@/utils/cache'
+import DICT from '@/utils/dict'
 
 /**
  * 可选的type值
@@ -66,6 +69,14 @@ fee_status 交账状态
 export default {
   name: 'selectType',
   props: {
+    focus: {
+      type: Function,
+      default: () => {}
+    },
+    blur: {
+      type: Function,
+      default: () => {}
+    },
     orgid: {
       type: [Number, String],
       default: ''
@@ -85,29 +96,28 @@ export default {
     remote: {
       type: Boolean,
       default: false
+    },
+    arterDelivery: {
+      type: Boolean,
+      default: false
+    },
+    filterfn: {
+      type: Function
+    },
+    filterable: {
+      type: Boolean,
+      default: true
     }
-  },
-  computed: {
-    ...mapGetters([
-      'otherinfo'
-    ])
   },
   data() {
     return {
       val: '',
+      queryFn: (el) => el,
+      // listdata: [],
       types: [],
       dataCache: {
-        'fee_status': [{
-          id: 'NOSETTLEMENT',
-          dictName: '未交账'
-        }, {
-          id: 'PARTSETTLEMENT',
-          dictName: '部分交账'
-        }, {
-          id: 'ALLSETTLEMENT',
-          dictName: '已交账'
-        }]
-      }
+      },
+      query: ''
     }
   },
   watch: {
@@ -134,30 +144,86 @@ export default {
         this.fetchData()
       } else {
         this.types = data
+        // this.listdata = data
       }
     }
+    if (typeof this.filterfn === 'function') {
+      this.queryFn = this.filterfn
+    }
+
     eventBus.$on('closepopbox', () => {
-      console.log('closepopbox selectType:')
-      this.$refs.myautocomplete.handleClose()
+      if (this.$refs.myautocomplete) {
+        this.$refs.myautocomplete.handleClose && this.$refs.myautocomplete.handleClose()
+      }
     })
   },
+  computed: {
+    listdata() {
+      // console.log('this.queryFn', this.queryFn)
+      return this.types.filter(this.queryFn)
+    }
+  },
   methods: {
+    makefilter(query) {
+      this.query = query
+      const REG = new RegExp(query, 'i')
+      let filterfn = (el) => {
+        console.log(el.dictName, REG, REG.test(el.dictName))
+        return REG.test(el.dictName)
+      }
+
+      if (query === '') {
+        filterfn = (el) => el
+      }
+      console.log('typeof this.filterfn', typeof this.filterfn)
+      if (typeof this.filterfn === 'function') {
+        filterfn = this.filterfn
+      }
+      this.queryFn = filterfn
+      // this.listdata = this.types.filter(filterfn)
+    },
     fetchData() {
       var cb = (data) => {
-        this.types = data
+
+        if(this.arterDelivery){
+          this.types = data.filter(el => {
+            return el.id !== 52
+          })
+        }else{
+          this.types = data
+
+        }
+
+        // this.listdata = data
         // debugger
         CACHE.set(this.type, data)
       }
-      if (this.dataCache[this.type]) {
-        cb(this.dataCache[this.type])
+      if (DICT[this.type]) {
+        cb(DICT[this.type])
       } else {
         getSelectType(this.type, this.orgid || this.otherinfo.companyId).then(cb)
       }
     },
+    highLight(item, key) {
+      if (this.query !== '') {
+        return this.setHightLight(item[key], this.query)
+      } else {
+        return item[key]
+      }
+    },
+    setHightLight(str, key) {
+      return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
+    },
     change(item) {
-      this.$emit('change', item)
       this.$emit('input', this.val)
+      this.$emit('change', item)
     }
   }
 }
 </script>
+<style lang="scss">
+.highlight{
+    font-style: normal;
+    color: #f00;
+  }
+</style>

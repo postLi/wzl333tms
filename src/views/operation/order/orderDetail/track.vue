@@ -2,35 +2,35 @@
   <div class="setpinfo_box" v-loading="loading">
     <h3 class="steptitle">物流信息</h3>
     <el-row class="stepItem_title">
-      <el-col :span="5" class="tracktype" >类型</el-col>
+      <el-col :span="3" class="tracktype" >类型</el-col>
       <el-col :span="4" >操作时间</el-col>
       <el-col :span="3">操作网点</el-col>
-      <el-col :span="6">操作信息</el-col>
+      <el-col :span="8">操作信息</el-col>
       <el-col :span="6">操作明细</el-col>
     </el-row>
     <div class="stepinfo">
       <el-steps direction="vertical">
-      <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" v-for="(item, index) in trackDetail" :key="index">
+      <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
         <span slot="icon" class="location" ></span>
         <template slot="description">
           <el-row class="stepItem">
-            <el-col :span="5">
+            <el-col :span="3">
               <span class="typebox">{{item.trackNode}}</span>
               <template v-if="item.trackType===1">
                 <span title="编辑" @click="editItem(item)" class="modifybtn"></span>
                 <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
               </template>
             </el-col>
-            <el-col :span="4" class="textcenter">
+            <el-col :span="4" class="">
               <p>{{item.createTime | parseTime }}</p>
             </el-col>
-            <el-col :span="3" class="textcenter">
+            <el-col :span="3" class="">
               <p>{{item.orgName}}</p>
             </el-col>
-            <el-col :span="6">
+            <el-col class="hyq-control-info" :span="8">
               <p>{{item.trackInfo}}</p>
             </el-col>
-            <el-col :span="5" :offset="1">
+            <el-col :span="6">
               <p>
                 <span class="track-human"  v-if="item.trackType===1" ></span>
                  {{item.trackDetailed}}
@@ -39,21 +39,21 @@
           </el-row>
         </template>
       </el-step>
-      <el-step>
+      <!-- <el-step>
         <span slot="icon" class="location" ></span>
-      </el-step>
+      </el-step> -->
     </el-steps>
     </div>
     <div class="stepinfo-footer">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel" label-width="80px">
         <el-form-item label="类型" prop="trackNode">
-          <el-input v-model="formModel.trackNode" placeholder="类型" size="mini"></el-input>
+          <el-input :maxlength="10" v-model="formModel.trackNode" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="createTime">
           <el-date-picker v-model.trim="formModel.createTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="操作信息" prop="trackInfo">
+        <el-form-item :maxlength="250" label="操作信息" prop="trackInfo">
           <el-input v-model="formModel.trackInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
@@ -67,13 +67,13 @@
 <script>
 // 请求接口
 import orderManage from '@/api/operation/orderManage'
-import {closest, objectMerge2} from '@/utils/'
+import { closest, objectMerge2, parseTime } from '@/utils/'
 
 export default {
   props: {
     orderid: [String, Number]
   },
-  data () {
+  data() {
     return {
       loading: false,
       trackDetail: [],
@@ -85,33 +85,33 @@ export default {
         trackInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
       formModel: {
-        "createTime": "",
+        'createTime': '', 
         // 修改时需要带上
         // "id": 0,
-        "orgid": '',
-        "shipId": '',
-        "trackDetailed": "",
-        "trackInfo": "",
-        "trackNode": "",
-        "trackType": ''
+        'orgid': '',
+        'shipId': '',
+        'trackDetailed': '',
+        'trackInfo': '',
+        'trackNode': '',
+        'trackType': ''
       }
     }
   },
   watch: {
-    orderid (newVal) {
-      if(newVal !== '') {
+    orderid(newVal) {
+      if (newVal !== '') {
         this.init()
       } else {
         this.reset()
       }
     }
   },
-  mounted(){
+  mounted() {
     this.init()
   },
-  methods:{
+  methods: {
     // 初始化
-    init(){
+    init() {
       this.reset()
       this.loading = true
       return Promise.all([
@@ -125,7 +125,7 @@ export default {
       })
     },
     // 获取系统时间
-    getSystemTime () {
+    getSystemTime() {
       return orderManage.getCreateOrderDate().then(data => {
         this.nowTime = new Date(data)
         return data
@@ -140,7 +140,7 @@ export default {
     },
     // 删除跟踪信息
     deleteTrack(item) {
-      let data = item.id
+      const data = item.id
       this.$confirm('此操作将删除跟踪信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -158,7 +158,7 @@ export default {
     editItem(item) {
       this.isModify = true
       this.itemid = item.id
-      for(let i in this.formModel){
+      for (const i in this.formModel) {
         this.formModel[i] = item[i]
       }
     },
@@ -166,16 +166,18 @@ export default {
     submitForm() {
       this.$refs['formModel'].validate((valid) => {
         if (valid) {
-          let data = objectMerge2({}, this.formModel)
+          const data = objectMerge2({}, this.formModel)
+          data.createTime = +new Date(data.createTime)
           let promObj
-          if(!this.isModify){
+          if (!this.isModify) {
             promObj = orderManage.postTrackinfo(data)
           } else {
             data.id = this.itemid
             promObj = orderManage.putTrackinfo(data)
           }
+
           promObj.then(res => {
-            this.$message.success('操作成功')
+            this.$message.success('保存成功')
             this.reset()
             this.getDetail()
           }).catch(err => {
@@ -185,7 +187,7 @@ export default {
       })
     },
     // 重置表单
-    reset () {
+    reset() {
       this.$refs['formModel'].resetFields()
       this.isModify = false
       this.itemid = ''
@@ -200,17 +202,17 @@ export default {
       delete this.formModel.id
     },
     // 取消高亮样式
-    offThisActive(e){
-      let p = closest(e.target,".el-step")
-      if(p){
-        p.classList.remove("trackactive")
+    offThisActive(e) {
+      const p = closest(e.target, '.el-step')
+      if (p) {
+        p.classList.remove('trackactive')
       }
     },
     // 设置高亮样式
-    setThisActive(e){
-      let p = closest(e.target,".el-step")
-      if(p){
-        p.classList.add("trackactive")
+    setThisActive(e) {
+      const p = closest(e.target, '.el-step')
+      if (p) {
+        p.classList.add('trackactive')
       }
     }
   }
@@ -220,6 +222,7 @@ export default {
 .setpinfo_box{
   display: flex;
   flex-direction: column;
+  min-width: 1060px;
   /* 覆盖ele样式 */
   .el-form--inline .el-form-item{
     margin-bottom: 0;
@@ -287,6 +290,8 @@ export default {
     .modifybtn, .deletebtn{
       display: inline-block;
     }
+  }
+  .trackactive,.firstactive{
     .typebox{
       background: url("../../../../assets/png/track-active.png") no-repeat;
       color: #fff;
@@ -299,7 +304,7 @@ export default {
     }
   }
   .modifybtn{
-    margin-left: 30px;
+    margin-left: 2px;
     background: url("../../../../assets/png/edit-icon.png") no-repeat;
     margin-right: 8px;
   }
@@ -310,15 +315,18 @@ export default {
   }
   .stepItem_title{
     color: #666;
-    padding-left: 34px;
+    padding-left: 28px;
     height: 34px;
     .el-col{
-      text-align: center;
+      text-align: left;
     }
     .tracktype{
       text-align: left;
       text-indent: 20px;
     }
+  }
+  .hyq-control-info{
+    padding-right: 10px;
   }
   
   .stepItem{

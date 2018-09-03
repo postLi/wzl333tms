@@ -1,21 +1,22 @@
 <template>
   <div class="createOrder-page">
-    <Main />
+      <Main />
   </div>
 </template>
 <script>
 import Main from './main'
 
 export default {
+  name: 'createOrder22',
   components: {
     Main
   },
-  data () {
+  data() {
     return {
-      userinfo: {}  
+      userinfo: {}
     }
   },
-  mounted () {
+  mounted() {
   }
 }
 </script>

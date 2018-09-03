@@ -4,7 +4,7 @@
       <router-link to="/"><img src="../../../assets/logo.png" alt=""></router-link>
     </div>
     <TopNavMenu />
-<!--     <router-link tag="div" class="pickClip" to="/order/pickClip"><icon-svg icon-class="tiaodanjia" />挑单夹</router-link> -->
+<!--     <router-link tag="div" class="pickClip" to="/order/pickClip"><icon-svg icon-class="tiaodanjia" />挑坕夹</router-link> -->
     <TopNavUser />
     <TopNavCreateOrder />
     <TopNavSearch />
@@ -25,7 +25,7 @@ export default {
     TopNavSearch,
     TopNavCreateOrder
   },
-  data () {
+  data() {
     return {
     }
   }
@@ -70,8 +70,8 @@ export default {
       }
       
       img{
-        height: 37px;
-        width: 112px;
+        height: 33px;
+        width: 97px;
         vertical-align: middle;
       }
     }

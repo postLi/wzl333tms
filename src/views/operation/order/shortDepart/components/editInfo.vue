@@ -7,7 +7,7 @@
       <div class="editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
           <el-tab-pane label="批次详情" name="first">
-            <Detail :info="info" :isShow="popVisible" @isSuccess="isSuccess" class="animated fadeInRight"></Detail>
+            <Detail :info="info" :arrivalStatus="info.bathStatusName" :isShow="popVisible" @isSuccess="isSuccess" :type="type" class="animated fadeInRight"></Detail>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="info_box" v-loading="loading">
@@ -15,12 +15,12 @@
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
                 <el-col :span="3">操作网点</el-col>
-                <el-col :span="2">操作人</el-col>
-                <el-col :span="6">操作信息</el-col>
+                <el-col :span="4">操作人</el-col>
+                <el-col :span="8">操作信息</el-col>
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" v-for="(item, index) in trackDetail" :key="index">
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" :class="{'firstactive': index===0}" v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
                       <el-row class="stepItem">
@@ -31,11 +31,11 @@
                             <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
                           </template>
                         </el-col>
-                        <el-col :span="4" class="textcenter">
+                        <el-col :span="4" class="">
                           <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p> -->
                           <p>{{item.operatorTime}}</p>
                         </el-col>
-                        <el-col :span="3" class="textcenter">
+                        <el-col :span="3" class="">
                           <p>{{item.orgName}}</p>
                         </el-col>
                         <el-col :span="4">
@@ -50,9 +50,9 @@
                       </el-row>
                     </template>
                   </el-step>
-                  <el-step>
+                  <!-- <el-step>
                     <span slot="icon" class="location"></span>
-                  </el-step>
+                  </el-step> -->
                 </el-steps>
               </div>
             </div>
@@ -63,14 +63,14 @@
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootEdit">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
         <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
+          <el-input :maxlength="10" v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
           <el-date-picker v-model.trim="formModel.operatorTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+          <el-input :maxlength="250" v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
@@ -113,11 +113,14 @@ export default {
     info: {
       type: Array,
       default: () => {}
+    },
+    type: {
+      type: String
     }
   },
   data() {
     return {
-      popTitle: '在途跟踪',
+      popTitle: '查看详情',
       loading: false,
       isModify: false,
       infoId: {},
@@ -145,19 +148,26 @@ export default {
   },
   watch: {
     id() {},
-    info() {},
+    info(newVal) {
+      if (newVal) {
+        this.getDetail()
+        this.getSystemTime()
+      }
+    },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()
+        this.getSystemTime()
       }
-    }
+    },
+    type () {}
   },
-  mounted() {
-    if (this.popVisible) {
-      this.getDetail()
-    }
-    this.getSystemTime()
-  },
+  // mounted() {
+  //   if (this.popVisible) {
+  //     this.getDetail()
+  //   }
+  //   this.getSystemTime()
+  // },
   methods: {
     getSystemTime() {
       getSystemTime().then(data => {
@@ -218,7 +228,7 @@ export default {
             this.getDetail()
           })
             .catch(error => {
-              this.$message({ type: 'success', message: '删除失败' })
+               this.$message.error(error.errorInfo || error.text)
             })
         })
         .catch(() => {
@@ -237,6 +247,9 @@ export default {
         this.getDetail()
         this.resetForm()
       })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
+      })
     },
     addTrack() { // 添加
       this.formModel.loadId = this.id
@@ -245,6 +258,9 @@ export default {
         this.getDetail()
         this.resetForm()
         this.getSystemTime()
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
       })
     },
     handleClick() {
@@ -389,11 +405,12 @@ export default {
       &:hover {}
     }
     /* 鼠标划过样式 */
-    .trackactive {
-      .modifybtn,
-      .deletebtn {
+    .trackactive{
+    .modifybtn, .deletebtn{
         display: inline-block;
       }
+    }
+    .trackactive,.firstactive {
       .typebox {
         background: url("../../../../../assets/png/track-active.png") no-repeat;
         color: #fff;
@@ -418,10 +435,10 @@ export default {
     .stepItem_title {
       color: #333;
       margin-top: 10px;
-      padding-left: 34px;
+      padding-left: 28px;
       height: 34px;
       .el-col {
-        text-align: center;
+        text-align: left;
       }
       .tracktype {
         text-align: left;

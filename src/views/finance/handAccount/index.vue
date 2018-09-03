@@ -11,6 +11,7 @@ import Total from './total'
 import Detail from './detail'
 
 export default {
+  name: 'handAccount',
   components: {
     Total,
     Detail

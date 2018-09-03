@@ -52,6 +52,16 @@ export function putCancel(ids) {
 }
 
 /**
+ * http://localhost:7010/api-order/order/pre/v1/accept/?access_token={{access_token}}&ids=1,2,3
+ * @param ids
+ * @returns {*}
+ */
+
+export function putAccept(ids) {
+  return fetch.put('/api-order/order/pre/v1/accept/?ids=' + ids)
+}
+
+/**
  * 插入客户订单
  * @param params
  * {
@@ -104,6 +114,23 @@ export function postAddOrder(params) {
 
 export function postModifyOrder(params) {
   return fetch.post('/api-order/order/pre/v1/updateOrder', params).then(res => {
+    return res.data || {}
+  })
+}
+
+/**
+ * 网络订单列表
+ */
+export function postNetworkList(params) {
+  return fetch.post('/api-order/order/pre/v1/networkList', params).then(res => {
+    return res.data || {}
+  })
+}
+/**
+ * 添加网络订单
+ */
+export function postAddNetworkOrder(params) {
+  return fetch.post('/api-order/order/pre/v1/addNetworkOrder', params).then(res => {
     return res.data || {}
   })
 }

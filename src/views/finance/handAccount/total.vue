@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-info" plain @click="doAction('detail')">查看明细</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-info" plain @click="doAction('detail')" v-has:FINANCE_ACCOUNT1>查看明细</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" class="table_setup" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" class="table_setup" @click="doAction('print')" plain>打印</el-button>
@@ -13,6 +13,7 @@
         <el-table
           ref="multipleTable"
           :data="usersArr"
+          :key="tablekey"
           stripe
           border
           @row-click="clickDetails"
@@ -55,15 +56,18 @@
           </template>
         </el-table>
       </div>   
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
 </template>
 <script>
 import * as handAccountApi from '@/api/finance/handAccount'
 import SearchForm from './components/search'
-import TableSetup from './components/tableSetup'
+import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
+import { getSummaries, parseTime } from '@/utils/'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
   components: {
@@ -96,6 +100,7 @@ export default {
         }
       },
       // 默认sort值为true
+      tablekey: '',
       tableColumn: [{
         'label': '序号',
         'prop': '',
@@ -131,9 +136,9 @@ export default {
       this.$router.push({
         path: '/finance/handAccount/detail',
         query: {
-          orderid: row.id,
-          type: 'view',
-          tab: '查看' + row.shipSn
+          id: row.userId,
+          tab: '查看' + row.name,
+          orgid: row.orgid
         }
       })
     },
@@ -163,7 +168,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'
@@ -182,14 +187,17 @@ export default {
           break
           // 导出数据
         case 'export':
-          var ids2 = this.selected.map(el => {
-            return el.customerId
+          SaveAsFile({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '员工交账-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
-          handAccountApi.getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
-            })
+          break
+        case 'print':
+          PrintInFullPage({
+            data: this.selected.length ? this.selected : this.usersArr,
+            columns: this.tableColumn,
+            name: '员工交账'
           })
           break
       }
@@ -202,6 +210,10 @@ export default {
     closeSetupTable() {
       this.setupTableVisible = false
     },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
+    },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
@@ -210,31 +222,7 @@ export default {
     },
     // 计算总数
     getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      // console.log(columns, data)
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ' 元'
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-
-      return sums
+      return getSummaries(param, ['shipNowpayFee', 'finishAccount', 'noSettlementFee'])
     }
   }
 }

@@ -17,6 +17,9 @@
   </div>
 </template>
 <script>
+// 需要考虑按需引入，减小引入体积
+// echarts的各模块
+// https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
 import { objectMerge2 } from '@/utils/index'
 export default {
@@ -83,9 +86,12 @@ export default {
       //   return this.$options.data().baseInfo
       // }
     },
-    truckInfo() {
-      this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad)
-      this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume)
+    truckInfo: {
+      handler() {
+        this.baseInfo.totalWeight = Number(this.truckInfo.truckLoad) || 0
+        this.baseInfo.totalVolume = Number(this.truckInfo.truckVolume) || 0
+      },
+      deep: true
     },
     popVisible() {
       if (this.popVisible) {
@@ -105,7 +111,6 @@ export default {
       if (this.popVisible) {
         this.baseInfo.weight = 0
         this.baseInfo.volume = 0
-        console.log(this.baseInfo)
         this.info.forEach(e => {
           this.baseInfo.weight += Number(e.loadWeight)
           this.baseInfo.volume += Number(e.loadVolume)
@@ -118,15 +123,14 @@ export default {
       this.initChartVolume()
     },
     initChartWeight() {
-      let surweight = this.baseInfo.totalWeight - this.baseInfo.weight
+      const surweight = this.baseInfo.totalWeight - this.baseInfo.weight
       this.baseInfo.surplusWeight = surweight
-      console.log(this.baseInfo.surplusWeight)
       if (this.popVisible) {
         this.chart = echarts.init(this.$refs.echartWeight)
         this.chart.setOption({
           title: {
             text: '总载重: ' + this.baseInfo.totalWeight,
-            subtext: '单位：吨',
+            subtext: '单位：千克',
             subtextStyle: {
               fontSize: 14,
               color: '#666666'
@@ -134,14 +138,18 @@ export default {
             x: 'center',
             bottom: '0px'
           },
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
           series: [{
-            name: '注册信息',
+            name: '总载重',
             type: 'pie',
             radius: '40%',
             label: {
               normal: {
                 show: true,
-                formatter: '{b}:\n\n{c}吨\n\n{d}%',
+                formatter: '{b}:\n\n{c}千克\n\n{d}%',
                 textStyle: {
                   fontWeight: 'normal',
                   fontSize: 16,
@@ -169,7 +177,7 @@ export default {
       }
     },
     initChartVolume() {
-      let survolume = this.baseInfo.totalVolume - this.baseInfo.volume
+      const survolume = this.baseInfo.totalVolume - this.baseInfo.volume
       this.baseInfo.surplusVolume = survolume
       if (this.popVisible) {
         this.chart = echarts.init(this.$refs.echartVolume)
@@ -184,8 +192,12 @@ export default {
             x: 'center',
             bottom: '0px'
           },
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
           series: [{
-            name: '注册信息',
+            name: '总载立方',
             type: 'pie',
             radius: '40%',
             label: {

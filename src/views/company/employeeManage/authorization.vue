@@ -49,9 +49,9 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
+      'otherinfo'
     ]),
-    myusers () {
+    myusers() {
       this.form.users = {}
       this.users.map(el => {
         // 需要实现双向绑定
@@ -60,8 +60,7 @@ export default {
       return this.users
     }
   },
-  data () {
-
+  data() {
     return {
       form: {
         rolesId: [], // 权限角色
@@ -73,23 +72,23 @@ export default {
     }
   },
   watch: {
-    popVisible (newVal){
-      if(!this.inited){
+    popVisible(newVal) {
+      if (!this.inited) {
         this.inited = true
         this.initInfo()
       }
     }
   },
-  mounted () {
-    if(!this.inited){
-        this.inited = true
-        this.initInfo()
-      }
+  mounted() {
+    if (!this.inited) {
+      this.inited = true
+      this.initInfo()
+    }
   },
   methods: {
-    initInfo () {
+    initInfo() {
       this.loading = true
-      return getAuthInfo(this.otherinfo.companyId).then(res => {
+      return getAuthInfo(this.otherinfo.orgid).then(res => {
         this.roles = res.list
         this.loading = false
       }).catch(err => {
@@ -99,31 +98,28 @@ export default {
     },
     submitForm() {
       this.loading = true
-      let data = []
-      for(let i in this.form.users){
+      const data = []
+      for (const i in this.form.users) {
         data.push({
-          "id": i,
-          "rolesId": this.form.users[i].join(',')
+          'id': i,
+          'rolesId': this.form.users[i].join(',')
         })
       }
       putEmployeerAuth(data).then(res => {
         this.loading = false
-        this.$alert('保存成功', '提示', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.closeMe()
-            this.$emit('success')
-          }
-        });
+        this.$message.success("保存成功")
+        this.closeMe()
+        this.$emit('success')
+
       }).catch(err => {
         this.loading = false
       })
     },
-    closeMe () {
+    closeMe() {
       this.form.users = {}
-      this.$emit('update:popVisible', false);
+      this.$emit('update:popVisible', false)
     },
-    getId(a,b){
+    getId(a, b) {
       console.log('change:: ', a, b)
     }
   }

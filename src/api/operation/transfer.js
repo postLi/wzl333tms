@@ -142,7 +142,7 @@ export function getAlreadyTransferBatchList(data) {
  */
 export function getTransferBatchDetailsList(data) {
   return fetch.post('/api-order/order/transfer/v1/selectTransferBatchDetailsList', data).then(checkStatus).then(res => {
-    return res.data || {}
+    return res.data || []
   })
 }
 

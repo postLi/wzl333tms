@@ -50,6 +50,7 @@
     </ul>
 
     <h3>type可选的值</h3>
+    <p class="important">只要后台字典数据库存在的字段，即可查询获取，不仅限于以下所列。。。。。。</p>
     <pre>network_type	网点类型
 manage_type	经营类型
 driving_type	驾驶证类型
@@ -99,7 +100,7 @@ export default {
   components: {
     SelectType
   },
-  data () {
+  data() {
     return {
       orgid: 1,
       selected: '',
@@ -108,7 +109,7 @@ export default {
     }
   },
   methods: {
-    getOrgid (obj) {
+    getOrgid(obj) {
       // {
       //   pageNum: 1,
       //   pageSize: 100

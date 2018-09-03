@@ -1,19 +1,24 @@
 <template>
   <transferTable>
+    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
+    <div slot="tableSearch" class="tableHeadItemForm clearfix">
+     <!-- 搜索左边表格 -->
+      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
+    </div>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-      <el-button icon="el-icon-plus" class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+      <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
+      <el-table ref="multipleTableRight" @row-dblclick="dclickAddItem" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
-            <el-button icon="el-icon-plus" class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+            <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号">
+        <el-table-column prop="shipSn" width="130" label="运单号">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -27,21 +32,21 @@
         </el-table-column>
         <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
         </el-table-column>
-        <el-table-column prop="cargoName" sortable label="货品名" width="120">
+        <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="120">
+        <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="140">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="120">
+        <el-table-column prop="repertoryVolume" sortable label="库存体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量(千克)" width="120">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
@@ -49,45 +54,45 @@
     </div>
     <!-- 右边表格区 -->
     <div slot="tableRight" class="tableHeadItemBtn">
-      <el-button icon="el-icon-minus" class="tableAllBtn" size="mini" @click="minusAllList"></el-button>
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+      <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
+      <el-table ref="multipleTableLeft" :data="rightTable"  @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
-            <el-button icon="el-icon-minus" class="tableItemBtn" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+            <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号" width="120">
+        <el-table-column prop="shipSn" label="运单号" width="130">
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
             <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="loadWeight" sortable label="配载重量" width="120">
+        <el-table-column prop="loadWeight" sortable label="配载重量(千克)" width="120">
           <template slot-scope="scope">
             <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="loadVolume" sortable label="配载体积" width="120">
+        <el-table-column prop="loadVolume" sortable label="配载体积(方)" width="120">
           <template slot-scope="scope">
             <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="库存重量" width="120">
+        <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="120">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="库存体积" width="120">
+        <el-table-column prop="repertoryVolume" sortable label="库存体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="120">
         </el-table-column>
-        <el-table-column prop="cargoWeight" sortable label="运单重量" width="120">
+        <el-table-column prop="cargoWeight" sortable label="运单重量(千克)" width="120">
         </el-table-column>
-        <el-table-column prop="cargoVolume" sortable label="运单体积" width="120">
+        <el-table-column prop="cargoVolume" sortable label="运单体积(方)" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -101,9 +106,9 @@
         </el-table-column>
         <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
         </el-table-column>
-        <el-table-column prop="cargoName" sortable label="货品名" width="120">
+        <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="120">
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
       </el-table>
     </div>
@@ -114,6 +119,8 @@ import { mapGetters } from 'vuex'
 import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
+import currentSearch from './currentSearch'
+import { getSummaries } from '@/utils/'
 export default {
   data() {
     return {
@@ -126,6 +133,7 @@ export default {
       btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],
+      orgLeftTable: [],
       leftTable: [],
       rightTable: [],
       orgData: {
@@ -150,7 +158,8 @@ export default {
     ])
   },
   components: {
-    transferTable
+    transferTable,
+    currentSearch
   },
   watch: {
     isModify: {
@@ -170,100 +179,35 @@ export default {
       deep: true
     }
   },
+  mounted () {
+    if (this.leftTable.length === 0) {
+      this.getList()
+    }
+  },
   activated() {
     this.getList()
   },
   methods: {
-    getSumRight(param) { // 右边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
-    },
-    getSumLeft(param) { // 左边表格合计-自定义显示
-      const { columns, data } = param
-      const sums = []
-      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
-      columns.forEach((column, index) => {
-
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2 || index === 3) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
-    },
     getList() {
       console.log('isModify', this.isModify)
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
+      this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
         this.leftTable = this.orgData.left
         this.rightTable = this.orgData.right
+        this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
+          this.orgLeftTable = data.data
           this.$emit('loadTable', this.rightTable)
         })
       }
+    },
+    getSearch (obj) { // 搜索
+     this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -344,10 +288,20 @@ export default {
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
-          let item = this.leftTable.indexOf(e)
-          if (item !== -1) { // 源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-          }
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = this.leftTable.indexOf(e)
+          // if (item !== -1) { // 源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          // }
+          // let orgItem = this.orgLeftTable.indexOf(e)
+          // if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+          //   this.orgLeftTable.splice(orgItem, 1)
+          // }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -361,11 +315,16 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable.push(e)
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.orgLeftTable.push(e)
+
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
@@ -390,6 +349,96 @@ export default {
     minusAllList() { // 减去全部
       this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
+    },
+    dclickAddItem (row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
+    },
+    dclickMinusItem (row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
+    },
+    getSumRight(param) { // 右边表格合计-自定义显示
+      // let propsArr = ['repertoryAmount', 'repertoryWeight', 'repertoryVolume', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      // return getSummaries(param, propsArr)
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总计'
+          return
+        }
+        if (index === 1) {
+          sums[index] = '操作'
+          return
+        }
+        if (index === 2) {
+          sums[index] = data.length + '单'
+          return
+        }
+        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
+          sums[index] = ''
+          return
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+          sums[index] += ''
+        } else {
+          sums[index] = 'N/A'
+        }
+      })
+      return sums
+    },
+    getSumLeft(param) { // 左边表格合计-自定义显示
+      // let propsArr = ['repertoryAmount', 'repertoryWeight', 'repertoryVolume', 'cargoAmount', 'cargoWeight', 'cargoVolume']
+      // return getSummaries(param, propsArr)
+      const { columns, data } = param
+      const sums = []
+      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
+      columns.forEach((column, index) => {
+
+        if (index === 0) {
+          sums[index] = '总计'
+          return
+        }
+        if (index === 1) {
+          sums[index] = '操作'
+          return
+        }
+        if (index === 2 || index === 3) {
+          sums[index] = data.length + '单'
+          return
+        }
+        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
+          sums[index] = ''
+          return
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+          sums[index] += ''
+        } else {
+          sums[index] = 'N/A'
+        }
+      })
+      return sums
     }
   }
 }
@@ -399,17 +448,47 @@ export default {
 .tableHeadItemBtn {
   height: 100%;
   position: relative;
-  .tableItemBtn {
-    width: 30px;
-    padding-left: 8px;
+  .el-button {
+    border: none;
   }
+  .el-button--mini,
+  .el-button--mini.is-round {
+    padding: 5px 9px;
+  }
+  .tableItemBtnMinus,
+  .tableItemBtn {
+    width: 18px;
+    height: 18px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+  }
+  .tableAllBtnMinus,
   .tableAllBtn {
-    width: 30px;
-    padding-left: 8px;
+    width: 18px;
+    height: 18px;
     position: absolute;
     z-index: 33;
-    top: 8px;
-    left: 61px;
+    top: 10px;
+    left: 67px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+  }
+  .tableAllBtn,
+  .tableItemBtn {
+    background-image: url('../../../../../assets/png/01zengjia-c.png');
+  }
+  .tableAllBtn:hover,
+  .tableItemBtn:hover {
+    background-image: url('../../../../../assets/png/02zengjia.png');
+  }
+
+  .tableAllBtnMinus,
+  .tableItemBtnMinus {
+    background-image: url('../../../../../assets/png/03shanqu-c.png');
+  }
+  .tableAllBtnMinus:hover,
+  .tableItemBtnMinus:hover {
+    background-image: url('../../../../../assets/png/04shanqu.png');
   }
   .showAllTable {
     width: calc(100% - 100px);

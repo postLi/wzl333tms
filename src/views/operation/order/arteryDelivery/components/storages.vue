@@ -7,212 +7,224 @@
       <div class="storagesInfoPop_content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-card">
           <el-tab-pane label="批次详情" name="first">
-            <div class="tabs-content" v-loading="loading">
+            <div class="tabs-cont" v-loading="loading">
               <div class="info_form">
                 <!--<el-form-item label="网点">-->
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
                 <!--</el-form-item>-->
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="sta_searchinfo clearfix" :model="formModel">
+                <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px"
+                         class="st_searchinfo clearfix" :model="formModel">
                   <el-form-item label="到达网点:">
-                    <el-input v-model="formModel.arriveOrgName" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.arriveOrgName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="车牌号码:">
-                    <el-input v-model="formModel.truckIdNumber" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.truckIdNumber" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="司机姓名:">
-                    <el-input v-model="formModel.dirverName" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.dirverName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="司机电话:">
-                    <el-input v-model="formModel.dirverMobile" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.dirverMobile" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="可载体积:">
-                    <el-input v-model="formModel.truckVolume" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.truckVolume" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="可载重量:">
-                    <el-input v-model="formModel.truckLoad" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.truckLoad" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="分摊方式:">
-                    <el-input v-model="formModel.apportionTypeName" maxlength="15" clearable disabled>
+                    <el-input v-model="formModel.apportionTypeName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="配载日期:">
-                    <el-input :value="formModel.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" maxlength="15" clearable disabled>
+                    <el-input :value="formModel.loadTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')" :maxlength="15"
+                              clearable disabled>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="要求到达日期:" class="art_arriveTime">
-                    <el-input maxlength="15" clearable disabled :value="formModel.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')">
+                    <el-input :maxlength="15" clearable disabled
+                              :value="formModel.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')">
                     </el-input>
                   </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
-                    <el-input v-model="formModel.remark" clearable maxlength="300" auto-complete="off" type="textarea" disabled>
+                    <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea"
+                              disabled>
                     </el-input>
                   </el-form-item>
                 </el-form>
               </div>
-              <div class="infos_table">
-                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="sta_searchinfo clearfix">
+              <div class="infos_table_">
+                <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px"
+                         class="st_searchinfo clearfix" :model="formModel" :rules="ruleData">
                   <ul>
                     <li>
                       <p>现付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>现付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayOilCard" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.nowpayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>回付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>回付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.backpayOilCard" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.backpayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到付运费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>到付油卡</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arrivepayOilCard" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.arrivepayOilCard" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>整车保险费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.carloadInsuranceFee" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.carloadInsuranceFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>发站装卸费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveHandlingFee" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.leaveHandlingFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
                       <p>发站其他费</p>
                       <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.leaveOtherFee" disabled></el-input>
+                        <el-input :maxlength="10" v-model="formModel.leaveOtherFee" disabled></el-input>
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到站装卸费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveHandlingFee" disabled></el-input>
+                      <p> 到站装卸费</p>
+                      <el-form-item prop="">
+                        <el-input :maxlength="10" v-model="formModel.arriveHandlingFee" :disabled="isModify"
+                                  v-number-only:point></el-input>
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到站其他费</p>
-                      <el-form-item prop="nowpayCarriage">
-                        <el-input maxlength="10" v-model="formModel.arriveOtherFee" disabled></el-input>
+                      <p> 到站其他费</p>
+                      <el-form-item prop="">
+                        <el-input :maxlength="10" v-model="formModel.arriveOtherFee" :disabled="isModify"
+                                  v-number-only:point></el-input>
                       </el-form-item>
                     </li>
                   </ul>
                 </el-form>
               </div>
-              <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />-->
-              <div class="tab_info">
-                <div class="btns_box">
-                  <!--<div v-if="isHiddenBtn===true">-->
-                    <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="isModify">{{popTitle}}</el-button>
-                  <!--</div>-->
-                  <!--<div v-if="isHiddenBtn===false">-->
-                    <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isModify">{{popTitle}}</el-button >
-                  <!--</div>-->
+              <div class="tab_info artDelivery_table">
+                <div class="_btns_box">
+                  <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')"
+                             v-if="!isAlFun" class="table_poptitle">{{popTitle}}
+                  </el-button>
 
 
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_export">导出</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain class="table_import">批量导入</el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printer')" plain
+                             class="table_export">打印清单
+                  </el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
+                             class="table_import">导出
+                  </el-button>
+                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable"
+                             class="table_setup">表格设置
+                  </el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :key="tablekey" :data="detailList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="80%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}">
-                    <el-table-column fixed sortable type="selection" width="40">
-                    </el-table-column>
-                    <el-table-column
-                    fixed
-                    sortable
-                    label="序号"
-                    width="80">
-                      <template slot-scope="scope">{{  scope.$index + 1 }}</template>
-                    </el-table-column>
-                    <el-table-column fixed sortable prop="shipFromOrgName" width="120" label="开单网点">
-                    </el-table-column>
-                    <el-table-column prop="shipSn" width="150" sortable label="运单号">
-                    </el-table-column>
-                    <el-table-column prop="childShipSn" sortable width="120" label="子运单号">
-                    </el-table-column>
-                      <!--actualAmount  loadAmount-->
-                      <el-table-column prop="actualAmount" sortable width="120" label="实到件数" v-if="isModify">
-                      </el-table-column>
-                      <!--actualWeight   loadWeight-->
-                      <el-table-column sortable prop="actualWeight" width="120" label="实到重量" v-if="isModify">
-                      </el-table-column>
-                      <!--actualVolume   loadVolume-->
-                      <el-table-column label="实到体积" width="120" prop="actualVolume" sortable v-if="isModify">
-                      </el-table-column>
 
 
-                      <el-table-column prop="actualAmount" sortable width="120" label="实到件数" v-if="!isModify">
+                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails"
+                            @selection-change="getSelection" height="80%" tooltip-effect="dark" :key="tablekey"
+                            style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                    <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+                    <template v-for="column in tableColumn">
+                      <!--有数据-->
+                      <el-table-column
+                        :key="column.id"
+                        :fixed="column.fixed"
+                        sortable
+                        :label="column.label"
+                        :width="column.width"
+                      >
+                        <!--状态-->
                         <template slot-scope="scope">
-                          <el-input type="number" :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualAmount" @change="changeData(scope.$index)" required></el-input>
+                          <div v-if="column.checkfn">
+                            <span v-if="column.checkfn(scope.row)">
+                               {{scope.row[column.prop]}}
+
+
+                            </span>
+                            <span v-else>
+                               <el-input
+
+                                 v-model.number="column.slot(scope)"
+                                 :size="btnsize"
+                                 v-number-only
+                                 @change="(val) => changeData(scope.$index, column.prop, val)"
+                               >
+                              </el-input>
+                              <!--{{scope.row[column.prop]}}-->
+                            </span>
+                          </div>
+                          <div v-else-if="column.expand">
+                            <el-input
+
+                              v-model.number="column.slot(scope)"
+                              :size="btnsize"
+                              v-number-only
+                              @change="(val) => changeData(scope.$index, column.prop, val)"
+                            >
+                            </el-input>
+                          </div>
+                          <span
+                            class="clickitem"
+                            v-else-if="column.click"
+                            v-html="column.slot(scope)"
+                            @click.stop="column.click(scope)"
+                          >
+                          </span>
+                          <span
+                            v-else-if="column.slot"
+                            v-html="column.slot(scope)"
+                          >
+                          </span>
+                          <span
+                            v-else
+                          >
+                            {{scope.row[column.prop]}}
+                          </span>
+                          <!--<span v-else v-html="column.slot(scope)"></span>-->
                         </template>
                       </el-table-column>
-                      <el-table-column sortable prop="actualWeight" width="120" label="实到重量" v-if="!isModify">
-                        <template slot-scope="scope">
-                          <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualWeight" @change="changeData(scope.$index)" required></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column sortable prop="actualVolume" width="120" label="实到体积" v-if="!isModify">
-                        <template slot-scope="scope">
-                          <el-input type="number"  :disabled="isEditActual" :size="btnsize" v-model.number="scope.row.actualVolume" @change="changeData(scope.$index)" required></el-input>
-                        </template>
-                      </el-table-column>
-                    <el-table-column prop="loadAmount" label="配载件数" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column sortable prop="loadWeight" width="110" label="配载重量">
-                    </el-table-column>
-                    <el-table-column prop="loadVolume" label="配载体积" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipFromCityName" label="出发城市" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipToCityName" label="到达城市" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipSenderName" label="发货人" width="100" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipSenderMobile" label="发货人电话" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipSenderName" label="收货人电话" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipSenderMobile" label="收货人电话" width="120" sortable>
-                    </el-table-column>
-                    <el-table-column prop="cargoName" label="货品名" width="100" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipGoodsSn" label="货号" width="130" sortable>
-                    </el-table-column>
-                    <el-table-column prop="shipRemarks" label="运单备注" width="120" sortable>
-                    </el-table-column>
+                    </template>
                   </el-table>
+
                 </div>
               </div>
             </div>
+            <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
+                        @success="setColumn"></TableSetup>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="deliveryinfo_box" v-loading="loading">
@@ -225,7 +237,9 @@
               </el-row>
               <div class="stepinfo">
                 <el-steps direction="vertical">
-                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive" v-for="(item, index) in trackDetail" :key="index">
+                  <el-step @mouseover.native="setThisActive" @mouseout.native="offThisActive"
+                           :class="{'firstactive': index===0}"
+                           v-for="(item, index) in trackDetail" :key="index">
                     <span slot="icon" class="location"></span>
                     <template slot="description">
                       <el-row class="stepItem">
@@ -254,60 +268,13 @@
                       </el-row>
                     </template>
                   </el-step>
-                  <el-step>
+                  <!-- <el-step>
                     <span slot="icon" class="location"></span>
-                  </el-step>
+                  </el-step> -->
                 </el-steps>
               </div>
             </div>
-            <!-- <div class="tab_box">
-              <div class="tab_box_item">
-                <el-row class="stepItem_title">
-                  <el-col :span="4" :offset="5"><b>操作时间</b></el-col>
-                  <el-col :span="3"><b>操作网点</b></el-col>
-                  <el-col :span="2"><b>操作人</b></el-col>
-                  <el-col :span="3"><b>操作信息</b></el-col>
-                </el-row>
-                <el-steps direction="vertical">
-                  <el-step v-for="(item, index) in trackDetail" :key="item.key" icon="el-icon-location">
-                    <template slot="description">
-                      <el-row class="stepItem">
-                        <el-col :span="4">
-                          <el-popover placement="right" width="50" trigger="hover" v-if="item.addStatus===1?true:false">
-                            <el-tooltip class="item" effect="dark" content="修改" placement="bottom">
-                              <el-button type="text" icon="el-icon-edit-outline" @click="editItem(item)"></el-button>
-                            </el-tooltip>
-                            <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                              <el-button type="text" icon="el-icon-delete" @click="deleteTrack(item)"></el-button>
-                            </el-tooltip>
-                            <el-button size="mini" slot="reference">{{item.loadStatus}}</el-button>
-                          </el-popover>
-                          <el-button size="mini" v-else>{{item.loadStatus}}</el-button>
-                        </el-col>
-                        <el-col :span="5">
-                          <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p>
-                        </el-col>
-                        <el-col :span="3">
-                          <p>{{item.orgName}}</p>
-                        </el-col>
-                        <el-col :span="3">
-                          <p>
-                            <i class="icon_man" v-if="item.addStatus===1?true:false"></i>
-                            <i class="icon_blank" v-else></i> {{item.operatorUsername}}
-                          </p>
-                        </el-col>
-                        <el-col :span="8">
-                          <p>{{item.operatorInfo}}</p>
-                        </el-col>
-                      </el-row>
-                    </template>
-                  </el-step>
-                  <el-step icon="el-icon-location"></el-step>
-                </el-steps>
-              </div>
-              <div class="tab_box_item">
-              </div>
-            </div> -->
+
           </el-tab-pane>
           <el-tab-pane label="运输合同" name="third">
             <div class="pact">
@@ -346,24 +313,38 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="五、本车货物总为">
-                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>件
-                      <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>千克
-                      <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>方,全程运费
-                      <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
-                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，现付油卡
-                      <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>元，到付运费
-                      <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
-                      <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>元，回付运费
-                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>元，回付油卡
-                      <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>元，保险费
-                      <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>
+                      件
+                      <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
+                      千克
+                      <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
+                      方,全程运费
+                      <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
+                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
+                      <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
+                      元，现付油卡
+                      <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
+                      元，到付运费
+                      <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
+                      ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
+                      <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
+                      元，回付运费
+                      <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
+                      元，回付油卡
+                      <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
+                      元，保险费
+                      <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
+                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为
-                      <el-input size="mini" disabled :value="formModel.planArrivedTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>。
+                      <el-input size="mini" disabled :value="formModel.departureTime"></el-input>
+                      ，到达时间为
+                      <!--<el-input size="mini" disabled :value="formModel.departureTime | parseTime('{y}-{m}-{d} {h}:{m}:{s}')"></el-input>，到达时间为-->
+                      <el-input size="mini" disabled :value="formModel.receivingTime "></el-input>
+                      。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
                   </div>
@@ -436,1114 +417,1438 @@
         </el-form-item>
       </el-form>
     </div>
-    <!-- <div slot="footer" class="dialog-footer stepFrom" v-if="isFootSecond">
-      <el-form inline :model="formModel" :rules="ruleForm" label-width="80px" ref="formModel">
-        <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
+
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
+
   </pop-right>
+
 </template>
 <script>
-import { REGEX } from '@/utils/validate'
-import popRight from '@/components/PopRight/index'
-import selectType from '@/components/selectType/index'
-import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
-import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
-import { getExportExcel } from '@/api/company/customerManage'
-import { mapGetters } from 'vuex'
-import SelectTree from '@/components/selectTree/index'
-import { objectMerge2, parseTime, closest } from '@/utils/'
-export default {
-  data() {
-    return {
-      tablekey: '1',
-      // titleIcon:"到车确定",
-      // titleIcon:"到车入库",
-      getBatchNo: '',
-      popTitle: '到车入库',
-      activeName: 'first',
-      trackDetail: [],
-      ruleForm: {},
-      loading: false,
-      isFootEdit: false,
-      isFootSecond: false,
-      isFootOther: false,
-      isCancelFootEdit: false,
-      isHiddenBtn: false,
-      isEditActual: false,
-      propsId: '',
-      formModel: {},
-      // formModel: {
-      //   addStatus: 1,
-      //   id: 0,
-      //   loadId: 0,
-      //   loadStatus: '',
-      //   operatorInfo: '',
-      //   operatorOrgid: 1,
-      //   operatorTime: '',
-      //   operatorUserid: 0
-      // },
-      btnsize: 'mini',
-      detailList: [],
-      selectDetailList: [],
-      selected: [],
-      //加载状态
-      loading: true,
-      // setupTableVisible: false,
-      // AddCustomerVisible: false,
-      formMode1: {
-        // arriveOrgName:'',//到达网点
-        // truckIdNumber:'',//车牌号码
-        // dirverName:'',//司机姓名
-        // dirverMobile:'',//司机电话
-        // truckVolume:'',//可载体积
-        // truckLoad:'',//可载重量
-        // apportionTypeName:'',//分摊方式
-        // DateTimeFormat:'',//配载日期
-        // requireArrivedTime:'',//要求到达日期：
-        // remark:'',
-        //  nowpayCarriage:'',//现付运费
-        //  nowpayOilCard:'',//现付油卡
-        //  backpayCarriage:'',//回付运费
-        //  backpayOilCard:'',//回付油卡
-        //  arrivepayCarriage:'',//到付运费
-        //  arrivepayOilCard:'',//到付油卡
-        //  carloadInsuranceFee:'',//整车保险费
-        //  leaveHandlingFee:'',//发站装卸费
-        //  leaveOtherFee:'',//发站其他费
-        //  arriveHandlingFee:'',//到站装卸费
-        //  arriveOtherFee:'',//到站其他费
-        //   userName //配载人员
-      },
-      sendTypeId: {
-        typeId: 54, //等于54为干线到车确认
-      },
-      sendModel: {
-        "tmsOrderLoad": {
-          "id": ""
+  import {REGEX} from '@/utils/validate'
+  import popRight from '@/components/PopRight/index'
+  import selectType from '@/components/selectType/index'
+  import {getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList} from '@/api/operation/track'
+  import {postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar} from '@/api/operation/arteryDelivery'
+  import {getExportExcel} from '@/api/company/customerManage'
+  import {mapGetters} from 'vuex'
+  import SelectTree from '@/components/selectTree/index'
+  import {objectMerge2, parseTime, closest} from '@/utils/'
+  import TableSetup from '@/components/tableSetup'
+  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+
+  export default {
+    data() {
+      const validateNum = function (rule, value, callback) {
+        if (!REGEX.ONLY_NUMBER.test(value)) {
+          callback(new Error('请输入数字~'))
+        } else if (REGEX.KONGE.test(value)) {
+          // this.$message.error('不能输入空格~')
+          callback(new Error('不能输入空格~'))
+        } else {
+          callback()
+        }
+      }
+
+      return {
+        ruleData: {
+          arriveHandlingFee: [
+            {validator: validateNum, trigger: 'blur'}
+          ], //
+          arriveOtherFee: [
+            {validator: validateNum, trigger: 'blur'}
+          ]
         },
-        tmsOrderLoadFee: {
-          "id": "",
-          "arriveHandlingFee": "",
-          "arriveOtherFee": ""
+        tablekey: '1',
+        // titleIcon:"到车确定",
+        // titleIcon:"到车入库",
+        getBatchNo: '',
+        popTitle: '到车入库',
+        activeName: 'first',
+        trackDetail: [],
+        ruleForm: {},
+        loading: false,
+        isFootEdit: false,
+        isFootSecond: false,
+        isFootOther: false,
+        isCancelFootEdit: false,
+        isHiddenBtn: false,
+        isEditActual: false,
+        propsId: '',
+        formModel: {},
+        // formModel: {
+        //   addStatus: 1,
+        //   id: 0,
+        //   loadId: 0,
+        //   loadStatus: '',
+        //   operatorInfo: '',
+        //   operatorOrgid: 1,
+        //   operatorTime: '',
+        //   operatorUserid: 0
+        // },
+        btnsize: 'mini',
+        detailList: [],
+        selectDetailList: [],
+        selected: [],
+        // 加载状态
+        loading: true,
+        setupTableVisible: false,
+        // AddCustomerVisible: false,
+        formMode1: {},
+        sendTypeId: {
+          typeId: 54 // 等于54为干线到车确认
         },
-        tmsOrderLoadDetailsList: [
+        batchTypeName: '',
+        sendModel: {
+          'tmsOrderLoad': {
+            'id': ''
+          },
+          tmsOrderLoadFee: {
+            'id': '',
+            'arriveHandlingFee': '',
+            'arriveOtherFee': ''
+          },
+          tmsOrderLoadDetailsList: [
+            // {
+            //   id:'',
+            //   actualAmount:'',
+            //   actualWeight:'',
+            //   actualVolume:''
+            // }
+          ]
+        },
+        searchQuery: {
+          'currentPage': 1,
+          'pageSize': 100,
+          'vo': {
+            'loadId': 1
+          }
+        },
+        tableColumn: [{
+          label: '序号',
+          prop: 'id',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        }, {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: true
+        }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '150',
+          fixed: true
+        }, {
+          label: '子运单号',
+          prop: 'childShipSn',
+          width: '120',
+          fixed: false
+        },
+          //   {
+          //   label: '应到件数',
+          //   prop: 'loadAmount',
+          //   width: '100',
+          //   fixed: false
+          // }, {
+          //   label: '应到重量',
+          //   prop: 'loadWeight',
+          //   width: '100',
+          //   fixed: false
+          // }, {
+          //   label: '应到体积',
+          //   prop: 'loadVolume',
+          //   width: '100',
+          //   fixed: false
+          // },
+          // v-if="isAlFun"   入库前的
+          {
+            label: '实到件数',
+            prop: 'actualAmount',
+            width: '100',
+            isAlFun: true,
+            expand: true,
+            fixed: false,
+            checkfn: (row) => {
+              console.log('row.warehouStatus:', row.warehouStatus)
+              return row.warehouStatus === 1
+            },
+
+            slot: (scope) => {
+              return scope.row.actualAmount
+            }
+          }, {
+            label: '实到重量',
+            prop: 'actualWeight',
+            width: '100',
+            expand: true,
+            checkfn: (row) => {
+              return row.warehouStatus === 1
+            },
+            fixed: false,
+
+            slot: (scope) => {
+              return scope.row.actualWeight
+            }
+          }, {
+            label: '实到体积',
+            prop: 'actualVolume',
+            width: '100',
+            expand: true,
+            checkfn: (row) => {
+              return row.warehouStatus === 1
+            },
+            fixed: false,
+
+            slot: (scope) => {
+              return scope.row.actualVolume
+            }
+          },
+          // v-if="!isAlFun"  入库后的
           // {
-          //   id:'',
-          //   actualAmount:'',
-          //   actualWeight:'',
-          //   actualVolume:''
-          // }
+          //   label: '实到件数',
+          //   prop: 'actualAmount',
+          //   width: '100',
+          //   checkfn: (row)=>{
+          //     return row.warehouStatus === 1
+          //   },
+          //   fixed: false
+          // }, {
+          //   label: '实到重量',
+          //   prop: 'actualWeight',
+          //   width: '100',
+          //   checkfn: (row)=>{
+          //     return row.warehouStatus === 1
+          //   },
+          //   fixed: false
+          // }, {
+          //   label: '实到体积',
+          //   prop: 'actualVolume',
+          //   width: '100',
+          //   checkfn: (row)=>{
+          //     return row.warehouStatus === 1
+          //   },
+          //   fixed: false
+          // },
+          //
+          {
+            label: '配载件数',
+            prop: 'loadAmount',
+            width: '100',
+            fixed: false
+          }, {
+            label: '配载重量',
+            prop: 'loadWeight',
+            width: '100',
+            fixed: false
+          }, {
+            label: '配载体积',
+            prop: 'loadVolume',
+            width: '100',
+            fixed: false
+          }, {
+            label: '出发城市',
+            prop: 'shipFromCityName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '到达城市',
+            prop: 'shipToCityName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '发货人',
+            prop: 'shipSenderName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '发货人电话',
+            prop: 'shipSenderMobile',
+            width: '120',
+            fixed: false
+          }, {
+            label: '收货人',
+            prop: 'shipReceiverName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '收货人电话',
+            prop: 'shipReceiverMobile',
+            width: '120',
+            fixed: false
+          }, {
+            label: '货品名',
+            prop: 'cargoName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '货号',
+            prop: 'shipGoodsSn',
+            width: '130',
+            fixed: false
+          }, {
+            label: '运单备注',
+            prop: 'shipRemarks',
+            width: '110',
+            fixed: false
+          }
         ]
+      }
+    },
+    components: {
+      popRight,
+      SelectTree,
+      selectType,
+      TableSetup
+
+    },
+    computed: {
+      ...mapGetters([
+        'otherinfo'
+      ]),
+      orgid() {
+        // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+
+        // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      }
+    },
+    props: {
+      popVisible: {
+        type: Boolean,
+        default: false
       },
-      searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "loadId": 1
+      isModify: {
+        type: Boolean,
+        default: false
+      },
+      isAlFun: {
+        type: Boolean,
+        default: false
+      },
+      info: {
+        type: Object,
+        default: () => {
+        }
+      },
+      issender: {
+        type: Boolean,
+        dafault: false
+      },
+      //
+      id: {
+        type: [String, Number],
+        dafault: false
+      }
+    },
+    watch: {
+      validateIsEmpty(msg = '不能为空！') {
+        return (rule, value, callback) => {
+          if (!value) {
+            callback(new Error(msg))
+          } else {
+            callback()
+          }
+        }
+      },
+      id(newVal) {
+      },
+      info(newVal) {
+        if (this.isModify) {
+          this.popTitle = '到车确定'
+        } else if (this.isAlFun) {
+          this.popTitle = '查看详情'
+        } else {
+          this.popTitle = '到车入库'
+        }
+        this.getBatchNo = this.info.batchNo
+        this.propsId = this.info.id
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
+      },
+      isAlFun(newVal) {
+        this.tablekey = +new Date()
+        if (this.isModify) {
+          this.popTitle = '到车确定'
+        } else if (this.isAlFun) {
+          this.popTitle = '查看详情'
+        } else {
+          this.popTitle = '到车入库'
+        }
+      },
+      isModify(newVal) {
+        this.tablekey = +new Date()
+        if (this.isModify) {
+          this.popTitle = '到车确定'
+        } else if (this.isAlFun) {
+          this.popTitle = '查看详情'
+        } else {
+          this.popTitle = '到车入库'
+        }
+      },
+      popVisible(newVal, oldVal) {
+        if (!this.inited) {
+          this.inited = true
+          this.initInfo()
         }
       }
-    }
-  },
-  components: {
-    popRight,
-    SelectTree,
-    selectType
-
-  },
-  computed: {
-    ...mapGetters([
-      'otherinfo'
-    ]),
-    orgid() {
-      // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-
-      // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-    }
-  },
-  props: {
-    popVisible: {
-      type: Boolean,
-      default: false
     },
-    isModify: {
-      type: Boolean,
-      default: false
-      },
-    info: {
-      type: Object,
-      default: () => {}
-    },
-    issender: {
-      type: Boolean,
-      dafault: false
-    },
-    id: {
-      type: [String, Number],
-      dafault: false
-    }
-  },
-  watch: {
-    id(newVal) {
-    },
-    info(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-
-      }
-      else {
-        this.popTitle = '到车入库'
-      }
-      this.getBatchNo = this.info.batchNo
+    mounted() {
       this.propsId = this.info.id
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
-    },
-    isModify(newVal) {
-      this.tablekey = +new Date()
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-      }
-      else {
-        this.popTitle = '到车入库'
+      if (this.popVisible) {
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
       }
     },
-    popVisible(newVal, oldVal) {
-      if (!this.inited) {
-        this.inited = true
-        this.initInfo()
-      }
-    },
-  },
-  mounted() {
-
-    this.propsId = this.info.id
-    if (this.popVisible) {
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
-
-    }
-  },
-  methods: {
-    changeData(newVal) { // 判断当行
-      let curAmount = this.detailList[newVal].actualAmount // 实到件数
-      let curWeight = this.detailList[newVal].actualWeight // 实到重量
-      let curVolume = this.detailList[newVal].actualVolume // 实到体积
-      let curloadAmount = this.detailList[newVal].loadAmount // 配载件数
-      let curloadWeight = this.detailList[newVal].loadWeight // 配载重量
-      let curloadVolume = this.detailList[newVal].loadVolume // 配载体积
-      if (this.selectDetailList.length === 1 && curAmount === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$notify({
-          title: '提示',
-          message: '实到件数不能为0',
-          type: 'warning'
-        })
-      }
-      if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
-        console.log(this.selectDetailList.length, this.detailList.length)
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$notify({
-          title: '提示',
-          message: '实到重量和实到体积不能同时为0',
-          type: 'warning'
-        })
-      }
-      if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], false)
-        console.log(this.selectDetailList.length)
-        if (this.selectDetailList.length === 0) {
-          this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
-          this.detailList[newVal].actualAmount = curloadAmount
-          this.detailList[newVal].actualWeight = curloadWeight
-          this.detailList[newVal].actualVolume = curloadVolume
+    methods: {
+      changeData(index, prop, newVal) { // 判断当行
+        this.detailList[index][prop] = Number(newVal)
+        const curAmount = this.detailList[index].actualAmount // 实到件数
+        const curWeight = this.detailList[index].actualWeight // 实到重量
+        const curVolume = this.detailList[index].actualVolume // 实到体积
+        const curloadAmount = this.detailList[index].loadAmount // 配载件数
+        const curloadWeight = this.detailList[index].loadWeight // 配载重量
+        const curloadVolume = this.detailList[index].loadVolume // 配载体积
+        if (this.selectDetailList.length === 1 && curAmount === 0) {
+          // console.log(this.selectDetailList.length, this.detailList.length)
+          this.detailList[index].actualAmount = curloadAmount
+          this.detailList[index].actualWeight = curloadWeight
+          this.detailList[index].actualVolume = curloadVolume
+          this.$notify({
+            title: '提示',
+            message: '实到件数不能为0',
+            type: 'warning'
+          })
         }
-        this.$notify({
-          title: '提示',
-          message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
-          type: 'warning'
+        // if (curAmount !== 0 && curWeight === 0 && curVolume === 0) {
+        //   console.log(this.selectDetailList.length, this.detailList.length)
+        //   this.detailList[newVal].actualAmount = curloadAmount
+        //   this.detailList[newVal].actualWeight = curloadWeight
+        //   this.detailList[newVal].actualVolume = curloadVolume
+        //   this.$notify({
+        //     title: '提示',
+        //     message: '实到重量和实到体积不能同时为0',
+        //     type: 'warning'
+        //   })
+        // }
+        if (curAmount === 0 && curVolume === 0 && curWeight === 0) {
+          this.$refs.multipleTable.toggleRowSelection(this.detailList[index], false)
+          // console.log(this.selectDetailList.length)
+          if (this.selectDetailList.length === 0) {
+            this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
+            this.detailList[index].actualAmount = curloadAmount
+            this.detailList[index].actualWeight = curloadWeight
+            this.detailList[index].actualVolume = curloadVolume
+          }
+          this.$notify({
+            title: '提示',
+            message: '实到数量都为0时,取消本条运单入库,但必须有一条运单',
+            type: 'warning'
+          })
+        } else if (curAmount < 0 || curWeight < 0 || curVolume < 0) {
+          this.$notify({
+            title: '提示',
+            message: '实到件数/实到重量/实到体积不能小于0,默认为该库存数量',
+            type: 'warning'
+          })
+          this.detailList[index].actualAmount = curloadAmount
+          this.detailList[index].actualWeight = curloadWeight
+          this.detailList[index].actualVolume = curloadVolume
+          this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
+        }
+        // else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
+        //   this.$notify({
+        //     title: '提示',
+        //     message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
+        //     type: 'warning'
+        //   })
+        //   this.detailList[newVal].actualAmount = curloadAmount
+        //   this.detailList[newVal].actualWeight = curloadWeight
+        //   this.detailList[newVal].actualVolume = curloadVolume
+        //   this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
+        // }
+        else {
+          this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
+        }
+        return this.detailList[index].actualAmount && this.detailList[index].actualWeight && this.detailList[index].actualVolume
+      },
+      fetchSelectLoadMainInfoList() {
+        this.loading = true
+        const selectMainId = this.propsId
+        this.searchQuery.vo.loadId = selectMainId
+        return postSelectLoadMainInfoList(this.searchQuery).then(data => {
+          this.formModel = data.list[0]
+          this.batchTypeName = this.formModel.batchTypeName
+          this.loading = false
         })
-      } else if (curAmount > curloadAmount || curAmount < 0 || curWeight > curloadWeight || curWeight < 0 || curVolume > curloadVolume || curVolume < 0) {
-        this.$notify({
-          title: '提示',
-          message: '实到件数/实到重量/实到体积不能小于0大于库存数量,默认为该库存数量',
-          type: 'warning'
-        })
-        this.detailList[newVal].actualAmount = curloadAmount
-        this.detailList[newVal].actualWeight = curloadWeight
-        this.detailList[newVal].actualVolume = curloadVolume
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
-      } else {
-        this.$refs.multipleTable.toggleRowSelection(this.detailList[newVal], true)
-      }
-      return this.detailList[newVal].actualAmount && this.detailList[newVal].actualWeight && this.detailList[newVal].actualVolume
-    },
-    fetchSelectLoadMainInfoList() {
-      this.loading = true
-      let selectMainId = this.propsId
-      this.searchQuery.vo.loadId = selectMainId
-      return postSelectLoadMainInfoList(this.searchQuery).then(data => {
-        this.formModel = data.list[0]
-        this.loading = false
-      })
+      },
+      fetchAllCustomer() {
+        this.loading = true
+        const _id = this.propsId
+        // console.log(_id);
+        return getSelectLoadList(_id).then(data => {
+          this.detailList = data
+          this.toggleAllRows()
+          this.loading = false
+          this.$nextTick(() => { // 默认设置实到数量为配载数量
+            this.detailList.forEach(e => {
+              // 入库前
+              if (!this.isAlFun) {
+                e.actualAmount = e.loadAmount
+                e.actualWeight = e.loadWeight
+                e.actualVolume = e.loadVolume
+              } else {
+                e.actualAmount = e.actualAmount
+                e.actualWeight = e.actualWeight
+                e.actualVolume = e.actualVolume
+              }
 
-    },
-    fetchAllCustomer() {
-      this.loading = true
-      let _id = this.propsId
-      // console.log(_id);
-      return getSelectLoadList(_id).then(data => {
-        this.detailList = data
-        this.toggleAllRows()
-        this.loading = false
-        this.$nextTick(() => { // 默认设置实到数量为配载数量
-          this.detailList.forEach(e => {
-            e.actualAmount = e.loadAmount
-            e.actualWeight = e.loadWeight
-            e.actualVolume = e.loadVolume
+              // e.actualAmount = e.loadAmount - e.actualAmount
+              // e.actualWeight = e.loadWeight - e.actualWeight
+              // e.actualVolume = e.loadVolume - e.actualVolume
+
+            })
+          })
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+      },
+      getDetail() {
+        const id = this.propsId
+        return getLoadDetail(id).then(data => {
+          this.trackDetail = Object.assign([], data)
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+      },
+      toggleAllRows() {
+        this.$nextTick(() => {
+          this.detailList.forEach((e, index) => {
+
+            // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0 ) {
+            //   this.$refs.multipleTable.toggleRowSelection(e, false)
+            // } else {
+            //   this.$refs.multipleTable.toggleRowSelection(e, true)
+            // }
+            this.$refs.multipleTable.toggleRowSelection(e, true)
           })
         })
-      })
-
-    },
-    getDetail() {
-      let id = this.propsId
-      return getLoadDetail(id).then(data => {
-        this.trackDetail = Object.assign([], data)
-      })
-    },
-    toggleAllRows() {
-      this.$nextTick(() => {
-        this.detailList.forEach((e, index) => {
-          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-            this.$refs.multipleTable.toggleRowSelection(e, false)
-          } else {
-            this.$refs.multipleTable.toggleRowSelection(e, true)
-          }
-        })
-      })
-    },
-    handleClick(tab, event) {
-      if (this.activeName === 'second') {
-        this.isFootSecond = true
-      } else {
-        this.isFootSecond = false
-      }
-    },
-    initInfo() {
-      this.loading = false
-    },
-    getOrgid(id) {
-      // this.form.orgid = id
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          if (this.formModel.id) {
-            this.editTrack()
-            console.log('FORMMODEL_EDIT', this.formModel)
-          } else {
-            this.addTrack()
-            console.log('FORMMODEL_ADD', this.formModel)
-          }
+      },
+      handleClick(tab, event) {
+        if (this.activeName === 'second') {
+          this.isFootSecond = true
+        } else {
+          this.isFootSecond = false
         }
-        this.closeMe()
-      })
-    },
-    reset() {},
-    closeMe(done) {
-      this.reset()
-      this.$emit('update:popVisible', false);
-      if (typeof done === 'function') {
-        done()
-      }
-    },
-    deleteTrack(item) {
-      console.log(item)
-      return deleteTrack(item.id).then(data => {
-        this.$message({ type: 'success', message: '删除成功' })
-        this.getDetail()
-      })
-    },
-    editItem(item) {
-      // this.resetForm()
-      this.formModel = objectMerge2({}, item)
-      this.isCancelFootEdit = true
-    },
-    editTrack() {
-      console.log('修改')
-      this.formModel.transferId = 0
-      return putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-    },
-    addTrack() {
-      console.log('添加')
-      this.formModel.loadId = this.id
-      return postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-    },
-    resetForm() {
-      this.$nextTick(() => {
-        this.$refs['formModel'].resetFields()
-        this.formModel = this.$options.data().formModel
-        this.isCancelFootEdit = false
-      })
-    },
-    fetchData() {
-      this.fetchAllCustomer()
-    },
-    showImport() {
-      // 显示导入窗口
-    },
-    doAction(type) {
-      if (type === 'import') {
-        this.showImport()
-        return false
-      }
-      // 判断是否有选中项
-      if (!this.selected.length) {
-        this.closeAddCustomer()
-        this.$message({
-          message: '请选择要操作的项~',
-          type: 'warning'
-        })
-        return false
-      }
-      switch (type) {
-        // 添加客户
-        case 'sure':
-          let data
-          if (this.popTitle === '到车确定') {
-            data = 54
-            postConfirmToCar(this.formModel.id, data).then(res => {
-              this.$message({
-                type: 'success',
-                message: '到车确定成功'
-              })
-              this.$emit("update:isModify", false)
-              this.$emit('success')
-              this.loading = false
-              // this.isHiddenBtn = false
-            })
-            // this.closeMe()
-          } else {
-            this.sendModel.tmsOrderLoad.id = this.formModel.id
-            this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
-            this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveHandlingFee
-            this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
-            this.sendModel.tmsOrderLoadDetailsList = []
-            this.selected.forEach((value, index, array) => {
-              this.sendModel.tmsOrderLoadDetailsList.push({
-                id: value.id,
-                actualAmount: value.actualAmount,
-                actualWeight: value.actualWeight,
-                actualVolume: value.actualVolume
-              })
-            })
-            data = this.sendModel
-            if(this.info.bathStatusName === "已到车"){
-              postAddRepertory(55, data).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '到车入库成功'
-                })
-                this.$emit('success')
-              })
-              this.closeMe()
-            }else{
-              this.$message({
-                message: '已到车的批次才可以做到货入库~',
-                type: 'warning'
-              })
+      },
+      initInfo() {
+        this.loading = false
+      },
+      getOrgid(id) {
+        // this.form.orgid = id
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (this.formModel.id) {
+              this.editTrack()
+              console.log('FORMMODEL_EDIT', this.formModel)
+            } else {
+              this.addTrack()
+              console.log('FORMMODEL_ADD', this.formModel)
             }
           }
-          break;
-          // 导出数据
-        case 'export':
-          let ids2 = this.selected.map(el => {
-            return el.customerId
+          this.closeMe()
+        })
+      },
+      reset() {
+      },
+      closeMe(done) {
+        this.reset()
+        this.$emit('update:popVisible', false)
+        if (typeof done === 'function') {
+          done()
+        }
+      },
+      deleteTrack(item) {
+        console.log(item)
+        return deleteTrack(item.id).then(data => {
+          this.$message({type: 'success', message: '删除成功'})
+          this.getDetail()
+        })
+      },
+      editItem(item) {
+        // this.resetForm()
+        this.formModel = objectMerge2({}, item)
+        this.isCancelFootEdit = true
+      },
+      editTrack() {
+        console.log('修改')
+        this.formModel.transferId = 0
+        return putUpdateTrack(this.formModel).then(data => {
+          this.$message({type: 'success', message: '修改成功'})
+          this.getDetail()
+          this.resetForm()
+        })
+      },
+      addTrack() {
+        console.log('添加')
+        this.formModel.loadId = this.id
+        return postAddTrack(this.formModel).then(data => {
+          this.$message({type: 'success', message: '添加成功'})
+          this.getDetail()
+          this.resetForm()
+        })
+      },
+      resetForm() {
+        this.$nextTick(() => {
+          this.$refs['formModel'].resetFields()
+          this.formModel = this.$options.data().formModel
+          this.isCancelFootEdit = false
+        })
+      },
+      fetchData() {
+        this.fetchAllCustomer()
+      },
+      showImport() {
+        // 显示导入窗口
+      },
+      doAction(type) {
+        // 判断是否有选中项
+        if (!this.selected.length && type !== 'export' && type !== 'printer') {
+          this.closeAddCustomer()
+          this.$message({
+            message: '请选择要操作的项~',
+            type: 'warning'
           })
-          getExportExcel(ids2.join(',')).then(res => {
-            this.$message({
-              type: 'success',
-              message: '即将自动下载!'
+          return false
+        }
+        switch (type) {
+          // 导出
+          case 'export':
+            SaveAsFile({
+              data: this.detailList,
+              columns: this.tableColumn,
+              name: '批次详情'
             })
-          })
-          break;
-      }
-      // 清除选中状态，避免影响下个操作
-      this.$refs.multipleTable.clearSelection()
-    },
-    setTable() {
-      this.setupTableVisible = true
-    },
-    closeSetupTable() {
-      this.setupTableVisible = false
-    },
-    openAddCustomer() {
-      this.AddCustomerVisible = true
-    },
-    closeAddCustomer() {
-      this.AddCustomerVisible = false
-    },
-    clickDetails(row, event, column) {
-      this.$refs.multipleTable.toggleRowSelection(row)
-    },
-    getSelection(selection) {
-      this.selected = selection
-    },
-    // 取消高亮样式
-    offThisActive(e) {
-      let p = closest(e.target, ".el-step")
-      if (p) {
-        p.classList.remove("trackactive")
-      }
-    },
-    // 设置高亮样式
-    setThisActive(e) {
-      let p = closest(e.target, ".el-step")
-      if (p) {
-        p.classList.add("trackactive")
+            break
+          // 打印
+          case 'printer':
+            PrintInFullPage({
+              data: this.detailList,
+              columns: this.tableColumn,
+              name: '批次详情'
+            })
+            break
+          // 添加客户
+          case 'sure':
+            let data
+            if (this.popTitle === '到车确定') {
+              data = 54
+              postConfirmToCar(this.formModel.id, data).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '到车确定成功'
+                })
+                this.$emit('update:isModify', false)
+                this.$emit('success')
+                this.loading = false
+                // this.isHiddenBtn = false
+              }).catch(err => {
+                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this.loading = false
+              })
+              // this.closeMe()
+            } else {
+              this.selected.forEach((value, index, array) => {
+                if (value.actualAmount === 0 && value.actualWeight === 0 && value.actualVolume === 0) {
+                  this.$message({
+                    type: 'info',
+                    message: '实到件数/实到重量/实到体积不能小于0'
+                  })
+                  return false
+                }
+                if (value.warehouStatus === 1) {
+                  this.$message({
+                    type: 'info',
+                    message: '不能再次到车入库'
+                  })
+                  return false
+                }
+                else {
+                  if (this.formModel.arriveHandlingFee === '' || this.formModel.arriveOtherFee === '') {
+                    this.formModel.arriveHandlingFee = 0
+                    this.formModel.arriveOtherFee = 0
+                  }
+                  this.sendModel.tmsOrderLoad.id = this.formModel.id
+                  this.sendModel.tmsOrderLoadFee.id = this.formModel.loadFeeId
+                  this.sendModel.tmsOrderLoadFee.arriveHandlingFee = this.formModel.arriveHandlingFee
+                  this.sendModel.tmsOrderLoadFee.arriveOtherFee = this.formModel.arriveOtherFee
+                  this.sendModel.tmsOrderLoadDetailsList = []
+                  this.selected.forEach((value, index, array) => {
+                    this.sendModel.tmsOrderLoadDetailsList.push({
+                      id: value.id,
+                      actualAmount: value.actualAmount,
+                      actualWeight: value.actualWeight,
+                      actualVolume: value.actualVolume,
+                      warehouStatus: value.warehouStatus
+                    })
+                  })
+                  data = this.sendModel
+                  postAddRepertory(55, data).then(res => {
+                    this.$message({
+                      type: 'success',
+                      message: '到车入库成功'
+                    })
+                    this.$emit('success')
+                  }).catch(err => {
+                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                  })
+                  this.closeMe()
+                }
+              })
+            }
+            break
+        }
+        // 清除选中状态，避免影响下个操作
+        this.$refs.multipleTable.clearSelection()
+      },
+      setTable() {
+        this.setupTableVisible = true
+      },
+      closeSetupTable() {
+        this.setupTableVisible = false
+      },
+      openAddCustomer() {
+        this.AddCustomerVisible = true
+      },
+      closeAddCustomer() {
+        this.AddCustomerVisible = false
+      },
+      clickDetails(row, event, column) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      },
+      getSelection(selection) {
+        this.selected = selection
+      },
+      // 取消高亮样式
+      offThisActive(e) {
+        const p = closest(e.target, '.el-step')
+        if (p) {
+          p.classList.remove('trackactive')
+        }
+      },
+      // 设置高亮样式
+      setThisActive(e) {
+        const p = closest(e.target, '.el-step')
+        if (p) {
+          p.classList.add('trackactive')
+        }
+      },
+      setColumn(obj) { // 重绘表格列表
+        this.tableColumn = obj
+        this.tablekey = Math.random() // 刷新表格视图
       }
     }
+    // }
   }
-  // }
-}
 
 </script>
 <style lang="scss">
-.tabs-content {
-  // height: calc(100% - 33px);
-  display: flex;
-  flex-direction: column;
-  position: relative;
 
-  .tab_info {
-    padding:0 10px;
-    height: 100%;
-    flex-grow: 1;
+  .tabs-cont {
+    // height: calc(100% - 33px);
     display: flex;
     flex-direction: column;
-
-    .btns_box {
-      margin-bottom: 10px;
-      .el-button {
-        margin-right: 0;
-      }
-      .table_setup {
-        float: right;
-        margin-right: 0;
-      }
-      .table_export {
-        margin-left: 576px;
-      }
-      /*.table_ixport{*/
-      /*margin-left: 400px;*/
-      /*}*/
-    }
-    .infos_tab {
-      width: 100%;
-      height: calc(100vh - 570px);
-      flex-grow: 1;
-
-      .el-table {
-        table {
-          th,
-          td {
-            text-align: center;
-          }
-        }
-        .unauth {
-          color: #f00;
-        }
-      }
-      .el-table td,
-      .el-table th {
-        padding: 5px 0;
-      }
-    }
-  }
-  .infos_tab_footer {
-    padding-left: 20px;
-    background: #eee;
-    height: 40px;
-    line-height: 40px;
-    box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
     position: relative;
-    z-index: 10;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
+    margin-top: 78px;
+    .tab_info.artDelivery_table {
+      padding: 0;
+    }
+    .tab_info {
+      padding: 0 10px;
+      height: 100%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
 
-  .show_pager {
-    float: right;
-    line-height: 40px;
-    height: 40px;
-    overflow: hidden;
-  }
-  .info_form {
-    margin-top: 85px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #dcdfe6;
-    .sta_searchinfo {
-      .el-form-item {
-        margin-right: 0;
-        margin-bottom: 15px;
+      ._btns_box {
+        /*padding-top: 17px;*/
+        margin-bottom: 10px;
+        border-top: 2px dotted #c8c8c8;
+        position: relative;
+        padding: 17px 10px 0 10px;
+        .el-button {
+          margin-right: 0;
+        }
+        .el-button.table_poptitle {
+          position: absolute;
+        }
+        .el-button.table_export {
+          position: absolute;
+          right: 200px;
+        }
+        .el-button.table_import {
+          position: absolute;
+          right: 110px;
+        }
+        .table_setup {
+          float: right;
+          margin-right: 0;
+        }
       }
-      .el-form-item.art_remk{
+      .infos_tab {
         width: 100%;
-        .el-form-item__content{
-          width: 81%;
-          .el-textarea.is-disabled {
-            .el-textarea__inner{
-              background-color: #fff;
-              color: #606266;
+        height: calc(100vh - 570px);
+        flex-grow: 1;
+        padding: 0 10px;
+        .el-table {
+          table {
+            th,
+            td {
+              text-align: center;
             }
           }
+          .unauth {
+            color: #f00;
+          }
         }
+        .el-table td,
+        .el-table th {
+          padding: 5px 0;
+        }
+        .actuaNum {
 
-      }
-      .el-form-item--mini{
+        }
+        .el-table__row {
+          .el-table_2_column_43 {
+            .el-input__inner {
+              border-color: #3e9ff1;
+            }
+          }
+          .el-table_2_column_44 {
+            .el-input__inner {
+              border-color: #3e9ff1;
+            }
+          }
+          .el-table_2_column_45 {
+            .el-input__inner {
+              border-color: #3e9ff1;
+            }
+          }
 
+        }
       }
     }
-    .el-input.is-disabled .el-input__inner{
-      color: #606266
-    }
-  }
-  .infos_table {
-    padding: 0 40px 10px 10px;
-    margin-top: 10px;
-    border-color: #dcdfe6;
-    ul {
-      /*border-top: 2px dotted #bbbbbb;
-        margin: 10px -10px -10px 0;
-        padding: 5px 10px 10px 10px;
-        /*background-color: #fbfbfb;*/
+    .infos_tab_footer {
+      padding-left: 20px;
+      background: #eee;
+      height: 40px;
+      line-height: 40px;
+      box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
+      position: relative;
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
       width: 100%;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-direction: row;
-      flex-direction: row;
-      li:nth-of-type(1) {
-        padding-left: 0;
-      }
-      li:last-of-type {
-        border-right: none;
-      }
-      li {
-        border: 1px solid #eee;
-        width: 10%;
-        border-bottom: none;
-        border-left: none;
-        p {
-          font-size: 14px;
-          text-align: center;
-          line-height: 34px;
+    }
+
+    .show_pager {
+      float: right;
+      line-height: 40px;
+      height: 40px;
+      overflow: hidden;
+    }
+    .info_form {
+      /*margin-top: 85px;*/
+      /*padding-bottom: 10px;*/
+
+      .st_searchinfo {
+        border-left: #d4d4d4;
+        .el-form-item {
+          margin-right: 35px;
+          margin-bottom: 15px;
+        }
+        .el-form-item:nth-of-type(3) {
+          margin-right: 0;
+        }
+        .el-form-item:nth-of-type(6) {
+          margin-right: 0;
+        }
+        .el-form-item:nth-of-type(9) {
+          margin-right: 0;
+        }
+        .el-form-item.art_remk {
+          width: 100%;
+          .el-form-item__content {
+            width: 88%;
+            .el-textarea.is-disabled {
+              .el-textarea__inner {
+                background-color: #fff;
+                color: #3e9ff1;
+              }
+            }
+          }
+
+        }
+        .el-form-item--mini {
+
         }
       }
-      .el-form-item {
-        margin-bottom: 0;
-        margin-right: 0;
+      .el-input.is-disabled .el-input__inner {
+        color: #3e9ff1
       }
     }
-    .el-input.is-disabled .el-input__inner{
-      color: #606266;
+    .infos_table_ {
+      padding: 0 10px 10px 10px;
+      margin-top: 10px;
+      border-color: #dcdfe6;
+      .st_searchinfo {
+        border-left: 1px solid #d4d4d4;
+        border-right: 1px solid #d4d4d4;
+        ul {
+          /*border-top: 2px dotted #bbbbbb;
+            margin: 10px -10px -10px 0;
+            padding: 5px 10px 10px 10px;
+            /*background-color: #fbfbfb;*/
+          width: 100%;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-direction: row;
+          flex-direction: row;
+          li:nth-of-type(1) {
+            padding-left: 0;
+          }
+          li:last-of-type {
+            border-right: none;
+          }
+          li {
+            border: 1px solid #eee;
+            width: 10%;
+            border-bottom: none;
+            border-left: none;
+            p {
+              font-size: 14px;
+              text-align: center;
+              line-height: 34px;
+              border-right-color: transparent;
+
+              i {
+                color: red;
+              }
+            }
+            p:last-of-type {
+
+            }
+          }
+          .el-form-item {
+            margin-bottom: 0;
+            margin-right: 0;
+          }
+        }
+      }
+
+      .el-input.is-disabled .el-input__inner {
+        color: #3e9ff1;
+        text-align: center;
+        border-radius: 0;
+        border-left-color: transparent;
+        background: transparent;
+        border-radius: 0;
+      }
     }
   }
-}
 
-.deliveryinfo_box {
-  margin: 76px 10px 0 10px;
-  display: flex;
-  flex-direction: column;
-  /* 覆盖ele样式 */
-  .el-form--inline .el-form-item {
-    margin-bottom: 0;
-  }
-  .el-step.is-vertical .el-step__head {
-    width: 18px;
-    position: relative;
-    top: 0px;
-  }
-  .el-step.is-vertical .el-step__line {
-    left: 8px;
-  }
-  .el-step__icon.is-text {
-    border-color: transparent;
-    border: 0;
-    width: 18px;
-    height: 18px;
-  }
-  .el-steps--vertical {
-    height: auto;
-  }
-  .el-step__main {
-    padding-bottom: 10px;
-  }
-  .el-step__description {
-    padding-right: 0;
-    font-size: 14px;
-    color: #333;
-  }
+  .deliveryinfo_box {
+    margin: 76px 10px 0 10px;
+    display: flex;
+    flex-direction: column;
+    /* 覆盖ele样式 */
+    .el-form--inline .el-form-item {
+      margin-bottom: 0;
+    }
+    .el-step.is-vertical .el-step__head {
+      width: 18px;
+      position: relative;
+      top: 0px;
+    }
+    .el-step.is-vertical .el-step__line {
+      left: 8px;
+    }
+    .el-step__icon.is-text {
+      border-color: transparent;
+      border: 0;
+      width: 18px;
+      height: 18px;
+    }
+    .el-steps--vertical {
+      height: auto;
+    }
+    .el-step__main {
+      padding-bottom: 10px;
+    }
+    .el-step__description {
+      padding-right: 0;
+      font-size: 14px;
+      color: #333;
+    }
 
-  .textcenter {
-    text-align: center;
-  }
-  .typebox {
-    background: url("../../../../../assets/png/track-bg.png") no-repeat;
-    width: 118px;
-    height: 24px;
-    padding-left: 16px;
-    text-align: center;
-    color: #333;
-    display: inline-block;
-    line-height: 24px;
-  }
-  .location {
-    background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-  }
-  .modifybtn,
-  .deletebtn {
-    display: inline-block;
-    display: none;
-    vertical-align: middle;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    margin-right: 3px;
-    background: url("../../../../../assets/png/delete-icon.png") no-repeat;
-
-    &:hover {}
-  }
-  /* 鼠标划过样式 */
-  .trackactive {
+    .textcenter {
+      text-align: center;
+    }
+    .typebox {
+      background: url("../../../../../assets/png/track-bg.png") no-repeat;
+      width: 118px;
+      height: 24px;
+      padding-left: 16px;
+      text-align: center;
+      color: #333;
+      display: inline-block;
+      line-height: 24px;
+    }
+    .location {
+      background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+    }
     .modifybtn,
     .deletebtn {
       display: inline-block;
+      display: none;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-right: 3px;
+      background: url("../../../../../assets/png/delete-icon.png") no-repeat;
+
+      &:hover {
+      }
     }
-    .typebox {
-      background: url("../../../../../assets/png/track-active.png") no-repeat;
-      color: #fff;
+    /* 鼠标划过样式 */
+    .trackactive {
+      .modifybtn, .deletebtn {
+        display: inline-block;
+      }
     }
-    .location {
-      background: url("../../../../../assets/png/active-point.png") no-repeat;
+    .trackactive, .firstactive {
+      .typebox {
+        background: url("../../../../../assets/png/track-active.png") no-repeat;
+        color: #fff;
+      }
+      .location {
+        background: url("../../../../../assets/png/active-point.png") no-repeat;
+      }
+      .el-step__line {
+        background-color: #3e9ff1;
+      }
     }
-    .el-step__line {
-      background-color: #3e9ff1;
+    .modifybtn {
+      margin-left: 10px;
+      background: url("../../../../../assets/png/edit-icon.png") no-repeat;
+      margin-right: 8px;
+    }
+    .steptitle {
+      font-size: 14px;
+      color: #333;
+      height: 34px;
+    }
+    .stepItem_title {
+      color: #333;
+      margin-top: 10px;
+      padding-left: 34px;
+      height: 34px;
+      .el-col {
+        text-align: center;
+      }
+      .tracktype {
+        text-align: left;
+        text-indent: 20px;
+      }
+    }
+
+    .stepItem {
+      /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
+      .el-col > p {
+        min-width: 1px;
+        min-height: 1px;
+      }
+    }
+    .stepinfo {
+      flex: 1;
+      overflow: auto;
+    }
+    .stepinfo-footer {
+      border-top: 1px solid #d8d8d8;
+      height: 70px;
+      padding-top: 30px;
     }
   }
-  .modifybtn {
-    margin-left: 10px;
-    background: url("../../../../../assets/png/edit-icon.png") no-repeat;
-    margin-right: 8px;
+
+  .stepFrom {
+    background-color: #f2f2f2;
+    box-shadow: -1px -1px 10px #bbb;
+    text-align: left;
+    padding: 0 10px;
+    .el-form-item__content {
+      vertical-align: middle;
+    }
   }
-  .steptitle {
+
+  .tabs-cont {
+    .info_form,
+    .infos_table {
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+        /*border-color: #e4e7ed;*/
+        /*color: #c0c4cc;*/
+        /*cursor: not-allowed;*/
+      }
+    }
+  }
+
+  /*批次详情*/
+
+  .storagesPop {
+    left: auto;
+    top: 50px;
+    bottom: auto;
+    min-width: 1000px;
+    max-width: 1000px;
+    /*z-index: 1001 !important;*/
+    .el-input.is-disabled {
+      .el-input__inner {
+        /*color:#3e9ff1;*/
+        background-color: transparent;
+        /*border-top-color: transparent;*/
+        /*border-left-color: transparent;*/
+        /*border-right-color: transparent;*/
+      }
+    }
+  }
+
+  .batchTypeNo {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
     font-size: 14px;
-    color: #333;
-    height: 34px;
-  }
-  .stepItem_title {
-    color: #333;
-    margin-top: 10px;
-    padding-left: 34px;
-    height: 34px;
-    .el-col {
-      text-align: center;
-    }
-    .tracktype {
-      text-align: left;
-      text-indent: 20px;
-    }
+    background: rgb(223, 233, 245);
+    padding-left: 15px;
+    position: fixed;
+    top: 30px;
+    left: 0;
+    z-index: 34;
   }
 
-  .stepItem {
-    /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
-    .el-col>p {
-      min-width: 1px;
-      min-height: 1px;
-    }
-  }
-  .stepinfo {
-    flex: 1;
-    overflow: auto;
-  }
-  .stepinfo-footer {
-    border-top: 1px solid #d8d8d8;
-    height: 70px;
-    padding-top: 30px;
-  }
-}
-
-.stepFrom {
-  background-color: #f2f2f2;
-  box-shadow: -1px -1px 10px #bbb;
-  text-align: left;
-  padding: 0 10px;
-  .el-form-item__content {
+  .icon_blank {
+    background-size: 15px;
+    display: inline-block;
+    width: 14px;
+    height: 16px;
     vertical-align: middle;
   }
-}
 
-.tabs-content {
-  .info_form,
-  .infos_table {
-    .el-input.is-disabled .el-input__inner {
-      background-color: #fff;
-      /*border-color: #e4e7ed;*/
-      /*color: #c0c4cc;*/
-      /*cursor: not-allowed;*/
-    }
-  }
-}
-
-
-
-/*批次详情*/
-
-.storagesPop {
-  left: auto;
-  top: 50px;
-  bottom: auto;
-  min-width: 1000px;
-  max-width: 1000px;
-  z-index: 1001 !important;
-}
-
-.batchTypeNo {
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  font-size: 14px;
-  background: rgb(223, 233, 245);
-  padding-left: 15px;
-  position: fixed;
-  top: 30px;
-  left: 0;
-  z-index: 34;
-}
-
-.icon_blank {
-  background-size: 15px;
-  display: inline-block;
-  width: 14px;
-  height: 16px;
-  vertical-align: middle;
-}
-
-.content_head {
-  background-color: #E9F3FA;
-  line-height: 36px;
-  height: 36px;
-  padding: 0 10px;
-}
-
-
-.storagesInfoPop_content {
-  // width: 100%;
-  // display: flex;
-  // flex-direction: column;
-  .tab-card {
-    .el-tabs__content {
-      padding: 0 !important;
-    }
-  }
-  .el-tabs__header {
-    position: fixed;
-    z-index: 34;
-    top: 66px;
-    left: 0;
+  .content_head {
+    background-color: #E9F3FA;
+    line-height: 36px;
+    height: 36px;
     padding: 0 10px;
-    background-color: #ffffff;
-    width: 100%;
   }
-  /*.el-tabs--border-card>.el-tabs__content{*/
-  /*padding: 0 !important;*/
-  /*}*/
-  /*padding: 0 10px 0 10px;*/
-  .tab_descript {}
-  .info {
-    background-color: rgb(238, 241, 246);
-    margin-top: -30px;
-    padding: 10px;
-  }
-  .info p {
-    font-weight: 900;
-    font-size: 16px;
-    margin-bottom: 0px;
-  }
-  .info-content {
-    margin-top: 10px;
-    padding: 20px 10px 10px;
-    background-color: #FFF;
-    border: 2px dotted rgb(238, 241, 246);
-  }
-  .itemRecharge {
-    background-color: rgb(238, 241, 246);
-    padding: 10px;
-  } // .tab_box {
-  //   padding-left: 10px;
-  //   display: flex;
-  //   flex-direction: row;
-  // .stepItem_title {
-  //   margin: 10px 0 10px 10px;
-  //   font-size: 14px;
-  //   width: 165%;
-  // }
-  //   .stepItem {
-  //     font-size: 14px;
-  //     color: #666;
-  //     margin-bottom: 20px;
-  //     width: 160%;
-  //     p {
-  //       word-wrap: break-word;
-  //       word-break: normal;
-  //       display: block;
-  //     }
-  //   }
-  // }
-  // .tab_box {
-  //   position: relative;
-  //   .tab_box_item {
-  //     .stepItem_title {
-  //       font-size: 14px;
-  //       color: #333;
-  //       width: 110%;
-  //       height: 36px;
-  //       line-height: 36px;
-  //     }
-  //     .el-step.is-vertical {
-  //       padding-left: 20px;
-  //       .stepItem {
-  //         width: 110%;
-  //         color: #666;
-  //         font-size: 14px;
-  //         padding: 10px;
-  //         margin: 0 0 3px 0;
-  //         background-color: #ffffff;
-  //         box-shadow: 0px 0px 10px #eaeaea;
-  //         transition: 0.4s;
-  //       }
-  //       .stepItem:hover {
-  //         transition: 0.2s;
-  //         background-color: #E9F3FA;
-  //       }
-  //     }
-  //   }
-  // }
-  //   .stepFrom {
-  //   display:block;
-  //   width:100%;
-  //   height:100%;
-  //   padding-top: 15px;
-  //   .el-form--inline .el-form-item{
-  //     margin-right:0;
-  //     float:left;
-  //     display:flex;
-  //     width:28%;
-  //   }
-  //   .el-date-editor.el-input,
-  //   .el-date-editor.el-input__inner {
-  //     width: 100%;
-  //   }
-  //   .el-form-item__label {
-  //     font-size: 12px;
-  //   }
-  //   .el-form-item__content {
-  //     flex: 1;
-  //   }
-  //   .el-button--primary{
-  //     position: absolute;
-  //     top:23px;
-  //     right:10px;
-  //   }
-  // }
-  /*货物运输合同*/
-  .pact {
-    padding: 0 10px;
-    .pact_top {
 
-      position: relative;
-      height: 40px;
-      margin-top: 85px;
-      margin-bottom: 10px;
-      h3 {
-        text-align: center;
-        color: rgba(0, 0, 0, 0.85);
-        font-weight: 500;
+  .storagesInfoPop_content {
+    // width: 100%;
+    // display: flex;
+    // flex-direction: column;
+    .tab-card {
+      .el-tabs__content {
+        padding: 0 !important;
       }
-      .top_num {
-        position: absolute;
-        right: 10px;
-        top: -18px;
-        .el-form-item {
-          display: flex;
+    }
+    .el-tabs__header {
+      position: fixed;
+      z-index: 34;
+      top: 66px;
+      left: 0;
+      padding: 0 10px;
+      background-color: #ffffff;
+      width: 100%;
+    }
+    /*.el-tabs--border-card>.el-tabs__content{*/
+    /*padding: 0 !important;*/
+    /*}*/
+    /*padding: 0 10px 0 10px;*/
+    .tab_descript {
+    }
+    .info {
+      background-color: rgb(238, 241, 246);
+      margin-top: -30px;
+      padding: 10px;
+    }
+    .info p {
+      font-weight: 900;
+      font-size: 16px;
+      margin-bottom: 0px;
+    }
+    .info-content {
+      margin-top: 10px;
+      padding: 20px 10px 10px;
+      background-color: #FFF;
+      border: 2px dotted rgb(238, 241, 246);
+    }
+    .itemRecharge {
+      background-color: rgb(238, 241, 246);
+      padding: 10px;
+    }
+    // .tab_box {
+    //   padding-left: 10px;
+    //   display: flex;
+    //   flex-direction: row;
+    // .stepItem_title {
+    //   margin: 10px 0 10px 10px;
+    //   font-size: 14px;
+    //   width: 165%;
+    // }
+    //   .stepItem {
+    //     font-size: 14px;
+    //     color: #666;
+    //     margin-bottom: 20px;
+    //     width: 160%;
+    //     p {
+    //       word-wrap: break-word;
+    //       word-break: normal;
+    //       display: block;
+    //     }
+    //   }
+    // }
+    // .tab_box {
+    //   position: relative;
+    //   .tab_box_item {
+    //     .stepItem_title {
+    //       font-size: 14px;
+    //       color: #333;
+    //       width: 110%;
+    //       height: 36px;
+    //       line-height: 36px;
+    //     }
+    //     .el-step.is-vertical {
+    //       padding-left: 20px;
+    //       .stepItem {
+    //         width: 110%;
+    //         color: #666;
+    //         font-size: 14px;
+    //         padding: 10px;
+    //         margin: 0 0 3px 0;
+    //         background-color: #ffffff;
+    //         box-shadow: 0px 0px 10px #eaeaea;
+    //         transition: 0.4s;
+    //       }
+    //       .stepItem:hover {
+    //         transition: 0.2s;
+    //         background-color: #E9F3FA;
+    //       }
+    //     }
+    //   }
+    // }
+    //   .stepFrom {
+    //   display:block;
+    //   width:100%;
+    //   height:100%;
+    //   padding-top: 15px;
+    //   .el-form--inline .el-form-item{
+    //     margin-right:0;
+    //     float:left;
+    //     display:flex;
+    //     width:28%;
+    //   }
+    //   .el-date-editor.el-input,
+    //   .el-date-editor.el-input__inner {
+    //     width: 100%;
+    //   }
+    //   .el-form-item__label {
+    //     font-size: 12px;
+    //   }
+    //   .el-form-item__content {
+    //     flex: 1;
+    //   }
+    //   .el-button--primary{
+    //     position: absolute;
+    //     top:23px;
+    //     right:10px;
+    //   }
+    // }
+    /*货物运输合同*/
+    .pact {
+      padding: 0 10px;
+      .pact_top {
+
+        position: relative;
+        height: 40px;
+        margin-top: 85px;
+        margin-bottom: 10px;
+        h3 {
+          text-align: center;
+          color: rgba(0, 0, 0, 0.85);
+          font-weight: 500;
         }
-      }
-      .top_no {
-        position: absolute;
-        right: 10px;
-        top: -5px;
-        .el-form-item {
-          display: flex;
-          .el-form-item__content {
-            .el-input.is-disabled {
-              .el-input__inner {
-                background-color: #fff;
-                border-color: #fff;
+        .top_num {
+          position: absolute;
+          right: 10px;
+          top: -18px;
+          .el-form-item {
+            display: flex;
+          }
+        }
+        .top_no {
+          position: absolute;
+          right: 10px;
+          top: -5px;
+          .el-form-item {
+            display: flex;
+            .el-form-item__content {
+              .el-input.is-disabled {
+                .el-input__inner {
+                  background-color: #fff;
+                  border-color: #fff;
+                }
               }
             }
           }
         }
       }
-    }
-    .cont_styles {
-      color: #606266;
-      font-size: 14px;
-    }
-    .pact_content {
-      .pact_title {
-        color: #606266;
-        font-size: 14px;
-        margin: 10px 0 0 25px;
-        p {
-          display: inline-block;
-          width: 250px;
-          border-bottom: 1px solid;
-          padding-left: 10px;
-        }
-      }
-      .p_cont,
-      .p_input {
+      .cont_styles {
         color: #606266;
         font-size: 14px;
       }
-      .p_cont {
-        .p_textarea.el-form-item {
-          display: inline-flex;
-          padding-left: 25px;
-          margin-bottom: 0;
-          .el-textarea {
-            width: 250%;
+      .pact_content {
+        .pact_title {
+          color: #606266;
+          font-size: 14px;
+          margin: 10px 0 0 25px;
+          p {
+            display: inline-block;
+            width: 250px;
+            border-bottom: 1px solid;
+            padding-left: 10px;
           }
         }
-        p.p_about {
+        .p_cont,
+        .p_input {
+
+          font-size: 14px;
+          .el-input__inner {
+            color: #606266;
+            border-top-color: transparent;
+            border-left-color: transparent;
+            border-right-color: transparent;
+          }
+        }
+        .p_cont {
+          .p_textarea.el-form-item {
+            display: inline-flex;
+            padding-left: 25px;
+            margin-bottom: 0;
+            .el-textarea {
+              width: 250%;
+            }
+          }
+          p.p_about {
+            padding-left: 25px;
+            margin: 10px 0 10px 0;
+          }
+          p {
+            margin-bottom: 5px;
+          }
+        }
+        p.p_salf {
+          color: #606266;
+          font-size: 14px;
           padding-left: 25px;
           margin: 10px 0 10px 0;
         }
-        p {
-          margin-bottom: 5px;
-        }
-      }
-      p.p_salf {
-        color: #606266;
-        font-size: 14px;
-        padding-left: 25px;
-        margin: 10px 0 10px 0;
-      }
-      .p_input {
-        .el-form-item {
-          margin-bottom: 0;
-          .el-form-item__content {
-            .el-input.el-input--mini.is-disabled {
-              width: 13%;
-              .el-input__inner {
-                background: #fff;
+        .p_input {
+          .el-form-item {
+            margin-bottom: 0;
+            .el-form-item__content {
+              .el-input.el-input--mini.is-disabled {
+                width: 13%;
+                color: #606266;
+                .el-input__inner {
+                  background: #fff;
+                }
               }
             }
           }
         }
-      }
-      .p_table {
-        float: left;
-        padding-left: 80px;
-        width: 400px;
-        margin-bottom: 150px;
-        .el-form-item {
-          margin-bottom: 0;
-          .el-form-item__content {
-            .el-input.el-input--mini.is-disabled {
-              width: 59%;
-              .el-input__inner {
-                width: 200px;
+        .p_table {
+          float: left;
+          padding-left: 80px;
+          width: 400px;
+          margin-bottom: 150px;
+          .el-form-item {
+            margin-bottom: 0;
+            .el-form-item__content {
+              .el-input.el-input--mini.is-disabled {
+                width: 59%;
+                .el-input__inner {
+                  width: 200px;
+                  color: #606266;
+                }
               }
-            }
-            .el-input.el-input--mini {
-              width: 59%;
-              input.el-input__inner {
-                width: 200px;
+              .el-input.el-input--mini {
+                width: 59%;
+                input.el-input__inner {
+                  width: 200px;
+                  color: #606266;
+                }
               }
-            }
 
-            /*.el-input.el-input--mini.is-disabled{*/
-            /*width: 20%*/
-            /*}*/
+              /*.el-input.el-input--mini.is-disabled{*/
+              /*width: 20%*/
+              /*}*/
+            }
+            .el-input__inner {
+              border-top-color: transparent;
+              border-left-color: transparent;
+              border-right-color: transparent;
+            }
+          }
+          .el-form-item:last-of-type {
+            margin-bottom: 30px;
           }
         }
-        .el-form-item:last-of-type {
-          margin-bottom: 30px;
+        .p_table:last-of-type {
+          /*<!--top:-204px;-->*/
+          /*left: 550px;*/
+          float: right;
+          padding-left: 0;
+          /*padding-left: 300px;*/
+          .el-form-item:last-of-type {
+            margin-bottom: 50px;
+          }
+          span {
+            margin-bottom: 100px;
+          }
         }
       }
-      .p_table:last-of-type {
-        /*<!--top:-204px;-->*/
-        /*left: 550px;*/
-        float: right;
-        padding-left: 0;
-        /*padding-left: 300px;*/
-        .el-form-item:last-of-type {
-          margin-bottom: 50px;
-        }
-        span {
-          margin-bottom: 100px;
-        }
+
+      .pact_bottom {
       }
     }
-
-
-
-    .pact_bottom {}
   }
-}
 
-.cont_rules .el-input--mini .el-input__inner {
-  background: #409eff;
-}
+  .cont_rules .el-input--mini .el-input__inner {
+    background: #409eff;
+  }
 
-.p_table .el-input--mini .el-input__inner {
-  width: 200px;
-}
+  .p_table .el-input--mini .el-input__inner {
+    width: 200px;
+  }
 
 </style>

@@ -5,11 +5,11 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn">在途跟踪</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK2>在途跟踪</el-button>
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfo>
+      <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe" :detailType="'detailShort'"></editInfo>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
@@ -92,12 +92,14 @@ export default {
       tableColumn: [{
           label: "发货批次",
           prop: "batchNo",
-          width: "110"
+          width: "110",
+          fixed: true
         },
         {
           label: "批次状态",
-          prop: "bathStatusName",
-          width: "120"
+          prop: "batchTypeName",
+          width: "100",
+          fixed: true
         },
         {
           label: "车牌号",
@@ -117,9 +119,17 @@ export default {
         {
           label: "短驳时间",
           prop: "departureTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: "配载时间",
+          prop: "loadTime",
+          width: "160",
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -130,7 +140,7 @@ export default {
         {
           label: "接收时间",
           prop: "receivingTime",
-          width: "180",
+          width: "160",
           slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -142,27 +152,42 @@ export default {
         },
         {
           label: "总件数",
-          prop: "actualAmount",
+          prop: "shipAmount",
           width: "120"
         },
         {
           label: "总重量",
-          prop: "actualWeight",
+          prop: "shipWeightall",
           width: "120"
         },
         {
           label: "总体积",
-          prop: "actualVolume",
+          prop: "shipVolumeall",
           width: "120"
         },
         {
           label: "重量装载率",
-          prop: "weightRate",
+          prop: "weightLoadRate",
           width: "120"
         },
         {
           label: "体积装载率",
-          prop: "volumeRate",
+          prop: "volumeLoadRate",
+          width: "120"
+        },
+        {
+          label: "分摊方式",
+          prop: "apportionType",
+          width: "120"
+        },
+        {
+          label: "可载重量",
+          prop: "truckLoad",
+          width: "120"
+        },
+        {
+          label: "可载体积",
+          prop: "truckVolume",
           width: "120"
         },
         {
@@ -233,6 +258,9 @@ export default {
     },
     getAllList() {
       this.loading = true
+      if (this.searchQuery.vo.batchTypeId === 46) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
       return postTrackList(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
@@ -242,6 +270,9 @@ export default {
         } else {
           this.loading = false
         }
+      })
+      .catch(error => {
+         this.$message.error(error.errorInfo || error.text)
       })
     },
     setColumn(obj) { // 重绘表格列表

@@ -38,7 +38,7 @@ import fetch from '../../utils/fetch'
  */
 export function getAllTrunk(params) {
   return fetch.post('/api-system/system/trunk/v1/list', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || { list: [], total: 0 }
   })
 }
 /**
@@ -54,11 +54,11 @@ export function getTrunkInfo(id) {
  * 获取车型
  * @param {*} orgid 网点id
  */
-export function getTruckType(orgid) {
+export function getTruckType(orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: 'truck_type',
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []
@@ -68,11 +68,11 @@ export function getTruckType(orgid) {
  * 获取车辆来源
  * @param {*} orgid 网点id
  */
-export function getTruckSource(orgid) {
+export function getTruckSource(orgId) {
   return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
     params: {
       dictType: 'truck_source',
-      orgid
+      orgId
     }
   }).then(res => {
     return res.data || []
@@ -101,7 +101,7 @@ export function deleteTrunkInfo(id) {
  * @param {array} ids 多个车辆id用数组处理
  */
 export function deleteSomeTrunkInfo(ids) {
-  return fetch.post('/api-system/system/trunk/v1/bathDelete/', ids)
+  return fetch.delete('/api-system/system/trunk/v1/bathDelete/?ids=' + ids)
 }
 /**
  * 根据选中的ids导出对应的excel文件
