@@ -129,12 +129,12 @@ export default {
         }, {
           label: '对账单名',
           prop: 'checkBillName',
-          width: '280',
+          width: '320',
           fixed: false
         }, {
           label: '对账编号',
           prop: 'checkBillCode',
-          width: '170',
+          width: '150',
           fixed: false
         }, {
           label: '对账开始时间',
