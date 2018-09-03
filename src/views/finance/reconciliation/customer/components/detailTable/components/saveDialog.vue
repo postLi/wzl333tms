@@ -113,7 +113,7 @@
         dialogData: {},
         checked1: true,
         popTitle: '',
-        totaMoney: '',
+        totaMoney: 0,
         loading: false
       }
     },

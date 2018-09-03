@@ -873,7 +873,7 @@
         // 总计
         sendId: '',
         visibleDialog: false,
-        loading: false,
+        loading: true,
         btnsize: 'mini',
         searchTitle: {
           shipSenderId: '', //
