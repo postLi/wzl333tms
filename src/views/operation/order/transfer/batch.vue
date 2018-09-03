@@ -51,7 +51,7 @@
                 <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
-            
+
           </template>
         </el-table>
       </div>

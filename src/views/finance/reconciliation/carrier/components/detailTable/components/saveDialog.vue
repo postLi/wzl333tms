@@ -115,8 +115,8 @@
         dialogData: {},
         checked1: true,
         popTitle: '',
-        totaMoney: '',
-        loading: false
+        totaMoney: 0,
+        loading: true
       }
     },
     computed: {
@@ -172,12 +172,15 @@
            let data = 0
             this.dialogData[item].forEach(el => {
               data += Number(el.totalFee)
+              // console.log(el)
           })
             count.push(data)
             data = 0
         }
+
         count.forEach((e, index) => {
           this.dialogInfo[index].toPay = e
+
         })
         // this.dialogInfo[0].toPay = 0
         // this.dialogInfo[1].toPay = 0
@@ -247,16 +250,15 @@
           this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId)
         }
         if (this.totaMoney === 0) {
-          
+
         }
         promiseObj.then(res => {
-          this.loading = false
+          this.closeMe()
           this.$message({
             message: '添加成功~',
             type: 'success'
           })
-
-          this.closeMe()
+          this.loading = false
         }).catch(err => {
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           this.loading = false
