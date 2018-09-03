@@ -252,7 +252,7 @@
     </div>
     <div class="info_news_footer">
       <div class="checked_footer">
-        <el-checkbox v-model="checkedInput" value="checkbox" checked="checked" >过滤失效网点</el-checkbox>
+        <el-checkbox v-model="checkedInput" value="checkbox" checked="checked">过滤失效网点</el-checkbox>
         <!--<p> 密码：123456</p>-->
       </div>
       <div class="total_footer">共计:{{ total }}</div>
