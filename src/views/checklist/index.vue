@@ -47,8 +47,11 @@
               <el-button type="primary" plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
           </li>
-          <div class="btn_content" v-if="flog">
-            <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button></p>
+          <div class="btn_content">
+            <p>所有的基础数据已经维护好了，我们去开一张单吧！
+              <el-button type="primary" class="btn_kd"  @click="doAction('order')" v-if="flog">开单</el-button>
+              <el-button type="primary" class="btn_h"  @click="doAction('order')"  v-else>开单</el-button>
+            </p>
           </div>
         </ul>
         <!-- <template v-if="isParentOrg">
@@ -150,6 +153,7 @@ export default {
       contTitle: [],
       // printSetOrderVisible: false,
       flog: false,
+      disabled: false,
       countList: [{
         value: 0,
         label: 'orgCount',
@@ -732,6 +736,18 @@ export default {
           width:110px;
           font-size: 16px;
         }
+        .btn_h{
+          width:110px;
+          font-size: 16px;
+          background-color:#ccc;
+          border:1px solid #ccc;
+        }
+      }
+      .btn_content .btn_h:hover{
+        opacity: 0.8;
+        background:#fff;
+        color:#3e9ff1;
+        border:1px solid #3e9ff1;
       }
     }
   }

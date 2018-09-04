@@ -354,7 +354,7 @@
           <div slot="content">
             功能：到站其他费
           </div>
-          <router-link to="./accountsPayable/batch/arriveOther">
+          <router-link to="./accountsPayable/batch/arrivalOther">
             <i class="flowicon1 dzqtf"></i><br>
             <span>到站其他费</span>
           </router-link>
