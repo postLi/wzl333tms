@@ -40,28 +40,28 @@
   display:inline-block;
   background: url('./assets/flow/flowicon2.png') no-repeat top left;
 // .sprite { background: url('sprite.png') no-repeat top left;  } 
-&.xf { background-position: 0px 0px; width: 33px; height: 41px;  } 
-&.df { background-position: 0px -51px; width: 36px; height: 34px;  } 
-&.yj { background-position: 0px -95px; width: 38px; height: 37px;  } 
-&.hdf { background-position: 0px -142px; width: 43px; height: 40px;  } 
-&.ydfy { background-position: 0px -192px; width: 54px; height: 41px;  } 
-&.sjthf { background-position: 0px -243px; width: 33px; height: 41px;  } 
-&.zzf { background-position: 0px -294px; width: 39px; height: 44px;  } 
-&.hk { background-position: 0px -348px; width: 38px; height: 41px;  } 
-&.ydfy { background-position: 0px -192px; width: 54px; height: 41px;  } 
-&.ycpl { background-position: 0px -399px; width: 41px; height: 41px;  } 
-&.qtfzc { background-position: 0px -450px; width: 41px; height: 42px;  } 
-&.fchz { background-position: 0px -502px; width: 57px; height: 41px;  } 
-&.dchz { background-position: 0px -553px; width: 65px; height: 47px;  } 
-&.zcbxf { background-position: 0px -610px; width: 35px; height: 44px;  } 
-&.fczxf { background-position: 0px -664px; width: 55px; height: 52px;  } 
-&.fzqtf { background-position: 0px -726px; width: 51px; height: 43px;  } 
-&.dzzxf { background-position: 0px -779px; width: 43px; height: 43px;  } 
-&.dzqtf { background-position: 0px -832px; width: 48px; height: 40px;  } 
-&.dbf { background-position: 0px -882px; width: 56px; height: 55px;  } 
-&.shf { background-position: 0px -947px; width: 71px; height: 48px;  } 
-&.hkdz { background-position: 0px -1005px; width: 47px; height: 42px;  } 
-&.hkff { background-position: 0px -1057px; width: 51px; height: 42px;  } 
-&.hkhs { background-position: 0px -1109px; width: 48px; height: 42px;  } 
-&.hkhk { background-position: 0px -1161px; width: 52px; height: 42px;  } 
+&.xf { background-position: 14px 10px; width: 52px; height: 52px;  transform: scale(1.1);} 
+&.df { background-position: 8px -40px; width: 52px; height: 52px;  } 
+&.yj { background-position: 0px -95px; width: 52px; height: 52px;  } 
+&.hdf { background-position: 7px -131px; width: 52px; height: 52px;  } 
+&.ydfy { background-position: 0px -192px; width: 52px; height: 52px;  } 
+&.sjthf { background-position: 0px -243px; width: 52px; height: 52px;  } 
+&.zzf { background-position: 0px -294px; width: 52px; height: 52px;  } 
+&.hk { background-position: 0px -348px; width: 52px; height: 52px;  } 
+&.ydfy { background-position: 0px -192px; width: 52px; height: 52px;  } 
+&.ycpl { background-position: 0px -399px; width: 52px; height: 52px;  } 
+&.qtfzc { background-position: 0px -450px; width: 52px; height: 52px;  } 
+&.fchz { background-position: 0px -502px; width: 52px; height: 52px;  } 
+&.dchz { background-position: 0px -553px; width: 52px; height: 52px;  } 
+&.zcbxf { background-position: 0px -610px; width: 52px; height: 52px;  } 
+&.fczxf { background-position: 0px -664px; width: 52px; height: 52px;  } 
+&.fzqtf { background-position: 0px -726px; width: 52px; height: 52px;  } 
+&.dzzxf { background-position: 0px -779px; width: 52px; height: 52px;  } 
+&.dzqtf { background-position: 0px -832px; width: 52px; height: 52px;  } 
+&.dbf { background-position: 0px -888px; width: 52px; height: 52px;  transform: scale(0.9);} 
+&.shf { background-position: 0px -947px; width: 52px; height: 52px;  } 
+&.hkdz { background-position: 0px -1005px; width: 52px; height: 52px;  } 
+&.hkff { background-position: 0px -1057px; width: 52px; height: 52px;  } 
+&.hkhs { background-position: 0px -1109px; width: 52px; height: 52px;  } 
+&.hkhk { background-position: 0px -1161px; width: 52px; height: 52px;  } 
 }

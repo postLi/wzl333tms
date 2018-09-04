@@ -652,6 +652,9 @@ export default {
       background: url("../../assets/flow/index31.png") no-repeat;
       // background-size: auto 2000;
       position: relative;
+      span{
+          font-size:14px;
+        }
       .finace_flow_item1{
         width: 897px;
         height: 101px;
@@ -662,6 +665,7 @@ export default {
         position: absolute;
         top: 34px;
         left: 208px;
+        
         .el-tooltip{
           padding-top:20px;
           flex-grow: 1;
@@ -737,6 +741,9 @@ export default {
       }
       .flowicon1 {
         transition: 0.5s;
+       span{
+         font-size: 14px;
+       }
       }
       .flowicon1:hover {
         transform: scale(1.2);

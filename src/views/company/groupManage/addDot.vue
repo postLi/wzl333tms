@@ -216,6 +216,7 @@
         </div>
       </template>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
         <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
         <el-button @click="closeMe">取 消</el-button>
       </div>
@@ -235,9 +236,9 @@
   import SelectTree from '@/components/selectTree/index'
   import SelectCity from '@/components/selectCity/index'
   import querySelect from '@/components/querySelect/index'
-  import {REGEX} from '../../../utils/validate'
-  import {objectMerge2} from '@/utils/index'
-  import {mapGetters} from 'vuex'
+  import { REGEX } from '../../../utils/validate'
+  import { objectMerge2 } from '@/utils/index'
+  import { mapGetters } from 'vuex'
   import SelectType from '@/components/selectType/index'
   // import {Obj}
   export default {
@@ -251,7 +252,15 @@
     computed: {
       ...mapGetters([
         'otherinfo'
-      ])
+      ]),
+      isShow: {
+        get() {
+          return this.popVisible
+        },
+        set() {
+
+        }
+      }
     },
     props: {
       popVisible: {
@@ -273,24 +282,13 @@
         type: [Number, String]
       }
     },
-    computed: {
-      isShow: {
-        get() {
-          return this.popVisible
-        },
-        set() {
-
-        }
-      }
-
-    },
-
     watch: {
       'form.accountStatus': {
         handler() {
           this.form.accountName = ''
         }
       },
+      checkSystem() {},
       popVisible(val) {
         if (val) {
           this.formKey = Math.random()
@@ -367,37 +365,37 @@
         },
         rules: {
           orgName: [
-            {required: true, validator: this.validateIsEmpty('请输入网点名称')}
+            { required: true, validator: this.validateIsEmpty('请输入网点名称') }
           ],
           responsibleName: [
-            {validator: callBackName, trigger: 'blur'},
-            {min: 2, message: '最少2个字符', trigger: 'blur'},
-            {max: 10, message: '不可超过10个字符', trigger: 'blur'}
+            { validator: callBackName, trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           responsibleTelephone: [
-            {pattern: REGEX.MOBILE, message: '请输入正确的电话号码', trigger: ['blur', 'change']}
+            { pattern: REGEX.MOBILE, message: '请输入正确的电话号码', trigger: ['blur', 'change'] }
           ],
           serviceName: [
-            {validator: callBackName, trigger: 'blur'},
-            {min: 2, message: '最少2个字符', trigger: 'blur'},
-            {max: 10, message: '不可超过10个字符', trigger: 'blur'}
+            { validator: callBackName, trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           // servicePhone: [
           //   { pattern: REGEX.TELEPHONE, message: '请输入正确的客服电话', trigger: ['blur', 'change'] }
           // ],
           // 网点代码
           networkCode: [
-            {required: true, validator: this.validateIsEmpty('请输入网点代码')},
-            {min: 2, message: '最少2个字符', trigger: 'blur'},
-            {max: 10, message: '不可超过10个字符', trigger: 'blur'}
+            { required: true, validator: this.validateIsEmpty('请输入网点代码') },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
             // 请选择城市
-            {required: true, validator: this.validateIsEmpty('请选择城市')}
+            { required: true, validator: this.validateIsEmpty('请选择城市') }
           ],
           accountName: [
-            {required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME},
-            {max: 15, message: '不能超过15个字符', trigger: 'blur'}
+            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
+            { max: 15, message: '不能超过15个字符', trigger: 'blur' }
           ]
         },
         dialogVisible: false,
@@ -484,7 +482,7 @@
           done()
         }
       },
-      submitForm(formName) {
+      submitForm(formName, bool) {
         this.isChecked = true
         this.isCheckedShow = false
         this.checkShowMessage = true
@@ -501,7 +499,7 @@
               }
               this.form.id = this.dotInfo.id
               this.form.createTime = +new Date(this.form.createTime)
-              if (this.form.orgType === '总公司'){
+              if (this.form.orgType === '总公司') {
                 this.form.orgType = 5
               }
               reqPromise = putOrgData(this.form)
@@ -516,7 +514,10 @@
             reqPromise.then(res => {
               this.$emit('success', this.isModify)
               this.$message.success('保存成功')
-              this.closeMe()
+              this.reset()
+              if (!bool) {
+                this.closeMe()
+              }
               this.loading = false
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
@@ -550,9 +551,9 @@
         this.form.accountStatus = item.accountStatus
         this.form.manageType = item.manageType
         this.form.createTime = item.createTime
-        if(item.orgType === 5){
+        if (item.orgType === 5) {
           this.form.orgType = '总公司'
-        }else{
+        } else {
           this.form.orgType = item.orgType
         }
       }

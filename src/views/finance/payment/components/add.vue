@@ -217,9 +217,10 @@ export default {
       font-size: 18px;
     }
   }
-  // .el-dialog__body{
-  //   padding: 0px 20px;
-  // }
+  .el-dialog__body{
+    // padding: 0px 20px;
+    min-height:80px;
+  }
   .el-dialog__footer{
     background: #e9e9e9;
     border-top: 1px solid #cbcbcb;

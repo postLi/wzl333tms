@@ -60,7 +60,7 @@
         </template> -->
       </div>
       <!-- 网点管理 -->
-      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" />
+      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" :checkSystem="true" />
       <!-- 权限管理 -->
       <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')"/> 
       <!-- 员工管理 -->
@@ -271,7 +271,7 @@ export default {
     fetchData(type) {
       if (type === 'addOrg') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addRole') {
         this.initSystem()
