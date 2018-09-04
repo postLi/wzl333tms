@@ -230,38 +230,38 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="120"
+            width="130"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="120"
+            width="150"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="100"
+            width="120"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="100"
+            width="130"
             label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
             prop="cargoName"
-            width="100"
+            width="150"
             label="货品名">
           </el-table-column>
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="80"
+            width="100"
             sortable
           >
           </el-table-column>
@@ -269,48 +269,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="90"
+            width="100"
             label="交接方式">
           </el-table-column>
-          <el-table-column
-            prop="abnormalType"
-            label="异常类型"
-            width="100"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
-            width="90"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="registerFee"
-            label="异常费用"
-            width="100"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="abnormalType"-->
+            <!--label="异常类型"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="abnormalAmount"-->
+            <!--label="异常件数"-->
+            <!--width="90"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="registerFee"-->
+            <!--label="异常费用"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalFee"
             label="小计"
-            width="100"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -523,38 +523,38 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="120"
+            width="130"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="120"
+            width="150"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="100"
+            width="120"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="100"
+            width="130"
             label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
             prop="cargoName"
-            width="100"
+            width="150"
             label="货品名">
           </el-table-column>
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="80"
+            width="100"
             sortable
           >
           </el-table-column>
@@ -562,48 +562,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="90"
+            width="100"
             label="交接方式">
           </el-table-column>
-          <el-table-column
-            prop="abnormalType"
-            label="异常类型"
-            width="100"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
-            width="90"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="registerFee"
-            label="异常费用"
-            width="100"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="abnormalType"-->
+            <!--label="异常类型"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="abnormalAmount"-->
+            <!--label="异常件数"-->
+            <!--width="90"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="registerFee"-->
+            <!--label="异常费用"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalFee"
             label="小计"
-            width="100"
+            width="120"
             sortable
           >
           </el-table-column>

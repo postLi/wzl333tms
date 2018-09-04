@@ -3,9 +3,9 @@
       <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="add-role-pop-content" v-loading="loading">
         <template class="addEmployeerPop-content" slot="content">
           <div class="add-role" >
-            <el-form >
+            <!--<el-form >-->
               <div class="add-role-top">
-                <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName" :key="roleKey">
+                <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName" >
                   <el-form-item label="角色名称：" prop="roleName">
                     <el-input v-model="formInline.roleName"  clearable></el-input>
                   </el-form-item>
@@ -24,6 +24,7 @@
               </div>
               <div class="add-role-tree">
                 <el-tree
+                  :key="roleKey"
                   :data="treeData"
                   show-checkbox
                   default-expand-all
@@ -45,7 +46,7 @@
                   </span>
                 </el-tree>
               </div>
-            </el-form>
+            <!--</el-form>-->
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
@@ -107,20 +108,13 @@
           this.formInline = objectMerge2(this.theUser || {})
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
+        //参照
         if (this.reference) {
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
-          console.log(this.popTitle,"监听other")
         } else {
           this.popTitle = '新增角色'
-          this.formInline = {
-            roleName: '',
-            remark: '',
-            menusId: '',
-            createrId: this.createrId
-          }
-          this.roleKey = Math.random()
-          console.log(this.popTitle,"监听watch")
+          this.result()
         }
       },
       reference() {
@@ -132,8 +126,7 @@
             createrId: this.createrId
           }
           this.popTitle = '新增角色'
-          this.roleKey = Math.random()
-          console.log(this.popTitle,"监听re")
+
         }
       }
     },
@@ -186,19 +179,24 @@
       }
     },
     mounted() {
-      this.treeData = this.dotInfo
+      // this.treeData = this.dotInfo
     },
     methods: {
-      result(){
+      newInfoData(){
         this.formInline = {
           roleName: '',
           remark: '',
           menusId: '',
           createrId: this.createrId
         }
+        // this.roleKey = Math.random()
+      },
+      result(){
+        this.newInfoData()
         this.roleKey = Math.random()
       },
       closeMe(done) {
+        this.result()
         this.$emit('close')
         this.$refs['formName'].resetFields()
         if (typeof done === 'function') {
