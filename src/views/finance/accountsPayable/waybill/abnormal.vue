@@ -29,6 +29,7 @@
         </el-table>
       </div>
     </div>
+    
     <!-- 分页 -->
     <div class="info_tab_footer">
       共计:{{ total }}
