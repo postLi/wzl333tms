@@ -90,7 +90,7 @@
           <!-- :class="{'disabledUpload': isCheck || isDeal}" -->
           <div class="clearfix uploadcard">
             <upload :title="'本地上传'" :showFileList="true" :limit="6" listtype="picture" v-model="form.abnormalPicture"
-                    :disabled="isCheck || isDeal ? true : false" :hidBut="hidBut"/>
+                    :disabled="isCheck || isDeal ? true : false" />
           </div>
         </div>
         <!--异常处理-->
@@ -308,8 +308,8 @@
             {required: true, message: '请输入运单号'}
           ]
         },
-        showBut: false,
-        hidBut: true,
+        // showBut: false,
+        // hidBut: true,
         // fileList2:[],
         disabled: false,
         popTitle: '',
@@ -431,7 +431,6 @@
         } else {
           this.dengji()
           this.popTitle = '异常登记'
-          this.hidBut = false
           for (const i in this.form) {
             this.form[i] = ''
           }
