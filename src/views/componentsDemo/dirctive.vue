@@ -18,6 +18,7 @@
     <input v-number-only:point type="text">
     <p>elementUI 输入框</p>
     <el-input v-numberOnly clearable></el-input>
+    <el-input v-model="testdata" v-numberOnly:point @blur="blur" @focus="focus" @change="change" clearable></el-input>
     <p>带校检的输入框</p>
     <el-form>
     <el-form-item label="账户账号" >
@@ -68,10 +69,25 @@ export default {
   data() {
     return {
       dialogTableVisible: false,
+      testdata: '',
       inputData: '安发网络'
     }
   },
+  watch: {
+    testdata(val) {
+      console.log('value:', val)
+    }
+  },
   methods: {
+    focus() {
+      console.log('focus:', this.testdata)
+    },
+    blur() {
+      console.log('blur:', this.testdata)
+    },
+    change() {
+      console.log('change:', this.testdata)
+    },
     clipboardSuccess() {
       this.$message({
         message: '复制成功',
