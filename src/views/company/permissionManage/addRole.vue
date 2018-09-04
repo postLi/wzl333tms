@@ -5,7 +5,7 @@
           <div class="add-role" >
             <el-form >
               <div class="add-role-top">
-                <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName">
+                <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName" :key="roleKey">
                   <el-form-item label="角色名称：" prop="roleName">
                     <el-input v-model="formInline.roleName"  clearable></el-input>
                   </el-form-item>
@@ -110,6 +110,7 @@
         if (this.reference) {
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
+          console.log(this.popTitle,"监听other")
         } else {
           this.popTitle = '新增角色'
           this.formInline = {
@@ -118,6 +119,8 @@
             menusId: '',
             createrId: this.createrId
           }
+          this.roleKey = Math.random()
+          console.log(this.popTitle,"监听watch")
         }
       },
       reference() {
@@ -129,6 +132,8 @@
             createrId: this.createrId
           }
           this.popTitle = '新增角色'
+          this.roleKey = Math.random()
+          console.log(this.popTitle,"监听re")
         }
       }
     },
@@ -164,6 +169,7 @@
             { max: 250, message: '最多可输入250个字符', trigger: 'blur' }
           ]
         },
+        roleKey:'',
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -183,6 +189,15 @@
       this.treeData = this.dotInfo
     },
     methods: {
+      result(){
+        this.formInline = {
+          roleName: '',
+          remark: '',
+          menusId: '',
+          createrId: this.createrId
+        }
+        this.roleKey = Math.random()
+      },
       closeMe(done) {
         this.$emit('close')
         this.$refs['formName'].resetFields()
@@ -208,10 +223,10 @@
               promiseObj = postRoleInfo(data)
             }
             promiseObj.then(res => {
-              this.loading = false
-              this.$message.success('保存成功')
-              this.closeMe()
               this.$emit('success')
+              this.loading = false
+              this.closeMe()
+              this.$message.success('保存成功')
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false

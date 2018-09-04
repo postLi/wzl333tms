@@ -763,7 +763,58 @@
     <div class="sBottom">
       <div class="sMessageBut">
 
+        <!--<el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"-->
+        <!--class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">-->
+          <!--<ul>-->
+            <!--<li>-->
+              <!--<el-form-item label="备注">-->
+              <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
+              <!--</el-form-item>-->
+            <!--</li>-->
+            <!--<li><p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p></li>-->
 
+          <!--</ul>-->
+          <!--<ul>-->
+            <!--<li>-->
+              <!--<el-form-item label="公司名称">-->
+              <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
+              <!--</el-form-item>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<el-form-item label="业务负责人">-->
+              <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
+              <!--</el-form-item>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
+              <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>-->
+              <!--</el-form-item>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<el-form-item label="财务负责人">-->
+              <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
+              <!--clearable></el-input>-->
+              <!--</el-form-item>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<el-form-item label="财务联系电话" prop="orgFinancialOfficerPhone">-->
+              <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
+              <!--clearable></el-input>-->
+              <!--</el-form-item>-->
+            <!--</li>-->
+            <!--<li>-->
+
+              <!--<el-form-item label="时间" class="creatTimeItem">-->
+              <!--<el-date-picker-->
+              <!--v-model="messageButtonInfo.createTime"-->
+              <!--type="date"-->
+              <!--placeholder="选择日期">-->
+              <!--</el-date-picker>-->
+
+              <!--</el-form-item>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</el-form>-->
 
         <el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"
                  class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
@@ -1558,9 +1609,137 @@
       }
     }
 
+    /*待定*/
+    /*.sBottom{*/
+      /*.sMessageBut{*/
+        /*.el-form{*/
+          /*margin-bottom: 180px;*/
+
+          /*ul:first-of-type{*/
+            /*li{*/
+              /*border: 1px solid #b4b4b4;*/
+              /*.el-form-item{*/
+                /*margin-bottom: 0;*/
+                /*margin-right: 0;*/
+                /*height: 28px;*/
+                /*line-height: 28px;*/
+                /*.el-form-item__label:first-of-type{*/
+                  /*padding-left: 10px;*/
+                  /*text-align: left;*/
+                /*}*/
+              /*}*/
 
 
-    .sBottom {
+              /*p{*/
+                /*text-align: left;*/
+                /*font-size: 14px;*/
+                /*color: #668cf0;*/
+                /*padding: 4px 0 5px 10px;*/
+                /*font-weight: 600;*/
+              /*}*/
+
+                /*.el-input__inner{*/
+                  /*border-left-color: #b4b4b4;*/
+                  /*border-right-color: transparent;*/
+                  /*border-bottom-color: #b4b4b4;*/
+                  /*border-top-color: transparent;*/
+                /*}*/
+
+                /*.el-input__inner:focus {*/
+                  /*border-left-color: #b4b4b4;*/
+                  /*border-top-color: transparent;*/
+                  /*border-right-color: transparent;*/
+                  /*border-bottom-color: #b4b4b4;*/
+                  /*outline: 0;*/
+                /*}*/
+                /*.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {*/
+                  /*border-color: #b4b4b4;*/
+                /*}*/
+
+
+            /*}*/
+          /*}*/
+          /*ul:last-of-type{*/
+            /*display: flex;*/
+
+            /*li{*/
+
+              /*flex: 1;*/
+              /*border: 1px solid #b4b4b4;*/
+              /*!*border-left: 1px solid #b4b4b4;;*!*/
+              /*!*border-right: 1px solid #b4b4b4;;*!*/
+              /*!*border-bottom: 1px solid #b4b4b4;;*!*/
+
+              /*.el-form-item{*/
+                /*margin-bottom: 0;*/
+                /*margin-right: 0;*/
+                /*height: 28px;*/
+                /*line-height: 28px;*/
+              /*}*/
+              /*.el-form-item--mini.creatTimeItem{*/
+                /*.el-form-item__label{*/
+                  /*width: 65px !important;*/
+                /*}*/
+
+              /*}*/
+              /*.el-form-item__label{*/
+                /*text-align: left;*/
+
+              /*}*/
+                /*.el-input__inner{*/
+                  /*border: 1px solid #b4b4b4;*/
+                  /*!*border-left-color: #b4b4b4;*!*/
+                  /*!*border-right-color: transparent;*!*/
+                  /*!*border-bottom-color: #b4b4b4;*!*/
+                  /*!*border-top-color: transparent;*!*/
+                /*}*/
+
+                /*.el-input__inner:focus {*/
+                  /*border: 1px solid #b4b4b4;*/
+                  /*!*border-left-color: #b4b4b4;*!*/
+                  /*!*border-top-color: transparent;*!*/
+                  /*!*border-right-color: transparent;*!*/
+                  /*!*border-bottom-color: #b4b4b4;*!*/
+                  /*outline: 0;*/
+                /*}*/
+                /*.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {*/
+                  /*border-color: #b4b4b4;*/
+                /*}*/
+
+
+            /*}*/
+
+            /*li:first-of-type{*/
+              /*.el-form-item__label:first-of-type{*/
+                /*padding-left: 10px;*/
+              /*}*/
+            /*}*/
+          /*}*/
+        /*}*/
+      /*}*/
+    /*}*/
+    /*@media screen and (max-width: 1980px) {*/
+      /*.sMessageBut {*/
+        /*.el-form {*/
+          /*!*.el-form ul:last-of-type li .el-input__inner*!*/
+          /*ul:last-of-type{*/
+            /*li{*/
+              /*.el-input__inner{*/
+                /*border: 1px solid #b4b4b4;*/
+              /*}*/
+              /*.el-input__inner:focus {*/
+                /*border: 1px solid #b4b4b4;*/
+                /*outline: 0;*/
+              /*}*/
+            /*}*/
+          /*}*/
+        /*}*/
+      /*}*/
+    /*}*/
+
+
+
+   .sBottom {
       border-right: 1px solid #b4b4b4;
       border-left: 1px solid #b4b4b4;
       margin-bottom: 100px;
