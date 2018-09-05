@@ -301,9 +301,9 @@
    }
  }
  // 创建打印页面    【未保存】标签或运单
- export function CreatePrintPageEnable(info) {
+ export function CreatePrintPageEnable(info, printer) {
    try {
-     LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', 'KZDesigner GK888t (EPL)')
+     LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
      LODOP = getLodop()
      let arr = new Array()
      arr = Object.assign([], info)
@@ -317,8 +317,13 @@
        if (e.filedValue === 'setting') {
          str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
        } else {
-         str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-         str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+        if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value )) { // 加急urgent和普通common 需要特殊处理为打勾
+          str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+          str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+        }else {
+          str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+          str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+        }
        }
      })
      eval(str)

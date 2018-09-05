@@ -252,8 +252,8 @@ import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
 import selectPrinter from '@/components/selectPrinter/index'
 import { downloadFile } from '@/api/common'
-import printSetOrder from './components/printSetOrder'
-import printSetLi from './components/printSetLi'
+import printSetOrder from './components/printSetOrderDrag'
+import printSetLi from './components/printSetLiDrag'
 
 export default {
   name: 'systemSetup',

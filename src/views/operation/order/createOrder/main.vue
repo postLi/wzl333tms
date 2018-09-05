@@ -2744,7 +2744,7 @@ export default {
             }
           })
         }
-        CreatePrintPageEnable(libData) // 调打印接口
+        CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
       })
       .catch(err => {
         this.$message.error(err.errorInfo || err.text || '发生未知错误~')
@@ -2762,7 +2762,7 @@ export default {
             }
           })
         }
-        CreatePrintPageEnable(data)
+        CreatePrintPageEnable(data,  this.otherinfo.systemSetup.printSetting.ship)
       })
       .catch(err => {
         this.$message.error(err.errorInfo || err.text || '发生未知错误~')
@@ -2770,7 +2770,7 @@ export default {
     },
     printSave() { // 打印保存的运单
       getPrintOrderItems(this.resOrderId).then(data => {
-        CreatePrintPage(data)
+        CreatePrintPage(data,  this.otherinfo.systemSetup.printSetting.ship)
       })
       .catch(err => {
         this.$message.error(err.errorInfo || err.text || '发生未知错误~')
