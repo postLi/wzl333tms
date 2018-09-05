@@ -285,12 +285,7 @@
                                   auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
                                   @blur="tooltip = false;disabledName = true"
                                   @mouseenter.native=" disabledName === true && (tooltip = true)"
-                                  @mouseleave.native="tooltip = false;disabledName = true" @change="changeCheckBillName"></el-input>
-                        <!--@blur="tooltip = false;disabledName = true"-->
-                        <!--@mouseout.native="tooltip = false;disabledName = true"-->
-                        <!--<template slot-scope="scope">-->
-                        <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-                        <!--</template>-->
+                                  @mouseleave.native="tooltip = false;disabledName = true" @change="changeCheckBillName"></el-input>\
                       </el-tooltip>
 
                       <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
@@ -305,7 +300,7 @@
                   <!--</div>-->
                   <div class="top_no">
                     <el-form-item label="NO.">
-                      <el-input placeholder="1" size="mini" disabled v-model="formModel.contractNo"></el-input>
+                      <el-input size="mini" disabled v-model="formModel.batchNo"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -435,8 +430,9 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
-      <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'">打印合同</el-button>
-      <el-button @click="closeMe">关闭</el-button>
+      <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'" round>打印合同</el-button>
+      <el-button @click="editMe" icon="el-icon-edit-outline" type="info" round v-if="activeName === 'third'">修改</el-button>
+      <el-button @click="closeMe" round type="danger" icon="el-icon-close">关闭</el-button>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
                   @success="setColumn"></TableSetup>
     </div>
@@ -725,10 +721,11 @@
         if(this.checkBillName.trim()){
           this.$emit('message',this.checkBillName)
           this.changeName = true
-          alert('')
+          alert('修改了数据')
         }else{
+          this.$emit('message','')
           this.changeName = false
-          alert('1')
+          alert('没有修改数据')
         }
       },
       fetchSelectLoadMainInfoList() {

@@ -288,7 +288,7 @@
                   <!--</div>-->
                   <div class="top_no">
                     <el-form-item label="NO.">
-                      <el-input placeholder="1" size="mini" disabled v-model="formModel.contractNo"></el-input>
+                      <el-input placeholder="1" size="mini" disabled v-model="formModel.batchNo"></el-input>
                     </el-form-item>
                   </div>
                 </div>
