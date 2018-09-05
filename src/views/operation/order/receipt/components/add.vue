@@ -7,13 +7,14 @@
               </el-form-item>
               <el-form-item label="回收日期:" prop="recTime" >
                 <el-date-picker
-                    v-model="searchCreatTime"
-                    align="right"
-                    type="date"
-                    :picker-options="pickOption2"
-                    placeholder="选择日期"
-                    value-format="timestamp"
-                    >
+                  v-model="searchCreatTime"
+                  align="right"
+                  type="date"
+                  :picker-options="pickOption2"
+                  placeholder="选择日期"
+                  value-format="timestamp"
+                >
+                <!-- <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template> -->
                 </el-date-picker>
               </el-form-item>
               <el-form-item label="回收备注" :label-width="formLabelWidth" prop="recRemark">
@@ -30,6 +31,17 @@
             <div class="addMark" v-if="isAccept">
               <el-form-item label="接收情况" prop="acceptTypeId" :cols="45">
                 <SelectType type="accept_type" v-model="form.acceptTypeId" />
+              </el-form-item>
+              <el-form-item label="接收日期:" prop="recTime" >
+                <el-date-picker
+                    v-model="searchCreatTime"
+                    align="right"
+                    type="date"
+                    :picker-options="pickOption2"
+                    placeholder="选择日期"
+                    value-format="timestamp"
+                    >
+                </el-date-picker>
               </el-form-item>
               <el-form-item label="接收备注" :label-width="formLabelWidth" prop="acceptRemark">
                 <el-input
@@ -57,7 +69,7 @@ import { putUpdateReceipt } from '@/api/operation/receipt'
 // import { REGEX } from '@/utils/validate'
 // import { mapGetters } from 'vuex'
 // import { exportWithIframe } from '@/utils'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   // computed: {
   // ...mapGetters([
@@ -113,7 +125,12 @@ export default {
         'recTypeId': 113,
         'recRemark': '',
         'acceptTypeId': 115,
-        'acceptRemark': ''
+        'acceptRemark': '',
+        'recTime': '',
+        'sendTime': '',
+        'acceptTime': '',
+        'giveoutTime': ''
+
       },
       formLabelWidth: '75px',
       tooltip: false,
@@ -150,7 +167,10 @@ export default {
         if (this.isModify) {
           this.popTitle = '回单回收'
           this.form.pageType = this.searchQuery.vo.pageType
-          console.log(888)
+          // this.$set(this.form, 'recTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          // this.$set(this.form, 'recTime', this.searchCreatTime)
+          this.form.recTime = this.searchCreatTime
+          console.log(this.searchCreatTime)
         }
       },
       immediate: true
@@ -160,7 +180,7 @@ export default {
         if (this.isAccept) {
           this.popTitle = '回单接收'
           this.form.pageType = this.searchQuery.vo.pageType
-          console.log(888)
+          this.$set(this.form, 'acceptTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
         }
       },
       immediate: true
@@ -180,6 +200,10 @@ export default {
       }
     },
     submitForm(formName) {
+      // this.form.recTime = this.searchCreatTime
+      // this.form.sendTime = this.searchCreatTime
+      // this.form.acceptTime = this.searchCreatTime
+      // this.form.giveoutTime = this.searchCreatTime
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
