@@ -7,13 +7,12 @@
               </el-form-item>
               <el-form-item label="回收日期:" prop="recTime" >
                 <el-date-picker
-                    v-model="form.recTime"
+                    v-model="searchCreatTime"
                     align="right"
                     type="date"
                     :picker-options="pickOption2"
                     placeholder="选择日期"
                     value-format="timestamp"
-                    :disabled="isDbclick"
                     >
                 </el-date-picker>
               </el-form-item>
@@ -99,6 +98,11 @@ export default {
     isAccept: {
       type: Boolean,
       default: false
+    },
+    info: {
+      type: Object,
+      default: () => {
+      }
     }
   },
 
@@ -113,6 +117,8 @@ export default {
       },
       formLabelWidth: '75px',
       tooltip: false,
+      pickOption2: '',
+      searchCreatTime: +new Date(),
       rules: {
 
       },
@@ -123,7 +129,7 @@ export default {
     }
   },
   mounted() {
-
+    console.log(this.info)
   },
   watch: {
     isDepMain() {
@@ -161,7 +167,6 @@ export default {
     },
     createrId(newVal) {
     }
-
   },
   methods: {
     reset() {
@@ -185,7 +190,6 @@ export default {
             this.$message({
               message: '保存成功~',
               type: 'success'
-
             })
             this.closeMe()
             this.$emit('success')
