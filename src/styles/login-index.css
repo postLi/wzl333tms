@@ -100,7 +100,7 @@
   color: #454545;
   margin-bottom: 20px !important;
 }
-.login-form .el-input-group__append, .el-input-group__prepend{
+.login-form .el-input-group__append{
   padding: 0;
 }
 .login-form .el-input-group__prepend{
@@ -203,9 +203,7 @@
   font-size: 14px;
 }
 
-.el-form-item__content:focus{
-  border-color:#409eff ;
-}
+
 
 /*底部*/
 .button-cont{
