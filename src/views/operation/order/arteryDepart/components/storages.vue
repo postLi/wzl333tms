@@ -443,8 +443,6 @@
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close" >取消</el-button>
       </template>
 
-      <!--<el-button @click="saveCheckBillName" round type="danger" icon="el-icon-close" v-if="activeName === 'third' || activeSCheckBillName">保存</el-button>-->
-      <!--<el-button @click="remCheckBillName" round type="danger" icon="el-icon-close" v-if="activeName === 'third' || activeRCheckBillName ">取消</el-button>-->
 
     </div>
   </pop-right>
