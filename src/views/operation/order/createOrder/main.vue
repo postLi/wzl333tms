@@ -162,19 +162,19 @@
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
                     <input ref="tmsOrdercargoAmount" v-number-only size="mini" :maxlength="20"
-                  v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
+                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
                   <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="20"
-                  v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                  :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
                     <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="20"
-                  v-model="form.cargoList[scope.$index][item.fieldProperty]" />
+                  :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
@@ -1874,7 +1874,8 @@ export default {
         this.findAllInput()
       }, 100)
     },
-    detectCargoNumChange() {
+    detectCargoNumChange(index, name, event) {
+      this.form.cargoList[index][name] = event.target.value
       this.setCargoNum()
     },
     // 修改货品列表
