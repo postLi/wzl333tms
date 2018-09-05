@@ -155,7 +155,7 @@
           this.dialogData = this.tota
           this.dialogData.dealPaytota.map(el => {
             this.$set(this.dialogInfo, 0, {
-              date: '应付账款',
+              date: '未付账款',
               toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalPay ? +el.totalPay : 0).result()
             })
             // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)

@@ -87,7 +87,7 @@
         dialogInfo:[
           {
             toPay:20,
-            date:"应付账款"
+            date:"未付账款"
           },
           {
             toPay:20,

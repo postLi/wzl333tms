@@ -17,7 +17,7 @@ export default {
     icon: 'yygl1_dingdan',
     name: 'ordermanage',
     component: _import('operation/order/manage/index'),
-    meta: { role: ['admin'], title: '订单管理', noCache: false, 'code': 'ORDER_MANGER' },
+    meta: { role: ['admin'], title: '预订单管理', noCache: false, 'code': 'ORDER_MANGER' },
     children: [{
       path: '/operation/order/manage/service',
       icon: 'QQ',

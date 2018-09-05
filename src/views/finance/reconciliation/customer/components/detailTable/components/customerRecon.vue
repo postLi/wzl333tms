@@ -95,7 +95,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应收清单</p>
+        <p>未收清单’</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -255,7 +255,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>应付清单</p>
+        <p>未付清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->

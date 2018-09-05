@@ -123,7 +123,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           width: '160',
           fixed: false
         }, {
-          label: '应付账款',
+          label: '未付账款',
           prop: 'payAmount',
           width: '120',
           fixed: false

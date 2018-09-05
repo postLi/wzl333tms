@@ -152,12 +152,12 @@ export default {
           width: '160',
           fixed: false
         }, {
-          label: '应收账款',
+          label: '未收账款',
           prop: 'receivableFee',
           width: '120',
           fixed: false
         }, {
-          label: '应付账款',
+          label: '未付账款',
           prop: 'payableFee',
           width: '120',
           fixed: false

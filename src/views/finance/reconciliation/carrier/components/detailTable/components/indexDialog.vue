@@ -88,11 +88,11 @@
         dialogInfo:[
           {
             toPay:10,
-            date:"应收账款"
+            date:"未收账款"
           },
           {
             toPay:20,
-            date:"应付账款"
+            date:"未付账款"
           },
           {
             toPay:10,
@@ -163,6 +163,7 @@
       },
 
       submitForm(formName) {
+        alert('')
         let data = {
           id:'',
           checkStatus:1

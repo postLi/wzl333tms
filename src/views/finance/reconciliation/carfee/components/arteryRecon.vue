@@ -91,7 +91,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应付账款</p>
+        <p>未付账款</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
