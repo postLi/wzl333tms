@@ -52,7 +52,7 @@
       </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId'
-                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"/>
+                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" v-on:message="checkNameInput"/>
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"/>
   </div>
 </template>
@@ -96,6 +96,7 @@
     },
     data() {
       return {
+        checkBillName_child:'',
         watchKey: 'lll',
         tablekey: 0,
         loading: true,
@@ -277,6 +278,10 @@
       }
     },
     methods: {
+      checkNameInput(text){
+        this.checkBillName_child = text
+        // console.log(text);
+      },
       fetchAllCustomer() {
         this.loading = true
         return postSelectLoadMainInfoList(this.searchQuery).then(data => {
@@ -330,6 +335,14 @@
             break
           // import
           case 'import':
+            if(this.checkBillName_child !== ''){
+              this.selected[0].checkBillName = this.checkBillName_child
+
+            }else{
+              this.tablekey = Math.random()
+
+            }
+            console.log(this.selected[0])
             let str = '?'
             for (const item in this.selected[0]) {
               str += item + '=' + (this.selected[0][item] === null ? '' : this.selected[0][item]) + '&'

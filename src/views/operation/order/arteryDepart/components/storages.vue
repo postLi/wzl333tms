@@ -272,7 +272,32 @@
 
                 <div class="pact_top">
 
-                  <h3>货物运输合同</h3>
+                  <!--<h3>货物运输合同</h3>-->
+
+                  <div class="sTitle">
+                    <el-form-item label="">
+
+                      <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
+                                  tabindex="-1">
+                        <div slot="content">双击可修改合同名称</div>
+                        <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
+                                  @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
+                                  auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
+                                  @blur="tooltip = false;disabledName = true"
+                                  @mouseenter.native=" disabledName === true && (tooltip = true)"
+                                  @mouseleave.native="tooltip = false;disabledName = true" @change="changeCheckBillName"></el-input>
+                        <!--@blur="tooltip = false;disabledName = true"-->
+                        <!--@mouseout.native="tooltip = false;disabledName = true"-->
+                        <!--<template slot-scope="scope">-->
+                        <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
+                        <!--</template>-->
+                      </el-tooltip>
+
+                      <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
+                    </el-form-item>
+                  </div>
+
+
                   <!--<div class="top_num">-->
                   <!--<el-form-item label="合同模板">-->
                   <!--<el-input  placeholder="1" size="mini"></el-input>-->
@@ -305,7 +330,7 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="五、本车货物总为">
-                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>
+                      <el-input size="mini" disabled v-model="formModel.loadAmountall" class="editInput"></el-input>
                       件
                       <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
                       千克
@@ -434,6 +459,10 @@
   export default {
     data() {
       return {
+        tooltip: false,
+        disabledName: true,
+        changeName: false,
+        checkBillName:'货物运输合同',
         tablekey: 0,
         getBatchNo: '',
         popTitle: '查看详情',
@@ -687,9 +716,21 @@
         this.getDetail()
         this.fetchAllCustomer()
         this.fetchSelectLoadMainInfoList()
+
       }
     },
     methods: {
+
+      changeCheckBillName(){
+        if(this.checkBillName.trim()){
+          this.$emit('message',this.checkBillName)
+          this.changeName = true
+          alert('')
+        }else{
+          this.changeName = false
+          alert('1')
+        }
+      },
       fetchSelectLoadMainInfoList() {
         this.loading = true
         let selectMainId = this.propsId
@@ -697,6 +738,8 @@
         return postSelectLoadMainInfoList(this.searchQuery).then(data => {
           this.formModel = data.list[0]
           this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
 
       },
@@ -858,14 +901,17 @@
       },
       print() { // 打印合同
         let str = '?'
+        this.formModel.checkBillName = this.checkBillName
         for (let item in this.formModel) {
           str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
 
         }
+
         // JSON.stringify(this.formModel)
         let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
 
         PrintContract(encodeURI(path))
+        // console.log(path);
       },
       setColumn(obj) { // 重绘表格列表
         this.tableColumn = obj
@@ -1300,6 +1346,70 @@
           color: rgba(0, 0, 0, 0.85);
           font-weight: 500;
         }
+        .sTitle {
+          /*flex: 1;*/
+          text-align: center;
+          .el-form-item{
+            width: 100%;
+            .el-form-item__content{
+              width: 100%;
+
+              /*showBg*/
+              .el-tooltip.showBg {
+                .el-input__inner {
+                  border-left-color: #c0c4cc;
+                  border-right-color: #c0c4cc;
+                  color: #fff;
+                  font-weight: 600;
+                  background: rgba(64,158,255,0.6);
+                  text-align: center;
+                }
+              }
+              .el-input__suffix {
+                left: -20px;
+                top: -20px;
+              }
+              .el-input--suffix .el-input__inner {
+                padding-right: 0;
+              }
+              .el-input.is-disabled .el-input__inner {
+                background-color: #fff;
+                text-align: center;
+              }
+
+              /*/*showBg*/
+              span {
+                position: relative;
+                top: -20px;
+                left: 200px;
+                font-size: 18px;
+                color: #333333;
+                font-weight: 600;
+              }
+              .el-input__inner {
+                border-color: transparent;
+                /*border-left-color: transparent;*/
+                /*border-right-color: transparent;*/
+                /*border-top-color: transparent;*/
+                /*border-bottom: 3px double #c0c4cc;*/
+                font-size: 18px;
+                color: #333333;
+                font-weight: 600;
+              }
+
+              .el-input__inner:focus {
+                border-bottom-color: #c0c4cc;
+              }
+              .el-input {
+                width: 50%;
+                text-align: center;
+              }
+
+            }
+          }
+
+
+        }
         .top_num {
           position: absolute;
           right: 10px;
@@ -1311,7 +1421,7 @@
         .top_no {
           position: absolute;
           right: 10px;
-          top: -5px;
+          top: 2px;
           .el-form-item {
             display: flex;
             .el-form-item__content {
@@ -1319,6 +1429,7 @@
                 .el-input__inner {
                   background-color: #fff;
                   border-color: #fff;
+                  color: #666;
                 }
               }
             }
@@ -1385,6 +1496,8 @@
                   border-top-color: transparent;
                   border-left-color: transparent;
                   border-right-color: transparent;
+                  text-align: center;
+                  color: #666;
                 }
               }
             }
@@ -1405,7 +1518,7 @@
                 .el-input__inner {
                   width: 200px;
                   background-color: #fff;
-                  color: #000;
+                  color: #666;
                   border-top-color: transparent;
                   border-left-color: transparent;
                   border-right-color: transparent;

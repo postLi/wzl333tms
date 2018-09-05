@@ -1025,7 +1025,7 @@
             data.carrierDetailDtoList.forEach((el, val) => {
               if (el.type === 1) {
                 this.dealInfo.push(el)
-                //虚拟
+                //其他
                 // // el.cargoAmount = 40.11
                 // //
                 // let el1 = objectMerge2({},el,{
