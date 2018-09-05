@@ -1,5 +1,5 @@
 <template>
-  <div class="pick-maintain">
+  <div class="lntelligent-maintain">
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading">
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
@@ -59,6 +59,10 @@
           <!--</el-table>-->
 
           <el-form :inline="true"  class="order_bottom" label-width="90px" :rules="rules" :model="getMentInfo" >
+            <el-form-item label="发车网点">
+              <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+            </el-form-item>
+
             <el-form-item label="选择网点" prop="shipSn">
               <querySelect :searchFn="search" valuekey="shipSn" :param="{shipFromOrgid: otherinfo.orgid}" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
             </el-form-item>
@@ -87,11 +91,13 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
+  import SelectTree from '@/components/selectTree/index'
 
   export default {
     components: {
       PopFrame,
-      querySelect
+      querySelect,
+      SelectTree
     },
     props: {
       popVisible: {
@@ -118,7 +124,7 @@
         }
         if (!hasOne) {
           callback(new Error('运单号或货号必填其中一项'))
-        }      else {
+        } else {
           callback()
         }
     }
@@ -127,10 +133,10 @@
         selected: [],
         rules: {
           shipSn: [
-            { validator: validateShipNum, trigger: 'blur' }
+            { validator: validateShipNum }
           ],
           shipGoodsSn: [
-            { validator: validateShipNum, trigger: 'blur' }
+            { validator: validateShipNum }
           ]
         },
         formLabelWidth: '100',
@@ -303,14 +309,14 @@
 </script>
 
 <style lang="scss">
-  .pick-maintain .pickpopDepMain{
+  .lntelligent-maintain .pickpopDepMain{
     top: 29%;
     bottom: auto;
     min-width: 500px;
     max-width:  500px;
 
   }
-  .pick-maintain .popRight-content{
+  .lntelligent-maintain .popRight-content{
     padding: 5px 10px 5px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item{
@@ -319,7 +325,7 @@
       text-align: center;
     }
     .el-input{
-      width: 90%;
+      /*width: 90%;*/
 
     }
     .order_bottom{
@@ -328,10 +334,6 @@
         margin-right: 0;
         margin-bottom: 30px;
         display: block;
-      }
-      .el-input{
-        /*width: 125px;*/
-
       }
     }
     .el-input__inner{
@@ -343,27 +345,11 @@
       .el-input__inner {
 
         background-color: #fff;
-        /*border-color: #e4e7ed;*/
         color: #606266;
-        /*cursor: not-allowed;*/
       }
 
     }
 
   }
 
-  .pick_center{
-    text-align: center;
-    padding-top: 80px;
-    font-size: 16px;
-  }
-  .pick_input{
-    padding-top: 60px;
-    text-align: center;
-    font-size: 14px;
-    .el-input{
-      width: 40%;
-
-    }
-  }
 </style>
