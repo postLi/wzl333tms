@@ -50,6 +50,7 @@
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm('formName', true)" >保存并添加</el-button>
           <el-button type="primary" @click="getCheckedNodes('formName')">保存</el-button>
           <el-button @click="closeMe">取 消</el-button>
         </div>
@@ -108,7 +109,7 @@
           this.formInline = objectMerge2(this.theUser || {})
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
-        //参照
+        // 参照
         if (this.reference) {
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
@@ -126,7 +127,6 @@
             createrId: this.createrId
           }
           this.popTitle = '新增角色'
-
         }
       }
     },
@@ -162,7 +162,7 @@
             { max: 250, message: '最多可输入250个字符', trigger: 'blur' }
           ]
         },
-        roleKey:'',
+        roleKey: '',
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -182,7 +182,7 @@
       // this.treeData = this.dotInfo
     },
     methods: {
-      newInfoData(){
+      newInfoData() {
         this.formInline = {
           roleName: '',
           remark: '',
@@ -191,7 +191,7 @@
         }
         // this.roleKey = Math.random()
       },
-      result(){
+      result() {
         this.newInfoData()
         this.roleKey = Math.random()
       },
@@ -203,7 +203,7 @@
           done()
         }
       },
-      getCheckedNodes(formName) {
+      getCheckedNodes(formName, bool) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true
@@ -223,7 +223,10 @@
             promiseObj.then(res => {
               this.$emit('success')
               this.loading = false
-              this.closeMe()
+              this.reset()
+              if (!bool) {
+                this.closeMe()
+              }
               this.$message.success('保存成功')
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))

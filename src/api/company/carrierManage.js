@@ -110,3 +110,9 @@ export function postCarrier(info) {
 export function putCarrier(info) {
   return fetch.put('/api-system/system/carrier/v1/update', info)
 }
+/** 承运商编码
+ *
+ */
+export function getCarrierSn(info) {
+  return fetch.get('/api-system/system/carrier/v1/getCarrierSn', info)
+}

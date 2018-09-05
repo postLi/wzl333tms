@@ -244,12 +244,12 @@ export default {
       // if (value === '' || value === null || !value || value === undefined) {
       //   callback(new Error('不能为空'))
       // } else
-      let reg = /^\d+(\.([1-9]|\d[1-9]))?$/
-      if (!reg.test(value)&& value !== undefined) {
+      const reg = /^\d+(\.([1-9]|\d[1-9]))?$/
+      if (!reg.test(value) && value !== undefined) {
         callback(new Error('请输入最多两位小数'))
-      } else if (value === '' || value === undefined){
+      } else if (value === '' || value === undefined) {
         callback()
-      }else {
+      } else {
         callback()
       }
     }
@@ -351,17 +351,17 @@ export default {
         // truckVolume: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
       formFeeRules: {
-        // nowpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // nowpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // backpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // backpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // arrivepayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // arrivepayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // carloadInsuranceFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // leaveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
+        nowpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        nowpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        backpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        backpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        arrivepayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        arrivepayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        carloadInsuranceFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        leaveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
       }
     }
   },
@@ -516,9 +516,9 @@ export default {
     },
     getLoadNo() {
       getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
-          this.truckMessage = data.text // 批次号
-          this.contractNo = data.text // 合同编号？？？？？
-        })
+        this.truckMessage = data.text // 批次号
+        this.contractNo = data.text // 合同编号？？？？？
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text)
         })
@@ -540,9 +540,9 @@ export default {
         this.getUpdateRepertoryRight()
       } else {
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-            this.leftTable = data.data
-            console.log('不修改 ')
-          })
+          this.leftTable = data.data
+          console.log('不修改 ')
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
           })
@@ -606,21 +606,21 @@ export default {
     gotoPage() { // 操作成功后跳转回到配载列表页面
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() } })
+          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() }})
           this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() } })
+          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() }})
           this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() } })
+          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() }})
           this.eventBus.$emit('replaceCurrentView', '/operation/order/deliverManage')
           break
       }
     },
     finishLoadInfo() {
-       if(this.loading){
+      if (this.loading) {
         return false
       }
       this.formValidate() // 表单验证
@@ -632,12 +632,12 @@ export default {
             console.log('这里是编辑完成配载', this.loadInfo)
             putLoadInfo(this.loadInfo).then(data => {
               this.loading = false
-                this.$message({ type: 'success', message: '修改配载信息成功' })
-                this.resetFieldsForm()
-                this.$nextTick(() => {
-                  this.gotoPage() // 操作成功后跳转到配载列表页面
-                })
+              this.$message({ type: 'success', message: '修改配载信息成功' })
+              this.resetFieldsForm()
+              this.$nextTick(() => {
+                this.gotoPage() // 操作成功后跳转到配载列表页面
               })
+            })
               .catch(error => {
                 this.loading = false
                 this.$message.error(error.errorInfo || error.text)
@@ -647,12 +647,12 @@ export default {
             this.loading = true
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.loading = false
-                this.$message({ type: 'success', message: '插入配载信息成功' })
-                this.resetFieldsForm()
-                this.$nextTick(() => {
-                  this.gotoPage()
-                })
+              this.$message({ type: 'success', message: '插入配载信息成功' })
+              this.resetFieldsForm()
+              this.$nextTick(() => {
+                this.gotoPage()
               })
+            })
               .catch(error => {
                 this.loading = false
                 this.$message.error(error.errorInfo || error.text)
@@ -662,7 +662,7 @@ export default {
       }
     },
     finishTruckInfo() {
-      if(this.loading){
+      if (this.loading) {
         return false
       }
       this.formValidate() // 表单验证
@@ -672,12 +672,12 @@ export default {
           this.loading = true
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
             this.loading = false
-              this.$message({ type: 'success', message: '保存成功' })
-              this.resetFieldsForm()
-              this.$nextTick(() => {
-                this.gotoPage() // 操作成功后跳转到配载列表页面
-              })
+            this.$message({ type: 'success', message: '保存成功' })
+            this.resetFieldsForm()
+            this.$nextTick(() => {
+              this.gotoPage() // 操作成功后跳转到配载列表页面
             })
+          })
             .catch(error => {
               this.loading = false
               this.$message.error(error.errorInfo || error.text)
@@ -703,7 +703,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
+        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
       } else {}
       this.init()
     },
@@ -778,10 +778,10 @@ export default {
       console.log('left', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
-            this.$set(this.setLoadTableList, 'left', data.data)
+          this.$set(this.setLoadTableList, 'left', data.data)
             // this.setLoadTableList.left = objectMerge2([], data.data)
-            console.log('修改ing左边列表', this.setLoadTableList.left)
-          })
+          console.log('修改ing左边列表', this.setLoadTableList.left)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
           })
@@ -792,10 +792,10 @@ export default {
       console.log('right', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
-            this.$set(this.setLoadTableList, 'right', data.data)
+          this.$set(this.setLoadTableList, 'right', data.data)
             // this.setLoadTableList.right = objectMerge2([], data.data)
-            console.log('修改ing右边列表', this.setLoadTableList.right)
-          })
+          console.log('修改ing右边列表', this.setLoadTableList.right)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
           })
@@ -847,10 +847,10 @@ export default {
         this.Trucks = this.cacheTruckList[orgid]
       } else {
         getTrucK().then(data => {
-            this.Trucks = data.data
-            this.cacheTruckList[orgid] = data.data
-            console.log('Trucks', this.Trucks)
-          })
+          this.Trucks = data.data
+          this.cacheTruckList[orgid] = data.data
+          console.log('Trucks', this.Trucks)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
           })
@@ -876,14 +876,14 @@ export default {
       // this.formModel.truckVolume = item.truckVolume
     },
     querySearch(queryString, cb) {
-        let driverList = this.Drivers
-        let results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, "gi"), 'driverName')) : driverList
+      const driverList = this.Drivers
+      const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
         // 调用 callback 返回司机列表的数据
-        cb(results)
+      cb(results)
     },
     querySearchTruck(queryString, cb) {
       const truckList = this.Trucks
-      const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
+      const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
       // 调用 callback 返回车辆列表的数据
       cb(results)
     },
@@ -895,7 +895,7 @@ export default {
       }
     },
     blurTruck() { // 车牌输入框失去响应时
-      let data = ''
+      const data = ''
       // this.Trucks.find(el => {
       //   if (this.formModel.truckIdNumber === el.truckIdNumber) {
       //     this.formModel.truckIdNumber = el.truckIdNumber
@@ -918,7 +918,7 @@ export default {
         }
       })
     },
-    changeTruckNum (val, type) {
+    changeTruckNum(val, type) {
       this.$set(this.formModel, type, Number(val))
     }
   }

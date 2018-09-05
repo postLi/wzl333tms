@@ -17,7 +17,7 @@
           <h3 class="title">会员登录</h3>
           <!--<div v-if="errInfo">-->
           <!--<span>{{errInfo}}</span>-->
-          <!--</div>-->
+          <!--</div>--> 
           <!-- <el-form-item prop="accNum"> -->
           <!--<span class="svg-container svg-container_login">-->
           <!--<icon-svg icon-class="yonghuming" />-->
@@ -31,9 +31,14 @@
               <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="password">
-            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
-              <template slot="prepend"><i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i></template>
+          <el-form-item prop="password" class="previewPwd">
+            <el-input name="password" :type="!isview? 'password' : 'text'" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
+              <template slot="prepend">
+                <i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i>
+                <!-- 两种写法都可以 -->
+                <i @click="isview = !isview" :class="{ 'icon_by': isview , 'icon_zy':!isview}"></i>
+                <!-- <i @click="isview = !isview" :class="[isview ? 'icon_by':'icon_zy']"></i> -->
+              </template>
             </el-input>
           </el-form-item>
           <div class="login">
@@ -108,6 +113,7 @@ export default {
       loading: false,
       checked: false,
       errInfo: false,
+      isview: false,
       // 模拟登陆信息
       loginForm: {
         // accNum: '4',
@@ -126,14 +132,14 @@ export default {
   mounted() {
     this.checkLocalStorage()
     if (process.env.NODE_ENV !== 'production') {
-      this.loginForm.username = "fangjian"
-      this.loginForm.password = "123456"
+      this.loginForm.username = 'fangjian'
+      this.loginForm.password = '123456'
     }
   },
   methods: {
     checkLocalStorage() {
       if (window.localStorage) {
-        let storage = window.localStorage
+        const storage = window.localStorage
         console.log('localStorage', storage.getItem('lastloginUsername'))
       }
     },
@@ -189,6 +195,9 @@ export default {
     password() {
       // this.holder = ''
       this.loginError = false
+    },
+    YJicon() {
+      this.isview = !this.isview
     }
   }
 }

@@ -5,6 +5,18 @@
               <el-form-item label="回收情况" prop="recTypeId" :cols="45">
                 <SelectType type="rec_type" v-model="form.recTypeId" />
               </el-form-item>
+              <el-form-item label="回收日期:" prop="recTime" >
+                <el-date-picker
+                    v-model="form.recTime"
+                    align="right"
+                    type="date"
+                    :picker-options="pickOption2"
+                    placeholder="选择日期"
+                    value-format="timestamp"
+                    :disabled="isDbclick"
+                    >
+                </el-date-picker>
+              </el-form-item>
               <el-form-item label="回收备注" :label-width="formLabelWidth" prop="recRemark">
                 <el-input
                   type="textarea"

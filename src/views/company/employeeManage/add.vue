@@ -44,6 +44,7 @@
       <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -231,7 +232,7 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
+    submitForm(formName, bool) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -260,7 +261,10 @@ export default {
               type: 'success',
               message: '保存成功!'
             })
-            this.closeMe()
+            this.reset()
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
           }).catch(err => {
             this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))

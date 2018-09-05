@@ -172,12 +172,9 @@
                           <div v-if="column.checkfn">
                             <span v-if="column.checkfn(scope.row)">
                                {{scope.row[column.prop]}}
-
-
                             </span>
                             <span v-else>
                                <el-input
-
                                  v-model.number="column.slot(scope)"
                                  :size="btnsize"
                                  v-number-only
@@ -426,21 +423,21 @@
 
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
+  import { REGEX } from '@/utils/validate'
   import popRight from '@/components/PopRight/index'
   import selectType from '@/components/selectType/index'
-  import {getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList} from '@/api/operation/track'
-  import {postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar} from '@/api/operation/arteryDelivery'
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {mapGetters} from 'vuex'
+  import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
+  import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
+  // import { getExportExcel } from '@/api/company/customerManage'
+  import { mapGetters } from 'vuex'
   import SelectTree from '@/components/selectTree/index'
-  import {objectMerge2, parseTime, closest} from '@/utils/'
+  import { objectMerge2, parseTime, closest } from '@/utils/'
   import TableSetup from '@/components/tableSetup'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     data() {
-      const validateNum = function (rule, value, callback) {
+      const validateNum = function(rule, value, callback) {
         if (!REGEX.ONLY_NUMBER.test(value)) {
           callback(new Error('请输入数字~'))
         } else if (REGEX.KONGE.test(value)) {
@@ -454,10 +451,10 @@
       return {
         ruleData: {
           arriveHandlingFee: [
-            {validator: validateNum, trigger: 'blur'}
+            { validator: validateNum, trigger: 'blur' }
           ], //
           arriveOtherFee: [
-            {validator: validateNum, trigger: 'blur'}
+            { validator: validateNum, trigger: 'blur' }
           ]
         },
         tablekey: '1',
@@ -477,6 +474,7 @@
         isEditActual: false,
         propsId: '',
         formModel: {},
+        label: '序号',
         // formModel: {
         //   addStatus: 1,
         //   id: 0,
@@ -492,7 +490,7 @@
         selectDetailList: [],
         selected: [],
         // 加载状态
-        loading: true,
+        // loading: true,
         setupTableVisible: false,
         // AddCustomerVisible: false,
         formMode1: {},
@@ -566,48 +564,48 @@
           //   fixed: false
           // },
           // v-if="isAlFun"   入库前的
-          {
-            label: '实到件数',
-            prop: 'actualAmount',
-            width: '100',
-            isAlFun: true,
-            expand: true,
-            fixed: false,
-            checkfn: (row) => {
-              console.log('row.warehouStatus:', row.warehouStatus)
-              return row.warehouStatus === 1
-            },
-
-            slot: (scope) => {
-              return scope.row.actualAmount
-            }
-          }, {
-            label: '实到重量',
-            prop: 'actualWeight',
-            width: '100',
-            expand: true,
-            checkfn: (row) => {
-              return row.warehouStatus === 1
-            },
-            fixed: false,
-
-            slot: (scope) => {
-              return scope.row.actualWeight
-            }
-          }, {
-            label: '实到体积',
-            prop: 'actualVolume',
-            width: '100',
-            expand: true,
-            checkfn: (row) => {
-              return row.warehouStatus === 1
-            },
-            fixed: false,
-
-            slot: (scope) => {
-              return scope.row.actualVolume
-            }
+        {
+          label: '实到件数',
+          prop: 'actualAmount',
+          width: '100',
+          isAlFun: true,
+          expand: true,
+          fixed: false,
+          checkfn: (row) => {
+            console.log('row.warehouStatus:', row.warehouStatus)
+            return row.warehouStatus === 1
           },
+
+          slot: (scope) => {
+            return scope.row.actualAmount
+          }
+        }, {
+          label: '实到重量',
+          prop: 'actualWeight',
+          width: '100',
+          expand: true,
+          checkfn: (row) => {
+            return row.warehouStatus === 1
+          },
+          fixed: false,
+
+          slot: (scope) => {
+            return scope.row.actualWeight
+          }
+        }, {
+          label: '实到体积',
+          prop: 'actualVolume',
+          width: '100',
+          expand: true,
+          checkfn: (row) => {
+            return row.warehouStatus === 1
+          },
+          fixed: false,
+
+          slot: (scope) => {
+            return scope.row.actualVolume
+          }
+        },
           // v-if="!isAlFun"  入库后的
           // {
           //   label: '实到件数',
@@ -635,67 +633,67 @@
           //   fixed: false
           // },
           //
-          {
-            label: '配载件数',
-            prop: 'loadAmount',
-            width: '100',
-            fixed: false
-          }, {
-            label: '配载重量',
-            prop: 'loadWeight',
-            width: '100',
-            fixed: false
-          }, {
-            label: '配载体积',
-            prop: 'loadVolume',
-            width: '100',
-            fixed: false
-          }, {
-            label: '出发城市',
-            prop: 'shipFromCityName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '到达城市',
-            prop: 'shipToCityName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '发货人',
-            prop: 'shipSenderName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '发货人电话',
-            prop: 'shipSenderMobile',
-            width: '120',
-            fixed: false
-          }, {
-            label: '收货人',
-            prop: 'shipReceiverName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '收货人电话',
-            prop: 'shipReceiverMobile',
-            width: '120',
-            fixed: false
-          }, {
-            label: '货品名',
-            prop: 'cargoName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '货号',
-            prop: 'shipGoodsSn',
-            width: '130',
-            fixed: false
-          }, {
-            label: '运单备注',
-            prop: 'shipRemarks',
-            width: '110',
-            fixed: false
-          }
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载重量',
+          prop: 'loadWeight',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载体积',
+          prop: 'loadVolume',
+          width: '100',
+          fixed: false
+        }, {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '120',
+          fixed: false
+        }, {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        }, {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '130',
+          fixed: false
+        }, {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '110',
+          fixed: false
+        }
         ]
       }
     },
@@ -911,7 +909,6 @@
               // e.actualAmount = e.loadAmount - e.actualAmount
               // e.actualWeight = e.loadWeight - e.actualWeight
               // e.actualVolume = e.loadVolume - e.actualVolume
-
             })
           })
         }).catch(err => {
@@ -929,8 +926,7 @@
       toggleAllRows() {
         this.$nextTick(() => {
           this.detailList.forEach((e, index) => {
-
-            // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0 ) {
+          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0 ) {
             //   this.$refs.multipleTable.toggleRowSelection(e, false)
             // } else {
             //   this.$refs.multipleTable.toggleRowSelection(e, true)
@@ -978,7 +974,7 @@
       deleteTrack(item) {
         console.log(item)
         return deleteTrack(item.id).then(data => {
-          this.$message({type: 'success', message: '删除成功'})
+          this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
         })
       },
@@ -991,7 +987,7 @@
         console.log('修改')
         this.formModel.transferId = 0
         return putUpdateTrack(this.formModel).then(data => {
-          this.$message({type: 'success', message: '修改成功'})
+          this.$message({ type: 'success', message: '修改成功' })
           this.getDetail()
           this.resetForm()
         })
@@ -1000,7 +996,7 @@
         console.log('添加')
         this.formModel.loadId = this.id
         return postAddTrack(this.formModel).then(data => {
-          this.$message({type: 'success', message: '添加成功'})
+          this.$message({ type: 'success', message: '添加成功' })
           this.getDetail()
           this.resetForm()
         })
@@ -1079,8 +1075,7 @@
                     message: '不能再次到车入库'
                   })
                   return false
-                }
-                else {
+                } else {
                   if (this.formModel.arriveHandlingFee === '' || this.formModel.arriveOtherFee === '') {
                     this.formModel.arriveHandlingFee = 0
                     this.formModel.arriveOtherFee = 0

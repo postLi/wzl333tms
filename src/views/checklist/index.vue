@@ -48,10 +48,12 @@
             </p>
           </li>
           <div class="btn_content">
-            <p>所有的基础数据已经维护好了，我们去开一张单吧！
-              <el-button type="primary" class="btn_kd"  @click="doAction('order')" v-if="flog">开单</el-button>
-              <el-button type="primary" class="btn_h"  @click="doAction('order')"  v-else>开单</el-button>
+            <p v-if="flog">所有的基础数据已经维护好了，我们去开一张单吧！
+              <el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button>
             </p>
+            <p v-else>
+              <el-button type="primary" class="btn_h">开单</el-button>
+            </p> 
           </div>
         </ul>
         <!-- <template v-if="isParentOrg">
@@ -62,19 +64,19 @@
       <!-- 网点管理 -->
       <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" :checkSystem="true" />
       <!-- 权限管理 -->
-      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')"/> 
+      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')" :checkSystem="true"/> 
       <!-- 员工管理 -->
-      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  :popVisible.sync="addDoTotVisible2" />
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  :popVisible.sync="addDoTotVisible2":checkSystem="true" />
       <!-- 发货客户 -->
-      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" />
+      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true"/>
       <!-- 收货客户 -->
-      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" />
+      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" :checkSystem="true"/>
       <!-- 司机管理 -->
-      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')"/>
+      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')" :checkSystem="true"/>
       <!-- 车辆管理 -->
-      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')"  />
+      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')" :checkSystem="true" />
       <!-- 承运商管理 -->
-      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')"/>
+      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')" :checkSystem="true" />
       <!-- 开单页面创建运单 -->
       <!-- 底部按钮操作部分 -->
       <!-- <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" /> -->
@@ -275,31 +277,31 @@ export default {
       }
       if (type === 'addRole') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addReciveCustomer') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addSendCustomer') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addDiver') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addTruck') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addCarrier') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addSetting') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
     },
     closeAddDot(obj) {
@@ -743,12 +745,12 @@ export default {
           border:1px solid #ccc;
         }
       }
-      .btn_content .btn_h:hover{
-        opacity: 0.8;
-        background:#fff;
-        color:#3e9ff1;
-        border:1px solid #3e9ff1;
-      }
+      // .btn_content .btn_h:hover{
+      //   opacity: 0.8;
+      //   background:#fff;
+      //   color:#3e9ff1;
+      //   border:1px solid #3e9ff1;
+      // }
     }
   }
 }

@@ -9,7 +9,10 @@
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" @row-dblclick="dclickAddItem" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed width="50" label="序号">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
@@ -56,7 +59,10 @@
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
       <el-table ref="multipleTableLeft" :data="rightTable"  @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-        <el-table-column fixed type="index" width="50">
+         <el-table-column fixed width="50" label="序号">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
@@ -179,7 +185,7 @@ export default {
       deep: true
     }
   },
-  mounted () {
+  mounted() {
     if (this.leftTable.length === 0) {
       this.getList()
     }
@@ -206,8 +212,8 @@ export default {
         })
       }
     },
-    getSearch (obj) { // 搜索
-     this.leftTable = obj
+    getSearch(obj) { // 搜索
+      this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -235,12 +241,12 @@ export default {
       }
     },
     changLoadData(newVal) { // 修改右边表格是配载数量 newVal为rightTable的下标index
-      let curAmount = this.rightTable[newVal].loadAmount // 配载件数
-      let curWeight = this.rightTable[newVal].loadWeight // 配载重量
-      let curVolume = this.rightTable[newVal].loadVolume // 配载体积
-      let currepertAmount = this.rightTable[newVal].repertoryAmount // 库存件数
-      let currepertWeight = this.rightTable[newVal].repertoryWeight // 库存重量
-      let currepertVolume = this.rightTable[newVal].repertoryVolume // 库存体积
+      const curAmount = this.rightTable[newVal].loadAmount // 配载件数
+      const curWeight = this.rightTable[newVal].loadWeight // 配载重量
+      const curVolume = this.rightTable[newVal].loadVolume // 配载体积
+      const currepertAmount = this.rightTable[newVal].repertoryAmount // 库存件数
+      const currepertWeight = this.rightTable[newVal].repertoryWeight // 库存重量
+      const currepertVolume = this.rightTable[newVal].repertoryVolume // 库存体积
       if (curAmount > currepertAmount || curAmount < 1 || curWeight > currepertWeight || curWeight < 0 || curVolume > currepertVolume || curVolume < 0) {
         this.$notify({
           title: '警告',
@@ -350,12 +356,12 @@ export default {
       this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
     },
-    dclickAddItem (row, event) { // 双击添加单行
+    dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)
       this.doAction('goLeft')
     },
-    dclickMinusItem (row, event) { // 双击减去单行
+    dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.doAction('goRight')
@@ -404,9 +410,8 @@ export default {
       // return getSummaries(param, propsArr)
       const { columns, data } = param
       const sums = []
-      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
+      const strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
       columns.forEach((column, index) => {
-
         if (index === 0) {
           sums[index] = '总计'
           return
