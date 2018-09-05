@@ -147,3 +147,30 @@ $bodercolor: #d0d7e5;
 .el-form-item__label{ 
   padding-right: 5px;
 }
+/**原生input **/
+.el-form-item__content>input, .nativeinput{
+  -webkit-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #606266;
+  display: inline-block;
+  font-size: inherit;
+  height: 40px;
+  line-height: 40px;
+  outline: 0;
+  padding: 0 15px;
+  -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  width: 100%;
+  border-color: transparent;
+  border-radius: 0;
+  height: 28px;
+  line-height: 28px;
+}
+.el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error{
+  border-color: #f56c6c;
+}

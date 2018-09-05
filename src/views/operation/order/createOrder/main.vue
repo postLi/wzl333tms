@@ -5,7 +5,7 @@
     </div>
     <div class="createOrderWrapper">
     <div class="createOrder-title"><span>收发货凭证</span></div>
-    <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
+    <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" :status-icon='false' inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
       <div class="order-num required">运单号： <span class="order-num-info">
         <el-form-item  :error='shipFieldValueInfo.shipSn'>
@@ -161,25 +161,25 @@
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
-                    <el-input ref="tmsOrdercargoAmount" v-number-only size="mini" :maxlength="20"
+                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" :maxlength="20"
                   v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
-                  <el-input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="20"
+                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="20"
                   v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <el-input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="20"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="20"
                   v-model="form.cargoList[scope.$index][item.fieldProperty]" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <el-input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                   </el-form-item>
                 </template>
@@ -1878,8 +1878,8 @@ export default {
       this.setCargoNum()
     },
     // 修改货品列表
-    changeFee(index, name, val) {
-      this.form.cargoList[index][name] = val
+    changeFee(index, name, event) {
+      this.form.cargoList[index][name] = event.target.value
       // 修改时计算总运费
       this.getTotalFee()
     },
@@ -3187,6 +3187,12 @@ $backgroundcolor: #cbe1f7;
         &:focus{
           background: rgba(0, 0, 0, 0.04);
         }
+      }
+      .el-form-item__content>input{
+        font-size: 12px;
+      }
+      .el-form-item.is-error .el-input__inner{
+        border-color: #f56c6c;
       }
       .addButton, .minusButton{
         display: inline-block;
