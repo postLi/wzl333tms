@@ -52,7 +52,7 @@
                 </div>
                 <div>
                   <el-form-item label="司机电话" prop="dirverMobile" class="formItemTextDanger">
-                    <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话" disabled></el-input>
+                    <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话"></el-input>
                   </el-form-item>
                 </div>
                 <div>
@@ -730,6 +730,9 @@ export default {
       this.$set(this.formModel, 'batchNo', this.truckMessage)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId)
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinish)
+      if (this.loadTypeId === 39) {
+        this.$set(this.formModel, 'contractNo', this.contractNo)
+      }
 
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
@@ -752,6 +755,9 @@ export default {
       this.$set(this.formModel, 'orgid', this.otherinfo.orgid)
       this.$set(this.formModel, 'loadTypeId', this.loadTypeId) // 配载类型：38-短驳 39-干线 40-送货
       this.$set(this.formModel, 'batchTypeId', this.batchTypeIdFinishTruck) // 批次状态： 干线(52已装车,53在途中)
+      if (this.loadTypeId === 39) {
+        this.$set(this.formModel, 'contractNo', this.contractNo)
+      }
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)

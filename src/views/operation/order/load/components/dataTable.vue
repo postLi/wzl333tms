@@ -289,10 +289,10 @@ export default {
           e.loadVolume = e.repertoryVolume
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.repertoryId !== e.repertoryId
           })
           this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.repertoryId !== e.repertoryId
           })
           // let item = this.leftTable.indexOf(e)
           // if (item !== -1) { // 源数据减去被穿梭的数据
@@ -318,7 +318,7 @@ export default {
           this.orgLeftTable.push(e)
 
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.repertoryId !== e.repertoryId
           })
           // let item = this.rightTable.indexOf(e)
           // if (item !== -1) {

@@ -375,8 +375,7 @@ export default {
       }
     },
     setData() {
-
-      if (this.dataName === '到站装卸费' && this.dataName === '到站其他费') {
+      if (this.dataName === '到站装卸费' || this.dataName === '到站其他费') {
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       } else {
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid) // 不是到付的进入结算页面,结算网点ascriptionOrgid默认为搜索的发车网点
