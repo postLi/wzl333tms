@@ -305,6 +305,9 @@ export default {
       return postFindAbnormalList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     setTable() {},

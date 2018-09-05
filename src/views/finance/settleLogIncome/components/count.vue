@@ -102,12 +102,18 @@ export default {
       }
       getAllCustomer(searchQuery).then(data => {
         this.senderOptions = data.list
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     getFeeTypeDict() {
       this.settlementId = 178
       getFeeTypeDict(this.settlementId).then(data => {
         this.feeIds = data
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     querySearchSender(queryString, cb) {

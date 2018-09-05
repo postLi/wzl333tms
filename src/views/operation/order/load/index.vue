@@ -531,6 +531,9 @@ export default {
           // this.formModel.planArrivedTime = data.trim()
           // this.formModel.loadTime = parseTime(new Date(data))
           this.formModel.loadTime = data.trim()
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     },

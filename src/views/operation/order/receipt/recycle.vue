@@ -331,7 +331,10 @@ export default {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
                 // this.loading = false
-    })
+    }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
   },
   data() {
     return {
@@ -560,6 +563,9 @@ export default {
         this.total = data.total
         this.loading = false
         // console.log(data);
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {

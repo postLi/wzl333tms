@@ -138,6 +138,9 @@ export default {
     getPersonalSetup() {
       return OrderApi.getPersonalSetup(this.userId).then(res => {
         this.form = res
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 重置
@@ -146,6 +149,9 @@ export default {
         this.$message('重置成功！')
         this.getPersonalSetup(this.userId)
         //this.close()
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 提交修改
@@ -156,6 +162,9 @@ export default {
         this.$message("修改成功！")
         this.$emit('success', data)
         this.close()
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 显示按键对应键名

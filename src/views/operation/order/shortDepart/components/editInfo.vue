@@ -174,6 +174,9 @@ export default {
         if (data) {
           this.formModel.operatorTime = data
         }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     submitForm(formName) { // 底部表单提交
@@ -209,6 +212,9 @@ export default {
       const id = this.id
       getLoadDetail(id).then(data => {
         this.trackDetail = Object.assign([], data)
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     closeMe(done) {

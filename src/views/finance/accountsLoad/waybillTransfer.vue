@@ -435,6 +435,9 @@ export default {
           e.inputTotalCost = e.unpaidFee
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     changLoadData(index, prop, newVal) {

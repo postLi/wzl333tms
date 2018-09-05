@@ -327,7 +327,10 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       }
     },
     changLoadData(index, prop, newVal) {

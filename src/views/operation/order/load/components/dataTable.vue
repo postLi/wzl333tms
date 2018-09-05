@@ -209,6 +209,9 @@ export default {
           this.leftTable = data.data
           this.orgLeftTable = data.data
           this.$emit('loadTable', this.rightTable)
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     },

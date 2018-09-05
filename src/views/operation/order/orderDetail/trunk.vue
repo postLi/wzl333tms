@@ -93,6 +93,9 @@ export default {
       return orderManage.getOrderInfoById(this.orderid).then(res => {
         this.start = res.data.tmsOrderShipInfo.shipFromCityName || '广州市'
         this.end = res.data.tmsOrderShipInfo.shipToCityName || '杭州市'
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     }
   }

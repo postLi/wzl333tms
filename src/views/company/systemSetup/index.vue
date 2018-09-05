@@ -537,6 +537,9 @@ export default {
         this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
         console.log(this.form.printSetting[item])
       }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     setShipNo() {
@@ -590,6 +593,9 @@ export default {
           message: '保存成功',
           type: 'success'
         })
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     initField() {

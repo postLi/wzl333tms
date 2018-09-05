@@ -1182,6 +1182,9 @@ export default {
     getOrgId() {
       return getOrgId(this.otherinfo.orgid).then(res => {
         return res.data || {}
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 获取个人设置
@@ -1214,6 +1217,9 @@ export default {
         // 获取网点信息
         this.orgInfo = dataArr[4]
         console.log('get INIT Infomation::', dataArr)
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 设置出发城市
@@ -1265,6 +1271,9 @@ export default {
         if (!this.output.isOrder) {
           orderManage.getShipSn(this.otherinfo.orgid).then(res => {
             this.form.tmsOrderShip.shipSn = res.data
+          }).catch((err)=>{
+            this.loading = false
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       } else {
@@ -1304,6 +1313,9 @@ export default {
             })
           }).then(res => {
             this.form.tmsOrderShip.shipGoodsSn = res.data
+          }).catch((err)=>{
+            this.loading = false
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       }
@@ -1406,6 +1418,9 @@ export default {
         } else {
           return false
         }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     /**
@@ -1544,6 +1559,9 @@ export default {
           } else {
             return Promise.reject('查无此提货信息~~~~')
           }
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     },
@@ -2484,6 +2502,9 @@ export default {
               if (this.config.shipNo.manualInput !== '1') {
                 orderManage.getShipSn(this.otherinfo.orgid).then(res => {
                   this.form.tmsOrderShip.shipSn = res.data
+                }).catch((err)=>{
+                  this.loading = false
+                  this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
                 })
                 this.$message.error('重复的订单号，已为你重新生成新的运单号~')
               } else {
@@ -2760,6 +2781,9 @@ export default {
         data.forEach(e => {
           this.DELIVERY_METHODS[e.id] = e.dictName
         })
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     getShipPayWay() { // 获取付款方式中文
@@ -2768,6 +2792,9 @@ export default {
         data.forEach(e => {
           this.PAY_WAY[e.id] = e.dictName
         })
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     setPrintData(type) { // 设置打印的字段
@@ -2855,6 +2882,9 @@ export default {
         if (!this.output.isOrder) {
           this.setDefaultValue()
         }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     }
   }, // 路由更新时触发，用来切换渲染数据

@@ -820,6 +820,9 @@ export default {
       return Promise.all([this.getCargoSetting()]).then(dataArr => {
         // 获取费用设置
         this.feeConfig = dataArr[0]
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 初始化各个表单的情况
@@ -944,11 +947,17 @@ export default {
         case 'printLibkey':
           getPrintLibItems(this.form.tmsOrderShipInfo.id).then(data => {
             CreatePrintPage(data)
+          }).catch((err)=>{
+            this.loading = false
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
           break
         case 'printShipKey':
           getPrintOrderItems(this.form.tmsOrderShipInfo.id).then(data => {
             CreatePrintPage(data)
+          }).catch((err)=>{
+            this.loading = false
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
           break
       }

@@ -406,7 +406,10 @@
           this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
           this.loading = false
           // console.log(data)
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       },
       // 处理返回的节点数据
       handleOrgInfo(data) {
@@ -433,7 +436,10 @@
           this.orgInfoCache[id] = res.data
           this.handleOrgInfo(res.data)
           this.loading = false
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       },
       //table项列表展示
       fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {
@@ -442,7 +448,10 @@
           this.usersArr = res.list
           this.total = res.total
           this.loading = false
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       },
       seleClick(selected) {
         this.selected = selected

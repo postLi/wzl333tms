@@ -395,6 +395,9 @@ export default {
           // this.form.abnormalNo = res
         console.log(res)
           // console.log(res, "this.form.abnormalNo: ", this.form);
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // handleSelectSender(res) {

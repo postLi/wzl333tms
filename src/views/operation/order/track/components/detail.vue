@@ -287,6 +287,9 @@ export default {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
         this.detailList = data.data
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     setColumn(obj) { // 重绘表格列表

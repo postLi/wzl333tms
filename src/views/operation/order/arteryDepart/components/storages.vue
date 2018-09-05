@@ -757,6 +757,9 @@
         let id = this.propsId
         return getLoadDetail(id).then(data => {
           this.trackDetail = Object.assign([], data)
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       toggleAllRows() {
@@ -807,6 +810,9 @@
         return deleteTrack(item.id).then(data => {
           this.$message({type: 'success', message: '删除成功'})
           this.getDetail()
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       editItem(item) {
@@ -821,6 +827,9 @@
           this.$message({type: 'success', message: '修改成功'})
           this.getDetail()
           this.resetForm()
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       addTrack() {
@@ -830,6 +839,9 @@
           this.$message({type: 'success', message: '添加成功'})
           this.getDetail()
           this.resetForm()
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       resetForm() {

@@ -206,6 +206,9 @@ export default {
       const id = this.id
       return getLoadDetail(id).then(data => {
         this.trackDetail = objectMerge2([], data)
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     closeMe(done) { // 关闭右边弹出框

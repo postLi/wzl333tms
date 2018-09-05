@@ -281,6 +281,9 @@ export default {
             this.financialWalList.push(e)
           }
         })
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     querySearch(queryString, cb) {
@@ -313,6 +316,9 @@ export default {
         if (this.formModel.szDtoList.length < 1) { // 默认显示一条收支方式
           this.plusItem()
         }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     initDetailDtoList() {
@@ -366,6 +372,9 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = new Date(data.trim())
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     closeMe(done) {

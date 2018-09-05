@@ -535,6 +535,9 @@
           this.truckKey = new Date().getTime()
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
         this.moodifyDealPay()
         this.moodifyReadyPay()

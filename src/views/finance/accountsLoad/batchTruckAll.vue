@@ -710,7 +710,10 @@ export default {
             e.amountLeaveOtherFee = e.unpaidLeaveOtherFee // 实结发站其他费
           })
           this.orgLeftTable = objectMerge2([], this.leftTable)
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
 
       // }
     },
