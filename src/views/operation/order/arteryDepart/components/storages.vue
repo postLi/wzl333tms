@@ -429,12 +429,23 @@
         </el-form-item>
       </el-form>
     </div>
+    <div slot="footer" class="dialog-footer" v-else-if="isFootFirst">
+      <el-button @click="closeMe" round type="warning" icon="el-icon-close">关闭</el-button>
+    </div>
     <div slot="footer" class="dialog-footer" v-else>
-      <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'" round>打印合同</el-button>
-      <el-button @click="editMe" icon="el-icon-edit-outline" type="info" round v-if="activeName === 'third'">修改</el-button>
-      <el-button @click="closeMe" round type="danger" icon="el-icon-close">关闭</el-button>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
-                  @success="setColumn"></TableSetup>
+      <template v-if="!activeECheckBillName">
+        <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'" round>打印合同</el-button>
+        <el-button @click="editCheckBillName" icon="el-icon-edit-outline" type="info" round v-if="activeName === 'third'">修改</el-button>
+        <el-button @click="closeMe" round type="warning" icon="el-icon-close" v-if="activeName === 'third' || activeName === 'first'">关闭</el-button>
+      </template>
+      <template v-else>
+        <el-button @click="saveCheckBillName" round type="success" icon="el-icon-check" >保存</el-button>
+        <el-button @click="remCheckBillName" round type="" icon="el-icon-close" >取消</el-button>
+      </template>
+
+      <!--<el-button @click="saveCheckBillName" round type="danger" icon="el-icon-close" v-if="activeName === 'third' || activeSCheckBillName">保存</el-button>-->
+      <!--<el-button @click="remCheckBillName" round type="danger" icon="el-icon-close" v-if="activeName === 'third' || activeRCheckBillName ">取消</el-button>-->
+
     </div>
   </pop-right>
 </template>
@@ -455,6 +466,9 @@
   export default {
     data() {
       return {
+        activeECheckBillName:false,
+        activeSCheckBillName:false,
+        activeRCheckBillName:false,
         tooltip: false,
         disabledName: true,
         changeName: false,
@@ -467,7 +481,9 @@
         ruleForm: {},
         loading: false,
         isFootEdit: false,
+        isFootFirst: false,
         isFootSecond: false,
+        isFootThird: false,
         isFootOther: false,
         isCancelEdit: false,
         propsId: '',
@@ -716,7 +732,18 @@
       }
     },
     methods: {
+      // activeECheckBillName:false,
+      // activeSCheckBillName:false,
+      // activeRCheckBillName:false,
+      editCheckBillName(){
+        this.activeECheckBillName = true
+      },
+      saveCheckBillName(){
 
+      },
+      remCheckBillName(){
+        this.activeECheckBillName = false
+      },
       changeCheckBillName(){
         if(this.checkBillName.trim()){
           this.$emit('message',this.checkBillName)
@@ -775,10 +802,16 @@
         })
       },
       handleClick(tab, event) {
-        if (this.activeName === 'second') {
+        this.isFootFirst = false
+        this.isFootSecond = false
+        this.isFootThird = false
+        if(this.activeName === 'first'){
+          this.isFootFirst = true
+        }
+        else if (this.activeName === 'second') {
           this.isFootSecond = true
         } else {
-          this.isFootSecond = false
+          this.isFootThird = true
         }
       },
       initInfo() {
