@@ -260,7 +260,7 @@ export default {
           fixed: false
         }, {
           label: '配载时间',
-          prop: 'requireArrivedTime',
+          prop: 'loadTime',
           width: '160',
           fixed: false
         }, {

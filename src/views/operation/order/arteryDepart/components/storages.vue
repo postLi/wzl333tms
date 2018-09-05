@@ -268,25 +268,27 @@
           <el-tab-pane label="运输合同" name="third">
             <div class="pact" id="contract">
 
-              <el-form :model="formModel">
+              <el-form :model="formModel" :rules="rules" ref="formName">
 
                 <div class="pact_top">
 
                   <!--<h3>货物运输合同</h3>-->
 
                   <div class="sTitle">
-                    <el-form-item label="">
+                    <el-form-item label="" prop="">
+                      <el-input v-model="checkBillName" auto-complete="off"  :disabled="!editFn" clearable></el-input><span></span>
 
-                      <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
-                                  tabindex="-1">
-                        <div slot="content">双击可修改合同名称</div>
-                        <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
-                                  @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
-                                  auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
-                                  @blur="tooltip = false;disabledName = true"
-                                  @mouseenter.native=" disabledName === true && (tooltip = true)"
-                                  @mouseleave.native="tooltip = false;disabledName = true" @change="changeCheckBillName"></el-input>\
-                      </el-tooltip>
+
+                      <!--<el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"-->
+                                  <!--tabindex="-1">-->
+                        <!--<div slot="content">双击可修改合同名称</div>-->
+                        <!--<el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable-->
+                                  <!--@dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"-->
+                                  <!--auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"-->
+                                  <!--@blur="tooltip = false;disabledName = true"-->
+                                  <!--@mouseenter.native=" disabledName === true && (tooltip = true)"-->
+                                  <!--@mouseleave.native="tooltip = false;disabledName = true" ></el-input>\-->
+                      <!--</el-tooltip>-->
 
                       <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
                     </el-form-item>
@@ -299,21 +301,26 @@
                   <!--</el-form-item>-->
                   <!--</div>-->
                   <div class="top_no">
-                    <el-form-item label="NO.">
-                      <el-input size="mini" disabled v-model="formModel.batchNo"></el-input>
+                    <el-form-item label="NO." prop="batchNo">
+                      <el-input size="mini" :disabled="!editFn" v-model="formModel.batchNo"></el-input>
                     </el-form-item>
                   </div>
                 </div>
                 <div class="pact_content">
                   <div class="pact_title">
-                    <span>委托方:</span>
-                    <p style="">{{formModel.orgName}}</p>
-                    <span>(以下简称甲方)</span>
+                    <el-form-item label="委托方:" prop="orgName">
+                      <el-input v-model="formModel.orgName" auto-complete="off"  :disabled="!editFn" clearable></el-input>
+                    </el-form-item>
+                    <span class="orgSpan">(以下简称甲方)</span>
+                    <!--<span>委托方:</span>-->
+                    <!--<p style="">{{formModel.orgName}}</p>-->
+                    <!--<span>(以下简称甲方)</span>-->
                   </div>
                   <div class="pact_title">
-                    <span>承运方:</span>
-                    <p style="">{{formModel.dirverName}}</p>
-                    <span>(以下简称乙方)</span>
+                    <el-form-item label="承运方:" prop="dirverName">
+                      <el-input v-model="formModel.dirverName" auto-complete="off"  :disabled="!editFn" clearable></el-input>
+                    </el-form-item>
+                    <span class="orgSpan">(以下简称乙方)</span>
                   </div>
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
                   <div class="p_cont">
@@ -362,7 +369,7 @@
                   <div class="p_cont">
                     <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
                     <el-form-item label="关于本车:" class="p_textarea">
-                      <el-input type="textarea" size="mini" v-model="formModel.remark"></el-input>
+                      <el-input type="textarea" size="mini" v-model="formModel.remark" :disabled="!editFn"></el-input>
                     </el-form-item>
                     <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
                     <p class="p_about">附：驾驶员、车辆登记</p>
@@ -439,7 +446,7 @@
         <el-button @click="closeMe" round type="warning" icon="el-icon-close" v-if="activeName === 'third' || activeName === 'first'">关闭</el-button>
       </template>
       <template v-else>
-        <el-button @click="saveCheckBillName" round type="success" icon="el-icon-check" >保存</el-button>
+        <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check" >保存</el-button>
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close" >取消</el-button>
       </template>
 
@@ -467,6 +474,7 @@
         activeECheckBillName:false,
         activeSCheckBillName:false,
         activeRCheckBillName:false,
+        editFn:false,
         tooltip: false,
         disabledName: true,
         changeName: false,
@@ -556,7 +564,8 @@
             "loadId": 1
           }
         },
-        tableColumn: [{
+        tableColumn: [
+          {
           label: '序号',
           prop: 'id',
           width: '100',
@@ -660,7 +669,12 @@
           width: '120',
           fixed: false
         }
-        ]
+        ],
+        rules:{
+          batchNo:[
+            {required: true, validator: this.validateIsEmpty('货品名不能为空')}
+          ]
+        }
 
       }
     },
@@ -730,28 +744,47 @@
       }
     },
     methods: {
+      validateIsEmpty(msg = '不能为空！') {
+        return (rule, value, callback) => {
+          if (!value) {
+            // this.showMessage(msg)
+            callback(new Error(msg))
+          } else {
+            callback()
+          }
+        }
+      },
+      handleClick(tab, event) {
+        this.isFootFirst = false
+        this.isFootSecond = false
+        this.isFootThird = false
+        if(this.activeName === 'first'){
+          this.isFootFirst = true
+        }
+        else if (this.activeName === 'second') {
+          this.isFootSecond = true
+        } else {
+          this.isFootThird = true
+          this.editFn = false
+        }
+      },
       // activeECheckBillName:false,
       // activeSCheckBillName:false,
       // activeRCheckBillName:false,
       editCheckBillName(){
         this.activeECheckBillName = true
+        this.editFn = true
       },
-      saveCheckBillName(){
-
+      saveCheckBillName(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.loading = true
+          }
+        })
       },
       remCheckBillName(){
         this.activeECheckBillName = false
-      },
-      changeCheckBillName(){
-        if(this.checkBillName.trim()){
-          this.$emit('message',this.checkBillName)
-          this.changeName = true
-          alert('修改了数据')
-        }else{
-          this.$emit('message','')
-          this.changeName = false
-          alert('没有修改数据')
-        }
+        this.editFn = false
       },
       fetchSelectLoadMainInfoList() {
         this.loading = true
@@ -799,19 +832,7 @@
           })
         })
       },
-      handleClick(tab, event) {
-        this.isFootFirst = false
-        this.isFootSecond = false
-        this.isFootThird = false
-        if(this.activeName === 'first'){
-          this.isFootFirst = true
-        }
-        else if (this.activeName === 'second') {
-          this.isFootSecond = true
-        } else {
-          this.isFootThird = true
-        }
-      },
+
       initInfo() {
         this.loading = false
       },
@@ -1386,6 +1407,7 @@
           color: rgba(0, 0, 0, 0.85);
           font-weight: 500;
         }
+
         .sTitle {
           /*flex: 1;*/
           text-align: center;
@@ -1411,6 +1433,7 @@
               }
               .el-input--suffix .el-input__inner {
                 padding-right: 0;
+                text-align: center;
               }
               .el-input.is-disabled .el-input__inner {
                 background-color: #fff;
@@ -1439,6 +1462,7 @@
 
               .el-input__inner:focus {
                 border-bottom-color: #c0c4cc;
+                text-align: center;
               }
               .el-input {
                 width: 50%;
@@ -1450,6 +1474,65 @@
 
 
         }
+        /*.sTitle {
+          text-align: center;
+          .el-form-item{
+            width: 100%;
+            .el-form-item__content{
+              width: 100%;
+
+              .el-tooltip.showBg {
+                .el-input__inner {
+                  border-left-color: #c0c4cc;
+                  border-right-color: #c0c4cc;
+                  color: #fff;
+                  font-weight: 600;
+                  background: rgba(64,158,255,0.6);
+                  text-align: center;
+                }
+              }
+              .el-input__suffix {
+                left: -20px;
+                top: -20px;
+              }
+              .el-input--suffix .el-input__inner {
+                padding-right: 0;
+              }
+              .el-input.is-disabled .el-input__inner {
+                background-color: #fff;
+                text-align: center;
+              }
+
+              span {
+                position: relative;
+                top: -20px;
+                left: 200px;
+                font-size: 18px;
+                color: #333333;
+                font-weight: 600;
+              }
+              .el-input__inner {
+                border-color: transparent;
+                font-size: 18px;
+                color: #333333;
+                font-weight: 600;
+              }
+
+              .el-input__inner:focus {
+                border-bottom-color: #c0c4cc;
+              }
+              .el-input {
+                width: 50%;
+                text-align: center;
+              }
+
+            }
+          }
+
+
+        }*/
+
+
         .top_num {
           position: absolute;
           right: 10px;
@@ -1485,11 +1568,24 @@
           color: #606266;
           font-size: 14px;
           margin: 10px 0 0 25px;
-          p {
+          .el-form-item{
             display: inline-block;
-            width: 250px;
-            border-bottom: 1px solid;
-            padding-left: 10px;
+            margin-bottom: 0;
+            .el-form-item__content{
+              float: left;
+              .el-input.is-disabled {
+                .el-input__inner{
+                  background-color: #fff;
+                  /*border-color: #e4e7ed;*/
+                  color: #666;
+                }
+              }
+            }
+          }
+          span.orgSpan{
+            position: relative;
+            top: -15px;
+            right: 0;
           }
         }
         .p_cont,
@@ -1504,6 +1600,11 @@
             margin-bottom: 0;
             .el-textarea {
               width: 250%;
+            }
+            .el-textarea.is-disabled .el-textarea__inner {
+              background-color: #fff;
+              border-color: #e4e7ed;
+              color: #666;
             }
           }
           p.p_about {
