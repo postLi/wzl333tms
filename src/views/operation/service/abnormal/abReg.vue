@@ -226,6 +226,7 @@ export default {
     }
   },
   mounted() {
+    this.loading = true
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       this.loading = false
@@ -420,7 +421,7 @@ export default {
           this.isModify = false
           this.isCheck = false
           // this.isDbclick = false
-          console.log(this.isModify)
+          // console.log(this.isModify)
           this.selectInfo = {}
           this.openAddAbnormal()
           break
@@ -475,12 +476,14 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              this.loading = true
               delAbnormal(ids).then(res => {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
                 })
                 this.fetchData()
+                this.loading = false
               }).catch(err => {
                 this.$message({
                   type: 'error',
