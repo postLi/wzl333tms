@@ -298,6 +298,7 @@
         </div>
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="fetchAllreceipt" :isGrant="isGrant"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </div>
 </template>
@@ -309,11 +310,13 @@ import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import AddMark from './components/add'
 export default {
   components: {
     SearchForm,
     TableSetup,
-    Pager
+    Pager,
+    AddMark
   },
   computed: {
     ...mapGetters([
@@ -328,10 +331,10 @@ export default {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
       // this.loading = false
-    }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+    }).catch((err) => {
+      this.loading = false
+      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+    })
   },
   data() {
     return {
@@ -340,8 +343,11 @@ export default {
       selectInfo: {},
       selected: [],
       dataset: [],
+      dotInfo: [],
       loading: true,
       setupTableVisible: false,
+      popVisible: false,
+      isGrant: false,
       tablekey: 0,
       total: 0,
       searchQuery: {
@@ -549,7 +555,7 @@ export default {
         this.dataset = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -633,8 +639,9 @@ export default {
             this.searchQuery.vo.receiptIds = ids
             this.dotInfo = ids
             this.popVisible = true
-            this.isAccept = true
-            this.isModify = false
+            // this.isAccept = true
+            // this.isModify = false
+            this.isGrant = true
             this.searchQuery.vo.receiptIds = ids
             putUpdateReceipt(this.searchQuery.vo).then(res => {
               this.$message({
@@ -659,6 +666,9 @@ export default {
     },
     setTable() {
       this.setupTableVisible = true
+    },
+    closeAddDot() {
+      this.popVisible = false
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj

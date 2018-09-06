@@ -20,6 +20,9 @@
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
           <el-input v-model="form.position" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="员工号" :label-width="formLabelWidth" prop="position">
+          <el-input v-model="form.jobNumber" auto-complete="off" :maxlength="20"></el-input>
+        </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth">
           <el-select v-model="form.sexFlag" placeholder="请选择性别">
             <el-option label="男" value="0"></el-option>
@@ -41,7 +44,7 @@
           </el-select> -->
         </el-form-item>
       </el-form>
-      <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
+      <div class="info" v-if="!isModify">注：密码默认为：123456</div>
     </template>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
@@ -225,6 +228,8 @@ export default {
         this.roleslist = this.roles
         this.departments = resArr[1]
       }).catch(err => {
+        this.$message.error('错误1：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+
         this.loading = false
         this.inited = false
       })
@@ -236,6 +241,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
+          this.$set(this.form, 'orgid', this.otherinfo.orgid)
           const data = Object.assign({}, this.form)
           let promiseObj
           data.rolesId = data.rolesId.join(',')
@@ -261,13 +267,14 @@ export default {
               type: 'success',
               message: '保存成功!'
             })
-            this.reset()
+            this.$refs['ruleForm'].resetFields()
             if (!bool) {
               this.closeMe()
             }
             this.$emit('success')
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            console.log(err)
+            // this.$message.error('错误2：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
           })
         } else {

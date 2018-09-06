@@ -651,7 +651,7 @@ export default {
             this.searchQuery.vo.receiptIds = ids
             this.dotInfo = ids
             this.popVisible = true
-                  // this.isAccept = true
+            // this.isAccept = true
             this.isModify = true
           } else {
             this.$message.warning('请选择未回收项~')
@@ -692,7 +692,6 @@ export default {
     },
     closeAddDot() {
       this.popVisible = false
-            // this.addDoTotVisible = false
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

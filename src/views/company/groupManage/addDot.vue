@@ -139,22 +139,19 @@
                       clearable></el-input>
           </el-form-item>
           <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
-            <el-input v-model="form.responsibleTelephone" auto-complete="off" :disabled="form.status===31"></el-input>
+            <el-input v-model="form.responsibleTelephone" :maxlength="11" auto-complete="off" :disabled="form.status===31"></el-input>
           </el-form-item>
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
 
 
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
-                         :disabled="form.status===31" type="city" v-model="form.city" :remote="true" clearable/>
-
-
+            :disabled="form.status===31" type="city" v-model="form.city" :remote="true" clearable/>
           </el-form-item>
           <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
             <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
           </el-form-item>
           <el-form-item label="客服电话" :label-width="formLabelWidth" clearable>
-            <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" maxlength="13"
-                      v-number-only></el-input>
+            <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" :maxlength="11" v-number-only></el-input>
           </el-form-item>
           <el-form-item label="详细地址" :label-width="formLabelWidth">
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"></el-input>
@@ -199,7 +196,7 @@
           <div class="rem-add-dot">
             <el-form-item label="备注" :label-width="formLabelWidth" prop="">
               <el-input
-
+              
                 type="textarea"
                 :rows="2"
                 placeholder="不可超300字"
@@ -472,8 +469,23 @@
       getOrgid(id) {
         this.form.parentId = id
       },
+      newDate() {
+
+      },
       reset() {
         this.$refs['ruleForm'].resetFields()
+        for (var i in this.form) {
+          this.form[i] = ''
+          if (this.form.id) {
+            delete this.form.id
+          }
+          delete this.form.createTime
+          this.form.orgType = 1
+          this.form.status = 32
+          this.form.manageType = 3
+          // this.form.parentId = this.companyId
+          this.form.parentId = this.getCheckedKeyId || this.otherinfo.orgid
+        }
       },
       closeMe(done) {
         this.$emit('close')
@@ -514,6 +526,7 @@
             reqPromise.then(res => {
               this.$emit('success', this.isModify)
               this.$message.success('保存成功')
+              this.formKey = Math.random()
               this.reset()
               if (!bool) {
                 this.closeMe()
@@ -575,6 +588,9 @@
       box-sizing: border-box;
     }
     .el-select .el-input__inner {
+      padding-right: 15px;
+    }
+    .el-input--suffix .el-input__inner{
       padding-right: 15px;
     }
   }

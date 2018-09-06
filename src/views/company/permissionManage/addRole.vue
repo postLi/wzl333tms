@@ -50,7 +50,7 @@
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('formName', true)" >保存并添加</el-button>
+          <!-- <el-button type="primary" @click="submitForm('formName', true)" >保存并添加</el-button> -->
           <el-button type="primary" @click="getCheckedNodes('formName')">保存</el-button>
           <el-button @click="closeMe">取 消</el-button>
         </div>
@@ -223,10 +223,7 @@
             promiseObj.then(res => {
               this.$emit('success')
               this.loading = false
-              this.reset()
-              if (!bool) {
-                this.closeMe()
-              }
+              this.closeMe()
               this.$message.success('保存成功')
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))

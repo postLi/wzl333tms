@@ -127,6 +127,11 @@ export default {
         width: '120',
         fixed: false
       }, {
+        label: '员工号',
+        prop: 'jobNumber',
+        width: '120',
+        fixed: false
+      }, {
         label: '登录账号',
         prop: 'username',
         width: '120',
@@ -167,10 +172,10 @@ export default {
       this.groupsArr = resArr[0]
       this.usersArr = resArr[1].list
       this.total = resArr[1].total
-    }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+    }).catch((err) => {
+      this.loading = false
+      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+    })
   },
   methods: {
     fetchAllUser(orgid, username, mobilephone) {
@@ -291,7 +296,7 @@ export default {
         this.loading = false
         this.usersArr = data.list
         this.total = data.total
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
