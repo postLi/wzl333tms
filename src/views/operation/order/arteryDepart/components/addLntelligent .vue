@@ -1,7 +1,7 @@
 <template>
   <div class="lntelligent-maintain">
-    <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading">
-      <template class='pickRelationPop-content' slot="content">
+    <el-dialog :title="popTitle" :isShow="popVisible"  class='pickpopDepMain' v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
+      <!--<template class='pickRelationPop-content' slot="content">-->
         <!--isDepMain-->
         <div class="depmain-div">
           <el-form :inline="true" class="order_bottom" label-width="80px" :rules="rules" :model="formInline"
@@ -70,13 +70,18 @@
 
         </div>
 
-      </template>
-      <div slot="footer" class="dialog-footer-frame">
-
-        <el-button @click="closeMe">取消</el-button>
-        <el-button type="primary" @click="submitForm('formName')">确定</el-button>
+      <!--</template>-->
+      <!--<div slot="footer" class="dialog-footer-frame">-->
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm('formName')">确 定</el-button>
+        <el-button @click="closeMe">取 消</el-button>
       </div>
-    </PopFrame>
+       <!--<div>-->
+         <!--<el-button @click="closeMe">取消</el-button>-->
+         <!--<el-button type="primary" @click="submitForm('formName')">确定</el-button>-->
+       <!--</div>-->
+      <!--</div>-->
+    </el-dialog>
   </div>
 
 </template>
@@ -275,6 +280,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.$router)
+
             this.$router.push(
               {
                 path: '/operation/order/loadIntelligent/components/intelligentImg',
@@ -284,6 +290,11 @@
                 }
               },
             )
+            this.closeMe()
+
+
+
+
             // this.$router.push(
             //   {
             //     path: '/operation/order/loadIntelligent/index',
@@ -366,67 +377,33 @@
 
 <style lang="scss">
   .lntelligent-maintain .pickpopDepMain {
-    top: 29%;
+    top: 12%;
     bottom: auto;
-    min-width: 550px;
-    max-width: 550px;
+    /*min-width: 550px;*/
+    /*max-width: 550px;*/
 
   }
 
-  .lntelligent-maintain {
-    .popRight-header {
-      text-align: center;
-    }
-    .popRight-content {
-      padding: 5px 10px 5px 10px;
-      box-sizing: border-box;
-      border-bottom: 1px solid #dcdfe6;
-      .el-form--inline .el-form-item {
-        margin-right: -8px;
-        margin-bottom: 5px;
+  .lntelligent-maintain .pickpopDepMain {
+    .el-dialog{
+      min-width: 550px;
+      max-width: 550px;
+      .el-dialog__header{
+        border-bottom: 1px solid #333;
+        .el-dialog__title{
+
+        }
+
+      }
+      .el-dialog__body {
+        padding: 15px 20px;
+
+      }
+      .el-dialog__footer{
         text-align: center;
-        .el-form-item__label {
-          text-align: left;
-        }
-      }
-
-      .order_bottom {
-        padding-top: 5px;
-        .el-form-item {
-          margin-right: 0;
-          margin-bottom: 20px;
-          display: block;
-          text-align: left;
-          .el-input {
-            width: 150%;
-
-          }
-        }
-      }
-      .el-input__inner {
-        height: 30px;
-        font-size: 14px;
-
-      }
-      .el-input.is-disabled {
-        .el-input__inner {
-
-          background-color: #fff;
-          color: #606266;
-        }
-
-      }
-      p {
-        margin-top: 13px;
-        font-size: 14px;
-        color: #606266;
-      }
-      .tableIntelligent {
-        .el-input {
-          width: 100%;
-        }
       }
     }
+
   }
 
 </style>

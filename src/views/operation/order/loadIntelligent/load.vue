@@ -49,6 +49,11 @@
   import SelectType from '@/components/selectType/index'
 
   export default {
+    props:{
+      model:{
+        type:Array
+      }
+    },
     components: {
       SelectType
     },
