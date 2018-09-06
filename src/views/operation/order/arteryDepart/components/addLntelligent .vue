@@ -18,47 +18,47 @@
               <!--<el-input v-model="getMentInfo.driverName" disabled></el-input>-->
             <!--</el-form-item>-->
           <!--</el-form>-->
-          <!--<el-table-->
-            <!--ref="multipleTable"-->
-            <!--:data="usersArr"-->
-            <!--stripe-->
-            <!--border-->
-            <!--@row-click="clickDetails"-->
-            <!--@selection-change="getSelection"-->
-            <!--height="160"-->
-            <!--tooltip-effect="dark"-->
-            <!--:default-sort = "{prop: 'id', order: 'ascending'}"-->
-            <!--style="width: 560px">-->
-            <!--<el-table-column-->
-              <!--fixed-->
-              <!--sortable-->
-              <!--type="selection"-->
-              <!--width="78">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--fixed-->
-              <!--sortable-->
-              <!--prop="shipSn"-->
-              <!--label="运单号"-->
-              <!--width="160">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--fixed-->
-              <!--sortable-->
-              <!--prop="shipGoodsSn"-->
-              <!--width="160"-->
-              <!--label="货号">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--fixed-->
-              <!--sortable-->
-              <!--prop="pickupFee"-->
-              <!--width="160"-->
-              <!--label="实际提货费">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
+          <el-table
+            ref="multipleTable"
+            :data="usersArr"
+            stripe
+            border
+            @row-click="clickDetails"
+            @selection-change="getSelection"
+            height="160"
+            tooltip-effect="dark"
+            :default-sort = "{prop: 'id', order: 'ascending'}"
+            style="width: 560px">
+            <el-table-column
+              fixed
+              sortable
+              type="selection"
+              width="78">
+            </el-table-column>
+            <el-table-column
+              fixed
+              sortable
+              prop="shipSn"
+              label="运单号"
+              width="160">
+            </el-table-column>
+            <el-table-column
+              fixed
+              sortable
+              prop="shipGoodsSn"
+              width="160"
+              label="货号">
+            </el-table-column>
+            <el-table-column
+              fixed
+              sortable
+              prop="pickupFee"
+              width="160"
+              label="实际提货费">
+            </el-table-column>
+          </el-table>
 
-          <el-form :inline="true"  class="order_bottom" label-width="90px" :rules="rules" :model="getMentInfo" >
+          <el-form :inline="true"  class="order_bottom" label-width="90px" :rules="rules" :model="getMentInfo" ref="formName">
             <el-form-item label="发车网点">
               <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
             </el-form-item>
@@ -77,12 +77,13 @@
 
 
         </div>
+
       </template>
       <div slot="footer" class="dialog-footer-frame" >
-        <el-button type="primary" @click="submitForm('formName')">加入列表</el-button>
-        <el-button @click="removeList">从列表移除</el-button>
+        <el-button type="primary" @click="submitForm('formName')">确定</el-button>
+        <el-button @click="removeList">取消</el-button>
       </div>
-
+      <ShowLntelligent :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></ShowLntelligent>
     </PopFrame>
   </div>
 
@@ -94,7 +95,7 @@
   import querySelect from '@/components/querySelect/index'
   import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
   import SelectTree from '@/components/selectTree/index'
-
+  import ShowLntelligent from './showLntelligent'
   export default {
     components: {
       PopFrame,
@@ -248,25 +249,29 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.loading = true
-            this.sendId.pickupFee = this.formInline.pickupFee
-            const pickupFee = this.sendId.pickupFee || ''
-            const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
+            console.log(this.$route)
+            this.$router.push({path: '/operation/order/loadIntelligent/index'})
+            console.log(this.$route)
 
-            promiseObj.then(res => {
-              this.loading = false
-              this.$message({
-                message: '添加成功~',
-                type: 'success'
-              })
-              delete this.sendId.shipId
-              this.fetchData()
-              this.reset()
-              this.$emit('success')
-            }).catch(err => {
-              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-              this.loading = false
-            })
+            // this.loading = true
+            // this.sendId.pickupFee = this.formInline.pickupFee
+            // const pickupFee = this.sendId.pickupFee || ''
+            // const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
+            //
+            // promiseObj.then(res => {
+            //   this.loading = false
+            //   this.$message({
+            //     message: '添加成功~',
+            //     type: 'success'
+            //   })
+            //   delete this.sendId.shipId
+            //   this.fetchData()
+            //   this.reset()
+            //   this.$emit('success')
+            // }).catch(err => {
+            //   this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            //   this.loading = false
+            // })
           } else {
             return false
         }
