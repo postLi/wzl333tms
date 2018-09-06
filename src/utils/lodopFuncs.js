@@ -1,8 +1,8 @@
  import { getSummaries } from './index'
  // import ExportJsonExcel from 'js-export-excel'
-//  const ExportJsonExcel = require('js-export-excel')
+ //  const ExportJsonExcel = require('js-export-excel')
  const ExportJsonExcel = require('./excel')
-//  console.log('ExportJsonExcel:', ExportJsonExcel)
+ //  console.log('ExportJsonExcel:', ExportJsonExcel)
 
  var CreatedOKLodop7766 = null
  var createTableComplate = false
@@ -222,7 +222,7 @@
      getLodop()
    }
  }
-  // 打印表格 普通table
+ // 打印表格 普通table
  export function PrintInSamplePage(obj) {
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
@@ -303,27 +303,29 @@
  // 创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info, printer) {
    try {
-     LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+     if (printer) {
+       LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+     }
      LODOP = getLodop()
      let arr = new Array()
      arr = Object.assign([], info)
      let str = ''
-     for(let item in arr){ // 没有传值的项设置位空字符串
-      if (arr[item].value === undefined || arr[item].value === null) {
-        arr[item].value = ''
-      }
+     for (let item in arr) { // 没有传值的项设置位空字符串
+       if (arr[item].value === undefined || arr[item].value === null) {
+         arr[item].value = ''
+       }
      }
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
          str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
        } else {
-        if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) ||(e.filedValue === 'valuables' && e.value) )) { // 加急urgent和普通common 需要特殊处理为打勾
-          str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
-          str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-        }else {
-          str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-          str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-        }
+         if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
+           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+         } else {
+           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+         }
        }
      })
      eval(str)
@@ -354,7 +356,7 @@
  export function SaveAsFile(obj) {
    obj = formatTableData(obj)
    // 如果是ie10+则用js-export-excel
-  // 否则用lodop
+   // 否则用lodop
    const isie = IEVersion()
    let uselodop = false
    if (isie !== -1) {
@@ -373,7 +375,7 @@
      option.fileName = obj.name
      var optionObj = {
        sheetData: [],
-      // sheetName:'sheet',
+       // sheetName:'sheet',
        sheetFilter: [],
        sheetHeader: []
        // columnWidths: [20, 20]
@@ -390,23 +392,23 @@
      optionObj.sheetData.push(sumObj)
      option.datas = [optionObj]
      var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
-    //  var toExcel = new ExportJsonExcel(option) // new
+     //  var toExcel = new ExportJsonExcel(option) // new
      toExcel.saveExcel() // 保存
    } else {
      try {
-     // let tableId = createTable(data, columns) // 重新创建打印视图table
+       // let tableId = createTable(data, columns) // 重新创建打印视图table
        const tableId = createTable(obj) // 重新创建打印视图table
        LODOP = getLodop()
        LODOP.PRINT_INIT('数据表格')
-     // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+       // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
        LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
-     // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+       // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
        LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
        LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
        LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
        LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
        LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
-     //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+       //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
        if (obj.name) {
          LODOP.SAVE_TO_FILE(obj.name + '.xls')
        } else {
@@ -432,7 +434,7 @@
      LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
      LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
      LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
-          // LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+     // LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
      if (obj.name) {
        LODOP.SAVE_TO_FILE(obj.name + '.xls')
      } else {
@@ -486,14 +488,14 @@
      } else if (fIEVersion == 10) {
        return 10
      } else {
-       return 6// IE版本<=7
+       return 6 // IE版本<=7
      }
    } else if (isEdge) {
-     return 'edge'// edge
+     return 'edge' // edge
    } else if (isIE11) {
      return 11 // IE11
    } else {
-     return -1// 不是ie浏览器
+     return -1 // 不是ie浏览器
    }
  }
 
@@ -535,7 +537,7 @@
      for (let j = 0; j < columns.length; j++) {
        const td = tbodyTr.insertCell()
        // 处理当列没有值、宽度设置等信息时，做默认值处理
-      // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
+       // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
        td.innerHTML = data[k][columns[j].prop]
        td.style.width = data[k][columns[j].width] + 'px'
        // td.setAttribute('width', data[k][columns[j].width])
