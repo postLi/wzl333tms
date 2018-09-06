@@ -136,7 +136,7 @@
           </el-form-item>
           <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
             <el-input v-model="form.responsibleName" auto-complete="off" :disabled="form.status===31"
-                      clearable></el-input>
+                      clearable :maxlength="10"></el-input>
           </el-form-item>
           <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
             <el-input v-model="form.responsibleTelephone" :maxlength="11" auto-complete="off" :disabled="form.status===31"></el-input>
@@ -147,14 +147,14 @@
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
             :disabled="form.status===31" type="city" v-model="form.city" :remote="true" clearable/>
           </el-form-item>
-          <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
-            <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
+          <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName" >
+            <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable :maxlength="10"></el-input>
           </el-form-item>
           <el-form-item label="客服电话" :label-width="formLabelWidth" clearable>
             <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" :maxlength="11" v-number-only></el-input>
           </el-form-item>
           <el-form-item label="详细地址" :label-width="formLabelWidth">
-            <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"></el-input>
+            <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" :maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
             <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" :maxlength="10"
@@ -170,7 +170,7 @@
           </el-form-item>
           <el-form-item label="预警额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.warningQuota" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only></el-input>
+                      v-number-only ></el-input>
           </el-form-item>
           <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"

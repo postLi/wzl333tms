@@ -251,6 +251,14 @@ export default {
       meta: {role: ['admin'], title: '智能配载', noCache: false}
     },
     {
+      path: '/operation/order/loadIntelligent/components/intelligentImg',
+      icon: 'QQ',
+      hidden: true,
+      name: 'intelligentImg',
+      component: _import('operation/order/loadIntelligent/components/intelligentImg'),
+      meta: {role: ['admin'], title: '智能配载', noCache: false}
+    },
+    {
       path: '/operation/order/track',
       icon: 'yygl12_genzong',
       name: 'ordertrack',

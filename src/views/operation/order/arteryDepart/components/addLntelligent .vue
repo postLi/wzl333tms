@@ -4,20 +4,13 @@
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div class="depmain-div">
-          <!--<el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth" ref="formName">-->
-            <!--<el-form-item label="提货批次">-->
-              <!--<el-input v-model="getMentInfo.pickupBatchNumber" disabled></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="派车费用">-->
-              <!--<el-input v-model="getMentInfo.truckFee" disabled></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="车牌号码">-->
-              <!--<el-input v-model="getMentInfo.truckIdNumber" disabled></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="司机姓名">-->
-              <!--<el-input v-model="getMentInfo.driverName" disabled></el-input>-->
-            <!--</el-form-item>-->
-          <!--</el-form>-->
+          <el-form :inline="true" class="order_bottom" label-width="80px" :rules="rules" :model="formInline"
+                   ref="formName">
+            <el-form-item label="到达网点" prop="orgId">
+              <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+            </el-form-item>
+
+          </el-form>
           <el-table
             ref="multipleTable"
             :data="usersArr"
@@ -25,77 +18,77 @@
             border
             @row-click="clickDetails"
             @selection-change="getSelection"
-            height="160"
+            height="200"
             tooltip-effect="dark"
-            :default-sort = "{prop: 'id', order: 'ascending'}"
-            style="width: 560px">
+            :default-sort="{prop: 'id', order: 'ascending'}"
+            style="width: 560px"
+            class="tableIntelligent"
+          >
             <el-table-column
               fixed
               sortable
               type="selection"
-              width="78">
+              width="70">
             </el-table-column>
             <el-table-column
               fixed
               sortable
               prop="shipSn"
-              label="运单号"
-              width="160">
+              label="车型"
+              width="100">
             </el-table-column>
             <el-table-column
               fixed
               sortable
               prop="shipGoodsSn"
-              width="160"
-              label="货号">
+              width="100"
+              label="承载重">
             </el-table-column>
             <el-table-column
               fixed
               sortable
               prop="pickupFee"
-              width="160"
-              label="实际提货费">
+              width="100"
+              label="承载方">
+            </el-table-column>
+            <el-table-column
+              fixed
+              sortable
+              prop="pickupFee"
+              width="155"
+              label="车费">
+              <template slot-scope="scope">
+                <el-input v-model.number="scope.row.num"
+                          :size="btnsize" v-number-only:point
+                          @change="(val)=>changeFright(scope.$index, scope.prop, val)"
+                          :disabled="selectdCheck"></el-input>
+              </template>
             </el-table-column>
           </el-table>
-
-          <el-form :inline="true"  class="order_bottom" label-width="90px" :rules="rules" :model="getMentInfo" ref="formName">
-            <el-form-item label="发车网点">
-              <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
-            </el-form-item>
-
-            <el-form-item label="选择网点" prop="shipSn">
-              <querySelect :searchFn="search" valuekey="shipSn" :param="{shipFromOrgid: otherinfo.orgid}" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
-            </el-form-item>
-            <el-form-item label="货号" prop="shipGoodsSn">
-              <querySelect :searchFn="search" :param="{shipFromOrgid: otherinfo.orgid}" valuekey="shipGoodsSn" search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
-            </el-form-item>
-            <el-form-item label="本单提货费" >
-              <el-input v-model="formInline.pickupFee" v-numberOnly></el-input>
-            </el-form-item>
-          </el-form>
-
+          <p>注：请填写车费，保证单车毛利的准确性。</p>
 
 
         </div>
 
       </template>
-      <div slot="footer" class="dialog-footer-frame" >
+      <div slot="footer" class="dialog-footer-frame">
+
+        <el-button @click="closeMe">取消</el-button>
         <el-button type="primary" @click="submitForm('formName')">确定</el-button>
-        <el-button @click="removeList">取消</el-button>
       </div>
-      <ShowLntelligent :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible" @success="fetchData" :dotInfo="selectInfo"></ShowLntelligent>
     </PopFrame>
   </div>
 
 </template>
 
 <script>
-  import { REGEX } from '@/utils/validate'
+  import {REGEX} from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
+  import {getFindShipByid, putRelevancyShip, putRremoveShip} from '@/api/operation/pickup'
   import SelectTree from '@/components/selectTree/index'
-  import ShowLntelligent from './showLntelligent'
+  import {mapGetters} from 'vuex'
+
   export default {
     components: {
       PopFrame,
@@ -112,7 +105,7 @@
         default: false
       },
       dotInfo: {
-        type: Object,
+        type: [Object, Boolean],
         default: false
       },
       createrId: [Number, String]
@@ -130,34 +123,48 @@
         } else {
           callback()
         }
-    }
+      }
 
       return {
+        selectdCheck: true,
+        btnsize: 'mini',
         selected: [],
         rules: {
+          orgId: [{required: true}],
           shipSn: [
-            { validator: validateShipNum }
+            {validator: validateShipNum}
           ],
           shipGoodsSn: [
-            { validator: validateShipNum }
+            {validator: validateShipNum}
           ]
         },
         formLabelWidth: '100',
-        usersArr: [],
+        usersArr: [
+          {
+            num: 10,
+            date: '车型'
+          },
+          {
+            num: 10,
+            date: '车型'
+          },
+          {
+            num: 10,
+            date: '车型'
+          },
+          {
+            num: 10,
+            date: '车型'
+          }
+        ],
         checked1: true,
-        popTitle: '智能配载',
+        popTitle: '填写参数',
         loading: false,
         formInline: {
           shipSn: '',
           shipGoodsSn: '',
-          pickupFee: ''
-        },
-        getMentInfo:
-        {
-          pickupBatchNumber: '',
-          truckFee: '', // 派车费用
-          truckIdNumber: '', // 车牌
-          driverName: ''// 司机姓名
+          pickupFee: '',
+          orgId: ''
         },
         sendId: {
           pickupId: '',
@@ -167,6 +174,9 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'otherinfo'
+      ]),
       isShow: {
         get() {
           return this.popVisible
@@ -177,41 +187,56 @@
     },
     watch: {
       dotInfo(newVal) {
-        this.infoData(this.dotInfo)
+        // this.infoData(this.dotInfo)
       },
       popVisible(newVal) {
-        this.fetchData()
+        // this.fetchData()
       }
     },
     mounted() {
+      this.formInline.orgId = this.otherinfo.orgid
       if (this.popVisible) {
-        this.sendId.pickupId = this.dotInfo.id
+        this.formInline.orgId = this.otherinfo.orgid
+        // alert(this.formInline.orgId)
       }
     },
     methods: {
-      infoData(item) {
-        this.getMentInfo.pickupBatchNumber = item.pickupBatchNumber
-        this.getMentInfo.driverName = item.driverName
-        this.getMentInfo.truckIdNumber = item.truckIdNumber
-        this.getMentInfo.getMentInfo = item.getMentInfo
-        this.getMentInfo.truckFee = item.truckFee
-        this.sendId.pickupId = item.id
+      changeFright(index, prop, newVal) {
+        this.usersArr[index][prop] = Number(newVal)
+        const newfreght = this.usersArr[index].num
+        if (newfreght === 0) {
+          this.usersArr[index].num = newfreght
+          this.$notify({
+            title: '提示',
+            message: '车费不能为0',
+            type: 'warning'
+          })
+        } else if (newfreght < 0) {
+          this.$notify({
+            title: '提示',
+            message: '车费不能小于0,默认为初始值',
+            type: 'warning'
+          })
+        } else {
+          this.$refs.multipleTable.toggleRowSelection(this.usersArr[index], true)
+          return this.usersArr[index].num
+        }
       },
       search(item) {
         return !item.pickupBatchNumber
       },
-      fetchFindByShipSnOrGoodSn() {
-        this.loading = true
-        return getFindShipByid(this.dotInfo.id).then(data => {
-          this.usersArr = data
-          this.loading = false
-        }).catch((err)=>{
-          this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-        })
-      },
+      // fetchFindByShipSnOrGoodSn() {
+      //   this.loading = true
+      //   return getFindShipByid(this.dotInfo.id).then(data => {
+      //     this.usersArr = data
+      //     this.loading = false
+      //   }).catch((err)=>{
+      //     this.loading = false
+      //     this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      //   })
+      // },
       fetchData() {
-        this.fetchFindByShipSnOrGoodSn()
+        // this.fetchFindByShipSnOrGoodSn()
       },
       getShipSn(order) {
         if (order) {
@@ -228,7 +253,7 @@
       closeMe(done) {
         this.reset()
         this.$emit('update:popVisible', false)
-      if (typeof done === 'function') {
+        if (typeof done === 'function') {
           done()
         }
       },
@@ -249,9 +274,24 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.$route)
-            this.$router.push({path: '/operation/order/loadIntelligent/index'})
-            console.log(this.$route)
+            console.log(this.$router)
+            this.$router.push(
+              {
+                path: '/operation/order/loadIntelligent/components/intelligentImg',
+                query: {
+                  tab:'智能配载',
+                  sendDate: this.usersArr
+                }
+              },
+            )
+            // this.$router.push(
+            //   {
+            //     path: '/operation/order/loadIntelligent/index',
+            //     query: {
+            //       sendDate: this.usersArr
+            //     }
+            //   },
+            // )
 
             // this.loading = true
             // this.sendId.pickupFee = this.formInline.pickupFee
@@ -274,89 +314,119 @@
             // })
           } else {
             return false
-        }
-        })
-    },
-      removeList() {
-        if (!this.selected.length) {
-          this.$message({
-            message: '请选择要操作的列表项~',
-            type: 'warning'
-          })
-          return false
-        }else {
-          if (this.selected.length > 1) {
-            this.$message({
-              message: '每次只能选择单条数据~',
-              type: 'warning'
-            })
-            return false
-          }        else {
-            const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
-            promiseObj.then(res => {
-              this.loading = false
-              this.$message.success("保存成功")
-              this.fetchData()
-              this.$emit('success')
-          }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-              this.loading = false
-            })
           }
-        }
+        })
+      },
+      removeList() {
+        // if (!this.selected.length) {
+        //   this.$message({
+        //     message: '请选择要操作的列表项~',
+        //     type: 'warning'
+        //   })
+        //   return false
+        // }else {
+        //   if (this.selected.length > 1) {
+        //     this.$message({
+        //       message: '每次只能选择单条数据~',
+        //       type: 'warning'
+        //     })
+        //     return false
+        //   }        else {
+        //     const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
+        //     promiseObj.then(res => {
+        //       this.loading = false
+        //       this.$message.success("保存成功")
+        //       this.fetchData()
+        //       this.$emit('success')
+        //   }).catch(err => {
+        //     this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        //       this.loading = false
+        //     })
+        //   }
+        // }
       },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
       },
       getSelection(selection) {
-        this.selected = selection
+
+        if (selection) {
+          this.selected = selection
+          this.selectdCheck = false
+          console.log(this.selectdCheck, '选中')
+        } else {
+          this.selectdCheck = true
+          console.log(this.selectdCheck, '未选中')
+        }
+
       }
     }
   }
 </script>
 
 <style lang="scss">
-  .lntelligent-maintain .pickpopDepMain{
+  .lntelligent-maintain .pickpopDepMain {
     top: 29%;
     bottom: auto;
-    min-width: 500px;
-    max-width:  500px;
+    min-width: 550px;
+    max-width: 550px;
 
   }
-  .lntelligent-maintain .popRight-content{
-    padding: 5px 10px 5px 10px;
-    box-sizing: border-box;
-    .el-form--inline .el-form-item{
-      margin-right: -8px;
-      margin-bottom: 5px;
+
+  .lntelligent-maintain {
+    .popRight-header {
       text-align: center;
     }
-    .el-input{
-      /*width: 90%;*/
-
-    }
-    .order_bottom{
-      padding-top: 5px;
-      .el-form-item{
-        margin-right: 0;
-        margin-bottom: 30px;
-        display: block;
+    .popRight-content {
+      padding: 5px 10px 5px 10px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #dcdfe6;
+      .el-form--inline .el-form-item {
+        margin-right: -8px;
+        margin-bottom: 5px;
+        text-align: center;
+        .el-form-item__label {
+          text-align: left;
+        }
       }
-    }
-    .el-input__inner{
-      height: 30px;
-      font-size: 14px;
 
-    }
-    .el-input.is-disabled {
+      .order_bottom {
+        padding-top: 5px;
+        .el-form-item {
+          margin-right: 0;
+          margin-bottom: 20px;
+          display: block;
+          text-align: left;
+          .el-input {
+            width: 150%;
+
+          }
+        }
+      }
       .el-input__inner {
+        height: 30px;
+        font-size: 14px;
 
-        background-color: #fff;
+      }
+      .el-input.is-disabled {
+        .el-input__inner {
+
+          background-color: #fff;
+          color: #606266;
+        }
+
+      }
+      p {
+        margin-top: 13px;
+        font-size: 14px;
         color: #606266;
       }
-
+      .tableIntelligent {
+        .el-input {
+          width: 100%;
+        }
+      }
     }
-
   }
 
 </style>

@@ -55,7 +55,7 @@
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId'
                  :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"/>
-    <AddLntelligent :popVisible.sync="lntelligentVisible" :isDepMain="isDepMain" @close="openlntelligent" @success="fetchData" :dotInfo="selectInfo"></AddLntelligent>
+    <AddLntelligent :popVisible.sync="lntelligentVisible"  @close="openlntelligent" @success="fetchData" :dotInfo="selectInfo"></AddLntelligent>
   </div>
 </template>
 <script>

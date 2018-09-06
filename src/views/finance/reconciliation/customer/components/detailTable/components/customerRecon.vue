@@ -95,7 +95,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>未收清单’</p>
+        <p>未收清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
