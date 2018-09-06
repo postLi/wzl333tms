@@ -2829,7 +2829,7 @@ export default {
         this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
         this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
         this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号吗
-        this.$set(obj, 'receiverAddress', this.form.receiver.customerAddress) // 收货地址
+        this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
         for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
           obj[item] = this.form.cargoList[0][item]
         }
@@ -2848,9 +2848,17 @@ export default {
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
         this.$set(obj, 'effective', this.form.tmsOrderShip.shipEffective) // 时效
+        if (this.form.tmsOrderShip.shipEffective === 95) {
+          this.$set(obj, 'urgent', this.form.tmsOrderShip.shipEffective) // 95-时效-加急
+        }else {
+          this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
+        }
         this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
-        this.$set(obj, 'controlGoods', this.shipOther) // 控货
-        this.$set(obj, 'valuables', this.shipOther) // 贵重物品
+        if (this.shipOther === 168) {
+          this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
+        }else {
+          this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
+        }
         this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
       }
       this.printDataObject = Object.assign({}, obj)

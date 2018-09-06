@@ -317,7 +317,7 @@
        if (e.filedValue === 'setting') {
          str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
        } else {
-        if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value )) { // 加急urgent和普通common 需要特殊处理为打勾
+        if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) ||(e.filedValue === 'valuables' && e.value) )) { // 加急urgent和普通common 需要特殊处理为打勾
           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
         }else {
