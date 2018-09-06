@@ -175,6 +175,7 @@ export default {
       },
       immediate: true
     },
+    
     isAccept: {
       handler(newVal) {
         if (this.isAccept) {
