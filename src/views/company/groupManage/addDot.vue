@@ -57,8 +57,8 @@
           </el-form-item>
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
-                         :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city"
-                         :remote="true" clearable/>
+            :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city"
+            :remote="true" clearable/>
 
 
           </el-form-item>
@@ -102,7 +102,7 @@
                  size="mini" :show-message="checkShowMessage" :key="formKey" v-else>
           <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
             <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 "
-                      :maxlength="15"></el-input>
+            :maxlength="15"></el-input>
           </el-form-item>
           <el-form-item label="网点类型" :label-width="formLabelWidth">
             <SelectType v-model="form.orgType" type="network_type" placeholder="请选择" class="" :disabled="isModify"/>
@@ -132,7 +132,7 @@
           </el-form-item>
           <el-form-item label="创建时间" v-if="isModify" :label-width="formLabelWidth">
             <el-input :value="form.createTime | parseTime('{y}/{m}/{d}')"
-                      :disabled="isModify || form.status===31"></el-input>
+            :disabled="isModify || form.status===31"></el-input>
           </el-form-item>
           <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
             <el-input v-model="form.responsibleName" auto-complete="off" :disabled="form.status===31"
@@ -158,23 +158,23 @@
           </el-form-item>
           <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
             <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" :maxlength="10"
-                      clearable></el-input>
+            clearable></el-input>
           </el-form-item>
           <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only></el-input>
+            v-number-only></el-input>
           </el-form-item>
           <el-form-item label="提现基准" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.benchmark" auto-complete="off" :disabled="form.status===31"
-                      v-number-only></el-input>
+            v-number-only :maxlength="9"></el-input>
           </el-form-item>
           <el-form-item label="预警额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.warningQuota" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only ></el-input>
+            v-number-only ></el-input>
           </el-form-item>
           <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"
-                      :disabled="form.status===31"></el-input>
+            :disabled="form.status===31"></el-input>
           </el-form-item>
 
           <div class="ad-add-dot" v-if="!isModify">
@@ -184,10 +184,10 @@
           <el-form-item v-if="form.accountStatus  && !isModify" :label-width="formLabelWidth" prop="accountName">
 
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
-                        tabindex="-1">
+              tabindex="-1">
               <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
               <el-input v-model.trim="form.accountName" auto-complete="off" @focus="tooltip = true"
-                        @blur="tooltip = false"></el-input>
+              @blur="tooltip = false"></el-input>
             </el-tooltip>
 
             <!--<el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>-->
