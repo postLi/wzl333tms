@@ -363,7 +363,6 @@ export default {
           } else {
             promiseObj = postTrunk(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
@@ -410,10 +409,10 @@ export default {
           this.DriverList = data.list
           this.cacheDriverList[orgid] = data.list
           this.loading = false
-        }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
       }
     }
   }

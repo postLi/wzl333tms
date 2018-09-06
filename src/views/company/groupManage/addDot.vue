@@ -33,7 +33,7 @@
           </el-form-item> -->
           <!-- <el-form-item label="经营类型" :label-width="formLabelWidth">
             <el-select v-model="form.manageType" :disabled="form.status===31" >
-              <!--<el-option v-for="item in manageType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
+              <el-option v-for="item in manageType" :key="item.id" :label="item.dictName" :value="item.id"></el-option>
               <el-option label="自营" :value="3"></el-option>
               <el-option label="加盟" :value="4"></el-option>
             </el-select>
@@ -43,7 +43,7 @@
           </el-form-item> -->
           <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
             <el-input v-model="form.responsibleName" auto-complete="off" :disabled="form.status===31"
-                      clearable></el-input>
+            clearable></el-input>
           </el-form-item>
           <el-form-item label="负责人电话" :label-width="formLabelWidth" prop="responsibleTelephone">
             <el-input v-model="form.responsibleTelephone" auto-complete="off" :disabled="form.status===31"></el-input>
@@ -52,8 +52,8 @@
           <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName">
             <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
           </el-form-item>
-          <el-form-item label="客服电话" :label-width="formLabelWidth" clearable>
-            <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"></el-input>
+          <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" clearable>
+            <el-input v-model="form.servicePhone" auto-complete="off" :maxlength="11" :disabled="form.status===31"></el-input>
           </el-form-item>
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
@@ -150,8 +150,8 @@
           <el-form-item label="客服人员" :label-width="formLabelWidth" prop="serviceName" >
             <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable :maxlength="10"></el-input>
           </el-form-item>
-          <el-form-item label="客服电话" :label-width="formLabelWidth" clearable>
-            <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" :maxlength="11" v-number-only></el-input>
+          <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" clearable>
+            <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31" :maxlength="11"></el-input>
           </el-form-item>
           <el-form-item label="详细地址" :label-width="formLabelWidth">
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" :maxlength="30"></el-input>
@@ -363,6 +363,9 @@
         rules: {
           orgName: [
             { required: true, validator: this.validateIsEmpty('请输入网点名称') }
+          ],
+          servicePhone: [
+            { required: true, pattern: REGEX.TELANDPHONE, message: '客服号码格式不正确' }
           ],
           responsibleName: [
             { validator: callBackName, trigger: 'blur' },

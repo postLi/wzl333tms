@@ -273,8 +273,8 @@ export default {
             }
             this.$emit('success')
           }).catch(err => {
-            console.log(err)
-            // this.$message.error('错误2：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            // console.log(err)
+            this.$message.error('错误2：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
           })
         } else {

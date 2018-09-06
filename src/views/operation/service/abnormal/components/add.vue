@@ -146,16 +146,16 @@
   </pop-right>
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
-  import {GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook} from '@/api/operation/dashboard'
-  import {getAllUser} from '@/api/company/employeeManage'
+  import { REGEX } from '@/utils/validate'
+  import { GetAbnormalNo, PostNewAbnormal, PutXiuGai, GetLook } from '@/api/operation/dashboard'
+  import { getAllUser } from '@/api/company/employeeManage'
   // import orderManage from '@/api/operation/orderManage'
   import popRight from '@/components/PopRight/index'
   import Upload from '@/components/Upload/singleImage2'
   import SelectTree from '@/components/selectTree/index'
   import SelectType from '@/components/selectType/index'
-  import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { mapGetters } from 'vuex'
+  import { objectMerge2 } from '@/utils/index'
   // import { parseTime } from '@/utils/index'
   import querySelect from '@/components/querySelect/index'
 
@@ -214,7 +214,7 @@
     },
     data() {
       // const _this = this
-      const validateNameSn = function (rule, value, callback) {
+      const validateNameSn = function(rule, value, callback) {
         if (value === '' || value === null || !value || value === undefined) {
           callback(new Error('请输入异常件数'))
         } else if (REGEX.ONLY_NUMBER_GT.test(value)) {
@@ -279,33 +279,33 @@
         tooltip: false,
         rules: {
           abnormalAmount: [
-            {required: true, validator: validateNameSn}
+            { required: true, validator: validateNameSn }
             // { required: true, pattern: REGEX.ONLY_NUMBER_GT, message: '件数格式不正确' }
           ],
           abnormalType: [
-            {required: true, message: '请选择异常类型', trigger: 'blur'}
+            { required: true, message: '请选择异常类型', trigger: 'blur' }
           ],
           // registerFee: [
           //   { required: true, validator: validatereg }
           // ],
           registerFee: [
-            {required: true, message: '请输入异常金额'}
+            { required: true, message: '请输入异常金额' }
           ],
           abnormalDescribe: [
-            {required: true, message: '必填'}
+            { required: true, message: '必填' }
           ],
           dutyOrgId: [
-            {required: true, message: '请选择责任网点'}
+            { required: true, message: '请选择责任网点' }
           ],
           disposeOrgId: [
-            {required: true, message: '请选择处理网点'}
+            { required: true, message: '请选择处理网点' }
           ],
           disposeOpinion: [
-            {required: true, message: '必填', trigger: 'blur'}
+            { required: true, message: '必填', trigger: 'blur' }
           ],
           shipSn: [
             // { required: true, trigger: 'blur', validator: validateshipSn}
-            {required: true, message: '请输入运单号'}
+            { required: true, message: '请输入运单号' }
           ]
         },
         // showBut: false,
@@ -337,7 +337,6 @@
       if (!this.inited) {
         this.inited = true
         this.initInfo()
-
       }
     },
     watch: {
@@ -607,7 +606,6 @@
             }
 
             promiseObj.then(res => {
-
               this.$message({
                 message: '保存成功~',
                 type: 'success'
@@ -808,21 +806,17 @@
     .uploadcard {
       padding: 20px 20px 20px 90px;
       //上传图片
-      // .el-upload--picture-card
       .el-upload-list--picture-card .el-upload-list__item {
         width: 234px;
         height: 136px;
       }
       .el-upload-dragger {
         width: 232px;
-        height: 134px;
       }
       .el-upload--picture-card {
         width: 234px;
         height: 134px;
         line-height: 30px;
-        // height:136px;
-
       }
       .upload__tip {
         line-height: 30px;

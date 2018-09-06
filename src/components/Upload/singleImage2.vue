@@ -330,9 +330,9 @@ export default {
         .el-upload--picture-card{
           line-height:43px;
         }
-        .upload__tip{
-          line-height:43px;
-        }
+        // .upload__tip{
+        //   line-height:43px;
+        // }
     }
 
 </style>

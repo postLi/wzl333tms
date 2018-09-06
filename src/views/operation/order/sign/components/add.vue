@@ -638,9 +638,13 @@ export default {
   .box_container .el-upload .el-upload-dragger{
     height:134px;
   }
+  // .box_container .upload__tip{
+  //   line-height: none;
+  // }
   .el-upload-dragger{
     width: 232px;
     height: 134px;
+    // border:none;
   }
   .el-upload--picture-card{
     width:234px;
