@@ -267,6 +267,7 @@
             <span>实际提货费</span>
           </router-link>
         </el-tooltip>
+        
         <el-tooltip placement="bottom">
           <div slot="content">
             功能：中转费
