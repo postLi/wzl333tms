@@ -55,7 +55,7 @@
               fixed
               sortable
               prop="pickupFee"
-              width="155"
+              width="130"
               label="车费">
               <template slot-scope="scope">
                 <el-input v-model.number="scope.row.num"
@@ -73,8 +73,9 @@
       <!--</template>-->
       <!--<div slot="footer" class="dialog-footer-frame">-->
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm('formName')">确 定</el-button>
         <el-button @click="closeMe">取 消</el-button>
+        <el-button type="primary" @click="submitForm('formName')">确 定</el-button>
+
       </div>
        <!--<div>-->
          <!--<el-button @click="closeMe">取消</el-button>-->
@@ -389,7 +390,8 @@
       min-width: 550px;
       max-width: 550px;
       .el-dialog__header{
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
         .el-dialog__title{
 
         }
@@ -397,7 +399,13 @@
       }
       .el-dialog__body {
         padding: 15px 20px;
-
+        border-bottom: 1px solid #ccc;
+        .depmain-div{
+          p{
+            padding-top: 10px;
+            color: #999;
+          }
+        }
       }
       .el-dialog__footer{
         text-align: center;
