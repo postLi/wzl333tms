@@ -41,7 +41,7 @@
                 <div>
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
                     <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" :maxlength="10">
-                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>   
+                      <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
                       <template slot-scope="{ item }">
                           <div class="name">{{ item.driverName }}</div>
                           <span class="addr">{{ item.driverMobile }}</span><br>
