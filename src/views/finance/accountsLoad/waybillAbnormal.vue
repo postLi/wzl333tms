@@ -67,7 +67,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -105,6 +105,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       orgLeftTable: [],
       tablekey: '',
       truckMessage: '',
@@ -460,15 +461,19 @@ export default {
       const unpaidName = 'unpaidFee' // 未结费用名
       const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
       const paidVal = this.rightTable[index][prop]
+      if (paidVal !== unpaidVal) {
+        this.$set(this.textChangeDanger, index, true)
+      }else {
+        this.$set(this.textChangeDanger, index, false)
+      }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
       } else {
-        // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
         }))
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      console.log(index, paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

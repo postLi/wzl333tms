@@ -125,7 +125,7 @@
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand" >
-                  <el-input :class="{'textChangeDanger': textChangeDanger[scope.$index]}" type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                  <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
                 </div>
                 <!-- 有返回值的列 -->
                 <div v-else>

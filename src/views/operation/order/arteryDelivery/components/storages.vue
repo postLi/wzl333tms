@@ -175,7 +175,7 @@
                             </span>
                             <span v-else>
                                <el-input
-                               :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
+                               @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
                                  v-model.number="column.slot(scope)"
                                  :size="btnsize"
                                  v-number-only
@@ -187,7 +187,7 @@
                           </div>
                           <div v-else-if="column.expand">
                             <el-input
-                              :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
+                              @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
                               v-model.number="column.slot(scope)"
                               :size="btnsize"
                               v-number-only

@@ -62,7 +62,8 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input @dbclick.stop.prevent.native type="number"  
+                  :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -100,6 +101,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
@@ -334,32 +336,32 @@ export default {
         slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '到付运费',
-        prop: 'arrivepayCarriage',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '已结到付运费',
-        prop: 'paidArrivepayCarriage',
-        width: '180',
-        fixed: false
-      },
-      {
-        label: '未结到付运费',
-        prop: 'unpaidArrivepayCarriage',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '实结到付运费',
-        prop: 'amountArrivepayCarriage',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
+        },
+        {
+          label: '到付运费',
+          prop: 'arrivepayCarriage',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '已结到付运费',
+          prop: 'paidArrivepayCarriage',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '未结到付运费',
+          prop: 'unpaidArrivepayCarriage',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '实结到付运费',
+          prop: 'amountArrivepayCarriage',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
             return scope.row.amountArrivepayCarriage
           }
       },
@@ -508,6 +510,10 @@ export default {
     }
   },
   mounted() {
+    let i = 50
+    while(i--<50){
+      this.textChangeDanger.push({})
+    }
     this.getList()
   },
   methods: {
@@ -582,9 +588,17 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
-      const paidVal = this.rightTable[index][prop]
+      let unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
+      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+       // 未结费用值
+      let paidVal = this.rightTable[index][prop]
+
+      if(paidVal !== unpaidVal){
+        this.$set(this.rightTable[index],prop + 'lyy', true)
+      } else {
+        this.$set(this.rightTable[index],prop + 'lyy', false)
+      }
+      
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], { [prop]: unpaidVal }))
@@ -687,6 +701,7 @@ export default {
           this.rightTable = this.rightTable.filter(el => {
             return el.batchNo !== e.batchNo
           })
+
           // let item = this.rightTable.indexOf(e)
           // if (item !== -1) {
           //   // 源数据减去被穿梭的数据

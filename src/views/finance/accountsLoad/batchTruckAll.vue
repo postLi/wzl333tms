@@ -62,7 +62,8 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" @dbclick.stop.prevent.native 
+                  :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -100,6 +101,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
@@ -649,6 +651,10 @@ export default {
     }
   },
   mounted() {
+    let i = 50
+    while(i--<50){
+      this.textChangeDanger.push({})
+    }
     this.getList()
   },
   methods: {
@@ -728,6 +734,11 @@ export default {
       const unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
       const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
       const paidVal = this.rightTable[index][prop]
+      if(paidVal !== unpaidVal){
+        this.$set(this.rightTable[index],prop + 'lyy', true)
+      } else {
+        this.$set(this.rightTable[index],prop + 'lyy', false)
+      }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
         this.$set(this.rightTable[index], prop, unpaidVal)
