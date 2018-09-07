@@ -175,6 +175,7 @@
                             </span>
                             <span v-else>
                                <el-input
+                               :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
                                  v-model.number="column.slot(scope)"
                                  :size="btnsize"
                                  v-number-only
@@ -186,7 +187,7 @@
                           </div>
                           <div v-else-if="column.expand">
                             <el-input
-
+                              :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
                               v-model.number="column.slot(scope)"
                               :size="btnsize"
                               v-number-only
@@ -474,6 +475,7 @@
         isEditActual: false,
         propsId: '',
         formModel: {},
+        textChangeDanger: [],
         label: '序号',
         // formModel: {
         //   addStatus: 1,
@@ -872,6 +874,14 @@
         // }
         else {
           this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
+        }
+
+        if (curAmount !== curloadAmount || curWeight !== curloadWeight || curVolume !== curloadVolume) {
+          this.textChangeDanger[index] = true
+        }else {
+          if (curAmount === curloadAmount && curWeight === curloadWeight && curVolume === curloadVolume) {
+            this.textChangeDanger[index] = false
+          }
         }
         return this.detailList[index].actualAmount && this.detailList[index].actualWeight && this.detailList[index].actualVolume
       },

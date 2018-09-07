@@ -3,27 +3,17 @@
     <div class="transferTable_head"></div>
     <div class="transferTable_main">
       <div class="transferTable_main_left" style="height:100%;" :style="showLeftStyle">
-      	<div class="transferTable_main_left_head">
+        <div class="transferTable_main_left_head">
           <b>库存运单</b>
-      	  <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowRightTable">
-	        <el-button :icon="isShowLeftTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllLeft"></el-button>
-	      </el-tooltip>
-      	</div>
-        <el-table ref="multipleTableLeft"
-        :data="leftTable"  
-        :key="tablekey" 
-        :show-overflow-tooltip="true" 
-        @row-dblclick="dclickAddItem"
-        @row-click="clickLeftRow"
-        @selection-change="getSelectionLeft" 
-        height="100%"
-        style="height: 100%;width: 100%;"
-        class="tableHeadItemBtn"
-        tooltip-effect="dark" border triped >
+          <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowRightTable">
+            <el-button :icon="isShowLeftTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllLeft"></el-button>
+          </el-tooltip>
+        </div>
+        <el-table ref="multipleTableLeft" :data="leftTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickAddItem" @row-click="clickLeftRow" @selection-change="getSelectionLeft" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
-          	<template slot-scope="scope">
-          		{{scope.$index+1}}
-          	</template>
+            <template slot-scope="scope">
+              {{scope.$index+1}}
+            </template>
           </el-table-column>
           <el-table-column fixed :render-header="setHeaderAdd" width="50">
             <template slot-scope="scope">
@@ -31,53 +21,31 @@
             </template>
           </el-table-column>
           <template v-for="column in tableColumnLeft">
-            <el-table-column 
-            :key="column.id" 
-            :prop="column.prop"
-            :fixed="column.fixed" 
-            :label="column.label" 
-            :width="column.width"
-            sortable >
+            <el-table-column :key="column.id" :prop="column.prop" :fixed="column.fixed" :label="column.label" :width="column.width" sortable>
             </el-table-column>
           </template>
         </el-table>
       </div>
-      <div class="transferTable_main_right"  style="height:100%;" :style="showRightStyle">
-      	<div class="transferTable_main_right_head">
+      <div class="transferTable_main_right" style="height:100%;" :style="showRightStyle">
+        <div class="transferTable_main_right_head">
           <b>配载清单</b><span> (可拖拽调整顺序)</span>
-      		<el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowLeftTable">
-	        <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
-	      </el-tooltip>
-      	</div>
-        <el-table ref="multipleTableRight"
-        :data="rightTable"  
-        :key="tablekey" 
-        :show-overflow-tooltip="true" 
-        @row-dblclick="dclickMinusItem"
-        @row-click="clickLeftRow"
-        @selection-change="getSelectionRight" 
-        height="100%"
-        style="height: 100%;width: 100%;"
-        class="tableHeadItemBtn"
-        tooltip-effect="dark" border triped >
+          <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowLeftTable">
+            <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
+          </el-tooltip>
+        </div>
+        <el-table ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
-          	<template slot-scope="scope">
-          		{{scope.$index+1}}
-          	</template>
+            <template slot-scope="scope">
+              {{scope.$index+1}}
+            </template>
           </el-table-column>
-          <el-table-column fixed  :render-header="setHeaderMinus" width="50">
+          <el-table-column fixed :render-header="setHeaderMinus" width="50">
             <template slot-scope="scope">
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
           <template v-for="column in tableColumnRight">
-            <el-table-column 
-            :key="column.id" 
-            :prop="column.prop"
-            :fixed="column.fixed" 
-            :label="column.label" 
-            :width="column.width"
-            sortable >
+            <el-table-column :key="column.id" :prop="column.prop" :fixed="column.fixed" :label="column.label" :width="column.width" sortable>
             </el-table-column>
           </template>
         </el-table>
@@ -240,26 +208,26 @@ export default {
   },
   mounted() {
     this.tableColumnLeft = Object.assign([], this.tableColumnLeftDepart)
-  	this.tableColumnRight = Object.assign([], this.tableColumnRightDepart)
+    this.tableColumnRight = Object.assign([], this.tableColumnRightDepart)
     this.fetchList()
   },
   computed: {
-  	showLeftStyle () {
+    showLeftStyle() {
       let showWidth = '30%'
-  	  showWidth = this.isShowLeftTable ? '100%' : (this.isShowRightTable ? '0%' : '30%')
-  	  return {
-  	  	width: showWidth,
-  	  	transition: '0.3s'
-  	  }
-  	},
-  	showRightStyle () {
+      showWidth = this.isShowLeftTable ? '100%' : (this.isShowRightTable ? '0%' : '30%')
+      return {
+        width: showWidth,
+        transition: '0.3s'
+      }
+    },
+    showRightStyle() {
       let showWidth = '70%'
-  	  showWidth = this.isShowRightTable ? '100%' : (this.isShowLeftTable ? '0%' : '70%')
-  	  return {
-  	  	width: showWidth,
-  	  	transition: '0.3s'
-  	  }
-  	}
+      showWidth = this.isShowRightTable ? '100%' : (this.isShowLeftTable ? '0%' : '70%')
+      return {
+        width: showWidth,
+        transition: '0.3s'
+      }
+    }
   },
   methods: {
     fetchList() {
@@ -295,6 +263,7 @@ export default {
       })
     },
     goLeft() { // 右边穿梭到左边
+      console.log('324534534534')
       this.selectedRight.forEach((e, index) => {
         this.leftTable = objectMerge2([], this.leftTable).filter(em => {
           return em.repertoryId !== e.repertoryId
@@ -311,62 +280,80 @@ export default {
       this.$emit('loadTable', this.rightTable)
     },
     goRight() { // 左边穿梭到右边
+      console.log('1231231234')
       this.selectedLeft.forEach((e, index) => {
-        this.leftTable = objectMerge2([], this.leftTable).filter(em => {
+        this.rightTable = this.rightTable.filter(em => {
           return em.repertoryId !== e.repertoryId
         })
-        this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
+        this.orgRightTable = this.orgRightTable.filter(em => {
           return em.repertoryId !== e.repertoryId
         })
         this.rightTable.push(e)
         this.orgRightTable.push(e)
-        this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+        this.leftTable = this.leftTable.filter(el => {
           return el.repertoryId !== e.repertoryId
         })
       })
       this.$emit('loadTable', this.rightTable)
     },
     dclickAddItem(row, event) { // 双击添加单行
-      this.addItem(row)
-    },
-    dclickMinusItem(row, event) { // 双击减去单行
-      this.minusItem(row)
-    },
-    addItem(row, index) { // 点击按钮+ 添加单行
+      console.log(row)
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.goRight()
     },
-    minusItem(row, index) { // 点击按钮- 减去单行
+    dclickMinusItem(row, event) { // 双击减去单行
+      console.log(row)
       this.selectedRight = []
       this.selectedRight.push(row)
       this.goLeft()
     },
+    addItem(row, index) { // 点击按钮+ 添加单行
+      console.log(row)
+      this.selectedLeft = []
+      this.selectedLeft[0]= row
+      this.goRight()
+    },
+    minusItem(row, index) { // 点击按钮- 减去单行
+      console.log(row)
+      this.selectedRight = []
+      this.selectedRight[0] = row
+      this.goLeft()
+    },
     addALLList() { // 添加全部
-    	this.selectedLeft = Object.assign([], this.leftTable)
-    	this.goRight()
+      this.selectedLeft = Object.assign([], this.leftTable)
+      this.goRight()
     },
     minusAllList() { // 减去全部
-    	this.selectedRight = Object.assign([], this.rightTable)
-    	this.goLeft()
+      this.selectedRight = Object.assign([], this.rightTable)
+      this.goLeft()
     },
     clickLeftRow(row) {
-      this.$refs.multipleTableLeft.toggleRowSelection(row)
+      console.log(row)
+      this.selectedLeft = []
+      this.selectedLeft[0] = row
+      // this.$refs.multipleTableLeft.toggleRowSelection(row)
+    },
+    clickRightRow (row) {
+      console.log(row)
+      this.selectedRight = []
+      this.selectedRight[0] = row
+      this.$refs.multipleTableRight.toggleRowSelection(row)
     },
     getSelectionLeft(list) {},
     getSelectionRight(list) {},
-    showAllLeft () {
-    	this.isShowLeftTable = !this.isShowLeftTable
-    	this.tableColumnLeft = this.isShowLeftTable ? Object.assign([], this.tableColumnLeftAll) : this.tableColumnLeftDepart
-    	this.showTableMessage = this.isShowLeftTable ? '点击隐藏' : '点击展开'
-    	console.log(this.isShowLeftTable, '左')
+    showAllLeft() {
+      this.isShowLeftTable = !this.isShowLeftTable
+      this.tableColumnLeft = this.isShowLeftTable ? Object.assign([], this.tableColumnLeftAll) : this.tableColumnLeftDepart
+      this.showTableMessage = this.isShowLeftTable ? '点击隐藏' : '点击展开'
+      console.log(this.isShowLeftTable, '左')
       this.$emit('showViewTable', this.isShowLeftTable)
     },
-    showAllRight () {
-    	this.isShowRightTable = !this.isShowRightTable
+    showAllRight() {
+      this.isShowRightTable = !this.isShowRightTable
       this.tableColumnRight = this.isShowRightTable ? Object.assign([], this.tableColumnRightAll) : this.tableColumnRightDepart
-    	this.showTableMessage = this.isShowRightTable ? '点击隐藏' : '点击展开'
-    	console.log(this.isShowRightTable, '右')
+      this.showTableMessage = this.isShowRightTable ? '点击隐藏' : '点击展开'
+      console.log(this.isShowRightTable, '右')
       this.$emit('showViewTable', this.isShowRightTable)
     }
   }
@@ -395,31 +382,31 @@ export default {
       height: 100%;
       transition: 0.9s;
     }
-    .transferTable_main_left_head{
+    .transferTable_main_left_head {
       border-right: 2px solid #cdf;
     }
-    .transferTable_main_right_head{
+    .transferTable_main_right_head {
       border-left: 2px solid #cdf;
     }
     .transferTable_main_left_head,
-    .transferTable_main_right_head{
-    	height: 36px;
+    .transferTable_main_right_head {
+      height: 36px;
       padding-top: 4px;
       padding-right: 4px;
-    	display: block;
-    	width: 100%;
-      b{
+      display: block;
+      width: 100%;
+      b {
         line-height: 30px;
-        margin-left:10px;
-        color:red;
+        margin-left: 10px;
+        color: red;
       }
-      span{
-        color:#999;
+      span {
+        color: #999;
         font-size: 14px;
       }
-    	.el-button--primary.is-plain{
-    		float: right;
-    	}
+      .el-button--primary.is-plain {
+        float: right;
+      }
     }
   }
   .tableHeadItemBtn {

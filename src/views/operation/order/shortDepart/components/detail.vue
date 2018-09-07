@@ -124,8 +124,8 @@
             <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else sortable>
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
-                <div v-if="column.expand">
-                  <el-input type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                <div v-if="column.expand" >
+                  <el-input :class="{'textChangeDanger': textChangeDanger[scope.$index]}" type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
                 </div>
                 <!-- 有返回值的列 -->
                 <div v-else>
@@ -170,6 +170,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       isNeedArrival: true, // true-未入库状态  false-已入库状态
       setupTableVisible: false,
       tablekey: 0,
@@ -318,12 +319,6 @@ export default {
         fixed: false
       },
       {
-        label: '配载体积',
-        prop: 'loadVolume',
-        width: '120',
-        fixed: false
-      },
-      {
         label: '发货人',
         prop: 'shipSenderName',
         width: '120',
@@ -463,7 +458,6 @@ export default {
       this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
         [prop]: curVal
       }))
-
       if (prop === 'actualAmount' && curVal === 0) {
         curVal = Number(loadVal)
         this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
@@ -475,8 +469,14 @@ export default {
           type: 'warning'
         })
       }
-
-      console.log(index, prop, loadName, curVal, loadVal, this.detailList[index].actualAmount)
+      if (curVal !== loadVal) { // 实到数量如果不等于配载数量 则字体样式变红
+        this.textChangeDanger[index] = true
+      }else {
+        if ( this.detailList[index].actualAmount === this.detailList[index].loadAmount && this.detailList[index].actualWeight === this.detailList[index].loadWeight && this.detailList[index].actualVolume === this.detailList[index].loadVolume) {
+          this.textChangeDanger[index] = false
+        }
+      }
+      console.log(curVal, loadVal, this.textChangeDanger[index])
       return curVal
     },
     changeData(newVal) { // 判断当行-废
@@ -490,6 +490,7 @@ export default {
       const curactualVolume = this.detailList[newVal].actualVolume // 应到体积
       const curactualWeight = this.detailList[newVal].actualWeight // 应到重量
       const curactualAmount = this.detailList[newVal].actualAmount // 应到件数
+      
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         this.detailList[newVal].actualAmount = curloadAmount
         // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight

@@ -26,7 +26,6 @@
               fixed
               sortable
               prop="date"
-              width="120"
               label="费用项">
             </el-table-column>
             <el-table-column

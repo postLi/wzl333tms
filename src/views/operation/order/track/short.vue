@@ -134,7 +134,7 @@ export default {
         },
         {
           label: "目的网点",
-          prop: "endOrgName",
+          prop: "arriveOrgName",
           width: "120"
         },
         {

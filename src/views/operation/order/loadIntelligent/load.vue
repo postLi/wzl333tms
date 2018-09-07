@@ -67,7 +67,7 @@ export default {
   },
   props: {
     model: {
-      type: Array
+      type: [Array, Object]
     }
   },
   data() {
@@ -80,7 +80,7 @@ export default {
       },
       loadInfoPercentOrg: [],
       loadTableInfo: [],
-      intelligentData: [],
+      intelligentData: {},
       valkey: '',
       rules: {}
     }

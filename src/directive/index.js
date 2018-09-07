@@ -20,7 +20,7 @@ const VueDirectiveObject = {
   keepNumber: function(event) {
     var hasPoint = this.hasPoint
     var pointNum = this.pointNum
-    console.log(this.value, 'this.value', event.type)
+    // console.log(this.value, 'this.value', event.type)
     // 如果第一位为小数点，则补0
     this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.').replace(new RegExp('^(\\d+)\\.(\\d{' + Math.abs(pointNum) + '}).*$'), '$1.$2') : this.value.replace(/\D/g, '').replace(/\./g, '')
   },

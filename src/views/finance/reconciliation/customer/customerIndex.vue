@@ -1,7 +1,7 @@
 <template>
   <!--v-loading="loading"-->
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="searchQuery.vo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
 
@@ -58,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    // this.searchQuery.vo.orgid = this.otherinfo.orgid
   },
   data() {
     return {
@@ -100,42 +100,41 @@ export default {
         }, {
           label: '网点',
           prop: 'orgName',
-          width: '250',
           fixed: true
         }, {
           label: '发货方',
           prop: 'customerUnit',
-          width: '200',
+          width: '150',
           fixed: true
         }, {
           label: '发货人',
           prop: 'customerName',
-          width: '200',
+          width: '150',
           fixed: false
         }, {
           label: '客户电话',
           prop: 'customerMobile',
-          width: '200',
+          width: '150',
           fixed: false
         }, {
           label: '对账合计',
           prop: 'totalFee',
-          width: '190',
+          width: '150',
           fixed: false
         }, {
           label: '应收账款',
           prop: 'receivableFee',
-          width: '190',
+          width: '150',
           fixed: false
         }, {
           label: '应付账款',
           prop: 'payableFee',
-          width: '200',
+          width: '150',
           fixed: false
         }, {
           label: '总单数',
           prop: 'totalCount',
-          width: '180',
+          width: '150',
           fixed: false
         }
       ]

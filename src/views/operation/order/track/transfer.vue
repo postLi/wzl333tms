@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfoTransfer :orgid="orgid" :id='transferId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
+      <editInfoTransfer :orgid="orgid" :id='transferId' :shipId="shipId" :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
@@ -66,6 +66,7 @@ export default {
       total: 0,
       isDisBtn: true,
       transferId: '',
+      shipId: '',
       tablekey: 0,
       selectInfo: [],
       trackInfo: {},
@@ -441,12 +442,14 @@ export default {
     getSelection(list) {
       if (this.$route.query.transfer) {
         this.transferId = this.$route.query.transfer
+        this.shipId = this.$route.query.shipId
       } else {
         if (list.length === 1) {
           this.selectInfo = Object.assign([], list)
           this.isDisBtn = false
           // let tid = this.selectInfo[0].transferId
           this.transferId = this.selectInfo[0].transferId
+          this.shipId = this.selectInfo[0].shipId
           this.trackInfo = Object.assign({}, this.selectInfo[0])
         } else if (list.length > 1) {
           this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })

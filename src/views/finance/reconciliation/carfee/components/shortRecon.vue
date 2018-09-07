@@ -147,26 +147,26 @@
           <el-table-column
             prop="orgName"
             sortable
-            width="160"
+            width="120"
             label="发车网点">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="160"
+            width="120"
             label="到达网点">
           </el-table-column>
 
           <el-table-column
             sortable
             prop="loadAmount"
-            width="140"
+            width="120"
             label="配载件数">
           </el-table-column>
           <el-table-column
             prop="loadWeight"
             label="配载重量"
-            width="140"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -174,27 +174,26 @@
           <el-table-column
             prop="loadVolume"
             sortable
-            width="160"
+            width="120"
             label="配载体积">
           </el-table-column>
           <el-table-column
             prop="driverName"
             label="司机"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shortPay"
             label="短驳费"
-            width="180"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="192"
             sortable
           >
             <template slot-scope="scope">
@@ -234,7 +233,7 @@
             fixed
             sortable
             label=""
-            width="80">
+            width="50">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAl(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                     fill="red"></icon-svg></span>
@@ -256,26 +255,26 @@
           <el-table-column
             prop="orgName"
             sortable
-            width="160"
+            width="120"
             label="发车网点">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="160"
+            width="120"
             label="到达网点">
           </el-table-column>
 
           <el-table-column
             sortable
             prop="loadAmount"
-            width="140"
+            width="120"
             label="配载件数">
           </el-table-column>
           <el-table-column
             prop="loadWeight"
             label="配载重量"
-            width="140"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -283,27 +282,26 @@
           <el-table-column
             prop="loadVolume"
             sortable
-            width="160"
+            width="120"
             label="配载体积">
           </el-table-column>
           <el-table-column
             prop="driverName"
             label="司机"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shortPay"
             label="短驳费"
-            width="180"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="192"
             sortable
           >
             <template slot-scope="scope">
@@ -581,6 +579,9 @@
           this.messageArr = data
           this.infoMessageData(this.messageArr)
           this.loading = false
+          if (this.visibleDialog) {
+            this.submit()
+          }
         }).catch(err => {
           this.newMessageData()
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
@@ -886,6 +887,7 @@
         this.delCont()
       },
       delCont() {
+        this.submit()
         this.$message({
           message: '删除成功~',
           type: 'success'

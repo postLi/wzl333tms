@@ -5,8 +5,8 @@
         <el-row class="stepItem_title">
           <el-col :span="5" class="tracktype">类型</el-col>
           <el-col :span="4">操作时间</el-col>
-          <el-col :span="3">操作网点</el-col>
-          <el-col :span="4">操作人</el-col>
+          <el-col :span="4">操作网点</el-col>
+          <el-col :span="3">操作人</el-col>
           <el-col :span="8">操作信息</el-col>
         </el-row>
         <div class="stepinfo">
@@ -16,14 +16,14 @@
               <template slot="description">
                 <el-row class="stepItem">
                   <el-col :span="5">
-                    <span class="typebox">{{item.loadStatus}}</span>
-                    <template v-if="item.addStatus===1">
+                    <span class="typebox">{{item.trackNode}}</span>
+                    <template v-if="item.trackType===1">
                       <span title="编辑" @click="editItem(item)" class="modifybtn"></span>
                       <span title="删除" @click="deleteTrack(item)" class="deletebtn"></span>
                     </template>
                   </el-col>
                   <el-col :span="4" class="">
-                    <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p>
+                    <p>{{item.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p>
                   </el-col>
                   <el-col :span="3" class="">
                     <p>{{item.orgName}}</p>
@@ -31,33 +31,30 @@
                   <el-col :span="4">
                     <p>
                       <i class="track-human" v-if="item.addStatus===1"></i>
-                      <i class="icon_blank" v-else></i> {{item.operatorUsername}}
+                      <i class="icon_blank" v-else></i> {{item.trackDetailed}}
                     </p>
                   </el-col>
                   <el-col :span="8">
-                    <p>{{item.operatorInfo}}</p>
+                    <p>{{item.trackInfo}}</p>
                   </el-col>
                 </el-row>
               </template>
             </el-step>
-            <!-- <el-step>
-              <span slot="icon" class="location"></span>
-            </el-step> -->
           </el-steps>
         </div>
       </div>
     </template>
     <div slot="footer" class="stepinfo-footer stepFrom">
       <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
-        <el-form-item label="类型" prop="loadStatus">
-          <el-input :maxlength="10" v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
+        <el-form-item label="类型" prop="trackNode">
+          <el-input :maxlength="10" v-model="formModel.trackNode" placeholder="类型" size="mini"></el-input>
         </el-form-item>
-        <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+        <el-form-item label="时间" prop="createTime">
+          <el-date-picker v-model="formModel.createTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input :maxlength="250" v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+        <el-form-item label="操作信息" prop="trackInfo">
+          <el-input :maxlength="250" v-model="formModel.trackInfo" placeholder="操作信息" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
           <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
@@ -72,7 +69,8 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
-import { getTransferTrack, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
+import order from '@/api/operation/orderManage'
+// import { getTransferTrack, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
 import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import { getSystemTime } from '@/api/common'
@@ -91,6 +89,9 @@ export default {
     },
     id: {
       type: [Number, String]
+    },
+    shipId: {
+      type: [Number, String]
     }
   },
   data() {
@@ -102,21 +103,20 @@ export default {
       trackDetail: [],
       formModel: {},
       ruleForm: {
-        loadStatus: [{ required: true, trigger: 'blur', message: '不能为空' }],
-        operatorTime: [{ required: true, trigger: 'blur', message: '不能为空' }],
-        operatorInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
+        trackNode: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        createTime: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        trackInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
       isShowBtn: true,
       isFootEdit: true,
       formModel: {
-        addStatus: 1,
-        id: 0,
-        loadId: 0,
-        loadStatus: '',
-        operatorInfo: '',
-        operatorOrgid: 1,
-        operatorTime: '',
-        operatorUserid: 0
+        createTime: '', 
+        orgid: '',
+        shipId: '',
+        trackDetailed: '',
+        trackInfo: '',
+        trackNode: '',
+        trackType: 1
       }
     }
   },
@@ -166,9 +166,10 @@ export default {
       })
     },
     getDetail() {
-      const transferId = this.id
-      return getTransferTrack(transferId).then(data => {
-        this.trackDetail = objectMerge2([], data)
+      let transferId = this.id
+      let shipId = this.shipId
+      order.getShipTrackinfo(shipId).then(data => {
+        this.trackDetail = data
       }).catch((err)=>{
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
@@ -186,7 +187,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        return deleteTrack(item.id).then(data => {
+        order.deleteTrackinfo(item.id).then(data => {
           this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
         })
@@ -200,8 +201,8 @@ export default {
       this.isModify = true
     },
     editTrack() {
-      this.formModel.transferId = this.id
-      return putUpdateTrack(this.formModel).then(data => {
+
+      order.putTrackinfo(this.formModel).then(data => {
         this.$message({ type: 'success', message: '修改成功' })
         this.getDetail()
         this.resetForm()
@@ -211,10 +212,11 @@ export default {
       })
     },
     addTrack() {
-      this.formModel.transferId = this.id
-      this.formModel.operatorTime = Date.parse(new Date(this.formModel.operatorTime))
-      return postAddTrack(this.formModel).then(data => {
-        console.log('提交：', this.formModel.operatorTime)
+      let data = objectMerge2({}, this.formModel)
+      data.createTime = +new Date(data.createTime)
+      data.shipId = this.shipId
+      data.orgid = this.otherinfo.orgid
+      order.postTrackinfo(data).then(data => {
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
         this.resetForm()
@@ -226,9 +228,9 @@ export default {
     getSystemTime() { // 获取系统时间
       if (!this.formModel.id) {
         getSystemTime().then(data => {
-            // this.formModel.operatorTime = Date.parse(new Date(data.trim()))
-          this.formModel.operatorTime = new Date(data.trim())
-          console.log('系统：', this.formModel.operatorTime)
+            // this.formModel.createTime = Date.parse(new Date(data.trim()))
+          this.formModel.createTime = new Date(data.trim())
+          console.log('系统：', this.formModel.createTime)
         })
           .catch(error => {
             this.$message({ type: 'error', message: '获取系统时间失败' })
@@ -260,16 +262,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
-// .icon_man {
-//   background-image: url(../../../../../assets/icom/human.svg);
-//   background-size: 24px;
-//   display: inline-block;
-//   width: 24px;
-//   height: 24px;
-//   vertical-align: middle;
-// }
-
+<style lang="scss">
 .icon_blank {
   background-size: 24px;
   display: inline-block;
