@@ -38,13 +38,6 @@
           <!--</el-breadcrumb>-->
         </div>
       </div>
-      <!--  <h2>智能配载</h2>
-      <h2>智能配载</h2>
-      <h2>智能配载</h2>
-      <h2>智能配载</h2>
-      <h2>智能配载</h2>
-      <h2>智能配载</h2>
-      <h2>智能配载</h2> -->
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
