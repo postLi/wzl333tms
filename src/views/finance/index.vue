@@ -231,6 +231,15 @@
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
+            功能：月结
+          </div>
+          <router-link to="/finance/accountsReceivable/arrive">
+            <i class="flowicon1 yj"></i><br>
+            <span>月结</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
             功能：回单付
           </div>
           <router-link to="/finance/accountsReceivable/receipt">
@@ -242,7 +251,7 @@
           <div slot="content">
             功能：异动费用
           </div>
-          <router-link to="/finance/accountsPayable/waybill/unusual">
+          <router-link to="/finance/accountsReceivable/abnormal">
             <i class="flowicon1 ydfy"></i><br>
             <span>异动费用</span>
           </router-link>
@@ -280,7 +289,7 @@
           <div slot="content">
             功能：异动费用
           </div>
-          <router-link to="/finance/accountsReceivable/abnormal">
+          <router-link to="/finance/accountsPayable/waybill/unusual">
             <i class="flowicon1 ydfy"></i><br>
             <span>异动费用</span>
           </router-link>
@@ -348,6 +357,15 @@
           <router-link to="./accountsPayable/batch/stationOther">
             <i class="flowicon1 fzqtf"></i><br>
             <span>发站其他费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            功能：到站装卸费
+          </div>
+          <router-link to="./accountsPayable/batch/stationOther">
+            <i class="flowicon1 dzzxf"></i><br>
+            <span>到站装卸费</span>
           </router-link>
         </el-tooltip>
         <el-tooltip placement="bottom">
@@ -516,7 +534,7 @@ export default {
         flex-wrap:wrap;
         .el-tooltip{
           //  flex-grow: 1;
-          width: 20%;
+          width: 16.5%;
           padding-top:20px;
           
         }

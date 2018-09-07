@@ -66,7 +66,7 @@
       <!-- 权限管理 -->
       <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')" :checkSystem="true"/> 
       <!-- 员工管理 -->
-      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  :popVisible.sync="addDoTotVisible2":checkSystem="true" />
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible2" :checkSystem="true" />
       <!-- 发货客户 -->
       <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true"/>
       <!-- 收货客户 -->
@@ -339,7 +339,6 @@ export default {
             self.timer = setInterval(() => {
               this.contTitleNull = true
               if (idx < len) {
-              // console.log(idx, len, arr[j].title, 666666)
                 self.contTitle = arr[j++].title
                 idx++
               } else {
@@ -401,16 +400,14 @@ export default {
     initSystem() {
       this.viewKey = new Date().getTime()
       this.type = 2
-      // this.loading = true
       this.dataset = {}
       // options获取原来的数据
       this.countList = this.$options.data().countList
       getInitializationCheck().then(data => {
         this.showani = true
         this.dataset = data
-        // this.loading = false
         for (const item in this.countList) {
-          this.countList[item].value = data[ this.countList[item].label]
+          this.countList[item].value = data[this.countList[item].label]
           this.countList[item].message = this.countList[item].message.replace(/undefined/, String(this.countList[item].value))
         }
         let resuct = 0

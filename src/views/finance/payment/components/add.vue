@@ -1,7 +1,21 @@
 <template>
    <el-dialog :title='popTitle' @close="closeMe" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="paymentStap">
     <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-          <div class="title"><i class="el-icon-info"></i>请您确认是否进行<a>{{proptitle}}</a>，总金额：<span>{{form.agencyFund}}</span>元？</div>
+          <el-form-item :label="proptitle + '日期'" class="time_input" >
+            <el-date-picker
+              v-model="searchCreatTime"
+              align="right"
+              type="date"
+              :picker-options="pickOption2"
+              placeholder="选择日期"
+              value-format="timestamp"
+            >
+            <!-- <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template> -->
+            </el-date-picker>
+          </el-form-item>
+          <div class="title">
+            <i class="el-icon-info"></i>请您确认是否进行<a>货款{{proptitle}}</a>，总金额：<span>{{form.agencyFund}}</span>元？
+          </div>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <!-- <el-button :plain="true" @click="openHTML">使用 HTML 片段</el-button>  -->
@@ -16,16 +30,14 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { putUpdateGoodsFunds } from '@/api/finance/payment'
 // import { REGEX } from '@/utils/validate'
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 // import { exportWithIframe } from '@/utils'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
-  // computed: {
-  // ...mapGetters([
-  //     'otherinfo'
-  //   ])
-  // },
   computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
     isShow: {
       get() {
         return this.popVisible
@@ -70,6 +82,8 @@ export default {
         'goodsFundsIds': [],
         'agencyFund': ''
       },
+      searchCreatTime: +new Date(),
+      pickOption2: '',
       formLabelWidth: '75px',
       tooltip: false,
       rules: {
@@ -145,6 +159,15 @@ export default {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
+          if (this.proptitle === '回收') {
+            this.$set(this.form, 'recTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          } else if (this.proptitle === '汇款') {
+            this.$set(this.form, 'remittanceTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          } else if (this.proptitle === '到账') {
+            this.$set(this.form, 'accountTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          } else if (this.proptitle === '发放') {
+            this.$set(this.form, 'giveoutTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          }
           const data = objectMerge2({}, this.form)
           data.goodsFundsIds = this.dotInfo.map(el => {
             return el.id
@@ -154,7 +177,7 @@ export default {
             this.$message({
               showClose: true,
               // duration: 0,
-              message: '贷款回收成功~',
+              message: '贷款' + this.proptitle + '成功~',
               type: 'success'
             })
             this.closeMe()
@@ -173,26 +196,11 @@ export default {
 </script>
 
 <style lang="scss">
-// .el-message--success{
-//   min-width: 428px;
-//   background: #cef0c1;
-//   position: fixed;
-//   left: 50%;
-//   top: 20px;
-//   top: 480px !important;
-  
-  
-// }
-// .el-message--success .el-message__content{
-//     color:black !important;
-//   }
-// .el-message__closeBtn{
-//   color: #90dfa8;
-//   font-weight: bold;
-// }
 .paymentStap{
   margin-top: 25vh;
-
+  .time_input{
+    margin-left:42px;
+  }
   .el-dialog{
     max-width: 445px;
     border:1px solid #cbcbcb;
@@ -239,6 +247,7 @@ export default {
     font-size: 15px;
     color:#000000;
     text-align: center;
+    margin:0;
     i{
       color:#93c0e9;
       margin-right: 10px;

@@ -151,7 +151,6 @@ export default {
       }
     }
   },
-
   data() {
     return {
       form: {
@@ -168,7 +167,7 @@ export default {
       rules: {
 
       },
-      
+
       checked1: true,
       popTitle: '',
       loading: false,

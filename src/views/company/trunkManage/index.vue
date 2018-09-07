@@ -88,10 +88,10 @@ export default {
       this.loading = false
       this.truckTypes = resArr[1]
       this.truckSources = resArr[2]
-    }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+    }).catch((err) => {
+      this.loading = false
+      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+    })
   },
   data() {
     return {
@@ -123,7 +123,7 @@ export default {
         {
           label: '序号',
           prop: 'id',
-          width: '80',
+          width: '60',
           fixed: true,
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -154,7 +154,7 @@ export default {
         }, {
           label: '可载体积（方）',
           prop: 'truckVolume',
-          width: '120',
+          width: '160',
           fixed: false
         }, {
           label: '车长',
@@ -240,7 +240,7 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })

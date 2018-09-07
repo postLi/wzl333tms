@@ -272,7 +272,7 @@
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
       
-      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
+      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
       
 </div>
@@ -511,7 +511,7 @@ export default {
         this.total = data.total
         this.loading = false
                 // console.log(data);
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
