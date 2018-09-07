@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="loadIntelligent_wrapper">
     <keep-alive>
       <component v-bind:is="component"></component>
     </keep-alive>
@@ -26,3 +26,11 @@
     }
   }
 </script>
+<style lang="scss">
+.loadIntelligent_wrapper{
+  height: 100%;
+  width:100%;
+  min-width: 1000px;
+  overflow: hidden;
+}
+</style>

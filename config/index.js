@@ -58,7 +58,7 @@ module.exports = {
         changeOrigin: true
       },
       '/huangyuwen': {
-        target: 'http://192.168.1.23:7010',
+        target: 'http://192.168.1.123:7010',
         pathRewrite: { '^/huangyuwen': '' },
         changeOrigin: true
       },

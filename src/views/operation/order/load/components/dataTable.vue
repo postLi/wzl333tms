@@ -296,6 +296,9 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
+          this.rightTable = this.rightTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => {
             return el.repertoryId !== e.repertoryId
@@ -323,6 +326,12 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = this.leftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
+          this.orgLeftTable = this.orgLeftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e)
 

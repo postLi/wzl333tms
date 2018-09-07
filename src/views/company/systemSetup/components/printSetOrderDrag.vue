@@ -470,7 +470,7 @@ export default {
           })
 
           putSettingCompanyOrder(this.formModel.labelList).then(data => {
-            this.$message({ type: 'success', message: '标签打印设置成功！' })
+            this.$message({ type: 'success', message: '运单打印设置成功！' })
             this.getSettingCompanyOrder()
             this.viewKey = new Date().getTime()
           })
