@@ -14,7 +14,10 @@
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
 
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed :render-header="setHeader" width="50">
             <template slot-scope="scope">
@@ -47,7 +50,10 @@
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column :render-header="setHeader2" fixed width="50">
             <template slot-scope="scope">
@@ -327,10 +333,10 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
-        }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
       }
     },
     changLoadData(index, prop, newVal) {
