@@ -147,7 +147,7 @@
         btnsize: 'mini',
         selected: [],
         rules: {
-          orgId: [{required: true}],
+          orgId: [{required: true,message:'到达网点不能为空'}],
           shipSn: [
             {validator: validateShipNum}
           ],
@@ -185,7 +185,8 @@
           shipSn: '',
           shipGoodsSn: '',
           pickupFee: '',
-          orgId: ''
+          orgId: '',
+          name:''
         },
         sendId: {
           pickupId: '',
@@ -194,19 +195,7 @@
         },
         searchTable: {
           'pageNum': 1,
-          'pageSize': 100,
-          // 'vo': {
-          //   'orgId': '',
-          //   dirverName: '',
-          //   truckIdNumber: '', // 车牌号
-          //   batchTypeId: '', // 批次状态
-          //   batchNo: '', // 发车批次
-          //   loadTypeId: 39, // 配载类型 38
-          //   loadEndTime: '', // 结束时间
-          //   loadStartTime: '',
-          //   departureStartTime: '',
-          //   departureEndTime: ''
-          // }
+          'pageSize': 100
         },
       }
     },
@@ -231,11 +220,11 @@
       }
     },
     mounted() {
-      this.formInline.orgId = this.otherinfo.orgid
+      // this.formInline.orgId = this.otherinfo.orgid
       this.infoFetch()
       if (this.popVisible) {
 
-        this.formInline.orgId = this.otherinfo.orgid
+        // this.formInline.orgId = this.otherinfo.orgid
         // alert(this.formInline.orgId)
       }
     },
@@ -319,11 +308,25 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            //跳到动画
+            // this.$router.push(
+            //   {
+            //     path: '/operation/order/loadIntelligent/components/intelligentImg',
+            //     query: {
+            //       tab: '智能配载',
+            //       sendData: this.usersArr.filter(el => {
+            //         return el.selectdCheck === false
+            //       })
+            //     }
+            //   },
+            // )
             this.$router.push(
               {
-                path: '/operation/order/loadIntelligent/components/intelligentImg',
+                path: '/operation/order/loadIntelligent/index',
                 query: {
                   tab: '智能配载',
+                  orgId: this.formInline.orgId,
+                  // name:
                   sendData: this.usersArr.filter(el => {
                     return el.selectdCheck === false
                   })
@@ -410,7 +413,6 @@
             el.selectdCheck = false
 
           })
-          console.log(this.selectdCheck, '选中')
         } else {
           // 3.剩下的为不可编辑状态
         }
