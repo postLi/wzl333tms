@@ -38,5 +38,13 @@ export function putCancelLoadTruck(loadIds, loadTypeId) {
  * @returns {AxiosPromise<any>}
  */
 export function putCancelLoadDepart(loadIds, loadTypeId) {
-  return fetch.put('/api-order/order/load/v1/cancelLoadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
+  return fetch.put('/api-order/aitransport/tmsstandardcar/v1/?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
+}
+
+//智能配载
+
+export function getIntnteSMainInfoList(params) {
+  return fetch.get('/api-order/aitransport/tmsstandardcar/v1/', params).then(res => {
+    return res.data || {}
+  })
 }

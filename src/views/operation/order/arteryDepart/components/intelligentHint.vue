@@ -1,78 +1,16 @@
 <template>
-  <div class="lntelligent-maintain">
+  <div class="lntelligentHint-maintain">
 
-    <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible" class='pickpopDepMain'
-               v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
-      <template>
-        <!--<i class="el-icon-edit"></i>-->
-        <!--<span class="deletebtn"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>-->
-      </template>
+    <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible"  class='pickpopDepMain' v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
+
 
       <!--<template class='pickRelationPop-content' slot="content">-->
       <!--isDepMain-->
       <div class="depmain-div">
-        <el-form :inline="true" class="order_bottom" label-width="80px" :rules="rules" :model="formInline"
-                 ref="formName">
-          <el-form-item label="到达网点" prop="orgId">
-            <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable class="orgClass"></SelectTree>
-          </el-form-item>
+        <div class="hitClass">
+          方案还没保存，确定切换按钮吗
+        </div>
 
-        </el-form>
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="200"
-          tooltip-effect="dark"
-
-          style="width: 560px"
-          class="tableIntelligent"
-        >
-          <el-table-column
-            fixed
-
-            type="selection"
-            width="60">
-          </el-table-column>
-          <el-table-column
-            fixed
-
-            prop="name"
-            label="车型"
-            width="90">
-          </el-table-column>
-          <el-table-column
-            fixed
-
-            prop="weight"
-            width="100"
-            label="承载重">
-          </el-table-column>
-          <el-table-column
-            fixed
-
-            prop="vol"
-            width="90"
-            label="承载方">
-          </el-table-column>
-          <el-table-column
-            fixed
-
-            prop="price"
-            width="138"
-
-            label="车费">
-            <template slot-scope="scope">
-              <el-input v-model.number="scope.row.price"
-                        :size="btnsize" v-number-only:point
-                        @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                        :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
-            </template>
-          </el-table-column>
-        </el-table>
         <p>注：请填写车费，保证单车毛利的准确性。</p>
 
 
@@ -97,14 +35,12 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
   import {REGEX} from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import {getFindShipByid, putRelevancyShip, putRremoveShip} from '@/api/operation/pickup'
   import SelectTree from '@/components/selectTree/index'
   import {mapGetters} from 'vuex'
-  import {getIntnteSMainInfoList} from '@/api/operation/arteryDepart'
 
   export default {
     components: {
@@ -143,6 +79,7 @@
       }
 
       return {
+        checkList: ['选中且禁用','复选框 A'],
         selectdCheck: true,
         btnsize: 'mini',
         selected: [],
@@ -157,30 +94,14 @@
         },
         formLabelWidth: '100',
         usersArr: [
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // },
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // },
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // },
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // }
+          {
+            num: 10,
+            date: '车型'
+          }
         ],
         checked1: true,
-        popTitle: '填写参数',
-        loading: true,
+        popTitle: '提示',
+        loading: false,
         formInline: {
           shipSn: '',
           shipGoodsSn: '',
@@ -191,23 +112,7 @@
           pickupId: '',
           shipId: '',
           pickupFee: ''
-        },
-        searchTable: {
-          'pageNum': 1,
-          'pageSize': 100,
-          // 'vo': {
-          //   'orgId': '',
-          //   dirverName: '',
-          //   truckIdNumber: '', // 车牌号
-          //   batchTypeId: '', // 批次状态
-          //   batchNo: '', // 发车批次
-          //   loadTypeId: 39, // 配载类型 38
-          //   loadEndTime: '', // 结束时间
-          //   loadStartTime: '',
-          //   departureStartTime: '',
-          //   departureEndTime: ''
-          // }
-        },
+        }
       }
     },
     computed: {
@@ -232,36 +137,23 @@
     },
     mounted() {
       this.formInline.orgId = this.otherinfo.orgid
-      this.infoFetch()
       if (this.popVisible) {
-
         this.formInline.orgId = this.otherinfo.orgid
         // alert(this.formInline.orgId)
       }
     },
     methods: {
-      infoFetch() {
-        this.loading = true
-        return getIntnteSMainInfoList(this.searchTable).then(data => {
-          this.usersArr = data.list
-          this.loading = false
-        }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-          this.loading = false
-        })
-      },
       changeFright(index, prop, newVal) {
         this.usersArr[index][prop] = Number(newVal)
-        const newfreght = this.usersArr[index].price
+        const newfreght = this.usersArr[index].num
         if (newfreght === 0) {
-          this.usersArr[index].price = newfreght
+          this.usersArr[index].num = newfreght
           this.$notify({
             title: '提示',
             message: '车费不能为0',
             type: 'warning'
           })
         } else if (newfreght < 0) {
-          this.usersArr[index].price = newfreght
           this.$notify({
             title: '提示',
             message: '车费不能小于0,默认为初始值',
@@ -269,7 +161,7 @@
           })
         } else {
           this.$refs.multipleTable.toggleRowSelection(this.usersArr[index], true)
-          return this.usersArr[index].price
+          return this.usersArr[index].num
         }
       },
       search(item) {
@@ -308,7 +200,12 @@
         }
       },
       reset() {
-        // this.usersArr = []
+        // this.formInline = this.setObject(this.formInline)
+        this.formInline = Object.assign({}, this.formInline)
+
+        this.formInline.shipSn = ''
+        this.formInline.shipGoodsSn = ''
+        this.formInline.pickupFee = ''
       },
       setObject(obj1, obj2) {
         for (var i in obj1) {
@@ -319,18 +216,20 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            console.log(this.$router)
+
             this.$router.push(
               {
                 path: '/operation/order/loadIntelligent/components/intelligentImg',
                 query: {
-                  tab: '智能配载',
-                  sendData: this.usersArr.filter(el => {
-                    return el.selectdCheck === false
-                  })
+                  tab:'智能配载',
+                  sendDate: this.usersArr
                 }
               },
             )
             this.closeMe()
+
+
 
 
             // this.$router.push(
@@ -398,21 +297,14 @@
         this.$refs.multipleTable.toggleRowSelection(row)
       },
       getSelection(selection) {
-        // 1.全部置为不可编辑状态
-        this.usersArr.forEach(el => {
-          el.selectdCheck = true
-        })
 
-        // 2.选中的改为可编辑状态
         if (selection) {
           this.selected = selection
-          this.selected.forEach(el => {
-            el.selectdCheck = false
-
-          })
+          this.selectdCheck = false
           console.log(this.selectdCheck, '选中')
         } else {
-          // 3.剩下的为不可编辑状态
+          this.selectdCheck = true
+          console.log(this.selectdCheck, '未选中')
         }
 
       }
@@ -421,45 +313,38 @@
 </script>
 
 <style lang="scss">
-
-
-  .lntelligent-maintain .pickpopDepMain {
+  .lntelligentHint-maintain .pickpopDepMain {
     top: 12%;
     bottom: auto;
-    .el-dialog {
-      min-width: 550px;
-      max-width: 550px;
+    .el-dialog{
+      min-width: 390px;
+      max-width: 390px;
       border-radius: 8px;
-      .el-dialog__header {
+      .el-dialog__header{
         border-bottom: 1px solid #ccc;
 
         /*text-align: center;*/
-        .el-dialog__title {
-          color: rgb(100, 186, 245);
+        .el-dialog__title{
+          color: rgb(100,186,245);
         }
 
       }
       .el-dialog__body {
         padding: 20px 35px;
-        border-bottom: 1px solid rgb(100, 186, 245);
-        .depmain-div {
-          .order_bottom {
-            .el-form-item.is-required {
-              width: 100%;
-              .el-select.select-tree.orgClass {
-                width: 185%;
-              }
-
-            }
+        border-bottom: 1px solid rgb(100,186,245);
+        .depmain-div{
+          .hitClass{
+            text-align: center;
+            padding: 40px 0 80px 0;
+            color: rgb(69,69,69);
           }
-
-          p {
+          p{
             padding-top: 20px;
-            color: rgb(254, 52, 52);
+            color: rgb(254,52,52);
           }
         }
       }
-      .el-dialog__footer {
+      .el-dialog__footer{
         text-align: right;
       }
     }
@@ -467,3 +352,4 @@
   }
 
 </style>
+

@@ -20,6 +20,10 @@
           'otherinfo'
         ])
       },
+      mounted() {
+        console.log(this.$route.query,'路由跳转')
+        // this.searchQuery.vo.memberId = this.$route.query.id
+      },
       methods:{
         openInteligent(){
           this.$router.push(
