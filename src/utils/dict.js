@@ -3,11 +3,12 @@ import * as $const from '@/utils/constant'
 const TMS_DICT_OBJECT = {
   'fee_status': [],
   'ship_shipIdentifying': {
-    '转': '<i class="ship-zhuan"></i>',
-    '拆': '<i class="ship-chai"></i>',
-    '改': '<i class="ship-gai"></i>',
-    '控': '<i class="ship-kong"></i>',
-    '异': '<i class="ship-yi"></i>'
+    '转': '<i title="运单已被中转外发" class="ship-zhuan"></i>',
+    '拆': '<i title="运单已被拆分" class="ship-chai"></i>',
+    '改': '<i title="运单已被修改" class="ship-gai"></i>',
+    '控': '<i title="等通知放货" class="ship-kong"></i>',
+    '异': '<i title="运单有异常" class="ship-yi"></i>',
+    '急': '<i title="此单需要加急处理" class="ship-ji"></i>'
   }
 }
 

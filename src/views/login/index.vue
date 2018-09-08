@@ -27,12 +27,12 @@
          </el-input>
         </el-form-item> -->
           <el-form-item prop="username">
-            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable>
+            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="11" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable>
               <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password" class="previewPwd">
-            <el-input name="password" :type="!isview? 'password' : 'text'" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
+            <el-input name="password" :maxlength="20" :type="!isview? 'password' : 'text'" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
               <template slot="prepend">
                 <i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i>
                 <!-- 两种写法都可以 -->

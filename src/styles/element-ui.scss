@@ -49,8 +49,8 @@ $bodercolor: #d0d7e5;
           text-align:center;
       }
   }
-  .unauth{
-      color: #f00;
+  .unauth, .red{
+      color: #ef0000;
   }
 }
 .el-table td, .el-table th{
@@ -196,4 +196,8 @@ $bodercolor: #d0d7e5;
 // anfa-tms\src\views\operation\service\controlgoods\components\search.vue
 .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
   width:200px;
+}
+
+.el-tabs--border-card>.el-tabs__content{
+  padding: 10px;
 }

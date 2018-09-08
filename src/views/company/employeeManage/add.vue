@@ -20,10 +20,10 @@
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
           <el-input v-model="form.position" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="员工号" :label-width="formLabelWidth" prop="position">
+        <el-form-item label="员工号" :label-width="formLabelWidth" prop="jobNumber">
           <el-input v-model="form.jobNumber" auto-complete="off" :maxlength="20"></el-input>
         </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth">
+        <el-form-item label="性别" prop="sexFlag" :label-width="formLabelWidth">
           <el-select v-model="form.sexFlag" placeholder="请选择性别">
             <el-option label="男" value="0"></el-option>
             <el-option label="女" value="1"></el-option>
@@ -32,7 +32,7 @@
         <el-form-item label="归属网点" :label-width="formLabelWidth" prop="orgid">
           <SelectTree filterable v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
-        <el-form-item label="权限角色" :label-width="formLabelWidth">
+        <el-form-item label="权限角色" :label-width="formLabelWidth" prop="rolesId">
           <el-select collapse-tags filterable  multiple v-model="form.rolesId" :filter-method="makefilter" placeholder="请选择权限">
             <el-option v-for="item in roleslist" :key="item.id" :label="item.roleName" :value="item.id"><span class="query-input-myautocomplete" v-html="highLight(item,'roleName')"> </span></el-option>
           </el-select>
@@ -237,11 +237,19 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
+    reset() {
+      // 缓存上一次选择的网点
+      const orgid = this.form.orgid
+      this.$refs['ruleForm'].resetFields()
+      console.log('id', orgid, this.form.orgid)
+
+      this.form.orgid = orgid
+    },
     submitForm(formName, bool) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$set(this.form, 'orgid', this.otherinfo.orgid)
+          // this.$set(this.form, 'orgid', this.otherinfo.orgid)
           const data = Object.assign({}, this.form)
           let promiseObj
           data.rolesId = data.rolesId.join(',')
@@ -267,7 +275,7 @@ export default {
               type: 'success',
               message: '保存成功!'
             })
-            this.$refs['ruleForm'].resetFields()
+            this.reset()
             if (!bool) {
               this.closeMe()
             }

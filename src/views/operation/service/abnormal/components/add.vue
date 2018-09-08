@@ -11,11 +11,11 @@
           <el-form-item label="运单号" prop="shipSn">
             <!--<el-input v-model="formInline.shipSn"></el-input>-->
             <querySelect valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" :key="querykey"
-                         v-model="form.shipSn" :disabled="isCheck || isDeal ? true : false"/>
+                         v-model="form.shipSn" :disabled="(isCheck || isDeal || shipSn) ? true : false"/>
           </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
             <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" :key="querykey" type="order" @change="getShipSn"
-                         v-model="form.shipGoodsSn" :disabled="isCheck || isDeal ? true : false"/>
+                         v-model="form.shipGoodsSn" :disabled="(isCheck || isDeal || shipSn) ? true : false"/>
             <!-- <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input> -->
           </el-form-item>
 
@@ -190,6 +190,10 @@
       id: {
         type: [Number, String]
       },
+      shipSn: {
+        type: [String, Number],
+        default: ''
+      },
       companyId: {
         type: [Number, String]
       },
@@ -334,6 +338,8 @@
     },
     mounted() {
       this.form.orgid = this.orgid
+  
+      console.log('shis,.shipsnd', this.shipSn)
       if (!this.inited) {
         this.inited = true
         this.initInfo()
@@ -433,6 +439,7 @@
           for (const i in this.form) {
             this.form[i] = ''
           }
+          this.form.shipSn = this.shipSn
           delete this.form.id
           // this.form.orgid = this.orgid
         }

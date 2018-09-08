@@ -1,6 +1,6 @@
 <template>
-<el-container :key="viewKey" class="check_box">
-  <el-header style="height:87px">
+<el-container  class="check_box">
+  <el-header :key="viewKey" style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
       <h6>系统体检：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙您更好的使用系统。</h6>
@@ -29,9 +29,9 @@
     <div class="main_checker" v-if="type===1">
       <el-button type="primary" @click="doAction('init')">初始化检查</el-button>
     </div>
-    <div class="main_checker2" v-else-if="type===2">
+    <div class="main_checker2"  v-else-if="type===2">
       <h6>公司管理</h6>
-      <div class="company_content">
+      <div class="company_content" :key="viewKey">
         <ul :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
           <li v-for="(item, index) in countList" :key="index">
             <p v-if="item.value > 0">
@@ -66,7 +66,7 @@
       <!-- 权限管理 -->
       <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')" :checkSystem="true"/> 
       <!-- 员工管理 -->
-      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible2" :checkSystem="true" />
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible2" @success="fetchData('addUser')" :checkSystem="true" />
       <!-- 发货客户 -->
       <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true"/>
       <!-- 收货客户 -->
@@ -271,6 +271,10 @@ export default {
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
     fetchData(type) {
+      // 写这么多分支，里面执行的代码不都是一样的的嘛。。。
+      if (type === 'addUser') {
+        this.initSystem()
+      }
       if (type === 'addOrg') {
         this.initSystem()
         // this.closeAddDot()

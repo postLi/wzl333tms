@@ -117,6 +117,7 @@ export default {
       if (key && value) {
         this.searchForm.type = key
         this.searchForm.value = value
+        this.searchForm.orgid = ''
       }
     },
     onSubmit() {

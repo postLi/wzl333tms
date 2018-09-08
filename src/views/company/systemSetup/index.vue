@@ -165,6 +165,10 @@
                 <SelectType type="notify_cargo_rule" v-model="form.shipPageFunc.notifyCargoRule" >
                 </SelectType>
               </el-form-item>
+              <el-form-item>
+                运单名称
+                <el-input v-model="form.shipPageFunc.orderName" />
+              </el-form-item>
             </div>
           </div>
           <!-- 运单权限 -->
@@ -180,6 +184,12 @@
                 </el-form-item>
                 <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.onlyDeleteOwnShip">只能删除自己开的运单</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.selectOrderSetting">是否可查询全公司运单</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.controlgoodsVisibleRule">其他网点是否可看控货信息</el-checkbox>
                 </el-form-item>
             </div>
           </div>
@@ -419,7 +429,9 @@ export default {
         'shipPermission': {
           'onlyInvalidOwnShip': '0',
           'onlyUpdateOwnShip': '0',
-          'onlyDeleteOwnShip': '0'
+          'onlyDeleteOwnShip': '0',
+          'selectOrderSetting': '1', // 是否可查询全公司运单
+          'controlgoodsVisibleRule': '1' // 其他网点是否可看控货信息
         },
         'module': 'order',
         'cargoNo': {
@@ -476,7 +488,8 @@ export default {
           'toCityByAdministrativeRegion': '0',
           'notifyCargoRule': '',
           'shipTimeRule': '',
-          'shipFieldSign': '1'
+          'shipFieldSign': '1',
+          orderName: '收发货凭证' // 开单页面标题
         },
         'orgid': 1
       }
@@ -495,7 +508,7 @@ export default {
   methods: {
     initPrinter() {
       this.printers = Object.assign([], CreatePrinterList())
-       for(let item in this.printers) {
+      for (const item in this.printers) {
         this.printers[item] = this.printers[item].replace(/%^/g, '\\')
       }
     },
@@ -532,12 +545,11 @@ export default {
         this.form = data
         this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
         this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
-        for(let item in this.form.printSetting) {
-
-        this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
-        console.log(this.form.printSetting[item])
-      }
-      }).catch((err)=>{
+        for (const item in this.form.printSetting) {
+          this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
+          console.log(this.form.printSetting[item])
+        }
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -580,11 +592,11 @@ export default {
     },
     saveData() {
       // 转译一下打印的\\字符
-      let formPrintSetting = Object.assign({}, this.form.printSetting)
-      for(let item in formPrintSetting) {
+      const formPrintSetting = Object.assign({}, this.form.printSetting)
+      for (const item in formPrintSetting) {
         formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
       }
-      let form = Object.assign({}, this.form)
+      const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
       console.log(form)
       putSetting(form).then(res => {
@@ -593,7 +605,7 @@ export default {
           message: '保存成功',
           type: 'success'
         })
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
