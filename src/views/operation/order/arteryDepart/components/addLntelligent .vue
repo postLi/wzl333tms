@@ -7,13 +7,14 @@
           <el-form :inline="true" class="order_bottom" label-width="80px" :rules="rules" :model="formInline"
                    ref="formName">
             <el-form-item label="到达网点" prop="orgId">
-              <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+              <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable size="mini"></SelectTree>
             </el-form-item>
 
           </el-form>
           <el-table
             ref="multipleTable"
             :data="usersArr"
+            
             stripe
             border
             @row-click="clickDetails"
@@ -28,14 +29,13 @@
               fixed
               sortable
               type="selection"
-              width="70">
+              width="35">
             </el-table-column>
             <el-table-column
               fixed
               sortable
               prop="shipSn"
-              label="车型"
-              width="100">
+              label="车型">
             </el-table-column>
             <el-table-column
               fixed
@@ -59,6 +59,7 @@
               label="车费">
               <template slot-scope="scope">
                 <el-input v-model.number="scope.row.num"
+
                           :size="btnsize" v-number-only:point
                           @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                           :disabled="selectdCheck"></el-input>
@@ -66,8 +67,6 @@
             </el-table-column>
           </el-table>
           <p>注：请填写车费，保证单车毛利的准确性。</p>
-
-
         </div>
 
       <!--</template>-->
@@ -398,7 +397,7 @@
 
       }
       .el-dialog__body {
-        padding: 15px 20px;
+        padding: 10px 15px;
         border-bottom: 1px solid #ccc;
         .depmain-div{
           p{

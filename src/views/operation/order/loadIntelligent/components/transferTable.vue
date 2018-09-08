@@ -4,7 +4,7 @@
     <div class="transferTable_main">
       <div class="transferTable_main_left" style="height:100%;" :style="showLeftStyle">
         <div class="transferTable_main_left_head">
-          <b>库存运单</b>
+          <b v-if="!isShowRightTable">库存运单</b>
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowRightTable">
             <el-button :icon="isShowLeftTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllLeft"></el-button>
           </el-tooltip>
@@ -28,12 +28,14 @@
       </div>
       <div class="transferTable_main_right" style="height:100%;" :style="showRightStyle">
         <div class="transferTable_main_right_head">
-          <b>配载清单</b><span> (可拖拽调整顺序)</span>
+          <b v-if="!isShowLeftTable">配载清单</b><span v-if="!isShowLeftTable"> (可拖拽调整顺序)</span>
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowLeftTable">
             <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
           </el-tooltip>
         </div>
-        <el-table ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
+        <el-table
+         draggable='true' @dragstart='drag($event)'
+         ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
             <template slot-scope="scope">
               {{scope.$index+1}}
@@ -55,6 +57,7 @@
   </div>
 </template>
 <script>
+  import draggable from 'vuedraggable'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import { objectMerge2 } from '@/utils/index'
 export default {
@@ -366,7 +369,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  border: 2px solid #cdf;
+  border: 1px solid #cdf;
   .transferTable_main {
     display: flex;
     flex-direction: row;
@@ -383,10 +386,10 @@ export default {
       transition: 0.9s;
     }
     .transferTable_main_left_head {
-      border-right: 2px solid #cdf;
+      border-right: 1px solid #cdf;
     }
     .transferTable_main_right_head {
-      border-left: 2px solid #cdf;
+      border-left: 1px solid #cdf;
     }
     .transferTable_main_left_head,
     .transferTable_main_right_head {

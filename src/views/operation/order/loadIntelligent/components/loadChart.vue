@@ -7,13 +7,13 @@
       </el-tooltip>
     </div>
     <div class="loadChart_chart" :style="{ flexDirection:isShowChart? 'row' : 'column' }">
-      <div class="chartItem">
+      <div class="chartItem bggreen" :style="chartItemWeight" ref="echartItemWeight">
         <b>重量装载率</b>
-        <div :class="className" :id="idWeigth" :style="{height:height,width:width}" ref="echartWeight"></div>
+        <div class="chartItemDetail" :style="chartWeightStyle" ref="echartWeight"></div>
       </div>
-      <div class="chartItem">
+      <div class="chartItem bgblue" :style="{height: isShowChart ? '100%' :'50%'}"  ref="echartItemVolumn">
         <b>体积装载率</b>
-        <div :class="className" :id="idVolume" :style="{height:height,width:width}" ref="echartVolume"></div>
+        <div class="chartItemDetail" :style="chartVolumnStyle" ref="echartVolume"></div>
       </div>
     </div>
   </div>
@@ -78,6 +78,27 @@ export default {
       default: '100%'
     }
   },
+  computed: {
+    chartItemWeight () {
+      return {
+        height: this.isShowChart ? '100%' : '50%',
+        borderBottom: this.isShowChart ? 'none' : '1px solid #cdf',
+        borderRight: this.isShowChart ? '1px solid #cdf' : 'none'
+      }
+    },
+    chartWeightStyle () {
+      return {
+        height: '100%',
+        width:  '100%'
+      }
+    },
+    chartVolumnStyle () {
+      return {
+        height: '100%',
+        width:  '100%'
+      }
+    }
+  },
   mounted() {
     this.initChart()
   },
@@ -87,6 +108,10 @@ export default {
       this.initData()
       this.initChartWeight()
       this.initChartVolume()
+      window.addEventListener('resize', this.resizeChart.bind(this))
+      // window.addEventListener('resize', function () {
+      //   this.$refs.echartWeight.resize()
+      // })
     },
     showAllChart() {
       this.isShowChart = !this.isShowChart
@@ -111,7 +136,7 @@ export default {
         series: [{
           name: '总载重',
           type: 'pie',
-          radius: '50%',
+          radius: '45%',
           label: {
             normal: {
               show: true,
@@ -141,9 +166,14 @@ export default {
         }]
       })
     },
+    resizeChart(){
+      this.chart.resize()
+      this.chart2.resize()
+    },
     initChartVolume() {
-      this.chart = echarts.init(this.$refs.echartVolume)
-      this.chart.setOption({
+      this.chart2 = echarts.init(this.$refs.echartVolume)
+      
+      this.chart2.setOption({
         title: {
           subtextStyle: {
             fontSize: 14,
@@ -159,7 +189,7 @@ export default {
         series: [{
           name: '总载立方',
           type: 'pie',
-          radius: '50%',
+          radius: '45%',
           label: {
             normal: {
               show: true,
@@ -200,42 +230,48 @@ export default {
 </script>
 <style lang="scss">
 .loadChart_wrapper {
-  // padding: 10px;
-  // width:100%;
+  width: 100%;
   height: 100%;
-  margin-left: 10px;
-  border: 2px solid #cdf;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #cdf;
   .loadChart_head {
-    height: 36px;
+    height: 38px;
     width: 100%;
     padding-right: 5px;
     padding-top: 3px;
+    border-bottom: 1px solid #cdf;
     .el-button--primary.is-plain {
       float: right;
     }
   }
   .loadChart_chart {
-    border-top: 1px solid #cdf;
     width: 100%;
-    height: calc(100% - 35px);
+    height: 100%;
     display: flex;
     flex-direction: column;
+    .bggreen {
+    }
+    .bgblue {
+      background: #eee;
+    }
     .chartItem {
-      flex-grow: 1;
-      width: 100%;
-      height: 50%;
-      border: 1px solid #cdf;
+      flex: 1;
       position: relative;
-      text-align: center;
       b {
         color: red;
         position: absolute;
         top: 10px;
         left: 10px;
       }
-      .chartItemDetail {
-        height: 100%;
+      .chartItemDetail{
+        display: block;
+        text-align: center;
       }
+      canvas{
+          height: 100%;
+          width: 100%;
+        }
     }
   }
 }

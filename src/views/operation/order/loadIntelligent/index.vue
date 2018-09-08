@@ -30,7 +30,8 @@
 .loadIntelligent_wrapper{
   height: 100%;
   width:100%;
-  min-width: 1000px;
-  overflow: hidden;
+  min-width: 1500px;
+  min-height: 600px;
+  // overflow: hidden;
 }
 </style>
