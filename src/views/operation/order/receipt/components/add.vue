@@ -174,6 +174,7 @@ export default {
       type: ''
     }
   },
+  
   mounted() {
     console.log(this.info)
   },
