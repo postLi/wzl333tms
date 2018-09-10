@@ -147,13 +147,21 @@
         })
         this.loading = true
         return getIntnteInit(this.sendRoute).then(data => {
-          this.intelligentData = data.transp[0].standacars
-          this.intelligentData.forEach((e, index) => {
+          
+          if (data) {
+            this.intelligentData = data.transp[0].standacars
+            this.intelligentData.forEach((e, index) => {
             this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
           })
+          }else {
+            this.eventBus.$emit('closeCurrentView')
+            this.$message({type: 'warning', message:'无配载信息'})
+
+          }
           this.loading = false
         }).catch(err => {
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+
           this.loading = false
         })
       },

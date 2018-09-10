@@ -465,6 +465,11 @@
           this.$set(e, 'tmsOrderLoad', curinfo)
           this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
           this.$set(data, 'tmsOrderLoadFee', e.tmsOrderLoadFee)
+          e.carLoadDetail.forEach(em => {
+            em.loadAmount = em.repertoryAmount
+            em.loadWeight = em.repertoryWeight
+            em.loadVolume = em.repertoryVolume
+          })
           this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
           this.$set(this.loadDataArray, index, data)
           data = {}
@@ -479,7 +484,7 @@
             this.setData()
             // console.log('loadDataArray', this.loadDataArray)
             postIntnteSmartLoad(this.loadDataArray).then(res => {
-              this.$message({type: 'warning', message: '保存配载'})
+              this.$message({type: 'success', message: '保存配载'})
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
               this.loading = false

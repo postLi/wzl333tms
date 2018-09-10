@@ -222,7 +222,16 @@ export default {
   watch: {
     loadTable: { // 深度监听数组变换
       handler(cval, oval) { // 拿到智能配载返回的数据
-        
+        if (cval) {
+          cval.right.forEach(el => {
+            el.forEach(e => {
+              e.loadAmount = e.repertoryAmount
+        e.loadWeight = e.repertoryWeight
+        e.loadVolume = e.repertoryVolume
+            })
+            
+          })
+        }
         this.orgData = Object.assign([], cval)
         this.orgRightTable = Object.assign([], cval.right)
         this.$nextTick(() => {
@@ -266,16 +275,17 @@ export default {
       this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
       this.rightTable.forEach(e => {
         e.loadAmount = e.repertoryAmount
-        e.cargoWeight = e.repertoryWeight
-        e.cargoVolume = e.repertoryVolume
+        e.loadWeight = e.repertoryWeight
+        e.loadVolume = e.repertoryVolume
       })
 
       let arr = [] // 存储所有被配载的运单
       this.orgRightTable.forEach((e, index) => {
-        e.loadAmount = e.repertoryAmount
-        e.cargoWeight = e.repertoryWeight
-        e.cargoVolume = e.repertoryVolume
+        
         e.forEach(em => {
+          em.loadAmount = em.repertoryAmount
+        em.loadWeight = em.repertoryWeight
+        em.loadVolume = em.repertoryVolume
           arr.push(em)
         })
       })
@@ -299,8 +309,8 @@ export default {
       getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => { // 库存运单列表
           data.data.forEach(e => {
             e.loadAmount = e.repertoryAmount
-            e.cargoWeight = e.repertoryWeight
-            e.cargoVolume = e.repertoryVolume
+        e.loadWeight = e.repertoryWeight
+        e.loadVolume = e.repertoryVolume
           })
           this.loading = true
           this.orgLeftTable = data.data
@@ -338,6 +348,9 @@ export default {
     },
     goLeft() { // 右边穿梭到左边
       this.selectedRight.forEach((e, index) => {
+        e.loadAmount = e.repertoryAmount
+        e.loadWeight = e.repertoryWeight
+        e.loadVolume = e.repertoryVolume
         this.leftTable = objectMerge2([], this.leftTable).filter(em => {
           return em.repertoryId !== e.repertoryId
         })
@@ -359,8 +372,8 @@ export default {
     goRight() { // 左边穿梭到右边
       this.selectedLeft.forEach((e, index) => {
         e.loadAmount = e.repertoryAmount
-        e.cargoWeight = e.repertoryWeight
-        e.cargoVolume = e.repertoryVolume
+        e.loadWeight = e.repertoryWeight
+        e.loadVolume = e.repertoryVolume
         this.rightTable = this.rightTable.filter(em => {
           return em.repertoryId !== e.repertoryId
         })

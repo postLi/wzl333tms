@@ -45,12 +45,12 @@ export function putCancelLoadDepart(loadIds, loadTypeId) {
 
 export function getIntnteSMainInfoList(params) {
   return fetch.get('/api-order/aitransport/tmsstandardcar/v1/', params).then(res => {
-    return res.data || {}
+    return res.data 
   })
 }
 export function getIntnteInit(params) {
   return fetch.post('/api-order/aitransport/intelligen/v1/init', params).then(res => {
-    return res.data || {}
+    return res.data
   })
 }
 export function postIntnteSmartLoad(params) {
