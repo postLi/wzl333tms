@@ -87,9 +87,11 @@
                         <el-input v-model="intelligentData.dirverMobile"></el-input>
                       </el-form-item>
                       <el-form-item label="到达日期">
-                        <el-date-picker size="mini" v-model="intelligentData.planArrivedTime"
-                                        value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="到达日期">
+                        <el-date-picker size="mini" v-model="intelligentData.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                         </el-date-picker>
+                        <!--<el-date-picker size="mini" v-model="intelligentData.planArrivedTime"-->
+                                        <!--value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="到达日期">-->
+                        <!--</el-date-picker>-->
                         <!--<el-input :size="btnsize" v-model="intelligentData.dirverMobile"></el-input>-->
                       </el-form-item>
                     </div>
@@ -149,6 +151,11 @@
         type: Array
       }
     },
+    computed:{
+      ...mapGetters([
+        'otherinfo'
+      ]),
+    },
     data() {
 
       return {
@@ -188,9 +195,8 @@
         Trucks: [],
         contractNo: '',
         intelligentRouterData: [],
-        intelligentLeftData: {
-          apportionTypeId: '',
-          arriveOrgid: '',
+        intelligentData: {
+
           contractNo: '',
           batchNo: '',
           batchTypeId: 52,
@@ -200,42 +206,15 @@
           dirverMobile: '',
           truckLoad: '',
           truckVolume: '',
-          loadTime: '',
+          loadTime: parseTime(new Date()),
           planArrivedTime: '',
           requireArrivedTime: '',
           truckUserId: '',
-          remark: '',
-
-          // "arriveOrgid":7,
-          // "contractNo":"GX00001",
-          // "batchNo":"DB18060035",
-          // "batchTypeId":48,
-          // "loadTypeId":38,
-          // "truckIdNumber":"车牌号",
-          // "dirverName":"司机名",
-          // "dirverMobile":"司机电话",
-          // "truckLoad":1.5,
-          // "truckVolume":2,
-          // "apportionTypeId":41,
-          // "loadTime":"2018-05-22 00:00:00",
-          // "planArrivedTime":"2018-05-23 00:00:00",
-          // "requireArrivedTime":"2018-05-21 00:00:00",
-          // "remark":"备注",
-          // "truckUserId":null
-
+          remark: ''
         },
-        intelligentData: {
-          // loadTime: parseTime(new Date()),
-          requireArrivedTime: '',
-          planArrivedTime: '',
-          orgid: '',
-          dirverName: '',
-          dirverMobile: '',
-          truckIdNumber: '',
-          truckVolume: '',
-          truckWidth: '',
-          // truckLoad: '',
-          // truckVolume: ''
+        intelligentLeftData: {
+          apportionTypeId: '',
+          arriveOrgid: '',
         },
         searchTable: {},
         changeDriverKey: '',
@@ -264,20 +243,14 @@
       dofo: {
         handler(newVal) {
           this.dataList = this.dofo
-          // this.$nextTick(() => {
           this.dataList.forEach((e, index) => {
             let data = {}
             this.$set(data, 'nowpayCarriage', e.price)
             this.$set(e, 'tmsOrderLoadFee', data)
-            // console.log(e.price, this.intFreightObj)
             data = {}
-            // this.intFreightObj.nowpayCarriage = e.price
-            // console.log('nowpayCarriage',this.intFreightObj, e.price)
           })
           this.$emit('truckIndex', this.currentIndex)
           this.$emit('truckPrecent', this.dataList[0])
-          // })
-
         }
       },
       loadTable: {
@@ -302,6 +275,7 @@
       getIntFreight(data) {
         this.intFreight = data.val
         this.intFreightObj = data.obj
+        this.$set(this.dataList[this.intFreightIndex], 'price', this.intFreight)
 
       },
       doAction(type) {
@@ -469,36 +443,21 @@
           let curinfo = {
             apportionTypeId: this.intelligentLeftData.apportionTypeId,
             arriveOrgid: this.intelligentLeftData.arriveOrgid,
-            contractNo: this.intelligentLeftData.contractNo,
-            batchNo: this.intelligentLeftData.batchNo,
-            batchTypeId: this.intelligentLeftData.batchTypeId,
-            truckIdNumber: this.intelligentLeftData.truckIdNumber,
-            dirverName: this.intelligentLeftData.dirverName,
-            dirverMobile: this.intelligentLeftData.dirverMobile,
-            truckLoad: this.intelligentLeftData.truckLoad,
-            truckVolume: this.intelligentLeftData.truckVolume,
-            loadTime: this.intelligentLeftData.loadTime,
-            planArrivedTime: this.intelligentLeftData.planArrivedTime,
-            requireArrivedTime: this.intelligentLeftData.requireArrivedTime,
-            truckUserId: this.intelligentLeftData.truckUserId,
-            remark: this.intelligentLeftData.remark
-            // intelligentLeftData: e.carDriver,
-            // carDriverId: e.carDriverId,
-            // carDriverPhone: e.carDriverPhone,
-            // carId: e.carId,
-            // carNo: e.carNo,
-            // id: e.id,
-            // name: e.name,
-            // price: e.price,
-            // reachDate: e.reachDate,
-            // spri: e.spri,
-            // swei: e.swei,
-            // svol: e.svol,
-            // url: e.url,
-            // volume: e.volume,
-            // weight: e.weight,
-            // arriveOrgid: this.intelligentLeftData.arriveOrgid,
-            // apportionTypeId: this.intelligentLeftData.apportionTypeId
+            contractNo: this.intelligentData.contractNo,
+            batchNo: this.intelligentData.batchNo,
+            batchTypeId: this.intelligentData.batchTypeId,
+            truckIdNumber: this.intelligentData.truckIdNumber,
+            dirverName: this.intelligentData.dirverName,
+            dirverMobile: this.intelligentData.dirverMobile,
+            truckLoad: this.intelligentData.truckLoad,
+            truckVolume: this.intelligentData.truckVolume,
+            loadTime: this.intelligentData.loadTime,
+            planArrivedTime: this.intelligentData.planArrivedTime,
+            requireArrivedTime: this.intelligentData.requireArrivedTime,
+            truckUserId: this.intelligentData.truckUserId,
+            loadTypeId: this.intelligentData.loadTypeId,
+            orgid: this.otherinfo.orgid,
+            remark: this.intelligentData.remark
           }
           this.$set(e, 'tmsOrderLoad', curinfo)
           this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
@@ -515,7 +474,7 @@
         this.$refs['formModel'].validate((valid) => {
           if (valid) {
             this.setData()
-            console.log('loadDataArray', this.loadDataArray)
+            // console.log('loadDataArray', this.loadDataArray)
             postIntnteSmartLoad(this.loadDataArray).then(res => {
               this.$message({type: 'warning', message: '保存配载'})
             }).catch(err => {
@@ -526,9 +485,6 @@
           } else {
             return false
           }
-          // })
-
-          // }
         })
       },
       changeLoadNum(val, index, type) {

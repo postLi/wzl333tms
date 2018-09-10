@@ -21,7 +21,6 @@
           <el-table-column
             fixed
             prop="nowpayCarriage"
-            width="90"
             label="现付运费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.nowpayCarriage"
@@ -33,7 +32,6 @@
           <el-table-column
             fixed
             prop="nowpayOilCard"
-            width="90"
             label="现付油卡">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.nowpayOilCard"
@@ -45,7 +43,6 @@
           <el-table-column
             fixed
             prop="backpayCarriage"
-            width="90"
             label="回付运费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.backpayCarriage"
@@ -54,22 +51,9 @@
                         :maxlength="5"></el-input>
             </template>
           </el-table-column>
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--prop="pickupFee"-->
-          <!--width="90"-->
-          <!--label="回付运费">-->
-          <!--<template slot-scope="scope">-->
-          <!--<el-input v-model.number="scope.row.num"-->
-          <!--:size="btnsize" v-number-only:point-->
-          <!--@change="(val)=>changeFright(scope.$index, scope.prop, val)"-->
-          <!--:maxlength="5"></el-input>-->
-          <!--</template>-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             prop="backpayOilCard"
-            width="90"
             label="回付油卡">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.backpayOilCard"
@@ -81,7 +65,6 @@
           <el-table-column
             fixed
             prop="arrivepayCarriage"
-            width="90"
             label="到付运费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.arrivepayCarriage"
@@ -93,7 +76,6 @@
           <el-table-column
             fixed
             prop="arrivepayOilCard"
-            width="90"
             label="到付油卡">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.arrivepayOilCard"
@@ -117,7 +99,7 @@
           <el-table-column
             fixed
             prop="leaveHandlingFee"
-            width="100"
+            width="109"
             label="发站装卸费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.leaveHandlingFee"
@@ -129,7 +111,7 @@
           <el-table-column
             fixed
             prop="leaveOtherFee"
-            width="100"
+            width="109"
             label="发站其他费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.leaveOtherFee"
@@ -141,7 +123,7 @@
           <el-table-column
             fixed
             prop="arriveHandlingFee"
-            width="100"
+            width="109"
             label="到站装卸费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.arriveHandlingFee"
@@ -153,7 +135,7 @@
           <el-table-column
             fixed
             prop="arriveOtherFee"
-            width="100"
+            width="109"
             label="到站其他费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.arriveOtherFee"
