@@ -222,6 +222,7 @@ export default {
   watch: {
     loadTable: { // 深度监听数组变换
       handler(cval, oval) { // 拿到智能配载返回的数据
+        
         this.orgData = Object.assign([], cval)
         this.orgRightTable = Object.assign([], cval.right)
         this.$nextTick(() => {
@@ -240,7 +241,7 @@ export default {
   mounted() {
     this.tableColumnLeft = Object.assign([], this.tableColumnLeftDepart)
     this.tableColumnRight = Object.assign([], this.tableColumnRightDepart)
-this.fetchList()
+    this.fetchList()
   },
   computed: {
     showLeftStyle() {
@@ -263,9 +264,17 @@ this.fetchList()
   methods: {
     initTable() {
       this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
-      
+      this.rightTable.forEach(e => {
+        e.loadAmount = e.repertoryAmount
+        e.cargoWeight = e.repertoryWeight
+        e.cargoVolume = e.repertoryVolume
+      })
+
       let arr = [] // 存储所有被配载的运单
       this.orgRightTable.forEach((e, index) => {
+        e.loadAmount = e.repertoryAmount
+        e.cargoWeight = e.repertoryWeight
+        e.cargoVolume = e.repertoryVolume
         e.forEach(em => {
           arr.push(em)
         })
@@ -276,7 +285,7 @@ this.fetchList()
             return em.repertoryId != e.repertoryId
           })
         })
-      }else{
+      } else {
         this.leftTable = Object.assign([], this.orgLeftTable)
       }
       this.$emit('loadCurTable', this.rightTable)
@@ -288,7 +297,12 @@ this.fetchList()
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => { // 库存运单列表
-        this.loading = true
+          data.data.forEach(e => {
+            e.loadAmount = e.repertoryAmount
+            e.cargoWeight = e.repertoryWeight
+            e.cargoVolume = e.repertoryVolume
+          })
+          this.loading = true
           this.orgLeftTable = data.data
           this.initTable()
         })
@@ -344,10 +358,13 @@ this.fetchList()
     },
     goRight() { // 左边穿梭到右边
       this.selectedLeft.forEach((e, index) => {
+        e.loadAmount = e.repertoryAmount
+        e.cargoWeight = e.repertoryWeight
+        e.cargoVolume = e.repertoryVolume
         this.rightTable = this.rightTable.filter(em => {
           return em.repertoryId !== e.repertoryId
         })
-        this.orgRightTable[this.truckIndex] = objectMerge2([],this.orgRightTable[this.truckIndex]).filter(em => {
+        this.orgRightTable[this.truckIndex] = objectMerge2([], this.orgRightTable[this.truckIndex]).filter(em => {
           return em.repertoryId !== e.repertoryId
         })
         this.rightTable.push(e)

@@ -94,7 +94,6 @@ export default {
   watch: {
     info: {
       handler(cval, oval) {
-        console.log('info',cval, oval)
         this.baseInfo.weight = 0
         this.baseInfo.volume = 0
         cval.forEach(e => {
@@ -109,10 +108,10 @@ export default {
     },
     truckInfo: {
       handler(cval, oval) {
-        console.log('chart',cval, oval)
+        if (cval) {
+          console.log('chart',cval, oval)
         this.baseInfo.totalWeight = Number(cval.weight) || 0
         this.baseInfo.totalVolume = Number(cval.volume) || 0
-        if (cval) {
           this.initChart()
         }
       },
@@ -122,7 +121,6 @@ export default {
   methods: {
     initData() {},
     initChart() {
-      console.log('234234', this.info, this.truckInfo)
       this.initData()
       this.initChartWeight()
       this.initChartVolume()

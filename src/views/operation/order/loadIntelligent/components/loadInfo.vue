@@ -29,8 +29,8 @@
               <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="63px" :inline="true"
                        label-position="right" size="mini" class="loadInfo_collapse_list" :key="valkey">
                 <!-- <el-form :model="intelligentData" label-width="63px" inline class="loadInfo_collapse_list"> -->
-                <div class="loadInfo_item" v-for="(item, index) in dataList"
-                     :style="{width: showCurrenFormStyle[index]?'calc(100% - 185px)': ''}">
+                <div class="loadInfo_item" v-for="(item, index) in dataList" 
+                     :style="{width: showCurrenFormStyle[index]?'calc(100% - 185px)': ''}" v-show="isShowCurPages">
                   <el-button class="verticalBtn" @click="selectCurrentTuck(item, index)"
                              :class="{'verticalBtnActive':showCurrenFormStyle[index]}">车型{{ changeNumCN[index]}}
                   </el-button>
@@ -231,7 +231,10 @@
         dataList: [{}, {}, {}],
         pretruckDisable: true,
         nexttruckDisable: false,
-        loadDataArray: []
+        loadDataArray: [],
+        truckPageSize: 3,
+        truckTotalPage: 0,
+        isShowCurPages: true
       }
     },
     watch: {
@@ -542,6 +545,9 @@
             }
           }
         }
+        // if (this.dataList.length / this.truckPageSize > parseInt(this.dataList.length / this.truckPageSize)) {
+
+        // }
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.dataList[this.currentIndex])
       }
@@ -677,7 +683,7 @@
                   .el-form-item {
                     margin-bottom: 0px;
                     .el-input {
-                      max-width: 150px;
+                      max-width: 160px;
                     }
                   }
                   .el-form-item.nameClass {
