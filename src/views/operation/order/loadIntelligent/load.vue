@@ -2,121 +2,7 @@
   <div class="loadIntelligent_content">
     <div class="loadIntelligent_main">
 
-      <loadInfo @truckPrecent="getTruckPrecent" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
-      <!-- <div class="load-intelligent">
-        <div class="header-left">
-          <el-tabs type="border-card" class="intelligent-card">
-            <el-tab-pane label="方案一">
-              <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="70px" :inline="true" label-position="right" size="mini" class="intelligentForm_lrl" :key="valkey">
-                <div class="load-intelligent-content">
-                  <div class="content-left">
-                    <el-form-item label="到达网点" prop="" class="orgidClass">
-                      <el-input disabled></el-input>
-                    </el-form-item>
-                    <el-form-item label="分摊方式">
-                      <selectType type="apportion_type" clearable size="mini"></selectType>
-                    </el-form-item>
-                  </div>
-                  <div class="content-cent">
-                    <div class="btn1">
-                      <el-button type="primary" @click="submitForm('ruleForm')" plain class="saveInt">
-                        <span>车</span>
-                        <br/><span>型</span>
-                        <br/><span>一</span>
-                      </el-button>
-                    </div>
-                    <div class="btnCont">
-                      <div class="content-right">
-                        <el-form-item label="车型" prop="" class="orgidClass1">
-                          <el-input></el-input>
-                        </el-form-item>
-                        <el-form-item label="车费">
-                          <el-input><i slot="suffix" class="el-input__icon el-icon-plus"></i></el-input>
-                        </el-form-item>
-                      </div>
-                      <div class="content-right">
-                        <div>
-                          <el-form-item label="车牌号" prop="" class="formItemTextDanger" :key="changeTruckKey">
-                            <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruckNum" auto-complete="off" @blur="blurTruck" :maxlength="8">
-                              <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
-                              <template slot-scope="{ item }">
-                                <div class="name">{{ item.truckIdNumber }}</div>
-                                <span class="addr">{{ item.driverName }}</span>
-                                <br>
-                                <span class="addr">{{ item.dirverMobile}}</span>
-                              </template>
-                            </el-autocomplete>
-                          </el-form-item>
-                        </div>
-                        <div>
-                          <el-form-item label="司机" prop="dirverName" class="formItemTextDanger" :key="changeDriverKey">
-                            <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelectName" auto-complete="off" :maxlength="10">
-                              <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
-                              <template slot-scope="{ item }">
-                                <div class="name">{{ item.driverName }}</div>
-                                <span class="addr">{{ item.driverMobile }}</span>
-                                <br>
-                                <span class="addr">{{ item.truckIdNumber }}</span>
-                              </template>
-                            </el-autocomplete>
-                          </el-form-item>
-                        </div>
-                      </div>
-                      <div class="content-right">
-                        <el-form-item label="可载方" prop="">
-                          <el-input v-model="intelligentData.truckVolume" :maxlength="3"></el-input>
-                        </el-form-item>
-                        <el-form-item label="司机电话">
-                          <el-input v-model="intelligentData.dirverMobile"></el-input>
-                        </el-form-item>
-                      </div>
-                      <div class="content-right">
-                        <el-form-item label="可载吨" prop="" class="orgidClass2">
-                          <el-input v-model="intelligentData.truckWidth" :maxlength="3"></el-input>
-                        </el-form-item>
-                        <el-form-item label="到达日期" class="arriveTimeClass">
-                          <el-date-picker v-model="intelligentData.requireArrivedTime" type="date" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期">
-                          </el-date-picker>
-                        </el-form-item>
-                      </div>
-                    </div>
-                    <div class="btn2">
-                      <el-button type="primary" @click="submitForm('ruleForm')" plain class="saveInt">
-                        <span>车</span>
-                        <br/><span>型</span>
-                        <br/><span>二</span>
-                      </el-button>
-                    </div>
-                    <div class="btn3">
-                      <el-button type="primary" @click="submitForm('ruleForm')" plain class="saveInt">
-                        <span>车</span>
-                        <br/><span>型</span>
-                        <br/><span>三</span>
-                      </el-button>
-                    </div>
-                    <div class="btn4">
-                      <el-button type="primary" @click="submitForm('ruleForm')" plain class="saveInt">
-                        <span>增</span>
-                        <br/><span>加</span>
-                        <br/><span>+</span>
-                      </el-button>
-                    </div>
-                  </div>
-                  <div class="content-center">
-                  </div>
-                </div>
-              </el-form>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-        <div class="header-right">
-          <el-button type="primary" @click="submitLoad('ruleForm')" icon="el-icon-refresh" plain size="mini">计算配载
-          </el-button>
-          <el-button type="success" @click="submitForm('ruleForm')" icon="el-icon-document" plain size="mini">保存配载
-          </el-button>
-          <el-button type="danger" @click="" icon="el-icon-circle-close-outline" plain size="mini">取消</el-button>
-        </div>
-      </div> -->
+      <loadInfo @truckPrecent="getTruckPrecent" :getLoadTable="loadInfoPercent" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
@@ -151,7 +37,6 @@
   import addDriverInfo from '@/views/company/driverManage/components/add'
   import {getDrivers, getTrucK, getSelectAddLoadRepertoryList} from '@/api/operation/load'
   import {getAllDriver} from '@/api/company/driverManage'
-  import {getSystemTime} from '@/api/common'
   import {getIntnteInit} from '@/api/operation/arteryDepart'
 
   export default {
@@ -241,14 +126,13 @@
     },
     mounted() {
       this.init()
-      this.getSystemTime()
       this.infoData()
       // console.log(this.$route.query, '首页数据')
 
     },
     activated() {
       this.init()
-      this.getSystemTime()
+      this.infoData()
     },
     methods: {
 
@@ -296,20 +180,6 @@
           this.inited = true
           this.initInfo()
         }
-      },
-      getSystemTime() { // 获取系统时间
-        // if (!this.isEdit) {
-        //   getSystemTime().then(data => {
-        //     // this.formModel.requireArrivedTime = parseTime(data, '{y}-{m}-{d} ') + '23:59:59'
-        //     // this.formModel.requireArrivedTime = data.trim()
-        //     // this.formModel.planArrivedTime = data.trim()
-        //     // this.formModel.loadTime = parseTime(new Date(data))
-        //     this.intelligentData.loadTime = data.trim()
-        //   }).catch((err)=>{
-        //     this.loading = false
-        //     this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-        //   })
-        // }
       },
       doAction(type) {
         switch (type) {

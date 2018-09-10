@@ -21,7 +21,7 @@
                 </el-form-item>
                 <el-form-item label="分摊方式" prop="apportionTypeId">
                   <selectType v-model="intelligentLeftData.apportionTypeId" type="apportion_type" clearable
-                              size="mini"></selectType>
+                              size="mini" class="apportClass"></selectType>
                 </el-form-item>
               </el-form>
             </div>
@@ -36,7 +36,7 @@
                   </el-button>
                   <div class="loadInfo_item_form" v-show="showCurrenFormStyle[index]">
                     <div class="loadInfo_item_form_row">
-                      <el-form-item label="车型">
+                      <el-form-item label="车型" class="nameClass">
                         <el-input disabled :size="btnsize" v-model="item.name"></el-input>
                       </el-form-item>
                       <el-form-item label="车牌号" prop="" :key="changeTruckKey">
@@ -55,16 +55,19 @@
                       </el-form-item>
                       <!--</el-form-item>-->
                       <el-form-item label="可载方" prop="">
-                        <el-input v-model="item.volume" :maxlength="3" @change="(val) =>changeLoadNum(val, index, 'volume')"></el-input>
+                        <el-input v-model="item.volume" :maxlength="3"
+                                  @change="(val) =>changeLoadNum(val, index, 'volume')"></el-input>
                       </el-form-item>
                       <el-form-item label="可载吨" prop="">
-                        <el-input v-model="item.weight" :maxlength="3" @change="(val) =>changeLoadNum(val, index, 'weight')"></el-input>
+                        <el-input v-model="item.weight" :maxlength="3"
+                                  @change="(val) =>changeLoadNum(val, index, 'weight')"></el-input>
                       </el-form-item>
                     </div>
                     <div class="loadInfo_item_form_row">
                       <el-form-item label="车费">
                         <el-input :size="btnsize" v-model="item.price">
-                          <i class="el-icon-edit-outline el-input__icon" slot="suffix" @click="doAction('addFreight')"></i>
+                          <i class="el-icon-edit-outline el-input__icon" slot="suffix"
+                             @click="addFreight(item.price, index)"></i>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="司机" prop="dirverName" class="formItemTextDanger" :key="changeDriverKey">
@@ -84,7 +87,7 @@
                         <el-input v-model="intelligentData.dirverMobile"></el-input>
                       </el-form-item>
                       <el-form-item label="到达日期">
-                        <el-input :size="btnsize"></el-input>
+                        <el-input :size="btnsize" v-model="intelligentData.dirverMobile"></el-input>
                       </el-form-item>
                     </div>
                   </div>
@@ -108,7 +111,7 @@
     <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver"
                    :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible"
                    @close="closeAddDriver" @success="fetchData"></addDriverInfo>
-    <AddLntelligentFreight :popVisible.sync="lntelligentFVisible"  @close="openlntelligent" ></AddLntelligentFreight>
+    <AddLntelligentFreight :popVisible.sync="lntelligentFVisible" @close="openlntelligent" @getIntFreight="intFreight" :intFreightItem="intFreightItem" :intFreightIndex="intFreightIndex"></AddLntelligentFreight>
   </div>
 </template>
 <script>
@@ -119,7 +122,7 @@
   import SelectType from '@/components/selectType/index'
   import addTruckInfo from '@/views/company/trunkManage/components/add'
   import addDriverInfo from '@/views/company/driverManage/components/add'
-  import {getDrivers, getTrucK, getSelectAddLoadRepertoryList} from '@/api/operation/load'
+  import {getDrivers, getTrucK, postLoadInfo} from '@/api/operation/load'
   import {getAllDriver} from '@/api/company/driverManage'
   import {getSystemTime} from '@/api/common'
   import AddLntelligentFreight from './intelligentFreight'
@@ -134,12 +137,16 @@
     },
     props: {
       orgid: [Number, String],
-      dofo: [Array,Object],
-      model: [Array,Object]
+      dofo: [Array, Object],
+      model: [Array, Object]
     },
     data() {
 
       return {
+        intFreightItem:'',
+        intFreightIndex:'',
+        intFreight:'',
+        intFreightObj:'',
         sendorgid: '',
         searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
         pickerOptions2: {
@@ -212,13 +219,13 @@
 
         }
       },
-      dofo:{
-        handler(newVal){
+      dofo: {
+        handler(newVal) {
           this.dataList = this.dofo
           console.log(this.dataList)
           // this.$nextTick(() => {
-            this.$emit('truckIndex', this.currentIndex)
-            this.$emit('truckPrecent', this.dataList[0])
+          this.$emit('truckIndex', this.currentIndex)
+          this.$emit('truckPrecent', this.dataList[0])
           // })
 
         }
@@ -244,7 +251,11 @@
       // })
     },
     methods: {
+      getIntFreight(item,obj){
+        this.intFreight = item
+        this.intFreightObj = obj
 
+      },
       doAction(type) {
         switch (type) {
           case 'addTruck': // 添加车辆信息
@@ -253,10 +264,15 @@
           case 'addDriver': // 添加司机信息
             this.addDriver()
             break
-          case 'addFreight':
-            this.openlntelligent()
-            break
+          // case 'addFreight':
+          //   this.openlntelligent()
+          //   break
         }
+      },
+      addFreight(val, index) {
+        this.intFreightItem=val
+        this.intFreightIndex=index
+        this.openlntelligent()
       },
       getSystemTime() { // 获取系统时间
       },
@@ -382,16 +398,38 @@
       closeAddTruckVisible() {
         this.addTruckVisible = false
       },
-      openlntelligent(){
+      openlntelligent() {
         this.lntelligentFVisible = true
       },
       submitLoad(formName) {
         this.$message({type: 'warning', message: '计算配载'})
       },
       submitForm(formName) {
-        this.$message({type: 'warning', message: '保存配载'})
+        this.$refs['formModel'].validate((valid) => {
+          if (valid) {
+            let arr = []
+            arr = Object.assign([], this.dataList)
+            arr.forEach((e, index) => {
+              if (index === this.currentIndex) {
+                this.$set(arr[index],'tmsOrderLoadFee',this.intFreightObj )
+              }
+            })
+
+           let data = []
+            postLoadInfo(data).then(res => {
+              this.$message({type: 'warning', message: '保存配载'})
+            }).catch(err => {
+              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+              this.loading = false
+            })
+
+          } else {
+            return false
+          }
+        })
+
       },
-      changeLoadNum (val, index, type){
+      changeLoadNum(val, index, type) {
         this.$emit('truckPrecent', this.dataList[index])
       },
       selectCurrentTuck(item, index) {
@@ -467,6 +505,11 @@
       .el-tabs--border-card {
         box-shadow: none;
         border: 1px solid #cdf;
+        .el-tabs__header.is-top {
+          .el-tabs__nav-wrap {
+            background: rgb(251, 255, 244);
+          }
+        }
       }
       .el-tabs--border-card > .el-tabs__content {
         padding: 10px;
@@ -482,6 +525,13 @@
           padding: 10px 5px 0 10px;
           .el-form {
             padding-top: 15px;
+            .orgClass {
+              .el-input.is-disabled {
+                .el-input__inner {
+                  color: #606266;
+                }
+              }
+            }
           }
           .el-form-item--mini.el-form-item,
           .el-form-item--small.el-form-item {
@@ -570,6 +620,13 @@
                     margin-bottom: 0px;
                     .el-input{
                       max-width: 150px;
+                    }
+                  }
+                  .el-form-item.nameClass {
+                    .el-input.is-disabled {
+                      .el-input__inner {
+                        color: #606266;
+                      }
                     }
                   }
                   .el-form-item--mini.el-form-item,

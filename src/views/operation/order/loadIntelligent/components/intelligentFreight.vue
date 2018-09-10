@@ -1,7 +1,8 @@
 <template>
   <div class="lntelligentFreight-maintain">
 
-    <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible"  class='pickpopDepMain' v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
+    <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible" class='pickpopDepMain'
+               v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
 
 
       <!--<template class='pickRelationPop-content' slot="content">-->
@@ -12,45 +13,30 @@
           :data="usersArr"
           stripe
           border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
           height="66"
           tooltip-effect="dark"
-
           style="width: 650px"
           class="tableIntelligent"
         >
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="nowpayCarriage"
             width="90"
             label="现付运费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.nowpayCarriage"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                         :maxlength="5"></el-input>
+                        :maxlength="5"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="nowpayOilCard"
             width="90"
             label="现付油卡">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
-                        :size="btnsize" v-number-only:point
-                        @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                         :maxlength="5"></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            prop="pickupFee"
-            width="90"
-            label="回付运费">
-            <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.nowpayOilCard"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -58,23 +44,35 @@
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="backpayCarriage"
             width="90"
             label="回付运费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.backpayCarriage"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
             </template>
           </el-table-column>
+          <!--<el-table-column-->
+          <!--fixed-->
+          <!--prop="pickupFee"-->
+          <!--width="90"-->
+          <!--label="回付运费">-->
+          <!--<template slot-scope="scope">-->
+          <!--<el-input v-model.number="scope.row.num"-->
+          <!--:size="btnsize" v-number-only:point-->
+          <!--@change="(val)=>changeFright(scope.$index, scope.prop, val)"-->
+          <!--:maxlength="5"></el-input>-->
+          <!--</template>-->
+          <!--</el-table-column>-->
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="backpayOilCard"
             width="90"
             label="回付油卡">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.backpayOilCard"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -82,11 +80,11 @@
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="arrivepayCarriage"
             width="90"
             label="到付运费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.arrivepayCarriage"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -94,11 +92,11 @@
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="arrivepayOilCard"
             width="90"
             label="到付油卡">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.arrivepayOilCard"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -110,8 +108,6 @@
           :data="usersArr"
           stripe
           border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
           height="67"
           tooltip-effect="dark"
 
@@ -120,11 +116,11 @@
         >
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="leaveHandlingFee"
             width="100"
             label="发站装卸费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.leaveHandlingFee"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -132,11 +128,11 @@
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="leaveOtherFee"
             width="100"
             label="发站其他费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.leaveOtherFee"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -144,11 +140,11 @@
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="arriveHandlingFee"
             width="100"
             label="到站装卸费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.arriveHandlingFee"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -156,11 +152,11 @@
           </el-table-column>
           <el-table-column
             fixed
-            prop="pickupFee"
+            prop="arriveOtherFee"
             width="100"
             label="到站其他费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
+              <el-input v-model.number="scope.row.arriveOtherFee"
                         :size="btnsize" v-number-only:point
                         @change="(val)=>changeFright(scope.$index, scope.prop, val)"
                         :maxlength="5"></el-input>
@@ -172,26 +168,19 @@
 
 
       </div>
-
-      <!--</template>-->
-      <!--<div slot="footer" class="dialog-footer-frame">-->
       <div slot="footer" class="dialog-footer">
 
-        <el-button type="primary" @click="submitForm('formName')">确 定</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="closeMe">取 消</el-button>
 
       </div>
-      <!--<div>-->
-      <!--<el-button @click="closeMe">取消</el-button>-->
-      <!--<el-button type="primary" @click="submitForm('formName')">确定</el-button>-->
-      <!--</div>-->
-      <!--</div>-->
     </el-dialog>
   </div>
 
 </template>
 
 <script>
+  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
   import {REGEX} from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
@@ -218,7 +207,15 @@
         type: [Object, Boolean],
         default: false
       },
-      createrId: [Number, String]
+      createrId: [Number, String],
+      intFreightItem: {
+        type: [String, Number],
+        default: false
+      },
+      intFreightIndex: {
+        type: [String, Number],
+        default: false
+      }
     },
     data() {
       let hasOne = false
@@ -236,7 +233,8 @@
       }
 
       return {
-        checkList: ['选中且禁用','复选框 A'],
+
+        total: '',
         selectdCheck: true,
         btnsize: 'mini',
         selected: [],
@@ -252,9 +250,18 @@
         formLabelWidth: '100',
         usersArr: [
           {
-            num: 10,
-            date: '车型'
-          }
+            nowpayCarriage: '',
+            nowpayOilCard: '',
+            backpayCarriage: '',
+            backpayOilCard: '',
+            arrivepayCarriage: '',
+            arrivepayOilCard: '',
+            carloadInsuranceFee: '',
+            leaveHandlingFee: '',
+            leaveOtherFee: '',
+            arriveHandlingFee: '',
+            arriveOtherFee: '',
+          },
         ],
         checked1: true,
         popTitle: '运费',
@@ -285,10 +292,21 @@
       }
     },
     watch: {
+      intFreightItem(newVal, oldVal){
+        // if(newVal){
+          this.usersArr[0].nowpayCarriage = newVal
+        // }
+      },
+      intFreightIndex(newVal){
+
+      },
       dotInfo(newVal) {
         // this.infoData(this.dotInfo)
       },
       popVisible(newVal) {
+        this.$nextTick(() => {
+          this.usersArr[0].nowpayCarriage = this.intFreightItem
+        })
         // this.fetchData()
       }
     },
@@ -296,21 +314,40 @@
       this.formInline.orgId = this.otherinfo.orgid
       if (this.popVisible) {
         this.formInline.orgId = this.otherinfo.orgid
+        // this.usersArr[0].nowpayCarriage =
         // alert(this.formInline.orgId)
       }
     },
     methods: {
       changeFright(index, prop, newVal) {
         this.usersArr[index][prop] = Number(newVal)
-        const newfreght = this.usersArr[index].num
-        if (newfreght === 0) {
-          this.usersArr[index].num = newfreght
+        const newNowpayCarriage = this.usersArr[index].nowpayCarriage
+        const newNowpayOilCard = this.usersArr[index].nowpayOilCard
+        const newBackpayCarriage = this.usersArr[index].backpayCarriage
+        const newBackpayOilCard = this.usersArr[index].backpayOilCard
+        const newArrivepayCarriage = this.usersArr[index].arrivepayCarriage
+        const newArrivepayOilCard = this.usersArr[index].arrivepayOilCard
+        const newLeaveHandlingFee = this.usersArr[index].leaveHandlingFee
+        const newLeaveOtherFee = this.usersArr[index].leaveOtherFee
+        const newArriveHandlingFee = this.usersArr[index].arriveHandlingFee
+        const newArriveOtherFee = this.usersArr[index].arriveOtherFee
+        if (newNowpayCarriage === 0 || newNowpayOilCard === 0 || newBackpayCarriage === 0 || newBackpayOilCard === 0 || newArrivepayCarriage === 0 || newArrivepayOilCard === 0 || newLeaveHandlingFee === 0 || newLeaveOtherFee === 0 || newArriveHandlingFee === 0 || newArriveOtherFee === 0) {
+          this.usersArr[index].nowpayCarriage = newNowpayCarriage
+          this.usersArr[index].nowpayOilCard = newNowpayOilCard
+          this.usersArr[index].backpayCarriage = newBackpayCarriage
+          this.usersArr[index].backpayOilCard = newBackpayOilCard
+          this.usersArr[index].arrivepayCarriage = newArrivepayCarriage
+          this.usersArr[index].arrivepayOilCard = newArrivepayOilCard
+          this.usersArr[index].leaveHandlingFee = newLeaveHandlingFee
+          this.usersArr[index].leaveOtherFee = newLeaveOtherFee
+          this.usersArr[index].arriveHandlingFee = newArriveHandlingFee
+          this.usersArr[index].arriveOtherFee = newArriveOtherFee
           this.$notify({
             title: '提示',
             message: '车费不能为0',
             type: 'warning'
           })
-        } else if (newfreght < 0) {
+        } else if (newNowpayCarriage < 0 || newNowpayOilCard < 0 || newBackpayCarriage < 0 || newBackpayOilCard < 0 || newArrivepayCarriage < 0 || newArrivepayOilCard < 0 || newLeaveHandlingFee < 0 || newLeaveOtherFee < 0 || newArriveHandlingFee < 0 || newArriveOtherFee < 0) {
           this.$notify({
             title: '提示',
             message: '车费不能小于0,默认为初始值',
@@ -318,37 +355,22 @@
           })
         } else {
           this.$refs.multipleTable.toggleRowSelection(this.usersArr[index], true)
-          return this.usersArr[index].num
+          this.usersArr[index].nowpayCarriage
+          this.usersArr[index].nowpayOilCard
+          this.usersArr[index].backpayCarriage
+          this.usersArr[index].backpayOilCard
+          this.usersArr[index].arrivepayCarriage
+          this.usersArr[index].arrivepayOilCard
+          this.usersArr[index].leaveHandlingFee
+          this.usersArr[index].leaveOtherFee
+          this.usersArr[index].arriveHandlingFee
+          this.usersArr[index].arriveOtherFee
         }
       },
       search(item) {
         return !item.pickupBatchNumber
       },
-      // fetchFindByShipSnOrGoodSn() {
-      //   this.loading = true
-      //   return getFindShipByid(this.dotInfo.id).then(data => {
-      //     this.usersArr = data
-      //     this.loading = false
-      //   }).catch((err)=>{
-      //     this.loading = false
-      //     this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      //   })
-      // },
-      fetchData() {
-        // this.fetchFindByShipSnOrGoodSn()
-      },
-      getShipSn(order) {
-        if (order) {
-          this.formInline.shipGoodsSn = order.shipGoodsSn
-          this.sendId.shipId = order.id
-        }
-      },
-      getShipGoodsSn(order) {
-        if (order) {
-          this.formInline.shipSn = order.shipSn
-          this.sendId.shipId = order.id
-        }
-      },
+
       closeMe(done) {
         this.reset()
         this.$emit('update:popVisible', false)
@@ -357,12 +379,21 @@
         }
       },
       reset() {
-        // this.formInline = this.setObject(this.formInline)
-        this.formInline = Object.assign({}, this.formInline)
-
-        this.formInline.shipSn = ''
-        this.formInline.shipGoodsSn = ''
-        this.formInline.pickupFee = ''
+        this.usersArr = [
+          {
+            nowpayCarriage: '',
+            nowpayOilCard: '',
+            backpayCarriage: '',
+            backpayOilCard: '',
+            arrivepayCarriage: '',
+            arrivepayOilCard: '',
+            carloadInsuranceFee: '',
+            leaveHandlingFee: '',
+            leaveOtherFee: '',
+            arriveHandlingFee: '',
+            arriveOtherFee: '',
+          },
+        ]
       },
       setObject(obj1, obj2) {
         for (var i in obj1) {
@@ -370,100 +401,13 @@
         }
         return obj1
       },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.$router)
-
-            this.$router.push(
-              {
-                path: '/operation/order/loadIntelligent/components/intelligentImg',
-                query: {
-                  tab:'智能配载',
-                  sendDate: this.usersArr
-                }
-              },
-            )
-            this.closeMe()
-
-
-
-
-            // this.$router.push(
-            //   {
-            //     path: '/operation/order/loadIntelligent/index',
-            //     query: {
-            //       sendDate: this.usersArr
-            //     }
-            //   },
-            // )
-
-            // this.loading = true
-            // this.sendId.pickupFee = this.formInline.pickupFee
-            // const pickupFee = this.sendId.pickupFee || ''
-            // const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
-            //
-            // promiseObj.then(res => {
-            //   this.loading = false
-            //   this.$message({
-            //     message: '添加成功~',
-            //     type: 'success'
-            //   })
-            //   delete this.sendId.shipId
-            //   this.fetchData()
-            //   this.reset()
-            //   this.$emit('success')
-            // }).catch(err => {
-            //   this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-            //   this.loading = false
-            // })
-          } else {
-            return false
-          }
-        })
-      },
-      removeList() {
-        // if (!this.selected.length) {
-        //   this.$message({
-        //     message: '请选择要操作的列表项~',
-        //     type: 'warning'
-        //   })
-        //   return false
-        // }else {
-        //   if (this.selected.length > 1) {
-        //     this.$message({
-        //       message: '每次只能选择单条数据~',
-        //       type: 'warning'
-        //     })
-        //     return false
-        //   }        else {
-        //     const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
-        //     promiseObj.then(res => {
-        //       this.loading = false
-        //       this.$message.success("保存成功")
-        //       this.fetchData()
-        //       this.$emit('success')
-        //   }).catch(err => {
-        //     this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-        //       this.loading = false
-        //     })
-        //   }
-        // }
+      submitForm() {
+        this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
+        this.$emit('getIntFreight', this.total,this.usersArr[0] )
+        // this.closeMe()
       },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
-      },
-      getSelection(selection) {
-
-        if (selection) {
-          this.selected = selection
-          this.selectdCheck = false
-          console.log(this.selectdCheck, '选中')
-        } else {
-          this.selectdCheck = true
-          console.log(this.selectdCheck, '未选中')
-        }
-
       }
     }
   }
@@ -475,31 +419,31 @@
   .lntelligentFreight-maintain .pickpopDepMain {
     top: 12%;
     bottom: auto;
-    .el-dialog{
+    .el-dialog {
       min-width: 720px;
       max-width: 720px;
       border-radius: 8px;
-      .el-dialog__header{
+      .el-dialog__header {
         border-bottom: 1px solid #ccc;
 
         /*text-align: center;*/
-        .el-dialog__title{
-          color: rgb(100,186,245);
+        .el-dialog__title {
+          color: rgb(100, 186, 245);
         }
 
       }
       .el-dialog__body {
         padding: 45px 35px;
-        border-bottom: 1px solid rgb(100,186,245);
-        .depmain-div{
+        border-bottom: 1px solid rgb(100, 186, 245);
+        .depmain-div {
 
-          p{
+          p {
             padding-top: 20px;
-            color: rgb(254,52,52);
+            color: rgb(254, 52, 52);
           }
         }
       }
-      .el-dialog__footer{
+      .el-dialog__footer {
         text-align: right;
       }
     }

@@ -27,6 +27,12 @@
             <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
           </el-form-item>
         </div>
+        <div class="sPayType">
+          <el-form-item label="中转付款方式" prop="">
+            <selectType v-model="searchTitle.paymentId" type="payment_type" clearable
+                        size="mini" class=""></selectType>
+          </el-form-item>
+        </div>
         <div class="sDate">
           <el-date-picker
             v-model="searchCreatTime"
@@ -130,52 +136,6 @@
       </el-form>
 
 
-      <!--<el-form :inline="true" :size="btnsize" label-position="center" :model="messageInfo" label-width="100px"-->
-               <!--class=" clearfix" ref="formName2" :rules="rules">-->
-
-        <!--<el-form-item label="承运商名称">-->
-          <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="业务负责人">-->
-          <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="联系方式" prop="memberPersonPhone">-->
-          <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="对账单编号">-->
-          <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="客户编号">-->
-          <!--<el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="开始时间">-->
-          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="结束时间">-->
-          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="结算方式">-->
-          <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="账户账号" prop="bankAccount">-->
-          <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="账户开户行">-->
-          <!--<el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="财务负责人">-->
-          <!--<el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="联系方式" prop="financialOfficerPhone">-->
-          <!--<el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="支付宝">-->
-          <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="微信" class="sWetPay">-->
-          <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
-        <!--</el-form-item>-->
-      <!--</el-form>-->
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
@@ -763,58 +723,6 @@
     <div class="sBottom">
       <div class="sMessageBut">
 
-        <!--<el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"-->
-        <!--class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">-->
-          <!--<ul>-->
-            <!--<li>-->
-              <!--<el-form-item label="备注">-->
-              <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
-              <!--</el-form-item>-->
-            <!--</li>-->
-            <!--<li><p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p></li>-->
-
-          <!--</ul>-->
-          <!--<ul>-->
-            <!--<li>-->
-              <!--<el-form-item label="公司名称">-->
-              <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
-              <!--</el-form-item>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<el-form-item label="业务负责人">-->
-              <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
-              <!--</el-form-item>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-              <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>-->
-              <!--</el-form-item>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<el-form-item label="财务负责人">-->
-              <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
-              <!--clearable></el-input>-->
-              <!--</el-form-item>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<el-form-item label="财务联系电话" prop="orgFinancialOfficerPhone">-->
-              <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
-              <!--clearable></el-input>-->
-              <!--</el-form-item>-->
-            <!--</li>-->
-            <!--<li>-->
-
-              <!--<el-form-item label="时间" class="creatTimeItem">-->
-              <!--<el-date-picker-->
-              <!--v-model="messageButtonInfo.createTime"-->
-              <!--type="date"-->
-              <!--placeholder="选择日期">-->
-              <!--</el-date-picker>-->
-
-              <!--</el-form-item>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</el-form>-->
 
         <el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"
                  class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
@@ -876,12 +784,13 @@
   import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
   import { SaveAsFileCarrier} from '@/utils/recLodopFuncs'
-  // import
+  import SelectType from '@/components/selectType/index'
 
   export default {
     components: {
       querySelect,
-      SaveDialog
+      SaveDialog,
+      SelectType
     },
     data() {
       const validateMobile = (rule, value, callback) => {
@@ -985,6 +894,7 @@
 
         searchTitle: {
           carrierId: '', //
+          paymentId: '', //
           startTime: '',
           endTime: ''
         },
