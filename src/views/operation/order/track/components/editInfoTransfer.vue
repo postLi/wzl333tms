@@ -201,7 +201,8 @@ export default {
       this.isModify = true
     },
     editTrack() {
-
+      this.formModel.createTime = parseTime(this.formModel.createTime, '{y}-{m}-{d} {h}:{i}:{s}')
+      console.log(this.formModel.createTime)
       order.putTrackinfo(this.formModel).then(data => {
         this.$message({ type: 'success', message: '修改成功' })
         this.getDetail()
@@ -213,9 +214,10 @@ export default {
     },
     addTrack() {
       let data = objectMerge2({}, this.formModel)
-      data.createTime = +new Date(data.createTime)
+      data.createTime = parseTime(+new Date(data.createTime), '{y}-{m}-{d} {h}:{i}:{s}')
       data.shipId = this.shipId
       data.orgid = this.otherinfo.orgid
+      console.log(data.createTime)
       order.postTrackinfo(data).then(data => {
         this.$message({ type: 'success', message: '添加成功' })
         this.getDetail()
