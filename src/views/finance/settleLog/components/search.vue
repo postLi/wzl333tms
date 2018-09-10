@@ -1,5 +1,6 @@
 <template>
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
+  <div>
+    <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
       <el-form-item label="结算时间">
         <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期"  @change="changeVal">
@@ -13,6 +14,16 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </selectType>
       </el-form-item>
+      <el-form-item label="自定义查询" class="zdycx">
+        <!-- <SelectType v-model="searchForm.shipStatus">
+          <el-option slot="head" label="全部" value=""></el-option>
+        </SelectType> -->
+        <!-- <SelectType @click="GetcustomList" type="settlement_type"></SelectType> -->
+        <querySelect  @change="GetcustomList" ></querySelect>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain  @click="Custom">保存自定义</el-button>
+      </el-form-item>
     </div>
     <!--  <el-form-item label="方向" prop="settlementId">
       <el-select v-model="searchForm.settlementId" placeholder="方向" :size="btnsize">
@@ -24,6 +35,10 @@
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
     </el-form-item>
   </el-form>
+ <addSave :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="searchForm"  @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify"/>
+
+  </div>
+ 
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
@@ -31,11 +46,14 @@ import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import SelectType from '@/components/selectType/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import addSave from './addSave'
+import { postQueryLogList, postcreaterQueryCriteriaLog } from '@/api/common'
 export default {
   components: {
     SelectTree,
     querySelect,
-    SelectType
+    SelectType,
+    addSave
   },
   props: {
     btnsize: {
@@ -58,6 +76,10 @@ export default {
       }
     }
     return {
+      dotInfo: [],
+      isModify: false,
+      popVisible: false,
+      setupTableVisible: false,
       searchForm: {
         // agent: '',
         // alipayAccount: '',
@@ -99,6 +121,21 @@ export default {
     this.onSubmit()
   },
   methods: {
+    fetchAllreceipt() {
+
+    },
+    Custom() {
+      this.isModify = true
+      this.popVisible = true
+    },
+    GetcustomList() {
+      return postQueryLogList().then(data => {
+        console.log(data)
+      })
+    },
+    closeAddDot() {
+      this.popVisible = false
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
@@ -107,7 +144,7 @@ export default {
       }
       this.$emit('change', searchObj)
     },
-    changeVal (obj) {
+    changeVal(obj) {
       this.onSubmit()
     },
     clearForm(formName) {
@@ -121,3 +158,10 @@ export default {
 }
 
 </script>
+<style lang="scss">
+.zdycx{
+  .el-form-item__label{
+    width:85px !important;
+  }
+}
+</style>

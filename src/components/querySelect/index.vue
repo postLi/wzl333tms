@@ -31,7 +31,6 @@
       <template v-else>
         <span v-html="highLight(item, showkey)"></span>
       </template>
-
     </slot>
   </template>
 </el-autocomplete>
