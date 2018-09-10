@@ -87,7 +87,10 @@
                         <el-input v-model="intelligentData.dirverMobile"></el-input>
                       </el-form-item>
                       <el-form-item label="到达日期">
-                        <el-input :size="btnsize" v-model="intelligentData.dirverMobile"></el-input>
+                        <el-date-picker size="mini" v-model="intelligentData.planArrivedTime"
+                                        value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="到达日期">
+                        </el-date-picker>
+                        <!--<el-input :size="btnsize" v-model="intelligentData.dirverMobile"></el-input>-->
                       </el-form-item>
                     </div>
                   </div>
@@ -111,7 +114,9 @@
     <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver"
                    :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible"
                    @close="closeAddDriver" @success="fetchData"></addDriverInfo>
-    <AddLntelligentFreight :popVisible.sync="lntelligentFVisible" @close="openlntelligent" @getIntFreight="intFreight" :intFreightItem="intFreightItem" :intFreightIndex="intFreightIndex"></AddLntelligentFreight>
+    <AddLntelligentFreight :popVisible.sync="lntelligentFVisible" @close="openlntelligent"
+                           @getIntFreight="getIntFreight" :intFreightItem="intFreightItem" :sendDataList="dataList"
+                           :intFreightIndex="intFreightIndex"></AddLntelligentFreight>
   </div>
 </template>
 <script>
@@ -126,6 +131,7 @@
   import {getAllDriver} from '@/api/company/driverManage'
   import {getSystemTime} from '@/api/common'
   import AddLntelligentFreight from './intelligentFreight'
+  import {postIntnteSmartLoad} from '@/api/operation/arteryDepart'
 
   export default {
     components: {
@@ -138,15 +144,18 @@
     props: {
       orgid: [Number, String],
       dofo: [Array, Object],
-      model: [Array, Object]
+      model: [Array, Object],
+      loadTable: {
+        type: Array
+      }
     },
     data() {
 
       return {
-        intFreightItem:'',
-        intFreightIndex:'',
-        intFreight:'',
-        intFreightObj:'',
+        intFreightItem: '',
+        intFreightIndex: '',
+        intFreight: '',
+        intFreightObj: {},
         sendorgid: '',
         searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
         pickerOptions2: {
@@ -180,8 +189,40 @@
         contractNo: '',
         intelligentRouterData: [],
         intelligentLeftData: {
-          arriveOrgid: '',
           apportionTypeId: '',
+          arriveOrgid: '',
+          contractNo: '',
+          batchNo: '',
+          batchTypeId: 52,
+          loadTypeId: 39,
+          truckIdNumber: '',
+          dirverName: '',
+          dirverMobile: '',
+          truckLoad: '',
+          truckVolume: '',
+          loadTime: '',
+          planArrivedTime: '',
+          requireArrivedTime: '',
+          truckUserId: '',
+          remark: '',
+
+          // "arriveOrgid":7,
+          // "contractNo":"GX00001",
+          // "batchNo":"DB18060035",
+          // "batchTypeId":48,
+          // "loadTypeId":38,
+          // "truckIdNumber":"车牌号",
+          // "dirverName":"司机名",
+          // "dirverMobile":"司机电话",
+          // "truckLoad":1.5,
+          // "truckVolume":2,
+          // "apportionTypeId":41,
+          // "loadTime":"2018-05-22 00:00:00",
+          // "planArrivedTime":"2018-05-23 00:00:00",
+          // "requireArrivedTime":"2018-05-21 00:00:00",
+          // "remark":"备注",
+          // "truckUserId":null
+
         },
         intelligentData: {
           // loadTime: parseTime(new Date()),
@@ -210,7 +251,8 @@
         changeNumCN: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'],
         dataList: [{}, {}, {}],
         pretruckDisable: true,
-        nexttruckDisable: false
+        nexttruckDisable: false,
+        loadDataArray: []
       }
     },
     watch: {
@@ -222,11 +264,24 @@
       dofo: {
         handler(newVal) {
           this.dataList = this.dofo
-          console.log(this.dataList)
           // this.$nextTick(() => {
+          this.dataList.forEach((e, index) => {
+            let data = {}
+            this.$set(data, 'nowpayCarriage', e.price)
+            this.$set(e, 'tmsOrderLoadFee', data)
+            // console.log(e.price, this.intFreightObj)
+            data = {}
+            // this.intFreightObj.nowpayCarriage = e.price
+            // console.log('nowpayCarriage',this.intFreightObj, e.price)
+          })
           this.$emit('truckIndex', this.currentIndex)
           this.$emit('truckPrecent', this.dataList[0])
           // })
+
+        }
+      },
+      loadTable: {
+        handler(cval, oval) {
 
         }
       }
@@ -236,24 +291,17 @@
       this.init()
       this.getSystemTime()
       this.intelligentLeftData.arriveOrgid = this.orgid
-      // this.$nextTick(() => {
-
-      // })
 
     },
     activated() {
       this.init()
       this.getSystemTime()
       this.intelligentLeftData.arriveOrgid = this.orgid
-      // this.$nextTick(() => {
-      //   this.$emit('truckIndex', this.currentIndex)
-      //   this.$emit('truckPrecent', this.dataList[0])
-      // })
     },
     methods: {
-      getIntFreight(item,obj){
-        this.intFreight = item
-        this.intFreightObj = obj
+      getIntFreight(data) {
+        this.intFreight = data.val
+        this.intFreightObj = data.obj
 
       },
       doAction(type) {
@@ -270,8 +318,8 @@
         }
       },
       addFreight(val, index) {
-        this.intFreightItem=val
-        this.intFreightIndex=index
+        this.intFreightItem = val
+        this.intFreightIndex = index
         this.openlntelligent()
       },
       getSystemTime() { // 获取系统时间
@@ -404,19 +452,71 @@
       submitLoad(formName) {
         this.$message({type: 'warning', message: '计算配载'})
       },
+      setData() {
+        let arr = []
+        let data = {} // 数组中的单个对象
+        arr = Object.assign([], this.dataList)
+        arr.forEach((e, index) => {
+          this.$set(arr[index], 'carLoadDetail', this.loadTable[index])
+          if (index === this.intFreightIndex) {
+            this.$set(arr[index], 'tmsOrderLoadFee', this.intFreightObj)
+          } else {
+          }
+
+        })
+
+        arr.forEach((e, index) => {
+          let curinfo = {
+            apportionTypeId: this.intelligentLeftData.apportionTypeId,
+            arriveOrgid: this.intelligentLeftData.arriveOrgid,
+            contractNo: this.intelligentLeftData.contractNo,
+            batchNo: this.intelligentLeftData.batchNo,
+            batchTypeId: this.intelligentLeftData.batchTypeId,
+            truckIdNumber: this.intelligentLeftData.truckIdNumber,
+            dirverName: this.intelligentLeftData.dirverName,
+            dirverMobile: this.intelligentLeftData.dirverMobile,
+            truckLoad: this.intelligentLeftData.truckLoad,
+            truckVolume: this.intelligentLeftData.truckVolume,
+            loadTime: this.intelligentLeftData.loadTime,
+            planArrivedTime: this.intelligentLeftData.planArrivedTime,
+            requireArrivedTime: this.intelligentLeftData.requireArrivedTime,
+            truckUserId: this.intelligentLeftData.truckUserId,
+            remark: this.intelligentLeftData.remark
+            // intelligentLeftData: e.carDriver,
+            // carDriverId: e.carDriverId,
+            // carDriverPhone: e.carDriverPhone,
+            // carId: e.carId,
+            // carNo: e.carNo,
+            // id: e.id,
+            // name: e.name,
+            // price: e.price,
+            // reachDate: e.reachDate,
+            // spri: e.spri,
+            // swei: e.swei,
+            // svol: e.svol,
+            // url: e.url,
+            // volume: e.volume,
+            // weight: e.weight,
+            // arriveOrgid: this.intelligentLeftData.arriveOrgid,
+            // apportionTypeId: this.intelligentLeftData.apportionTypeId
+          }
+          this.$set(e, 'tmsOrderLoad', curinfo)
+          this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
+          this.$set(data, 'tmsOrderLoadFee', e.tmsOrderLoadFee)
+          this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
+          this.$set(this.loadDataArray, index, data)
+          data = {}
+          curinfo = {}
+        })
+
+
+      },
       submitForm(formName) {
         this.$refs['formModel'].validate((valid) => {
           if (valid) {
-            let arr = []
-            arr = Object.assign([], this.dataList)
-            arr.forEach((e, index) => {
-              if (index === this.currentIndex) {
-                this.$set(arr[index],'tmsOrderLoadFee',this.intFreightObj )
-              }
-            })
-
-           let data = []
-            postLoadInfo(data).then(res => {
+            this.setData()
+            console.log('loadDataArray', this.loadDataArray)
+            postIntnteSmartLoad(this.loadDataArray).then(res => {
               this.$message({type: 'warning', message: '保存配载'})
             }).catch(err => {
               this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
@@ -426,8 +526,10 @@
           } else {
             return false
           }
-        })
+          // })
 
+          // }
+        })
       },
       changeLoadNum(val, index, type) {
         this.$emit('truckPrecent', this.dataList[index])
@@ -618,7 +720,7 @@
                   margin-top: 10px;
                   .el-form-item {
                     margin-bottom: 0px;
-                    .el-input{
+                    .el-input {
                       max-width: 150px;
                     }
                   }

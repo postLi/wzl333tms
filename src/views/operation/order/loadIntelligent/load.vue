@@ -2,7 +2,7 @@
   <div class="loadIntelligent_content">
     <div class="loadIntelligent_main">
 
-      <loadInfo @truckPrecent="getTruckPrecent" :getLoadTable="loadInfoPercent" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
+      <loadInfo @truckPrecent="getTruckPrecent" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">

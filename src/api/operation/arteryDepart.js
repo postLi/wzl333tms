@@ -53,3 +53,6 @@ export function getIntnteInit(params) {
     return res.data || {}
   })
 }
+export function postIntnteSmartLoad(params) {
+  return fetch.post('/api-order/order/load/v1/smartLoad', params)
+}

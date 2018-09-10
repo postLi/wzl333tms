@@ -215,6 +215,9 @@
       intFreightIndex: {
         type: [String, Number],
         default: false
+      },
+      sendDataList: {
+        type: Array
       }
     },
     data() {
@@ -300,6 +303,7 @@
       intFreightIndex(newVal){
 
       },
+      sendDataList (newVal){},
       dotInfo(newVal) {
         // this.infoData(this.dotInfo)
       },
@@ -313,10 +317,15 @@
     mounted() {
       this.formInline.orgId = this.otherinfo.orgid
       if (this.popVisible) {
-        this.formInline.orgId = this.otherinfo.orgid
         // this.usersArr[0].nowpayCarriage =
         // alert(this.formInline.orgId)
       }
+       this.$nextTick(() => {
+         this.sendDataList.forEach((e, index) => {
+           this.usersArr[0].nowpayCarriage = e.price
+           this.submitForm()
+         })
+       })
     },
     methods: {
       changeFright(index, prop, newVal) {
@@ -372,7 +381,7 @@
       },
 
       closeMe(done) {
-        this.reset()
+        // this.reset()
         this.$emit('update:popVisible', false)
         if (typeof done === 'function') {
           done()
@@ -403,8 +412,13 @@
       },
       submitForm() {
         this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
-        this.$emit('getIntFreight', this.total,this.usersArr[0] )
-        // this.closeMe()
+        // this.$emit('getIntFreight', this.usersArr[0],this.total )
+
+        this.$emit('getIntFreight', {
+          obj: this.usersArr[0],
+          val: this.total
+        })
+        this.closeMe()
       },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
