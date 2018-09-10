@@ -1,5 +1,5 @@
 <template>
-  <div class="transferTable_wrapper">
+  <div class="transferTable_wrapper" v-loading="loading">
     <div class="transferTable_head"></div>
     <div class="transferTable_main">
       <div class="transferTable_main_left" style="height:100%;" :style="showLeftStyle">
@@ -33,9 +33,7 @@
             <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
           </el-tooltip>
         </div>
-        <el-table
-         draggable='true' @dragstart='drag($event)'
-         ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
+        <el-table draggable='true' @dragstart='drag($event)' ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
             <template slot-scope="scope">
               {{scope.$index+1}}
@@ -57,24 +55,28 @@
   </div>
 </template>
 <script>
-  import draggable from 'vuedraggable'
+import draggable from 'vuedraggable'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import { objectMerge2 } from '@/utils/index'
 export default {
-    props: {
-      truckIndex: {
-        type:[Number, String]
-      },
-      loadTable: {
-        type: Array
-      }
+  props: {
+    truckIndex: {
+      type: [Number, String],
+      default: () => {}
     },
+    loadTable: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       tablekey: 0,
+      loading: false,
       showTableMessage: '点击展开',
       isShowLeftTable: false,
       isShowRightTable: false,
+      orgData: {},
       leftTable: [],
       orgLeftTable: [],
       rightTable: [],
@@ -111,31 +113,31 @@ export default {
         },
         {
           label: '到达网点',
-          prop: 'repertoryVolume'
+          prop: 'shipToOrgName'
         },
         {
           label: '到达城市',
-          prop: 'repertoryVolume'
+          prop: 'shipToCityName'
         },
         {
           label: '货品名',
-          prop: 'repertoryVolume'
+          prop: 'cargoName'
         },
         {
           label: '开单网点',
-          prop: 'repertoryVolume'
+          prop: 'shipFromOrgName'
         },
         {
           label: '出发城市',
-          prop: 'repertoryVolume'
+          prop: 'shipFromCityName'
         },
         {
           label: '发货人',
-          prop: 'repertoryVolume'
+          prop: 'shipSenderName'
         },
         {
           label: '收货人',
-          prop: 'repertoryVolume'
+          prop: 'shipReceiverName'
         }
       ],
       tableColumnRight: [],
@@ -146,15 +148,15 @@ export default {
         },
         {
           label: '到达网点',
-          prop: 'shipSn'
+          prop: 'shipToOrgName'
         },
         {
           label: '到达城市',
-          prop: 'shipSn'
+          prop: 'shipToCityName'
         },
         {
           label: '货品名',
-          prop: 'shipSn'
+          prop: 'cargoName'
         },
         {
           label: '库存重量',
@@ -172,15 +174,15 @@ export default {
         },
         {
           label: '到达网点',
-          prop: 'shipSn'
+          prop: 'shipToOrgName'
         },
         {
           label: '到达城市',
-          prop: 'shipSn'
+          prop: 'shipToCityName'
         },
         {
           label: '货品名',
-          prop: 'shipSn'
+          prop: 'cargoName'
         },
         {
           label: '库存重量',
@@ -192,35 +194,53 @@ export default {
         },
         {
           label: '库存件数',
-          prop: 'repertoryVolume'
+          prop: 'repertoryAmount'
         },
         {
           label: '出发城市',
-          prop: 'repertoryVolume'
+          prop: 'shipFromCityName'
         },
         {
           label: '开单网点',
-          prop: 'repertoryVolume'
+          prop: 'shipFromOrgName'
         },
         {
           label: '发货人',
-          prop: 'repertoryVolume'
+          prop: 'shipSenderName'
         },
         {
           label: '收货人',
-          prop: 'repertoryVolume'
+          prop: 'shipReceiverName'
         },
         {
           label: '货号',
-          prop: 'repertoryVolume'
+          prop: 'shipGoodsSn'
         }
       ],
     }
   },
+  watch: {
+    loadTable: { // 深度监听数组变换
+      handler(cval, oval) { // 拿到智能配载返回的数据
+        this.orgData = Object.assign([], cval)
+        this.orgRightTable = Object.assign([], cval.right)
+        this.$nextTick(() => {
+          this.fetchList()
+        })
+      },
+      deep: true
+    },
+    truckIndex: {
+      handler(cval, oval) { // 深度监听车型下标index 例如：0-车型一
+        this.initTable()
+      }
+    },
+    deep: true
+  },
   mounted() {
     this.tableColumnLeft = Object.assign([], this.tableColumnLeftDepart)
     this.tableColumnRight = Object.assign([], this.tableColumnRightDepart)
-    this.fetchList()
+this.fetchList()
   },
   computed: {
     showLeftStyle() {
@@ -241,11 +261,40 @@ export default {
     }
   },
   methods: {
-    fetchList() {
-      getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-        this.leftTable = data.data
-        this.orgLeftTable = data.data
+    initTable() {
+      this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
+      
+      let arr = [] // 存储所有被配载的运单
+      this.orgRightTable.forEach((e, index) => {
+        e.forEach(em => {
+          arr.push(em)
+        })
       })
+      if (arr.length) {
+        arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
+          this.leftTable = this.leftTable.filter(em => {
+            return em.repertoryId != e.repertoryId
+          })
+        })
+      }else{
+        this.leftTable = Object.assign([], this.orgLeftTable)
+      }
+      this.$emit('loadCurTable', this.rightTable)
+      this.$emit('loadTable', this.orgRightTable)
+
+    },
+    fetchList() {
+      this.loading = false
+      this.leftTable = this.$options.data().leftTable
+      this.rightTable = this.$options.data().rightTable
+      getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => { // 库存运单列表
+        this.loading = true
+          this.orgLeftTable = data.data
+          this.initTable()
+        })
+        .catch(error => {
+          this.$message({ type: 'danger', message: error.errorInfo || error.text || '发生未知错误~' })
+        })
     },
     setHeaderAdd(h, { column }) {
       return h('el-button', {
@@ -274,7 +323,6 @@ export default {
       })
     },
     goLeft() { // 右边穿梭到左边
-      console.log('324534534534')
       this.selectedRight.forEach((e, index) => {
         this.leftTable = objectMerge2([], this.leftTable).filter(em => {
           return em.repertoryId !== e.repertoryId
@@ -287,46 +335,49 @@ export default {
         this.rightTable = objectMerge2([], this.rightTable).filter(el => {
           return el.repertoryId !== e.repertoryId
         })
+        this.orgRightTable[this.truckIndex] = objectMerge2([], this.orgRightTable[this.truckIndex]).filter(el => {
+          return el.repertoryId !== e.repertoryId
+        })
       })
-      this.$emit('loadTable', this.rightTable)
+      this.$emit('loadCurTable', this.rightTable)
+      this.$emit('loadTable', this.orgRightTable)
     },
     goRight() { // 左边穿梭到右边
-      console.log('1231231234')
       this.selectedLeft.forEach((e, index) => {
         this.rightTable = this.rightTable.filter(em => {
           return em.repertoryId !== e.repertoryId
         })
-        this.orgRightTable = this.orgRightTable.filter(em => {
+        this.orgRightTable[this.truckIndex] = objectMerge2([],this.orgRightTable[this.truckIndex]).filter(em => {
           return em.repertoryId !== e.repertoryId
         })
         this.rightTable.push(e)
-        this.orgRightTable.push(e)
+        this.orgRightTable[this.truckIndex].push(e)
         this.leftTable = this.leftTable.filter(el => {
           return el.repertoryId !== e.repertoryId
         })
+        this.orgLeftTable = this.orgLeftTable.filter(el => {
+          return el.repertoryId !== e.repertoryId
+        })
       })
-      this.$emit('loadTable', this.rightTable)
+      this.$emit('loadCurTable', this.rightTable)
+      this.$emit('loadTable', this.orgRightTable)
     },
     dclickAddItem(row, event) { // 双击添加单行
-      console.log(row)
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.goRight()
     },
     dclickMinusItem(row, event) { // 双击减去单行
-      console.log(row)
       this.selectedRight = []
       this.selectedRight.push(row)
       this.goLeft()
     },
     addItem(row, index) { // 点击按钮+ 添加单行
-      console.log(row)
       this.selectedLeft = []
-      this.selectedLeft[0]= row
+      this.selectedLeft[0] = row
       this.goRight()
     },
     minusItem(row, index) { // 点击按钮- 减去单行
-      console.log(row)
       this.selectedRight = []
       this.selectedRight[0] = row
       this.goLeft()
@@ -340,13 +391,11 @@ export default {
       this.goLeft()
     },
     clickLeftRow(row) {
-      console.log(row)
       this.selectedLeft = []
       this.selectedLeft[0] = row
       // this.$refs.multipleTableLeft.toggleRowSelection(row)
     },
-    clickRightRow (row) {
-      console.log(row)
+    clickRightRow(row) {
       this.selectedRight = []
       this.selectedRight[0] = row
       this.$refs.multipleTableRight.toggleRowSelection(row)

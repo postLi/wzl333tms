@@ -116,12 +116,6 @@ export default {
           fixed: false
         },
         {
-          label: '目的网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
           label: '送货时间',
           prop: 'loadTime',
           width: '160',

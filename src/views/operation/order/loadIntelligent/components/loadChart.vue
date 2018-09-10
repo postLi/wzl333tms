@@ -37,21 +37,13 @@ export default {
         totalVolume: 0, // 总载立方
         volume: 0, // 已配载-立方
         surplusVolume: 0 // 可配载
-      },
-      newInfo: {
-        totalWeight: 0, // 总载重
-        weight: 0, // 已配载-重量
-        surplusWeight: 0, // 可配载
-        totalVolume: 0, // 总载立方
-        volume: 0, // 已配载-立方
-        surplusVolume: 0 // 可配载
       }
     }
   },
   props: {
-    info: { // 表格里面的数据
+    info: { // 右边列表里面的数据
       type: Array,
-      default: []
+      default: () => {}
     },
     truckInfo: { // 顶部基本信息里面的数据
       type: Object,
@@ -100,30 +92,41 @@ export default {
     }
   },
   watch: {
+    info: {
+      handler(cval, oval) {
+        console.log('info',cval, oval)
+        this.baseInfo.weight = 0
+        this.baseInfo.volume = 0
+        cval.forEach(e => {
+          this.baseInfo.weight += Number(e.repertoryWeight) || 0
+          this.baseInfo.volume += Number(e.repertoryVolume) || 0
+        })
+        if (cval) {
+          this.initChart()
+        }
+      },
+      deep: true
+    },
     truckInfo: {
-      handler(newVal) {
-        console.log('chart',newVal)
+      handler(cval, oval) {
+        console.log('chart',cval, oval)
+        this.baseInfo.totalWeight = Number(cval.weight) || 0
+        this.baseInfo.totalVolume = Number(cval.volume) || 0
+        if (cval) {
+          this.initChart()
+        }
       },
       deep: true
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-  },
   methods: {
     initData() {},
     initChart() {
-      console.log('23423432',this.truckInfo)
+      console.log('234234', this.info, this.truckInfo)
       this.initData()
       this.initChartWeight()
       this.initChartVolume()
       window.addEventListener('resize', this.resizeChart.bind(this))
-      // window.addEventListener('resize', function () {
-      //   this.$refs.echartWeight.resize()
-      // })
-
     },
     showAllChart() {
       this.isShowChart = !this.isShowChart
@@ -152,7 +155,7 @@ export default {
           label: {
             normal: {
               show: true,
-              formatter: '{d}%',
+              formatter: '{b} \n\n {d}%',
               textStyle: {
                 fontWeight: 'normal',
                 fontSize: 14,
@@ -161,15 +164,15 @@ export default {
             }
           },
           data: [{
-              value: 35,
+              value: this.baseInfo.totalWeight,
               name: '已配载',
               itemStyle: {
                 color: '#FFCC66'
               }
             },
             {
-              value: 44,
-              name: '可配载',
+              value: this.baseInfo.weight,
+              name: '可载吨',
               itemStyle: {
                 color: '#79F7C1'
               }
@@ -205,7 +208,7 @@ export default {
           label: {
             normal: {
               show: true,
-              formatter: '{d}%',
+              formatter: '{b} \n\n {d}%',
               textStyle: {
                 fontWeight: 'normal',
                 fontSize: 14,
@@ -214,15 +217,15 @@ export default {
             }
           },
           data: [{
-              value: 44,
+              value: this.baseInfo.totalVolume,
               name: '已配载',
               itemStyle: {
                 color: '#FFCC66'
               }
             },
             {
-              value: 55,
-              name: '可配载',
+              value: this.baseInfo.volume,
+              name: '可载方',
               itemStyle: {
                 color: '#79F7C1'
               }
@@ -265,12 +268,11 @@ export default {
     .bggreen {
     }
     .bgblue {
-      background: #eee;
     }
     .chartItem {
       flex: 1;
       position: relative;
-      b {
+      b {  
         color: red;
         position: absolute;
         top: 10px;

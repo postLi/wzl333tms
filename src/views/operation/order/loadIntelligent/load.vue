@@ -121,7 +121,7 @@
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable :truckIndex="truckIndex" :loadTable="intelligentData.carLoadDetail" @showViewTable="showFullViewTable" @loadTable="getLoadTable"></transferTable>
+        <transferTable :truckIndex="truckIndex" :loadTable="setLoadTableList" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
@@ -204,7 +204,11 @@
         intelligentData: [],
         changeDriverKey: '',
         changeTruckKey: '',
-        rules: {}
+        rules: {},
+        setLoadTableList: {
+          left: [],
+          right: []
+        }
       }
     },
     computed: {
@@ -260,6 +264,9 @@
         this.loading = true
         return getIntnteInit(this.sendRoute).then(data => {
           this.intelligentData = data.transp[0].standacars
+          this.intelligentData.forEach((e, index) => {
+            this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
+          })
           this.loading = false
         }).catch(err => {
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
@@ -429,8 +436,10 @@
         // this.$emit('change', this.searchForm)
       },
       getLoadTable(arr) {
-        this.loadInfoPercentOrg = objectMerge2([], arr)
         this.loadTableInfo = arr
+      },
+      getLoadCurTable (arr) {
+        this.loadInfoPercentOrg = objectMerge2([], arr)
       },
       showFullViewTable(val) { // 穿梭框全屏展示
         this.isShowViewTable = val

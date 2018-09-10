@@ -338,7 +338,6 @@
           getTrucK().then(data => {
             this.Trucks = data.data
             this.cacheTruckList[orgid] = data.data
-            console.log('Trucks', this.Trucks)
           }).catch(error => {
             this.$message.error(error.errorInfo || error.text)
           })
@@ -399,12 +398,12 @@
         this.currentIndex = index
         this.showCurrenFormStyle = []
         this.showCurrenFormStyle[index] = true
-        console.log(this.showCurrenFormStyle[index], this.currentIndex)
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.dataList[this.currentIndex])
       },
       addtuck() {
         ++this.currentIndex
+        this.dataList.push({})
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.dataList[this.currentIndex])
       },
@@ -560,7 +559,7 @@
               flex-direction: row;
               .loadInfo_item_form {
                 padding-top: 15px;
-                min-width: 1010px;
+                min-width: 1000px;
                 display: inline-block;
                 .loadInfo_item_form_row {
                   display: flex;
@@ -569,6 +568,9 @@
                   margin-top: 10px;
                   .el-form-item {
                     margin-bottom: 0px;
+                    .el-input{
+                      max-width: 150px;
+                    }
                   }
                   .el-form-item--mini.el-form-item,
                   .el-form-item--small.el-form-item {
