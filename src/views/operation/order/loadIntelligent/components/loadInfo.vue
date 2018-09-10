@@ -55,10 +55,10 @@
                       </el-form-item>
                       <!--</el-form-item>-->
                       <el-form-item label="可载方" prop="">
-                        <el-input v-model="intelligentData.truckVolume" :maxlength="3"></el-input>
+                        <el-input v-model="item.volume" :maxlength="3" @change="(val) =>changeLoadNum(val, index, 'volume')"></el-input>
                       </el-form-item>
                       <el-form-item label="可载吨" prop="">
-                        <el-input v-model="intelligentData.truckLoad" :maxlength="3"></el-input>
+                        <el-input v-model="item.weight" :maxlength="3" @change="(val) =>changeLoadNum(val, index, 'weight')"></el-input>
                       </el-form-item>
                     </div>
                     <div class="loadInfo_item_form_row">
@@ -215,19 +215,33 @@
       dofo:{
         handler(newVal){
           this.dataList = this.dofo
+          console.log(this.dataList)
+          // this.$nextTick(() => {
+            this.$emit('truckIndex', this.currentIndex)
+            this.$emit('truckPrecent', this.dataList[0])
+          // })
 
         }
       }
     },
     mounted() {
+
       this.init()
       this.getSystemTime()
       this.intelligentLeftData.arriveOrgid = this.orgid
+      // this.$nextTick(() => {
+
+      // })
+
     },
     activated() {
       this.init()
       this.getSystemTime()
       this.intelligentLeftData.arriveOrgid = this.orgid
+      // this.$nextTick(() => {
+      //   this.$emit('truckIndex', this.currentIndex)
+      //   this.$emit('truckPrecent', this.dataList[0])
+      // })
     },
     methods: {
 
@@ -276,6 +290,7 @@
         // })
       },
       init() {
+
         this.intelligentData = this.$options.data().intelligentData
         // this.$refs['ruleForm'].resetFields()
         // this.setLoadTypeId()
@@ -288,6 +303,7 @@
           this.inited = true
           this.initInfo()
         }
+
       },
       initInfo() {
         this.loading = false
@@ -376,14 +392,21 @@
       submitForm(formName) {
         this.$message({type: 'warning', message: '保存配载'})
       },
+      changeLoadNum (val, index, type){
+        this.$emit('truckPrecent', this.dataList[index])
+      },
       selectCurrentTuck(item, index) {
         this.currentIndex = index
         this.showCurrenFormStyle = []
         this.showCurrenFormStyle[index] = true
         console.log(this.showCurrenFormStyle[index], this.currentIndex)
+        this.$emit('truckIndex', this.currentIndex)
+        this.$emit('truckPrecent', this.dataList[this.currentIndex])
       },
       addtuck() {
-
+        ++this.currentIndex
+        this.$emit('truckIndex', this.currentIndex)
+        this.$emit('truckPrecent', this.dataList[this.currentIndex])
       },
       pretruck() { // 展示上一个车型
         if (this.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
@@ -402,7 +425,9 @@
               this.pretruckDisable = true
             }
           }
+          this.$emit('truckPrecent', this.dataList[this.currentIndex])
         }
+        this.$emit('truckIndex', this.currentIndex)
       },
       nexttruck() { // 展示下一个车型
         if (this.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
@@ -422,6 +447,8 @@
             }
           }
         }
+        this.$emit('truckIndex', this.currentIndex)
+        this.$emit('truckPrecent', this.dataList[this.currentIndex])
       }
     }
   }

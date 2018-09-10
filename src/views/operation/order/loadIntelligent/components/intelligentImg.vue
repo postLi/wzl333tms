@@ -23,20 +23,23 @@
     },
     mounted() {
       this.sendIndex = this.$route.query.sendDate
-      console.log(this.$route.query, '路由跳转')
+      // console.log(this.$route.query, '路由跳转')
       // this.searchQuery.vo.memberId = this.$route.query.id
     },
     methods: {
       openInteligent() {
+        // console.log(JSON.parse(this.$route.query.sendData),this.$route)
         this.$router.push(
           {
             path: '/operation/order/loadIntelligent/index',
             query: {
               tab: '智能配载',
-              sendDateT: this.$route.query.sendDate
+              orgId: this.$route.query.orgId,
+              sendDate: this.$route.query.sendData
             }
           },
         )
+        // console.log(this.$route)
       }
     }
   }

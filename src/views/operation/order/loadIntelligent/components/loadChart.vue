@@ -55,7 +55,7 @@ export default {
     },
     truckInfo: { // 顶部基本信息里面的数据
       type: Object,
-      default: {}
+      default: () => {}
     },
     className: {
       type: String,
@@ -99,12 +99,23 @@ export default {
       }
     }
   },
+  watch: {
+    truckInfo: {
+      handler(newVal) {
+        console.log('chart',newVal)
+      },
+      deep: true
+    }
+  },
   mounted() {
-    this.initChart()
+    this.$nextTick(() => {
+      this.initChart()
+    })
   },
   methods: {
     initData() {},
     initChart() {
+      console.log('23423432',this.truckInfo)
       this.initData()
       this.initChartWeight()
       this.initChartVolume()
@@ -112,6 +123,7 @@ export default {
       // window.addEventListener('resize', function () {
       //   this.$refs.echartWeight.resize()
       // })
+
     },
     showAllChart() {
       this.isShowChart = !this.isShowChart
@@ -172,7 +184,7 @@ export default {
     },
     initChartVolume() {
       this.chart2 = echarts.init(this.$refs.echartVolume)
-      
+
       this.chart2.setOption({
         title: {
           subtextStyle: {

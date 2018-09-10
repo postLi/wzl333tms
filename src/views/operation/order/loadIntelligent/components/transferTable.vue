@@ -61,6 +61,14 @@
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import { objectMerge2 } from '@/utils/index'
 export default {
+    props: {
+      truckIndex: {
+        type:[Number, String]
+      },
+      loadTable: {
+        type: Array
+      }
+    },
   data() {
     return {
       tablekey: 0,

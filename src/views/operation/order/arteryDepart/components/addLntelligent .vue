@@ -147,7 +147,7 @@
         btnsize: 'mini',
         selected: [],
         rules: {
-          orgId: [{required: true,message:'到达网点不能为空'}],
+          orgId: [{required: true, message: '到达网点不能为空'}],
           shipSn: [
             {validator: validateShipNum}
           ],
@@ -186,7 +186,7 @@
           shipGoodsSn: '',
           pickupFee: '',
           orgId: '',
-          name:''
+          name: ''
         },
         sendId: {
           pickupId: '',
@@ -309,30 +309,34 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             //跳到动画
+            let data = this.usersArr.filter(el => {
+              return el.selectdCheck === false
+            })
+            console.log(data)
+            this.$router.push(
+              {
+                path: '/operation/order/loadIntelligent/components/intelligentImg',
+                query: {
+                  tab: '智能配载',
+                  orgId: this.formInline.orgId,
+                  sendData: JSON.stringify(data)
+                  // sendData: data
+                }
+              },
+            )
             // this.$router.push(
             //   {
-            //     path: '/operation/order/loadIntelligent/components/intelligentImg',
+            //     path: '/operation/order/loadIntelligent/index',
             //     query: {
             //       tab: '智能配载',
+            //       orgId: this.formInline.orgId,
+            //       // name:
             //       sendData: this.usersArr.filter(el => {
             //         return el.selectdCheck === false
             //       })
             //     }
             //   },
             // )
-            this.$router.push(
-              {
-                path: '/operation/order/loadIntelligent/index',
-                query: {
-                  tab: '智能配载',
-                  orgId: this.formInline.orgId,
-                  // name:
-                  sendData: this.usersArr.filter(el => {
-                    return el.selectdCheck === false
-                  })
-                }
-              },
-            )
             this.closeMe()
 
 

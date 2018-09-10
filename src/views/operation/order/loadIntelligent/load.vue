@@ -2,7 +2,7 @@
   <div class="loadIntelligent_content">
     <div class="loadIntelligent_main">
 
-      <loadInfo :orgid="$route.query.orgId" :dofo="intelligentData"></loadInfo>
+      <loadInfo @truckPrecent="getTruckPrecent" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
       <!-- <div class="load-intelligent">
         <div class="header-left">
           <el-tabs type="border-card" class="intelligent-card">
@@ -121,11 +121,11 @@
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable @showViewTable="showFullViewTable" @loadTable="getLoadTable"></transferTable>
+        <transferTable :truckIndex="truckIndex" :loadTable="intelligentData.carLoadDetail" @showViewTable="showFullViewTable" @loadTable="getLoadTable"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
-        <loadChart :info="loadInfoPercent" ref="loadchart" :truckInfo="formModel"
+        <loadChart :info="loadInfoPercent" ref="loadchart" :truckInfo="truckPrecent"
                    @showViewChart="showFullViewChart"></loadChart>
       </div>
       <!-- 添加车辆信息 -->
@@ -171,6 +171,8 @@
     },
     data() {
       return {
+        truckIndex: '',
+        truckPrecent: {},
         sendRoute: {
           orgId: '',
           standCar: [{}]
@@ -247,8 +249,12 @@
     methods: {
 
       infoData() {
+        let obj = JSON.parse(this.$route.query.sendDate)
         this.sendRoute.orgId = this.$route.query.orgId
-        this.sendRoute.standCar = this.$route.query.sendData.map((item, val) => {
+        // for (var i in this.$route.query.sendDate) {
+        //   this.sendRoute.standCar[i] = Object.assign(this.$route.query.sendDate[i])
+        // }
+        this.sendRoute.standCar = obj.map((item, val) => {
           return {id: item.cid, spri: item.price}
         })
         this.loading = true
@@ -260,8 +266,12 @@
           this.loading = false
         })
       },
-
-
+      getTruckIndex (obj) {
+        this.truckIndex = obj
+      },
+      getTruckPrecent (obj) {
+        this.truckPrecent = obj
+      },
       //
       resizeChart() {
         this.$refs.loadchart.resizeChart()
