@@ -33,9 +33,11 @@
                 <div class="loadInfo_item" v-for="(item, index) in dataList"
                      :style="{width: showCurrenFormStyle[index]?'calc(100% - 185px)': ''}" v-show="isShowCurPages">
                   <el-button class="verticalBtn" @click="selectCurrentTuck(item, index)"
-                             :class="{'verticalBtnActive':showCurrenFormStyle[index]}">车型{{ changeNumCN[index]}}
+                             :class="{'verticalBtnActive':showCurrenFormStyle[index]}">
+                             <i class="lll-ntelligent-del" :class="{'lll-ntelligent-delActive':showCurrenFormStyle[index]}" @click="delCurTruck(index,item)"></i>
+                             车型{{ changeNumCN[index]}}
                   </el-button>
-                  <i class="lll-ntelligent-del"><img src=".././../../../../assets/icom/lll-ntelligent-del.png" alt=""></i>
+                  
                   <div class="loadInfo_item_form" v-show="showCurrenFormStyle[index]">
                     <div class="loadInfo_item_form_row">
                       <el-form-item label="车型" class="nameClass">
@@ -245,7 +247,7 @@
         },
         currentIndex: 0,
         formModelRules: {},
-        changeNumCN: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'],
+        changeNumCN: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十','十一','十二','十三','十四'],
         dataList: [{}, {}, {}],
         pretruckDisable: true,
         nexttruckDisable: false,
@@ -551,6 +553,7 @@
         })
       },
       changeLoadNum(val, index, type) {
+
         this.$emit('truckPrecent', this.dataList[index])
       },
       selectCurrentTuck(item, index) {
@@ -559,6 +562,15 @@
         this.showCurrenFormStyle[index] = true
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.dataList[this.currentIndex])
+      },
+      delCurTruck(index,item){
+        this.$message.warning('暂无此功能！')
+        // this.currentIndex = index
+        // this.$emit('truckIndex', this.currentIndex)
+        // this.dataList =  this.dataList.filter((e, index) => {
+        //   return index !== this.currentIndex
+        // })
+        // console.log(index)
       },
       addtuck() {
         ++this.currentIndex
@@ -692,24 +704,48 @@
             word-wrap: break-word;
             color: rgb(5,136,195);
             font-weight: 600;
+              position: relative;
           }
           .verticalBtn:hover {
             color: #fff;
             transition: 0.3s;
-            background-color: rgb(5,136,195);
+           background-color:#0c6e9b;
           }
           .verticalBtnActive {
             color: #fff;
             background-color: rgb(5,136,195);
           }
-          i.lll-ntelligent-del{
-            position: relative;
 
-            img{
-              position: absolute;
-              left: -15px;
-              cursor: pointer;
-            }
+          .verticalBtn:hover i.lll-ntelligent-del::before{
+            background-image: url(../../../../../assets/icom/load/07sc.png);
+            background-repeat: no-repeat;
+            transition: 0.3s;
+
+          }
+          i.lll-ntelligent-del:before{
+            content: '';
+            display: block;
+            position:absolute;
+            top:0px;
+            right:-7px;
+            width: 20px;
+            height: 20px;
+            background-image: url(../../../../../assets/icom/load/09sc.png);
+            background-repeat: no-repeat;
+            transition: 0.3s;
+          }
+          
+          i.lll-ntelligent-delActive:before{
+            content: '';
+            display: block;
+            position:absolute;
+            top:0px;
+            right:-7px;
+            width: 20px;
+            height: 20px;
+            background-image: url(../../../../../assets/icom/load/07sc.png);
+            background-repeat: no-repeat;
+            transition: 0.3s;
           }
           .loadInfo_collapse_list {
             width: 100%;

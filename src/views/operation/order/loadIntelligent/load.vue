@@ -149,9 +149,11 @@
 
           if (data) {
             this.intelligentData = data.transp[0].standacars
+            this.setLoadTableList.left = data.transp[0].storeOrderListloss
             this.intelligentData.forEach((e, index) => {
             this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
           })
+
           }else {
             this.eventBus.$emit('closeCurrentView')
             this.$message({type: 'warning', message:'无配载信息'})

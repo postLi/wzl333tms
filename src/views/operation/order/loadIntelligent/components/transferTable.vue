@@ -226,17 +226,20 @@ export default {
           cval.right.forEach(el => {
             el.forEach(e => {
               e.loadAmount = e.repertoryAmount
-        e.loadWeight = e.repertoryWeight
-        e.loadVolume = e.repertoryVolume
+              e.loadWeight = e.repertoryWeight
+              e.loadVolume = e.repertoryVolume
             })
-            
           })
         }
+
         this.orgData = Object.assign([], cval)
         this.orgRightTable = Object.assign([], cval.right)
-        this.$nextTick(() => {
-          this.fetchList()
-        })
+        this.orgLeftTable = Object.assign([], cval.left)
+        this.leftTable = Object.assign([], cval.left)
+        this.initTable()
+        // this.$nextTick(() => {
+        //   this.fetchList()
+        // })
       },
       deep: true
     },
@@ -250,7 +253,8 @@ export default {
   mounted() {
     this.tableColumnLeft = Object.assign([], this.tableColumnLeftDepart)
     this.tableColumnRight = Object.assign([], this.tableColumnRightDepart)
-    this.fetchList()
+    this.initTable()
+    // this.fetchList()
   },
   computed: {
     showLeftStyle() {
@@ -303,22 +307,23 @@ export default {
 
     },
     fetchList() {
-      this.loading = false
+      // this.loading = false
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => { // 库存运单列表
-          data.data.forEach(e => {
-            e.loadAmount = e.repertoryAmount
-        e.loadWeight = e.repertoryWeight
-        e.loadVolume = e.repertoryVolume
-          })
-          this.loading = true
-          this.orgLeftTable = data.data
-          this.initTable()
-        })
-        .catch(error => {
-          this.$message({ type: 'danger', message: error.errorInfo || error.text || '发生未知错误~' })
-        })
+
+      // getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => { // 库存运单列表
+      //     data.data.forEach(e => {
+      //       e.loadAmount = e.repertoryAmount
+      //   e.loadWeight = e.repertoryWeight
+      //   e.loadVolume = e.repertoryVolume
+      //     })
+      //     this.loading = true
+      //     this.orgLeftTable = data.data
+      //     this.initTable()
+      //   })
+      //   .catch(error => {
+      //     this.$message({ type: 'danger', message: error.errorInfo || error.text || '发生未知错误~' })
+      //   })
     },
     setHeaderAdd(h, { column }) {
       return h('el-button', {

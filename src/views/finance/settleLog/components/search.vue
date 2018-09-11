@@ -112,9 +112,9 @@ export default {
         // createBy: 0,
         // financialWay: '',
         // id: 0,
-        orgId: '',
-        startTime: '',
-        endTime: ''
+        orgId: ''
+        // startTime: '',
+        // endTime: ''
         // paymentsType: 0,
         // receivableNumber: '',
         // remark: '',
