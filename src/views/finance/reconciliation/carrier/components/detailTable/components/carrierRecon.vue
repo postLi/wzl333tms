@@ -1103,6 +1103,7 @@
         this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
         this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
       },
+      //
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {
           confirmButtonText: '确定',

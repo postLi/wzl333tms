@@ -2,87 +2,158 @@
   <div class="lntelligentPset-maintain">
 
     <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible"  class='pickpopDepMain' v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
-
-
-      <!--<template class='pickRelationPop-content' slot="content">-->
-      <!--isDepMain-->
       <div class="depmain-div">
-       <div class="checklistClass">
-         <el-checkbox-group v-model="checkList">
-           <ul>
-             <li><el-checkbox label="大件优先"></el-checkbox></li>
-             <li><el-checkbox label="急件优先"></el-checkbox></li>
-             <li><el-checkbox label="库龄升序优先"></el-checkbox></li>
-           </ul>
-           <ul>
-             <li><el-checkbox label="库龄降序优先" ></el-checkbox></li>
-             <li><el-checkbox label="件数单价高优先" ></el-checkbox></li>
-             <li><el-checkbox label="体积单价高优先" ></el-checkbox></li>
-           </ul>
-           <ul>
-             <li><el-checkbox label="重量单价高优先" ></el-checkbox></li>
-           </ul>
+       <!--<div class="checklistClass">-->
+         <!--<el-checkbox-group v-model="checkList">-->
+           <!--<ul>-->
+             <!--<li><el-checkbox label="大件优先"></el-checkbox></li>-->
+             <!--<li><el-checkbox label="急件优先"></el-checkbox></li>-->
+             <!--<li><el-checkbox label="库龄升序优先"></el-checkbox></li>-->
+           <!--</ul>-->
+           <!--<ul>-->
+             <!--<li><el-checkbox label="库龄降序优先" ></el-checkbox></li>-->
+             <!--<li><el-checkbox label="件数单价高优先" ></el-checkbox></li>-->
+             <!--<li><el-checkbox label="体积单价高优先" ></el-checkbox></li>-->
+           <!--</ul>-->
+           <!--<ul>-->
+             <!--<li><el-checkbox label="重量单价高优先" ></el-checkbox></li>-->
+           <!--</ul>-->
+         <!--</el-checkbox-group>-->
+       <!--</div>-->
 
+        <div>
+          <el-tabs type="border-card">
+            <el-tab-pane>
+              <span slot="label"> 系统车型</span>
+              <el-table
+                ref="multipleTable"
+                :data="usersArr"
+                stripe
+                border
+                @row-click="clickDetails"
+                @selection-change="getSelection"
+                height="200"
+                tooltip-effect="dark"
 
+                style="width: 490px"
+                class="tableIntelligent"
+              >
+                <el-table-column
+                  fixed
 
+                  type="selection"
+                  width="60">
+                </el-table-column>
+                <el-table-column
+                  fixed
 
+                  prop="shipSn"
+                  label="车型"
+                  width="80">
+                </el-table-column>
+                <el-table-column
+                  fixed
 
-         </el-checkbox-group>
-       </div>
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="200"
-          tooltip-effect="dark"
+                  prop="shipGoodsSn"
+                  width="90"
+                  label="承载重">
+                </el-table-column>
+                <el-table-column
+                  fixed
 
-          style="width: 560px"
-          class="tableIntelligent"
-        >
-          <el-table-column
-            fixed
+                  prop="pickupFee"
+                  width="90"
+                  label="承载方">
+                </el-table-column>
+                <el-table-column
+                  fixed
+                  prop="pickupFee"
+                  width="135"
+                  label="车费">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.num"
+                              :size="btnsize" v-number-only:point
+                              @change="(val)=>changeFright(scope.$index, scope.prop, val)"
+                              :disabled="selectdCheck"></el-input>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="自定义车型">
+              <div class="tableIntelligentPSet">
+                <el-table
+                  ref="multipleTable"
+                  :data="usersArr"
+                  stripe
+                  border
+                  @row-click="clickDetails"
+                  @selection-change="getSelection"
+                  height="200"
+                  tooltip-effect="dark"
 
-            type="selection"
-            width="60">
-          </el-table-column>
-          <el-table-column
-            fixed
+                  style="width: 490px"
 
-            prop="shipSn"
-            label="车型"
-            width="90">
-          </el-table-column>
-          <el-table-column
-            fixed
+                >
+                  <el-table-column
+                    fixed
+                    type="selection"
+                    width="60">
+                  </el-table-column>
+                  <el-table-column
+                    fixed
+                    prop="name"
+                    label="车型"
+                    width="90">
+                    <template slot-scope="scope">
+                      <el-input v-model.number="scope.row.price"
+                                :size="btnsize" v-number-only:point
+                                @change="(val)=>changeFright(scope.$index, scope.prop, val)"
+                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    fixed
+                    prop="weight"
+                    width="90"
+                    label="承载重">
+                    <template slot-scope="scope">
+                      <el-input v-model.number="scope.row.price"
+                                :size="btnsize" v-number-only:point
+                                @change="(val)=>changeFright(scope.$index, scope.prop, val)"
+                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    fixed
+                    prop="vol"
+                    width="90"
+                    label="承载方">
+                    <template slot-scope="scope">
+                      <el-input v-model.number="scope.row.price"
+                                :size="btnsize" v-number-only:point
+                                @change="(val)=>changeFright(scope.$index, scope.prop, val)"
+                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    fixed
+                    prop="price"
+                    width="125"
+                    label="车费">
+                    <template slot-scope="scope">
+                      <el-input v-model.number="scope.row.price"
+                                :size="btnsize" v-number-only:point
+                                @change="(val)=>changeFright(scope.$index, scope.prop, val)"
+                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
 
-            prop="shipGoodsSn"
-            width="100"
-            label="承载重">
-          </el-table-column>
-          <el-table-column
-            fixed
+            </el-tab-pane>
+          </el-tabs>
+        </div>
 
-            prop="pickupFee"
-            width="90"
-            label="承载方">
-          </el-table-column>
-          <el-table-column
-            fixed
-
-            prop="pickupFee"
-            width="138"
-            label="车费">
-            <template slot-scope="scope">
-              <el-input v-model.number="scope.row.num"
-                        :size="btnsize" v-number-only:point
-                        @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                        :disabled="selectdCheck"></el-input>
-            </template>
-          </el-table-column>
-        </el-table>
         <p>注：请填写车费，保证单车毛利的准确性。</p>
 
 
@@ -151,6 +222,7 @@
       }
 
       return {
+        selectdCheck: true,
         checkList: ['选中且禁用','复选框 A'],
         selectdCheck: true,
         btnsize: 'mini',
@@ -381,14 +453,20 @@
         this.$refs.multipleTable.toggleRowSelection(row)
       },
       getSelection(selection) {
+        // 1.全部置为不可编辑状态
+        this.usersArr.forEach(el => {
+          el.selectdCheck = true
+        })
 
+        // 2.选中的改为可编辑状态
         if (selection) {
           this.selected = selection
-          this.selectdCheck = false
-          console.log(this.selectdCheck, '选中')
+          this.selected.forEach(el => {
+            el.selectdCheck = false
+
+          })
         } else {
-          this.selectdCheck = true
-          console.log(this.selectdCheck, '未选中')
+          // 3.剩下的为不可编辑状态
         }
 
       }
@@ -414,6 +492,29 @@
           color: rgb(100,186,245);
         }
 
+      }
+      .el-tabs__content{
+        .el-table{
+          .el-table__fixed-body-wrapper{
+            .el-table__row{
+              td:not(:first-of-type){
+                padding: 0 0;
+                .cell{
+                  padding-left: 0;
+                  padding-right: 0;
+                  .el-input.el-input--mini{
+                    /*width: 114%;*/
+                    .el-input__inner{
+                      border-radius: 0;
+                    }
+                  }
+                }
+              }
+
+            }
+
+          }
+        }
       }
       .el-dialog__body {
         padding: 20px 35px;
@@ -447,6 +548,7 @@
             padding-top: 20px;
             color: rgb(254,52,52);
           }
+
         }
       }
       .el-dialog__footer{

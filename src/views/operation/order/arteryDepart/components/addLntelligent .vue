@@ -33,37 +33,31 @@
         >
           <el-table-column
             fixed
-
             type="selection"
             width="60">
           </el-table-column>
           <el-table-column
             fixed
-
             prop="name"
             label="车型"
             width="90">
           </el-table-column>
           <el-table-column
             fixed
-
             prop="weight"
             width="100"
             label="承载重">
           </el-table-column>
           <el-table-column
             fixed
-
             prop="vol"
             width="90"
             label="承载方">
           </el-table-column>
           <el-table-column
             fixed
-
             prop="price"
             width="138"
-
             label="车费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.price"
@@ -128,65 +122,20 @@
       createrId: [Number, String]
     },
     data() {
-      let hasOne = false
-      const validateShipNum = (rule, value, callback) => {
-        if (this.formInline.shipSn === '' && this.formInline.shipGoodsSn === '') {
-          hasOne = false
-        } else {
-          hasOne = true
-        }
-        if (!hasOne) {
-          callback(new Error('运单号或货号必填其中一项'))
-        } else {
-          callback()
-        }
-      }
-
       return {
         selectdCheck: true,
         btnsize: 'mini',
         selected: [],
         rules: {
-          orgId: [{required: true, message: '到达网点不能为空'}],
-          shipSn: [
-            {validator: validateShipNum}
-          ],
-          shipGoodsSn: [
-            {validator: validateShipNum}
-          ]
+          orgId: [{required: true, message: '到达网点不能为空', trigger: 'blur'}]
         },
         formLabelWidth: '100',
-        usersArr: [
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // },
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // },
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // },
-          // {
-          //   num: 10,
-          //   date: '车型',
-          //   selectdCheck: true
-          // }
-        ],
+        usersArr: [],
         checked1: true,
         popTitle: '填写参数',
         loading: true,
         formInline: {
-          shipSn: '',
-          shipGoodsSn: '',
-          pickupFee: '',
-          orgId: '',
-          name: ''
+          orgId: ''
         },
         sendId: {
           pickupId: '',
@@ -208,24 +157,22 @@
           return this.popVisible
         },
         set() {
+          return this.formInline.orgId
         }
       }
     },
     watch: {
       dotInfo(newVal) {
-        // this.infoData(this.dotInfo)
       },
       popVisible(newVal) {
-        // this.fetchData()
+        this.infoFetch()
+      },
+      orgId(newVal){
+
       }
     },
     mounted() {
-      // this.formInline.orgId = this.otherinfo.orgid
-      this.infoFetch()
       if (this.popVisible) {
-
-        // this.formInline.orgId = this.otherinfo.orgid
-        // alert(this.formInline.orgId)
       }
     },
     methods: {
@@ -264,31 +211,6 @@
       search(item) {
         return !item.pickupBatchNumber
       },
-      // fetchFindByShipSnOrGoodSn() {
-      //   this.loading = true
-      //   return getFindShipByid(this.dotInfo.id).then(data => {
-      //     this.usersArr = data
-      //     this.loading = false
-      //   }).catch((err)=>{
-      //     this.loading = false
-      //     this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      //   })
-      // },
-      fetchData() {
-        // this.fetchFindByShipSnOrGoodSn()
-      },
-      getShipSn(order) {
-        if (order) {
-          this.formInline.shipGoodsSn = order.shipGoodsSn
-          this.sendId.shipId = order.id
-        }
-      },
-      getShipGoodsSn(order) {
-        if (order) {
-          this.formInline.shipSn = order.shipSn
-          this.sendId.shipId = order.id
-        }
-      },
       closeMe(done) {
         this.reset()
         this.$emit('update:popVisible', false)
@@ -297,13 +219,8 @@
         }
       },
       reset() {
-        // this.usersArr = []
-      },
-      setObject(obj1, obj2) {
-        for (var i in obj1) {
-          obj1[i] = obj2 ? obj2[i] : ''
-        }
-        return obj1
+        this.usersArr = []
+        this.formInline.orgId = ""
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -312,7 +229,6 @@
             let data = this.usersArr.filter(el => {
               return el.selectdCheck === false
             })
-            console.log(data)
             this.$router.push(
               {
                 path: '/operation/order/loadIntelligent/components/intelligentImg',
@@ -338,68 +254,10 @@
             //   },
             // )
             this.closeMe()
-
-
-            // this.$router.push(
-            //   {
-            //     path: '/operation/order/loadIntelligent/index',
-            //     query: {
-            //       sendDate: this.usersArr
-            //     }
-            //   },
-            // )
-
-            // this.loading = true
-            // this.sendId.pickupFee = this.formInline.pickupFee
-            // const pickupFee = this.sendId.pickupFee || ''
-            // const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
-            //
-            // promiseObj.then(res => {
-            //   this.loading = false
-            //   this.$message({
-            //     message: '添加成功~',
-            //     type: 'success'
-            //   })
-            //   delete this.sendId.shipId
-            //   this.fetchData()
-            //   this.reset()
-            //   this.$emit('success')
-            // }).catch(err => {
-            //   this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-            //   this.loading = false
-            // })
           } else {
             return false
           }
         })
-      },
-      removeList() {
-        // if (!this.selected.length) {
-        //   this.$message({
-        //     message: '请选择要操作的列表项~',
-        //     type: 'warning'
-        //   })
-        //   return false
-        // }else {
-        //   if (this.selected.length > 1) {
-        //     this.$message({
-        //       message: '每次只能选择单条数据~',
-        //       type: 'warning'
-        //     })
-        //     return false
-        //   }        else {
-        //     const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
-        //     promiseObj.then(res => {
-        //       this.loading = false
-        //       this.$message.success("保存成功")
-        //       this.fetchData()
-        //       this.$emit('success')
-        //   }).catch(err => {
-        //     this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-        //       this.loading = false
-        //     })
-        //   }
-        // }
       },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)

@@ -127,7 +127,6 @@
     mounted() {
       this.init()
       this.infoData()
-      // console.log(this.$route.query, '首页数据')
 
     },
     activated() {
@@ -147,7 +146,7 @@
         })
         this.loading = true
         return getIntnteInit(this.sendRoute).then(data => {
-          
+
           if (data) {
             this.intelligentData = data.transp[0].standacars
             this.intelligentData.forEach((e, index) => {

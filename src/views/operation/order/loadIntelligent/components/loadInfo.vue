@@ -3,9 +3,10 @@
     <div class="loadInfo_btns clraefix">
       <el-button type="primary" @click="submitLoad('formModel')" icon="el-icon-refresh" plain size="mini">计算配载
       </el-button>
-      <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" plain size="mini">保存配载
+      <el-button type="success" @click="submitForm()" icon="el-icon-document" plain size="mini">保存配载
       </el-button>
-      <el-button type="danger" @click="" icon="el-icon-circle-close-outline" plain size="mini">取消</el-button>
+      <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">取消
+      </el-button>
     </div>
     <div class="loadInfo_tab">
       <el-tabs type="border-card">
@@ -26,20 +27,22 @@
               </el-form>
             </div>
             <div class="loadInfo_collapse">
-              <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="63px" :inline="true"
+              <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="76px" :inline="true"
                        label-position="right" size="mini" class="loadInfo_collapse_list" :key="valkey">
                 <!-- <el-form :model="intelligentData" label-width="63px" inline class="loadInfo_collapse_list"> -->
-                <div class="loadInfo_item" v-for="(item, index) in dataList" 
+                <div class="loadInfo_item" v-for="(item, index) in dataList"
                      :style="{width: showCurrenFormStyle[index]?'calc(100% - 185px)': ''}" v-show="isShowCurPages">
                   <el-button class="verticalBtn" @click="selectCurrentTuck(item, index)"
                              :class="{'verticalBtnActive':showCurrenFormStyle[index]}">车型{{ changeNumCN[index]}}
                   </el-button>
+                  <i class="lll-ntelligent-del"><img src=".././../../../../assets/icom/lll-ntelligent-del.png" alt=""></i>
                   <div class="loadInfo_item_form" v-show="showCurrenFormStyle[index]">
                     <div class="loadInfo_item_form_row">
                       <el-form-item label="车型" class="nameClass">
                         <el-input disabled :size="btnsize" v-model="item.name"></el-input>
+
                       </el-form-item>
-                      <el-form-item label="车牌号" prop="" :key="changeTruckKey">
+                      <el-form-item label="车牌号" prop="" :key="changeTruckKey" prop="truckIdNumber">
                         <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.truckIdNumber"
                                          :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini"
                                          @select="handleSelectTruckNum" auto-complete="off" @blur="blurTruck"
@@ -64,7 +67,7 @@
                       </el-form-item>
                     </div>
                     <div class="loadInfo_item_form_row">
-                      <el-form-item label="车费">
+                      <el-form-item label="车费" prop="">
                         <el-input :size="btnsize" v-model="item.price">
                           <i class="el-icon-edit-outline el-input__icon" slot="suffix"
                              @click="addFreight(item.price, index)"></i>
@@ -83,14 +86,15 @@
                           </template>
                         </el-autocomplete>
                       </el-form-item>
-                      <el-form-item label="司机电话">
+                      <el-form-item label="司机电话" prop="dirverMobile">
                         <el-input v-model="intelligentData.dirverMobile"></el-input>
                       </el-form-item>
                       <el-form-item label="到达日期">
-                        <el-date-picker size="mini" v-model="intelligentData.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
+                        <el-date-picker size="mini" v-model="intelligentData.planArrivedTime"
+                                        value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                         </el-date-picker>
                         <!--<el-date-picker size="mini" v-model="intelligentData.planArrivedTime"-->
-                                        <!--value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="到达日期">-->
+                        <!--value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="到达日期">-->
                         <!--</el-date-picker>-->
                         <!--<el-input :size="btnsize" v-model="intelligentData.dirverMobile"></el-input>-->
                       </el-form-item>
@@ -98,6 +102,7 @@
                   </div>
                 </div>
                 <el-button class="verticalBtn verticalBtnAdd" @click="addtuck">增加+</el-button>
+
                 <div class="verticalBtnTransfer">
                   <el-button class="verticalBtnSort" @click="pretruck" icon="el-icon-d-arrow-left"
                              :disabled="pretruckDisable"></el-button>
@@ -151,7 +156,7 @@
         type: Array
       }
     },
-    computed:{
+    computed: {
       ...mapGetters([
         'otherinfo'
       ]),
@@ -219,7 +224,18 @@
         searchTable: {},
         changeDriverKey: '',
         changeTruckKey: '',
-        rules: {},
+        rules: {
+          truckIdNumber: [
+            {required: true, message: '请选择车牌号~'}
+          ],
+          dirverName: [
+            {required: true, message: '请选择司机~'}
+          ],
+          dirverMobile: [
+            {required: true, message: '请选择司机电话~'}
+          ]
+          // truckIdNumber: [{required: true, validator: this.validateIsEmpty('请选择车牌号!'), trigger: 'blur'}]
+        },
         showCurrenFormStyle: [true],
         btnsize: 'mini',
         formModel: {
@@ -240,8 +256,10 @@
     watch: {
       orgid: {
         handler(newVal) {
+          this.intelligentLeftData.arriveOrgid = this.orgid
 
-        }
+        },
+        deep: true
       },
       dofo: {
         handler(newVal) {
@@ -275,6 +293,16 @@
       this.intelligentLeftData.arriveOrgid = this.orgid
     },
     methods: {
+      validateIsEmpty(msg = '不能为空！') {
+        return (rule, value, callback) => {
+          if (!value) {
+            // this.showMessage(msg)
+            callback(new Error(msg))
+          } else {
+            callback()
+          }
+        }
+      },
       getIntFreight(data) {
         this.intFreight = data.val
         this.intFreightObj = data.obj
@@ -293,6 +321,24 @@
           //   this.openlntelligent()
           //   break
         }
+      },
+      cancelButtonText() {
+        this.$confirm('页面没保存，确定关闭吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '已关闭成功!'
+          });
+          this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已成功取消!'
+          });
+        });
       },
       addFreight(val, index) {
         this.intFreightItem = val
@@ -478,20 +524,27 @@
 
 
       },
-      submitForm(formName) {
+      submitForm() {
         this.$refs['formModel'].validate((valid) => {
           if (valid) {
-            this.setData()
-            // console.log('loadDataArray', this.loadDataArray)
-            postIntnteSmartLoad(this.loadDataArray).then(res => {
-              this.$message({type: 'success', message: '保存配载'})
-            }).catch(err => {
-              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-              this.loading = false
-            })
+            this.$refs['ruleForm'].validate((valid) => {
+              if (valid) {
+                this.loading = true
+                this.setData()
+                // console.log('loadDataArray', this.loadDataArray)
+                postIntnteSmartLoad(this.loadDataArray).then(res => {
+                  this.$message({type: 'success', message: '保存配载'})
+                  this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
+                  this.loading = false
+                }).catch(err => {
+                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this.loading = false
+                })
 
-          } else {
-            return false
+              } else {
+                return false
+              }
+            })
           }
         })
       },
@@ -508,6 +561,7 @@
       addtuck() {
         ++this.currentIndex
         this.dataList.push({})
+        this.intelligentData.push({})
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.dataList[this.currentIndex])
       },
@@ -630,21 +684,30 @@
             padding: 10px;
             font-family: '微软雅黑';
             background-color: #fff;
-            border: 1px solid #0588c3;
+            border: 1px solid rgb(5,136,195);
             font-size: 16px;
             line-height: 20px;
             word-wrap: break-word;
-            color: #0588c3;
+            color: rgb(5,136,195);
             font-weight: 600;
           }
           .verticalBtn:hover {
             color: #fff;
             transition: 0.3s;
-            background-color: #0588c3;
+            background-color: rgb(5,136,195);
           }
           .verticalBtnActive {
             color: #fff;
-            background-color: #0588c3;
+            background-color: rgb(5,136,195);
+          }
+          i.lll-ntelligent-del{
+            position: relative;
+
+            img{
+              position: absolute;
+              left: -15px;
+              cursor: pointer;
+            }
           }
           .loadInfo_collapse_list {
             width: 100%;
@@ -707,6 +770,16 @@
             }
           }
         }
+      }
+    }
+  }
+
+  .lll-autocomplete {
+    li {
+      line-height: normal;
+      padding: 7px;
+      .name, .addr {
+        font-size: 12px;
       }
     }
   }

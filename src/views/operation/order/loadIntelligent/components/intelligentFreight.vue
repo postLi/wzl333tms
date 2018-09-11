@@ -203,19 +203,6 @@
       }
     },
     data() {
-      let hasOne = false
-      const validateShipNum = (rule, value, callback) => {
-        if (this.formInline.shipSn === '' && this.formInline.shipGoodsSn === '') {
-          hasOne = false
-        } else {
-          hasOne = true
-        }
-        if (!hasOne) {
-          callback(new Error('运单号或货号必填其中一项'))
-        } else {
-          callback()
-        }
-      }
 
       return {
 
@@ -224,13 +211,6 @@
         btnsize: 'mini',
         selected: [],
         rules: {
-          orgId: [{required: true}],
-          shipSn: [
-            {validator: validateShipNum}
-          ],
-          shipGoodsSn: [
-            {validator: validateShipNum}
-          ]
         },
         formLabelWidth: '100',
         usersArr: [
@@ -251,12 +231,6 @@
         checked1: true,
         popTitle: '运费',
         loading: false,
-        formInline: {
-          shipSn: '',
-          shipGoodsSn: '',
-          pickupFee: '',
-          orgId: ''
-        },
         sendId: {
           pickupId: '',
           shipId: '',
@@ -293,11 +267,10 @@
         this.$nextTick(() => {
           this.usersArr[0].nowpayCarriage = this.intFreightItem
         })
-        // this.fetchData()
       }
     },
     mounted() {
-      this.formInline.orgId = this.otherinfo.orgid
+      // this.formInline.orgId = this.otherinfo.orgid
       if (this.popVisible) {
         // this.usersArr[0].nowpayCarriage =
         // alert(this.formInline.orgId)
@@ -358,12 +331,9 @@
           this.usersArr[index].arriveOtherFee
         }
       },
-      search(item) {
-        return !item.pickupBatchNumber
-      },
 
       closeMe(done) {
-        // this.reset()
+        this.reset()
         this.$emit('update:popVisible', false)
         if (typeof done === 'function') {
           done()
@@ -393,9 +363,8 @@
         return obj1
       },
       submitForm() {
-        this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
-        // this.$emit('getIntFreight', this.usersArr[0],this.total )
 
+        this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
         this.$emit('getIntFreight', {
           obj: this.usersArr[0],
           val: this.total
