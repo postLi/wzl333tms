@@ -77,6 +77,7 @@ export default {
       this.$emit('change', JSON.parse((item.queryContent).replace(/'/g, '"')))
     }
   },
+
   mounted() {
     this.loadAll()
   }
