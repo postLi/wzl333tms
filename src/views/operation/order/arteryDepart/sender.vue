@@ -261,7 +261,18 @@
             width: '120',
             fixed: false
           },
-
+          {
+            label: '封签号',
+            prop: 'sealNumber',
+            width: '120',
+            fixed: false
+          },
+          {
+            label: '油卡号',
+            prop: 'oilCardNumber',
+            width: '120',
+            fixed: false
+          },
           // {
           //   label: '配载时间',
           //   prop: 'loadTime',

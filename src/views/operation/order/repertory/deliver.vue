@@ -413,7 +413,7 @@ export default {
   },
   methods: {
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail',order.shipId, order.id,  true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
       console.log(order.shipId)
     },
     tableRowColor({ row, rowIndex }) {

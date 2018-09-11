@@ -15,10 +15,13 @@
               <!-- 基本信息 -->
               <div class="loadFrom-type-baseInfo">
                 <div>
-                  <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40">
-                    <el-input size="mini" v-model="formModel.deliveryFee" clearable v-number-only:point :maxlength="8">
+                  <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40" class="multipleInput">
+                    <el-input size="mini" v-model="formModel.deliveryDetailFee"  v-number-only:point :maxlength="8" placeholder="送货费">
+                    </el-input>
+                    <el-input size="mini" v-model="formModel.deliveryHandlingFee"  v-number-only:point :maxlength="8" placeholder="装卸费">
                       <template slot="append">元</template>
                     </el-input>
+                   
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
@@ -113,6 +116,11 @@
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
               <ul class="feeList_lyy">
                 <li>
+                  <p>运费合计(元)</p>
+                  <el-form-item>
+                    <el-input :maxlength="10" :size="mini" disabled :value="totalFormFee"  style="text-align:center;"></el-input>
+                  </el-form-item>
+                </li><li>
                   <p>现付运费(元)</p>
                   <el-form-item prop="nowpayCarriage">
                     <el-input v-model="formFee.nowpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
@@ -178,7 +186,20 @@
                     <el-input v-model="formFee.arriveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
                   </el-form-item>
                 </li>
+                <li>
+                  <p>封签号</p>
+                  <el-form-item prop="sealNumber">
+                    <el-input v-model="formFee.sealNumber" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                  </el-form-item>
+                </li>
+                <li>
+                  <p>油卡号</p>
+                  <el-form-item prop="oilCardNumber">
+                    <el-input v-model="formFee.oilCardNumber" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                  </el-form-item>
+                </li>
               </ul>
+              <span class="feeTips">注：运费合计 = 现付运费 + 现付油卡 + 回付运费 + 回付油卡 + 到付运费 + 到付油卡</span>
             </el-form>
           </div>
         </el-collapse-item>
@@ -225,7 +246,7 @@ import SelectTree from '@/components/selectTree/index'
 import addTruckInfo from '@/views/company/trunkManage/components/add'
 import addDriverInfo from '@/views/company/driverManage/components/add'
 import loadChart from './components/loadChart'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 export default {
   name: 'orderload',
@@ -392,6 +413,14 @@ export default {
         return this.$route.query.info
       },
       set() {}
+    },
+    totalFormFee: {
+      get() {
+        let count = 0
+        count = tmsMath.add(this.formFee.nowpayCarriage, this.formFee.nowpayOilCard, this.formFee.backpayCarriage, this.formFee.backpayOilCard,this.formFee.arrivepayCarriage, this.formFee.arrivepayOilCard).result()
+        return count
+      },
+      set() {}
     }
   },
   components: {
@@ -492,7 +521,7 @@ export default {
         data.requireArrivedTime = this.orgData.requireArrivedTime
         data.planArrivedTime = this.orgData.planArrivedTime
         data.remark = this.orgData.remark
-        data.deliveryFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
+        data.deliveryDetailFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
         this.formModel = objectMerge2({}, data)
         // formFee 数据
         const dataFee = {}
@@ -507,6 +536,8 @@ export default {
         dataFee.leaveOtherFee = this.orgData.leaveOtherFee
         dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
         dataFee.arriveOtherFee = this.orgData.arriveOtherFee
+        dataFee.sealNumber = this.orgData.sealNumber
+        dataFee.oilCardNumber = this.orgData.oilCardNumber
         this.formFee = objectMerge2({}, dataFee)
       } else {
         this.orgData = objectMerge2({}, this.$options.data().orgData)
@@ -740,8 +771,9 @@ export default {
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
-      if (this.loadTypeId === 40) {
-        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
+      if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee 
+        let total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', total)
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
@@ -764,9 +796,10 @@ export default {
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
-      if (this.loadTypeId === 40) {
-        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', this.formModel.deliveryFee)
-      } else {
+      if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee 
+        let total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', total)
+      }else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
       // console.log('短驳完成发车', this.loadInfo)
@@ -930,6 +963,7 @@ export default {
 </script>
 <style lang="scss">
 .load-steup {
+  min-width: 1000px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -1001,7 +1035,19 @@ export default {
       flex-direction: row;
       margin-bottom: -10px;
       .el-input {
-        width: 220px;
+        width:210px;
+      }
+      .el-input-group__append, .el-input-group__prepend{
+        padding: 0 5px;
+      }
+      .multipleInput{
+        .el-form-item__content{
+          display: flex;
+          flex-direction: row;
+        }
+        .el-input {
+          width:105px;
+      }
       }
     }
   }
@@ -1025,9 +1071,13 @@ export default {
     }
   }
 }
-
+.feeTips{
+  color:#999;
+  font-size:12px;
+  margin-left: 10px;
+}
 ul.feeList_lyy {
-  margin: 10px;
+  margin: 10px 10px 5px 10px;
   border: 1px solid #d0d7e5;
   display: flex;
   li {
@@ -1035,8 +1085,10 @@ ul.feeList_lyy {
     height: 70px;
     border-right: 1px solid #d0d7e5;
     p {
+      font-size:13px;
       background-color: #eaf0ff;
       line-height: 36px;
+      height: 36px;
       margin-bottom: -5px;
     }
     .el-input__inner {
@@ -1050,6 +1102,10 @@ ul.feeList_lyy {
     }
     .el-form-item__error {
       margin-top: -6px;
+    }
+    .el-input.is-disabled .el-input__inner{
+      text-align: center;
+      color: #222;
     }
   }
 }
