@@ -92,6 +92,9 @@ export default {
     this.$nextTick(() => {
       console.log('78797', this.searchObj)
       this.form.queryContent = JSON.stringify(this.searchObj)
+      this.form.userId = this.otherinfo.userId
+      this.form.orgId = this.otherinfo.orgid
+      this.form.menuCode = this.$route.meta.code
     })
   },
   watch: {
