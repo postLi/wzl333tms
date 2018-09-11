@@ -434,7 +434,6 @@ export const pickerOptions4 = {
     let _end = dateobj || new Date()
     const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
     _end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
-
     // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
     return [start, _end]
   },
@@ -560,6 +559,7 @@ export const pickerOptions2 = [{
     const start = new Date()
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
     picker.$emit('pick', [start, end])
+    console.log(picker)
   }
 }]
 

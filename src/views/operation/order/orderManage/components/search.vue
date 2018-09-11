@@ -40,11 +40,7 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </select-type>
       </el-form-item>
-      <el-form-item label="自定义查询" class="zdycx">
-        <select-type v-model="searchForm.shipStatus" type="ship_status" >
-          <el-option slot="head" label="全部" value=""></el-option>
-        </select-type>
-      </el-form-item>
+      <searchAll></searchAll>
       </div>
       <el-form-item class="staff_searchinfo--btn">
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -57,12 +53,13 @@
 import { pickerOptions2, parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-
+import searchAll from '@/components/searchAll/index'
 export default {
   name: 'order-manage-search',
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {

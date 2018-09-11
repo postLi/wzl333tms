@@ -8,6 +8,7 @@
               :default-value="defaultTime"
               type="daterange"
               align="right"
+              popper-class='searchCreatTime'
               value-format="yyyy-MM-dd"
               start-placeholder="开始日期"
               :picker-options="pickerOptions2"

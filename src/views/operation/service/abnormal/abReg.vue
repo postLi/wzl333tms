@@ -381,7 +381,7 @@ export default {
         this.dataset = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -394,11 +394,11 @@ export default {
     fetchData() {
       this.fetchAllreceipt()
     },
-         // 获取组件返回的搜索参数
+    // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
-            // 根据搜索参数请求后台获取数据
+       // 根据搜索参数请求后台获取数据
       objectMerge2(this.searchQuery.vo, searchParam)
-            // this.searchQuery.vo.orgId = searchParam.orgid
+      // this.searchQuery.vo.orgId = searchParam.orgid
       this.fetchData()
     },
     doAction(type) {

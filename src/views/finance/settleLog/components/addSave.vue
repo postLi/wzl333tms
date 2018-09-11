@@ -46,7 +46,7 @@ export default {
       default: false
     },
     dotInfo: [Object, Array],
-    searchQuery: [Object, Array],
+    searchForm: [Object, Array],
     isDepMain: {
       type: Boolean,
       default: false
@@ -60,6 +60,7 @@ export default {
       type: Boolean,
       default: false
     },
+    searchObj: [Object, Array],
     proptitle: String
   },
 
@@ -88,22 +89,24 @@ export default {
   },
 
   mounted() {
-    console.log(this.otherinfo.userId)
-    this.form.userId = this.otherinfo.userId
-    this.form.orgId = this.otherinfo.orgId
-    this.form.menuCode = this.$route.meta.code
-    console.log(this.$route.meta)
+    this.$nextTick(() => {
+      console.log('78797', this.searchObj)
+      this.form.queryContent = JSON.stringify(this.searchObj)
+    })
   },
   watch: {
-    isDepMain() {
-
-    },
     dotInfo(newVal) {
       if (this.isModify) {
         // this.popTitle = '回单回收'
         // this.form.userId = this.otherinfo.userId
+        this.form.userId = this.otherinfo.userId
+        this.form.orgId = this.otherinfo.orgid
+        this.form.menuCode = this.$route.meta.code
         console.log(this.otherinfo.userId)
       }
+    },
+    searchObj(newVal) {
+      // console.log(this.searchObj)
     },
     // searchQuery(newVal) {
     //   this.form.pageType = this.searchQuery.vo.pageType

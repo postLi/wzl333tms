@@ -260,7 +260,6 @@ export default {
           } else {
             promiseObj = postEmployeer(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
             /* this.$alert('保存成功', '提示', {
@@ -270,7 +269,6 @@ export default {
                 this.$emit('success')
               }
             }); */
-
             this.$message({
               type: 'success',
               message: '保存成功!'
