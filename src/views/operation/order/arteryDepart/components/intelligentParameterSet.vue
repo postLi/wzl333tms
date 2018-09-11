@@ -1,25 +1,26 @@
 <template>
   <div class="lntelligentPset-maintain">
 
-    <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible"  class='pickpopDepMain' v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
+    <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible" class='pickpopDepMain'
+               v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
       <div class="depmain-div">
-       <!--<div class="checklistClass">-->
-         <!--<el-checkbox-group v-model="checkList">-->
-           <!--<ul>-->
-             <!--<li><el-checkbox label="大件优先"></el-checkbox></li>-->
-             <!--<li><el-checkbox label="急件优先"></el-checkbox></li>-->
-             <!--<li><el-checkbox label="库龄升序优先"></el-checkbox></li>-->
-           <!--</ul>-->
-           <!--<ul>-->
-             <!--<li><el-checkbox label="库龄降序优先" ></el-checkbox></li>-->
-             <!--<li><el-checkbox label="件数单价高优先" ></el-checkbox></li>-->
-             <!--<li><el-checkbox label="体积单价高优先" ></el-checkbox></li>-->
-           <!--</ul>-->
-           <!--<ul>-->
-             <!--<li><el-checkbox label="重量单价高优先" ></el-checkbox></li>-->
-           <!--</ul>-->
-         <!--</el-checkbox-group>-->
-       <!--</div>-->
+        <!--<div class="checklistClass">-->
+        <!--<el-checkbox-group v-model="checkList">-->
+        <!--<ul>-->
+        <!--<li><el-checkbox label="大件优先"></el-checkbox></li>-->
+        <!--<li><el-checkbox label="急件优先"></el-checkbox></li>-->
+        <!--<li><el-checkbox label="库龄升序优先"></el-checkbox></li>-->
+        <!--</ul>-->
+        <!--<ul>-->
+        <!--<li><el-checkbox label="库龄降序优先" ></el-checkbox></li>-->
+        <!--<li><el-checkbox label="件数单价高优先" ></el-checkbox></li>-->
+        <!--<li><el-checkbox label="体积单价高优先" ></el-checkbox></li>-->
+        <!--</ul>-->
+        <!--<ul>-->
+        <!--<li><el-checkbox label="重量单价高优先" ></el-checkbox></li>-->
+        <!--</ul>-->
+        <!--</el-checkbox-group>-->
+        <!--</div>-->
 
         <div>
           <el-tabs type="border-card">
@@ -27,7 +28,7 @@
               <span slot="label"> 系统车型</span>
               <el-table
                 ref="multipleTable"
-                :data="usersArr"
+                :data="systemList"
                 stripe
                 border
                 @row-click="clickDetails"
@@ -47,35 +48,35 @@
                 <el-table-column
                   fixed
 
-                  prop="shipSn"
+                  prop="name"
                   label="车型"
                   width="80">
                 </el-table-column>
                 <el-table-column
                   fixed
 
-                  prop="shipGoodsSn"
+                  prop="weight"
                   width="90"
                   label="承载重">
                 </el-table-column>
                 <el-table-column
                   fixed
 
-                  prop="pickupFee"
+                  prop="vol"
                   width="90"
                   label="承载方">
                 </el-table-column>
                 <el-table-column
                   fixed
-                  prop="pickupFee"
+                  prop="price"
                   width="135"
                   label="车费">
-                  <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.num"
-                              :size="btnsize" v-number-only:point
-                              @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                              :disabled="selectdCheck"></el-input>
-                  </template>
+                  <!--<template slot-scope="scope">-->
+                    <!--<el-input v-model.number="scope.row.num"-->
+                              <!--:size="btnsize" v-number-only:point-->
+                              <!--@change="(val)=>changeFright(scope.$index, scope.prop, val)"-->
+                              <!--:disabled="selectdCheck"></el-input>-->
+                  <!--</template>-->
                 </el-table-column>
               </el-table>
             </el-tab-pane>
@@ -83,7 +84,7 @@
               <div class="tableIntelligentPSet">
                 <el-table
                   ref="multipleTable"
-                  :data="usersArr"
+                  :data="definedList"
                   stripe
                   border
                   @row-click="clickDetails"
@@ -105,10 +106,11 @@
                     label="车型"
                     width="90">
                     <template slot-scope="scope">
-                      <el-input v-model.number="scope.row.price"
+                      <el-input v-model.number="scope.row.name"
                                 :size="btnsize" v-number-only:point
                                 @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                                :disabled="scope.row['selectdCheck']" :maxlength="3"
+                                @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -117,10 +119,11 @@
                     width="90"
                     label="承载重">
                     <template slot-scope="scope">
-                      <el-input v-model.number="scope.row.price"
+                      <el-input v-model.number="scope.row.weight"
                                 :size="btnsize" v-number-only:point
                                 @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                                :disabled="scope.row['selectdCheck']" :maxlength="3"
+                                @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -129,10 +132,11 @@
                     width="90"
                     label="承载方">
                     <template slot-scope="scope">
-                      <el-input v-model.number="scope.row.price"
+                      <el-input v-model.number="scope.row.vol"
                                 :size="btnsize" v-number-only:point
                                 @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                                :disabled="scope.row['selectdCheck']" :maxlength="3"
+                                @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -144,7 +148,8 @@
                       <el-input v-model.number="scope.row.price"
                                 :size="btnsize" v-number-only:point
                                 @change="(val)=>changeFright(scope.$index, scope.prop, val)"
-                                :disabled="scope.row['selectdCheck']" :maxlength="3" @click.stop.prevent.native></el-input>
+                                :disabled="scope.row['selectdCheck']" :maxlength="3"
+                                @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -181,7 +186,7 @@
   import {REGEX} from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import {getFindShipByid, putRelevancyShip, putRremoveShip} from '@/api/operation/pickup'
+  import {getIntnteCarInfo, postPzcarinfotms, putPzcarinfotms, deletePzcarinfotms} from '@/api/operation/arteryDepart'
   import SelectTree from '@/components/selectTree/index'
   import {mapGetters} from 'vuex'
 
@@ -207,35 +212,14 @@
       createrId: [Number, String]
     },
     data() {
-      let hasOne = false
-      const validateShipNum = (rule, value, callback) => {
-        if (this.formInline.shipSn === '' && this.formInline.shipGoodsSn === '') {
-          hasOne = false
-        } else {
-          hasOne = true
-        }
-        if (!hasOne) {
-          callback(new Error('运单号或货号必填其中一项'))
-        } else {
-          callback()
-        }
-      }
+
 
       return {
         selectdCheck: true,
-        checkList: ['选中且禁用','复选框 A'],
-        selectdCheck: true,
+        checkList: ['选中且禁用', '复选框 A'],
         btnsize: 'mini',
         selected: [],
-        rules: {
-          orgId: [{required: true}],
-          shipSn: [
-            {validator: validateShipNum}
-          ],
-          shipGoodsSn: [
-            {validator: validateShipNum}
-          ]
-        },
+        rules: {},
         formLabelWidth: '100',
         usersArr: [
           {
@@ -258,17 +242,17 @@
         checked1: true,
         popTitle: '参数设置',
         loading: false,
-        formInline: {
-          shipSn: '',
-          shipGoodsSn: '',
-          pickupFee: '',
-          orgId: ''
+        formInline: {},
+        infoGetSystemList: {
+          sign: 1,
+          orgid: ''
         },
-        sendId: {
-          pickupId: '',
-          shipId: '',
-          pickupFee: ''
-        }
+        infoGetDefinedList: {
+          sign: 2,
+          orgid: ''
+        },
+        systemList: [],
+        definedList: [],
       }
     },
     computed: {
@@ -288,17 +272,39 @@
         // this.infoData(this.dotInfo)
       },
       popVisible(newVal) {
-        // this.fetchData()
+        this.infoGetSystemList.orgid = this.otherinfo.orgid
+        this.infoGetDefinedList.orgid = this.otherinfo.orgid
+        this.fetchGetIntnteCarInfo()
+        this.fetchGetIntnteCarDefinedInfo()
+
       }
     },
     mounted() {
-      this.formInline.orgId = this.otherinfo.orgid
       if (this.popVisible) {
-        this.formInline.orgId = this.otherinfo.orgid
-        // alert(this.formInline.orgId)
+
       }
     },
     methods: {
+      fetchGetIntnteCarInfo() {
+        this.loading = true
+        return getIntnteCarInfo(this.infoGetSystemList.orgid, this.infoGetSystemList.sign).then(data => {
+
+          this.systemList = data
+          console.log(this.systemList, '获取车型')
+          this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+      },
+      fetchGetIntnteCarDefinedInfo() {
+        this.loading = true
+        return getIntnteCarInfo(this.infoGetDefinedList.orgid, this.infoGetDefinedList.sign).then(data => {
+          this.definedList = data
+          this.loading = false
+        }).catch(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+      },
       changeFright(index, prop, newVal) {
         this.usersArr[index][prop] = Number(newVal)
         const newfreght = this.usersArr[index].num
@@ -378,14 +384,12 @@
               {
                 path: '/operation/order/loadIntelligent/components/intelligentImg',
                 query: {
-                  tab:'智能配载',
+                  tab: '智能配载',
                   sendDate: this.usersArr
                 }
               },
             )
             this.closeMe()
-
-
 
 
             // this.$router.push(
@@ -480,31 +484,31 @@
   .lntelligentPset-maintain .pickpopDepMain {
     top: 12%;
     bottom: auto;
-    .el-dialog{
+    .el-dialog {
       min-width: 550px;
       max-width: 550px;
       border-radius: 8px;
-      .el-dialog__header{
+      .el-dialog__header {
         border-bottom: 1px solid #ccc;
 
         /*text-align: center;*/
-        .el-dialog__title{
-          color: rgb(100,186,245);
+        .el-dialog__title {
+          color: rgb(100, 186, 245);
         }
 
       }
-      .el-tabs__content{
-        .el-table{
-          .el-table__fixed-body-wrapper{
-            .el-table__row{
-              td:not(:first-of-type){
+      .el-tabs__content {
+        .el-table {
+          .el-table__fixed-body-wrapper {
+            .el-table__row {
+              td:not(:first-of-type) {
                 padding: 0 0;
-                .cell{
+                .cell {
                   padding-left: 0;
                   padding-right: 0;
-                  .el-input.el-input--mini{
+                  .el-input.el-input--mini {
                     /*width: 114%;*/
-                    .el-input__inner{
+                    .el-input__inner {
                       border-radius: 0;
                     }
                   }
@@ -518,40 +522,40 @@
       }
       .el-dialog__body {
         padding: 20px 35px;
-        border-bottom: 1px solid rgb(100,186,245);
-        .depmain-div{
-         .checklistClass{
-           padding-bottom: 10px;
-           ul:first-of-type{
-             li{
-               float: left;
-               padding:0 85px 10px 0;
-             }
-             li:last-of-type{
-               padding-left: 15px;
-               padding-right: 0;
-             }
-           }
-           ul:nth-of-type(2){
-             li{
-               float: left;
-               padding:0 58px 10px 0;
-             }
-             li:last-of-type{
-               padding-left: -10px;
-               padding-right: 0;
-             }
-           }
-         }
+        border-bottom: 1px solid rgb(100, 186, 245);
+        .depmain-div {
+          .checklistClass {
+            padding-bottom: 10px;
+            ul:first-of-type {
+              li {
+                float: left;
+                padding: 0 85px 10px 0;
+              }
+              li:last-of-type {
+                padding-left: 15px;
+                padding-right: 0;
+              }
+            }
+            ul:nth-of-type(2) {
+              li {
+                float: left;
+                padding: 0 58px 10px 0;
+              }
+              li:last-of-type {
+                padding-left: -10px;
+                padding-right: 0;
+              }
+            }
+          }
 
-          p{
+          p {
             padding-top: 20px;
-            color: rgb(254,52,52);
+            color: rgb(254, 52, 52);
           }
 
         }
       }
-      .el-dialog__footer{
+      .el-dialog__footer {
         text-align: right;
       }
     }

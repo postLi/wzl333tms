@@ -47,7 +47,7 @@
                                          :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini"
                                          @select="handleSelectTruckNum" auto-complete="off" @blur="blurTruck"
                                          :maxlength="8">
-                          <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
+                          <i class="intAddF" slot="suffix" @click="doAction('addTruck')"><icon-svg icon-class="inadd_lll"></icon-svg></i>
                           <template slot-scope="{ item }">
                             <div class="name">{{ item.truckIdNumber }}</div>
                             <span class="addr">{{ item.driverName }}</span>
@@ -69,15 +69,17 @@
                     <div class="loadInfo_item_form_row">
                       <el-form-item label="车费" prop="">
                         <el-input :size="btnsize" v-model="item.price">
-                          <i class="el-icon-edit-outline el-input__icon" slot="suffix"
-                             @click="addFreight(item.price, index)"></i>
+                          <i class="intEditF" slot="suffix"
+                             @click="addFreight(item.price, index)"><icon-svg icon-class="intlDel_lll"></icon-svg></i>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="司机" prop="dirverName" class="formItemTextDanger" :key="changeDriverKey">
                         <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.dirverName"
                                          :fetch-suggestions="querySearch" placeholder="司机名称" size="mini"
                                          @select="handleSelectName" auto-complete="off" :maxlength="10">
-                          <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
+                          <i class="intAddF" slot="suffix" @click="doAction('addDriver')">
+                            <icon-svg icon-class="inadd_lll"></icon-svg>
+                          </i>
                           <template slot-scope="{ item }">
                             <div class="name">{{ item.driverName }}</div>
                             <span class="addr">{{ item.driverMobile }}</span>
@@ -765,8 +767,17 @@
                   .el-form-item--small.el-form-item {
                     margin-bottom: 0px;
                   }
+
                 }
               }
+            }
+            i.intEditF{
+              font-size: 20px;
+              cursor: pointer;
+            }
+            i.intAddF{
+              font-size: 20px;
+              cursor: pointer;
             }
           }
         }

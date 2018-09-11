@@ -50,6 +50,7 @@ export function putCancelLoadDepart(loadIds, loadTypeId) {
 export function getLookContract(loadId) {
   return fetch.get('/api-order/order/load/v1/contract/' + loadId)
 }
+
 //修改
 // {
 //   "loadId":"修改的配载id",
@@ -79,4 +80,27 @@ export function getIntnteInit(params) {
 
 export function postIntnteSmartLoad(params) {
   return fetch.post('/api-order/order/load/v1/smartLoad', params)
+}
+
+//系统车型获取车型列表
+//sign 1查询系统车型 2查询当前网点自定义车型 3查询系统车型+当前网点自定义车型
+export function getIntnteCarInfo(orgid, sign) {
+  return fetch.get('/api-order/aitransport/pzcarinfotms/v1/getCarInfo/?orgid=' + orgid + '&sign=' + sign,).then(res => {
+    return res.data
+  })
+}
+
+//_添加自定义车型
+export function postPzcarinfotms(params) {
+  return fetch.post('/api-order/aitransport/pzcarinfotms/v1/', params)
+}
+
+//_修改自定义车型
+export function putPzcarinfotms(params) {
+  return fetch.put('/api-order/aitransport/pzcarinfotms/v1/', params)
+}
+
+//_删除自定义车型
+export function deletePzcarinfotms(id) {
+  return fetch.delete('api-order/aitransport/pzcarinfotms/v1/' + id)
 }

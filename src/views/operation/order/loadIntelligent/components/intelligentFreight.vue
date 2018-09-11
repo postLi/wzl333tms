@@ -397,10 +397,29 @@
         }
 
       }
+
       .el-dialog__body {
         padding: 45px 35px;
         border-bottom: 1px solid rgb(100, 186, 245);
         .depmain-div {
+          .el-table__fixed-body-wrapper{
+            .el-table__body{
+              .el-table__row{
+                td{
+                  padding: 0 0;
+                  .cell{
+                    padding-left: 0;
+                    padding-right:0;
+                    .el-input.el-input--mini{
+                      .el-input__inner{
+                        border-radius: 0;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
 
           p {
             padding-top: 20px;

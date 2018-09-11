@@ -131,7 +131,7 @@
     },
     activated() {
       this.init()
-      this.infoData()
+      // this.infoData()
     },
     methods: {
 
