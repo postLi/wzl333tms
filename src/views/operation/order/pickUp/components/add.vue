@@ -513,12 +513,12 @@
         if (trunk) {
           // console.log(trunk,'车牌号');
           if (this.form.tmsDriver.driverName === '' || this.form.tmsDriver.driverMobile === '') {
-            this.valkey = Math.random()
+            // this.valkey = Math.random()
             this.form.tmsDriver.driverName = trunk.driverName
             this.form.tmsDriver.driverMobile = trunk.dirverMobile
             this.form.tmsDriver.driverId = trunk.driverId
           } else {
-            this.valkey = Math.random()
+            // this.valkey = Math.random()
             this.form.tmsDriver.driverName = Object.assign(this.form.tmsDriver.driverName)
             this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
           }
