@@ -391,7 +391,6 @@ export default {
       }
     },
     getDriverList(orgid) {
-      console.log('//////////////////////=this.DriverList', this.DriverList)
       // 缓存数据，减少切换组织列表造成的请求
       // 切换组织列表时，需要重置司机信息，避免不同组织的车辆司机混搭？
       // 还是可以绑定所有司机？
