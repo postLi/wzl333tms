@@ -6,6 +6,7 @@
       :fetch-suggestions="querySearchAsync"
       placeholder="请输入内容"
       @select="handleSelect"
+      clearable
       >
       <template slot-scope="{ item }">
         <div class="name">{{ item.queryKey }}</div>
@@ -13,7 +14,7 @@
     </el-autocomplete>
     <el-button plain  @click="Custom">保存自定义</el-button>
   </el-form-item>
-  <addSave :searchObj="searchObj" :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="loadAll" :isModify="isModify"/>
+  <addSave :searchObj="searchObj" :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="fetchAllloadAll" :isModify="isModify"/>
 </div>
 </template>
 <script>
@@ -32,7 +33,7 @@ export default {
     return {
       dotInfo: [],
       isModify: false,
-      popVisible: false,       
+      popVisible: false,
       setupTableVisible: false,
       dataset: [],
       datalist: '',
@@ -52,19 +53,17 @@ export default {
     searchObj: {
       handler(cval, oval) {
         this.$nextTick(() => {
-          console.log('searchAll_cval',cval, oval)
+          console.log('searchAll_cval', cval, oval)
         })
       },
       deep: true
     }
   },
   mounted() {
-    console.log('werwer',this.searchObj)
-    this.loadAll()
+    console.log('werwer', this.searchObj)
+    this.fetchAllloadAll()
   },
   methods: {
-    fetchAllreceipt() {
-    },
     Custom() {
       this.isModify = true
       this.popVisible = true
@@ -91,9 +90,11 @@ export default {
       }
     },
     handleSelect(item) {
-      console.log(item)
       this.datalist = item.queryKey
+      const obj = JSON.parse(item.queryContent)
       this.$emit('change', JSON.parse((item.queryContent).replace(/'/g, '"')))
+      // 用$emit提交给父组件
+      this.$emit('dataObj', obj)
     }
   }
 }

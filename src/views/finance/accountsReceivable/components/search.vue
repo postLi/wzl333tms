@@ -55,7 +55,7 @@
       <select-type v-model="searchForm.status" type="count_status" >
       </select-type>
     </el-form-item>
-    
+    <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button><el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -67,12 +67,13 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { parseTime, pickerOptions2 } from '@/utils/'
-
+import searchAll from '@/components/searchAll/index'
 export default {
   name: 'handaccount-manage-search',
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -94,6 +95,7 @@ export default {
   data() {
     return {
       searchCreatTime: [],
+      searchObjs: {},
       defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
         shipFromOrgid: '',
@@ -115,6 +117,18 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.shipFromOrgid = newVal
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchCreatTime && this.searchCreatTime[0]) {
+          this.searchObjs.startTime = this.searchCreatTime[0] + ' 00:00:00'
+          this.searchObjs.endTime = this.searchCreatTime[1] + ' 23:59:59'
+        }
+        console.log(this.searchObjs, cval, oval)
+      },
+      deep: true
     }
   },
   mounted() {
@@ -128,13 +142,16 @@ export default {
     })
   },
   methods: {
+    getDataObj(obj) {
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchCreatTime && this.searchCreatTime[0]) {
         searchObj.startTime = this.searchCreatTime[0] + ' 00:00:00'
         searchObj.endTime = this.searchCreatTime[1] + ' 23:59:59'
       }
-
       this.$emit('change', searchObj)
     },
     clearForm() {
@@ -143,7 +160,6 @@ export default {
       this.searchForm.shipFromCityCode = ''
       this.searchForm.shipToCityCode = ''
       this.searchForm.shipSn = ''
-
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
       this.searchCreatTime = this.defaultTime
