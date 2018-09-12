@@ -295,7 +295,7 @@
                   })
                   this.fetchData()
                 })
-              }else{
+              } else {
                 this.$message({
                   message: '自定义车型不能超过5种~',
                   type: 'success'
@@ -380,7 +380,6 @@
         }
       },
       reset() {
-        // this.formInline = this.setObject(this.formInline)
         this.formInline = Object.assign({}, this.formInline)
 
         this.formInline.shipSn = ''
@@ -396,7 +395,35 @@
             })
             return false
           } else {
-            this.selectedSys
+
+            // this.definedList = this.selected
+            // let data = {}
+            // let sendData1 = {}
+            // data = this.definedList.filter(el => {
+            //   return el.selectdCheck === false
+            // }).map(el => {
+            //   sendData1 = {
+            //     name: el.name,
+            //     vol: el.vol,
+            //     weight: el.weight
+            //   }
+
+
+            // console.log(this.selectedSys, "是this.selectedSys");
+            // this.systemList = this.selectedSys
+            // let data1 = {}
+            // let sendData3 = {}
+            // data1 = this.systemList.filter(el => {
+            //   return el.selectdCheck === true
+            //
+            // }).map(el => {
+            //   sendData3 = {
+            //     cid: el.cid,
+            //     price: el.price
+            //   }
+            // })
+            // console.log(data1)
+
           }
         } else {
 

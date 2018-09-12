@@ -471,7 +471,6 @@
               })
               return false
             } else {
-              // =>todo 删除多个
 
               ids = ids.join(',')
               this.$confirm('确定要取消发车？', '提示', {
