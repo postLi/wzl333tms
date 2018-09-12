@@ -37,7 +37,7 @@
                              <i class="lll-ntelligent-del" :class="{'lll-ntelligent-delActive':showCurrenFormStyle[index]}" @click="delCurTruck(index,item)"></i>
                              车型{{ changeNumCN[index]}}
                   </el-button>
-                  
+
                   <div class="loadInfo_item_form" v-show="showCurrenFormStyle[index]">
                     <div class="loadInfo_item_form_row">
                       <el-form-item label="车型" class="nameClass">
@@ -297,6 +297,7 @@
       this.intelligentLeftData.arriveOrgid = this.orgid
     },
     methods: {
+
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
           if (!value) {
@@ -734,7 +735,7 @@
             background-repeat: no-repeat;
             transition: 0.3s;
           }
-          
+
           i.lll-ntelligent-delActive:before{
             content: '';
             display: block;

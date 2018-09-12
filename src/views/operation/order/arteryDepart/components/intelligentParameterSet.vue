@@ -4,39 +4,25 @@
     <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible" class='pickpopDepMain'
                v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
       <div class="depmain-div">
-        <!--<div class="checklistClass">-->
-        <!--<el-checkbox-group v-model="checkList">-->
-        <!--<ul>-->
-        <!--<li><el-checkbox label="大件优先"></el-checkbox></li>-->
-        <!--<li><el-checkbox label="急件优先"></el-checkbox></li>-->
-        <!--<li><el-checkbox label="库龄升序优先"></el-checkbox></li>-->
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li><el-checkbox label="库龄降序优先" ></el-checkbox></li>-->
-        <!--<li><el-checkbox label="件数单价高优先" ></el-checkbox></li>-->
-        <!--<li><el-checkbox label="体积单价高优先" ></el-checkbox></li>-->
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li><el-checkbox label="重量单价高优先" ></el-checkbox></li>-->
-        <!--</ul>-->
-        <!--</el-checkbox-group>-->
-        <!--</div>-->
+        <div class="carDiv" v-if=isSecond>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="doAction('addCar')"></el-button>
+          <el-button type="danger" size="mini" icon="el-icon-minus" @click="doAction('subCar')"></el-button>
+        </div>
+        <div class="tabsDiv">
+          <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
 
-        <div>
-          <el-tabs type="border-card">
-            <el-tab-pane>
+            <el-tab-pane name="first">
               <span slot="label"> 系统车型</span>
               <el-table
-                ref="multipleTable"
+                ref="multipleTable1"
                 :data="systemList"
                 stripe
                 border
-                @row-click="clickDetails"
-                @selection-change="getSelection"
+                @row-click="clickDetail"
+                @selection-change="getSelectionSys"
                 height="200"
                 tooltip-effect="dark"
-
-                style="width: 490px"
+                style="width: 450px"
                 class="tableIntelligent"
               >
                 <el-table-column
@@ -69,18 +55,12 @@
                 <el-table-column
                   fixed
                   prop="price"
-                  width="135"
+                  width="120"
                   label="车费">
-                  <!--<template slot-scope="scope">-->
-                    <!--<el-input v-model.number="scope.row.num"-->
-                              <!--:size="btnsize" v-number-only:point-->
-                              <!--@change="(val)=>changeFright(scope.$index, scope.prop, val)"-->
-                              <!--:disabled="selectdCheck"></el-input>-->
-                  <!--</template>-->
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-            <el-tab-pane label="自定义车型">
+            <el-tab-pane label="自定义车型" name="second">
               <div class="tableIntelligentPSet">
                 <el-table
                   ref="multipleTable"
@@ -91,9 +71,7 @@
                   @selection-change="getSelection"
                   height="200"
                   tooltip-effect="dark"
-
-                  style="width: 490px"
-
+                  style="width: 450px"
                 >
                   <el-table-column
                     fixed
@@ -142,7 +120,7 @@
                   <el-table-column
                     fixed
                     prop="price"
-                    width="125"
+                    width="110"
                     label="车费">
                     <template slot-scope="scope">
                       <el-input v-model.number="scope.row.price"
@@ -212,13 +190,13 @@
       createrId: [Number, String]
     },
     data() {
-
-
       return {
+        activeName: "first",
+        isSecond: false,
         selectdCheck: true,
-        checkList: ['选中且禁用', '复选框 A'],
         btnsize: 'mini',
         selected: [],
+        selectedSys: [],
         rules: {},
         formLabelWidth: '100',
         usersArr: [
@@ -252,7 +230,7 @@
           orgid: ''
         },
         systemList: [],
-        definedList: [],
+        definedList: []
       }
     },
     computed: {
@@ -285,15 +263,74 @@
       }
     },
     methods: {
+      doAction(type) {
+        if (this.selected.length === 0) {
+          this.$message({
+            message: '请选择要操作的项~',
+            type: 'warning'
+          })
+          return false
+        } else {
+          switch (type) {
+            case 'addCar':
+              if (this.definedList.length < 5) {
+                this.definedList = this.selected
+                let data = {}
+                let sendData1 = {}
+                data = this.definedList.filter(el => {
+                  return el.selectdCheck === false
+                }).map(el => {
+                  sendData1 = {
+                    name: el.name,
+                    vol: el.vol,
+                    weight: el.weight
+                  }
+                })
+                const promiseObj = postPzcarinfotms(sendData1)
+                promiseObj.then(res => {
+                  this.loading = false
+                  this.$message({
+                    message: '添加成功~',
+                    type: 'success'
+                  })
+                  this.fetchData()
+                })
+              }else{
+                this.$message({
+                  message: '自定义车型不能超过5种~',
+                  type: 'success'
+                })
+                return false
+              }
+              break;
+            case 'subCar':
+              this.definedList = this.selected
+              let loadId = ''
+              loadId = this.definedList.filter(el => {
+                return el.selectdCheck === true
+              }).map(el => {
+                return el.cid
+              })
+              loadId = loadId.join(',')
+              deletePzcarinfotms(loadId).then(res => {
+                this.loading = false
+                this.$message({
+                  message: '删除成功~',
+                  type: 'success'
+                })
+                this.fetchData()
+              })
+              break;
+          }
+        }
+
+      },
       fetchGetIntnteCarInfo() {
         this.loading = true
         return getIntnteCarInfo(this.infoGetSystemList.orgid, this.infoGetSystemList.sign).then(data => {
 
           this.systemList = data
-          console.log(this.systemList, '获取车型')
           this.loading = false
-        }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       fetchGetIntnteCarDefinedInfo() {
@@ -301,58 +338,39 @@
         return getIntnteCarInfo(this.infoGetDefinedList.orgid, this.infoGetDefinedList.sign).then(data => {
           this.definedList = data
           this.loading = false
-        }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       changeFright(index, prop, newVal) {
-        this.usersArr[index][prop] = Number(newVal)
-        const newfreght = this.usersArr[index].num
-        if (newfreght === 0) {
-          this.usersArr[index].num = newfreght
+        this.definedList[index][prop] = Number(newVal)
+        const newName = this.definedList[index].name
+        const newWeight = this.definedList[index].weight
+        const newVol = this.definedList[index].vol
+        const newPrice = this.definedList[index].price
+        if (newName === 0 || newWeight === 0 || newVol === 0 || newPrice === 0) {
+          this.definedList[index].num = newName
+          this.definedList[index].weight = newWeight
+          this.definedList[index].vol = newVol
+          this.definedList[index].price = newPrice
           this.$notify({
             title: '提示',
             message: '车费不能为0',
             type: 'warning'
           })
-        } else if (newfreght < 0) {
+        } else if (newName < 0) {
           this.$notify({
             title: '提示',
             message: '车费不能小于0,默认为初始值',
             type: 'warning'
           })
         } else {
-          this.$refs.multipleTable.toggleRowSelection(this.usersArr[index], true)
-          return this.usersArr[index].num
+          this.definedList[index].name
+          this.definedList[index].weight
+          this.definedList[index].vol
+          this.definedList[index].price
         }
       },
-      search(item) {
-        return !item.pickupBatchNumber
-      },
-      // fetchFindByShipSnOrGoodSn() {
-      //   this.loading = true
-      //   return getFindShipByid(this.dotInfo.id).then(data => {
-      //     this.usersArr = data
-      //     this.loading = false
-      //   }).catch((err)=>{
-      //     this.loading = false
-      //     this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      //   })
-      // },
       fetchData() {
-        // this.fetchFindByShipSnOrGoodSn()
-      },
-      getShipSn(order) {
-        if (order) {
-          this.formInline.shipGoodsSn = order.shipGoodsSn
-          this.sendId.shipId = order.id
-        }
-      },
-      getShipGoodsSn(order) {
-        if (order) {
-          this.formInline.shipSn = order.shipSn
-          this.sendId.shipId = order.id
-        }
+        this.fetchGetIntnteCarDefinedInfo()
       },
       closeMe(done) {
         this.reset()
@@ -369,110 +387,49 @@
         this.formInline.shipGoodsSn = ''
         this.formInline.pickupFee = ''
       },
-      setObject(obj1, obj2) {
-        for (var i in obj1) {
-          obj1[i] = obj2 ? obj2[i] : ''
-        }
-        return obj1
-      },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.$router)
-
-            this.$router.push(
-              {
-                path: '/operation/order/loadIntelligent/components/intelligentImg',
-                query: {
-                  tab: '智能配载',
-                  sendDate: this.usersArr
-                }
-              },
-            )
-            this.closeMe()
-
-
-            // this.$router.push(
-            //   {
-            //     path: '/operation/order/loadIntelligent/index',
-            //     query: {
-            //       sendDate: this.usersArr
-            //     }
-            //   },
-            // )
-
-            // this.loading = true
-            // this.sendId.pickupFee = this.formInline.pickupFee
-            // const pickupFee = this.sendId.pickupFee || ''
-            // const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
-            //
-            // promiseObj.then(res => {
-            //   this.loading = false
-            //   this.$message({
-            //     message: '添加成功~',
-            //     type: 'success'
-            //   })
-            //   delete this.sendId.shipId
-            //   this.fetchData()
-            //   this.reset()
-            //   this.$emit('success')
-            // }).catch(err => {
-            //   this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-            //   this.loading = false
-            // })
-          } else {
+      submitForm() {
+        if (!this.isSecond) {
+          if (!this.selectedSys.length) {
+            this.$message({
+              message: '请选择要操作的项~',
+              type: 'warning'
+            })
             return false
+          } else {
+            this.selectedSys
           }
-        })
+        } else {
+
+        }
       },
-      removeList() {
-        // if (!this.selected.length) {
-        //   this.$message({
-        //     message: '请选择要操作的列表项~',
-        //     type: 'warning'
-        //   })
-        //   return false
-        // }else {
-        //   if (this.selected.length > 1) {
-        //     this.$message({
-        //       message: '每次只能选择单条数据~',
-        //       type: 'warning'
-        //     })
-        //     return false
-        //   }        else {
-        //     const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
-        //     promiseObj.then(res => {
-        //       this.loading = false
-        //       this.$message.success("保存成功")
-        //       this.fetchData()
-        //       this.$emit('success')
-        //   }).catch(err => {
-        //     this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-        //       this.loading = false
-        //     })
-        //   }
-        // }
+      clickDetail(row, event, column) {
+        this.$refs.multipleTable1.toggleRowSelection(row)
       },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
       },
+      getSelectionSys(selection) {
+        this.selectedSys = selection
+      },
       getSelection(selection) {
-        // 1.全部置为不可编辑状态
-        this.usersArr.forEach(el => {
+        this.definedList.forEach(el => {
           el.selectdCheck = true
         })
-
-        // 2.选中的改为可编辑状态
         if (selection) {
           this.selected = selection
           this.selected.forEach(el => {
             el.selectdCheck = false
 
           })
-        } else {
-          // 3.剩下的为不可编辑状态
         }
 
+      },
+      handleClick(tab, event) {
+        if (this.activeName === 'second') {
+          this.isSecond = true
+        } else {
+          this.isSecond = false
+        }
       }
     }
   }
@@ -524,6 +481,15 @@
         padding: 20px 35px;
         border-bottom: 1px solid rgb(100, 186, 245);
         .depmain-div {
+          .carDiv {
+            position: absolute;
+            left: 350px;
+            top: 80px;
+            z-index: 1;
+          }
+          .tabsDiv {
+            position: relative;
+          }
           .checklistClass {
             padding-bottom: 10px;
             ul:first-of-type {

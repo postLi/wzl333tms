@@ -73,13 +73,11 @@
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
   import {PrintInFullPage, SaveAsFile, PrintContract} from '@/utils/lodopFuncs'
-  import AddLntelligent from './components/addLntelligent '
-  // import AddLntelligent from './components/intelligentParameterSet'
+  // import AddLntelligent from './components/addLntelligent '
+  import AddLntelligent from './components/intelligentParameterSet'
   // import AddLntelligent from './components/intelligentFreight'
   // import AddLntelligent from './components/intelligentHint'
   // import AddLntelligent from './components/intelligentPayHint'
-
-  // import { PrintContract } from '@/utils/lodopFuncs'
   export default {
     components: {
       SearchForm,
