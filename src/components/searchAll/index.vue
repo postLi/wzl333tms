@@ -13,7 +13,7 @@
     </el-autocomplete>
     <el-button plain  @click="Custom">保存自定义</el-button>
   </el-form-item>
-  <addSave :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify"/>
+  <addSave :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="fetchAllloadAll" :isModify="isModify"/>
 </div>
 </template>
 <script>
@@ -53,7 +53,7 @@ export default {
     closeAddDot() {
       this.popVisible = false
     },
-    loadAll() {
+    fetchAllloadAll() {
       this.querySearch.vo.orgId = this.otherinfo.orgid
       this.querySearch.vo.userId = this.otherinfo.userId
       this.querySearch.vo.menuCode = this.$route.meta.code
@@ -78,7 +78,7 @@ export default {
     }
   },
   mounted() {
-    this.loadAll()
+    this.fetchAllloadAll()
   }
 }
 </script>
