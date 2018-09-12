@@ -60,6 +60,22 @@ const permission = {
         // 暂时给于全部权限，等后台权限体系建立好再对接设置
        // accessedRouters = asyncRouterMap
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
+        console.log('accessedRouters:',accessedRouters)
+        accessedRouters.map(el=>{
+          if(el.meta && el.meta.code === 'SYSTEM'){
+            let flag = true
+            el.children.map(ee => {
+              if(ee.meta && ee.meta.code && flag){
+                if(ee.children.length){
+                  el.redirect = ee.children[0].path
+                } else {
+                  el.redirect = ee.path
+                }
+                flag = false
+              }
+            })
+          }
+        })
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
