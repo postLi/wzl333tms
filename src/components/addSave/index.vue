@@ -60,7 +60,11 @@ export default {
       type: Boolean,
       default: false
     },
-    proptitle: String
+    proptitle: String,
+    searchObj: {
+      type: [Array, Object],
+      default: () => {}
+    }
   },
 
   data() {
@@ -109,6 +113,18 @@ export default {
     },
 
     createrId(newVal) {
+    },
+    searchObj: {
+      handler (cval, oval) {
+        if (cval) {
+          this.form.queryContent = JSON.stringify(cval)
+          this.form.orgId = this.otherinfo.orgid
+          this.form.userId = this.otherinfo.userId
+          this.form.menuCode = this.$route.meta.code
+        }
+        console.log('addSave_cval', cval, this.form)
+      },
+      deep: true
     }
   },
   methods: {
@@ -127,6 +143,7 @@ export default {
         if (valid) {
           this.loading = true
           const data = objectMerge2({}, this.form)
+          console.log('addSave_data',data)
           const promiseObj = postcreaterQueryCriteriaLog(data)
           promiseObj.then(res => {
             this.$message({

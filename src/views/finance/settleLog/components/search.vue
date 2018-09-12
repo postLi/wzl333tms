@@ -7,7 +7,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="结算网点" prop="orgId">
-        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="changeVal"></SelectTree>
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"></SelectTree>
       </el-form-item>
       <el-form-item label="结算类型" prop="settlementId">
         <selectType v-model="searchForm.settlementId" type="settlement_type" clearable @change="changeVal">
@@ -191,11 +191,12 @@ export default {
       }
 
       this.searchObj = Object.assign({}, searchObj)
+      console.log(this.searchObj, this.searchForm)
       console.log('56664', this.searchObj)
       // this.searchForm.startTime = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
       // this.searchForm.endTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
 
-      // this.$emit('change', this.searchForm)
+      this.$emit('change', this.searchForm)
     },
     changeVal(obj) {
       this.onSubmit()

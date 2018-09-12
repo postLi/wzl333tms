@@ -44,8 +44,8 @@
                         <el-input disabled :size="btnsize" v-model="item.name"></el-input>
 
                       </el-form-item>
-                      <el-form-item label="车牌号" prop="" :key="changeTruckKey" prop="truckIdNumber">
-                        <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.truckIdNumber"
+                      <el-form-item label="车牌号" prop="" :key="changeTruckKey" :prop="'item.'+index+'.truckIdNumber'">
+                        <el-autocomplete popper-class="lll-autocomplete" v-model="item.truckIdNumber"
                                          :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini"
                                          @select="handleSelectTruckNum" auto-complete="off" @blur="blurTruck"
                                          :maxlength="8">

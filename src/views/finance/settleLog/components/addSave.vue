@@ -87,37 +87,46 @@ export default {
       type: ''
     }
   },
-
   mounted() {
     this.$nextTick(() => {
-      console.log('78797', this.searchObj)
-      this.form.queryContent = JSON.stringify(this.searchObj)
-      this.form.userId = this.otherinfo.userId
-      this.form.orgId = this.otherinfo.orgid
-      this.form.menuCode = this.$route.meta.code
+      // console.log('78797', this.searchObj)
+      // this.form.queryContent = JSON.stringify(this.searchObj)
+      // this.form.userId = this.otherinfo.userId
+      // this.form.orgId = this.searchObj.orgId
+      // // this.form.orgId = this.otherinfo.orgid
+      // this.form.menuCode = this.$route.meta.code
     })
   },
   watch: {
     dotInfo(newVal) {
       if (this.isModify) {
+         this.form.queryContent = JSON.stringify(this.searchObj)
         // this.popTitle = '回单回收'
         // this.form.userId = this.otherinfo.userId
         this.form.userId = this.otherinfo.userId
-        this.form.orgId = this.otherinfo.orgid
+        this.form.orgId = this.searchObj.orgId
+        // this.form.orgId = this.otherinfo.orgid
         this.form.menuCode = this.$route.meta.code
         console.log(this.otherinfo.userId)
       }
     },
-    searchObj(newVal) {
-      // console.log(this.searchObj)
+    searchObj: {
+      handler (cval, oval) {
+        if (cval) {
+          console.log('cval',cval)
+        this.form.queryContent = JSON.stringify(cval)
+        this.form.userId = this.otherinfo.userId
+        this.form.orgId = this.searchObj.orgId
+        this.form.menuCode = this.$route.meta.code
+        console.log(this.otherinfo.userId)
+        }
+      },
+      deep: true
     },
     // searchQuery(newVal) {
     //   this.form.pageType = this.searchQuery.vo.pageType
     //   console.log(this.form.pageType);
     // },
-    orgid(newVal) {
-      this.form.orgid = newVal
-    },
 
     createrId(newVal) {
     }
