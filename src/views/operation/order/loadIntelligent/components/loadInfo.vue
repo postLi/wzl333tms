@@ -30,8 +30,8 @@
               <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="76px" :inline="true"
                        label-position="right" size="mini" class="loadInfo_collapse_list" :key="valkey">
                 <div class="loadInfo_item" v-for="(item, index) in intelligentData.dataList"
-                     :style="{width: showCurrenFormStyle[index]?'calc(100% - 185px)': ''}" v-show="isShowCurPages">
-                  <el-button class="verticalBtn" @click="selectCurrentTuck(item, index)"
+                     :style="{width: showCurrenFormStyle[index]?'calc(100% - 183px)': '',transition:'0.5s'}">
+                  <el-button class="verticalBtn" @click="selectCurrentTuck(index,item)"
                              :class="{'verticalBtnActive':showCurrenFormStyle[index]}">
                              <i class="lll-ntelligent-del" :class="{'lll-ntelligent-delActive':showCurrenFormStyle[index]}" @click="delCurTruck(index,item)"></i>
                              车型{{ changeNumCN[index]}}
@@ -42,8 +42,9 @@
                       <el-form-item label="车型" class="nameClass">
                         <el-input disabled :size="btnsize" v-model="item.name"></el-input>
 
+
                       </el-form-item>
-                      <el-form-item label="车牌号" :key="changeTruckKey" :prop="`dataList.${index}.truckIdNumber`" 
+                      <el-form-item label="车牌号" :key="changeTruckKey" :prop="`dataList.${index}.truckIdNumber`"  class="formItemTextDanger"
                       :rules="{required: true, message: '请选择车牌号~'}">
                         <el-autocomplete popper-class="lll-autocomplete" v-model="item.truckIdNumber"
                                          :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini"
@@ -92,8 +93,8 @@
                         </el-autocomplete>
                       </el-form-item>
                       <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" 
-                      :rules="{required: true, message: '请选择司机电话~'}">
-                        <el-input v-model="item.dirverMobile"></el-input>
+                      :rules="{required: true, message: '请选择司机电话~'}"  class="formItemTextDanger">
+                        <el-input v-model="item.dirverMobile" :maxlength="11"></el-input>
                       </el-form-item>
                       <el-form-item label="到达日期">
                         <el-date-picker size="mini" v-model="item.planArrivedTime"
@@ -107,7 +108,7 @@
                     </div>
                   </div>
                 </div>
-                <el-button class="verticalBtn verticalBtnAdd" @click="addtuck">增加+</el-button>
+                <el-button class="verticalBtn verticalBtnAdd clearfix" @click="addtuck">增加+</el-button>
 
                 <div class="verticalBtnTransfer">
                   <el-button class="verticalBtnSort" @click="pretruck" icon="el-icon-d-arrow-left"
@@ -165,7 +166,7 @@
     computed: {
       ...mapGetters([
         'otherinfo'
-      ]),
+      ])
     },
     data() {
 
@@ -210,26 +211,26 @@
           orgid: '',
           dataList: []
         },
-        // intelligentData: {
-        //   contractNo: '',
-        //   batchNo: '',
-        //   batchTypeId: 52,
-        //   loadTypeId: 39,
-        //   truckIdNumber: '',
-        //   dirverName: '',
-        //   dirverMobile: '',
-        //   truckLoad: '',
-        //   truckVolume: '',
-        //   loadTime: parseTime(new Date()),
-        //   planArrivedTime: '',
-        //   requireArrivedTime: '',
-        //   truckUserId: '',
-        //   remark: ''
-        // },
         intelligentLeftData: {
-          apportionTypeId: '',
-          arriveOrgid: '',
+          contractNo: '',
+          batchNo: '',
+          batchTypeId: 52,
+          loadTypeId: 39,
+          truckIdNumber: '',
+          dirverName: '',
+          dirverMobile: '',
+          truckLoad: '',
+          truckVolume: '',
+          loadTime: parseTime(new Date()),
+          planArrivedTime: '',
+          requireArrivedTime: '',
+          truckUserId: '',
+          remark: ''
         },
+        // intelligentLeftData: {
+        //   apportionTypeId: '',
+        //   arriveOrgid: '',
+        // },
         searchTable: {},
         changeDriverKey: '',
         changeTruckKey: '',
@@ -259,14 +260,16 @@
         loadDataArray: [],
         truckPageSize: 3,
         truckTotalPage: 0,
-        isShowCurPages: true
+        isShowCurPages: true,
+        showCurPagesData: {
+          dataList: []
+        }
       }
     },
     watch: {
       orgid: {
         handler(newVal) {
           this.intelligentLeftData.arriveOrgid = this.orgid
-
         },
         deep: true
       },
@@ -274,6 +277,8 @@
         handler(newVal) {
           this.intelligentData.dataList = this.dofo
           this.intelligentData.dataList.forEach((e, index) => {
+            e.loadTime= parseTime(new Date())
+            e.planArrivedTime= parseTime(new Date())
             let data = {}
             this.$set(data, 'nowpayCarriage', e.price)
             this.$set(e, 'tmsOrderLoadFee', data)
@@ -284,25 +289,23 @@
         }
       },
       loadTable: {
-        handler(cval, oval) {
-
-        }
+        handler(cval, oval) {}
       }
     },
     mounted() {
-
-      this.init()
-      this.getSystemTime()
-      this.intelligentLeftData.arriveOrgid = this.orgid
-
-    },
-    activated() {
       this.init()
       this.getSystemTime()
       this.intelligentLeftData.arriveOrgid = this.orgid
     },
+    // activated() {
+    //   this.init()
+    //   this.getSystemTime()
+    //   this.intelligentLeftData.arriveOrgid = this.orgid
+    // },
     methods: {
+      setCurPageView () { // 设置只显示三个车型
 
+      },
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
           if (!value) {
@@ -356,6 +359,7 @@
         this.openlntelligent()
       },
       getSystemTime() { // 获取系统时间
+        
       },
       init() {
         this.intelligentData = this.$options.data().intelligentData
@@ -370,7 +374,6 @@
           this.inited = true
           this.initInfo()
         }
-
       },
       initInfo() { // 车牌号和司机信息 init
         this.loading = false
@@ -413,16 +416,14 @@
       querySearch(queryString, cb) {
         const driverList = this.Drivers
         console.log('this.Drivers', this.Drivers)
-        // const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
-        const results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
+        const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
         // 调用 callback 返回司机列表的数据
         cb(results)
       },
       querySearchTruck(queryString, cb) {
         const truckList = this.Trucks
         console.log('this.Trucks', this.Trucks)
-        // const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
-        const results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
+        const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
         // 调用 callback 返回车辆列表的数据
         cb(results)
       },
@@ -489,28 +490,42 @@
             this.$set(arr[index], 'tmsOrderLoadFee', this.intFreightObj)
           } else {
           }
-
         })
 
         arr.forEach((e, index) => {
           let curinfo = {
+            // apportionTypeId: this.intelligentLeftData.apportionTypeId,
+            // arriveOrgid: this.intelligentLeftData.arriveOrgid,
+            // contractNo: this.intelligentLeftData.contractNo,
+            // batchNo: this.intelligentLeftData.batchNo,
+            // batchTypeId: this.intelligentLeftData.batchTypeId,
+            // truckIdNumber: this.intelligentLeftData.truckIdNumber,
+            // dirverName: this.intelligentLeftData.dirverName,
+            // dirverMobile: this.intelligentLeftData.dirverMobile,
+            // truckLoad: this.intelligentLeftData.truckLoad,
+            // truckVolume: this.intelligentLeftData.truckVolume,
+            // loadTime: this.intelligentLeftData.loadTime,
+            // planArrivedTime: this.intelligentLeftData.planArrivedTime,
+            // requireArrivedTime: this.intelligentLeftData.requireArrivedTime,
+            // truckUserId: this.intelligentLeftData.truckUserId,
+            // remark: this.intelligentLeftData.remark
             apportionTypeId: this.intelligentLeftData.apportionTypeId,
             arriveOrgid: this.intelligentLeftData.arriveOrgid,
-            contractNo: this.intelligentData.contractNo,
-            batchNo: this.intelligentData.batchNo,
-            batchTypeId: this.intelligentData.batchTypeId,
-            truckIdNumber: this.intelligentData.truckIdNumber,
-            dirverName: this.intelligentData.dirverName,
-            dirverMobile: this.intelligentData.dirverMobile,
-            truckLoad: this.intelligentData.truckLoad,
-            truckVolume: this.intelligentData.truckVolume,
-            loadTime: this.intelligentData.loadTime,
-            planArrivedTime: this.intelligentData.planArrivedTime,
-            requireArrivedTime: this.intelligentData.requireArrivedTime,
-            truckUserId: this.intelligentData.truckUserId,
-            loadTypeId: this.intelligentData.loadTypeId,
+            contractNo: e.contractNo || '',
+            batchNo: e.batchNo || '',
+            batchTypeId: this.intelligentLeftData.batchTypeId,
+            truckIdNumber: e.truckIdNumber,
+            dirverName: e.dirverName,
+            dirverMobile: e.dirverMobile,
+            truckLoad: e.truckLoad,
+            truckVolume: e.truckVolume,
+            loadTime: e.loadTime,
+            planArrivedTime: e.planArrivedTime,
+            requireArrivedTime: e.requireArrivedTime,
+            truckUserId: e.truckUserId,
+            loadTypeId: this.intelligentLeftData.loadTypeId,
             orgid: this.otherinfo.orgid,
-            remark: this.intelligentData.remark
+            remark: e.remark
           }
           this.$set(e, 'tmsOrderLoad', curinfo)
           this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
@@ -524,8 +539,10 @@
           this.$set(this.loadDataArray, index, data)
           data = {}
           curinfo = {}
+          this.loadDataArray = this.loadDataArray.filter((e, index) => {
+            return (e.tmsOrderLoadDetailsList && e.tmsOrderLoadDetailsList.length > 0)
+          })
         })
-
 
       },
       submitForm() {
@@ -554,7 +571,7 @@
       changeLoadNum(val, index, type) {
         this.$emit('truckPrecent', this.intelligentData.dataList[index])
       },
-      selectCurrentTuck(item, index) {
+      selectCurrentTuck(index, item) {
         this.currentIndex = index
         this.showCurrenFormStyle = []
         this.showCurrenFormStyle[index] = true
@@ -562,17 +579,35 @@
         this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
       },
       delCurTruck(index,item){
-        this.$message.warning('暂无此功能！')
-        // this.currentIndex = index
-        // this.$emit('truckIndex', this.currentIndex)
-        // this.intelligentData.dataList =  this.intelligentData.dataList.filter((e, index) => {
-        //   return index !== this.currentIndex
-        // })
-        // console.log(index)
+        this.showCurrenFormStyle = []
+        console.log(index, index-1)
+        this.currentIndex = index
+        this.$emit('truckIndex', this.currentIndex)
+        this.intelligentData.dataList =  this.intelligentData.dataList.filter((e, cindex) => {
+          return cindex !== this.currentIndex
+        })
+        this.showCurrenFormStyle[--this.currentIndex] = true
+        console.log(this.currentIndex,this.intelligentData.dataList)
+
       },
       addtuck() {
         ++this.currentIndex
-        this.intelligentData.dataList.push({})
+        this.intelligentData.dataList.push({
+          contractNo: '',
+          batchNo: '',
+          batchTypeId: 52,
+          loadTypeId: 39,
+          truckIdNumber: '',
+          dirverName: '',
+          dirverMobile: '',
+          truckLoad: '',
+          truckVolume: '',
+          loadTime: parseTime(new Date()),
+          planArrivedTime: '',
+          requireArrivedTime: '',
+          truckUserId: '',
+          remark: ''
+        })
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
       },
@@ -776,17 +811,24 @@
               flex-direction: row;
               .loadInfo_item_form {
                 padding-top: 15px;
-                min-width: 1000px;
+                width: 1200px;
                 display: inline-block;
+
                 .loadInfo_item_form_row {
                   display: flex;
                   flex-direction: row;
                   margin-bottom: 10px;
                   margin-top: 10px;
+                  .formItemTextDanger {
+                    .el-form-item__label {
+                      color: #ef0000;
+                    }
+                  }
                   .el-form-item {
                     margin-bottom: 0px;
                     .el-input {
-                      max-width: 160px;
+                      min-width: 160px;
+                      max-width: 173px;
                     }
                   }
                   .el-form-item.nameClass {
@@ -800,6 +842,7 @@
                   .el-form-item--small.el-form-item {
                     margin-bottom: 0px;
                   }
+                 
 
                 }
               }
