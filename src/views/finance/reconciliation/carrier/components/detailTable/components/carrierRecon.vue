@@ -1002,13 +1002,13 @@
                 // this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
                 //   const a = {}
                 //   a.totalFee = el.totalFee
-                  
+
                 //   return a
                 // }) : []
                 // this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                 //   const a = {}
                 //   a.totalCost = el.totalCost
-                 
+
                 //   return a
                 // }) : []
                 // this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
@@ -1044,13 +1044,13 @@
         this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalFee
-                  
+
                   return a
                 }) : []
                 this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
                   a.totalFee = el.totalCost
-                 
+
                   return a
                 }) : []
                 this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
@@ -1123,7 +1123,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5) {
+          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 10) {
             sums[index] = ''
             return
           }

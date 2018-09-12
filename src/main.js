@@ -17,9 +17,6 @@ import './mixins'
 
 import './directive'
 
-// mock
-// import './mock/'
-
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 

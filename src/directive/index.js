@@ -83,7 +83,6 @@ Vue.directive('numberOnly', {
 Vue.directive('onlyNumberAndLetter', {
   bind: function(el, binding) {
     // 判断是否需要小数点
-    const arg = binding.arg || ''
     const el2 = VueDirectiveObject.findInput(el)
 
     if (el2) {

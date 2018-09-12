@@ -106,7 +106,7 @@ export default {
         {
           label: '序号',
           prop: 'id',
-          width: '120',
+          width: '70',
           fixed: true,
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -129,32 +129,32 @@ export default {
         }, {
           label: '对账单名',
           prop: 'checkBillName',
-          width: '280',
+          width: '320',
           fixed: false
         }, {
           label: '对账编号',
           prop: 'checkBillCode',
-          width: '170',
+          width: '140',
           fixed: false
         }, {
           label: '对账开始时间',
           prop: 'checkStartTime',
-          width: '160',
+          width: '150',
           fixed: false
         }, {
           label: '对账结束时间',
           prop: 'checkEndTime',
-          width: '160',
+          width: '150',
           fixed: false
         }, {
           label: '应收应付对账合计',
           prop: 'totalCountFee',
-          width: '180',
+          width: '160',
           fixed: false
         }, {
           label: '应收账款',
           prop: 'receivableFee',
-          width: '150',
+          width: '120',
           fixed: false
         }, {
           label: '应付账款',
@@ -249,8 +249,9 @@ export default {
         this.loading = false
       }).catch(err => {
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this.loading = false
       })
-      this.loading = false
+
     },
     fetchData() {
       this.fetchAllCustomer()
@@ -338,13 +339,15 @@ export default {
                 checkStatus: 0
               }
               _data.id = this.selected[0].id
+              this.loading = true
               postUpdateBillCheckSelective(_data).then(res => {
-                this.loading = false
+
                 this.$message({
                   type: 'success',
-                  message: '保存成功~'
+                  message: '已取消对账~'
                 })
                 this.fetchData()
+                this.loading = false
               }).catch(err => {
                 this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
                 this.loading = false
@@ -354,6 +357,8 @@ export default {
                 type: 'info',
                 message: '该对账单还没对账~'
               })
+              this.$refs.multipleTable.clearSelection()
+              return false
             }
           }
 
@@ -368,13 +373,14 @@ export default {
             })
             return false
           } else {
+            this.loading = true
             if (this.selected[0].checkStatus === 0) {
               const id = this.selected[0].id
               deleteCarShort(id).then(res => {
                 this.loading = false
                 this.$message({
                   type: 'success',
-                  message: '保存成功~'
+                  message: '删除成功~'
                 })
                 this.fetchData()
               }).catch(err => {
@@ -386,6 +392,8 @@ export default {
                 type: 'info',
                 message: '该对账单已完成对账不可以删除~'
               })
+              this.$refs.multipleTable.clearSelection()
+              return false
             }
           }
 

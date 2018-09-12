@@ -48,7 +48,7 @@ export default {
       default: 'mini'
     },
     orgid: {
-      type: Number
+      type: [Number,String]
     },
     issender: {
       type: Boolean,
