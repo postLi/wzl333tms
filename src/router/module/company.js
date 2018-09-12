@@ -54,7 +54,7 @@ export default {
     hidden: false,
     name: 'customerManage',
     component: _import('company/customerManage/index'),
-      // redirect: '/company/customerManage/sender',
+    redirect: '/company/customerManage/sender',
     meta: { title: '客户管理', stitle: '客户', noCache: false, 'code': 'CUSTOMELIST' },
     children: [{
       path: '/company/customerManage/sender',
