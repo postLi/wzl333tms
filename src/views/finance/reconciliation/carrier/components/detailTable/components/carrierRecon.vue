@@ -27,6 +27,12 @@
             <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
           </el-form-item>
         </div>
+        <div class="sPayType">
+          <el-form-item label="中转付款方式" prop="">
+            <selectType v-model="searchTitle.paymentId" type="payment_type" clearable
+                        size="mini" class=""></selectType>
+          </el-form-item>
+        </div>
         <div class="sDate">
           <el-date-picker
             v-model="searchCreatTime"
@@ -47,54 +53,93 @@
     <div class="sMessageTop">
       <el-form :inline="true" :size="btnsize" label-position="center" :model="messageInfo" label-width="100px"
                class=" clearfix" ref="formName2" :rules="rules">
+        <ul>
+          <li>
+            <el-form-item label="承运商名称">
+              <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
+              </el-form-item>
+                </li>
+          <li>
+            <el-form-item label="业务负责人">
+              <el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="联系方式" prop="memberPersonPhone">
+              <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="对账单编号">
+              <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
+            </el-form-item>
+          </li>
 
-        <el-form-item label="承运商名称">
-          <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="业务负责人">
-          <el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="memberPersonPhone">
-          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="对账单编号">
-          <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="客户编号">
-          <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="开始时间">
-          <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="结算方式">
-          <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="账户账号" prop="bankAccount">
-          <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="账户开户行">
-          <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="财务负责人">
-          <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="financialOfficerPhone">
-          <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>
-        </el-form-item>
-        <el-form-item label="支付宝">
-          <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="微信" class="sWetPay">
-          <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>
-        </el-form-item>
+
+        </ul>
+        <ul>
+          <li>
+            <el-form-item label="客户编号">
+              <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="开始时间">
+              <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="结束时间">
+              <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="结算方式">
+              <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
+            </el-form-item>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <el-form-item label="账户账号" prop="bankAccount">
+              <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="账户开户行">
+            <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="财务负责人">
+              <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="联系方式" prop="financialOfficerPhone">
+              <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>
+            </el-form-item>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <el-form-item label="支付宝">
+            <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>
+            </el-form-item>
+          </li>
+          <li>
+            <el-form-item label="微信" class="sWetPay">
+            <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>
+            </el-form-item>
+          </li>
+        </ul>
       </el-form>
+
+
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应收清单</p>
+        <p>未收清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -145,38 +190,38 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="120"
+            width="130"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="130"
+            width="150"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="100"
+            width="120"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="100"
+            width="130"
             label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
             prop="cargoName"
-            width="100"
+            width="150"
             label="货品名">
           </el-table-column>
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="80"
+            width="100"
             sortable
           >
           </el-table-column>
@@ -184,48 +229,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="90"
+            width="100"
             label="交接方式">
           </el-table-column>
-          <el-table-column
-            prop="abnormalType"
-            label="异常类型"
-            width="100"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
-            width="90"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="registerFee"
-            label="异常费用"
-            width="100"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="abnormalType"-->
+            <!--label="异常类型"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="abnormalAmount"-->
+            <!--label="异常件数"-->
+            <!--width="90"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="registerFee"-->
+            <!--label="异常费用"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalFee"
             label="小计"
-            width="100"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -244,7 +289,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>应付清单</p>
+        <p>未付清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -438,38 +483,38 @@
           </el-table-column>
           <el-table-column
             prop="shipSn"
-            width="120"
+            width="130"
             sortable
             label="运单号">
           </el-table-column>
           <el-table-column
             prop="oddNumbers"
             sortable
-            width="130"
+            width="150"
             label="中转单号">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
             sortable
-            width="100"
+            width="120"
             label="出发城市">
           </el-table-column>
           <el-table-column
             prop="shipToCityName"
             sortable
-            width="100"
+            width="130"
             label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
             prop="cargoName"
-            width="100"
+            width="150"
             label="货品名">
           </el-table-column>
           <el-table-column
             prop="cargoAmount"
             label="件数"
-            width="80"
+            width="100"
             sortable
           >
           </el-table-column>
@@ -477,48 +522,48 @@
           <el-table-column
             prop="shipDeliveryMethod"
             sortable
-            width="90"
+            width="100"
             label="交接方式">
           </el-table-column>
-          <el-table-column
-            prop="abnormalType"
-            label="异常类型"
-            width="100"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
-            width="90"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="registerFee"
-            label="异常费用"
-            width="100"
-            sortable
-          >
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="abnormalType"-->
+            <!--label="异常类型"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="abnormalAmount"-->
+            <!--label="异常件数"-->
+            <!--width="90"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="registerFee"-->
+            <!--label="异常费用"-->
+            <!--width="100"-->
+            <!--sortable-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="100"
+            width="150"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="totalFee"
             label="小计"
-            width="100"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -677,11 +722,10 @@
     </div>
     <div class="sBottom">
       <div class="sMessageBut">
+
+
         <el-form :inline="true" :size="btnsize" label-position="center" :model="messageButtonInfo" label-width="90px"
                  class="sButtom_searchinfo clearfix" ref="formName3" :rules="btnRule">
-          <!--<el-form-item label="总计">-->
-          <!--<el-input v-model="messageButtonInfo.totalCount" auto-complete="off" ></el-input>-->
-          <!--</el-form-item>-->
           <el-form-item label="备注">
             <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>
           </el-form-item>
@@ -713,7 +757,7 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
-            <!--<el-input v-model="messageButtonInfo.createTime" auto-complete="off" :maxlength="8"></el-input>-->
+
           </el-form-item>
         </el-form>
       </div>
@@ -740,12 +784,13 @@
   import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
   import { SaveAsFileCarrier} from '@/utils/recLodopFuncs'
-  // import
+  import SelectType from '@/components/selectType/index'
 
   export default {
     components: {
       querySelect,
-      SaveDialog
+      SaveDialog,
+      SelectType
     },
     data() {
       const validateMobile = (rule, value, callback) => {
@@ -849,6 +894,7 @@
 
         searchTitle: {
           carrierId: '', //
+          paymentId: '', //
           startTime: '',
           endTime: ''
         },
@@ -889,7 +935,7 @@
             data.carrierDetailDtoList.forEach((el, val) => {
               if (el.type === 1) {
                 this.dealInfo.push(el)
-                //虚拟
+                //其他
                 // // el.cargoAmount = 40.11
                 // //
                 // let el1 = objectMerge2({},el,{
@@ -998,29 +1044,6 @@
                 this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
-                //
-                // this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
-                //   const a = {}
-                //   a.totalFee = el.totalFee
-
-                //   return a
-                // }) : []
-                // this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                //   const a = {}
-                //   a.totalCost = el.totalCost
-
-                //   return a
-                // }) : []
-                // this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
-                //   const a = {}
-                //   a.totalFee = el.totalFee
-                //   return a
-                // }) : []
-                // this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                //   const a = {}
-                //   a.totalCost = el.totalCost
-                //   return a
-                // }) : []
                  this.countTotal() // 计算合计
                 if (!this.form.carrierDetailDtoList.length) {
                   this.$message({
@@ -1080,6 +1103,7 @@
         this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
         this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
       },
+      //
       canBtn() {
         this.$confirm('确定要取消对账单吗？', '提示', {
           confirmButtonText: '确定',
@@ -1123,7 +1147,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 10) {
+          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 10 || index === 16) {
             sums[index] = ''
             return
           }
@@ -1326,10 +1350,78 @@
         vertical-align: middle;
       }
     }
-    .sMessageTop {
+    .sMessageTop{
+      ul{
+        display: flex;
+        li{
+          border: 1px solid #b4b4b4;
+          flex: 1;
+          .el-form-item{
+            margin-bottom:0;
+            margin-right:0;
+            height: 28px;
+            line-height: 28px;
+            .el-form-item__label{
+              text-align: left;
+              padding-left: 10px;
+            }
+            .el-input__inner{
+              border-radius: 0;
+              /*border: 1px solid #b4b4b4;*/
+              border-left-color: #b4b4b4;
+              border-right-color: transparent;
+              border-bottom-color: #b4b4b4;
+              border-top-color: transparent;
+            }
+          }
+
+
+          .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+            border-left-color: #b4b4b4;
+            border-right-color: transparent;
+            border-bottom-color: #b4b4b4;
+            border-top-color: transparent;
+          }
+
+          .el-input.is-active .el-input__inner, .el-input__inner:focus {
+            border-left-color: #b4b4b4;
+            border-top-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: #b4b4b4;
+            outline: 0;
+          }
+
+          .el-input.is-disabled .el-input__inner {
+            background-color: transparent;
+            border-left-color: #b4b4b4;
+            border-right-color: transparent;
+            border-bottom-color: #b4b4b4;
+            /*border-top-color: transparent;*/
+            color: #606266;
+          }
+
+        }
+
+      }
+      ul:nth-of-type(2),ul:nth-of-type(3),ul:nth-of-type(4){
+        li{
+          border-top-color: transparent;
+        }
+      }
+    }
+    @media screen and (max-width: 1375px) {
+      .sMessageTop{
+        ul{
+          li{
+
+          }
+        }
+      }
+    }
+   /* .sMessageTop {
       border: 1px solid #b4b4b4;
-      /*border-top: transparent;*/
-      /*border-bottom: transparent;*/
+      /*border-top: transparent;
+      /*border-bottom: transparent;
       .el-form-item {
         margin-bottom: 0;
         margin-right: -5px;
@@ -1380,7 +1472,7 @@
         background-color: transparent;
         color: #666666;
       }
-    }
+    }*/
     .sMessageCont {
       .sMessageCont_info {
         background-color: #e2eaff;
@@ -1427,7 +1519,138 @@
         cursor: pointer;
       }
     }
-    .sBottom {
+
+    /*待定*/
+    /*.sBottom{*/
+      /*.sMessageBut{*/
+        /*.el-form{*/
+          /*margin-bottom: 180px;*/
+
+          /*ul:first-of-type{*/
+            /*li{*/
+              /*border: 1px solid #b4b4b4;*/
+              /*.el-form-item{*/
+                /*margin-bottom: 0;*/
+                /*margin-right: 0;*/
+                /*height: 28px;*/
+                /*line-height: 28px;*/
+                /*.el-form-item__label:first-of-type{*/
+                  /*padding-left: 10px;*/
+                  /*text-align: left;*/
+                /*}*/
+              /*}*/
+
+
+              /*p{*/
+                /*text-align: left;*/
+                /*font-size: 14px;*/
+                /*color: #668cf0;*/
+                /*padding: 4px 0 5px 10px;*/
+                /*font-weight: 600;*/
+              /*}*/
+
+                /*.el-input__inner{*/
+                  /*border-left-color: #b4b4b4;*/
+                  /*border-right-color: transparent;*/
+                  /*border-bottom-color: #b4b4b4;*/
+                  /*border-top-color: transparent;*/
+                /*}*/
+
+                /*.el-input__inner:focus {*/
+                  /*border-left-color: #b4b4b4;*/
+                  /*border-top-color: transparent;*/
+                  /*border-right-color: transparent;*/
+                  /*border-bottom-color: #b4b4b4;*/
+                  /*outline: 0;*/
+                /*}*/
+                /*.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {*/
+                  /*border-color: #b4b4b4;*/
+                /*}*/
+
+
+            /*}*/
+          /*}*/
+          /*ul:last-of-type{*/
+            /*display: flex;*/
+
+            /*li{*/
+
+              /*flex: 1;*/
+              /*border: 1px solid #b4b4b4;*/
+              /*!*border-left: 1px solid #b4b4b4;;*!*/
+              /*!*border-right: 1px solid #b4b4b4;;*!*/
+              /*!*border-bottom: 1px solid #b4b4b4;;*!*/
+
+              /*.el-form-item{*/
+                /*margin-bottom: 0;*/
+                /*margin-right: 0;*/
+                /*height: 28px;*/
+                /*line-height: 28px;*/
+              /*}*/
+              /*.el-form-item--mini.creatTimeItem{*/
+                /*.el-form-item__label{*/
+                  /*width: 65px !important;*/
+                /*}*/
+
+              /*}*/
+              /*.el-form-item__label{*/
+                /*text-align: left;*/
+
+              /*}*/
+                /*.el-input__inner{*/
+                  /*border: 1px solid #b4b4b4;*/
+                  /*!*border-left-color: #b4b4b4;*!*/
+                  /*!*border-right-color: transparent;*!*/
+                  /*!*border-bottom-color: #b4b4b4;*!*/
+                  /*!*border-top-color: transparent;*!*/
+                /*}*/
+
+                /*.el-input__inner:focus {*/
+                  /*border: 1px solid #b4b4b4;*/
+                  /*!*border-left-color: #b4b4b4;*!*/
+                  /*!*border-top-color: transparent;*!*/
+                  /*!*border-right-color: transparent;*!*/
+                  /*!*border-bottom-color: #b4b4b4;*!*/
+                  /*outline: 0;*/
+                /*}*/
+                /*.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {*/
+                  /*border-color: #b4b4b4;*/
+                /*}*/
+
+
+            /*}*/
+
+            /*li:first-of-type{*/
+              /*.el-form-item__label:first-of-type{*/
+                /*padding-left: 10px;*/
+              /*}*/
+            /*}*/
+          /*}*/
+        /*}*/
+      /*}*/
+    /*}*/
+    /*@media screen and (max-width: 1980px) {*/
+      /*.sMessageBut {*/
+        /*.el-form {*/
+          /*!*.el-form ul:last-of-type li .el-input__inner*!*/
+          /*ul:last-of-type{*/
+            /*li{*/
+              /*.el-input__inner{*/
+                /*border: 1px solid #b4b4b4;*/
+              /*}*/
+              /*.el-input__inner:focus {*/
+                /*border: 1px solid #b4b4b4;*/
+                /*outline: 0;*/
+              /*}*/
+            /*}*/
+          /*}*/
+        /*}*/
+      /*}*/
+    /*}*/
+
+
+
+   .sBottom {
       border-right: 1px solid #b4b4b4;
       border-left: 1px solid #b4b4b4;
       margin-bottom: 100px;

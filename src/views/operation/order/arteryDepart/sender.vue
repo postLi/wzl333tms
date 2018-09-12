@@ -5,7 +5,8 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:LOAD_GX_ADD>新增配载
         </el-button>
-
+        <el-button type="danger" :size="btnsize" icon="el-icon-circle-plus-outline" plain @click="doAction('Intelligent')" v-has:LOAD_GX_ADD>智能配载
+        </el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('depart')" v-has:LOAD_GX_LOADDEPART>发车
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline
@@ -52,8 +53,9 @@
       </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId'
-                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"/>
+                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"/>
+    <AddLntelligent :popVisible.sync="lntelligentVisible"  @close="openlntelligent" @success="fetchData" :dotInfo="selectInfo"></AddLntelligent>
   </div>
 </template>
 <script>
@@ -71,13 +73,20 @@
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
   import {PrintInFullPage, SaveAsFile, PrintContract} from '@/utils/lodopFuncs'
+  import AddLntelligent from './components/addLntelligent '
+  // import AddLntelligent from './components/intelligentParameterSet'
+  // import AddLntelligent from './components/intelligentFreight'
+  // import AddLntelligent from './components/intelligentHint'
+  // import AddLntelligent from './components/intelligentPayHint'
+
   // import { PrintContract } from '@/utils/lodopFuncs'
   export default {
     components: {
       SearchForm,
       Pager,
       TableSetup,
-      AddCustomer
+      AddCustomer,
+      AddLntelligent
     },
     computed: {
       ...mapGetters([
@@ -96,6 +105,7 @@
     },
     data() {
       return {
+        checkBillName_child:'',
         watchKey: 'lll',
         tablekey: 0,
         loading: true,
@@ -105,6 +115,7 @@
         trackId: '',
         setupTableVisible: false,
         AddCustomerVisible: false,
+        lntelligentVisible: false,
         isModify: false,
         selectInfo: {},
         // 选中的行
@@ -250,7 +261,18 @@
             width: '120',
             fixed: false
           },
-
+          {
+            label: '封签号',
+            prop: 'sealNumber',
+            width: '120',
+            fixed: false
+          },
+          {
+            label: '油卡号',
+            prop: 'oilCardNumber',
+            width: '120',
+            fixed: false
+          },
           // {
           //   label: '配载时间',
           //   prop: 'loadTime',
@@ -277,6 +299,7 @@
       }
     },
     methods: {
+
       fetchAllCustomer() {
         this.loading = true
         return postSelectLoadMainInfoList(this.searchQuery).then(data => {
@@ -304,7 +327,7 @@
       },
       doAction(type) {
         // 判断是否有选中项
-        if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
+        if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print' && type !== 'Intelligent') {
           this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
@@ -314,6 +337,14 @@
         }
 
         switch (type) {
+          case 'Intelligent':
+            // this.$message({
+            //   message: '改功能待开发~',
+            //   type: 'warning'
+            // })
+            this.selectInfo = this.selected[0]
+            this.openlntelligent()
+            break;
           // 导出
           case 'export':
             SaveAsFile({
@@ -328,7 +359,7 @@
               columns: this.tableColumn
             })
             break
-          // import
+          // 合同
           case 'import':
             let str = '?'
             for (const item in this.selected[0]) {
@@ -512,6 +543,12 @@
         }
         // 清除选中状态，避免影响下个操作
         this.$refs.multipleTable.clearSelection()
+      },
+      openlntelligent(){
+        this.lntelligentVisible = true
+      },
+      closelntelligent(){
+        this.lntelligentVisible = false
       },
       setTable() {
         this.setupTableVisible = true

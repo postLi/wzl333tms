@@ -331,6 +331,9 @@ export default {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
                 // this.loading = false
+    }).catch((err) => {
+      this.loading = false
+      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
     })
   },
   data() {
@@ -409,7 +412,7 @@ export default {
         prop: 'recTime',
         width: '180',
         slot: (scope) => {
-          return `${parseTime(scope.row.recTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          return `${parseTime(scope.row.recTime, '{y}-{m}-{d}')}`
         },
         fixed: false
       }, {
@@ -560,6 +563,9 @@ export default {
         this.total = data.total
         this.loading = false
         // console.log(data);
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {
@@ -645,7 +651,7 @@ export default {
             this.searchQuery.vo.receiptIds = ids
             this.dotInfo = ids
             this.popVisible = true
-                  // this.isAccept = true
+            // this.isAccept = true
             this.isModify = true
           } else {
             this.$message.warning('请选择未回收项~')
@@ -686,7 +692,6 @@ export default {
     },
     closeAddDot() {
       this.popVisible = false
-            // this.addDoTotVisible = false
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

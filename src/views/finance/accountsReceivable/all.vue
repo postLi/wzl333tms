@@ -4,7 +4,6 @@
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET1>结算</el-button>
-          
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI1>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP1>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" >表格设置</el-button>
@@ -25,7 +24,6 @@
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          
           <el-table-column
             fixed
             sortable
@@ -244,7 +242,7 @@ export default {
         'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
-        'prop': 'shipEffective'
+        'prop': 'shipEffectiveName'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks'
@@ -274,6 +272,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {

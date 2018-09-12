@@ -103,3 +103,25 @@ export function postImportExcel(data) {
       return error.data
     })
 }
+/**
+ * 自定义查询条件接口
+ */
+export function postQueryLogList(data) {
+  return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/getQueryLogList', data).then(res => {
+    return res.data
+  })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
+}
+/**
+ * 自定义查询条件新增接口
+ */
+export function postcreaterQueryCriteriaLog(data) {
+  return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/createrQueryCriteriaLog', data).then(res => {
+    return res.data
+  })
+    .catch(error => {
+      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    })
+}

@@ -6,10 +6,10 @@
           <SelectTree v-model="form.orgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="承运商编码" prop="carrierSn">
-          <el-input v-model="form.carrierSn" :maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierSn" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商" prop="carrierName">
-          <el-input v-model.trim="form.carrierName" :maxlength="10" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierName" :maxlength="1" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
           <el-input v-numberOnly v-model="form.carrierMobile"  :maxlength="11" auto-complete="off"></el-input>
@@ -54,6 +54,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -61,7 +62,7 @@
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
-import { postCarrier, putCarrier } from '@/api/company/carrierManage'
+import { postCarrier, putCarrier, getCarrierSn } from '@/api/company/carrierManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
@@ -156,6 +157,9 @@ export default {
         liablePhone: [
           // { required: true, message: '请输入负责人手机号码' }
           // { validator: validateFormNumber, trigger: 'change'}
+        ],
+        carrierSn: [
+          { required: true, message: '仅限字母或数字组合', pattern: REGEX.ONLY_NUMBER_AND_LETTER }
         ]
       },
       popTitle: '新增承运商',
@@ -211,6 +215,7 @@ export default {
         this.form.carrierId = data.carrierId
       } else {
         this.popTitle = '新增承运商'
+        this.getCarrierSn()
         for (const i in this.form) {
           this.form[i] = ''
         }
@@ -220,13 +225,23 @@ export default {
     }
   },
   methods: {
+    getCarrierSn() {
+      this.loading = true
+      return getCarrierSn().then(data => {
+        this.form.carrierSn = data.data
+        console.log(data.data)
+        this.loading = false
+      }).catch(err => {
+        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+      })
+    },
     initInfo() {
       this.loading = false
     },
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
+    submitForm(formName, bool) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -243,7 +258,10 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.closeMe()
+            this.reset()
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
           }).catch(err => {
             this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))

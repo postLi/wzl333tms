@@ -40,6 +40,7 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </select-type>
       </el-form-item>
+      <searchAll></searchAll>
       </div>
       <el-form-item class="staff_searchinfo--btn">
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -52,12 +53,13 @@
 import { pickerOptions2, parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
-
+import searchAll from '@/components/searchAll/index'
 export default {
   name: 'order-manage-search',
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -117,6 +119,7 @@ export default {
       if (key && value) {
         this.searchForm.type = key
         this.searchForm.value = value
+        this.searchForm.orgid = ''
       }
     },
     onSubmit() {
@@ -151,6 +154,14 @@ export default {
         width: 200px;
       }
     }
+    .zdycx{
+      .el-form-item__label{
+        width:85px !important;
+      }
+    }
+    // .el-form-item__label{
+    //   width:85px !important;
+    // }
 }
 
 </style>

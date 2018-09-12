@@ -1,6 +1,6 @@
 <template>
-<el-container :key="viewKey" class="check_box">
-  <el-header style="height:87px">
+<el-container  class="check_box">
+  <el-header :key="viewKey" style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
       <h6>系统体检：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙您更好的使用系统。</h6>
@@ -29,9 +29,9 @@
     <div class="main_checker" v-if="type===1">
       <el-button type="primary" @click="doAction('init')">初始化检查</el-button>
     </div>
-    <div class="main_checker2" v-else-if="type===2">
+    <div class="main_checker2"  v-else-if="type===2">
       <h6>公司管理</h6>
-      <div class="company_content">
+      <div class="company_content" :key="viewKey">
         <ul :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
           <li v-for="(item, index) in countList" :key="index">
             <p v-if="item.value > 0">
@@ -47,8 +47,13 @@
               <el-button type="primary" plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
           </li>
-          <div class="btn_content" v-if="flog">
-            <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button></p>
+          <div class="btn_content">
+            <p v-if="flog">所有的基础数据已经维护好了，我们去开一张单吧！
+              <el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button>
+            </p>
+            <p v-else>
+              <el-button type="primary" class="btn_h">开单</el-button>
+            </p> 
           </div>
         </ul>
         <!-- <template v-if="isParentOrg">
@@ -57,21 +62,21 @@
         </template> -->
       </div>
       <!-- 网点管理 -->
-      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" />
+      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" :checkSystem="true" />
       <!-- 权限管理 -->
-      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')"/> 
+      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')" :checkSystem="true"/> 
       <!-- 员工管理 -->
-      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  :popVisible.sync="addDoTotVisible2" />
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible2" @success="fetchData('addUser')" :checkSystem="true" />
       <!-- 发货客户 -->
-      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" />
+      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true"/>
       <!-- 收货客户 -->
-      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" />
+      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" :checkSystem="true"/>
       <!-- 司机管理 -->
-      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')"/>
+      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')" :checkSystem="true"/>
       <!-- 车辆管理 -->
-      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')"  />
+      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')" :checkSystem="true" />
       <!-- 承运商管理 -->
-      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')"/>
+      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')" :checkSystem="true" />
       <!-- 开单页面创建运单 -->
       <!-- 底部按钮操作部分 -->
       <!-- <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" /> -->
@@ -150,6 +155,7 @@ export default {
       contTitle: [],
       // printSetOrderVisible: false,
       flog: false,
+      disabled: false,
       countList: [{
         value: 0,
         label: 'orgCount',
@@ -265,37 +271,41 @@ export default {
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
     fetchData(type) {
+      // 写这么多分支，里面执行的代码不都是一样的的嘛。。。
+      if (type === 'addUser') {
+        this.initSystem()
+      }
       if (type === 'addOrg') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addRole') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addReciveCustomer') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addSendCustomer') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addDiver') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addTruck') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addCarrier') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addSetting') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
     },
     closeAddDot(obj) {
@@ -333,7 +343,6 @@ export default {
             self.timer = setInterval(() => {
               this.contTitleNull = true
               if (idx < len) {
-              // console.log(idx, len, arr[j].title, 666666)
                 self.contTitle = arr[j++].title
                 idx++
               } else {
@@ -395,16 +404,14 @@ export default {
     initSystem() {
       this.viewKey = new Date().getTime()
       this.type = 2
-      // this.loading = true
       this.dataset = {}
       // options获取原来的数据
       this.countList = this.$options.data().countList
       getInitializationCheck().then(data => {
         this.showani = true
         this.dataset = data
-        // this.loading = false
         for (const item in this.countList) {
-          this.countList[item].value = data[ this.countList[item].label]
+          this.countList[item].value = data[this.countList[item].label]
           this.countList[item].message = this.countList[item].message.replace(/undefined/, String(this.countList[item].value))
         }
         let resuct = 0
@@ -732,7 +739,19 @@ export default {
           width:110px;
           font-size: 16px;
         }
+        .btn_h{
+          width:110px;
+          font-size: 16px;
+          background-color:#ccc;
+          border:1px solid #ccc;
+        }
       }
+      // .btn_content .btn_h:hover{
+      //   opacity: 0.8;
+      //   background:#fff;
+      //   color:#3e9ff1;
+      //   border:1px solid #3e9ff1;
+      // }
     }
   }
 }

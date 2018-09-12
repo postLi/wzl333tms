@@ -101,7 +101,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '80',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchForm.pageNum - 1) * this.searchForm.pageSize) + scope.$index + 1
@@ -124,6 +124,11 @@ export default {
       }, {
         label: '职务',
         prop: 'position',
+        width: '120',
+        fixed: false
+      }, {
+        label: '员工号',
+        prop: 'jobNumber',
         width: '120',
         fixed: false
       }, {
@@ -167,6 +172,9 @@ export default {
       this.groupsArr = resArr[0]
       this.usersArr = resArr[1].list
       this.total = resArr[1].total
+    }).catch((err) => {
+      this.loading = false
+      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
     })
   },
   methods: {
@@ -288,6 +296,9 @@ export default {
         this.loading = false
         this.usersArr = data.list
         this.total = data.total
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 获取组件返回的搜索参数

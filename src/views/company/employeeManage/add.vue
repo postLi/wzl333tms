@@ -20,7 +20,10 @@
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
           <el-input v-model="form.position" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth">
+        <el-form-item label="员工号" :label-width="formLabelWidth" prop="jobNumber">
+          <el-input v-model="form.jobNumber" auto-complete="off" :maxlength="20"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" prop="sexFlag" :label-width="formLabelWidth">
           <el-select v-model="form.sexFlag" placeholder="请选择性别">
             <el-option label="男" value="0"></el-option>
             <el-option label="女" value="1"></el-option>
@@ -29,7 +32,7 @@
         <el-form-item label="归属网点" :label-width="formLabelWidth" prop="orgid">
           <SelectTree filterable v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
-        <el-form-item label="权限角色" :label-width="formLabelWidth">
+        <el-form-item label="权限角色" :label-width="formLabelWidth" prop="rolesId">
           <el-select collapse-tags filterable  multiple v-model="form.rolesId" :filter-method="makefilter" placeholder="请选择权限">
             <el-option v-for="item in roleslist" :key="item.id" :label="item.roleName" :value="item.id"><span class="query-input-myautocomplete" v-html="highLight(item,'roleName')"> </span></el-option>
           </el-select>
@@ -41,9 +44,10 @@
           </el-select> -->
         </el-form-item>
       </el-form>
-      <div class="info" v-if="!isModify">注：密码默认为：123456。</div>
+      <div class="info" v-if="!isModify">注：密码默认为：123456</div>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -224,6 +228,8 @@ export default {
         this.roleslist = this.roles
         this.departments = resArr[1]
       }).catch(err => {
+        this.$message.error('错误1：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+
         this.loading = false
         this.inited = false
       })
@@ -231,10 +237,19 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
+    reset() {
+      // 缓存上一次选择的网点
+      const orgid = this.form.orgid
+      this.$refs['ruleForm'].resetFields()
+      console.log('id', orgid, this.form.orgid)
+
+      this.form.orgid = orgid
+    },
+    submitForm(formName, bool) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
+          // this.$set(this.form, 'orgid', this.otherinfo.orgid)
           const data = Object.assign({}, this.form)
           let promiseObj
           data.rolesId = data.rolesId.join(',')
@@ -245,7 +260,6 @@ export default {
           } else {
             promiseObj = postEmployeer(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
             /* this.$alert('保存成功', '提示', {
@@ -255,15 +269,18 @@ export default {
                 this.$emit('success')
               }
             }); */
-
             this.$message({
               type: 'success',
               message: '保存成功!'
             })
-            this.closeMe()
+            this.reset()
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            // console.log(err)
+            this.$message.error('错误2：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
             this.loading = false
           })
         } else {

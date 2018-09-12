@@ -17,7 +17,8 @@
     <p>修饰符 v-number-only:point 允许小数点</p>
     <input v-number-only:point type="text">
     <p>elementUI 输入框</p>
-    <el-input v-numberOnly clearable></el-input>
+    <el-input @keyup.native='keepNumber' @blur.native='keepNumber' @keydown.native='keepNumber' clearable></el-input>
+    <el-input v-model="testdata" @keydown.native='keepNumberAndPoint' @blur="blur" @focus="focus" @change="change" clearable></el-input>
     <p>带校检的输入框</p>
     <el-form>
     <el-form-item label="账户账号" >
@@ -64,14 +65,30 @@
   </div>
 </template>
 <script>
+
 export default {
   data() {
     return {
       dialogTableVisible: false,
+      testdata: '',
       inputData: '安发网络'
     }
   },
+  watch: {
+    testdata(val) {
+      console.log('value:', val)
+    }
+  },
   methods: {
+    focus() {
+      console.log('focus:', this.testdata)
+    },
+    blur() {
+      console.log('blur:', this.testdata)
+    },
+    change() {
+      console.log('change:', this.testdata)
+    },
     clipboardSuccess() {
       this.$message({
         message: '复制成功',

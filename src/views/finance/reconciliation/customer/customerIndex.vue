@@ -1,13 +1,13 @@
 <template>
   <!--v-loading="loading"-->
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="searchQuery.vo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
 
           <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('storage')" v-has:FINANCE_CUSTOMERDETAIL>对账明细</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CUSTOMERDETAIL>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CUSTOMERPRI>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CUSTOMERPRI>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CARRIEREXP>打印</el-button>
 
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -58,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.orgid = this.otherinfo.orgid
+    // this.searchQuery.vo.orgid = this.otherinfo.orgid
   },
   data() {
     return {
@@ -100,42 +100,41 @@ export default {
         }, {
           label: '网点',
           prop: 'orgName',
-          width: '250',
           fixed: true
         }, {
           label: '发货方',
           prop: 'customerUnit',
-          width: '200',
+          width: '150',
           fixed: true
         }, {
           label: '发货人',
           prop: 'customerName',
-          width: '200',
+          width: '150',
           fixed: false
         }, {
           label: '客户电话',
           prop: 'customerMobile',
-          width: '200',
+          width: '150',
           fixed: false
         }, {
           label: '对账合计',
           prop: 'totalFee',
-          width: '190',
+          width: '150',
           fixed: false
         }, {
           label: '应收账款',
           prop: 'receivableFee',
-          width: '190',
+          width: '150',
           fixed: false
         }, {
           label: '应付账款',
           prop: 'payableFee',
-          width: '200',
+          width: '150',
           fixed: false
         }, {
           label: '总单数',
           prop: 'totalCount',
-          width: '180',
+          width: '150',
           fixed: false
         }
       ]

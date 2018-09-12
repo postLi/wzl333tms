@@ -186,7 +186,7 @@
               <el-table-column
                 fixed
                 prop="id"
-                width="100"
+                width="60"
                 label="序号">
                 <template slot-scope="scope">{{ ((pageNum - 1)*pageSize) + scope.$index + 1 }}</template>
               </el-table-column>
@@ -406,39 +406,21 @@
           this.fetchOrgId(this.dataTree[0].id)// 根据组织id显示列表
           this.loading = false
           // console.log(data)
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       // 处理返回的节点数据
       handleOrgInfo(data) {
         this.form = data // 顶部隐藏页面
         this.getform = objectMerge2({}, this.form)
-        // console.log(this.getform)
       },
       // 根据组织id显示列表
       fetchOrgId(id) {
         this.loading = true
         this.getOrgId = parseInt(id, 10)
         this.fetchAllUsers(id)
-        // if (this.getCheckedKeyId) {
-        //   getOrgId(this.getCheckedKeyId).then(res => {
-        //     console.log(res,"滴100行")
-        //     this.orgInfoCache[id] = res.data
-        //     this.handleOrgInfo(res.data)
-        //     // this.fetchOrg()
-        //     this.loading = false
-        //   })
-        //   // this.handleOrgInfo()
-        //   // this.loading = false
-        // }
-        // else {
-        //   this.loading = true
-        //   getOrgId(id).then(res => {
-        //     console.log(res,"滴400行")
-        //     this.orgInfoCache[id] = res.data
-        //     this.handleOrgInfo(res.data)
-        //     this.loading = false
-        //   })
-        // }
         if (this.orgInfoCache[id]) {
           this.handleOrgInfo(this.orgInfoCache[id])
           this.loading = false
@@ -449,20 +431,27 @@
         this.loading = false
       },
       getOrgInfo(id) {
+        this.loading = true
         getOrgId(id).then(res => {
-          // console.log(res,"滴400行")
           this.orgInfoCache[id] = res.data
           this.handleOrgInfo(res.data)
           this.loading = false
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
+      // table项列表展示
       fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {
         this.loading = true
         getAllUser(orgid, name, mobile, pageSize, pageNum).then(res => {
           this.usersArr = res.list
           this.total = res.total
+          this.loading = false
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
-        this.loading = false
       },
       seleClick(selected) {
         this.selected = selected

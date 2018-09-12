@@ -480,6 +480,9 @@ export default {
         postDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
           this.total = data.total
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
         this.setView() // 设置视图
       }

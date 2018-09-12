@@ -128,7 +128,10 @@ export default {
         // 设置为当前日期
         getSystemTime().then(time => {
           this.formModel.transferTime = parseTime(new Date(time))
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       }
       this.getSelectAddLoadRepertoryList()
     },
@@ -140,7 +143,10 @@ export default {
         return transferManageApi.getBatchNo(this.otherinfo.orgid).then(res => {
           this.cache.transferBatchNo = res.data
           this.formModel.transferBatchNo = res.data
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       }
     },
     // 获取左边列表信息
@@ -148,11 +154,17 @@ export default {
       if (this.isModify) {
         return transferManageApi.getUpdateLoadRepertoryList(this.otherinfo.orgid, this.formModel.transferBatchNo).then(data => {
           this.leftData = data.data
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       } else {
         return transferManageApi.getLeftRepetoryList(this.otherinfo.orgid).then(data => {
           this.leftData = data.data
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
       }
     },
     goTransferList() {

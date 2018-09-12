@@ -97,7 +97,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应付账款</p>
+        <p>未付账款</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -118,14 +118,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDelete(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                   fill="red"></icon-svg></span>
@@ -147,26 +147,26 @@
           <el-table-column
             prop="orgName"
             sortable
-            width="160"
+            width="120"
             label="发车网点">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="160"
+            width="120"
             label="到达网点">
           </el-table-column>
 
           <el-table-column
             sortable
             prop="loadAmount"
-            width="140"
+            width="120"
             label="配载件数">
           </el-table-column>
           <el-table-column
             prop="loadWeight"
             label="配载重量"
-            width="140"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -174,27 +174,26 @@
           <el-table-column
             prop="loadVolume"
             sortable
-            width="160"
+            width="120"
             label="配载体积">
           </el-table-column>
           <el-table-column
             prop="driverName"
             label="司机"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shortPay"
             label="短驳费"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="192"
             sortable
           >
             <template slot-scope="scope">
@@ -227,14 +226,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="50">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAl(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                     fill="red"></icon-svg></span>
@@ -256,26 +255,26 @@
           <el-table-column
             prop="orgName"
             sortable
-            width="160"
+            width="120"
             label="发车网点">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="160"
+            width="120"
             label="到达网点">
           </el-table-column>
 
           <el-table-column
             sortable
             prop="loadAmount"
-            width="140"
+            width="120"
             label="配载件数">
           </el-table-column>
           <el-table-column
             prop="loadWeight"
             label="配载重量"
-            width="140"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -283,27 +282,26 @@
           <el-table-column
             prop="loadVolume"
             sortable
-            width="160"
+            width="120"
             label="配载体积">
           </el-table-column>
           <el-table-column
             prop="driverName"
             label="司机"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="shortPay"
             label="短驳费"
-            width="130"
+            width="100"
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="192"
             sortable
           >
             <template slot-scope="scope">
@@ -535,6 +533,9 @@
           this.truckKey = new Date().getTime()
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
         this.moodifyDealPay()
         this.moodifyReadyPay()
@@ -578,6 +579,9 @@
           this.messageArr = data
           this.infoMessageData(this.messageArr)
           this.loading = false
+          if (this.visibleDialog) {
+            this.submit()
+          }
         }).catch(err => {
           this.newMessageData()
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
@@ -883,6 +887,7 @@
         this.delCont()
       },
       delCont() {
+        this.submit()
         this.$message({
           message: '删除成功~',
           type: 'success'
@@ -915,6 +920,7 @@
         this.messageButtonInfo.createTime = item.createTime
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
+        this.messageButtonInfo.checkStatus = item.checkStatus
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
         this.searchCreatTime[0] = item.checkStartTime

@@ -14,7 +14,10 @@
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true"  @row-dblclick="dclickAddItem">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" type="index" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
@@ -48,7 +51,10 @@
       <div slot="tableRight" class="tableHeadItemBtn">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;"  @row-dblclick="dclickMinusItem">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" type="index" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
@@ -61,7 +67,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -99,6 +105,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       tablekey: '',
       truckMessage: '',
       formModel: {},
@@ -126,250 +133,250 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '结算状态',
-          prop: 'statusName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'receiverCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '中转费',
-          prop: 'fee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '未结中转费',
-          prop: 'unpaidFee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '已结中转费',
-          prop: 'closeFee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发货方',
-          prop: 'senderUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货方',
-          prop: 'receiverUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '结算状态',
+        prop: 'statusName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'receiverCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '中转费',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '未结中转费',
+        prop: 'unpaidFee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '已结中转费',
+        prop: 'closeFee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货方',
+        prop: 'senderUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货方',
+        prop: 'receiverUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-        },
-        {
-          label: '出发城市',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达城市',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
-        }
+      },
+      {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ],
       tableColumnRight: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '结算状态',
-          prop: 'statusName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'receiverCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '中转费',
-          prop: 'fee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '未结中转费',
-          prop: 'unpaidFee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '已结中转费',
-          prop: 'closeFee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '实结中转费',
-          prop: 'inputTotalCost',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '结算状态',
+        prop: 'statusName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'receiverCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '中转费',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '未结中转费',
+        prop: 'unpaidFee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '已结中转费',
+        prop: 'closeFee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '实结中转费',
+        prop: 'inputTotalCost',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
             return scope.row.inputTotalCost
           }
-        },
-        {
-          label: '发货方',
-          prop: 'senderUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货方',
-          prop: 'receiverUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
+      },
+      {
+        label: '发货方',
+        prop: 'senderUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货方',
+        prop: 'receiverUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-        },
-        {
-          label: '出发城市',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达城市',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
-        }
+      },
+      {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
     }
   },
@@ -401,7 +408,7 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     getList() {
-      let selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
+      const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -428,29 +435,37 @@ export default {
           this.isGoReceipt = false
         }
         this.rightTable.forEach(e => { // 左边表格减去右边的数据
-          let item = this.leftTable.indexOf(e)
+          const item = this.leftTable.indexOf(e)
           if (item !== -1) {
             this.leftTable.splice(item, 1)
           }
           e.inputTotalCost = e.unpaidFee
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      let unpaidName = 'unpaidFee' // 未结费用名
-      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
-      let paidVal = this.rightTable[index][prop]
+      const unpaidName = 'unpaidFee' // 未结费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const paidVal = this.rightTable[index][prop]
+      if (paidVal !== unpaidVal) {
+        this.$set(this.textChangeDanger, index, true)
+      }else {
+        this.$set(this.textChangeDanger, index, false)
+      }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
       } else {
-        // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
         }))
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      
+      console.log(index, paidVal, unpaidVal,unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -484,17 +499,27 @@ export default {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
           e.inputTotalCost = e.unpaidFee
-          this.rightTable.push(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
-              item = index
-            }
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
           })
-          if (item !== -1) {
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+             return el.shipSn !== e.shipSn
+           })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // this.rightTable.push(e)
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.shipSn === e.shipSn) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) {
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
           // let item = this.leftTable.indexOf(e)
           // if (item !== -1) { // 源数据减去被穿梭的数据
           //   this.leftTable.splice(item, 1)
@@ -517,13 +542,24 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // this.leftTable.push(e)
+          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+          // let item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -532,17 +568,16 @@ export default {
       } else {
         this.isGoReceipt = false
       }
-
     },
     selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
-    dclickAddItem (row, event) { // 双击添加单行
+    dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)
       this.doAction('goLeft')
     },
-    dclickMinusItem (row, event) { // 双击减去单行
+    dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.doAction('goRight')
@@ -599,11 +634,11 @@ export default {
       console.log('tableReceiptInfo', this.tableReceiptInfo)
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'inputTotalCost', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'inputTotalCost', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     }
   }

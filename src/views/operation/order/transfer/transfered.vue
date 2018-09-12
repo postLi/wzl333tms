@@ -430,6 +430,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {
@@ -489,9 +492,11 @@ export default {
             })
           }
           var id = this.selected[0].id
+          let shipId = this.selected[0].shipId
 
           this.$router.push({ path: '/operation/order/track/transfer', query: {
-            transfer: id
+            transfer: id,
+            shipId: shipId
           }})
           break
           // 取消中转

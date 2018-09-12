@@ -1,37 +1,86 @@
 <template>
    <el-dialog :title='popTitle' @close="closeMe" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="wzl_addReceiptPop">
      <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
-            <div class="addMark" v-if="isModify">
-              <el-form-item label="回收情况" prop="recTypeId" :cols="45">
-                <SelectType type="rec_type" v-model="form.recTypeId" />
-              </el-form-item>
-              <el-form-item label="回收备注" :label-width="formLabelWidth" prop="recRemark">
-                <el-input
-                  type="textarea"
-                  :rows="7"
-                  :cols="30"
-                  :maxlength="200"
-                  placeholder="最多200个字符"
-                  v-model="form.recRemark"
-                  auto-complete="off"></el-input>
-              </el-form-item>
-            </div>   
-            <div class="addMark" v-if="isAccept">
-              <el-form-item label="接收情况" prop="acceptTypeId" :cols="45">
-                <SelectType type="accept_type" v-model="form.acceptTypeId" />
-              </el-form-item>
-              <el-form-item label="接收备注" :label-width="formLabelWidth" prop="acceptRemark">
-                <el-input
-                  :maxlength="200"
-                  type="textarea"
-                  :rows="7"
-                  :cols="30"
-                  placeholder="最多200个字符"
-                  v-model="form.acceptRemark"
-                  auto-complete="off"></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
+        <div class="addMark" v-if="isModify">
+          <el-form-item label="回收情况" prop="recTypeId" :cols="45">
+            <SelectType type="rec_type" v-model="form.recTypeId" />
+          </el-form-item>
+          <el-form-item label="回收日期:" prop="recTime" >
+            <el-date-picker
+              v-model="searchCreatTime"
+              align="right"
+              type="date"
+              :picker-options="pickOption2"
+              placeholder="选择日期"
+              value-format="timestamp"
+            >
+            <!-- <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template> -->
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="回收备注" :label-width="formLabelWidth" prop="recRemark">
+            <el-input
+              type="textarea"
+              :rows="7"
+              :cols="30"
+              :maxlength="200"
+              placeholder="最多200个字符"
+              v-model="form.recRemark"
+              auto-complete="off"></el-input>
+          </el-form-item>
+        </div>   
+        <div class="addMark" v-if="isAccept">
+          <el-form-item label="接收情况" prop="acceptTypeId" :cols="45">
+            <SelectType type="accept_type" v-model="form.acceptTypeId" />
+          </el-form-item>
+          <el-form-item label="接收日期:" prop="recTime" >
+            <el-date-picker
+                v-model="searchCreatTime"
+                align="right"
+                type="date"
+                :picker-options="pickOption2"
+                placeholder="选择日期"
+                value-format="timestamp"
+                >
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="接收备注" :label-width="formLabelWidth" prop="acceptRemark">
+            <el-input
+              :maxlength="200"
+              type="textarea"
+              :rows="7"
+              :cols="30"
+              placeholder="最多200个字符"
+              v-model="form.acceptRemark"
+              auto-complete="off"></el-input>
+          </el-form-item>
+        </div>
+        <div class="addMark" v-if="isSend">
+          <el-form-item label="寄出日期:" prop="sendTime" >
+            <el-date-picker
+                v-model="searchCreatTime"
+                align="right"
+                type="date"
+                :picker-options="pickOption2"
+                placeholder="选择日期"
+                value-format="timestamp"
+                >
+            </el-date-picker>
+          </el-form-item>
+        </div>
+        <div class="addMark" v-if="isGrant">
+          <el-form-item label="发放日期:" prop="giveoutTime" >
+            <el-date-picker
+                v-model="searchCreatTime"
+                align="right"
+                type="date"
+                :picker-options="pickOption2"
+                placeholder="选择日期"
+                value-format="timestamp"
+                >
+            </el-date-picker>
+          </el-form-item>
+        </div>
+      </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
@@ -46,7 +95,7 @@ import { putUpdateReceipt } from '@/api/operation/receipt'
 // import { REGEX } from '@/utils/validate'
 // import { mapGetters } from 'vuex'
 // import { exportWithIframe } from '@/utils'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 export default {
   // computed: {
   // ...mapGetters([
@@ -87,9 +136,21 @@ export default {
     isAccept: {
       type: Boolean,
       default: false
+    },
+    isSend: {
+      type: Boolean,
+      default: false
+    },
+    isGrant: {
+      type: Boolean,
+      default: false
+    },
+    info: {
+      type: Object,
+      default: () => {
+      }
     }
   },
-
   data() {
     return {
       form: {
@@ -101,17 +162,21 @@ export default {
       },
       formLabelWidth: '75px',
       tooltip: false,
+      pickOption2: '',
+      searchCreatTime: +new Date(),
       rules: {
 
       },
+
       checked1: true,
       popTitle: '',
       loading: false,
       type: ''
     }
   },
+  
   mounted() {
-
+    console.log(this.info)
   },
   watch: {
     isDepMain() {
@@ -122,7 +187,6 @@ export default {
     },
     searchQuery(newVal) {
       this.form.pageType = this.searchQuery.vo.pageType
-      //  console.log(this.form.pageType);
     },
     orgid(newVal) {
       this.form.orgid = newVal
@@ -132,7 +196,7 @@ export default {
         if (this.isModify) {
           this.popTitle = '回单回收'
           this.form.pageType = this.searchQuery.vo.pageType
-          console.log(888)
+          this.$set(this.form, 'recTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
         }
       },
       immediate: true
@@ -142,14 +206,30 @@ export default {
         if (this.isAccept) {
           this.popTitle = '回单接收'
           this.form.pageType = this.searchQuery.vo.pageType
-          console.log(888)
+        }
+      },
+      immediate: true
+    },
+    isSend: {
+      handler(newVal) {
+        if (this.isSend) {
+          this.popTitle = '回单寄出'
+          this.form.pageType = this.searchQuery.vo.pageType
+        }
+      },
+      immediate: true
+    },
+    isGrant: {
+      handler(newVal) {
+        if (this.isGrant) {
+          this.popTitle = '回单发放'
+          this.form.pageType = this.searchQuery.vo.pageType
         }
       },
       immediate: true
     },
     createrId(newVal) {
     }
-
   },
   methods: {
     reset() {
@@ -166,6 +246,15 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
+          if (this.isModify) {
+            this.$set(this.form, 'recTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          } else if (this.isAccept) {
+            this.$set(this.form, 'acceptTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          } else if (this.isSend) {
+            this.$set(this.form, 'sendTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          } else if (this.isGrant) {
+            this.$set(this.form, 'acceptTime', parseTime(this.searchCreatTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          }
           const data = objectMerge2({}, this.form)
           data.receiptIds = this.dotInfo
           const promiseObj = putUpdateReceipt(data)
@@ -173,12 +262,14 @@ export default {
             this.$message({
               message: '保存成功~',
               type: 'success'
-
             })
             this.closeMe()
             this.$emit('success')
-          }).catch(res => {
-            this.$message.warning(res.text)
+          }).catch(err => {
+            this.$message({
+              type: 'error',
+              message: err.errorInfo || err.text || '未知错误，请重试~'
+            })
             this.closeMe()
           })
         } else {

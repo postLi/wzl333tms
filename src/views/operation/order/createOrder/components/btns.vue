@@ -78,6 +78,9 @@ export default {
         
         // 重新绑定新的快捷键
         this.bindKey()
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 绑定快捷键

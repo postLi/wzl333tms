@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     report() {
+      console.log('sdfsdf2347823748', this.query)
       reportOperation(this.query).then(res => {
         let data = res
         let countColVal = []
@@ -125,13 +126,15 @@ export default {
 
 
         for (let k = 0; k < data.length; k++) { // 填充内容数据
+          console.log(k)
           const tbodyTr = tbody.insertRow()
           for (let j = 0; j < this.columns.length; j++) {
+            console.log('j', j, this.countCol)
             const td = tbodyTr.insertCell()
             // 处理当列没有值、宽度设置等信息时，做默认值处理
             for (let t in this.countCol) { // 保留两位小数
               if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : '0.00'
+                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop] : '0.00'
               }
             }
             td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
@@ -141,6 +144,9 @@ export default {
             td.style.width = (this.columns[j].width || 120) + 'px'
           }
         }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     doAction(type) {

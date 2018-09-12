@@ -14,7 +14,7 @@
         <trunk v-if="activeTab.six" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
-        <abnormal v-if="activeTab.four" :orderid="output.orderid" />
+        <abnormal v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="five" label="改单日志">
         <log v-if="activeTab.five" :orderid="output.orderid" />
@@ -91,7 +91,8 @@ export default {
         'six': false
       },
       output: {
-        orderid: ''
+        orderid: '',
+        shipsn: ''
       }
     }
   },
@@ -147,6 +148,7 @@ export default {
       this.activeIndex = 'one'
       this.getOrderInfo(this.output.orderid).then(res => {
         this.orderdata = res.data
+        this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
         this.loading = false
       }).catch(err => {
         console.log('initOrderDetail err:', err)

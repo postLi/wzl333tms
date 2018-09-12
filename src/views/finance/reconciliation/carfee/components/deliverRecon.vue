@@ -87,7 +87,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应付账款</p>
+        <p>未付账款</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -511,7 +511,10 @@
         this.moodifyList().then(() => {
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
         this.moodifyDealPay()
         this.moodifyReadyPay()
       } else {
@@ -813,6 +816,7 @@
         this.messageButtonInfo.createTime = item.createTime
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
+        this.messageButtonInfo.checkStatus = item.checkStatus
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
         this.searchCreatTime[0] = item.checkStartTime

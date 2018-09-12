@@ -105,8 +105,10 @@ export default {
         key: index.key,
         value: index.value
       }})
+      console.log("this.$refs['topNavSearchComplete'].$refs['input']", this.$refs['topNavSearchComplete'].$refs['input'])
       if (this.$refs['topNavSearchComplete'].$refs['input'] && this.$refs['topNavSearchComplete'].$refs['input'].blur) {
         this.$refs['topNavSearchComplete'].$refs['input'].blur()
+        this.$refs['topNavSearchComplete'].close()
       }
     },
     clearinput() {

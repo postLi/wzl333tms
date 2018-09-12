@@ -8,7 +8,10 @@
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed width="50" type="index" label="序号">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
@@ -79,7 +82,10 @@
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
       <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed width="50" type="index" label="序号">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
@@ -266,7 +272,7 @@ export default {
     getPayName() {
       if (this.rightTable.length !== 0) {
         this.arrNoPayName = [] // 未结费用项字段名
-        for (let item in this.rightTable[0]) {
+        for (const item in this.rightTable[0]) {
           if (item.indexOf('no') === 0) { // 获取开头为no的字符串字段名
             this.arrNoPayName.push(item)
           }
@@ -274,26 +280,26 @@ export default {
         // console.log('=====未结费用项字段名', this.arrNoPayName)
 
         this.arrPayName = [] // 费用项字段名
-        for (let item in this.arrNoPayName) {
-          let str = this.arrNoPayName[item].substring(2, 3).toLowerCase() + this.arrNoPayName[item].substring(3) // 截取no后面的字符串，并将首字母大写转成小写
+        for (const item in this.arrNoPayName) {
+          const str = this.arrNoPayName[item].substring(2, 3).toLowerCase() + this.arrNoPayName[item].substring(3) // 截取no后面的字符串，并将首字母大写转成小写
           this.arrPayName.push(str)
         }
         // console.log('=====费用项字段名', this.arrPayName)
 
         this.arrhadPayName = [] // 已结费用项字段名
-        for (let item in this.arrNoPayName) {
-          let str = 'had' + this.arrNoPayName[item].substring(2) // 截取no后面的字符串，并在前面拼接had
+        for (const item in this.arrNoPayName) {
+          const str = 'had' + this.arrNoPayName[item].substring(2) // 截取no后面的字符串，并在前面拼接had
           this.arrhadPayName.push(str)
         }
         // console.log('=====已结费用项字段名', this.arrhadPayName)
 
         this.arrPayNameActual = [] // 费用实际支出项字段名
-        for (let item in this.arrPayName) {
-          let str = this.arrPayName[item] + 'Actual'
+        for (const item in this.arrPayName) {
+          const str = this.arrPayName[item] + 'Actual'
           this.arrPayNameActual.push(str)
         }
         // console.log('=====费用实际支出项字段名', this.arrPayNameActual)
-        let obj = {
+        const obj = {
           arrPayName: this.arrPayName,
           arrNoPayName: this.arrNoPayName,
           arrhadPayName: this.arrhadPayName,
@@ -315,8 +321,8 @@ export default {
         this.leftTable = objectMerge2([], this.orgLeftTable)
         return false
       }
-      console.log('orgLeftTable',this.orgLeftTable.length)
-      this.leftTable = Object.assign([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据 
+      console.log('orgLeftTable', this.orgLeftTable.length)
+      this.leftTable = Object.assign([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
         if (this.rightTable[index]) {
           return el.shipSn !== this.rightTable[index].shipSn
         } else {
@@ -330,19 +336,18 @@ export default {
       this.$emit('loadTable', this.rightTable)
       this.getPayName()
       // // 判断右边表格的数据 合计是否为智能结算中输入的值
-      let listCount = 0
-      let countDifference = 0
+      const listCount = 0
+      const countDifference = 0
 
       // 判断返回的数据 实结支出费用等于 未结费用
       // 前者等于 | 小于后者 不用进行操作
       // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示结算多余的数
 
-      let nameFlag = '' // 右边最后一条的批次号或者运单号
+      const nameFlag = '' // 右边最后一条的批次号或者运单号
       let isCopyLastData = false // 左边是否需要复制一条右边最后那条数据  true-要复制 false-不复制
       this.arrPayNameActual.forEach((el, actIndex) => {
-
-        let feeActual = this.rightTable[this.rightTable.length - 1][el] // 实际费用
-        let feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
+        const feeActual = this.rightTable[this.rightTable.length - 1][el] // 实际费用
+        const feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
 
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
           this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
@@ -362,21 +367,20 @@ export default {
       if (isCopyLastData) { // true-给左边添加一条数据，并修改相关未结费用
         this.leftTable.push(objectMerge2([], this.rightTable[this.rightTable.length - 1]))
         this.arrLastPartFeeName.forEach(e => { // 左边最后一条 未结=未结-实际
-          let noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未结费用名
-          let feeNameActual = e + 'Actual' // 实际费用名
+          const noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未结费用名
+          const feeNameActual = e + 'Actual' // 实际费用名
           this.leftTable[this.leftTable.length - 1][feeNameActual] = this.rightTable[this.rightTable.length - 1][noFeeName] - this.rightTable[this.rightTable.length - 1][feeNameActual]
         })
       }
-     
+
       this.$emit('loadTable', this.rightTable)
       this.countOrgLeftTable = objectMerge2([], this.leftTable)
-
     },
 
     // initCount(cval, oval) { // 对智能结算返回的数据进行操作
     //   // this.getList()
     //   this.leftTable = [] // 左边表格显示最原始的数据
-    //   this.rightTable = objectMerge2([], cval) // 右边表格显示的数据 
+    //   this.rightTable = objectMerge2([], cval) // 右边表格显示的数据
     //   this.$emit('loadTable', this.rightTable) // 方便费用信息处显示计算总额
 
     //   this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
@@ -453,6 +457,9 @@ export default {
           this.orgLeftTable = data
           this.countOrgLeftTable = data
           this.$emit('loadTable', this.rightTable)
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
         obj = {}
       }
@@ -494,18 +501,18 @@ export default {
     dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
-      console.log('selectedLeft',  this.selectedLeft.length)
+      console.log('selectedLeft', this.selectedLeft.length)
       this.doAction('goRight')
     },
     uniqueArray(array, key, fee) {
-      let result = [array[0]]
+      const result = [array[0]]
       for (let i = 1; i < array.length; i++) {
-        let item = array[i]
+        const item = array[i]
         let repeat = false
         for (let j = 0; j < result.length; j++) {
           if (item[key] === result[j][key]) {
             if (fee) {
-              for (let k in fee) {
+              for (const k in fee) {
                 result[j][fee[k]] = tmsMath._add(item[fee[k]], result[j][fee[k]])
               }
             }
@@ -524,6 +531,9 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
@@ -535,7 +545,7 @@ export default {
             return el.shipSn !== e.shipSn
           })
         })
-        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn',  this.arrLastPartActualFeeName) // 去重
+        this.rightTable = this.uniqueArray(objectMerge2(this.rightTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
         this.getPayName()
@@ -548,6 +558,12 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = this.leftTable.filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.countOrgLeftTable = this.countOrgLeftTable.filter(el => {
+            return el.shipSn !== e.shipSn
+          })
           this.leftTable.push(e)
           this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)
@@ -555,7 +571,7 @@ export default {
             return el.shipSn !== e.shipSn
           })
         })
-        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn',  this.arrLastPartActualFeeName) // 去重
+        this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         this.countOrgLeftTable = this.uniqueArray(objectMerge2(this.countOrgLeftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
@@ -583,11 +599,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay','hadOnPay','hadBackPay','hadArrivalPay','noArrivalPay','hadMonthPay','noMonthPay','noBackPay','hadUnusualPay','noUnusualPay','arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','noShipFeeTotal', 'noShipFeeTotal','hadShipFeeTotal']
+      const propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay', 'hadOnPay', 'hadBackPay', 'hadArrivalPay', 'noArrivalPay', 'hadMonthPay', 'noMonthPay', 'noBackPay', 'hadUnusualPay', 'noUnusualPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'noShipFeeTotal', 'noShipFeeTotal', 'hadShipFeeTotal']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay','hadBackPay','hadArrivalPay','hadOnPay','noArrivalPay','hadMonthPay','noMonthPay','noBackPay','hadUnusualPay','noUnusualPay','hadBackPay','hadArrivalPay','arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|','noShipFeeTotal', 'noShipFeeTotal', 'hadShipFeeTotal','hadShipFeeTotal', 'onPayActual', 'arrivalPayActual', 'backPayActual', 'unusualPayActual', 'monthPayActual']
+      const propsArr = ['shipFeeTotalActual', 'shipFeeTotal', 'onPay', 'noOnPay', 'hadBackPay', 'hadArrivalPay', 'hadOnPay', 'noArrivalPay', 'hadMonthPay', 'noMonthPay', 'noBackPay', 'hadUnusualPay', 'noUnusualPay', 'hadBackPay', 'hadArrivalPay', 'arrivalPay', 'backPay', 'unusualPay', 'monthPay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'noShipFeeTotal', 'noShipFeeTotal', 'hadShipFeeTotal', 'hadShipFeeTotal', 'onPayActual', 'arrivalPayActual', 'backPayActual', 'unusualPayActual', 'monthPayActual']
       return getSummaries(param, propsArr)
     }
   }

@@ -108,6 +108,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -276,7 +277,7 @@ export default {
       this.initPanel()
     }
   },
-  
+
   watch: {
     popVisible(newVal, oldVal) {
       if (!this.inited) {
@@ -297,11 +298,11 @@ export default {
       deep: true
     }
   },
-  activated () {
+  activated() {
     this.initDriverList()
   },
   methods: {
-    initDriverList () {
+    initDriverList() {
       this.DriverList = this.$options.data().DriverList
       this.cacheDriverList = []
       this.getTreeOrgid(this.orgid)
@@ -350,7 +351,7 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(ruleForm) {
+    submitForm(ruleForm, bool) {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -362,11 +363,13 @@ export default {
           } else {
             promiseObj = postTrunk(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.closeMe()
+            this.reset()
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
           }).catch(err => {
             this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
@@ -406,6 +409,9 @@ export default {
           this.DriverList = data.list
           this.cacheDriverList[orgid] = data.list
           this.loading = false
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     }

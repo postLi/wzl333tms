@@ -3,12 +3,12 @@
       <el-upload
         class="image-uploader"
         drag
-        v-if="uploadUrl" 
-        :data="upload" 
+        v-if="uploadUrl"
+        :data="upload"
         :action="uploadUrl"
-        :multiple="false" 
+        :multiple="false"
         list-type="picture-card"
-        :show-file-list="showFileList" 
+        :show-file-list="showFileList"
         :file-list="filelist"
         :limit="limit"
         :disabled="disabled"
@@ -26,9 +26,10 @@
         <!-- <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div> -->
         <!-- <i class="el-icon-plus"></i> -->
         <slot name="content">
-          <el-button :size="size" type="primary" class="button">点击上传</el-button>
+          <el-button :size="size" type="primary" class="button" :disabled="disabled">点击上传</el-button>
           <div class="el-upload__text">将文件拖拽到此区域</div>
           <div v-if="tip" class="upload__tip">{{ tip }}</div>
+
         </slot>
       </el-upload>
       <el-dialog custom-class="singleimage2" :visible.sync="dialogVisible" :append-to-body="true">
@@ -74,6 +75,15 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    // 隐藏文字
+    hidBut: {
+      type: Boolean,
+      default: false
+    },
+    showBut: {
+      type: Boolean
+      // default: false
     }
   },
   computed: {
@@ -116,10 +126,17 @@ export default {
         }
       },
       immediate: true
+    },
+    hidBut() {
+
+    },
+    disabled() {
+
     }
   },
   mounted() {
     this.init()
+    console.log(this.disabled)
   },
   methods: {
     init() {
@@ -313,9 +330,9 @@ export default {
         .el-upload--picture-card{
           line-height:43px;
         }
-        .upload__tip{
-          line-height:43px;
-        }
+        // .upload__tip{
+        //   line-height:43px;
+        // }
     }
 
 </style>

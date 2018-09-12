@@ -17,14 +17,16 @@ const VueDirectiveObject = {
   findInput: function(el) {
     return el.classList.contains('el-input') ? el.querySelector('input') : el
   },
-  keepNumber: function() {
+  keepNumber: function(event) {
     var hasPoint = this.hasPoint
     var pointNum = this.pointNum
+    // console.log(this.value, 'this.value', event.type)
     // 如果第一位为小数点，则补0
     this.value = hasPoint ? this.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.').replace(new RegExp('^(\\d+)\\.(\\d{' + Math.abs(pointNum) + '}).*$'), '$1.$2') : this.value.replace(/\D/g, '').replace(/\./g, '')
   },
   keepNumberAndLetter() {
-    this.value = this.value.replace(/[\u4E00-\u9FA5]/g, '')
+    // this.value = this.value.replace(/[\u4E00-\u9FA5]/g, '')
+    this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')
   },
   onkeydown: function(event) {
     // console.log('event.keyCode:',event.keyCode,String.fromCharCode(event.keyCode),event.key,event.code, /[\d]/.test(String.fromCharCode(event.keyCode)))
@@ -35,6 +37,7 @@ const VueDirectiveObject = {
   ) {
       // 数字 小键盘数字
       if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
+        VueDirectiveObject.keepNumber.apply(this, event)
         event.stopPropagation()
         event.preventDefault()
       }

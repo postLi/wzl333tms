@@ -124,8 +124,8 @@
             <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else sortable>
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
-                <div v-if="column.expand">
-                  <el-input type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                <div v-if="column.expand" >
+                  <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" type="number" v-model="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
                 </div>
                 <!-- 有返回值的列 -->
                 <div v-else>
@@ -170,6 +170,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       isNeedArrival: true, // true-未入库状态  false-已入库状态
       setupTableVisible: false,
       tablekey: 0,
@@ -201,23 +202,23 @@ export default {
       },
       tableColumn: [],
       tableColumnArrival: [{
-          label: "运单号",
-          prop: "shipSn",
-          width: "130",
-          fixed: true
-        },
-        {
-          label: "子运单号",
-          prop: "childShipSn",
-          width: "130",
-          fixed: true
-        },
-        {
-          label: "开单网点",
-          prop: "shipFromOrgName",
-          width: "120",
-          fixed: false
-        },
+        label: '运单号',
+        prop: 'shipSn',
+        width: '130',
+        fixed: true
+      },
+      {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '130',
+        fixed: true
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
         // {
         //   label: "应到件数",
         //   prop: "loadAmount",
@@ -239,132 +240,126 @@ export default {
         //   fixed: false,
         //   hide: true
         // },
-        {
-          label: "实到件数",
-          prop: "actualAmount",
-          width: "120",
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.actualAmount
-          }
-        },
-        {
-          label: "实到重量",
-          prop: "actualWeight",
-          width: "120",
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.actualWeight
-          }
-        },
-        {
-          label: "实到体积",
-          prop: "actualVolume",
-          width: "120",
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.actualVolume
-          }
-        },
-        {
-          label: "配载件数",
-          prop: "loadAmount",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载重量",
-          prop: "loadWeight",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载体积",
-          prop: "loadVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单件数",
-          prop: "cargoAmount",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单重量",
-          prop: "cargoWeight",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单体积",
-          prop: "cargoVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "出发城市",
-          prop: "shipFromCityName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "到达城市",
-          prop: "shipToCityName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载体积",
-          prop: "loadVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "发货人",
-          prop: "shipSenderName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "发货人电话",
-          prop: "shipSenderMobile",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "收货人",
-          prop: "shipReceiverName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "收货人电话",
-          prop: "shipReceiverMobile",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "货品名",
-          prop: "cargoName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "货号",
-          prop: "shipGoodsSn",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单备注",
-          prop: "shipRemarks",
-          width: "200",
-          fixed: false
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.actualAmount
         }
+      },
+      {
+        label: '实到重量',
+        prop: 'actualWeight',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.actualWeight
+        }
+      },
+      {
+        label: '实到体积',
+        prop: 'actualVolume',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.actualVolume
+        }
+      },
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载重量',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载体积',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '200',
+        fixed: false
+      }
       ],
       tableColumnDeiver: []
     }
@@ -376,7 +371,6 @@ export default {
   watch: {
     isShow() {
       if (this.isShow) {
-
         if (this.arrivalStatus === '已入库') {
           this.isNeedArrival = false
         } else {
@@ -413,7 +407,7 @@ export default {
   },
   methods: {
     setTableColumn() { // 设置表格列
-      let arrTableColumn = []
+      const arrTableColumn = []
       objectMerge2([], this.tableColumnArrival).forEach(e => {
         if (!e.hide) {
           if (e.expand) {
@@ -457,14 +451,13 @@ export default {
     },
     changeInputData(index, prop, newVal) { // 判断当行-新
       let curVal = this.detailList[index][prop] // 实到值
-      let loadName = 'load' + prop.substring(6) // 配载名称
-      let loadVal = this.detailList[index][loadName] // 配载值
+      const loadName = 'load' + prop.substring(6) // 配载名称
+      const loadVal = this.detailList[index][loadName] // 配载值
       const _this = this
       curVal = Number(newVal)
       this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
         [prop]: curVal
       }))
-
       if (prop === 'actualAmount' && curVal === 0) {
         curVal = Number(loadVal)
         this.$set(_this.detailList, index, objectMerge2(_this.detailList[index], {
@@ -476,10 +469,15 @@ export default {
           type: 'warning'
         })
       }
-
-      console.log(index, prop, loadName, curVal, loadVal, this.detailList[index].actualAmount)
+      if (curVal !== loadVal) { // 实到数量如果不等于配载数量 则字体样式变红
+        this.textChangeDanger[index] = true
+      }else {
+        if ( this.detailList[index].actualAmount === this.detailList[index].loadAmount && this.detailList[index].actualWeight === this.detailList[index].loadWeight && this.detailList[index].actualVolume === this.detailList[index].loadVolume) {
+          this.textChangeDanger[index] = false
+        }
+      }
+      console.log(curVal, loadVal, this.textChangeDanger[index])
       return curVal
-
     },
     changeData(newVal) { // 判断当行-废
       console.log(newVal, this.detailList[newVal].actualWeight)
@@ -492,6 +490,7 @@ export default {
       const curactualVolume = this.detailList[newVal].actualVolume // 应到体积
       const curactualWeight = this.detailList[newVal].actualWeight // 应到重量
       const curactualAmount = this.detailList[newVal].actualAmount // 应到件数
+      
       if (this.selectDetailList.length === 1 && curAmount === 0) {
         this.detailList[newVal].actualAmount = curloadAmount
         // this.detailList[newVal].actualWeight = curloadWeight - curactualWeight
@@ -597,17 +596,16 @@ export default {
         return false
       } else {
         postAddRepertory(50, this.newData).then(data => {
-            if (data.status === 200) {
-              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
-              console.log(this.$route)
-              this.$message({ type: 'success', message: '短驳入库操作成功' })
-              this.message = true
-
-            } else {
-              this.message = false
-            }
-            this.$emit('isSuccess', this.message)
-          })
+          if (data.status === 200) {
+            this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
+            console.log(this.$route)
+            this.$message({ type: 'success', message: '短驳入库操作成功' })
+            this.message = true
+          } else {
+            this.message = false
+          }
+          this.$emit('isSuccess', this.message)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
@@ -618,22 +616,22 @@ export default {
     getLoadTrack() {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-          if (data) {
-            this.detailList = data.data
-            this.setData()
-            this.toggleAllRows()
-            this.$nextTick(() => {
-              this.detailList.forEach(e => {
-                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  e.actualAmount = e.loadAmount
-                  e.actualWeight = e.loadWeight
-                  e.actualVolume = e.loadVolume
-                } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
-                }
-              })
+        if (data) {
+          this.detailList = data.data
+          this.setData()
+          this.toggleAllRows()
+          this.$nextTick(() => {
+            this.detailList.forEach(e => {
+              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                e.actualAmount = e.loadAmount
+                e.actualWeight = e.loadWeight
+                e.actualVolume = e.loadVolume
+              } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+              }
             })
-          }
-        })
+          })
+        }
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text)
         })

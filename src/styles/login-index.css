@@ -100,17 +100,42 @@
   color: #454545;
   margin-bottom: 20px !important;
 }
-.login-form .el-input-group__append, .el-input-group__prepend{
+.login-form .el-input-group__append{
   padding: 0;
 }
 .login-form .el-input-group__prepend{
   /*border-radius: 5px 0 0 5px;*/
   border: 0;
   border-right: 1px solid #dcdfe6;
+ 
 }
 
 .login-container .el-form-item:hover{
   border-color: #409eff;
+}
+.previewPwd{
+  padding-right:26px;
+  position: relative;
+}
+.icon_by{
+  /* background: url('../assets/login_images/by.png') no-repeat; */
+  background: url('../assets/login_images/moren.jpg') no-repeat;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 251px;
+  top: 7px;
+  cursor: pointer;
+}
+.icon_zy{
+  /* background: url('../assets/login_images/zy.png') no-repeat; */
+  background: url('../assets/login_images/kejian.jpg') no-repeat;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 251px;
+  top: 7px;
+  cursor: pointer;
 }
 .container-top{
   background-color: #FFF;
@@ -178,9 +203,7 @@
   font-size: 14px;
 }
 
-.el-form-item__content:focus{
-  border-color:#409eff ;
-}
+
 
 /*底部*/
 .button-cont{

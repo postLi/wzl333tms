@@ -14,7 +14,10 @@
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
 
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed :render-header="setHeader" width="50">
             <template slot-scope="scope">
@@ -47,7 +50,10 @@
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column :render-header="setHeader2" fixed width="50">
             <template slot-scope="scope">
@@ -327,6 +333,9 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     },
@@ -409,13 +418,24 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          const item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 右边源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // this.leftTable.push(e)
+          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+          // const item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 右边源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }

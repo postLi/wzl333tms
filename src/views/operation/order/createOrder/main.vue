@@ -4,8 +4,8 @@
       <span class="batchNum" :class="{'on': i === currentBatch}" v-for="i in output.ordernum" @click="changeBatch(i)" :key="i">第{{ i }}票</span>
     </div>
     <div class="createOrderWrapper">
-    <div class="createOrder-title"><span>收发货凭证</span></div>
-    <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
+    <div class="createOrder-title"><span>{{ otherinfo.systemSetup.shipPageFunc.orderName || '收发货凭证'}}</span></div>
+    <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" :status-icon='false' inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
       <div class="order-num required">运单号： <span class="order-num-info">
         <el-form-item  :error='shipFieldValueInfo.shipSn'>
@@ -41,7 +41,7 @@
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipFromCityName}">出发城市</span>
             <el-form-item :error='shipFieldValueInfo.shipFromCityName' >
-              <querySelect ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput" show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
+              <querySelect :maxlength="50" ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput" show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -49,7 +49,7 @@
           <div class="order-form-item">
             <span class="order-form-label required">到达城市</span>
             <el-form-item :error='shipFieldValueInfo.shipToCityName'>
-              <querySelect ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput" show='select' filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
+              <querySelect :maxlength="50" ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput" show='select' filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
             </el-form-item>
           </div>
         </el-col>
@@ -87,25 +87,25 @@
           <div class="order-form-item">
             <span :class="{'required': shipFieldValue.shipSenderId}" class="order-form-label">发货方</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderUnit' >
-              <querySelect ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
+              <querySelect :maxlength="25" ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderName}">发 货 人</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderName' >
-              <querySelect ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
+              <querySelect :maxlength="25" ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
-              <querySelect ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+              <querySelect :maxlength="11" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipSenderAddress}">发货地址</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderAddress'>
-              <querySelect ref="tmsOrderdetailedAddress" search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.sender.detailedAddress" @change="setSender" />
+              <querySelect :maxlength="50" ref="tmsOrderdetailedAddress" search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.sender.detailedAddress" @change="setSender" />
             </el-form-item>
           </div>
         </div>
@@ -116,25 +116,25 @@
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">收货方</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverUnit'>
-              <querySelect ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
+              <querySelect :maxlength="25" ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverName}">收 货 人</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverName'>
-              <querySelect ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
+              <querySelect :maxlength="25" ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
-              <querySelect ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+              <querySelect :maxlength="11" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverAddress}">收货地址</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverAddress'>
-              <querySelect ref="tmsOrdershipReceiverAddress" search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
+              <querySelect :maxlength="50" ref="tmsOrdershipReceiverAddress" search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
             </el-form-item>
           </div>
         </div>
@@ -151,40 +151,40 @@
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo.cargoName : ''">
-                    <querySelect ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+                    <querySelect :maxlength="30" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoPack : ''">
-                    <querySelect ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
+                    <querySelect :maxlength="20" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
-                    <el-input ref="tmsOrdercargoAmount" v-number-only size="mini" :maxlength="20"
-                  v-model="form.cargoList[scope.$index].cargoAmount" @change="detectCargoNumChange" />
+                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" maxlength="20"
+                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
-                  <el-input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="20"
-                  v-model="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" maxlength="20"
+                  :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <el-input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="20"
-                  v-model="form.cargoList[scope.$index][item.fieldProperty]" />
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" maxlength="20"
+                  :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <el-input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                   </el-form-item>
                 </template>
                 <template v-else>
-                  <el-input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" :maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                  <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" class="nativeinput" maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                 </template>
               </template>
@@ -1182,6 +1182,9 @@ export default {
     getOrgId() {
       return getOrgId(this.otherinfo.orgid).then(res => {
         return res.data || {}
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 获取个人设置
@@ -1214,6 +1217,9 @@ export default {
         // 获取网点信息
         this.orgInfo = dataArr[4]
         console.log('get INIT Infomation::', dataArr)
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // 设置出发城市
@@ -1265,6 +1271,9 @@ export default {
         if (!this.output.isOrder) {
           orderManage.getShipSn(this.otherinfo.orgid).then(res => {
             this.form.tmsOrderShip.shipSn = res.data
+          }).catch((err) => {
+            this.loading = false
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       } else {
@@ -1304,6 +1313,9 @@ export default {
             })
           }).then(res => {
             this.form.tmsOrderShip.shipGoodsSn = res.data
+          }).catch((err) => {
+            this.loading = false
+            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
         }
       }
@@ -1406,6 +1418,9 @@ export default {
         } else {
           return false
         }
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     /**
@@ -1544,6 +1559,9 @@ export default {
           } else {
             return Promise.reject('查无此提货信息~~~~')
           }
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     },
@@ -1874,12 +1892,13 @@ export default {
         this.findAllInput()
       }, 100)
     },
-    detectCargoNumChange() {
+    detectCargoNumChange(index, name, event) {
+      this.form.cargoList[index][name] = event.target.value
       this.setCargoNum()
     },
     // 修改货品列表
-    changeFee(index, name, val) {
-      this.form.cargoList[index][name] = val
+    changeFee(index, name, event) {
+      this.form.cargoList[index][name] = event.target.value
       // 修改时计算总运费
       this.getTotalFee()
     },
@@ -2277,6 +2296,8 @@ export default {
       return msg
     },
     checkcargoWeight(m) {
+      // 不作检测
+      return m
       const value = this.form.cargoList[0].cargoWeight
       const value2 = this.form.cargoList[0].cargoVolume
 
@@ -2321,9 +2342,10 @@ export default {
 
       if (msg && !m) {
         this.$message.error(msg)
-        const obj = this.$refs['tmsOrder' + find.fieldProperty]
+        let obj = this.$refs['tmsOrder' + find.fieldProperty]
+        obj = Array.isArray(obj) ? obj[1] : obj
         if (obj) {
-          obj[1].focus()
+          obj.focus()
         }
       } else {
         msg = m
@@ -2331,7 +2353,7 @@ export default {
       return msg
     },
     checkshipReceiptSn(m) {
-      return ''
+      return m
       /* const value = this.form.tmsOrderShip.shipToCityName
       let msg = ''
       if (!value) {
@@ -2483,6 +2505,9 @@ export default {
               if (this.config.shipNo.manualInput !== '1') {
                 orderManage.getShipSn(this.otherinfo.orgid).then(res => {
                   this.form.tmsOrderShip.shipSn = res.data
+                }).catch((err) => {
+                  this.loading = false
+                  this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
                 })
                 this.$message.error('重复的订单号，已为你重新生成新的运单号~')
               } else {
@@ -2537,10 +2562,8 @@ export default {
               }
             }
             // 处理城市信息
-              data.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName ? data.tmsOrderShip.shipFromCityName.replace(/,$/, '') : ''
-              data.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName ? data.tmsOrderShip.shipToCityName.replace(/,$/, '') : ''
-
-            
+            data.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName ? data.tmsOrderShip.shipFromCityName.replace(/,$/, '') : ''
+            data.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName ? data.tmsOrderShip.shipToCityName.replace(/,$/, '') : ''
 
             // 判断收发货人信息
             let changeSender = false
@@ -2702,10 +2725,9 @@ export default {
           this.isSavePrint = false // false-不保存并打印，只保存
           break
         case 'savePrintKey':
-         this.isSavePrint = true // true-保存并打印
+          this.isSavePrint = true // true-保存并打印
           this.submitForm()
-         
-          
+
           // this.$message.info('正在开发中，敬请期待。')
           break
       }
@@ -2722,7 +2744,7 @@ export default {
             }
           })
         }
-        CreatePrintPageEnable(libData) // 调打印接口
+        CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
       })
       .catch(err => {
         this.$message.error(err.errorInfo || err.text || '发生未知错误~')
@@ -2740,7 +2762,7 @@ export default {
             }
           })
         }
-        CreatePrintPageEnable(data)
+        CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
       })
       .catch(err => {
         this.$message.error(err.errorInfo || err.text || '发生未知错误~')
@@ -2748,7 +2770,7 @@ export default {
     },
     printSave() { // 打印保存的运单
       getPrintOrderItems(this.resOrderId).then(data => {
-        CreatePrintPage(data)
+        CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
       })
       .catch(err => {
         this.$message.error(err.errorInfo || err.text || '发生未知错误~')
@@ -2759,6 +2781,9 @@ export default {
         data.forEach(e => {
           this.DELIVERY_METHODS[e.id] = e.dictName
         })
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     getShipPayWay() { // 获取付款方式中文
@@ -2767,6 +2792,9 @@ export default {
         data.forEach(e => {
           this.PAY_WAY[e.id] = e.dictName
         })
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     setPrintData(type) { // 设置打印的字段
@@ -2801,7 +2829,7 @@ export default {
         this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
         this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
         this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号吗
-        this.$set(obj, 'receiverAddress', this.form.receiver.customerAddress) // 收货地址
+        this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
         for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
           obj[item] = this.form.cargoList[0][item]
         }
@@ -2820,9 +2848,17 @@ export default {
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
         this.$set(obj, 'effective', this.form.tmsOrderShip.shipEffective) // 时效
+        if (this.form.tmsOrderShip.shipEffective === 95) {
+          this.$set(obj, 'urgent', this.form.tmsOrderShip.shipEffective) // 95-时效-加急
+        } else {
+          this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
+        }
         this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
-        this.$set(obj, 'controlGoods', this.shipOther) // 控货
-        this.$set(obj, 'valuables', this.shipOther) // 贵重物品
+        if (this.shipOther === 168) {
+          this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
+        } else {
+          this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
+        }
         this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
       }
       this.printDataObject = Object.assign({}, obj)
@@ -2854,6 +2890,9 @@ export default {
         if (!this.output.isOrder) {
           this.setDefaultValue()
         }
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     }
   }, // 路由更新时触发，用来切换渲染数据
@@ -3187,6 +3226,12 @@ $backgroundcolor: #cbe1f7;
         &:focus{
           background: rgba(0, 0, 0, 0.04);
         }
+      }
+      .el-form-item__content>input{
+        font-size: 12px;
+      }
+      .el-form-item.is-error .el-input__inner{
+        border-color: #f56c6c;
       }
       .addButton, .minusButton{
         display: inline-block;

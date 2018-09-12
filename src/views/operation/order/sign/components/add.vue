@@ -57,7 +57,7 @@
           <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input v-model="form.documentNum" auto-complete="off" :disabled="isDbclick"></el-input>
+          <el-input v-model="form.documentNum" auto-complete="off" :maxlength="18" :disabled="isDbclick"></el-input>
         </el-form-item>
         <el-form-item label="签收类型:" prop="signTypeId" >
           <SelectType v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
@@ -395,6 +395,9 @@ export default {
           // this.form.abnormalNo = res
         console.log(res)
           // console.log(res, "this.form.abnormalNo: ", this.form);
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     // handleSelectSender(res) {
@@ -466,9 +469,12 @@ export default {
               //     this.$emit('success')
               //   }
               // })
-          }).catch(res => {
-            this.loading = false
-            this.$message.warning(res.text)
+          }).catch(err => {
+            this.loadding = false
+            this.$message({
+              type: 'error',
+              message: err.errorInfo || err.text || '未知错误，请重试~'
+            })
             this.closeMe()
           })
         } else {
@@ -629,9 +635,16 @@ export default {
     width: 234px;
     height: 136px;
   }
+  .box_container .el-upload .el-upload-dragger{
+    height:134px;
+  }
+  // .box_container .upload__tip{
+  //   line-height: none;
+  // }
   .el-upload-dragger{
-    width: 234px;
-    height: 136px;
+    width: 232px;
+    height: 134px;
+    // border:none;
   }
   .el-upload--picture-card{
     width:234px;

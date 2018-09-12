@@ -1,5 +1,9 @@
 <template>
   <div class="abnomal-content orderinfo-content">
+    <div class="abnormal-btns-order">
+      <el-button type="primary" size="mini" icon="el-icon-circle-plus" plain @click="openAddAbnormal" v-has:ABNO_ADD>异常登记</el-button>
+    </div>
+    <div class="abnomal-content-wrapper">
     <el-table
       ref="multipleTable"
       :data="usersArr"
@@ -58,18 +62,27 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
+    <Addabnormal :issender="true" :isModify="false"  :isCheck="false" :info="{}" :id="''" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId"
+    :shipSn="shipsn" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
   </div>
 </template>
 <script>
 import orderManage from '@/api/operation/orderManage'
+import Addabnormal from '@/views/operation/service/abnormal/components/add'
 
 export default {
+  components: {
+    Addabnormal
+  },
   props: {
-    orderid: [String, Number]
+    orderid: [String, Number],
+    shipsn: [String, Number]
   },
   data() {
     return {
       loading: false,
+      AddAbnormalVisible: false,
       usersArr: []
     }
   },
@@ -86,9 +99,18 @@ export default {
     this.fetchData()
   },
   methods: {
+    openAddAbnormal() {
+      this.AddAbnormalVisible = true
+    },
+    closeAddAbnormal() {
+      this.AddAbnormalVisible = false
+    },
     fetchData() {
       return orderManage.getShipAbnormal(this.orderid).then(res => {
         this.usersArr = res
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     }
   }
@@ -96,6 +118,12 @@ export default {
 </script>
 <style lang="scss">
 .abnomal-content{
+  .abnormal-btns-order{
+    margin-bottom: 10px;
+  }
+  .abnomal-content-wrapper{
+    height: calc( 100% - 38px);
+  }
   .clickimglist{
     width: 100%;
     overflow: auto;

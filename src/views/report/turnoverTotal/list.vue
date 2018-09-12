@@ -11,8 +11,19 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div class="info_tab_report" id="report_turnoverTotal">
+      <div @scroll="handleBottom" class="info_tab_report" id="report_turnoverTotal">
         <table id="report_turnoverTotal_table"></table>
+        <table ref="footTotalFee" class="footTotalFee">
+          <colgroup width="65px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup>
+        </table>
       </div>
     </div>
   </div>
@@ -109,7 +120,19 @@ export default {
       'otherinfo'
     ])
   },
+   mounted(){
+    this.getScrollWidth()
+  },
   methods: {
+    getScrollWidth() {
+        var noScroll, scroll, oDiv = document.createElement("DIV")
+        oDiv.style.cssText = "position:absolute;top:-1000px;width:100px;height:100px; overflow:hidden;"
+        noScroll = document.body.appendChild(oDiv).clientWidth
+        oDiv.style.overflowY = "scroll"
+        scroll = oDiv.clientWidth
+        document.body.removeChild(oDiv)
+        this.scrollwidth = noScroll-scroll
+      },
     report() {
       reportTurnoverTotal(this.query).then(res => {
         let data = res.list
@@ -200,6 +223,34 @@ export default {
           td.setAttribute('bgcolor', 'gainsboro')
           td.setAttribute('color', 'white')
         }
+
+        // 复制-生成多一个浮动的底部合计行
+        let totalTable = document.getElementsByClassName('footTotalFee')[0]
+        let total_tfootLen = totalTable.getElementsByTagName('tfoot')
+        if (total_tfootLen.length > 0) {
+          totalTable.removeChild(total_tfootLen[0])
+        }
+        let total_tfoot = document.createElement('tfoot')
+
+        totalTable.appendChild(total_tfoot)
+        totalTable.style.borderCollapse = 'collapse'
+        totalTable.style.border = '1px solid #d0d7e5';
+        totalTable.setAttribute('border', '1')
+        totalTable.setAttribute('font', '12px')
+        // 生成底部合计行
+        const total_tfootTr = total_tfoot.insertRow()
+        for (let t in this.columns) {
+          const td = total_tfootTr.insertCell()
+          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
+          td.style.textAlign = this.columns[t].textAlign
+          td.style.padding = '2px 5px'
+          td.style.fontSize = '13px'
+          td.setAttribute('bgcolor', 'gainsboro')
+          td.setAttribute('color', 'white')
+        }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     doAction(type) {
@@ -226,6 +277,26 @@ export default {
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
       this.report()
+    },
+    handleBottom(e){
+      let el = e.target
+      let top = el.scrollTop
+      let width = el.offsetWidth
+      let orgwidth = el.scrollWidth
+      let hasscroll = orgwidth > width
+      let height = el.offsetHeight
+      let footel = this.$refs.footTotalFee
+      let footheight = footel.offsetHeight
+      let calctop = top + height - footheight
+      if(hasscroll){
+        calctop -= this.scrollwidth
+      }
+
+      if(!this.maxheight){
+        this.maxheight =  el.scrollHeight
+      }
+      footel.style.bottom='auto'
+      footel.style.top =  (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
     }
   }
 }
@@ -245,7 +316,6 @@ export default {
     height: 100%;
     box-shadow: 1px 1px 10px #bbb;
     overflow: hidden;
-    scrolling: no;
   }
 }
 
@@ -254,38 +324,94 @@ export default {
   width: calc(100% - 20px);
   height: calc(100% - 100px);
 }
-
 .info_tab_report {
-  height: calc( 100%);
+  height: 100%;
+  padding-bottom: 30px;
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
+  position: relative;
+
+
   /*设置边框的*/
-  table {
-    width: 100%;
-    min-width: 1000px;
-    tbody tr {
-      background-color: #FFF;
-      transition: 0.5s;
-    }
-    tbody tr:hover {
-      background-color: #ccc;
-      transition: 0.3s;
-    }
-    tbody tr td:hover {
-      background-color: #cdcdcd;
-      transition: 0.3s;
-    }
-    tbody,
-    tfoot {
-      color: #222;
-      line-height: 23px;
-      font-size: 13px;
-      td {
-        font-size: 13px;
+  #report_turnoverTotal_table {
+      width: 100%;
+      min-width: 1200px;
+
+      tbody tr {
+        background-color: #FFF;
+        transition: 0.5s;
       }
+      tbody tr:hover {
+        background-color: #ccc;
+        transition: 0.3s;
+      }
+      tbody tr td:hover {
+        background-color: #cdcdcd;
+        transition: 0.3s;
+      }
+      tbody {
+        color: #222;
+        line-height: 23px;
+        font-size: 13px;
+        td {
+          font-size: 13px;
+        }
+      }
+      tfoot {
+        display: none;
+      }
+  }
+}
+
+.footTotalFee {
+  width: 100%;
+  position: absolute;
+  min-width: 1200px;
+  bottom: 0px;
+  left: 0;
+  z-index: 2;
+  tfoot {
+    color: #222;
+    line-height: 24px;
+    font-size: 13px;
+    td {
+      font-size: 13px;
+      border: 1px solid #bbb;
     }
   }
 }
+// .info_tab_report {
+//   height: calc( 100%);
+//   overflow: auto;
+//   border: 1px solid #d0d7e5;
+//   box-shadow: 1px 1px 20px #ddd;
+//   /*设置边框的*/
+//   table {
+//     width: 100%;
+//     min-width: 1000px;
+//     tbody tr {
+//       background-color: #FFF;
+//       transition: 0.5s;
+//     }
+//     tbody tr:hover {
+//       background-color: #ccc;
+//       transition: 0.3s;
+//     }
+//     tbody tr td:hover {
+//       background-color: #cdcdcd;
+//       transition: 0.3s;
+//     }
+//     tbody,
+//     tfoot {
+//       color: #222;
+//       line-height: 23px;
+//       font-size: 13px;
+//       td {
+//         font-size: 13px;
+//       }
+//     }
+//   }
+// }
 
 </style>

@@ -503,6 +503,9 @@ export default {
           this.orgLeftTable = data
           this.countOrgLeftTable = data
           this.$emit('loadTable', this.rightTable)
+        }).catch((err)=>{
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
         obj = {}
       }
@@ -553,6 +556,9 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return el.batchNo !== e.batchNo
+          })
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.batchNo !== e.batchNo
@@ -578,6 +584,12 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.batchNo !== e.batchNo
+          })
+          this.countOrgLeftTable = objectMerge2( [], this.countOrgLeftTable).filter(el=>{
+            return el.batchNo !== e.batchNo
+          })
           this.leftTable.push(e)
           this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)

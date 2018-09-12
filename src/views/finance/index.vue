@@ -231,6 +231,15 @@
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
+            功能：月结
+          </div>
+          <router-link to="/finance/accountsReceivable/arrive">
+            <i class="flowicon1 yj"></i><br>
+            <span>月结</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
             功能：回单付
           </div>
           <router-link to="/finance/accountsReceivable/receipt">
@@ -242,7 +251,7 @@
           <div slot="content">
             功能：异动费用
           </div>
-          <router-link to="/finance/accountsPayable/waybill/unusual">
+          <router-link to="/finance/accountsReceivable/abnormal">
             <i class="flowicon1 ydfy"></i><br>
             <span>异动费用</span>
           </router-link>
@@ -258,6 +267,7 @@
             <span>实际提货费</span>
           </router-link>
         </el-tooltip>
+        
         <el-tooltip placement="bottom">
           <div slot="content">
             功能：中转费
@@ -280,7 +290,7 @@
           <div slot="content">
             功能：异动费用
           </div>
-          <router-link to="/finance/accountsReceivable/abnormal">
+          <router-link to="/finance/accountsPayable/waybill/unusual">
             <i class="flowicon1 ydfy"></i><br>
             <span>异动费用</span>
           </router-link>
@@ -352,9 +362,18 @@
         </el-tooltip>
         <el-tooltip placement="bottom">
           <div slot="content">
+            功能：到站装卸费
+          </div>
+          <router-link to="./accountsPayable/batch/stationOther">
+            <i class="flowicon1 dzzxf"></i><br>
+            <span>到站装卸费</span>
+          </router-link>
+        </el-tooltip>
+        <el-tooltip placement="bottom">
+          <div slot="content">
             功能：到站其他费
           </div>
-          <router-link to="./accountsPayable/batch/arriveOther">
+          <router-link to="./accountsPayable/batch/arrivalOther">
             <i class="flowicon1 dzqtf"></i><br>
             <span>到站其他费</span>
           </router-link>
@@ -453,192 +472,6 @@ export default {
       padding: 30px;
     }
   }
-  // .wzl_caiwu-flow{
-  //   width: 1223px;
-  //   height: 603px;
-  //   margin: 53px auto 0;
-  //   position: relative;
-  //   background: url("../../assets/flow/cw1.png") no-repeat;
-  //   .el-button{
-  //     display: inline-block;
-  //     // width: 88px;
-  //     width: 110px;
-  //     margin:5px;
-  //     padding: none;
-  //     text-align: center;
-  //     background-color: #cbebff;
-  //     border-radius: 2px;
-  //     border: solid 1px #39bbff;
-  //     font-weight: bold;
-  //     font-size: 13px;
-  //     user-select: none;//避免选中的时候有默认样式
-  //   }
-  //   .fin1-content{
-  //     width:680px;
-  //     height: 75px;
-  //     line-height: 75px;
-  //     border-radius: 10px;
-  //     text-align: center;
-  //     // background: red;
-  //     position: absolute;
-  //     top:5px;
-  //     left:347px;
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-  //   }
-  //   .fin2-content{
-  //     width: 681px;
-  //     height: 223px;
-  //     padding-top: 10px;
-  //     // background: red;
-  //     position: absolute;
-  //     top: 110px;
-  //     right: 195px;
-  //     border-radius: 10px;
-  //     padding-left:33px;
-  //     // text-align: center;
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       // transform: translate(8px,5px)
-  //       transform:scale(1.1,1.1)
-      
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-      
-  //   }
-  //   .fin3-content{
-  //     // background: red;
-  //     width: 268px;
-  //     height: 80px;
-  //     line-height: 80px;
-  //     border-radius: 10px;
-  //     position: absolute;
-  //     left: 413px;
-  //     top: 388px;
-  //     text-align: center;
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-  //   }
-  //   .fin4-content{
-  //     // background:yellow;
-  //     width: 268px;
-  //     height: 80px;
-  //     line-height: 80px;
-  //     border-radius: 10px;
-  //     position: absolute;
-  //     left: 693px;
-  //     top: 388px;
-  //     text-align: center;
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-  //   }
-  //   .fin5-content{
-  //     // background: red;
-  //     width: 118px;
-  //     height: 308px;
-  //     position: absolute;
-  //     left: 184px;
-  //     top: 16px;
-  //     .el-button{
-  //       display: inline-block;
-  //       width: 110px;
-  //       margin-top: 9px;
-  //       margin-bottom: 127px;
-  //       padding: none;
-  //       text-align: center;
-  //       background-color: #cbebff;
-  //       border-radius: 2px;
-  //       border: solid 1px #2ca3f1;
-  //       font-weight: bold;
-  //     }
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-  //   }
-  //   .fin6-content{
-  //     // background: yellow;
-  //     width: 118px;
-  //     height: 308px;
-  //     position: absolute;
-  //     left: 184px;
-  //     top: 371px;
-  //     .el-button{
-  //       display: inline-block;
-  //       width: 110px;
-  //       margin-top: 28px;
-  //       margin-bottom: 88px;
-  //       padding: none;
-  //       text-align: center;
-  //       background-color: #cbebff;
-  //       border-radius: 2px;
-  //       border: solid 1px #2ca3f1;
-  //       font-weight: bold;
-  //     }
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-  //   }
-  //   .fin7-content{
-  //     // background: yellow;
-  //     width: 121px;
-  //     height: 50px;
-  //     position: absolute;
-  //     bottom: 3px;
-  //     left: 338px;
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //     :hover span{
-  //       color:#fff;
-  //     }
-  //   }
-  //   .fin8-content{
-  //     // background:red;
-  //     width: 121px;
-  //     height: 50px;
-  //     position:absolute;
-  //     right:-5px;
-  //     bottom: 257px;
-  //     cursor: pointer;
-  //     .el-button{
-  //       height: 42px;
-  //      background-color: #13a5f2;
-  //      border:none;
-  //      color:#fff;
-  //     }
-  //     :hover.el-button{
-  //       background-color: #39bbff;
-  //       transform:scale(1.1,1.1)
-  //     }
-  //   }
-  // }  
-// }
 .finace-container {
     padding-top:45px;
     min-width: 1190px;
@@ -652,6 +485,9 @@ export default {
       background: url("../../assets/flow/index31.png") no-repeat;
       // background-size: auto 2000;
       position: relative;
+      span{
+          font-size:14px;
+        }
       .finace_flow_item1{
         width: 897px;
         height: 101px;
@@ -662,6 +498,7 @@ export default {
         position: absolute;
         top: 34px;
         left: 208px;
+        
         .el-tooltip{
           padding-top:20px;
           flex-grow: 1;
@@ -698,7 +535,7 @@ export default {
         flex-wrap:wrap;
         .el-tooltip{
           //  flex-grow: 1;
-          width: 20%;
+          width: 16.5%;
           padding-top:20px;
           
         }
@@ -737,6 +574,9 @@ export default {
       }
       .flowicon1 {
         transition: 0.5s;
+       span{
+         font-size: 14px;
+       }
       }
       .flowicon1:hover {
         transform: scale(1.2);

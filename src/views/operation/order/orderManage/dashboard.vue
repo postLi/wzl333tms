@@ -3,6 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('create')" plain v-has:ORDER_E3>创建运单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_E3>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_P1>打印</el-button>
           <span class="viewtip">
@@ -437,6 +438,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {
@@ -467,10 +471,26 @@ export default {
 
       switch (type) {
           // 添加运单
-        case 'add':
+        case 'create':
           this.isModify = false
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          }
+          const netdata = this.selected[0]
           this.selectInfo = {}
-          this.openAddOrder()
+          this.$router.push({
+            path: '/operation/order/modifyOrder',
+            query: {
+              orderid: netdata.id,
+              type: 'modify',
+              isdash: '1',
+                  // tab: '修改' + this.selectInfo.shipSn
+              tab: '从' + netdata.shipSn + '建单'
+            }
+          })
           break
           // 修改运单信息
         case 'modify':

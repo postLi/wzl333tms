@@ -345,7 +345,7 @@ export default {
         {
           label: '代收款手续费',
           prop: 'commissionFee',
-          width: '12'
+          width: '120'
         },
         // {
         //   label: "制单人",
@@ -460,7 +460,7 @@ export default {
       }
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.shipId, order.id, true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
       console.log(order.shipId)
     },
     setTable() {

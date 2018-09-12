@@ -226,6 +226,7 @@ export default {
     }
   },
   mounted() {
+    this.loading = true
     this.searchQuery.vo.orgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       this.loading = false
@@ -380,6 +381,9 @@ export default {
         this.dataset = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
 
@@ -390,11 +394,11 @@ export default {
     fetchData() {
       this.fetchAllreceipt()
     },
-         // 获取组件返回的搜索参数
+    // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
-            // 根据搜索参数请求后台获取数据
+       // 根据搜索参数请求后台获取数据
       objectMerge2(this.searchQuery.vo, searchParam)
-            // this.searchQuery.vo.orgId = searchParam.orgid
+      // this.searchQuery.vo.orgId = searchParam.orgid
       this.fetchData()
     },
     doAction(type) {
@@ -420,7 +424,7 @@ export default {
           this.isModify = false
           this.isCheck = false
           // this.isDbclick = false
-          console.log(this.isModify)
+          // console.log(this.isModify)
           this.selectInfo = {}
           this.openAddAbnormal()
           break
@@ -475,12 +479,14 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              this.loading = true
               delAbnormal(ids).then(res => {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
                 })
                 this.fetchData()
+                this.loading = false
               }).catch(err => {
                 this.$message({
                   type: 'error',

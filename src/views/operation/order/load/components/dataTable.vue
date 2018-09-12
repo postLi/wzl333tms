@@ -9,7 +9,10 @@
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" @row-dblclick="dclickAddItem" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed width="50" label="序号">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
@@ -19,6 +22,8 @@
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" width="130" label="运单号">
+        </el-table-column>
+        <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -56,7 +61,10 @@
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
       <el-table ref="multipleTableLeft" :data="rightTable"  @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-        <el-table-column fixed type="index" width="50">
+         <el-table-column fixed width="50" label="序号">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column fixed width="50">
           <template slot-scope="scope">
@@ -66,6 +74,8 @@
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="130">
+        </el-table-column>
+         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
@@ -179,7 +189,7 @@ export default {
       deep: true
     }
   },
-  mounted () {
+  mounted() {
     if (this.leftTable.length === 0) {
       this.getList()
     }
@@ -203,11 +213,14 @@ export default {
           this.leftTable = data.data
           this.orgLeftTable = data.data
           this.$emit('loadTable', this.rightTable)
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       }
     },
-    getSearch (obj) { // 搜索
-     this.leftTable = obj
+    getSearch(obj) { // 搜索
+      this.leftTable = obj
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -235,12 +248,12 @@ export default {
       }
     },
     changLoadData(newVal) { // 修改右边表格是配载数量 newVal为rightTable的下标index
-      let curAmount = this.rightTable[newVal].loadAmount // 配载件数
-      let curWeight = this.rightTable[newVal].loadWeight // 配载重量
-      let curVolume = this.rightTable[newVal].loadVolume // 配载体积
-      let currepertAmount = this.rightTable[newVal].repertoryAmount // 库存件数
-      let currepertWeight = this.rightTable[newVal].repertoryWeight // 库存重量
-      let currepertVolume = this.rightTable[newVal].repertoryVolume // 库存体积
+      const curAmount = this.rightTable[newVal].loadAmount // 配载件数
+      const curWeight = this.rightTable[newVal].loadWeight // 配载重量
+      const curVolume = this.rightTable[newVal].loadVolume // 配载体积
+      const currepertAmount = this.rightTable[newVal].repertoryAmount // 库存件数
+      const currepertWeight = this.rightTable[newVal].repertoryWeight // 库存重量
+      const currepertVolume = this.rightTable[newVal].repertoryVolume // 库存体积
       if (curAmount > currepertAmount || curAmount < 1 || curWeight > currepertWeight || curWeight < 0 || curVolume > currepertVolume || curVolume < 0) {
         this.$notify({
           title: '警告',
@@ -287,21 +300,16 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
+          this.rightTable = this.rightTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.repertoryId !== e.repertoryId
           })
           this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.repertoryId !== e.repertoryId
           })
-          // let item = this.leftTable.indexOf(e)
-          // if (item !== -1) { // 源数据减去被穿梭的数据
-          //   this.leftTable.splice(item, 1)
-          // }
-          // let orgItem = this.orgLeftTable.indexOf(e)
-          // if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
-          //   this.orgLeftTable.splice(orgItem, 1)
-          // }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -314,17 +322,18 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = this.leftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
+          this.orgLeftTable = this.orgLeftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e)
 
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.repertoryId !== e.repertoryId
           })
-          // let item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
@@ -350,95 +359,23 @@ export default {
       this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
     },
-    dclickAddItem (row, event) { // 双击添加单行
+    dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)
       this.doAction('goLeft')
     },
-    dclickMinusItem (row, event) { // 双击减去单行
+    dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      // let propsArr = ['repertoryAmount', 'repertoryWeight', 'repertoryVolume', 'cargoAmount', 'cargoWeight', 'cargoVolume']
-      // return getSummaries(param, propsArr)
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 3 || index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9 || index === 10 || index === 11 || index === 18) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+      const propsArr = ['_index|2|单','_index|3|单', 'shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      // let propsArr = ['repertoryAmount', 'repertoryWeight', 'repertoryVolume', 'cargoAmount', 'cargoWeight', 'cargoVolume']
-      // return getSummaries(param, propsArr)
-      const { columns, data } = param
-      const sums = []
-      let strNull = [12, 13, 14, 15, 16, 17, 18, 19, 20]
-      columns.forEach((column, index) => {
-
-        if (index === 0) {
-          sums[index] = '总计'
-          return
-        }
-        if (index === 1) {
-          sums[index] = '操作'
-          return
-        }
-        if (index === 2 || index === 3) {
-          sums[index] = data.length + '单'
-          return
-        }
-        if (index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 20) {
-          sums[index] = ''
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ''
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
+       const propsArr = ['_index|2|单','_index|3|单', 'shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
+      return getSummaries(param, propsArr)
     }
   }
 }

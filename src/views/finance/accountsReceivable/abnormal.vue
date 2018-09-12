@@ -204,7 +204,7 @@ export default {
         'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
-        'prop': 'shipEffective'
+        'prop': 'shipEffectiveName'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks'
@@ -236,6 +236,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {

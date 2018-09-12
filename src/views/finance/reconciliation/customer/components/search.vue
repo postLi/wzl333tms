@@ -29,7 +29,6 @@
           maxlength="11"
           v-model="searchForm.customerMobile"
           clearable
-          prop="customerMobile"
         >
         </el-input>
       </el-form-item>
@@ -114,9 +113,9 @@ export default {
     }
   },
   watch: {
-    orgid(newVal) {
-      this.searchForm.orgid = newVal
-    }
+    // orgid(newVal) {
+    //   this.searchForm.orgid = newVal
+    // }
   },
   mounted() {
     this.searchForm.orgid = this.orgid
@@ -131,6 +130,7 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
+      this.searchForm = this.$options.data().searchForm
       this.searchForm.orgid = this.orgid
       this.searchForm.customerName = ''
       this.searchForm.customerMobile = ''
@@ -138,6 +138,7 @@ export default {
       this.searchForm.endTime = ''
       // this.searchCreatTime = []
       this.searchCreatTime = this.defaultTime
+      console.log(this.searchForm, this.orgid)
     }
   }
 }

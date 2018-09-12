@@ -133,6 +133,9 @@ export default {
     setSystemTime() {
       return getSystemTime().then(data => {
         this.form.signTime = data
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     reset() {

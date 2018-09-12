@@ -31,7 +31,6 @@
       <template v-else>
         <span v-html="highLight(item, showkey)"></span>
       </template>
-
     </slot>
   </template>
 </el-autocomplete>
@@ -490,6 +489,7 @@ export default {
           if (el[name] === value) {
             this.handlevalue = el[this.showkey]
             isfind = true
+            this.handleSelect(el)
           }
         })
         // 当查找不到时，回显到输入框

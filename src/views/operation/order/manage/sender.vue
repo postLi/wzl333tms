@@ -241,22 +241,23 @@ export default {
           prop: 'commissionFee',
           width: '130',
           fixed: false
-        }, {
-          label: '件数单价',
-          prop: 'cargoAmount',
-          width: '110',
-          fixed: false
-        }, {
-          label: '重量单价',
-          prop: 'weightFee',
-          width: '110',
-          fixed: false
-        }, {
-          label: '体积单价',
-          prop: 'volumeFee',
-          width: '110',
-          fixed: false
-        }
+        },
+        // {
+        //   label: '件数单价',
+        //   prop: 'cargoAmount',
+        //   width: '110',
+        //   fixed: false
+        // }, {
+        //   label: '重量单价',
+        //   prop: 'weightFee',
+        //   width: '110',
+        //   fixed: false
+        // }, {
+        //   label: '体积单价',
+        //   prop: 'volumeFee',
+        //   width: '110',
+        //   fixed: false
+        // }
       ]
     }
   },

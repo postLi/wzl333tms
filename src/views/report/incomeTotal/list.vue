@@ -136,6 +136,9 @@ export default {
           td.style.padding = '2px 5px'
           td.style.fontSize = '13px'
         }
+      }).catch((err)=>{
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     doAction(type) {

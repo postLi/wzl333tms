@@ -49,8 +49,8 @@ $bodercolor: #d0d7e5;
           text-align:center;
       }
   }
-  .unauth{
-      color: #f00;
+  .unauth, .red{
+      color: #ef0000;
   }
 }
 .el-table td, .el-table th{
@@ -146,4 +146,58 @@ $bodercolor: #d0d7e5;
 }
 .el-form-item__label{ 
   padding-right: 5px;
+}
+/**原生input **/
+.el-form-item__content>input, .nativeinput{
+  -webkit-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #606266;
+  display: inline-block;
+  font-size: inherit;
+  height: 40px;
+  line-height: 40px;
+  outline: 0;
+  padding: 0 15px;
+  -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  width: 100%;
+  border-color: transparent;
+  border-radius: 0;
+  height: 28px;
+  line-height: 28px;
+}
+.el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error{
+  border-color: #f56c6c;
+}
+
+/*修改全局绿色输入框*/
+// anfa-tms\src\styles\addDot.css
+.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+  border-color: #dcdfe6;
+}
+//anfa-tms\src\styles\login-index.css
+.el-input-group__prepend{
+  padding: 0;
+}
+// anfa-tms\src\styles\login-index.css
+.el-form-item__content:focus{
+  border-color:#409eff ;
+}
+// anfa-tms\src\views\operation\service\abnormal\components\search.vue
+.el-range-editor--mini.el-input__inner{
+  height: 28px;
+  width: 200px;
+}
+// anfa-tms\src\views\operation\service\controlgoods\components\search.vue
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+  width:200px;
+}
+
+.el-tabs--border-card>.el-tabs__content{
+  padding: 10px;
 }

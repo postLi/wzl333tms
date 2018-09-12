@@ -159,6 +159,12 @@ export default {
           return `${parseTime(scope.row.createTime)}`
         }
       }, {
+        prop: 'shipEffectiveName',
+        label: '时效',
+        slot: function(scope) {
+          return scope.row.shipEffectiveName === '加急' ? '<span class="red">加急</span>' : scope.row.shipEffectiveName
+        }
+      }, {
         'label': '发货人',
         'prop': 'shipSenderName',
         'width': '150'
@@ -477,6 +483,16 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+        // 当搜索运单号且全匹配且仅有一条结果时自动打开其详情页面
+        if (this.total === 1) {
+          if (this.searchQuery.vo.shipSn && this.searchQuery.vo.shipSn === this.usersArr[0].shipSn) {
+            const order = this.usersArr[0]
+            this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+          }
+        }
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
     fetchData() {

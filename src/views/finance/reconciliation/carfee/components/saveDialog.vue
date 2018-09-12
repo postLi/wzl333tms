@@ -26,7 +26,6 @@
               fixed
               sortable
               prop="date"
-              width="120"
               label="费用项">
             </el-table-column>
             <el-table-column
@@ -155,7 +154,7 @@
           this.dialogData = this.tota
           this.dialogData.dealPaytota.map(el => {
             this.$set(this.dialogInfo, 0, {
-              date: '应付账款',
+              date: '未付账款',
               toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalPay ? +el.totalPay : 0).result()
             })
             // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
@@ -253,13 +252,12 @@
         }
 
         promiseObj.then(res => {
+          this.loading = false
+          this.reset()
           this.$message({
             message: '保存成功~',
             type: 'success'
           })
-
-          this.reset()
-          this.loading = false
         }).catch(err => {
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           this.loading = false
