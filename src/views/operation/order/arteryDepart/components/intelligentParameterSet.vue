@@ -419,7 +419,6 @@
           this.selected = selection
           this.selected.forEach(el => {
             el.selectdCheck = false
-
           })
         }
 
