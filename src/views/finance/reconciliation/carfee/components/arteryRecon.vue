@@ -16,11 +16,7 @@
                         @blur="tooltip = false;disabledName = true"
                         @mouseenter.native=" disabledName === true && (tooltip = true)"
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
-              <!--@blur="tooltip = false;disabledName = true"-->
-              <!--@mouseout.native="tooltip = false;disabledName = true"-->
-              <!--<template slot-scope="scope">-->
-              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-              <!--</template>-->
+
             </el-tooltip>
           </el-form-item>
         </div>
@@ -33,9 +29,6 @@
               <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
                          :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
-
-            <!--<querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" show="select" @change="getTrunkName"  v-model="searchTitle.memberName" clearable/>-->
-
           </el-form-item>
           <el-date-picker
             v-model="searchCreatTime"
@@ -617,8 +610,6 @@
       ])
     },
     mounted() {
-      // this.searchCreatTime = this.defaultTime
-
       this.changeOrgid(this.otherinfo, this.$route.query.id)
       if (this.$route.query.id) {
         this.sendId = this.$route.query.id
@@ -641,7 +632,6 @@
       export1() {
         if (this.searchTitle.memberName) {
           this.sendData()
-          // console.log(JSON.stringify(this.form))
           SaveAsFileCarfeefeeArt({
             data: objectMerge2({}, this.form),
             name: '新建对账'
@@ -658,7 +648,6 @@
         this.loading = true
         return getTrucK().then(data => {
           this.memberNameType = data.data
-          // console.log(this.memberNameType);
           this.loading = false
         }).catch(err => {
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
@@ -756,14 +745,12 @@
           this.searchAlReadyPay.memberName = trunk.truckIdNumber
         }
       },
-      // 查询
       onSubmit() {
         if (this.searchTitle.memberName) {
           if (!this.searchCreatTime[0]) {
             this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
-          // this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
@@ -780,31 +767,12 @@
           return false
         }
       },
-      // onSubmit() {
-      //   if (this.searchTitle.memberName) {
-      //     this.fetchList()
-      //     this.fetchDealPay()
-      //     this.fetchReadyPay()
-      //   } else {
-      //     this.$message({
-      //       message: '车牌号不能为空~',
-      //       type: 'error'
-      //     })
-      //     return false
-      //   }
-      //   const searchObj = {}
-      //   searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-      //   searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-      //   this.infoSearchTime(searchObj.startTime, searchObj.endTime)
-      // },
-      // 保存
       submit() {
         this.$refs['formName2'].validate((valid) => {
           if (valid) {
             this.$refs['formName3'].validate((valid) => {
               if (valid) {
                 this.sendData()
-                // 总计
                 this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
                   const a = {}
                   a.totalPay = el.totalPay
@@ -815,7 +783,6 @@
                   a.totalPay = el.totalPay
                   return a
                 }) : []
-                // console.log(this.tota)
 
                 if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
                   this.$message({
@@ -901,7 +868,6 @@
             type: 'success',
             message: '保存成功!'
           })
-          // this.$router.back(-1)
           this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/artery')
         }).catch(() => {
           this.$message({
@@ -1027,9 +993,6 @@
         this.messageButtonInfo.remark = ''
         this.messageButtonInfo.totalCount = ''
         this.checkBillName = ''
-        // this.searchCreatTime = ''
-        // this.searchCreatTime[0] = ''
-        // this.searchCreatTime[1] = ''
       },
       infoSearchTime(startTime, endTime) {
         this.searchTitle.startTime = startTime

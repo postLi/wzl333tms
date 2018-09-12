@@ -58,7 +58,6 @@
   import {postCreateBillCheckCarInfo} from '@/api/finance/fin_carfee'
   // parseTime
   import {parseTime, tmsMath} from '@/utils'
-  // import { getFindShipByid,putRelevancyShip,putRremoveShip} from '@/api/operation/pickup'
 
   export default {
     components: {
@@ -214,7 +213,7 @@
 
       },
 
-      submitForm(formName) {
+      submitForm() {
         this.loading = true
         let promiseObj
         let data = []
@@ -246,7 +245,6 @@
             this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/artery')
           } else {
             promiseObj = postCreateBillCheckCarInfo(data)
-            // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/shortDepart')
             this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/shortDepart')
           }
         }
@@ -258,9 +256,6 @@
             message: '保存成功~',
             type: 'success'
           })
-        }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
-          this.loading = false
         })
       }
     }

@@ -81,7 +81,6 @@
           </el-form-item>
           <el-form-item label="司机手机" prop="tmsDriver.driverMobile">
             <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" :disabled="isDbclick"></el-input>
-            <!--<querySelect search="driverMobile" type="driver"  @change="getdriverMobile" :remote="true" v-model="form.tmsDriver.driverMobile" />-->
           </el-form-item>
           <el-form-item label="车辆单位" prop="tmsTruck.truckUnit">
             <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"
@@ -127,7 +126,6 @@
       <el-button @click="closeMe">关 闭</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
-      <!--<el-button @click="submit">保存并打印</el-button>-->
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -244,12 +242,10 @@
             // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
           ],
           'tmsTruck.truckIdNumber': [
-            // {  validator: this.validateIsEmpty('车牌号不能为空')}
             { required: true, validator: this.validateIsEmpty('车牌号不能为空') }
             // { max: 8, message: '车牌号最多可输入8个字符' }
           ],
           'tmsDriver.driverName': [
-            // { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
             { required: true, validator: this.validateIsEmpty('司机姓名不能为空') }
           ],
           'tmsDriver.driverMobile': [
@@ -478,7 +474,6 @@
           this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
         })
       },
-      /** 收货人/发货人  tmsCustomer*/
       setSender(item, type) {
         type = type ? 'customRece' : 'tmsCustomer'
         if (item) {
@@ -496,7 +491,6 @@
         } else {
         }
       },
-      // 司机姓名
       getdriverName(item, city) {
         if (item) {
           if (this.form.tmsDriver.driverMobile) {
@@ -508,12 +502,9 @@
           }
         }
       },
-      // 车牌号
       getTrunkName(trunk) {
         if (trunk) {
-          // console.log(trunk,'车牌号');
           if (this.form.tmsDriver.driverName === '' || this.form.tmsDriver.driverMobile === '') {
-            // this.valkey = Math.random()
             this.form.tmsDriver.driverName = trunk.driverName
             this.form.tmsDriver.driverMobile = trunk.dirverMobile
             this.form.tmsDriver.driverId = trunk.driverId
@@ -531,12 +522,9 @@
       initInfo() {
         this.loading = false
       },
-      submit() {
-        console.log('保存并打印')
-      },
       submitForm(formName) {
         this.isChecked = true
-        this.isCheckedShow = false
+        this.isCheckedShow = true
         this.checkShowMessage = true
         //
         this.$refs[formName].validate((valid) => {

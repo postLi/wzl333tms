@@ -331,7 +331,6 @@
           ],
           'tmsOrderCargoList.cargoName': [
             {validator: this.validateIsEmpty('货品名不能为空')}
-            // { validator: validateCargoName, trigger: 'change' }
           ],
           'tmsOrderCargoList.cargoAmount': [
             {validator: this.validateIsEmpty('件数不能为空')},
@@ -458,7 +457,6 @@
         this.inited = true
         this.initInfo()
       }
-      // this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
     },
     watch: {
       popVisible(newVal, oldVal) {
@@ -518,7 +516,6 @@
     },
     methods: {
       changeOrderTo(item) {
-        // console.log(item)
       },
       watchData() {
         if (this.isModify) {
@@ -642,7 +639,7 @@
       },
       submitForm(ruleForm) {
         this.isChecked = true
-        this.isCheckedShow = false
+        this.isCheckedShow = true
         this.checkShowMessage = true
         this.$refs[ruleForm].validate((valid) => {
           this.isChecked = false
@@ -665,13 +662,11 @@
               obj[i] = data.tmsOrderCargoList[i]
             }
             data.tmsOrderCargoList = [obj]
-            // 判断操作，调用对应的函数
             if (this.isModify) {
-              // data.id = this.form.tmsOrderPre.id
               promiseObj = postModifyOrder(data)
             } else {
 
-              if (this.networkFlog) { // 添加网络订单
+              if (this.networkFlog) {
                 promiseObj = postAddNetworkOrder(data)
               }else {
                 promiseObj = postAddOrder(data)

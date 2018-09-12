@@ -7,7 +7,6 @@
 
         <div class="sTitle">
           <el-form-item label="">
-            <!--<el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>-->
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
@@ -29,7 +28,6 @@
               <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
                          :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
-            <!--<querySelect search="truckIdNumber" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />-->
 
           </el-form-item>
           <el-date-picker

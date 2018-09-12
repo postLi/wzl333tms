@@ -17,14 +17,8 @@
                         @blur="tooltip = false;disabledName = true"
                         @mouseenter.native=" disabledName === true && (tooltip = true)"
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
-              <!--@blur="tooltip = false;disabledName = true"-->
-              <!--@mouseout.native="tooltip = false;disabledName = true"-->
-              <!--<template slot-scope="scope">-->
-              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-              <!--</template>-->
-            </el-tooltip>
 
-            <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
+            </el-tooltip>
           </el-form-item>
         </div>
         <div class="sPayType">
@@ -142,7 +136,6 @@
         <p>未收清单</p>
       </div>
       <div class="info_tab">
-        <!--@selection-change="getSelection"-->
         <el-table
           ref="multipleTable"
           :data="dealInfo"
@@ -155,12 +148,7 @@
           tooltip-effect="dark"
           :default-sort="{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
+
           <el-table-column
             fixed
             sortable
@@ -177,9 +165,6 @@
               <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                       fill="red"></icon-svg></span>
             </template>
-            <!--<template slot-scope="scope">-->
-            <!--<span @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" ></icon-svg></span>-->
-            <!--</template>-->
           </el-table-column>
           <el-table-column
             fixed
@@ -232,27 +217,6 @@
             width="100"
             label="交接方式">
           </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="abnormalType"-->
-            <!--label="异常类型"-->
-            <!--width="100"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="abnormalAmount"-->
-            <!--label="异常件数"-->
-            <!--width="90"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="registerFee"-->
-            <!--label="异常费用"-->
-            <!--width="100"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
           <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
@@ -794,7 +758,7 @@
     },
     data() {
       const validateMobile = (rule, value, callback) => {
-        if (REGEX.MOBILE.test(value) || !value) {
+        if (REGEX.MOBILE.test(value)) {
           callback()
         } else {
           this.$message.error('请输入正确的联系号码~')
@@ -856,15 +820,15 @@
         },
         messageButtonInfo: {
           companyName: '',
-          orgBusinessOfficer: '', // 本网点业务负责人
-          orgBusinessOfficerPhone: '', // 本网点业务负责人
-          orgFinancialOfficer: '', // 本网点财务负责人
-          orgFinancialOfficerPhone: '', // 本网点财务负责人
+          orgBusinessOfficer: '', //
+          orgBusinessOfficerPhone: '', //
+          orgFinancialOfficer: '', //
+          orgFinancialOfficerPhone: '', //
           createTime: '',
           remark: '',
           totalCount: ''
         },
-        dealPayInfo: [], // 应付    1-应收 2-应付 3-已收 4-已付
+        dealPayInfo: [],
         dealInfo: [],
         alreadyPayInfo: [],
         alreadyInfo: [],
@@ -882,7 +846,7 @@
           alreadytota: [],
           alreadyPaytota: []
         },
-        dealPayInfoData: [], // 应付    1-应收 2-应付 3-已收 4-已付
+        dealPayInfoData: [],
         dealInfoData: [],
         alreadyPayInfoData: [],
         alreadyInfoData: [],
@@ -911,13 +875,11 @@
       this.onSubmit()
     },
     mounted() {
-      // this.searchCreatTime = this.defaultTime
       this.onSubmit()
     },
     methods: {
       export1() {
         this.sendData()
-        // console.log(JSON.stringify(this.form))
         SaveAsFileCarrier({
           data: objectMerge2({},this.form),
           name: '新建对账'
@@ -935,22 +897,6 @@
             data.carrierDetailDtoList.forEach((el, val) => {
               if (el.type === 1) {
                 this.dealInfo.push(el)
-                //其他
-                // // el.cargoAmount = 40.11
-                // //
-                // let el1 = objectMerge2({},el,{
-                //   totalFee: 11000.01
-                // })
-                // this.dealInfo.push(el1)
-                // let el2 = objectMerge2({},el,{
-                //   totalFee: 1300.01
-                // })
-                // this.dealInfo.push(el2)
-                // let el3 = objectMerge2({},el,{
-                //   totalFee: 11110.01
-                // })
-                // this.dealInfo.push(el3)
-                // this.dealInfoData.push(el)
               } else if (el.type === 2) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)
@@ -1147,7 +1093,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 10 || index === 16) {
+          if (index === 3 || index === 4 || index === 5 || index === 7) {
             sums[index] = ''
             return
           }
@@ -1156,10 +1102,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-
                 return tmsMath._add(prev,curr)
-                // return (prev+curr)
-
               } else {
                 return prev
               }
@@ -1244,11 +1187,6 @@
         this.searchCreatTime = this.defaultTime
         this.searchCreatTime[0] = item.checkStartTime
         this.searchCreatTime[1] = item.checkEndTime
-
-        // searchCreatTime
-        // this.messageInfo.financialOfficerPhone = item.financialOfficerPhone
-        // this.messageInfo.orgBusinessOfficer = item.orgBusinessOfficer
-        // this.messageInfo.orgBusinessOfficerPhone = item.orgBusinessOfficerPhone
         this.messageInfo.memberId = item.memberId
         this.messageInfo.orgId = item.orgId
         this.messageInfo.companyId = item.companyId
@@ -1396,7 +1334,6 @@
             border-left-color: #b4b4b4;
             border-right-color: transparent;
             border-bottom-color: #b4b4b4;
-            /*border-top-color: transparent;*/
             color: #606266;
           }
 
@@ -1418,61 +1355,6 @@
         }
       }
     }
-   /* .sMessageTop {
-      border: 1px solid #b4b4b4;
-      /*border-top: transparent;
-      /*border-bottom: transparent;
-      .el-form-item {
-        margin-bottom: 0;
-        margin-right: -5px;
-        border: 1px solid #b4b4b4;
-        border-left-color: transparent;
-        .el-input__inner {
-          border-top-color: transparent;
-          border-right-color: transparent;
-          border-bottom-color: transparent;
-          width: 185px;
-          border-radius: 0;
-        }
-        .el-input__inner:focus {
-          border-left: 1px solid #dcdfe6;
-        }
-      }
-      .el-form-item:nth-of-type(6) {
-        border-right-color: transparent;
-      }
-      .el-form-item:nth-of-type(7) {
-        border-top-color: transparent;
-      }
-      .el-form-item:nth-of-type(8) {
-        border-top-color: transparent;
-      }
-      .el-form-item:nth-of-type(9) {
-        border-top-color: transparent;
-      }
-      .el-form-item:nth-of-type(10) {
-        border-top-color: transparent;
-      }
-      .el-form-item:nth-of-type(11) {
-        border-top-color: transparent;
-      }
-      .el-form-item:nth-of-type(12) {
-        border-top-color: transparent;
-        border-right-color: transparent;
-      }
-      .el-form-item:nth-last-of-type(2) {
-        border-top-color: transparent;
-      }
-      .sWetPay {
-        width: 83.4%;;
-        border-top-color: transparent;
-        border-right-color: transparent;
-      }
-      .el-input.is-disabled .el-input__inner {
-        background-color: transparent;
-        color: #666666;
-      }
-    }*/
     .sMessageCont {
       .sMessageCont_info {
         background-color: #e2eaff;
@@ -1519,134 +1401,6 @@
         cursor: pointer;
       }
     }
-
-    /*待定*/
-    /*.sBottom{*/
-      /*.sMessageBut{*/
-        /*.el-form{*/
-          /*margin-bottom: 180px;*/
-
-          /*ul:first-of-type{*/
-            /*li{*/
-              /*border: 1px solid #b4b4b4;*/
-              /*.el-form-item{*/
-                /*margin-bottom: 0;*/
-                /*margin-right: 0;*/
-                /*height: 28px;*/
-                /*line-height: 28px;*/
-                /*.el-form-item__label:first-of-type{*/
-                  /*padding-left: 10px;*/
-                  /*text-align: left;*/
-                /*}*/
-              /*}*/
-
-
-              /*p{*/
-                /*text-align: left;*/
-                /*font-size: 14px;*/
-                /*color: #668cf0;*/
-                /*padding: 4px 0 5px 10px;*/
-                /*font-weight: 600;*/
-              /*}*/
-
-                /*.el-input__inner{*/
-                  /*border-left-color: #b4b4b4;*/
-                  /*border-right-color: transparent;*/
-                  /*border-bottom-color: #b4b4b4;*/
-                  /*border-top-color: transparent;*/
-                /*}*/
-
-                /*.el-input__inner:focus {*/
-                  /*border-left-color: #b4b4b4;*/
-                  /*border-top-color: transparent;*/
-                  /*border-right-color: transparent;*/
-                  /*border-bottom-color: #b4b4b4;*/
-                  /*outline: 0;*/
-                /*}*/
-                /*.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {*/
-                  /*border-color: #b4b4b4;*/
-                /*}*/
-
-
-            /*}*/
-          /*}*/
-          /*ul:last-of-type{*/
-            /*display: flex;*/
-
-            /*li{*/
-
-              /*flex: 1;*/
-              /*border: 1px solid #b4b4b4;*/
-              /*!*border-left: 1px solid #b4b4b4;;*!*/
-              /*!*border-right: 1px solid #b4b4b4;;*!*/
-              /*!*border-bottom: 1px solid #b4b4b4;;*!*/
-
-              /*.el-form-item{*/
-                /*margin-bottom: 0;*/
-                /*margin-right: 0;*/
-                /*height: 28px;*/
-                /*line-height: 28px;*/
-              /*}*/
-              /*.el-form-item--mini.creatTimeItem{*/
-                /*.el-form-item__label{*/
-                  /*width: 65px !important;*/
-                /*}*/
-
-              /*}*/
-              /*.el-form-item__label{*/
-                /*text-align: left;*/
-
-              /*}*/
-                /*.el-input__inner{*/
-                  /*border: 1px solid #b4b4b4;*/
-                  /*!*border-left-color: #b4b4b4;*!*/
-                  /*!*border-right-color: transparent;*!*/
-                  /*!*border-bottom-color: #b4b4b4;*!*/
-                  /*!*border-top-color: transparent;*!*/
-                /*}*/
-
-                /*.el-input__inner:focus {*/
-                  /*border: 1px solid #b4b4b4;*/
-                  /*!*border-left-color: #b4b4b4;*!*/
-                  /*!*border-top-color: transparent;*!*/
-                  /*!*border-right-color: transparent;*!*/
-                  /*!*border-bottom-color: #b4b4b4;*!*/
-                  /*outline: 0;*/
-                /*}*/
-                /*.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {*/
-                  /*border-color: #b4b4b4;*/
-                /*}*/
-
-
-            /*}*/
-
-            /*li:first-of-type{*/
-              /*.el-form-item__label:first-of-type{*/
-                /*padding-left: 10px;*/
-              /*}*/
-            /*}*/
-          /*}*/
-        /*}*/
-      /*}*/
-    /*}*/
-    /*@media screen and (max-width: 1980px) {*/
-      /*.sMessageBut {*/
-        /*.el-form {*/
-          /*!*.el-form ul:last-of-type li .el-input__inner*!*/
-          /*ul:last-of-type{*/
-            /*li{*/
-              /*.el-input__inner{*/
-                /*border: 1px solid #b4b4b4;*/
-              /*}*/
-              /*.el-input__inner:focus {*/
-                /*border: 1px solid #b4b4b4;*/
-                /*outline: 0;*/
-              /*}*/
-            /*}*/
-          /*}*/
-        /*}*/
-      /*}*/
-    /*}*/
 
 
 

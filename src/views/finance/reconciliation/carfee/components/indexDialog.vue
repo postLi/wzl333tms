@@ -3,10 +3,6 @@
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <div class="depmain-div" >
-          <!--<div class="dialogMoney">-->
-
-          <!--对账总金额：<span>{{totaMoney}}元</span>-->
-          <!--</div>-->
           <el-table
             ref="multipleTable"
             :data="dialogInfo"

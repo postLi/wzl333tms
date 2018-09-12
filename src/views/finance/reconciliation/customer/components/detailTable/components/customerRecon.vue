@@ -16,14 +16,9 @@
                         @blur="tooltip = false;disabledName = true"
                         @mouseenter.native=" disabledName === true && (tooltip = true)"
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
-              <!--@blur="tooltip = false;disabledName = true"-->
-              <!--@mouseout.native="tooltip = false;disabledName = true"-->
-              <!--<template slot-scope="scope">-->
-              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-              <!--</template>-->
+
             </el-tooltip>
 
-            <!--<el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>-->
           </el-form-item>
         </div>
         <div class="sDate">
@@ -112,12 +107,6 @@
           tooltip-effect="dark"
           :default-sort="{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -588,12 +577,6 @@
           tooltip-effect="dark"
           :default-sort="{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
@@ -1142,7 +1125,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 18) {
+          if (index === 3 || index === 4 || index === 5 ) {
             sums[index] = ''
             return
           }
@@ -1152,7 +1135,6 @@
               const value = Number(curr)
               if (!isNaN(value)) {
                 return tmsMath._add(prev , curr)
-                // return prev + curr
               } else {
                 return prev
               }

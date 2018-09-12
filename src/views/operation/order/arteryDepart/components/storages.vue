@@ -677,18 +677,14 @@
         ],
         rules: {
           contractName: [
-            // {message: '只能输入字母和数字', pattern: REGEX.ONLY_NUMBER_AND_LETTER,trigger:'blur'}
-            // {required: true, this.validateIsEmpty('合同名称不能为空!')}
-            {required: true, validator: this.validateIsEmpty('合同名称不能为空!'), trigger: 'blur'}
+            {required: true, message:'合同名称不能为空!', trigger: 'blur'}
           ],
           contractNo: [
-            {required: true, validator: this.validateIsEmpty('合同编号不能为空!'), trigger: 'blur'},
+            {required: true, message:'合同编号不能为空!', trigger: 'blur'},
             {message: '只能输入字母和数字', pattern: REGEX.ONLY_NUMBER_AND_LETTER}
-            // {required: true, message: '合同编号不能为空!'}
           ],
           nomineeCompany: [
-            {required: true, validator: this.validateIsEmpty('委托方不能为空!'), trigger: 'blur'}
-            // {required: true, message: '委托方不能为空!'}
+            {required: true, message:'委托方不能为空!', trigger: 'blur'}
           ]
         },
         sendContract: {
@@ -696,13 +692,7 @@
           nomineeCompany: '',
           contractName: '',
           contractNo: '',
-          remark: '',
-          // "loadId":"修改的配载id",
-          // "nomineeCompany":"委托方",
-          // "contractName":"合同名称",
-          // "contractNo":"合同编号",
-          // "remark":"备注"
-
+          remark: ''
         }
 
       }
@@ -778,25 +768,13 @@
       fetchGetLookContract() {
         this.loading = true
         let loadId = this.propsId
-        // console.log(loadId, '获取id1')
         return getLookContract(loadId).then(data => {
           this.sendContract = data.data
-          // console.log(data, '获取id')
           this.loading = false
         }).catch(err => {
           this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
 
-      },
-      validateIsEmpty(msg = '不能为空！') {
-        return (rule, value, callback) => {
-          if (!value) {
-            // this.showMessage(msg)
-            callback(new Error(msg))
-          } else {
-            callback()
-          }
-        }
       },
       handleClick(tab, event) {
         this.isFootFirst = false
@@ -812,14 +790,9 @@
           this.editFn = false
         }
       },
-      // activeECheckBillName:false,
-      // activeSCheckBillName:false,
-      // activeRCheckBillName:false,
       editCheckBillName() {
         this.activeECheckBillName = true
         this.editFn = true
-
-
       },
       saveCheckBillName(formName) {
         this.$refs[formName].validate((valid) => {
@@ -831,12 +804,8 @@
                 message: '保存成功'
               })
               this.$emit('success')
-              // this.closeMe()
               this.activeECheckBillName = false
               this.editFn = false
-              this.loading = false
-            }).catch(err => {
-              this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
               this.loading = false
             })
 
@@ -859,8 +828,6 @@
           this.formModel = data.list[0]
           this.sendContract.loadId = this.formModel.loadId
           this.loading = false
-        }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
 
       },
@@ -871,9 +838,6 @@
           this.usersArr = data
           this.loading = false
           this.toggleAllRows()
-          // this.$refs.multipleTable.toggleRowSelection(e, true)
-        }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
 
       },
@@ -881,18 +845,11 @@
         let id = this.propsId
         return getLoadDetail(id).then(data => {
           this.trackDetail = Object.assign([], data)
-        }).catch((err) => {
-          this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
       },
       toggleAllRows() {
         this.$nextTick(() => {
           this.usersArr.forEach((e, index) => {
-            // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-            //   this.$refs.multipleTable.toggleRowSelection(e, false)
-            // } else {
-            //   this.$refs.multipleTable.toggleRowSelection(e, true)
             // }
             this.$refs.multipleTable.toggleRowSelection(e, true)
           })

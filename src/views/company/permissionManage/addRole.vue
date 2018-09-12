@@ -36,14 +36,12 @@
                   <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span v-if="data.status===0">
                       <img src="../../../assets/icom/link.png" alt="">
-                      {{ node.label }} 
-                      <!-- <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()"> -->
+                      {{ node.label }}
                       {{ node.label }}
                       </span>
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
-                      {{ node.label }} 
-                      <!-- <input type="text" :value="data.code" v-clipboard:copy='data.code' onmouseover="this.select()"> -->
+                      {{ node.label }}
                       </span>
                   </span>
                 </el-tree>
@@ -111,7 +109,6 @@
           this.formInline = objectMerge2(this.theUser || {})
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         }
-        // 参照
         if (this.reference) {
           this.formInline.menusId = this.theUser.id
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
@@ -119,6 +116,7 @@
           this.popTitle = '新增角色'
           this.result()
         }
+        this.roleKey = Math.random()
       },
       reference() {
         if (this.reference) {
@@ -156,7 +154,7 @@
       return {
         rules: {
           roleName: [
-            { required: true, message: '请输入角色名称', validator: roleName },
+            { required: true, message: '请输入角色名称', validator: roleName , trigger: 'blur'},
             { max: 12, message: '最多可输入12个字符' }
           ],
           remarks: [
@@ -181,7 +179,6 @@
       }
     },
     mounted() {
-      // this.treeData = this.dotInfo
     },
     methods: {
       newInfoData() {

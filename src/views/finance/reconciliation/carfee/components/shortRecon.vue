@@ -7,7 +7,6 @@
 
         <div class="sTitle">
           <el-form-item label="">
-            <!--<el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>-->
 
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
@@ -18,11 +17,7 @@
                         @blur="tooltip = false;disabledName = true"
                         @mouseenter.native=" disabledName === true && (tooltip = true)"
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
-              <!--@blur="tooltip = false;disabledName = true"-->
-              <!--@mouseout.native="tooltip = false;disabledName = true"-->
-              <!--<template slot-scope="scope">-->
-              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-              <!--</template>-->
+
             </el-tooltip>
 
           </el-form-item>
@@ -38,7 +33,6 @@
               <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
                          :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
-            <!--<querySelect search="truckIdNumber"  show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />-->
 
           </el-form-item>
 

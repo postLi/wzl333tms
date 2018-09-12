@@ -21,11 +21,9 @@
             <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain v-has:PERMISSION_DELETE>删除</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain v-has:PERMISSION_COPY>参照</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain v-has:PERMISSION_LINK>关联员工</el-button>
-            <!--表格功能-->
+
           </div>
         </div>
-        <!--表格功能-->
-        <!--表格内容-->
         <div class="info_news">
           <el-table
             ref="multipleTable"
@@ -58,9 +56,9 @@
               label="创建者">
             </el-table-column>
             <el-table-column
-              label="创建时间">
+              label="创建时间"
+              prop="createTime">
 
-              <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d}') }}</template>
             </el-table-column>
             <el-table-column
               prop="remark"
@@ -68,7 +66,6 @@
             </el-table-column>
           </el-table>
         </div>
-        <!--表格内容-->
 
       </div>
     </div>
@@ -77,9 +74,6 @@
     <div class="info_table_footer">
 
       <div class="total_footer">共计:{{ usersArr.length }}</div>
-<!--       <div class="show_pager">
-        <Pager :total="total" @change="handlePageChange"/>
-      </div> -->
     </div>
   </div>
 </template>
@@ -89,13 +83,11 @@
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
-  // import DepMaintain from './depMaintain'
   export default {
     name: 'permissionManage',
     components: {
       AddRole,
       RelationPer
-      // DepMaintain
     },
     computed: {
       ...mapGetters([
@@ -110,7 +102,6 @@
           roleName: '',
           id: ''
         },
-        // 加载状态
         btnsize: 'mini',
         loading: true,
         addRelatVisible: false,
@@ -120,18 +111,13 @@
         isModify: false,
         isReference: false,
         formLabelWidth: '120px',
-        // 表格内容
         selected: [],
         usersArr: [],
         getTreeArr: [],
-        // 保存要修改的角色
         theUser: {},
         thePer: {},
         theMentInfo: {},
         thePerAllUser: {},
-        // 左边树形初始化数据
-        getOrgId: '', // 根据组织id获取列表
-        // 缓存节点数据
         orgInfoCache: {}
       }
     },
@@ -152,7 +138,7 @@
       fetchAllUser(orgid, username, mobilephone) {
         return getAllUser(orgid, username || '', mobilephone || '')
       },
-      getSeachInfo(orgid, roleName, pageNum, pagesize) {
+      getSeachInfo(orgid, roleName) {
         if (roleName) {
           this.searchDate.roleName = roleName
           getAuthInfo(this.otherinfo.orgid, this.searchDate.roleName).then(res => {
@@ -191,17 +177,15 @@
         this.selected = selected
       },
       doAction(type) {
-        //  判断是否有选中项
         if (!this.selected.length && type !== 'addRole' && type !== 'depMain' && type !== 'deletePeople') {
           this.$message({
-            message: '请选择要操作的员工~',
+            message: '请选择要操作的角色~',
             type: 'warning'
           })
           return false
         }
 
         switch (type) {
-          // 新增角色
           case 'addRole':
             this.theUser = {}
             this.addDoRoleVisible = true
@@ -210,7 +194,6 @@
             this.isReference = false
 
             break
-        // 修改角色
           case 'roleNot':
             if (this.selected.length > 1) {
               this.$message({
@@ -226,7 +209,6 @@
             this.theUser = this.selected[0]
             this.getTreeInfo()
             break
-        //  参照isReference
           case 'reference':
             if (this.selected.length > 1) {
               this.$message({
@@ -243,7 +225,6 @@
               this.getTreeInfo()
             }
             break
-        // 关联员工
           case 'relationPer':
             if (this.selected.length > 1) {
               this.$message({
@@ -259,12 +240,10 @@
               this.thePer = this.selected[0]
             }
             break
-        //    删除员工
           case 'deletePeople':
             this.addDoRoleVisible = false
             this.addRelatVisible = false
             const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].roleName
-            // =>todo 删除多个
             let ids = ''
             this.selected.map(item => {
               ids += item.id + ','
@@ -296,10 +275,8 @@
             })
             break
         }
-        // 清除选中状态，避免影响下个操作
         this.$refs.multipleTable.clearSelection()
       },
-      // 表头筛选
       filterTag(value, row) {
         return row.tag === value
       },
