@@ -14,7 +14,7 @@
           <div class="loadInfo_content">
             <div class="content_left">
               <el-form :model="intelligentLeftData" :size="btnsize" ref="formModel" label-width="65px"
-                       :rules="formModelRules">
+                       >
                 <el-form-item label="到达网点" prop="arriveOrgid">
                   <SelectTree v-model="intelligentLeftData.arriveOrgid" :orgid="otherinfo.orgid" clearable
                               class="orgClass" disabled></SelectTree>
@@ -29,8 +29,7 @@
             <div class="loadInfo_collapse">
               <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="76px" :inline="true"
                        label-position="right" size="mini" class="loadInfo_collapse_list" :key="valkey">
-                <!-- <el-form :model="intelligentData" label-width="63px" inline class="loadInfo_collapse_list"> -->
-                <div class="loadInfo_item" v-for="(item, index) in dataList"
+                <div class="loadInfo_item" v-for="(item, index) in intelligentData.dataList"
                      :style="{width: showCurrenFormStyle[index]?'calc(100% - 185px)': ''}" v-show="isShowCurPages">
                   <el-button class="verticalBtn" @click="selectCurrentTuck(item, index)"
                              :class="{'verticalBtnActive':showCurrenFormStyle[index]}">
@@ -44,10 +43,11 @@
                         <el-input disabled :size="btnsize" v-model="item.name"></el-input>
 
                       </el-form-item>
-                      <el-form-item label="车牌号" prop="" :key="changeTruckKey" prop="truckIdNumber">
-                        <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.truckIdNumber"
+                      <el-form-item label="车牌号" :key="changeTruckKey" :prop="`dataList.${index}.truckIdNumber`" 
+                      :rules="{required: true, message: '请选择车牌号~'}">
+                        <el-autocomplete popper-class="lll-autocomplete" v-model="item.truckIdNumber"
                                          :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini"
-                                         @select="handleSelectTruckNum" auto-complete="off" @blur="blurTruck"
+                                         @select="(val) => handleSelectTruckNum(val,index)" auto-complete="off" @blur="blurTruck"
                                          :maxlength="8">
                           <i class="intAddF" slot="suffix" @click="doAction('addTruck')"><icon-svg icon-class="inadd_lll"></icon-svg></i>
                           <template slot-scope="{ item }">
@@ -69,16 +69,17 @@
                       </el-form-item>
                     </div>
                     <div class="loadInfo_item_form_row">
-                      <el-form-item label="车费" prop="">
+                      <el-form-item label="车费">
                         <el-input :size="btnsize" v-model="item.price">
                           <i class="intEditF" slot="suffix"
                              @click="addFreight(item.price, index)"><icon-svg icon-class="intlDel_lll"></icon-svg></i>
                         </el-input>
                       </el-form-item>
-                      <el-form-item label="司机" prop="dirverName" class="formItemTextDanger" :key="changeDriverKey">
-                        <el-autocomplete popper-class="lll-autocomplete" v-model="intelligentData.dirverName"
+                      <el-form-item label="司机" class="formItemTextDanger" :key="changeDriverKey" :prop="'dataList.'+index+'.dirverName'" 
+                      :rules="{required: true, message: '请选择司机~'}">
+                        <el-autocomplete popper-class="lll-autocomplete" v-model="item.dirverName"
                                          :fetch-suggestions="querySearch" placeholder="司机名称" size="mini"
-                                         @select="handleSelectName" auto-complete="off" :maxlength="10">
+                                         @select="(val) => handleSelectName(val, index)" auto-complete="off" :maxlength="10">
                           <i class="intAddF" slot="suffix" @click="doAction('addDriver')">
                             <icon-svg icon-class="inadd_lll"></icon-svg>
                           </i>
@@ -90,11 +91,12 @@
                           </template>
                         </el-autocomplete>
                       </el-form-item>
-                      <el-form-item label="司机电话" prop="dirverMobile">
-                        <el-input v-model="intelligentData.dirverMobile"></el-input>
+                      <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" 
+                      :rules="{required: true, message: '请选择司机电话~'}">
+                        <el-input v-model="item.dirverMobile"></el-input>
                       </el-form-item>
                       <el-form-item label="到达日期">
-                        <el-date-picker size="mini" v-model="intelligentData.planArrivedTime"
+                        <el-date-picker size="mini" v-model="item.planArrivedTime"
                                         value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                         </el-date-picker>
                         <!--<el-date-picker size="mini" v-model="intelligentData.planArrivedTime"-->
@@ -126,7 +128,7 @@
                    :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible"
                    @close="closeAddDriver" @success="fetchData"></addDriverInfo>
     <AddLntelligentFreight :popVisible.sync="lntelligentFVisible" @close="openlntelligent"
-                           @getIntFreight="getIntFreight" :intFreightItem="intFreightItem" :sendDataList="dataList"
+                           @getIntFreight="getIntFreight" :intFreightItem="intFreightItem" :sendDataList="intelligentData.dataList"
                            :intFreightIndex="intFreightIndex"></AddLntelligentFreight>
   </div>
 </template>
@@ -205,22 +207,25 @@
         contractNo: '',
         intelligentRouterData: [],
         intelligentData: {
-
-          contractNo: '',
-          batchNo: '',
-          batchTypeId: 52,
-          loadTypeId: 39,
-          truckIdNumber: '',
-          dirverName: '',
-          dirverMobile: '',
-          truckLoad: '',
-          truckVolume: '',
-          loadTime: parseTime(new Date()),
-          planArrivedTime: '',
-          requireArrivedTime: '',
-          truckUserId: '',
-          remark: ''
+          orgid: '',
+          dataList: []
         },
+        // intelligentData: {
+        //   contractNo: '',
+        //   batchNo: '',
+        //   batchTypeId: 52,
+        //   loadTypeId: 39,
+        //   truckIdNumber: '',
+        //   dirverName: '',
+        //   dirverMobile: '',
+        //   truckLoad: '',
+        //   truckVolume: '',
+        //   loadTime: parseTime(new Date()),
+        //   planArrivedTime: '',
+        //   requireArrivedTime: '',
+        //   truckUserId: '',
+        //   remark: ''
+        // },
         intelligentLeftData: {
           apportionTypeId: '',
           arriveOrgid: '',
@@ -248,7 +253,7 @@
         currentIndex: 0,
         formModelRules: {},
         changeNumCN: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十','十一','十二','十三','十四'],
-        dataList: [{}, {}, {}],
+        dataList: [],
         pretruckDisable: true,
         nexttruckDisable: false,
         loadDataArray: [],
@@ -267,15 +272,15 @@
       },
       dofo: {
         handler(newVal) {
-          this.dataList = this.dofo
-          this.dataList.forEach((e, index) => {
+          this.intelligentData.dataList = this.dofo
+          this.intelligentData.dataList.forEach((e, index) => {
             let data = {}
             this.$set(data, 'nowpayCarriage', e.price)
             this.$set(e, 'tmsOrderLoadFee', data)
             data = {}
           })
           this.$emit('truckIndex', this.currentIndex)
-          this.$emit('truckPrecent', this.dataList[0])
+          this.$emit('truckPrecent', this.intelligentData.dataList[0])
         }
       },
       loadTable: {
@@ -311,7 +316,7 @@
       getIntFreight(data) {
         this.intFreight = data.val
         this.intFreightObj = data.obj
-        this.$set(this.dataList[this.intFreightIndex], 'price', this.intFreight)
+        this.$set(this.intelligentData.dataList[this.intFreightIndex], 'price', this.intFreight)
 
       },
       doAction(type) {
@@ -352,37 +357,7 @@
       },
       getSystemTime() { // 获取系统时间
       },
-      querySearch(queryString, cb) {
-        const driverList = this.Drivers
-        const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
-        // 调用 callback 返回司机列表的数据
-        cb(results)
-      },
-      querySearchTruck(queryString, cb) {
-        const truckList = this.Trucks
-        const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
-        // 调用 callback 返回车辆列表的数据
-        cb(results)
-      },
-      createFilter(queryString, prop) {
-        return (data) => {
-          if (data[prop]) {
-            return (queryString.test(data[prop]))
-          }
-        }
-      },
-      blurTruck() { // 车牌输入框失去响应时
-        const data = ''
-        // this.Trucks.find(el => {
-        //   if (this.formModel.truckIdNumber === el.truckIdNumber) {
-        //     this.formModel.truckIdNumber = el.truckIdNumber
-        //   } else {
-        //     this.formModel.truckIdNumber = undefined
-        //   }
-        // })
-      },
       init() {
-
         this.intelligentData = this.$options.data().intelligentData
         // this.$refs['ruleForm'].resetFields()
         // this.setLoadTypeId()
@@ -397,7 +372,7 @@
         }
 
       },
-      initInfo() {
+      initInfo() { // 车牌号和司机信息 init
         this.loading = false
         // this.truckKey = new Date().getTime()
         // this.driverKey = new Date().getTime()
@@ -435,28 +410,52 @@
           })
         }
       },
-      handleSelectName(item) {
-        // this.driverKey = new Date().getTime()
-        this.changeDriverKey = Math.random()
-        if (this.intelligentData.truckIdNumber === '' || this.intelligentData.truckIdNumber === undefined) {
-          this.intelligentData.truckIdNumber = item.truckIdNumber
+      querySearch(queryString, cb) {
+        const driverList = this.Drivers
+        console.log('this.Drivers', this.Drivers)
+        // const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
+        const results = queryString ? driverList.filter(this.createFilter(queryString)) : driverList
+        // 调用 callback 返回司机列表的数据
+        cb(results)
+      },
+      querySearchTruck(queryString, cb) {
+        const truckList = this.Trucks
+        console.log('this.Trucks', this.Trucks)
+        // const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
+        const results = queryString ? truckList.filter(this.createFilter(queryString)) : truckList
+        // 调用 callback 返回车辆列表的数据
+        cb(results)
+      },
+      createFilter(queryString, prop) {
+        return (data) => {
+          console.log(data,'sdfsdf')
+          prop=""
+          if (data[prop]) {
+            return (queryString.test(data[prop]))
+          }
         }
-        this.intelligentData.dirverMobile = item.driverMobile
-        this.intelligentData.dirverName = item.driverName
+      },
+      blurTruck() { // 车牌输入框失去响应时
+        const data = ''
+      },
+      handleSelectName(item,index) {
+        this.changeDriverKey = Math.random()
+        if (this.intelligentData.dataList[index].truckIdNumber === '' || this.intelligentData.dataList[index].truckIdNumber === undefined) {
+          this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
+        }
+        this.intelligentData.dataList[index].dirverMobile = item.driverMobile
+        this.intelligentData.dataList[index].dirverName = item.driverName
         this.isDriverSelect = true
       },
-      handleSelectTruckNum(item) {
-
-        // this.truckKey = new Date().getTime()
+      handleSelectTruckNum(item, index) {
         this.changeTruckKey = Math.random()
-        this.intelligentData.truckIdNumber = item.truckIdNumber
-        this.intelligentData.dirverMobile = item.driverMobile
-        this.intelligentData.dirverName = item.driverName
-
-        this.$set(this.intelligentData, 'truckLoad', Number(item.truckLoad))
-        this.$set(this.intelligentData, 'truckVolume', Number(item.truckVolume))
-        // this.formModel.truckLoad = item.truckLoad
-        // this.formModel.truckVolume = item.truckVolume
+        this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
+        this.intelligentData.dataList[index].dirverMobile = item.driverMobile
+        this.intelligentData.dataList[index].dirverName = item.driverName
+        this.intelligentData.dataList[index].weight = item.truckLoad
+        this.intelligentData.dataList[index].volume = item.truckVolume
+        this.$set(this.intelligentData.dataList[index], 'truckLoad', Number(item.truckLoad))
+        this.$set(this.intelligentData.dataList[index], 'truckVolume', Number(item.truckVolume))
       },
       fetchData() {
         this.initInfo() // 添加完司机或车辆之后，刷新下拉数据
@@ -483,7 +482,7 @@
       setData() {
         let arr = []
         let data = {} // 数组中的单个对象
-        arr = Object.assign([], this.dataList)
+        arr = Object.assign([], this.intelligentData.dataList)
         arr.forEach((e, index) => {
           this.$set(arr[index], 'carLoadDetail', this.loadTable[index])
           if (index === this.intFreightIndex) {
@@ -536,7 +535,6 @@
               if (valid) {
                 this.loading = true
                 this.setData()
-                // console.log('loadDataArray', this.loadDataArray)
                 postIntnteSmartLoad(this.loadDataArray).then(res => {
                   this.$message({type: 'success', message: '保存配载'})
                   this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
@@ -554,34 +552,32 @@
         })
       },
       changeLoadNum(val, index, type) {
-
-        this.$emit('truckPrecent', this.dataList[index])
+        this.$emit('truckPrecent', this.intelligentData.dataList[index])
       },
       selectCurrentTuck(item, index) {
         this.currentIndex = index
         this.showCurrenFormStyle = []
         this.showCurrenFormStyle[index] = true
         this.$emit('truckIndex', this.currentIndex)
-        this.$emit('truckPrecent', this.dataList[this.currentIndex])
+        this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
       },
       delCurTruck(index,item){
         this.$message.warning('暂无此功能！')
         // this.currentIndex = index
         // this.$emit('truckIndex', this.currentIndex)
-        // this.dataList =  this.dataList.filter((e, index) => {
+        // this.intelligentData.dataList =  this.intelligentData.dataList.filter((e, index) => {
         //   return index !== this.currentIndex
         // })
         // console.log(index)
       },
       addtuck() {
         ++this.currentIndex
-        this.dataList.push({})
-        this.intelligentData.push({})
+        this.intelligentData.dataList.push({})
         this.$emit('truckIndex', this.currentIndex)
-        this.$emit('truckPrecent', this.dataList[this.currentIndex])
+        this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
       },
       pretruck() { // 展示上一个车型
-        if (this.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
+        if (this.intelligentData.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
           this.pretruckDisable = true
           this.nexttruckDisable = true
         } else {
@@ -597,16 +593,16 @@
               this.pretruckDisable = true
             }
           }
-          this.$emit('truckPrecent', this.dataList[this.currentIndex])
+          this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
         }
         this.$emit('truckIndex', this.currentIndex)
       },
       nexttruck() { // 展示下一个车型
-        if (this.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
+        if (this.intelligentData.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
           this.pretruckDisable = true
           this.nexttruckDisable = true
         } else {
-          if (this.currentIndex === this.dataList.length - 1) {
+          if (this.currentIndex === this.intelligentData.dataList.length - 1) {
             this.nexttruckDisable = true
             this.pretruckDisable = false
           } else {
@@ -614,16 +610,16 @@
             this.showCurrenFormStyle = []
             this.showCurrenFormStyle[this.currentIndex] = true
             this.pretruckDisable = false
-            if (this.currentIndex === this.dataList.length - 1) {
+            if (this.currentIndex === this.intelligentData.dataList.length - 1) {
               this.nexttruckDisable = true
             }
           }
         }
-        // if (this.dataList.length / this.truckPageSize > parseInt(this.dataList.length / this.truckPageSize)) {
+        // if (this.intelligentData.dataList.length / this.truckPageSize > parseInt(this.intelligentData.dataList.length / this.truckPageSize)) {
 
         // }
         this.$emit('truckIndex', this.currentIndex)
-        this.$emit('truckPrecent', this.dataList[this.currentIndex])
+        this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
       }
     }
   }

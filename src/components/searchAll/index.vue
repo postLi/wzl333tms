@@ -13,7 +13,7 @@
     </el-autocomplete>
     <el-button plain  @click="Custom">保存自定义</el-button>
   </el-form-item>
-  <addSave :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify"/>
+  <addSave :searchObj="searchObj" :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="loadAll" :isModify="isModify"/>
 </div>
 </template>
 <script>
@@ -23,11 +23,16 @@ export default {
   components: {
     addSave
   },
+  props: {
+    searchObj: {
+      type: [Object, Array]
+    }
+  },
   data() {
     return {
       dotInfo: [],
       isModify: false,
-      popVisible: false,
+      popVisible: false,       
       setupTableVisible: false,
       dataset: [],
       datalist: '',
@@ -43,6 +48,20 @@ export default {
       }
     }
   },
+  watch: {
+    searchObj: {
+      handler(cval, oval) {
+        this.$nextTick(() => {
+          console.log('searchAll_cval',cval, oval)
+        })
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    console.log('werwer',this.searchObj)
+    this.loadAll()
+  },
   methods: {
     fetchAllreceipt() {
     },
@@ -53,7 +72,7 @@ export default {
     closeAddDot() {
       this.popVisible = false
     },
-    loadAll() {
+    fetchAllloadAll() {
       this.querySearch.vo.orgId = this.otherinfo.orgid
       this.querySearch.vo.userId = this.otherinfo.userId
       this.querySearch.vo.menuCode = this.$route.meta.code
@@ -76,9 +95,6 @@ export default {
       this.datalist = item.queryKey
       this.$emit('change', JSON.parse((item.queryContent).replace(/'/g, '"')))
     }
-  },
-  mounted() {
-    this.loadAll()
   }
 }
 </script>
