@@ -384,6 +384,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
+          selectedMode: 'single',
           selected: {
             '运单数': true,
             '体积': false,
