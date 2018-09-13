@@ -30,7 +30,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" v-model.number="column.slot(scope)"  :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -66,7 +66,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input :value="scope.row.notReceiptpayFee"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
+                  <el-input :value="scope.row.notReceiptpayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -105,6 +105,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       currentSearch: '',
       tablekey: '',
       truckMessage: '',
@@ -345,6 +346,11 @@ export default {
       this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
         [prop]: Number(newVal)
       }))
+      if (this.rightTable[index].notReceiptpayFee !== newVal) {
+        this.textChangeDanger[index] = true
+      }else {
+        this.textChangeDanger[index] = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名

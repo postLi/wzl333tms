@@ -13,7 +13,7 @@
         <span class="kuai7"></span>
         <span class="kuai8"></span>
         <span class="kuai9"></span>
-        <span class="kuai10" @animationend="click=true"></span>
+        <span class="kuai10" @animationend="openInteligent"></span>
       </div>
         <span class="yinying"></span>
       <span class="lunzi lunzi1"></span>
@@ -48,7 +48,7 @@
     methods: {
       openInteligent() {
         // console.log(JSON.parse(this.$route.query.sendData),this.$route)
-        if (this.click) {
+        // if (this.click) {
           this.$router.push(
             {
               path: '/operation/order/loadIntelligent/index',
@@ -59,7 +59,7 @@
               }
             },
           )
-        }
+        // }
         // console.log(this.$route)
       }
     }

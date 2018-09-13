@@ -2,13 +2,13 @@
   <div class="lntelligentPset-maintain">
 
     <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible" class='pickpopDepMain'
-               v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
+                :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
       <div class="depmain-div">
         <div class="carDiv" v-if=isSecond>
           <el-button type="primary" size="mini" icon="el-icon-plus" @click="doAction('addCar')"></el-button>
           <el-button type="danger" size="mini" icon="el-icon-minus" @click="doAction('subCar')"></el-button>
         </div>
-        <div class="tabsDiv">
+        <div class="tabsDiv" v-loading="loading">
           <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
 
             <el-tab-pane name="first">

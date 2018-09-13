@@ -22,6 +22,7 @@ export default {
     path: '/finance/accountsReceivable',
     icon: 'caiwugl1_yingshou',
     name: 'accountsReceivable',
+    redirect: '/finance/accountsReceivable/all',
     component: _import('finance/accountsReceivable/index'),
     meta: { role: ['admin'], title: '应收账款', 'code': 'FINANCE_REC', noCache: false },
     children: [{

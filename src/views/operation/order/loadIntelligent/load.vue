@@ -1,13 +1,12 @@
 <template>
   <div class="loadIntelligent_content">
     <div class="loadIntelligent_main">
-
-      <loadInfo @truckPrecent="getTruckPrecent" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
+      <loadInfo @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable :truckIndex="truckIndex" :loadTable="setLoadTableList" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable"></transferTable>
+        <transferTable :truckIndex="truckIndex" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
@@ -22,6 +21,8 @@
       <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver"
                      :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible"
                      @close="closeAddDriver" @success="fetchData"></addDriverInfo>
+       <!-- 参数设置 -->
+       <AddLntelligent :popVisible.sync="lntelligentVisible"  @close="closelntelligent"></AddLntelligent>
     </div>
   </div>
 </template>
@@ -38,6 +39,7 @@
   import {getDrivers, getTrucK, getSelectAddLoadRepertoryList} from '@/api/operation/load'
   import {getAllDriver} from '@/api/company/driverManage'
   import {getIntnteInit} from '@/api/operation/arteryDepart'
+  import AddLntelligent from '../arteryDepart/components/intelligentParameterSet'
 
   export default {
     name: "load",
@@ -47,7 +49,8 @@
       SelectType,
       addTruckInfo,
       addDriverInfo,
-      loadInfo
+      loadInfo,
+      AddLntelligent
     },
     props: {
       model: {
@@ -62,6 +65,7 @@
           orgId: '',
           standCar: [{}]
         },
+        lntelligentVisible: false,
         isShowViewChart: false,
         isShowViewTable: false, // 穿梭框 false-不全屏 true-全屏
         isModify: false,
@@ -93,6 +97,10 @@
         setLoadTableList: {
           left: [],
           right: []
+        },
+        delCurTruckData: {
+          number: '',
+          list: []
         }
       }
     },
@@ -134,7 +142,6 @@
       // this.infoData()
     },
     methods: {
-
       infoData() {
         let obj = JSON.parse(this.$route.query.sendDate)
         this.sendRoute.orgId = this.$route.query.orgId
@@ -172,7 +179,10 @@
       getTruckPrecent (obj) {
         this.truckPrecent = obj
       },
-      //
+      getDelCurTruck (obj) { // 删除车辆的时候 需要将右边的数据减到左边
+        this.delCurTruckData = Object.assign({}, obj)
+        console.log('this.delCurTruckData', this.delCurTruckData)
+      },
       resizeChart() {
         this.$refs.loadchart.resizeChart()
       },
@@ -222,7 +232,6 @@
           getDrivers().then(data => {
             this.Drivers = data.data
             this.cacheDriverList[orgid] = data.data
-            console.log('Drivers', this.Drivers)
           })
         }
       },
@@ -233,7 +242,6 @@
           getTrucK().then(data => {
             this.Trucks = data.data
             this.cacheTruckList[orgid] = data.data
-            console.log('Trucks', this.Trucks)
           }).catch(error => {
             this.$message.error(error.errorInfo || error.text)
           })
@@ -326,8 +334,13 @@
       },
       showFullViewChart(val) {
         this.isShowViewChart = val
+      },
+      openlntelligent(){
+        this.lntelligentVisible = true
+      },
+      closelntelligent(){
+        this.lntelligentVisible = false
       }
-
     }
   }
 

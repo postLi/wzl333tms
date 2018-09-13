@@ -28,10 +28,11 @@
       </div>
       <div class="transferTable_main_right" style="height:100%;" :style="showRightStyle">
         <div class="transferTable_main_right_head">
-          <b v-if="!isShowLeftTable">配载清单</b><span v-if="!isShowLeftTable"> (可拖拽调整顺序)</span>
+          <b v-if="!isShowLeftTable">配载清单<span v-if="!isShowLeftTable"> (可拖拽调整顺序)</span></b>
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowLeftTable">
             <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
           </el-tooltip>
+          <el-button type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
         </div>
         <el-table draggable='true' @dragstart='drag($event)' ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
@@ -67,6 +68,10 @@ export default {
     loadTable: {
       type: Object,
       default: () => {}
+    },
+    delData: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -76,6 +81,7 @@ export default {
       showTableMessage: '点击展开',
       isShowLeftTable: false,
       isShowRightTable: false,
+      isDel: false, // true-删除车型 false-平常
       orgData: {},
       leftTable: [],
       orgLeftTable: [],
@@ -237,24 +243,34 @@ export default {
         this.orgLeftTable = Object.assign([], cval.left)
         this.leftTable = Object.assign([], cval.left)
         this.initTable()
-        // this.$nextTick(() => {
-        //   this.fetchList()
-        // })
       },
       deep: true
     },
     truckIndex: {
       handler(cval, oval) { // 深度监听车型下标index 例如：0-车型一
         this.initTable()
-      }
+      },
+      deep: true
     },
-    deep: true
+    delData: {
+      handler(cval, oval) { // 删除车型时
+        console.log('delData', cval, oval)
+        this.isDel = true
+        if (cval.list.carLoadDetail && cval.list.carLoadDetail.length > 0) {
+          this.selectedRight = []
+          cval.list.carLoadDetail.forEach(e => {
+            this.selectedRight.push(e)
+          })
+          this.goLeft()
+        }
+      },
+      deep: true
+    }
   },
   mounted() {
     this.tableColumnLeft = Object.assign([], this.tableColumnLeftDepart)
     this.tableColumnRight = Object.assign([], this.tableColumnRightDepart)
     this.initTable()
-    // this.fetchList()
   },
   computed: {
     showLeftStyle() {
@@ -285,11 +301,10 @@ export default {
 
       let arr = [] // 存储所有被配载的运单
       this.orgRightTable.forEach((e, index) => {
-        
         e.forEach(em => {
           em.loadAmount = em.repertoryAmount
-        em.loadWeight = em.repertoryWeight
-        em.loadVolume = em.repertoryVolume
+          em.loadWeight = em.repertoryWeight
+          em.loadVolume = em.repertoryVolume
           arr.push(em)
         })
       })
@@ -371,29 +386,43 @@ export default {
           return el.repertoryId !== e.repertoryId
         })
       })
+      if (this.isDel) { // 判断是否执行了删除操作，如果true就减去被减去的车型数据
+        this.orgRightTable.splice(this.delData.number, 1)
+        this.isDel = false
+      }
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
     },
     goRight() { // 左边穿梭到右边
       this.selectedLeft.forEach((e, index) => {
-        e.loadAmount = e.repertoryAmount
-        e.loadWeight = e.repertoryWeight
-        e.loadVolume = e.repertoryVolume
-        this.rightTable = this.rightTable.filter(em => {
-          return em.repertoryId !== e.repertoryId
+        let find = this.rightTable.filter(em => {
+          return em.repertoryId === e.repertoryId
         })
-        this.orgRightTable[this.truckIndex] = objectMerge2([], this.orgRightTable[this.truckIndex]).filter(em => {
-          return em.repertoryId !== e.repertoryId
-        })
-        this.rightTable.push(e)
-        this.orgRightTable[this.truckIndex].push(e)
-        this.leftTable = this.leftTable.filter(el => {
-          return el.repertoryId !== e.repertoryId
-        })
-        this.orgLeftTable = this.orgLeftTable.filter(el => {
-          return el.repertoryId !== e.repertoryId
-        })
+        if (find.length === 0) {
+          e.loadAmount = e.repertoryAmount
+          e.loadWeight = e.repertoryWeight
+          e.loadVolume = e.repertoryVolume
+          /*this.rightTable = this.rightTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })*/
+          console.log(this.truckIndex)
+          /*this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex].filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })*/
+          this.rightTable.push(e)
+          this.orgRightTable[this.truckIndex].push(e)
+          this.leftTable = this.leftTable.filter(el => {
+            return el.repertoryId !== e.repertoryId
+          })
+          this.orgLeftTable = this.orgLeftTable.filter(el => {
+            return el.repertoryId !== e.repertoryId
+          })
+        }
+
       })
+      this.tablekey = Math.random()
+      console.log('right', this.rightTable.length, this.orgRightTable[this.truckIndex].length)
+      console.log('left', this.leftTable.length, this.orgLeftTable.length)
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
     },
@@ -414,7 +443,7 @@ export default {
     },
     minusItem(row, index) { // 点击按钮- 减去单行
       this.selectedRight = []
-      this.selectedRight[0] = row
+      this.selectedRight[index] = row
       this.goLeft()
     },
     addALLList() { // 添加全部
@@ -426,13 +455,14 @@ export default {
       this.goLeft()
     },
     clickLeftRow(row) {
-      this.selectedLeft = []
-      this.selectedLeft[0] = row
-      // this.$refs.multipleTableLeft.toggleRowSelection(row)
+      console.log(row.shipSn)
+      // this.selectedLeft = []
+      // this.selectedLeft[0] = row
+      this.$refs.multipleTableLeft.toggleRowSelection(row)
     },
     clickRightRow(row) {
-      this.selectedRight = []
-      this.selectedRight[0] = row
+      // this.selectedRight = []
+      // this.selectedRight[0] = row
       this.$refs.multipleTableRight.toggleRowSelection(row)
     },
     getSelectionLeft(list) {},
@@ -450,6 +480,9 @@ export default {
       this.showTableMessage = this.isShowRightTable ? '点击隐藏' : '点击展开'
       console.log(this.isShowRightTable, '右')
       this.$emit('showViewTable', this.isShowRightTable)
+    },
+    paramSet() { // 参数设置
+      this.$emit('openParamSet')
     }
   }
 }
@@ -494,11 +527,13 @@ export default {
         line-height: 30px;
         margin-left: 10px;
         color: red;
+        span {
+          color: #999;
+          font-size: 14px;
+          font-weight:400;
+        }
       }
-      span {
-        color: #999;
-        font-size: 14px;
-      }
+
       .el-button--primary.is-plain {
         float: right;
       }
