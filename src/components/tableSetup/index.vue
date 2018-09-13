@@ -116,37 +116,36 @@
 <script>
 /**
  * 整体逻辑
- * 1.进入页面，判断父组件是否有传code值，没有则从router上拿code值；
+ * 1. 进入页面，判断父组件是否有传code值，没有则从router上拿code值；
  * 1.1 通过code拿到数据后需要跟传过来的column进行合并，如果column中有的字段不在后台数据中，则考虑删除掉；
  * 1.2 如果通过code值拿不到数据，则只取column数据
- * 2.如果获取不到code值，则只读取columns数据；
- * 3.如果没有columns数据，则不进行tablesetup设置；
- * 4.提交的数据格式化，不提交slot等多余属性；
+ * 2. 如果获取不到code值，则只读取columns数据；
+ * 3. 如果没有columns数据，则不进行tablesetup设置；
+ * 4. 提交的数据需格式化，不提交slot等多余属性；
+ *
+ * ====== 特殊情况 =====
+ * 1.一个页面有2个以上的tablesetup组件；（通过传code值区分；如果没有对应的code区分，则传code值为 NOSET）
  */
 import draggable from 'vuedraggable'
 import { objectMerge2 } from '@/utils/index'
+import { getTableSetup, putChangeTableSetup } from '@/api/common'
 export default {
   props: {
     popVisible: {
       type: Boolean,
       default: false
     },
-    issender: {
-      type: Boolean,
-      dafault: false
-    },
     columns: {
       type: Array,
       default: []
+    },
+    code: {
+      type: String,
+      default: ''
     }
   },
   components: {
     draggable
-  },
-  watch: {
-    $route() {
-
-    }
   },
   computed: {
     isShow: {
@@ -229,11 +228,30 @@ export default {
       isCheck: true, // 判断显示列数是否超过50个，false-不可选择 true-可以选择,
       maxLen: MAXLENGTH,
       rightCheckLen: 0,
-      leftCheckLen: 0
+      leftCheckLen: 0,
+      thecode: ''// 需要请求的code值
     }
   },
   mounted() {
-    this.submitForm() // 打开页面就开启表格设置
+    const code = this.code
+    const rcode = this.$route.meta.code
+   // 1 如果显示声明不用请求服务器则不作处理
+    if (code === 'NOSET') {
+      this.submitForm() // 打开页面就开启表格设置
+    } else if (code) {
+     // 2 指定显示的code值
+      this.thecode = code
+    } else if (rcode) {
+     // 3 如果有从链接上拿到code值
+      this.thecode = rcode
+    } else {
+     // 4 其余情况则直接处理
+      this.submitForm()
+    }
+    // 如果有code值则请求处理
+    if (this.thecode) {
+      this.fetchTableSetup()
+    }
   },
   methods: {
     sort(array) { // 从小到大排序
@@ -250,6 +268,27 @@ export default {
           this.goLeft()
           break
       }
+    },
+    // 读取服务器上的设置
+    fetchTableSetup() {
+      return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {
+
+      }).catch(err => {
+        // 如果从服务器上拿取数据出错，则将其当做本地数据处理
+        this.code = ''
+      })
+    },
+    changeTbaleSetup() {
+      if (this.code) {
+        return putChangeTableSetup(this.otherinfo.orgid, this.thecode, this.formatColumn(this.showColumnData)).then(res => {
+
+        }).catach(err => {
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+      }
+    },
+    formatColumn(data) {
+      return data
     },
     checkRightLen() { // 判断右边列表是否超过50个字段
       if (this.showColumnData.length > this.maxLen) {
@@ -412,7 +451,6 @@ export default {
     },
     handleSwitch(obj) {},
     submitForm() {
-      console.log('表格设置开启中')
       const data = Object.assign([], this.showColumnData)
       this.$emit('success', data)
       this.listKey = Math.random()
