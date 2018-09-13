@@ -114,6 +114,15 @@
   </el-dialog>
 </template>
 <script>
+/**
+ * 整体逻辑
+ * 1.进入页面，判断父组件是否有传code值，没有则从router上拿code值；
+ * 1.1 通过code拿到数据后需要跟传过来的column进行合并，如果column中有的字段不在后台数据中，则考虑删除掉；
+ * 1.2 如果通过code值拿不到数据，则只取column数据
+ * 2.如果获取不到code值，则只读取columns数据；
+ * 3.如果没有columns数据，则不进行tablesetup设置；
+ * 4.提交的数据格式化，不提交slot等多余属性；
+ */
 import draggable from 'vuedraggable'
 import { objectMerge2 } from '@/utils/index'
 export default {
@@ -133,6 +142,11 @@ export default {
   },
   components: {
     draggable
+  },
+  watch: {
+    $route() {
+
+    }
   },
   computed: {
     isShow: {
