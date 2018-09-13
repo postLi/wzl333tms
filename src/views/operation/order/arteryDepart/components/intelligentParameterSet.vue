@@ -396,33 +396,6 @@
             return false
           } else {
 
-            // this.definedList = this.selected
-            // let data = {}
-            // let sendData1 = {}
-            // data = this.definedList.filter(el => {
-            //   return el.selectdCheck === false
-            // }).map(el => {
-            //   sendData1 = {
-            //     name: el.name,
-            //     vol: el.vol,
-            //     weight: el.weight
-            //   }
-
-
-            // console.log(this.selectedSys, "是this.selectedSys");
-            // this.systemList = this.selectedSys
-            // let data1 = {}
-            // let sendData3 = {}
-            // data1 = this.systemList.filter(el => {
-            //   return el.selectdCheck === true
-            //
-            // }).map(el => {
-            //   sendData3 = {
-            //     cid: el.cid,
-            //     price: el.price
-            //   }
-            // })
-            // console.log(data1)
 
           }
         } else {
