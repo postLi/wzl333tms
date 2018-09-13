@@ -135,11 +135,12 @@ export default {
       // }
 
       // this.searchObj = Object.assign({}, searchObj)
-      const searchObj = {}
+      const searchObj = Object.assign({}, this.searchForm)
       searchObj.settlementId = this.searchForm.settlementId
       searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
       searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
       this.$emit('change', searchObj)
+      console.log()
     },
     clearForm(formName) {
       this.$nextTick(() => {
