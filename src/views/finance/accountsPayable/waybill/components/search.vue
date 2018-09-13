@@ -46,7 +46,7 @@
         <el-input v-model="searchForm.shipToCityName" clearable  :maxlength="maxlength"></el-input>
         <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" ></querySelect> -->
       </el-form-item>
-      
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -59,10 +59,12 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import searchAll from '@/components/searchAll/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    searchAll
   },
   props: {
     btnsize: {
@@ -94,6 +96,7 @@ export default {
     }
     return {
       maxlength: 25,
+      searchObjs: {},
       searchForm: {
         shipFromOrgid: '',
         orgid: '',
@@ -124,6 +127,23 @@ export default {
       pickerOptions: {
         shortcuts: pickerOptions2
       }
+    }
+  },
+  watch: {
+    orgid(newVal) {
+      this.searchForm.orgid = newVal
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchTime) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+        console.log(this.searchObjs, cval, oval)
+      },
+      deep: true
     }
   },
   mounted() {

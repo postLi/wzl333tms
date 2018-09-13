@@ -28,7 +28,7 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </select-type>
       </el-form-item>
-      <searchAll :searchObj="searchObjs"></searchAll>
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -93,6 +93,7 @@ export default {
         this.onSubmit()
       }
     },
+      // 传到子组件
     searchForm: {
       handler(cval, oval) {
         this.searchObjs = Object.assign({}, cval)
@@ -121,6 +122,11 @@ export default {
         this.searchForm.value = value
         this.searchForm.orgid = ''
       }
+    },
+    // 接收子组件传回来的东西
+    getDataObj(obj) {
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
     },
     onSubmit() {
       const searchObj = {}

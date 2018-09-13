@@ -125,3 +125,38 @@ export function postcreaterQueryCriteriaLog(data) {
       this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
     })
 }
+/**
+ * 根据网点和模块查询表头设置信息
+ * @param {*} orgId 当前网点id
+ * @param {*} module 模块名称
+ */
+export function getTableSetup(orgId, module) {
+  return fetch.get('/api-order/order/tmstitlesetting/v1.1/list', {
+    params: {
+      orgId,
+      module
+    }
+  })
+}
+/**
+ * 修改表头设置信息
+ * @param {*} orgId 当前网点id
+ * @param {*} module 模块名称
+ * @param {*} data 配置数据
+ {
+    "companyId": 0,
+    "fixed": true,
+    "hidden": true,
+    "id": 0,
+    "lable": "string",
+    "orgId": 0,
+    "prop": "string",
+    "titleModule": "string",
+    "titleOrder": 0,
+    "userId": 0,
+    "width": "string"
+  }
+ */
+export function putChangeTableSetup(orgId, module, data) {
+  return fetch.put('/api-order/order/tmstitlesetting/v1.1/?orgId=' + orgId + '&module=' + module, data)
+}
