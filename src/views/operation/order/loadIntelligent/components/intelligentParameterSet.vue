@@ -96,7 +96,11 @@ export default {
       type: [Object, Boolean],
       default: false
     },
-    createrId: [Number, String]
+    createrId: [Number, String],
+    selectTruck: {
+      type: [Array, Object],
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -161,11 +165,15 @@ export default {
       this.infoGetDefinedList.orgid = this.otherinfo.orgid
       this.fetchGetIntnteCarInfo()
       this.fetchGetIntnteCarDefinedInfo()
+    },
+    selectTruck: {
+      handler(newVal) {
+        console.log('newVal', newVal)
+      }
     }
   },
   mounted() {
     if (this.popVisible) {
-
     }
   },
   methods: {
@@ -364,27 +372,30 @@ export default {
       //     console.log('111')
       //   }
       // } else {
-        if ((this.selected && this.selected.length > 0) || (this.selectedSys && this.selectedSys.length > 0)) {
-          putPzcarinfotms(this.selected[0]).then(data => { // 保存修改
-              this.closeMe()
-              this.$message.success('操作成功,只能修改打勾选择的第一项！')
-              let arr = []
-              this.selectedSys.forEach(e => {
-                arr.push(e)
-              })
-              this.selected.forEach(e => {
-                arr.push(e)
-              })
-              this.$emit('savaParamTruck', arr)
-            })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
-            })
-        } else {
-          this.$message.warning('请选择要操作的项~')
-          // this.closeMe()
+      if (this.selectedSys && this.selectedSys.length > 0) {
+        if ( this.selected.length === 0) {
+          this.$emit('savaParamTruck', this.selectedSys)
+          this.$message.success('参数设置成功！')
+          this.closeMe()
         }
-      // }
+      }
+      if (this.selected && this.selected.length > 0) {
+        putPzcarinfotms(this.selected[0]).then(data => { // 保存修改
+            this.closeMe()
+            this.$message.success('操作成功,只能修改打勾选择的第一项！')
+            let arr = []
+            this.selectedSys.forEach(e => {
+              arr.push(e)
+            })
+            this.selected.forEach(e => {
+              arr.push(e)
+            })
+            this.$emit('savaParamTruck', arr)
+          })
+          .catch(error => {
+            this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+          })
+      }
     },
     clickDetail(row, event, column) {
       this.$refs.multipleTable1.toggleRowSelection(row)

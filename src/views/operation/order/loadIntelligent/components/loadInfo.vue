@@ -1,9 +1,9 @@
 <template>
   <div class="loadInfo_wrapper">
     <div class="loadInfo_btns clraefix">
-      <el-button type="primary" @click="submitLoad('formModel')" icon="el-icon-refresh" plain size="mini">计算配载
+      <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" :disabled="isSubmitLoad">计算配载
       </el-button>
-      <el-button type="success" @click="submitForm()" icon="el-icon-document" plain size="mini">保存配载
+      <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini">保存配载
       </el-button>
       <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">取消
       </el-button>
@@ -130,26 +130,30 @@ export default {
     model: [Array, Object],
     loadTable: {
       type: Array
+    },
+    paramTuck: {
+      type: [Array, Object],
+      default: () => {}
     }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
-    addDisabled(){
-      if(this.intelligentData.dataList.length >= this.maxDataLength){
+    addDisabled() {
+      if (this.intelligentData.dataList.length >= this.maxDataLength) {
         return true
       }
       return false
     },
-    pretruckDisable2(){
-      if(this.currentIndex < 1){
+    pretruckDisable2() {
+      if (this.currentIndex < 1) {
         return true
       }
       return false
     },
-    nexttruckDisable2(){
-      if((this.intelligentData.dataList.length - 1) <= this.currentIndex){
+    nexttruckDisable2() {
+      if ((this.intelligentData.dataList.length - 1) <= this.currentIndex) {
         return true
       }
       return false
@@ -251,7 +255,9 @@ export default {
       isShowCurPages: true,
       showCurPagesData: {
         dataList: []
-      }
+      },
+      isSubmitLoad: true,
+      preDelDataList: []
     }
   },
   watch: {
@@ -263,15 +269,15 @@ export default {
     },
     dofo: {
       handler(newVal) {
-        if(!this.inited2 ){
+        if (!this.inited2) {
           console.log('000000000000-2')
-          
-        
           this.intelligentData.dataList = Object.assign([], this.dofo)
           this.intelligentData.dataList.forEach((e, index) => {
             this.inited2 = true
             e.loadTime = parseTime(new Date())
             e.planArrivedTime = parseTime(new Date())
+            e.weight = e.weight ? e.weight : 0
+            e.volume = e.volume ? e.volume : 0
             e._index = index
             let data = {}
             this.$set(data, 'nowpayCarriage', e.price)
@@ -279,7 +285,7 @@ export default {
             data = {}
           })
           this.showCurPagesData = Object.assign({}, this.intelligentData)
-          
+
           this.setCurPageView(0) // 设置显示
           this.$emit('truckIndex', this.currentIndex)
           this.$emit('truckPrecent', this.intelligentData.dataList[0])
@@ -288,6 +294,61 @@ export default {
     },
     loadTable: {
       handler(cval, oval) {}
+    },
+    paramTuck: {
+      handler(cval, oval) {
+        console.log('paramTuck', cval)
+        // 计算配载按钮显示可用
+        this.isSubmitLoad = false
+        // 替换车型列表 并显示
+        let selArr = []
+        // 保存需要去除的运单
+        if (cval.length < this.intelligentData.dataList.length) {
+          this.preDelDataList = this.intelligentData.dataList.slice(cval.length, this.intelligentData.dataList.length)
+          console.log('preDelDataList', this.preDelDataList)
+        } else {
+          this.pretruckDisable = []
+        }
+        cval.forEach((e, index) => {
+          selArr.push({
+            name: e.name,
+            cid: e.cid,
+            volume: e.vol ? e.vol : 0,
+            weight: e.weight ? e.weight : 0,
+            price: e.price,
+            carDriver: '',
+            tagid: e.tagid,
+            carDriverId: '',
+            carDriverPhone: '',
+            carId: '',
+            carLoadDetail: this.intelligentData.dataList[index] ? this.intelligentData.dataList[index].carLoadDetail : [],
+            carNo: '',
+            reachDate: '',
+            spri: '',
+            svol: '',
+            swei: '',
+            url: '',
+            loadTime: parseTime(new Date()),
+            planArrivedTime: '',
+            requireArrivedTime: '',
+            _index: index
+          })
+        })
+
+        this.intFreightIndex = 0
+        this.currentIndex = 0
+        this.showCurrenFormStyle = []
+      this.showCurrenFormStyle[this.currentIndex] = true
+      this.$emit('truckIndex', this.currentIndex)
+        this.intelligentData.dataList = Object.assign([], selArr)
+        console.log('newDataList', this.intelligentData.dataList)
+        selArr = []
+        this.setCurPageView(0) // 设置显示
+        this.showCurPagesData = Object.assign({}, this.intelligentData)
+        // 如果选择的车型比之前的车型列表数量少 就要把运单返回到左边列表
+        this.$emit('resetTrucDelList')
+
+      }
     }
   },
   mounted() {
@@ -297,30 +358,30 @@ export default {
     this.intelligentLeftData.arriveOrgid = this.orgid
   },
   methods: {
-    converToCn(){
+    converToCn() {
       let i = 0
       let arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
       this.changeNumCN = []
-      while(i++<99){
+      while (i++ < 99) {
         let nums = (i + '').split('')
-        let str = nums[1] ? (nums[0]==='1' ? '' : arr[nums[0]] )+ '十' +(nums[1] === '0' ? '' : arr[nums[1]]) : arr[nums[0]]
-        if(i === 10){
+        let str = nums[1] ? (nums[0] === '1' ? '' : arr[nums[0]]) + '十' + (nums[1] === '0' ? '' : arr[nums[1]]) : arr[nums[0]]
+        if (i === 10) {
           str = '十'
         }
         this.changeNumCN.push(str)
       }
     },
     setCurPageView(index) { // 设置只显示三个车型
-      console.log('setCurPageView:',index,this.intelligentData.dataList)
-      let maxShowLen = this.maxShowLen// 最多显示车型数量
+      console.log('setCurPageView:', index, this.intelligentData.dataList)
+      let maxShowLen = this.maxShowLen // 最多显示车型数量
       let orgLen = this.intelligentData.dataList ? this.intelligentData.dataList.length : 0 // 车型列表的长度
       if (orgLen) {
         if (orgLen > maxShowLen) {
-          if (index+maxShowLen > orgLen) {
+          if (index + maxShowLen > orgLen) {
             index = orgLen - maxShowLen
           }
 
-          this.showCurPagesData.dataList = this.intelligentData.dataList.slice(index, index+3)
+          this.showCurPagesData.dataList = this.intelligentData.dataList.slice(index, index + 3)
         } else {
           this.showCurPagesData.dataList = this.intelligentData.dataList
         }
@@ -343,7 +404,6 @@ export default {
       this.intFreight = data.val
       this.intFreightObj = data.obj
       this.$set(this.intelligentData.dataList[this.intFreightIndex], 'price', this.intFreight)
-
     },
     doAction(type) {
       switch (type) {
@@ -459,7 +519,6 @@ export default {
       const data = ''
     },
     handleSelectName(item, index) {
-
       this.changeDriverKey = Math.random()
       if (this.intelligentData.dataList[index].truckIdNumber === '' || this.intelligentData.dataList[index].truckIdNumber === undefined) {
         this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
@@ -499,15 +558,34 @@ export default {
     openlntelligent() {
       this.lntelligentFVisible = true
     },
-    submitLoad(formName) {
-      this.$message({ type: 'warning', message: '计算配载' })
+    submitLoad() { // 结算配载
+      if (!this.paramTuck || this.paramTuck.length < 1) {
+        this.$message.warning('请进行参数设置')
+      } else {
+        let arr = []
+        this.paramTuck.forEach(e => {
+          arr.push({
+            cid: e.cid,
+            price: e.price
+          })
+        })
+        this.loading = true
+        this.$router.push({
+          path: '/operation/order/loadIntelligent/components/intelligentImg',
+          query: {
+            orgId: this.$route.query.orgId,
+            sendData: JSON.stringify(arr)
+          }
+        })
+        this.eventBus.$emit('closeCurrentView')
+      }
     },
     setData() {
       let arr = []
       let data = {} // 数组中的单个对象
       arr = Object.assign([], this.intelligentData.dataList)
       arr.forEach((e, index) => {
-        this.$set(arr[index], 'carLoadDetail', this.loadTable[index])
+        this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
         if (index === this.intFreightIndex) {
           this.$set(arr[index], 'tmsOrderLoadFee', this.intFreightObj)
         } else {}
@@ -536,11 +614,13 @@ export default {
         this.$set(e, 'tmsOrderLoad', curinfo)
         this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
         this.$set(data, 'tmsOrderLoadFee', e.tmsOrderLoadFee)
+        // if (e.carLoadDetail.length) {
         e.carLoadDetail.forEach(em => {
           em.loadAmount = em.repertoryAmount
           em.loadWeight = em.repertoryWeight
           em.loadVolume = em.repertoryVolume
         })
+        // }
         this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
         this.$set(this.loadDataArray, index, data)
         data = {}
@@ -549,6 +629,7 @@ export default {
         //   this.$message({type: 'warning', message:'车型列表不能为空'})
         //   return false
         // }
+
         this.loadDataArray = this.loadDataArray.filter((e, index) => {
           return (e.tmsOrderLoadDetailsList && e.tmsOrderLoadDetailsList.length > 0)
         })
@@ -564,6 +645,7 @@ export default {
               this.setData()
               postIntnteSmartLoad(this.loadDataArray).then(res => {
                 this.$message({ type: 'success', message: '保存配载' })
+                this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
                 this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
                 this.loading = false
               }).catch(err => {
@@ -598,23 +680,23 @@ export default {
       this.intelligentData.dataList.splice(index, 1)
       var len = this.intelligentData.dataList.length
       var flag
-      while(len--){
-         if(this.showCurrenFormStyle[len]){
+      while (len--) {
+        if (this.showCurrenFormStyle[len]) {
           this.currentIndex = len
           flag = true
           break
-         }
+        }
       }
-      if(!flag){
+      if (!flag) {
         this.showCurrenFormStyle[this.currentIndex] = true
       }
       this.$emit('truckIndex', this.currentIndex)
-      
-      console.log('truckIndex',this.currentIndex, this.intelligentData.dataList)
+
+      console.log('truckIndex', this.currentIndex, this.intelligentData.dataList)
       this.$message.info('已删除')
-      setTimeout(()=>{
-        this.intelligentData.dataList.forEach((el, index)=>{
-          this.$set(this.intelligentData.dataList, index, Object.assign(el,{'_index': index}))
+      setTimeout(() => {
+        this.intelligentData.dataList.forEach((el, index) => {
+          this.$set(this.intelligentData.dataList, index, Object.assign(el, { '_index': index }))
         })
       }, 500)
       console.log(this.intelligentData.dataList, this.currentIndex)
@@ -625,7 +707,7 @@ export default {
     },
     addtuck() {
       var index = this.intelligentData.dataList.length
-      if(index > this.maxDataLength){
+      if (index > this.maxDataLength) {
         return false
       }
 
@@ -724,7 +806,7 @@ export default {
       border: 1px solid #cdf;
       .el-tabs__header.is-top {
         .el-tabs__nav-wrap {
-          background: rgb(251, 255, 244);
+          // background: rgb(251, 255, 244);
         }
       }
     }

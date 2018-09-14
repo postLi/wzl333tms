@@ -47,8 +47,6 @@
     },
     methods: {
       openInteligent() {
-        // console.log(JSON.parse(this.$route.query.sendData),this.$route)
-        // if (this.click) {
           this.$router.push(
             {
               path: '/operation/order/loadIntelligent/index',
@@ -59,8 +57,7 @@
               }
             },
           )
-        // }
-        // console.log(this.$route)
+          this.eventBus.$emit('closeCurrentView')
       }
     }
   }
