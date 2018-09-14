@@ -288,6 +288,7 @@ export default {
             e.forEach(el => {
               this.selectedRight.push(el)
             })
+            this.orgRightTable[index] = []
           }
         })
         this.goLeft()
