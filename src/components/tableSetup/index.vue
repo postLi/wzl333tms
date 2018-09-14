@@ -183,6 +183,9 @@ export default {
     }
   },
   mounted() {
+    // 进来先隐藏全部
+    // this.$emit('success', [])
+
     const code = this.code
     const rcode = this.$route.meta.code
 
@@ -303,6 +306,10 @@ export default {
           // 1.先取服务器数据
           const copy = []
           const len = this.columns.length
+          // 格式化数据
+          data.sort(function(a, b) {
+            return a.titleOrder > b.titleOrder ? 1 : -1
+          })
           data.forEach(el => {
             const _el = Object.assign({}, el)
             for (let i = 0; i < len; i++) {
@@ -362,9 +369,9 @@ export default {
             c[i] = el[i]
           }
 
-          c.hidden = true
+          c.hidden = false
           c.titleOrder = ++index
-          copy.push(el)
+          copy.push(c)
         }
       })
 
@@ -378,9 +385,9 @@ export default {
             c[i] = el[i]
           }
 
-          c.hidden = false
+          c.hidden = true
           c.titleOrder = ++index
-          copy.push(el)
+          copy.push(c)
         }
       })
 
