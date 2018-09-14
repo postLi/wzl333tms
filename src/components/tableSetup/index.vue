@@ -156,61 +156,11 @@ export default {
     }
   },
   data() {
-    const MAXLENGTH = 50
-    // 1.检查是否有默认隐藏项
-    // 2.当显示项超过50的归类到隐藏项
-    const generateData = _ => { // 初始化左边列表
-      const data = []
-      if (this.columns.length > 0) {
-        let inx = 0
-        this.columns.forEach((e, index) => {
-          if (e.hidden) {  // 默认隐藏列
-            const obj = objectMerge2(e)
-            obj.key = index
-            data.push(obj)
-          } else {
-            inx++
-          }
-          if (inx > MAXLENGTH) {
-            const obj = objectMerge2(e)
-            obj.key = index
-            obj.hidden = true
-            data.push(obj)
-          }
-        })
-      }
-      return data
-    }
-    const generateRightData = _ => { // 初始化右边的列表
-      const data = []
-      if (this.columns.length > 0) {
-        let inx = 0
-        this.columns.forEach((e, index) => {
-          if (!e.hidden && inx < MAXLENGTH) { // 默认显示列
-            inx++
-            const obj = objectMerge2(e)
-            obj.hidden = false
-            obj.key = index
-            data.push(obj)
-          }
-        })
-      }
-      return data
-    }
-    // 计算左边列表的数量
-    const getleftListLen = generateData().length
-    // 计算右边列表的数量
-    const getRightListLen = generateRightData().length
-    // 计算所有列的数量
-    // 为啥拿个数量都要函数返回
-    const getColumnListLen = _ => {
-      return this.columns.length
-    }
     return {
-      orgColumnData: generateData(),
-      columnData: generateData(),
-      orgShowColumnData: generateRightData(),
-      showColumnData: generateRightData(),
+      orgColumnData: [],
+      columnData: [],
+      orgShowColumnData: [],
+      showColumnData: [],
       list: [],
       rightList: [],
       listKey: 0,
@@ -222,11 +172,11 @@ export default {
       checkListRight: [],
       searchLeft: '',
       searchRight: '',
-      leftListLen: getleftListLen,
-      rightListLen: getRightListLen,
-      columnListLen: getColumnListLen(),
+      leftListLen: 0,
+      rightListLen: 0,
+      columnListLen: 0,
       isCheck: true, // 判断显示列数是否超过50个，false-不可选择 true-可以选择,
-      maxLen: MAXLENGTH,
+      maxLen: 50,
       rightCheckLen: 0,
       leftCheckLen: 0,
       thecode: ''// 需要请求的code值
@@ -235,9 +185,10 @@ export default {
   mounted() {
     const code = this.code
     const rcode = this.$route.meta.code
+
    // 1 如果显示声明不用请求服务器则不作处理
     if (code === 'NOSET') {
-      this.submitForm() // 打开页面就开启表格设置
+      this.convertData() // 打开页面就开启表格设置
     } else if (code) {
      // 2 指定显示的code值
       this.thecode = code
@@ -246,7 +197,7 @@ export default {
       this.thecode = rcode
     } else {
      // 4 其余情况则直接处理
-      this.submitForm()
+      this.convertData()
     }
     // 如果有code值则请求处理
     if (this.thecode) {
@@ -254,6 +205,72 @@ export default {
     }
   },
   methods: {
+    convertData(data) {
+      this.initData(data)
+      this.callback()
+    },
+    initData(_data) {
+      _data = _data || this.columns
+      const MAXLENGTH = this.maxLen
+      // 1.检查是否有默认隐藏项
+      // 2.当显示项超过50的归类到隐藏项
+      const generateData = _ => { // 初始化左边列表
+        const data = []
+        if (_data.length > 0) {
+          let inx = 0
+          _data.forEach((e, index) => {
+            if (e.hidden) {  // 默认隐藏列
+              const obj = objectMerge2(e)
+              obj.key = index
+              data.push(obj)
+            } else {
+              inx++
+            }
+            if (inx > MAXLENGTH) {
+              const obj = objectMerge2(e)
+              obj.key = index
+              obj.hidden = true
+              data.push(obj)
+            }
+          })
+        }
+        return data
+      }
+      const generateRightData = _ => { // 初始化右边的列表
+        const data = []
+        if (_data.length > 0) {
+          let inx = 0
+          _data.forEach((e, index) => {
+            if (!e.hidden && inx < MAXLENGTH) { // 默认显示列
+              inx++
+              const obj = objectMerge2(e)
+              obj.hidden = false
+              obj.key = index
+              data.push(obj)
+            }
+          })
+        }
+        return data
+      }
+      // 计算左边列表的数量
+      const getleftListLen = generateData().length
+      // 计算右边列表的数量
+      const getRightListLen = generateRightData().length
+      // 计算所有列的数量
+      // 为啥拿个数量都要函数返回
+      const getColumnListLen = _ => {
+        return _data.length
+      }
+
+      this.orgColumnData = generateData()
+      this.columnData = generateData()
+      this.orgShowColumnData = generateRightData()
+      this.showColumnData = generateRightData()
+
+      this.leftListLen = getleftListLen
+      this.rightListLen = getRightListLen
+      this.columnListLen = getColumnListLen()
+    },
     sort(array) { // 从小到大排序
       return array.sort((a, b) => {
         return a.key - b.key
@@ -269,26 +286,106 @@ export default {
           break
       }
     },
+    fetchFail() {
+      this.thecode = ''
+      this.convertData()
+    },
     // 读取服务器上的设置
     fetchTableSetup() {
       return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {
+        var data = res.data
+        // 保存原有数据，用来在上传时格式化数据
+        this.orgdata = data
+        if (data && data.length) {
+          // 处理格式化本地数据
+          // 如果本地存在不同的列，保留还是删除？
 
+          // 1.先取服务器数据
+          const copy = []
+          const len = this.columns.length
+          data.forEach(el => {
+            const _el = Object.assign({}, el)
+            for (let i = 0; i < len; i++) {
+              if (this.columns[i].prop === el.prop) {
+                for (const j in this.columns[i]) {
+                  if (typeof _el[j] === 'undefined' || _el[j] === null) {
+                    _el[j] = this.columns[i][j]
+                  }
+                }
+                break
+              }
+            }
+
+            copy.push(_el)
+          })
+
+          // 2.合并本地剩余的数据
+          this.columns.forEach(el => {
+            const find = copy.filter(_el => _el.prop === el.prop)
+            if (find.length === 0) {
+              copy.push(el)
+            }
+          })
+          this.convertData(copy)
+        } else {
+          this.fetchFail()
+        }
       }).catch(err => {
         // 如果从服务器上拿取数据出错，则将其当做本地数据处理
-        this.code = ''
+        // this.$message.info('获取表格数据失败。')
+        console.log('获取表格数据失败：', this.thecode)
+        this.fetchFail()
       })
     },
     changeTbaleSetup() {
-      if (this.code) {
+      if (this.thecode) {
         return putChangeTableSetup(this.otherinfo.orgid, this.thecode, this.formatColumn(this.showColumnData)).then(res => {
-
-        }).catach(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this.$message.info('保存成功')
+          this.callback()
+        }).catch(err => {
+          this.$message.error('保存失败：' + (err.errorInfo || err.text || '未知错误，请重试~'))
         })
       }
     },
     formatColumn(data) {
-      return data
+      var orgdata = this.orgdata
+      var copy = []
+      let index = 0
+
+      // 显示的列
+      data.forEach(el => {
+        var find = orgdata.filter(_el => _el.prop === el.prop)
+        if (find.length) {
+          const c = {}
+          const o = find[0]
+          for (const i in o) {
+            c[i] = el[i]
+          }
+
+          c.hidden = true
+          c.titleOrder = ++index
+          copy.push(el)
+        }
+      })
+
+      // 隐藏的列
+      this.columnData.forEach(el => {
+        var find = orgdata.filter(_el => _el.prop === el.prop)
+        if (find.length) {
+          const c = {}
+          const o = find[0]
+          for (const i in o) {
+            c[i] = el[i]
+          }
+
+          c.hidden = false
+          c.titleOrder = ++index
+          copy.push(el)
+        }
+      })
+
+      // 按照data的排序处理
+      return copy
     },
     checkRightLen() { // 判断右边列表是否超过50个字段
       if (this.showColumnData.length > this.maxLen) {
@@ -450,11 +547,21 @@ export default {
       this.rightList = Object.assign([], value)
     },
     handleSwitch(obj) {},
-    submitForm() {
+    callback() {
       const data = Object.assign([], this.showColumnData)
+      console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
       this.$emit('success', data)
       this.listKey = Math.random()
+
       this.closeMe()
+    },
+    submitForm() {
+      // 判断是否要保存数据
+      if (this.thecode) {
+        this.changeTbaleSetup()
+      } else {
+        this.callback()
+      }
     }
   }
 }

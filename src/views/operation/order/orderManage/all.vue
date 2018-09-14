@@ -277,7 +277,7 @@ export default {
         'width': '150'
       }, {
         'label': '到达省',
-        'prop': 'shipToCityName',
+        'prop': 'endProvince',
         'width': '150',
         hidden: true,
         slot: function(scope) {
@@ -285,7 +285,7 @@ export default {
         }
       }, {
         'label': '到达市',
-        'prop': 'shipToCityName',
+        'prop': 'endCity',
         'width': '150',
         hidden: true,
         slot: function(scope) {
@@ -293,7 +293,7 @@ export default {
         }
       }, {
         'label': '到达县区',
-        'prop': 'shipToCityName',
+        'prop': 'endArea',
         'width': '150',
         hidden: true,
         slot: function(scope) {

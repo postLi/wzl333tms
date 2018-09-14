@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="apple-touch-fullscreen" content="YES" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta http-equiv="Expires" content="-1" />
+<meta http-equiv="pragram" content="no-cache" />
+<meta name="viewport" content="width=640, user-scalable=no, target-densitydpi=device-dpi">
+<meta name="screen-orientation" content="portrait">
+<meta name="x5-orientation" content="portrait">
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<title>上传图片 - 安发中国</title>
+</head>
+<body>
+  <h2>带capture="camera"属性</h2>
+  <input type="file" id="getimg" capture="camera"  >
+  <h2>不带capture="camera"属性 accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"</h2>
+  <input type="file" id="getimg2"  accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" >
+  <h2>不带capture="camera"属性 accept="image/*"</h2>
+  <input type="file" id="getimg3"  accept="image/*" >
+  <img src="about:blank" id="preview" alt="">
+  <script src="js/lrz.all.bundle.js"></script>
+  <script>
+/**
+ *
+ * 　　 ┏┓　 ┏┓
+ * 　　┏┛┻━━━┛┻┓
+ * 　　┃　　　　　┃
+ * 　　┃　　　━　 ┃
+ * 　　┃　┳┛　┗┳　┃
+ * 　　┃　　　　　 ┃
+ * 　　┃　　　┻　　┃
+ * 　　┃　　　　　 ┃
+ * 　　┗━┓　　　┏━┛Code is far away from bug
+* 　　　　┃　　　┃    神兽保佑,代码无bug
+* 　　　　┃　　　┃
+* 　　　　┃　　　┗━━━┓
+* 　　　　┃　　　　　 ┣┓
+* 　　　　┃　　　　 ┏┛
+* 　　　　┗┓┓┏━┳┓┏┛
+* 　　　　　┃┫┫　┃┫┫
+* 　　　　　┗┻┛　┗┻┛
+ *
+ */
+
+  var getParams = function(_keystr,url) {
+    var keystr = _keystr || '';
+    var args = url || location.search;
+    args = args.replace(/&amp;/ig,"&");
+    if(!args){return "";}
+    var reg = new RegExp('[\?&]' + keystr + '=([^&]*)[&$]?', 'i');
+    var chk = args.match(reg);
+    return chk ? chk[1] : "";
+  };
+  
+  function $(selector){
+    return document.querySelectorAll(selector);
+  }
+  function getImageFile(e){
+    console.log($("#preview")[0])
+    //e.dataTransfer 为拖拉文件时候触发
+    var files = e.target.files || e.dataTransfer.files;
+    if (!files.length) return;
+
+    // 1024 你懂的^.^
+    lrz(files[0],{
+      width: 1024
+    }).then(function(rst){
+      
+      $("#preview")[0].src = rst.base64
+    });
+  }
+
+  $('#getimg')[0].onchange = getImageFile;
+  $('#getimg2')[0].onchange = getImageFile;
+  $('#getimg3')[0].onchange = getImageFile;
+
+  var PAGE = {};
+
+  function initPage(){
+    // 1.拿取token
+    // 2.拿取上传id
+    // 3.拿取上传图片张数的按钮，不传则为1
+    PAGE.data = {
+      token: getParams('access_token'),
+      id: getParams('id'),
+      len: getParams('len')
+    }
+  }
+
+  initPage();
+
+  </script>
+</body>
+</html>
