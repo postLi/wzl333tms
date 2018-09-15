@@ -24,7 +24,7 @@
               </el-form>
             </div>
             <div class="loadInfo_collapse">
-              <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="76px" :inline="true" label-position="right" size="mini" class="loadInfo_collapse_list" :key="valkey">
+              <el-form :model="intelligentData" :rules="rules" ref="ruleForm" label-width="100px" :inline="true" label-position="right" size="mini" class="loadInfo_collapse_list" :key="valkey">
                 <div class="loadInfo_item" v-for="(item, index) in showCurPagesData.dataList" :style="{width: showCurrenFormStyle[item._index]?'calc(100% - 183px)': '',transition:'0.5s'}">
                   <el-button class="verticalBtn" @click="selectCurrentTuck(item._index,item)" :class="{'verticalBtnActive':showCurrenFormStyle[item._index]}">
                     <i class="lll-ntelligent-del" :class="{'lll-ntelligent-delActive':showCurrenFormStyle[item._index]}" @click="delCurTruck(item._index,item)"></i> 车型{{ changeNumCN[item._index]}}
@@ -849,13 +849,15 @@ export default {
         .el-form-item--mini.el-form-item,
         .el-form-item--small.el-form-item {
           margin-bottom: 10px;
+          display:flex;
+          flex-direction: row;
         }
         .el-button {
           white-space: normal;
           border-radius: 0px;
         }
         .verticalBtn {
-          width: 45px;
+          width: 40px;
           height: 110px;
           padding: 10px;
           font-family: '微软雅黑';
@@ -940,7 +942,7 @@ export default {
             flex-direction: row;
             .loadInfo_item_form {
               padding-top: 15px;
-              width: 1200px;
+              // width: 1200px;
               display: inline-block;
 
               .loadInfo_item_form_row {
@@ -954,10 +956,15 @@ export default {
                   }
                 }
                 .el-form-item {
+                  width: 100%;
                   margin-bottom: 0px;
                   .el-input {
-                    min-width: 160px;
-                    max-width: 173px;
+                    width: 100%;
+                    // min-width: 120px;
+                    // max-width: 153px;
+                    .el-input__inner{
+                      padding: 0 5px;
+                    }
                   }
                 }
                 .el-form-item.nameClass {

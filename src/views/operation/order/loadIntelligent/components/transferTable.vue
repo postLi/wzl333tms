@@ -34,7 +34,7 @@
           </el-tooltip>
           <el-button type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
         </div>
-        <el-table ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
+        <el-table row-key="repertoryId" ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
             <template slot-scope="scope">
               {{scope.$index+1}}
@@ -52,13 +52,15 @@
         </el-table>
       </div>
     </div>
-    <div class="transferTable_foot"></div>
+    <div class="transferTable_foot">
+    </div>
   </div>
 </template>
 <script>
 import draggable from 'vuedraggable'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import { objectMerge2 } from '@/utils/index'
+import Sortable from 'sortablejs'
 export default {
   props: {
     getinfoed: Boolean,
@@ -81,6 +83,7 @@ export default {
   },
   data() {
     return {
+      isDelOtherTruck: false,
       tablekey: 0,
       loading: false,
       showTableMessage: '全屏查看',
@@ -228,6 +231,9 @@ export default {
           prop: 'shipGoodsSn'
         }
       ],
+      oldList: [],
+      newList: [],
+      sortable: null
     }
   },
   watch: {
@@ -242,6 +248,7 @@ export default {
           return 
         }
         if (cval) {
+          this.isDelOtherTruck = false
           cval.right.forEach(el => {
             el.forEach(e => {
               e.loadAmount = e.repertoryAmount
@@ -255,6 +262,8 @@ export default {
         this.orgRightTable = Object.assign([], cval.right)
         this.orgLeftTable = Object.assign([], cval.left)
         this.leftTable = Object.assign([], cval.left)
+        this.oldList = this.rightTable.map(v => v.repertoryId)
+        this.newList = this.oldList.slice()
         this.initTable()
       },
       deep: true
@@ -280,7 +289,6 @@ export default {
     },
     resetTuckLoad: {
       handler(cval, oval) {
-
         let arr = []
         this.selectedRight = []
         this.orgRightTable.forEach((e, index) => {
@@ -291,6 +299,7 @@ export default {
             this.orgRightTable[index] = []
           }
         })
+        this.isDelOtherTruck = true
         this.goLeft()
       }
     },
@@ -355,9 +364,12 @@ export default {
         console.log('77799999')
         this.leftTable = Object.assign([], this.orgLeftTable)
       }
+      this.$nextTick(() => {
+        this.setSort() // 右边列表行拖拽
+      })
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
-
+      
     },
     fetchList() {
       // this.loading = false
@@ -378,6 +390,27 @@ export default {
       //   .catch(error => {
       //     this.$message({ type: 'danger', message: error.errorInfo || error.text || '发生未知错误~' })
       //   })
+    },
+    setSort () { // 右边列表行拖拽
+      const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
+      console.log(el)
+      this.sortable = Sortable.create(el, {
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+        setData: function(dataTransfer) {
+          dataTransfer.setData('Text', '')
+          // to avoid Firefox bug
+          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+        },
+        onEnd: evt => {
+          const targetRow = this.rightTable.splice(evt.oldIndex, 1)[0]
+          this.rightTable.splice(evt.newIndex, 0, targetRow)
+          this.orgRightTable[this.truckIndex].splice(evt.newIndex, 0 , targetRow)
+          // for show the changes, you can delete in you code
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+        }
+      })
+
     },
     setHeaderAdd(h, { column }) {
       return h('el-button', {
@@ -423,9 +456,13 @@ export default {
           // })
           this.leftTable.push(e)
           this.orgLeftTable.push(e)
+
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.repertoryId !== e.repertoryId
           })
+          if (this.isDelOtherTruck) { // 如果是做参数设置时，需要删除掉多余对应车型的运单
+            this.orgRightTable = this.orgRightTable.splice(1,Number(this.resetTuckLoad))
+          }
           this.orgRightTable[this.truckIndex] = objectMerge2([], this.orgRightTable[this.truckIndex]).filter(el => {
             return el.repertoryId !== e.repertoryId
           })
@@ -435,6 +472,9 @@ export default {
         this.orgRightTable.splice(this.delData.number, 1)
         this.isDel = false
       }
+      this.$nextTick(() => {
+        this.setSort() // 右边列表行拖拽
+      })
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
     },
@@ -465,6 +505,9 @@ export default {
           console.log('2222222222222222222222',this.rightTable.length)
         }
 
+      })
+      this.$nextTick(() => {
+        this.setSort() // 右边列表行拖拽
       })
       this.tablekey = Math.random()
       this.$emit('loadCurTable', this.rightTable)
@@ -542,6 +585,11 @@ export default {
   display: flex;
   flex-direction: column;
   border: 1px solid #cdf;
+  .sortable-ghost{
+    opacity: .8;
+    color: #fff!important;
+    background: #42b983!important;
+  }
   .transferTable_main {
     display: flex;
     flex-direction: row;
