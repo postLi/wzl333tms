@@ -1,4 +1,6 @@
 import fetch from '../../utils/fetch'
+import CACHE from '@/utils/cache'
+import { getSelectType } from '@/api/common'
 
 /**
  * 获取指定网点的所有下级节点
@@ -89,14 +91,7 @@ export function postAllOrgInfo(orgId, isRefresh) {
  * @param {*} orgid 网点id
  */
 export function getDepartmentInfo(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'department_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('department_type', orgId)
 }
 /**
  * 获取指定网点的权限信息

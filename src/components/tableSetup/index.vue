@@ -205,6 +205,15 @@ export default {
     // 如果有code值则请求处理
     if (this.thecode) {
       this.fetchTableSetup()
+      this.eventBus.$on('tablesetup.change', (code, data) => {
+        if (code && code === this.thecode) {
+          const find = this.showColumnData.filter(el => el.prop === data.prop)
+          if (find.length) {
+            find[0].width = data.width
+            this.changeTbaleSetup()
+          }
+        }
+      })
     }
   },
   methods: {
@@ -348,7 +357,7 @@ export default {
       if (this.thecode) {
         return putChangeTableSetup(this.otherinfo.orgid, this.thecode, this.formatColumn(this.showColumnData)).then(res => {
           this.$message.info('保存成功')
-          this.callback()
+          // this.callback()
         }).catch(err => {
           this.$message.error('保存失败：' + (err.errorInfo || err.text || '未知错误，请重试~'))
         })
@@ -565,7 +574,9 @@ export default {
     submitForm() {
       // 判断是否要保存数据
       if (this.thecode) {
-        this.changeTbaleSetup()
+        this.changeTbaleSetup().then(res => {
+          this.callback()
+        })
       } else {
         this.callback()
       }

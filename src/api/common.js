@@ -1,5 +1,6 @@
 import fetch from '@/utils/fetch'
 import { getToken } from '@/utils/auth'
+import CACHE from '@/utils/cache'
 
 /**
  * 获取城市数据
@@ -36,6 +37,14 @@ export function getSystemTime() {
  */
 window.UPLOADPOLICYDATA = '' // 用来缓存上传policy
 window.UPLOADPOLICYDATA_timer = '' // 加个定时器变量，防止没有引用的定时器被自动回收
+window.UPLOADPOLICYDATA = {
+  'accessid': 'LTAIFj5nQSIxEZ8H',
+  'policy': 'eyJleHBpcmF0aW9uIjoiMjAxOC0wOS0xNlQxOToyMDowMS4zMTJaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF0sWyJzdGFydHMtd2l0aCIsIiRrZXkiLCJ0bXMvIl1dfQ==',
+  'signature': 'A+ZRKPmw0mFXhNNdd5ycyoH6g9c=',
+  'dir': 'tms/',
+  'host': 'http://aflc.oss-cn-shenzhen.aliyuncs.com',
+  'expire': '1537125601'
+}
 export function getUploadPolicy() {
   // 后期可添加是否过期的验证
   if (window.UPLOADPOLICYDATA) {
@@ -59,15 +68,24 @@ export function getUploadPolicy() {
  * @param {*} type 下拉类型
  * @param {*} orgid 网点id
  */
-export function getSelectType(type = '', orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: type,
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+export function getSelectType(type = '', orgId, needupdate) {
+  // 当标记为未更新，且缓存有数据时，则读取缓存数据
+  if (!(CACHE.get(orgId + type + '_update')) && CACHE.get(orgId + type)) {
+    return new Promise((resolve) => {
+      resolve(CACHE.get(orgId + type))
+    })
+  } else {
+    return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
+      params: {
+        dictType: type,
+        orgId
+      }
+    }).then(res => {
+      CACHE.set(orgId + type, res.data)
+      CACHE.set(orgId + type + '_update', false)
+      return res.data || []
+    })
+  }
 }
 
 /**
@@ -179,7 +197,7 @@ export function getUploadIdInfo(id) {
  * @param {*} url 要生成二维码的链接
  */
 export function getTwocodeUrl(url) {
-  return '/tmspluginservice/common/qrcode/v1/qrcode?access_token=' + getToken() + '&url=' + url
+  return '/tmspluginservice/common/qrcode/v1/qrcode?access_token=' + getToken() + '&url=' + encodeURIComponent(url)
 }
 /**
  * 保存链接

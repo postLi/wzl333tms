@@ -20,7 +20,7 @@
             <el-input v-model.trim="form.companyName" :maxlength="25" placeholder="公司全称"></el-input>
           </el-form-item>
           <el-form-item >
-            <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
+            <upload twocode class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
           </el-form-item>
           <div class="info" >公司法人信息</div>
           <el-form-item prop="legalPersonname" >
@@ -30,10 +30,10 @@
         <!-- 个人信息 -->
         <el-form-item class="clearfix">
           <div class="idcard-pos">
-            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idcardPositive" />
+            <upload twocode :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idcardPositive" />
           </div>
           <div class="idcard-ver">
-            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idcardVerso" />
+            <upload twocode :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idcardVerso" />
           </div>
         </el-form-item>
 
@@ -74,7 +74,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm',true)">保存并打印</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm',true)">保存并新增</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -392,7 +392,7 @@ export default {
   }
 
   .licensePicture{
-    height: 116px;
+    height: 200px;
     line-height: 1.2;
   }
 
@@ -477,7 +477,7 @@ export default {
 
   .idcard-pos,.idcard-ver{
     width: 234px;
-    height: 136px;
+    height: 200px;
     float: left;
     line-height: 1.2;
 

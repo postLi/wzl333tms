@@ -322,7 +322,7 @@
             type: 'warning'
           }).then(() => {
             this.loading = true
-            deletePerManage(_id).then(res => {
+            deletePerManage(_id, this.otherinfo.orgid).then(res => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'

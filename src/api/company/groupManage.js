@@ -1,4 +1,6 @@
 import fetch from '../../utils/fetch'
+import CACHE from '@/utils/cache'
+import { getSelectType } from '@/api/common'
 
 /**
  * 获取所有网点的信息
@@ -12,7 +14,7 @@ export function getAllOrgInfo() {
  * 根据组织id获取列表
  */
 export function getOrgId(id) {
-  return fetch.get('/api-system/system/org/v1/'+id)
+  return fetch.get('/api-system/system/org/v1/' + id)
 }
 
 /**
@@ -38,14 +40,7 @@ export function putOrgData(data) {
  * @param {*} orgid 网点id
  */
 export function getSelectDictInfo(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'department_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('department_type', orgId)
 }
 
 /**
@@ -63,6 +58,7 @@ export function postDict(orgid, dictName) {
     orgid,
     dictName
   }).then(res => {
+    CACHE.set(orgid + 'department_type' + '_update', true)
     return res.data || []
   })
 }
@@ -70,8 +66,11 @@ export function postDict(orgid, dictName) {
  *根据ID设置字典不可用
  * @param "id":"",
  */
-export function deletePerManage(id) {
-  return fetch.delete('/api-system/system/dict/v1/' + id)
+export function deletePerManage(id, orgid) {
+  return fetch.delete('/api-system/system/dict/v1/' + id).then(res => {
+    CACHE.set(orgid + 'department_type' + '_update', true)
+    return res
+  })
 }
 /**
  *修改字典信息
@@ -89,6 +88,7 @@ export function putDict(orgid, dictName, id) {
     orgid,
     dictName
   }).then(res => {
+    CACHE.set(orgid + 'department_type' + '_update', true)
     return res.data || []
   })
 }
@@ -100,14 +100,7 @@ export function putDict(orgid, dictName, id) {
  * 分拨中心 1
  */
 export function getNetWorkTypeInfo(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'network_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('network_type', orgId)
 }
 
 /**
@@ -117,14 +110,7 @@ export function getNetWorkTypeInfo(orgId) {
  * 加盟 1
  */
 export function getManageTypeInfo(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'manage_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('manage_type', orgId)
 }
 /**
  * 获取指定网点的网点状态
@@ -133,12 +119,5 @@ export function getManageTypeInfo(orgId) {
  * 有效   1
  */
 export function getNetworkStatusInfo(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'network_status',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('network_status', orgId)
 }

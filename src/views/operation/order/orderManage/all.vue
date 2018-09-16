@@ -12,7 +12,20 @@
           <span class="viewtip">
             双击查看详情
           </span>
-          <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+          <el-popover
+            @mouseenter.native="showSaveBox"
+            @mouseout.native="hideSaveBox"
+            placement="top"
+            width="160"
+            v-model="visible2">
+            <p>表格宽度修改了，是否要保存？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+            </div>
+            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+          </el-popover>
+          
       </div>
       <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
         <div slot="content">双击查看运单详情</div> -->
@@ -28,6 +41,7 @@
           @row-click="clickDetails"
           @row-dblclick="showDetail"
           @selection-change="getSelection"
+          @header-dragend="setTableWidth"
           height="100%"
           :summary-method="getSumLeft"
           show-summary
@@ -101,6 +115,7 @@ export default {
     this.fetchAllOrder(this.otherinfo.orgid).then(res => {
       this.loading = false
     }) */
+    this.thecode = this.$route.meta.code
   },
   data() {
     return {
@@ -126,6 +141,8 @@ export default {
       },
       // 默认sort值为true
       tablekey: '',
+      thecode: '', // 用来设置tablesetup的code值
+      columnWidthData: {},
       tableColumn: [{
         'label': '运单号',
         'prop': 'shipSn',
@@ -455,7 +472,8 @@ export default {
         hidden: true,
         'width': '150'
       }],
-      showtip: false
+      showtip: false,
+      visible2: false
     }
   },
   methods: {
@@ -707,6 +725,34 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      console.log('set table:', newWidth, oldWidth, column)
+      // column.property
+      // column.label
+      this.visible2 = true
+      this.columnWidthData = {
+        prop: column.property,
+        label: column.label,
+        width: newWidth
+      }
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.columnWidthData)
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     }
   }
 }

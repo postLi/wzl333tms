@@ -1,4 +1,5 @@
 import fetch from '../../utils/fetch'
+import { getSelectType } from '@/api/common'
 
 /**
  * 根据条件获取司机列表
@@ -51,14 +52,7 @@ export function getDriverInfo(id) {
  * @param {*} orgid 网点id
  */
 export function getDriverLiceseType(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'driving_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('driving_type', orgId)
 }
 
 /**
