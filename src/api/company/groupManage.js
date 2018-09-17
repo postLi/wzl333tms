@@ -23,6 +23,9 @@ export function getOrgId(id) {
  * @returns {AxiosPromise<any>}
  */
 export function postOrgSaveDate(data) {
+  // 网点名称可能变更了，但是父级如果不更新还是会获取到旧的子名称？
+  // 统一拿公司网点，子网点部分都直接从最顶级下面拿数据
+  CACHE.set('orgtree' + '_update', true)
   return fetch.post('/api-system/system/org/v1/save/', data)
 }
 
@@ -32,6 +35,7 @@ export function postOrgSaveDate(data) {
  * @returns {AxiosPromise<any>}
  */
 export function putOrgData(data) {
+  CACHE.set('orgtree' + '_update', true)
   return fetch.put('/api-system/system/org/v1/edit/', data)
 }
 

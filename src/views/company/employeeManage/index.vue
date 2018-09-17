@@ -1,6 +1,6 @@
 <template>
   <div class="staff_manage" v-loading="loading">
-    <SearchForm :groups="groupsArr" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="staff_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:USER_ADD>新增员工</el-button>
@@ -66,7 +66,6 @@ export default {
   data() {
     return {
       // 请求获得的数据
-      groupsArr: [],
       rolesArr: [],
       departmentArr: [],
       usersArr: [],
@@ -167,11 +166,10 @@ export default {
     }
   },
   mounted() {
-    Promise.all([getAllOrgInfo(this.otherinfo.orgid), this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
+    Promise.all([this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
       this.loading = false
-      this.groupsArr = resArr[0]
-      this.usersArr = resArr[1].list
-      this.total = resArr[1].total
+      this.usersArr = resArr[0].list
+      this.total = resArr[0].total
     }).catch((err) => {
       this.loading = false
       this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')

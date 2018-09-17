@@ -172,13 +172,17 @@
         showFailPage(JSON.stringify(err))
       });
       
+    }).always(function () {
+      // 清空文件上传控件的值
+      e.target.value = null;
     });
   }
 
   $('#getimg3')[0].onchange = getImageFile;
+  var apiurl = '/api';
 
   $('.submitbtn').on('click', function(){
-    $.post('/home/tmspluginservice/common/qrcode/v1/SaveByID?access_token='+PAGE.data.token+'&k=' + PAGE.data.id + '&v=' + encodeURIComponent(PAGE.data.upurl)).done(function(res){
+    $.post(apiurl + '/tmspluginservice/common/qrcode/v1/SaveByID?access_token='+PAGE.data.token+'&k=' + PAGE.data.id + '&v=' + encodeURIComponent(PAGE.data.upurl)).done(function(res){
       if(res.status === 200){
         showSuccessPage();
       } else {
@@ -209,19 +213,34 @@
     showFailPage(JSON.stringify(arguments))
   }
 
+ // 尝试读取3次，如果3次后都没拿到数据，则提示失败
+ var requestTime = 0
   function getPolicy(){
-    $.get('/home/anfacommonservice/common/oss/v1/policy?access_token='+PAGE.data.token).done(function(res){
+    if(requestTime<3){
+      requestTime++;
+    } else {
+      return false;
+    }
+    $.get(apiurl + '/anfacommonservice/common/oss/v1/policy?access_token='+PAGE.data.token).done(function(res){
       var data = res.data;
       if(res.status === 200){
         PAGE.data.policydata = data
         $('.loadinginfo').hide();
         $('.uploadbox').show();
       } else {
-        showFailPage(JSON.stringify(res.errorInfo))
+        if(requestTime<3){
+          getPolicy();
+        } else {
+          showFailPage(JSON.stringify(res.errorInfo))
+        }
       }
     }).fail(function(err){
-      alert('token信息出错了')
-      showFailPage(JSON.stringify(err))
+      if(requestTime<3){
+          getPolicy();
+        } else {
+          alert('token信息出错了')
+          showFailPage(JSON.stringify(err))
+        }
     })
   }
 

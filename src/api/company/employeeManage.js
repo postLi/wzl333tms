@@ -1,6 +1,7 @@
 import fetch from '../../utils/fetch'
 import CACHE from '@/utils/cache'
 import { getSelectType } from '@/api/common'
+import { getUserInfo } from '@/utils/auth'
 
 /**
  * 获取指定网点的所有下级节点
@@ -15,7 +16,7 @@ export function getGroupName(orgid) {
  * 过滤树中的某个节点及其子节点数据
  * @param {*} data 数组结构的树
  */
-/* function getOrgChild(data, id) {
+function getOrgChild(data, id) {
   // 1.遍历数据的第一层
   const res = data.filter(el => {
     if (el.id === id) {
@@ -44,45 +45,32 @@ export function getGroupName(orgid) {
       return []
     }
   }
-} */
+}
 /**
  * 获取所有网点的信息，树形结构
  * 过滤掉无效的网点
  */
-const LocalAllOrgInfo = {}
 export function getAllOrgInfo(orgId, isRefresh) {
-  return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
-    const data = res.data || []
-    LocalAllOrgInfo[orgId] = data
-    return data
-  })
-
-  // 如果是强制刷新或者无本地缓存则请求服务器
-  /* if (isRefresh || (!LocalAllOrgInfo[orgId])) {
-    return fetch.get('/api-system/system/org/v1/tree/' + orgId).then(res => {
-      const data = res.data || []
-      LocalAllOrgInfo[orgId] = data
-      return data
+  // 判断缓存的列表里能否取到对应的网点列表，如果查找不到，则取最新的数据
+  if (!(CACHE.get('orgtree' + '_update')) && CACHE.get('orgtree')) {
+    return new Promise((resolve) => {
+      resolve(getOrgChild(CACHE.get('orgtree'), orgId))
     })
   } else {
-    return new Promise(resolve => {
-      resolve(LocalAllOrgInfo[orgId])
+    const cid = getUserInfo().companyId
+    // 改为始终拿公司下的网点信息
+    return fetch.get('/api-system/system/org/v1/tree/' + cid).then(res => {
+      const data = res.data || []
+      CACHE.set('orgtree', res.data)
+      CACHE.set('orgtree' + '_update', false)
+      return getOrgChild(data, orgId)
     })
-  }*/
-
-  /* return fetch.get('/api-system/system/org/v1/tree').then(res => {
-    let data = res.data
-    if (orgid) {
-      data = getOrgChild(data, orgid)
-    }
-    return data || []
-  }) */
+  }
 }
 /** 返回全部的数据 */
 export function postAllOrgInfo(orgId, isRefresh) {
   return fetch.post('/api-system/system/org/v1/tree/' + orgId).then(res => {
     const data = res.data || []
-    LocalAllOrgInfo[orgId] = data
     return data
   })
 }
