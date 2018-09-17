@@ -349,7 +349,7 @@ export default {
         label: '货号',
         prop: 'shipGoodsSn',
         width: '120',
-        fixed: true
+        fixed: false
       }, {
         label: '开单网点',
         prop: 'fromOrgName',
@@ -390,10 +390,10 @@ export default {
         fixed: false
       }, {
         label: '到账日期',
-        prop: 'acceptTime',
+        prop: 'accountTime',
         width: '165',
         slot: (scope) => {
-          return `${parseTime(scope.row.acceptTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          return `${parseTime(scope.row.accountTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
         fixed: false
       }, {

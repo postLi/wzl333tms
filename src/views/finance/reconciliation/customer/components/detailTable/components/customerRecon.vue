@@ -27,6 +27,7 @@
             :default-value="defaultTime"
             type="daterange"
             align="right"
+            size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -142,6 +143,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -297,6 +304,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -460,6 +473,12 @@
             label="货号">
           </el-table-column>
           <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
+          </el-table-column>
+          <el-table-column
             prop="shipFromCityName"
             sortable
             width="160"
@@ -612,6 +631,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"

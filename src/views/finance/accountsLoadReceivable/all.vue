@@ -151,7 +151,12 @@ export default {
         label: '结算状态',
         prop: 'totalStatusCn',
         width: '120'
-      },
+      },{
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
       {
         label: '发货人',
         prop: 'shipSenderName',
@@ -164,6 +169,12 @@ export default {
         width: '120',
         fixed: false
       },
+      {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
       {
         'label': '现付',
         'prop': 'nowPayFee'

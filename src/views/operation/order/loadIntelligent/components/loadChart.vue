@@ -109,7 +109,6 @@ export default {
     truckInfo: {
       handler(cval, oval) {
         if (cval) {
-          console.log('chart',cval, oval)
         this.baseInfo.totalWeight = Number(cval.weight) || 0
         this.baseInfo.totalVolume = Number(cval.volume) || 0
           this.initChart()

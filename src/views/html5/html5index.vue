@@ -163,57 +163,57 @@ export default {
         }
       },
       thedata: {
-        'abnormalAddCent': '-1.00%',
-        'abnormalAddFee': 2495.00, // 异动增款
-        'abnormalSubFee': 4158.00, // 异动减款
-        'addComCent': '-1.00%',
-        'amount': 14, // 运单总数
-        'amountCent': '-7.00%',
-        'amountCollectCent': '64.00%',
-        'amountPayCent': '36.00%',
-        'amountVolume': 169.40, // 总体积
-        'amountWeight': 5270.37, // 总重量
-        'arriveComCent': '-50.00%',
-        'arrivePayCent': '-50.00%',
-        'arrivePayFee': 8076.00, // 到付
-        'brokerageComCent': '-10.00%',
-        'brokerageFee': 3258.00, // 回扣
-        'collectFee': 29515.00, // 总收入
+        'abnormalAddCent': '0.00%',
+        'abnormalAddFee': 0, // 异动增款
+        'abnormalSubFee': 0, // 异动减款
+        'addComCent': '0.00%',
+        'amount': 0, // 运单总数
+        'amountCent': '0.00%',
+        'amountCollectCent': '0.00%',
+        'amountPayCent': '0.00%',
+        'amountVolume': 0, // 总体积
+        'amountWeight': 0, // 总重量
+        'arriveComCent': '0.00%',
+        'arrivePayCent': '0.00%',
+        'arrivePayFee': 0, // 到付
+        'brokerageComCent': '0.00%',
+        'brokerageFee': 0, // 回扣
+        'collectFee': 0, // 总收入
         'creatTime': null, // 开单时间
-        'lineArrive': 1, // 干线到车总数
+        'lineArrive': 0, // 干线到车总数
         'lineArriveCent': '0.00%',
-        'lineComCent': '-5.00%',
-        'lineFee': 608.00, // 干线费
-        'lineSend': 3, // 干线发车总数
-        'lineSendCent': '-25.00%',
-        'monthComCent': '133.00%',
-        'monthPayCent': '133.00%',
-        'monthPayFee': 5797.00, // 月结
-        'nowComCent': '51.00%',
-        'nowPayCent': '51.00%',
-        'nowPayFee': 10602.00, // 现付
-        'orgid': 1, // 归属网点
-        'otherComCent': '-7.00%',
-        'otherFee': 3308.00, // 其他费
-        'payFee': 16750.00, // 总支出
-        'receiptComCent': '-76.00%',
-        'receiptPayCent': '-76.00%',
-        'receiptPayFee': 2545.00, // 回单付
-        'sendComCent': '-5.00%',
-        'sendFee': 3058.00, // 送货费
-        'shortArrive': 3, // 短驳到车总数
+        'lineComCent': '0.00%',
+        'lineFee': 0, // 干线费
+        'lineSend': 0, // 干线发车总数
+        'lineSendCent': '0.00%',
+        'monthComCent': '0.00%',
+        'monthPayCent': '0.00%',
+        'monthPayFee': 0, // 月结
+        'nowComCent': '0.00%',
+        'nowPayCent': '0.00%',
+        'nowPayFee': 0, // 现付
+        'orgid': 0, // 归属网点
+        'otherComCent': '0.00%',
+        'otherFee': 0, // 其他费
+        'payFee': 0, // 总支出
+        'receiptComCent': '0.00%',
+        'receiptPayCent': '0.00%',
+        'receiptPayFee': 0, // 回单付
+        'sendComCent': '0.00%',
+        'sendFee': 0, // 送货费
+        'shortArrive': 0, // 短驳到车总数
         'shortArriveCent': '0.00%',
-        'shortComCent': '11.00%',
-        'shortFee': 2360.00, // 短驳费
-        'shortSend': 7, // 短驳发车总数
+        'shortComCent': '0.00%',
+        'shortFee': 0, // 短驳费
+        'shortSend': 0, // 短驳发车总数
         'shortSendCent': '0.00%',
-        'subComCent': '4.00%',
+        'subComCent': '0.00%',
         'type': null, // 数据类型：0,短驳发车；1，短驳到车；2，干线发车；3，干线到车
-        'volume': null, // 体积
-        'volumeCent': '-14.00%',
-        'week': null, // 星期几
-        'weight': null, // 重量
-        'weightCent': '3.00%',
+        'volume': 0, // 体积
+        'volumeCent': '0.00%',
+        'week': 0, // 星期几
+        'weight': 0, // 重量
+        'weightCent': '0.00%',
         'id': null
       },
       pickerDate: [],
@@ -338,10 +338,12 @@ export default {
       *选择的日期周期(0:今天；1：昨天；2：本周；3：本月； 4：本年；5：自定义；
       private Integer buttonKey;
         */
-      postHomedetail(this.otherinfo.companyId, this.searchQuery.vo).then(data => {
-        this.thedata = data
-        this.setInChart()
-        this.setCompareChart()
+      postHomedetail(this.otherinfo.orgid, this.searchQuery.vo).then(data => {
+        if (data) {
+          this.thedata = data
+          this.setInChart()
+          this.setCompareChart()
+        }
       }).catch(err => {
         this.currentkey = ''
         this.$message.warning('查不到相关数据。')
@@ -616,6 +618,7 @@ export default {
    // 获取年度运力数据
     myChart3.showLoading()
     getHomeYearDetail().then(data => {
+      data = data || []
       const monthArr = []
       const shipArr = []
       const weightArr = []
@@ -627,6 +630,7 @@ export default {
       })
       this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
     }).catch(err => {
+      console.log('fetch err info:', err)
       const shipArr = [2.0, 4.9, 7.0, 10, 25.6, 76.7, 135.6, 162.2, '', '', '', '']
       const weightArr = [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0]
       const volumeArr = [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 0, 0, 0, 0]

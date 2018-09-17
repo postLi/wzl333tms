@@ -101,7 +101,7 @@
     },
     mounted() {
       this.fetchAllCustomer()
-      this.tablekey = Math.random()
+      this.tablekey = new Date().getTime()
     },
     data() {
       return {

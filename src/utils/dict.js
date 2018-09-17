@@ -16,14 +16,16 @@ const TMS_DICT_OBJECT = {
  * 赋值
  */
 for (const i in $const) {
-  TMS_DICT_OBJECT[(i + '').toLocaleLowerCase()] = Object.entries($const[i]).map(el => {
-    let obj = {}
-    obj = {
-      id: /\d+/.test(el[0]) ? (parseInt(el[0], 10) || el[0]) : el[0],
-      dictName: el[1]
-    }
-    return obj
-  })
+  if (typeof $const[i] === 'object') {
+    TMS_DICT_OBJECT[(i + '').toLocaleLowerCase()] = Object.entries($const[i]).map(el => {
+      let obj = {}
+      obj = {
+        id: /\d+/.test(el[0]) ? (parseInt(el[0], 10) || el[0]) : el[0],
+        dictName: el[1]
+      }
+      return obj
+    })
+  }
 }
 console.log('TMS_DICT_OBJECT:', TMS_DICT_OBJECT)
 

@@ -71,7 +71,6 @@ import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import order from '@/api/operation/orderManage'
 // import { getTransferTrack, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
-import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime, closest } from '@/utils/index'
@@ -110,7 +109,7 @@ export default {
       isShowBtn: true,
       isFootEdit: true,
       formModel: {
-        createTime: '', 
+        createTime: '',
         orgid: '',
         shipId: '',
         trackDetailed: '',
@@ -166,11 +165,11 @@ export default {
       })
     },
     getDetail() {
-      let transferId = this.id
-      let shipId = this.shipId
+      const transferId = this.id
+      const shipId = this.shipId
       order.getShipTrackinfo(shipId).then(data => {
         this.trackDetail = data
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -192,7 +191,7 @@ export default {
           this.getDetail()
         })
         .catch(error => {
-           this.$message.error(error.errorInfo || error.text || '删除失败')
+          this.$message.error(error.errorInfo || error.text || '删除失败')
         })
       })
     },
@@ -209,11 +208,11 @@ export default {
         this.resetForm()
       })
       .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
+        this.$message.error(error.errorInfo || error.text)
       })
     },
     addTrack() {
-      let data = objectMerge2({}, this.formModel)
+      const data = objectMerge2({}, this.formModel)
       data.createTime = parseTime(+new Date(data.createTime), '{y}-{m}-{d} {h}:{i}:{s}')
       data.shipId = this.shipId
       data.orgid = this.otherinfo.orgid
@@ -224,7 +223,7 @@ export default {
         this.resetForm()
       })
       .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
+        this.$message.error(error.errorInfo || error.text)
       })
     },
     getSystemTime() { // 获取系统时间

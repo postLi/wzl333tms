@@ -55,6 +55,11 @@
       <select-type v-model="searchForm.status" type="count_status" >
       </select-type>
     </el-form-item>
+    <el-form-item label="签收状态"  prop="signStatus">
+      <selectType v-model="searchForm.signStatus"  type="sign_status">
+        <el-option slot="head" label="全部" value="" ></el-option>
+      </selectType>
+    </el-form-item>
     <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
@@ -107,7 +112,8 @@ export default {
         shipToCityCode: '',
         shipSn: '',
         ascriptionOrgId: '',
-        status: ''
+        status: '',
+        signStatus: ''
       },
       pickerOptions2: {
         shortcuts: pickerOptions2
@@ -118,6 +124,12 @@ export default {
     orgid(newVal) {
       this.searchForm.shipFromOrgid = newVal
     },
+    searchCreatTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
     // 传到子组件
     searchForm: {
       handler(cval, oval) {
@@ -126,7 +138,6 @@ export default {
           this.searchObjs.startTime = this.searchCreatTime[0] + ' 00:00:00'
           this.searchObjs.endTime = this.searchCreatTime[1] + ' 23:59:59'
         }
-        console.log(this.searchObjs, cval, oval)
       },
       deep: true
     }
@@ -143,6 +154,7 @@ export default {
   },
   methods: {
     getDataObj(obj) {
+      this.searchCreatTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)
       this.$emit('change', obj)
     },

@@ -1,4 +1,5 @@
 import fetch from '../../utils/fetch'
+import { getSelectType } from '@/api/common'
 
 /**
  * 插入角色信息
@@ -64,7 +65,7 @@ export function getAuthInfo(orgid, rolesName, currentPage = 1, pageSize = 100) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function getauthTreeInfo(role_id) {
-  return fetch.get('/api-system/system/menu/v1/menuTree/',{
+  return fetch.get('/api-system/system/menu/v1/menuTree/', {
     params: {
       role_id: role_id || 0
     }
@@ -78,13 +79,6 @@ export function getauthTreeInfo(role_id) {
  * @param {*} orgid 网点id
  */
 export function getSelectDictInfo(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'menu_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('menu_type', orgId)
 }
 

@@ -18,10 +18,21 @@
             :on-error="handleError"
             :on-success="handleImageScucess">
             <slot name="content">
-                <!-- <div v-if="title && !showFileList" class="upload__title">{{ title }}</div> -->
-                <el-button :size="size" type="primary">点击上传</el-button>
-                <div class="el-upload__text" v-if="!showFileList">将文件拖拽到此区域</div>
-                <div v-if="tip" class="upload__tip">{{ tip }}</div>
+                <div v-if="!showtc">
+                  <div v-if="title && !showFileList" class="upload__title">{{ title }}</div>
+                  <el-button :size="size" type="primary">点击上传</el-button>
+                  <el-button class="uploadtwocode" :size="size" @click.stop.prevent="showtc = true" v-if="twocode" type="primary">二维码上传</el-button>
+                  <div class="el-upload__text" v-if="!showFileList">将文件拖拽到此区域</div>
+                  <div v-if="tip" class="upload__tip">{{ tip }}</div>
+                </div>
+                <div class="twocodebox" @click.stop.prevent @mouseover="showtwocdetip = true" @mouseout="showtwocdetip = false" v-else>
+                  <div>
+                    <img :src="twocodeurl" alt="">
+                  </div>
+                  <el-button  :size="size" @click="showtc = false" type="primary">本地上传</el-button>
+                  <el-button  :size="size" @click="changeTwocode" type="primary">更换二维码</el-button>
+                </div>
+                
             </slot>
         </el-upload>
         <div class="image-preview" v-if="imageUrl && !showFileList">
@@ -37,8 +48,9 @@
 
 <script>
 // 上传接口
-import { getUploadPolicy } from '@/api/common'
+import { getUploadPolicy, getUploadId, getUploadIdInfo, getTwocodeUrl } from '@/api/common'
 import { parseTime } from '@/utils/'
+import QRCode from 'qrcode'
 
 export default {
   name: 'singleImageUpload',
@@ -72,6 +84,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    twocode: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -85,6 +101,8 @@ export default {
       dataObj: { token: '', key: '' },
       // 上传参数文档
       // https://help.aliyun.com/document_detail/31988.html
+      // OSS PostObject错误及排查
+      // https://yq.aliyun.com/articles/58524
       upload: {
         'key': '', // 文件名称
         'policy': '',
@@ -95,10 +113,20 @@ export default {
       },
       uploadUrl: '',
       dir: '',
-      filelist: []
+      filelist: [],
+      showtc: false,
+      showtwocdetip: true,
+      twocodeurl: ''
     }
   },
   watch: {
+    showtc(){
+      if(this.showtc){
+        this.changeTwocode()
+      } else {
+        clearInterval(this.uptimer)
+      }
+    },
     value: {
       handler(newVal) {
         if (this.showFileList) {
@@ -123,6 +151,10 @@ export default {
   updated() {
     console.log('single image updated~~~')
   },
+  beforeDestroy(){
+    console.log('beforeDestroy')
+    clearInterval(this.uptimer)
+  },
   methods: {
     init() {
         // 从后台获取policy
@@ -142,6 +174,7 @@ export default {
         return el.url !== url
       })
       this.emitInput('')
+      this.showtc = false
     },
     // 超出上传数量
     onexceed(file, filelist) {
@@ -213,6 +246,52 @@ export default {
           })
         }
       })
+    },
+    changeTwocode(){
+      clearInterval(this.uptimer)
+      // 请求uploadid
+      getUploadId().then(res => {
+        this.upid = res.data
+        this.startFetchData()
+        let url = 'http://' + location.host +'/static/upload.html?len=1&access_token='+ this.access_token +'&id=' +res.data
+        console.log('url:', url)
+        QRCode.toDataURL(url,{
+          rendererOpts:{
+            margin: 0
+          }
+        }).then(url => {
+          this.twocodeurl = url
+        })
+        // this.twocodeurl = getTwocodeUrl('//' + location.host +'/static/upload.html?len=1&id=' +res.data)
+      }).catch(err=>{
+        this.$message.error('生成二维码出错了~')
+      })
+      
+    },
+    startFetchData(){
+      clearInterval(this.uptimer)
+      let thetime = 0;
+      this.uptimer = setInterval(()=>{
+        thetime += 5000
+        // 当超过10分钟时，自动刷新二维码并提示
+        if(thetime > 9.5 * 60 * 1000){
+          this.$message.info('二维码过期了，已重新生成~')
+          this.changeTwocode()
+          return false
+        }
+        getUploadIdInfo(this.upid).then(res=>{
+          let data = res.data
+          if(data && data.id === this.upid && data.url){
+            clearInterval(this.uptimer)
+            // this.value = data.url
+            this.showtc = false
+            this.emitInput(decodeURIComponent(data.url))
+          }
+        }).catch(err=>{
+          // this.changeTwocode()
+          this.$message.info('二维码过期了，请重新扫描上传~')
+        })
+      }, 5000)
     }
   }
 }
@@ -236,6 +315,22 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
     @import "src/styles/mixin.scss";
     
+    .uploadtwocode{
+      position: relative;
+    }
+    .twocodebox{
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      img{
+        width: 164px;
+        height: 164px;
+      }
+      .el-button{
+        margin-top: 0 !important;
+      }
+    }
     .upload-container {
         width: 100%;
         position: relative;

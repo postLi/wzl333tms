@@ -129,7 +129,12 @@ export default {
         'label': '货号',
         'prop': 'shipGoodsSn',
         'width': '150'
-      }, {
+      },{
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },{
         'label': '运单标识',
         'prop': 'shipIdentifying',
         slot: function(scope) {

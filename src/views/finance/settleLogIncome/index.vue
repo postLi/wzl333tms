@@ -209,13 +209,16 @@ export default {
         return false
       }
       this.setData()
+      this.loading = true
       postAddIncome(this.addIncomeInfo).then(data => { // 保存
+        this.loading =false
           this.$message({ type: 'success', message: '保存成功！' })
           this.getFeeInfo()
           this.tableKey = new Date().getTime()
           this.$router.push({ path: './settleLog', query:{ pageKey: new Date().getTime()  } })
         })
         .catch(error => {
+          this.loading =false
           this.$message({ type: 'error', message: error.errorInfo || error.text })
         })
     },

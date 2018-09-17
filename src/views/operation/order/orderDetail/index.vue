@@ -11,7 +11,7 @@
         <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="six" label="运单轨迹">
-        <trunk v-if="activeTab.six" :orderid="output.orderid" />
+        <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
         <abnormal v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
@@ -74,7 +74,7 @@ export default {
     this.init()
   },
   mounted() {
-    this.init()
+    // this.init()
   },
   data() {
     return {

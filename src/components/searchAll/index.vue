@@ -60,7 +60,6 @@ export default {
     }
   },
   mounted() {
-    console.log('werwer', this.searchObj)
     this.fetchAllloadAll()
   },
   methods: {
