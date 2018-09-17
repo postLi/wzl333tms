@@ -151,6 +151,12 @@ export default {
         width: '120'
       },
       {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
+      {
         label: '发货人',
         prop: 'shipSenderName',
         width: '120',

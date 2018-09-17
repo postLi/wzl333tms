@@ -134,6 +134,11 @@ export default {
           return parseShipStatus(scope.row.shipIdentifying)
         }
       }, {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },{
         'label': '出发城市',
         'prop': 'shipFromCityName'
       }, {

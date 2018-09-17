@@ -55,6 +55,11 @@
       <select-type v-model="searchForm.status" type="count_status" >
       </select-type>
     </el-form-item>
+    <el-form-item label="签收状态"  prop="signStatus">
+      <selectType v-model="searchForm.signStatus"  type="sign_status">
+        <el-option slot="head" label="全部" value="" ></el-option>
+      </selectType>
+    </el-form-item>
     <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
@@ -107,7 +112,8 @@ export default {
         shipToCityCode: '',
         shipSn: '',
         ascriptionOrgId: '',
-        status: ''
+        status: '',
+        signStatus: ''
       },
       pickerOptions2: {
         shortcuts: pickerOptions2

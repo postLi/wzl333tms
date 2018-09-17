@@ -95,6 +95,12 @@ export default {
           fixed: false
         },
         {
+          label: '签收状态',
+          prop: 'signStatusName',
+          width: '100',
+          fixed: false
+        },
+        {
           label: '运单标识',
           prop: 'shipIdentifying',
           width: '150',

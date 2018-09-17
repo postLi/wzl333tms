@@ -985,7 +985,7 @@
       },
       print() { // 打印合同
         let str = '?'
-        this.formModel.checkBillName = this.checkBillName
+        this.formModel.checkBillName = this.sendContract.contractName
         for (let item in this.formModel) {
           str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
 

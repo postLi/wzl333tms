@@ -22,6 +22,11 @@
           </el-date-picker>
         </div>
       </el-form-item>
+      <el-form-item label="签收状态" prop="signStatus">
+        <selectType v-model="searchForm.signStatus" type="sign_status">
+          <el-option slot="head" label="全部" value=""></el-option>
+        </selectType>
+      </el-form-item>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>

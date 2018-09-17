@@ -67,12 +67,14 @@ import SearchForm from './components/search2'
 import TableSetup from '@/components/tableSetup'
 import { getSummaries, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import Pager from '@/components/Pagination/index'
 
 export default {
   name: 'handAccountDetail',
   components: {
     SearchForm,
-    TableSetup
+    TableSetup,
+    Pager
   },
   mounted() {
     // this.searchQuery.vo.userId = this.$route.query.id
@@ -135,6 +137,10 @@ export default {
         'prop': 'shipSn',
         'width': '120'
       }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100'
+      },{
         'label': '费用类别',
         'prop': 'feeName'
       }, {
@@ -208,6 +214,7 @@ export default {
     fetchData() {
       this.fetchAllOrder()
     },
+    setColumn () {},
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
