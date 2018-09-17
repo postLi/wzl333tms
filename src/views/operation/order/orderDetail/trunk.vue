@@ -14,7 +14,8 @@ window.initialize = function() {
 }
 export default {
   props: {
-    orderid: [String, Number]
+    orderid: [String, Number],
+    orderdata: [Object]
   },
   data() {
     return {
@@ -26,6 +27,9 @@ export default {
       if (newVal !== '') {
         this.init()
       }
+    },
+    orderdata() {
+
     }
   },
   mounted() {
@@ -85,18 +89,17 @@ export default {
     },
 
     init() {
-      return Promise.all([this.fetchData(), this.loadMap()]).then(() => {
+      this.fetchData()
+      return Promise.all([this.loadMap()]).then(() => {
         this.initMap()
       })
     },
     fetchData() {
-      return orderManage.getOrderInfoById(this.orderid).then(res => {
-        this.start = res.data.tmsOrderShipInfo.shipFromCityName || '广州市'
-        this.end = res.data.tmsOrderShipInfo.shipToCityName || '杭州市'
-      }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+      if (this.orderdata.tmsOrderShipInfo) {
+        this.start = this.orderdata.tmsOrderShipInfo.shipFromCityName || '广州市'
+        this.end = this.orderdata.tmsOrderShipInfo.shipToCityName || '杭州市'
+        return
+      }
     }
   }
 }

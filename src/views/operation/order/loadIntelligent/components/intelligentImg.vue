@@ -47,7 +47,7 @@
     },
     methods: {
       openInteligent() {
-          this.$router.push(
+        this.$router.push(
             {
               path: '/operation/order/loadIntelligent/index',
               query: {
@@ -57,7 +57,7 @@
               }
             },
           )
-          this.eventBus.$emit('closeCurrentView')
+        this.eventBus.$emit('closeCurrentView')
       }
     }
   }

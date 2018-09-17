@@ -253,7 +253,9 @@
       id: getParams('id'),
       len: parseInt(getParams('len'),10) || 1
     }
-    if(!PAGE.data.token || !PAGE.data.id){
+    if(getParams('page') && getParams('page')==='success'){
+      showSuccessPage();
+    }else if(!PAGE.data.token || !PAGE.data.id){
       alert('缺少必要参数！');
       showFailPage()
     } else {
