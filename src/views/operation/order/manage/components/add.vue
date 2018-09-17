@@ -78,19 +78,19 @@
             <li>
               <p><i>*</i> 件数</p>
               <el-form-item prop="tmsOrderCargoList.cargoAmount">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
+                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoAmount" v-numberOnly :disabled="isDbclick"></el-input>
               </el-form-item>
             </li>
             <li>
               <p>重量(kg)</p>
               <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
+                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoWeight" v-numberOnly :disabled="isDbclick"></el-input>
               </el-form-item>
             </li>
             <li>
               <p>体积(方)</p>
               <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
+                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoVolume" v-numberOnly :disabled="isDbclick"></el-input>
               </el-form-item>
             </li>
             <li>
@@ -644,7 +644,7 @@
         this.$refs[ruleForm].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
-          if (valid) {
+          if (valid && !this.loading) {
             this.loading = true
             this.form.customerList[0] = this.form.customSend
             this.form.customerList[1] = this.form.customRece
@@ -662,6 +662,7 @@
               obj[i] = data.tmsOrderCargoList[i]
             }
             data.tmsOrderCargoList = [obj]
+            this.loading = true
             if (this.isModify) {
               promiseObj = postModifyOrder(data)
             } else {
@@ -679,12 +680,13 @@
               this.$message.success('保存成功')
               this.loading = false
             }).catch(err => {
+              this.loading = false
               this.$message({
                 type: 'info',
                 message: err.errorInfo || err.text || '未知错误，请重试~'
               })
             })
-            this.loading = false
+            
           } else {
             return false
           }

@@ -226,7 +226,20 @@ export default {
           prop: 'backpayOilCard',
           width: '110',
           fixed: false
-        }, {
+        }, 
+        {
+            label: '封签号',
+            prop: 'sealNumber',
+            width: '120',
+            fixed: false
+          },
+          {
+            label: '油卡号',
+            prop: 'oilCardNumber',
+            width: '120',
+            fixed: false
+          },
+        {
           label: '运费合计',
           prop: 'totalFee',
           width: '110',

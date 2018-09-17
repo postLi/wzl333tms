@@ -530,7 +530,7 @@
         this.$refs[formName].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
-          if (valid) {
+          if (valid && !this.loading) {
             this.loading = true
             this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
 
@@ -538,6 +538,7 @@
             // console.log(this.form.tmsTruck.truckIdNumber)
             const data = objectMerge2({}, this.form)
             // 判断操作，调用对应的函数
+            this.loading = true
             if (this.isModify) {
               promiseObj = putUpdatePickup(data)
             } else {
@@ -557,6 +558,7 @@
             }
 
             promiseObj.then(res => {
+              this.loading = false
               this.$refs[formName].resetFields()
               this.$emit('success')
               this.closeMe()

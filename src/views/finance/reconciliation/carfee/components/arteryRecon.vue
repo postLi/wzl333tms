@@ -22,10 +22,10 @@
         </div>
         <div class="sDate">
           <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-if="$route.query.id">
-            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled></el-input>
+            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled size="mini"></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-else>
-            <el-select v-model="searchTitle.memberName" clearable>
+            <el-select v-model="searchTitle.memberName" clearable  size="mini">
               <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
                          :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
@@ -35,6 +35,7 @@
             :default-value="defaultTime"
             type="daterange"
             align="right"
+            size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -1083,10 +1084,10 @@
       }
       .sDate {
         .el-form-item__label {
-          line-height: 40px;
+          line-height: 28px;
         }
         .el-input__inner {
-          height: 40px;
+          // height: 40px;
         }
         .el-input.is-disabled {
           .el-input__inner {

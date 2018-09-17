@@ -23,6 +23,7 @@
         <el-input v-model="searchForm.dirverName" clearable :maxlength="10"  placeholder="司机名称"></el-input>
         <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
       </el-form-item>
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -35,10 +36,12 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import searchAll from '@/components/searchAll/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    searchAll
   },
   props: {
     btnsize: {
@@ -61,6 +64,7 @@ export default {
       }
     }
     return {
+      searchObjs: {},
       searchForm: {
         // sign: 2,
         orgid: '',
@@ -83,12 +87,36 @@ export default {
       }
     }
   },
+  watch: {
+    searchTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'loadStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'loadEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchTime) {
+          this.$set(this.searchObjs, 'loadStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'loadEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.searchForm.orgid = this.otherinfo.orgid
     // this.searchForm.ascriptionOrgid = this.otherinfo.orgid // 结算网点
     this.onSubmit()
   },
   methods: {
+    getDataObj (obj) {
+      this.searchTime = [obj.loadStartTime, obj.loadEndTime]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {

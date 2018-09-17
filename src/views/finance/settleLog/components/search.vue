@@ -7,7 +7,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="结算网点" prop="orgId">
-        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"></SelectTree>
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="onSubmit"></SelectTree>
       </el-form-item>
       <el-form-item label="结算类型" prop="settlementId">
         <selectType v-model="searchForm.settlementId" type="settlement_type" clearable>
@@ -95,6 +95,12 @@ export default {
     orgid(newVal) {
       this.searchForm.orgId = newVal
     },
+    searchCreatTime(newVal) {
+      if (newVal) {
+         this.searchObjs.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
+         this.searchObjs.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+      }
+    },
     // 传到子组件
     searchForm: {
       handler(cval, oval) {
@@ -121,6 +127,7 @@ export default {
     // },
     // 接收子组件传回来的东西
     getDataObj(obj) {
+      this.searchCreatTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)
       this.$emit('change', obj)
     },
@@ -146,6 +153,7 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.searchForm.orgId = this.orgid
+        this.searchCreatTime = this.defaultTime
         this.$refs[formName].resetFields()
       })
     }

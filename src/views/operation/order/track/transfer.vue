@@ -160,11 +160,11 @@ export default {
           prop: "deliveryExpense",
           width: "120"
         },
-        // {
-        //   label: "中转费其他费",
-        //   prop: "batchTypeId",
-        //   width: "120"
-        // },
+        {
+          label: "中转费其他费",
+          prop: "transferOtherFee",
+          width: "120"
+        },
         {
           label: "中转费合计",
           prop: "totalCost",

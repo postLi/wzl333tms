@@ -88,6 +88,12 @@ export default {
     }
   },
   watch: {
+    searchTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'departureStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'departureEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
     orgid(newVal) {
       this.searchForm.orgId = newVal
     },
@@ -111,6 +117,7 @@ export default {
   methods: {
     // 接收子组件传回来的东西
     getDataObj(obj) {
+      this.searchTime = [obj.departureStartTime, obj.departureEndTime]
       this.searchForm = Object.assign({}, obj)
       this.$emit('change', obj)
     },
