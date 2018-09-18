@@ -21,6 +21,14 @@
 
           </el-form-item>
         </div>
+        <div class="sPayType">
+          <el-form-item label="费用项" prop="">
+            <el-select v-model="typeIds" multiple collapse-tags placeholder="可多选" @change="changeFeeType">
+              <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.dictValue">
+            </el-option>
+        </el-select>
+          </el-form-item>
+        </div>
         <div class="sDate">
           <el-date-picker
             v-model="searchCreatTime"
@@ -804,6 +812,7 @@
   import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
   import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
+  import { getSelectType } from '@/api/common'
 
   export default {
     components: {
@@ -883,6 +892,8 @@
         visibleDialog: false,
         loading: true,
         btnsize: 'mini',
+        feeIdsArr: [],
+        typeIds: '',
         searchTitle: {
           shipSenderId: '', //
           startTime: '',
@@ -918,9 +929,19 @@
       this.onSubmit()
     },
     mounted() {
+      this.getSelectType()
       this.onSubmit()
     },
     methods: {
+      changeFeeType(obj) {
+        console.log('changeFeeType', obj, this.typeIds)
+      },
+      getSelectType() {
+      const type = 'custoer_fee_type'
+      getSelectType(type, this.otherinfo.orgid).then(data => {
+        this.feeIdsArr = data
+      })
+    },
       export1() {
         this.sendData()
         // console.log(JSON.stringify(this.form))
@@ -932,6 +953,7 @@
       fetchList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
+        this.searchTitle.feeTypeId =  this.typeIds.join(',')
         return postCFinanceinitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
           this.infoMessage(this.messageArr)

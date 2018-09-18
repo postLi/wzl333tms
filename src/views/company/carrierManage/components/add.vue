@@ -9,7 +9,7 @@
           <el-input v-model.trim="form.carrierSn" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商" prop="carrierName">
-          <el-input v-model.trim="form.carrierName" :maxlength="1" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierName" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
           <el-input v-numberOnly v-model="form.carrierMobile"  :maxlength="11" auto-complete="off"></el-input>
@@ -261,6 +261,9 @@ export default {
             this.reset()
             if (!bool) {
               this.closeMe()
+            }else {
+              this.form.orgid = this.orgid
+              this.getCarrierSn()
             }
             this.$emit('success')
           }).catch(err => {

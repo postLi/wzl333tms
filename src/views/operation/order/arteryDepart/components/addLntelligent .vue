@@ -45,19 +45,19 @@
           <el-table-column
             fixed
             prop="weight"
-            width="100"
-            label="承载重">
+            width="110"
+            label="承载重(kg)">
           </el-table-column>
           <el-table-column
             fixed
             prop="vol"
             width="90"
-            label="承载方">
+            label="承载方(m³)">
           </el-table-column>
           <el-table-column
             fixed
             prop="price"
-            width="138"
+            width="120"
             label="车费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.price"
