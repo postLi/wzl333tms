@@ -120,8 +120,8 @@ export default {
     }
   },
   watch: {
-    showtc(){
-      if(this.showtc){
+    showtc() {
+      if (this.showtc) {
         this.changeTwocode()
       } else {
         clearInterval(this.uptimer)
@@ -151,7 +151,7 @@ export default {
   updated() {
     console.log('single image updated~~~')
   },
-  beforeDestroy(){
+  beforeDestroy() {
     console.log('beforeDestroy')
     clearInterval(this.uptimer)
   },
@@ -247,47 +247,46 @@ export default {
         }
       })
     },
-    changeTwocode(){
+    changeTwocode() {
       clearInterval(this.uptimer)
       // 请求uploadid
       getUploadId().then(res => {
         this.upid = res.data
         this.startFetchData()
-        let url = 'http://' + location.host +'/static/upload.html?len=1&access_token='+ this.access_token +'&id=' +res.data
+        const url = 'http://' + location.host + '/static/upload.html?len=1&access_token=' + this.access_token + '&id=' + res.data + '&url=' + (window.tms_testapiurl || '')
         console.log('url:', url)
-        QRCode.toDataURL(url,{
-          rendererOpts:{
+        QRCode.toDataURL(url, {
+          rendererOpts: {
             margin: 0
           }
         }).then(url => {
           this.twocodeurl = url
         })
         // this.twocodeurl = getTwocodeUrl('//' + location.host +'/static/upload.html?len=1&id=' +res.data)
-      }).catch(err=>{
+      }).catch(err => {
         this.$message.error('生成二维码出错了~')
       })
-      
     },
-    startFetchData(){
+    startFetchData() {
       clearInterval(this.uptimer)
-      let thetime = 0;
-      this.uptimer = setInterval(()=>{
+      let thetime = 0
+      this.uptimer = setInterval(() => {
         thetime += 5000
         // 当超过10分钟时，自动刷新二维码并提示
-        if(thetime > 9.5 * 60 * 1000){
+        if (thetime > 9.5 * 60 * 1000) {
           this.$message.info('二维码过期了，已重新生成~')
           this.changeTwocode()
           return false
         }
-        getUploadIdInfo(this.upid).then(res=>{
-          let data = res.data
-          if(data && data.id === this.upid && data.url){
+        getUploadIdInfo(this.upid).then(res => {
+          const data = res.data
+          if (data && data.id === this.upid && data.url) {
             clearInterval(this.uptimer)
             // this.value = data.url
             this.showtc = false
             this.emitInput(decodeURIComponent(data.url))
           }
-        }).catch(err=>{
+        }).catch(err => {
           // this.changeTwocode()
           this.$message.info('二维码过期了，请重新扫描上传~')
         })
