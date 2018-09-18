@@ -428,6 +428,9 @@ h1{
       id: getParams('id'),
       len: parseInt(getParams('len'),10) || 1
     }
+    if(getParams('url')){
+      apiurl = getParams('url')
+    }
     if(getParams('page') && getParams('page')==='success'){
       showSuccessPage();
     }else if(!PAGE.data.token || !PAGE.data.id){
