@@ -190,13 +190,13 @@
                 <li>
                   <p>封签号</p>
                   <el-form-item prop="sealNumber">
-                    <el-input v-model="formFee.sealNumber" :maxlength="20" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model.trim="formFee.sealNumber" :maxlength="20" :size="mini" onkeyup="this.value=this.value.replace(/\s+/g,'')"></el-input>
                   </el-form-item>
                 </li>
                 <li>
                   <p>油卡号</p>
                   <el-form-item prop="oilCardNumber">
-                    <el-input v-model="formFee.oilCardNumber" :maxlength="20" :size="mini" v-number-only:point></el-input>
+                    <el-input v-model.trim="formFee.oilCardNumber" :maxlength="25" :size="mini" v-numberOnly></el-input>
                   </el-form-item>
                 </li>
               </ul>
