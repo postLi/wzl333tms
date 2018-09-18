@@ -596,6 +596,7 @@ export default {
       this.tablekey = Math.random() // 刷新表格视图
     },
     getDbClick(row, event) {
+      console.log('detail', row)
       this.selectInfo = row
       this.isCheck = true
       this.isModify = false

@@ -359,7 +359,7 @@ export default {
       })
     },
     showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.shipSn, order.id, true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {
       this.setupTableVisible = true

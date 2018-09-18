@@ -15,30 +15,39 @@
 <meta name="full-screen" content="yes">
 <meta name="x5-fullscreen" content="true">
 <title>上传图片 - 安发中国</title>
+<script>
+  //https://github.com/amfe/lib-flexible/blob/2.0/index.js
+!function(e,t){function n(){t.body?t.body.style.fontSize=12*o+"px":t.addEventListener("DOMContentLoaded",n)}function d(){var e=i.clientWidth/10;i.style.fontSize=e+"px"}var i=t.documentElement,o=e.devicePixelRatio||1;if(n(),d(),e.addEventListener("resize",d),e.addEventListener("pageshow",function(e){e.persisted&&d()}),o>=2){var a=t.createElement("body"),s=t.createElement("div");s.style.border=".5px solid transparent",a.appendChild(s),i.appendChild(a),1===s.offsetHeight&&i.classList.add("hairlines"),i.removeChild(a)}}(window,document);
+</script>
+<style>
+html{color:#000;background:#fff;overflow-y:scroll;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+html *{outline:0;-webkit-text-size-adjust:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+html,body{font-family:sans-serif;height: 100%;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{margin:0;padding:0}
+input,select,textarea{font-size:100%}
+table{border-collapse:collapse;border-spacing:0}
+fieldset,img{border:0}
+abbr,acronym{border:0;font-variant:normal}
+del{text-decoration:line-through}address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:500}
+ol,ul{list-style:none}
+caption,th{text-align:left}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:500}
+q:before,q:after{content:''}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+a:hover{text-decoration:underline}
+ins,a{text-decoration:none}
+</style>
 <style>
 #preview{
   max-width: 100%;
   max-height: 100%;
 }
-.submitbtn{
-  cursor: pointer;
-  width: 100px;
-  height: 50px;
-  background: darkred;
-  border: 1px solid #666;
-  color: #fff;
-  text-align: center;
-  line-height: 50px;
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  margin-left: -50px;
-}
+
 .uploadbox{
   display: none;
-}
-.submitbtn{
-  display: none;
+  height: 100%;
 }
 #loginfo{
   position: fixed;
@@ -49,19 +58,183 @@
   background: rgba(0,0,0,.4);
   color: #fff;
   pointer-events: none;
+  display: none;
+}
+.loadinginfo{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+h1{
+  text-align: center;
+  font-size: 32px;
+  padding: 10px 0;
+}
+.upload-tip{
+  height: 2rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+.upload-tip p{
+  font-size: 24px;
+  line-height: 1.5;
+  padding-left: 10%;
+}
+.big-upload-box{
+  width: 80%;
+  margin-left: 10%;
+  position: relative;
+  height: calc(100% - 4rem);
+  box-sizing: border-box;
+  padding: 20px;
+  background: #eee;
+  margin-bottom: 0.3rem;
+  overflow: hidden;
+}
+.big-upload-box span{
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+}
+.big-upload-box input{
+  position: absolute;
+  width: 100%;
+  height: 100%; 
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.big-upload-box .upload-ico{
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  font-size: 3rem;
+  top: 50%;
+  margin-left: -1.5rem;
+  margin-top: -1.5rem;
+  left: 50%;
+  color: #999;
+  text-align: center;
+  line-height: 2.5rem;
+  pointer-events: none;
+}
+.lt,.rt,.lb,.rb{
+  z-index: 2;
+}
+.lt{
+  left: 0;
+  top: 0;
+  border-left: 5px solid #999;
+  border-top: 5px solid #999;
+}
+.rt{
+  right: 0;
+  top: 0;
+  border-right: 5px solid #999;
+  border-top: 5px solid #999;
+}
+.lb{
+  left: 0;
+  bottom: 0;
+  border-left: 5px solid #999;
+  border-bottom: 5px solid #999;
+}
+.rb{
+  right: 0;
+  bottom: 0;
+  border-right: 5px solid #999;
+  border-bottom: 5px solid #999;
+}
+.imgbox{
+  background: #aaa;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 20px solid #eee;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  display: none;
+}
+
+.upload-btns{
+  height: 1rem;
+  text-align: center;
+  display: none;
+}
+.upload-btns div{
+  display: inline-block;
+  margin-right: 20px;
+  width: 2rem;
+  height: 1rem;
+  line-height: 1rem;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 24px;
+}
+
+.rechoice{
+  color: #409eff;
+  background: #ecf5ff;
+  border: 1px solid #b3d8ff;
+}
+.rechoice input{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+}
+.submitbtn{
+  color: #fff;
+  background-color: #409eff;
+  border: 1px solid #409eff;
 }
 </style>
 </head>
 <body>
   <div class="loadinginfo">正在初始化中...</div>
   <div class="uploadbox">
-    <input type="file" id="getimg3"  accept="image/*" >
-    <img src="about:blank" id="preview" alt="">
+    <div class="upload-tip">
+      <h1>上传图片</h1>
+      <p>1.点击[+]选择图片;<br>2.点击“确认”按钮上传;</p>
+    </div>
+    <div class="big-upload-box">
+      <span class="lt"></span>
+      <span class="rt"></span>
+      <span class="lb"></span>
+      <span class="rb"></span>
+      <span class="upload-ico">+</span>
+      <input type="file" id="getimg3"  accept="image/*" >
+      <div class="imgbox">
+          <img src="http://img2.dzwww.com:8888/tupian/20171202/201712021705f71a7f65519974.jpg" id="preview" alt="">
+      </div>
+    </div>
+    <div class="upload-btns">
+      <div class="rechoice">
+        换一张
+        <input type="file" id="getimg2"  accept="image/*" >
+      </div>
+      <div class="submitbtn">确认</div>
+    </div>
   </div>
-  <div class="submitbtn">确认</div>
+  
   <div id="loginfo"></div>
   <script src="js/lrz.all.bundle.js"></script>
-  <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  <script src="js/jquery-2.1.1.min.js"></script>
   <script>
 /**
  *
@@ -163,7 +336,8 @@
           loginfo('链接：' + url)
           $("#preview")[0].src = url;
           PAGE.data.upurl = url;
-          $('.submitbtn').show();
+          $('.upload-btns').show();
+          $('.imgbox').show().css('display', 'flex');
         } else {
           loginfo('4444')
         }
@@ -178,6 +352,7 @@
     });
   }
 
+  $('#getimg2')[0].onchange = getImageFile;
   $('#getimg3')[0].onchange = getImageFile;
   var apiurl = '/api';
 
