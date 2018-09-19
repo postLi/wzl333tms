@@ -2533,7 +2533,7 @@ export default {
         }
 
       // 检查运单号是否重复
-        if (this.output.ismodify) {
+        if (this.output.ismodify && !this.$route.query.isdash) {
           resolve(!msg)
         } else {
           if (!this.form.tmsOrderShip.shipSn) {
@@ -2684,9 +2684,17 @@ export default {
               data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
               data.tmsOrderShip.shipStatus = this.orderData.tmsOrderShip.shipStatus
               console.log('change Order:', data)
-              orderManage.putChangeOrder(data).then(res => {
+              // 判断是否从草稿箱过来
+              let pro
+              const isdashed = this.$route.query.isdash
+              if (isdashed) {
+                pro = orderManage.postNewOrder(data)
+              } else {
+                pro = orderManage.putChangeOrder(data)
+              }
+              pro.then(res => {
                 this.loading = false
-                this.$message.success('成功修改运单！')
+                this.$message.success('成功' + (isdashed ? '创建' : '修改') + '运单！')
                 this.eventBus.$emit('saveOrderSuccess')
 
                 if (!this.output.isbatch) {
@@ -2702,7 +2710,7 @@ export default {
                 }
               }).catch(err => {
                 this.loading = false
-                this.$message.error('修改失败，原因：' + err.text)
+                this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
               })
             } else {
               /* this.$message.success('成功创建运单！')
