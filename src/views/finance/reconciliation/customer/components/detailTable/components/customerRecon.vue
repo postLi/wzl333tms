@@ -129,8 +129,7 @@
             label=""
             width="80">
             <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
-                                                                                      fill="red"></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -214,6 +213,22 @@
             label="付款方式"
             width="130"
             sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -547,6 +562,22 @@
             label="付款方式"
             width="130"
             sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -977,7 +1008,7 @@
           this.messageArr = data.tmsFinanceBillCheckDto
           this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
           console.log('this.currentFeeTypeIds_res/////add', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
-          this.typeIds = this.currentFeeTypeIds
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           if (data.customerDetailDtoList.length > 0) {
@@ -1025,7 +1056,7 @@
           this.messageArr = data.tmsFinanceBillCheckDto
           this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
           console.log('this.currentFeeTypeIds_res/////edit', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
-          this.typeIds = this.currentFeeTypeIds
+          this.typeIds =  data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           data.customerDetailDtoList.forEach((el, val) => {
