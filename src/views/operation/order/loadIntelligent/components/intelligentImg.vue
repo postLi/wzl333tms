@@ -30,7 +30,6 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import { getIntnteInit } from '@/api/operation/arteryDepart'
 export default {
   data() {
@@ -45,15 +44,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'otherinfo'
-    ])
+
   },
-  watch:{
-    httpend(){
+  watch: {
+    httpend() {
       this.stopLoad()
     },
-    stopani(){
+    stopani() {
       this.stopLoad()
     }
   },
@@ -66,7 +63,7 @@ export default {
   },
   methods: {
     infoData() {
-      let obj = JSON.parse(this.$route.query.sendData)
+      const obj = JSON.parse(this.$route.query.sendData)
       this.sendRoute.orgId = this.$route.query.orgId
       this.sendRoute.standCar = obj.map((item, val) => {
         return { id: item.cid, spri: item.price }
@@ -83,15 +80,15 @@ export default {
     },
     stopLoad() { // 请求失败时跳转到干线列表
       if (this.httpend && this.stopani) {
-         this.$message.error(this.errorMessage)
-        setTimeout(() =>{
-        this.$router.push({path: '/operation/order/arteryDepart'})
-        this.eventBus.$emit('closeCurrentView')
+        this.$message.error(this.errorMessage)
+        setTimeout(() => {
+          this.eventBus.$emit('closeCurrentView')
+          this.$router.push({ path: '/operation/order/arteryDepart' })
         }, 2000)
-       
       }
     },
     openInteligent() {
+      this.eventBus.$emit('closeCurrentView')
       this.$router.push({
         path: '/operation/order/loadIntelligent/index',
         query: {
@@ -99,8 +96,7 @@ export default {
           orgId: this.$route.query.orgId,
           sendDate: this.$route.query.sendData
         }
-      }, )
-      this.eventBus.$emit('closeCurrentView')
+      })
     }
   }
 }
