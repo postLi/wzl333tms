@@ -33,6 +33,7 @@
             :default-value="defaultTime"
             type="daterange"
             align="right"
+            size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -192,6 +193,12 @@
             label="出发城市">
           </el-table-column>
           <el-table-column
+            prop="signStatusName"
+            sortable
+            width="120"
+            label="签收状态">
+          </el-table-column>
+          <el-table-column
             prop="shipToCityName"
             sortable
             width="130"
@@ -313,6 +320,12 @@
             sortable
             width="120"
             label="中转单号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatusName"
+            sortable
+            width="120"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -458,6 +471,12 @@
             label="中转单号">
           </el-table-column>
           <el-table-column
+            prop="signStatusName"
+            sortable
+            width="120"
+            label="签收状态">
+          </el-table-column>
+          <el-table-column
             prop="shipFromCityName"
             sortable
             width="120"
@@ -601,6 +620,12 @@
             sortable
             width="120"
             label="中转单号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatusName"
+            sortable
+            width="120"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -1221,14 +1246,23 @@
 
 <style lang="scss">
   .carrierCreat_lll {
-    margin: 0 9px;
+    margin: 0 10px;
     .sTop {
       .short_searchinfo {
         display: flex;
-        padding: 20px 0 15px 0;
+        flex-direction:row;
+        padding: 20px 0 10px 0;
         .sTitle {
           flex: 1;
           text-align: center;
+         .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+          margin-bottom: 0px;
+          width: 100%;
+          .el-form-item__content{
+            width: 50%;
+            min-width: 400px;
+          }
+         }
           /*showBg*/
           .el-tooltip.showBg {
             .el-input__inner {
@@ -1267,26 +1301,26 @@
             font-size: 18px;
             color: #333333;
             font-weight: 600;
+            text-align: center;
           }
 
           .el-input__inner:focus {
             border-bottom-color: #c0c4cc;
           }
           .el-input {
-            width: 158%;
+            // width: 158%;
           }
-
         }
-        .el-form-item__content {
-          line-height: 0;
-        }
+        // .el-form-item__content {
+        //   line-height: 0;
+        // }
       }
-      .el-form-item {
-        margin-bottom: 0;
-      }
-      .el-form--inline .el-form-item {
-        vertical-align: middle;
-      }
+      // .el-form-item {
+      //   margin-bottom: 0;
+      // }
+      // .el-form--inline .el-form-item {
+      //   vertical-align: middle;
+      // }
     }
     .sMessageTop{
       ul{

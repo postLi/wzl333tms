@@ -59,6 +59,8 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>     
     </div>
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+     <!-- 异动费用详情弹出框 -->
+     <Addunusual :issender="true" :isModify="isModifyDetail" :isDbClick="isDbClick" :isCheck="isCheck" :payType="'RECEIVABLE'" :info="selectInfoDetail" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchAllOrder"  />
   </div>
 </template>
 <script>
@@ -69,18 +71,25 @@ import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-
+import Addunusual from '../unusual/components/add'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    Addunusual
   },
   mounted() {
     // this.loading = false
   },
   data() {
     return {
+       isCheck: false,
+      isModifyDetail: false,
+       isDbClick: false,
+       selectInfoDetail: {},
+       id: '',
+       AddAbnormalVisible: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -135,7 +144,12 @@ export default {
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      }, {
+      },{
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
       }, {
@@ -211,6 +225,11 @@ export default {
       }]
     }
   },
+  computed: {
+    orgid() {
+      return this.isModifyDetail ? this.selectInfoDetail.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
+  },
   methods: {
     viewDetails(row) {
       row = row || []
@@ -225,8 +244,18 @@ export default {
         }
       })
     },
-    showDetail(order) {
-      this.viewDetails([order])
+    showDetail(row) {
+      this.selectInfoDetail = row
+      this.isDbClick = true
+      this.isModifyDetail = false
+      this.AddAbnormalVisible = true
+       // this.viewDetails([order])
+    },
+    closeAddAbnormal() {
+      this.AddAbnormalVisible = false
+      this.isModify = false
+      this.selectInfo = {}
+     
     },
     fetchAllOrder() {
       this.loading = true

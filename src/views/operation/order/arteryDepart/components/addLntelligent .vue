@@ -2,7 +2,7 @@
   <div class="lntelligent-maintain">
 
     <el-dialog icon="el-icon-edit-outline" :title="popTitle" :isShow="popVisible" class='pickpopDepMain'
-               v-loading="loading" :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
+                :close-on-click-modal="false" :before-close="closeMe" :visible.sync="isShow">
       <template>
         <!--<i class="el-icon-edit"></i>-->
         <!--<span class="deletebtn"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>-->
@@ -10,7 +10,7 @@
 
       <!--<template class='pickRelationPop-content' slot="content">-->
       <!--isDepMain-->
-      <div class="depmain-div">
+      <div class="depmain-div" v-loading="loading">
         <el-form :inline="true" class="order_bottom" label-width="80px" :rules="rules" :model="formInline"
                  ref="formName">
           <el-form-item label="到达网点" prop="orgId">
@@ -45,19 +45,19 @@
           <el-table-column
             fixed
             prop="weight"
-            width="100"
-            label="承载重">
+            width="110"
+            label="承载重(kg)">
           </el-table-column>
           <el-table-column
             fixed
             prop="vol"
             width="90"
-            label="承载方">
+            label="承载方(m³)">
           </el-table-column>
           <el-table-column
             fixed
             prop="price"
-            width="138"
+            width="120"
             label="车费">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.price"
@@ -229,6 +229,7 @@
             let data = this.usersArr.filter(el => {
               return el.selectdCheck === false
             })
+            console.log()
             this.$router.push(
               {
                 path: '/operation/order/loadIntelligent/components/intelligentImg',
@@ -236,7 +237,6 @@
                   tab: '智能配载',
                   orgId: this.formInline.orgId,
                   sendData: JSON.stringify(data)
-                  // sendData: data
                 }
               },
             )

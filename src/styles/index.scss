@@ -165,8 +165,8 @@ table{
 // 运单费用状态
 .shipstatus{
   position: absolute;
-  width: 166px;
-  height: 91px;
+  width: 120px;
+  height: 71px;
   top: 120px;
   right: 110px;
   display: none;
@@ -186,6 +186,38 @@ table{
   display: block;
   background: url("./assets/icom/shipFeeStatus/yunfeiyijie.png") no-repeat;;
 }
+
+.ship-huidanweifafang,.ship-huidanyifafang,.ship-huidanweihuishou{
+  top: 307px;
+  left: 84px;
+  right: auto;
+  display: block;
+}
+.ship-huidanweihuishou{
+  background: url("./assets/icom/shipFeeStatus/y9.png") no-repeat;;
+}
+.ship-huidanweifafang{
+  background: url("./assets/icom/shipFeeStatus/y8.png") no-repeat;;
+}
+.ship-huidanyifafang{
+  background: url("./assets/icom/shipFeeStatus/y4.png") no-repeat;;
+}
+
+.ship-huokuanweifafang,.ship-huokuanyifafang,.ship-huokuanweihuishou{
+  display: block;
+  top: 220px;
+  right: 400px;
+}
+.ship-huokuanweihuishou{
+  background: url("./assets/icom/shipFeeStatus/y10.png") no-repeat;;
+}
+.ship-huokuanweifafang{
+  background: url("./assets/icom/shipFeeStatus/y6.png") no-repeat;;
+}
+.ship-huokuanyifafang{
+  background: url("./assets/icom/shipFeeStatus/y7.png") no-repeat;;
+}
+
 
 // 弹窗大图样式
 .clickimg{

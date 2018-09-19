@@ -367,7 +367,7 @@ export default {
         width: '100'
       },
       {
-        label: '是时效',
+        label: '时效',
         prop: 'shipEffectiveName',
         width: '90'
       },

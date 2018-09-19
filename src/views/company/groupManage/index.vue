@@ -237,7 +237,7 @@
   import AddDot from './addDot'
   import DepMaintain from './depMaintain'
   import { getOrgId } from '../../../api/company/groupManage'
-  import { getAllOrgInfo, getAllUser, deleteEmployeer, postAllOrgInfo } from '../../../api/company/employeeManage'
+  import { getAllUser, deleteEmployeer, postAllOrgInfo } from '../../../api/company/employeeManage'
 
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'

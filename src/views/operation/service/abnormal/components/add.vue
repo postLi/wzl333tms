@@ -406,7 +406,6 @@
           })
         } else if (this.isCheck) {
           this.popTitle = '查看明细'
-
           GetLook(this.info.id).then(res => {
             this.form = res
             this.form.disposeTime = new Date()

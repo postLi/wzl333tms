@@ -22,6 +22,12 @@
           </el-date-picker>
         </div>
       </el-form-item>
+      <el-form-item label="签收状态" prop="signStatus">
+        <selectType v-model="searchForm.signStatus" type="sign_status">
+          <el-option slot="head" label="全部" value=""></el-option>
+        </selectType>
+      </el-form-item>
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -34,12 +40,13 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { parseTime, pickerOptions2 } from '@/utils/'
-
+import searchAll from '@/components/searchAll/index'
 export default {
   name: 'handaccount-manage-search',
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -52,6 +59,7 @@ export default {
   },
   data() {
     return {
+      searchObjs: {},
       searchCreatTime: [],
       defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
@@ -66,11 +74,29 @@ export default {
     }
   },
   watch: {
+    searchCreatTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
     orgid: {
       handler(newVal) {
         this.searchForm.orgid = Number(newVal) || ''
       },
       immediate: true
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        this.searchObjs.status = this.searchObjs.status === '' ? null : this.searchObjs.status
+        if (this.searchCreatTime) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -80,6 +106,12 @@ export default {
     this.onSubmit()
   },
   methods: {
+     // 接收子组件传回来的东西
+    getDataObj(obj) {
+      this.searchCreatTime = [obj.startTime, obj.endTime]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       searchObj.status = searchObj.status === '' ? null : searchObj.status
@@ -96,6 +128,7 @@ export default {
       this.searchForm.endTime = ''
       this.searchCreatTime = this.defaultTime
       this.searchForm.orgid = this.otherinfo.orgid
+      this.searchObjs.signStatus = ''
     }
   }
 }

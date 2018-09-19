@@ -66,7 +66,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input :value="scope.row.notNowPayFee"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
+                  <el-input :value="scope.row.notNowPayFee"  @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -105,6 +105,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       currentSearch: '',
       tablekey: '',
       truckMessage: '',
@@ -149,6 +150,12 @@ export default {
         prop: 'totalStatusCn',
         width: '120'
       },
+      {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
       {
         label: '发货人',
         prop: 'shipSenderName',
@@ -344,6 +351,11 @@ export default {
       this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
         [prop]: Number(newVal)
       }))
+      if (this.rightTable[index].notNowPayFee !== Number(newVal)) {
+        this.textChangeDanger[index] = true
+      }else {
+        this.textChangeDanger[index] = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名

@@ -94,9 +94,9 @@ export default {
       tableColumn: [
         {
           label: '序号',
-          prop: 'id',
+          prop: 'number',
           width: '70',
-          fixed: true,
+          fixed: false,
           slot: (scope) => {
             return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) + scope.$index + 1
           }
@@ -351,7 +351,6 @@ export default {
             })
             this.$refs.multipleTable.clearSelection()
             return false
-
           }
           if (this.selected[0].orderStatus === 213) {
             this.eventBus.$emit('showCreateOrder', {
@@ -578,7 +577,7 @@ export default {
       this.AddCustomerVisible = true
     },
     closeAddCustomer() {
-      //this.mykey = Math.random()
+      // this.mykey = Math.random()
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {

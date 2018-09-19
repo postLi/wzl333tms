@@ -119,6 +119,12 @@ export default {
           width: '90'
         },
         {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
           label: '车牌号',
           prop: 'truckIdNumber',
           width: '100'
@@ -168,7 +174,7 @@ export default {
           }
         },
         {
-          label: '短驳费',
+          label: '短驳费(元)',
           prop: 'shortFee',
           width: '100'
         },
@@ -178,14 +184,14 @@ export default {
           width: '100'
         },
         {
-          label: '配载总重量',
+          label: '配载总重量(kg)',
           prop: 'loadWeightall',
-          width: '100'
+          width: '120'
         },
         {
-          label: '配载总体积',
+          label: '配载总体积(m³)',
           prop: 'loadVolumeall',
-          width: '100'
+          width: '120'
         },
         {
           label: '重量装载率',
@@ -245,7 +251,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' }})
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' } })
           break
         case 'truck': // 发车
           if (isWork) {
@@ -319,14 +325,14 @@ export default {
         this.searchQueryData.vo.batchTypeId = undefined
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
-        if (data) {
-          this.dataList = data.list
-          this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
-        }
-      })
+          if (data) {
+            this.dataList = data.list
+            this.total = data.total
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text || '发生未知错误！')
         })
@@ -385,12 +391,12 @@ export default {
         }).then(() => {
           console.log('发车', this.commonTruck)
           putTruckDepart(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '发车成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
+              if (data) {
+                this.$message({ type: 'success', message: '发车成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text || '发生未知错误！')
               this.clearData()
@@ -411,12 +417,12 @@ export default {
         }).then(() => {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '取消发车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
+              if (data) {
+                this.$message({ type: 'success', message: '取消发车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text || '发生未知错误！')
               this.clearData()
@@ -437,12 +443,12 @@ export default {
         }).then(() => {
           console.log('取消装车', this.commonTruck)
           putTruckLoad(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '取消装车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
+              if (data) {
+                this.$message({ type: 'success', message: '取消装车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
             .catch(error => {
               this.$message.error(error.errorInfo || error.text || '发生未知错误！')
               this.clearData()
@@ -456,7 +462,7 @@ export default {
     edit() { // 修改
       const batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
-        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' }})
+        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' } })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
         this.clearData()

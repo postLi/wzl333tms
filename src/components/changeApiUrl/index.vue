@@ -19,7 +19,22 @@ export default {
       options: [
         {
           value: 'api',
-          label: '157服务器',
+          label: '开发服（79）',
+          online: true
+        },
+        {
+          value: '157service',
+          label: '测试服（157）',
+          online: true
+        },
+        {
+          value: '180service',
+          label: '预发布服（180）',
+          online: true
+        },
+        {
+          value: 'ceshi',
+          label: '测试服2（78）',
           online: true
         },
         {
@@ -53,28 +68,18 @@ export default {
           online: true
         },
         {
-          value: 'aliyun',
-          label: '阿里云',
-          online: true
-        },
-        {
-          value: 'ceshi',
-          label: '78服务器',
-          online: true
-        },
-        {
-          value: 'home',
-          label: '157-2',
-          online: true
-        },
-        {
           value: 'lingzhiying',
           label: '凌梓颖',
           online: true
         },
         {
-          value: '79service',
-          label: '79服务器',
+          value: 'aliyun',
+          label: '阿里云',
+          online: true
+        },
+        {
+          value: 'home',
+          label: '157-2',
           online: true
         }
       ]

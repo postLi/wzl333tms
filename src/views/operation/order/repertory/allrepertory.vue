@@ -424,7 +424,7 @@ export default {
           fixed: false
         },
         {
-          label: '是时效',
+          label: '时效',
           prop: 'shipEffectiveName',
           width: '100',
           fixed: false

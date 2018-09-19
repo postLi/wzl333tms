@@ -16,6 +16,8 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="120">
         </el-table-column>
+        <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
+        </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
@@ -100,6 +102,8 @@
             <selectType type="payment_type" size="mini"
             @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
           </template>
+        </el-table-column>
+        <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="100">
         </el-table-column>

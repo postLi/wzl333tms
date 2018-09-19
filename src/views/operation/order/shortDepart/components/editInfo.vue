@@ -80,7 +80,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div slot="footer" class="" v-else="isFootEdit">
+    <div slot="footer" class="" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -89,7 +89,6 @@
 import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
-import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
 import { getSystemTime } from '@/api/common'
@@ -160,7 +159,7 @@ export default {
         this.getSystemTime()
       }
     },
-    type () {}
+    type() {}
   },
   // mounted() {
   //   if (this.popVisible) {
@@ -174,7 +173,7 @@ export default {
         if (data) {
           this.formModel.operatorTime = data
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -188,8 +187,8 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-                this.editTrack()
-              })
+              this.editTrack()
+            })
               .catch(() => {
                 this.$message({ type: 'warning', message: '取消操作' })
               })
@@ -199,8 +198,8 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-                this.addTrack()
-              })
+              this.addTrack()
+            })
               .catch(() => {
                 this.$message({ type: 'warning', message: '取消操作' })
               })
@@ -212,7 +211,7 @@ export default {
       const id = this.id
       getLoadDetail(id).then(data => {
         this.trackDetail = Object.assign([], data)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -229,14 +228,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-          return deleteTrack(item.id).then(data => {
-            this.$message({ type: 'success', message: '删除成功' })
-            this.getDetail()
-          })
-            .catch(error => {
-               this.$message.error(error.errorInfo || error.text)
-            })
+        return deleteTrack(item.id).then(data => {
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getDetail()
         })
+            .catch(error => {
+              this.$message.error(error.errorInfo || error.text)
+            })
+      })
         .catch(() => {
           this.$message({ type: 'warning', message: '取消操作' })
         })
@@ -254,7 +253,7 @@ export default {
         this.resetForm()
       })
       .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
+        this.$message.error(error.errorInfo || error.text)
       })
     },
     addTrack() { // 添加
@@ -266,7 +265,7 @@ export default {
         this.getSystemTime()
       })
       .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
+        this.$message.error(error.errorInfo || error.text)
       })
     },
     handleClick() {

@@ -128,6 +128,18 @@
                         <el-input :maxlength="10" v-model="formModel.arriveOtherFee" disabled></el-input>
                       </el-form-item>
                     </li>
+                    <li style="width: 12%;">
+                      <p>封签号</p>
+                      <el-form-item prop="sealNumber">
+                        <el-input :maxlength="10" v-model="formModel.sealNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
+                    <li style="width: 12%;">
+                      <p>油卡号</p>
+                      <el-form-item prop="oilCardNumber">
+                        <el-input :maxlength="10" v-model="formModel.oilCardNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
                   </ul>
                 </el-form>
               </div>
@@ -147,7 +159,7 @@
 
 
                   <el-table ref="multipleTable" :data="usersArr" border @row-click="clickDetails"
-                            @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey"
+                            @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
                             style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
@@ -594,19 +606,24 @@
             width: '180',
             fixed: false
           }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '100',
+        fixed: false
+      },{
             label: '配载件数',
             prop: 'loadAmount',
             width: '100',
             fixed: false
           }, {
-            label: '配载重量',
+            label: '配载重量(kg)',
             prop: 'loadWeight',
-            width: '100',
+            width: '120',
             fixed: false
           }, {
-            label: '配载体积',
+            label: '配载体积(m³)',
             prop: 'loadVolume',
-            width: '100',
+            width: '120',
             fixed: false
           }, {
             label: '运单件数',
@@ -614,14 +631,14 @@
             width: '100',
             fixed: false
           }, {
-            label: '运单重量',
+            label: '运单重量(kg)',
             prop: 'cargoWeight',
-            width: '100',
+            width: '120',
             fixed: false
           }, {
-            label: '运单体积',
+            label: '运单体积(m³)',
             prop: 'cargoVolume',
-            width: '100',
+            width: '120',
             fixed: false
           }, {
             label: '出发城市',
@@ -738,12 +755,15 @@
     watch: {
 
       info(newVal) {
-        this.propsId = this.info.id
+        if (newVal) {
+          this.propsId = this.info.id
         this.getDetail()
         this.fetchAllCustomer()
         this.fetchSelectLoadMainInfoList()
         this.fetchGetLookContract()
         this.getBatchNo = this.info.batchNo
+        }
+        
       },
       isModify(newVal) {
       },
@@ -755,7 +775,7 @@
       },
     },
     mounted() {
-      this.propsId = this.info.id
+      this.propsId = this.info.id ? this.info.id : ''
       if (this.popVisible) {
         this.getDetail()
         this.fetchAllCustomer()
@@ -985,7 +1005,7 @@
       },
       print() { // 打印合同
         let str = '?'
-        this.formModel.checkBillName = this.checkBillName
+        this.formModel.checkBillName = this.sendContract.contractName
         for (let item in this.formModel) {
           str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
 
@@ -1098,7 +1118,7 @@
       .st_searchinfo {
         .el-form-item {
           margin-right: 35px;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
         }
         .el-form-item:nth-of-type(3) {
           margin-right: 0;
@@ -1176,8 +1196,8 @@
     left: auto;
     top: 50px;
     bottom: auto;
-    min-width: 1000px;
-    max-width: 1000px;
+    min-width: 1200px;
+    max-width: 1200px;
     .st_searchinfo {
       .el-input.is-disabled {
         .el-input__inner {

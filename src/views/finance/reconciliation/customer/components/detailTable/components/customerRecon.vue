@@ -21,12 +21,21 @@
 
           </el-form-item>
         </div>
+        <div class="sPayType">
+          <el-form-item label="费用项" prop="">
+            <el-select v-model="typeIds" multiple collapse-tags placeholder="可多选" @change="changeFeeType">
+              <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.dictValue">
+            </el-option>
+        </el-select>
+          </el-form-item>
+        </div>
         <div class="sDate">
           <el-date-picker
             v-model="searchCreatTime"
             :default-value="defaultTime"
             type="daterange"
             align="right"
+            size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -120,8 +129,7 @@
             label=""
             width="80">
             <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
-                                                                                      fill="red"></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -142,6 +150,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -202,10 +216,27 @@
           >
           </el-table-column>
           <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
             prop="unusualFee"
             label="异动增款"
             width="130"
             sortable
+            v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -213,6 +244,7 @@
             label="回单付"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -220,6 +252,7 @@
             label="月结"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -299,6 +332,12 @@
             label="货号">
           </el-table-column>
           <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
+          </el-table-column>
+          <el-table-column
             prop="shipFromCityName"
             sortable
             width="160"
@@ -363,6 +402,7 @@
             label="异动减款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -370,6 +410,7 @@
             label="异常金额"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -377,6 +418,7 @@
             label="代收货款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -460,6 +502,12 @@
             label="货号">
           </el-table-column>
           <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
+          </el-table-column>
+          <el-table-column
             prop="shipFromCityName"
             sortable
             width="160"
@@ -517,10 +565,27 @@
           >
           </el-table-column>
           <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
             prop="unusualFee"
             label="异动增款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -528,6 +593,7 @@
             label="回单付"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -535,6 +601,7 @@
             label="月结"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -614,6 +681,12 @@
             label="货号">
           </el-table-column>
           <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
+          </el-table-column>
+          <el-table-column
             prop="shipFromCityName"
             sortable
             width="160"
@@ -678,6 +751,7 @@
             label="异动减款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -685,6 +759,7 @@
             label="异常金额"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -692,6 +767,7 @@
             label="代收货款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -779,6 +855,7 @@
   import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
   import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
+  import { getSelectType } from '@/api/common'
 
   export default {
     components: {
@@ -787,6 +864,8 @@
     },
     data() {
       return {
+        currentFeeTypeIds: [],
+        orgFeeTypeIds: [],
         tooltip: false,
         disabledName: true,
         pickerOptions2: {
@@ -858,6 +937,8 @@
         visibleDialog: false,
         loading: true,
         btnsize: 'mini',
+        feeIdsArr: [],
+        typeIds: '',
         searchTitle: {
           shipSenderId: '', //
           startTime: '',
@@ -893,9 +974,24 @@
       this.onSubmit()
     },
     mounted() {
+      this.currentFeeTypeIds = []
+      this.orgFeeTypeIds = []
+      this.getSelectType()
       this.onSubmit()
     },
     methods: {
+      changeFeeType(obj) {
+        console.log('changeFeeType', obj, this.typeIds)
+      },
+      getSelectType() {
+      const type = 'custoer_fee_type'
+      getSelectType(type, this.otherinfo.orgid).then(data => {
+        this.feeIdsArr = data
+        data.forEach((e, index) => {
+          this.orgFeeTypeIds[index] = e.dictValue
+        })
+      })
+    },
       export1() {
         this.sendData()
         // console.log(JSON.stringify(this.form))
@@ -907,8 +1003,12 @@
       fetchList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
+        this.searchTitle.feeTypeId =  this.typeIds.join(',')
         return postCFinanceinitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////add', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           if (data.customerDetailDtoList.length > 0) {
@@ -954,6 +1054,9 @@
         return getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
           const data = res.data
           this.messageArr = data.tmsFinanceBillCheckDto
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////edit', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
+          this.typeIds =  data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           data.customerDetailDtoList.forEach((el, val) => {
@@ -1006,6 +1109,7 @@
             this.$refs['formName3'].validate((valid) => {
               if (valid) {
                 this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+                this.form.tmsFinanceBillCheckDto.feeTypeId = this.searchTitle.feeTypeId
                 for (const i in this.messageInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
                 }

@@ -114,6 +114,12 @@ export default {
           fixed: false
         },
         {
+          label: '签收状态',
+          prop: 'signStatusName',
+          width: '100',
+          fixed: false
+        },
+        {
           label: '运单标识',
           prop: 'shipIdentifying',
           width: '150',
@@ -353,7 +359,7 @@ export default {
       })
     },
     showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.shipSn, order.id, true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {
       this.setupTableVisible = true

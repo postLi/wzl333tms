@@ -6,6 +6,8 @@
     </div>
 
     <div class="shipstatus" :class="[shipStatus]"></div>
+    <div class="shipstatus" :class="[shipHuidanStatus]"></div>
+    <div class="shipstatus" :class="[shipHuokuanStatus]"></div>
 
     <div class="createOrder-title"><span>收发货凭证</span></div>
     <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
@@ -713,7 +715,9 @@ export default {
           'shipToOrgid': '',
           'shipTotalFee': '',
           'shipTruckIdNumber': '',
-          'shipUserid': ''
+          'shipUserid': '',
+          backStatus: '', // 112 已发放
+          fundsGoodsStatus: '' // 269 已发放
         },
         'tmsOrderTransfer': {
           'arrivalMobile': '',
@@ -750,6 +754,8 @@ export default {
       },
       // 运单结算样式
       shipStatus: 'ship-yunfeiweijie',
+      shipHuidanStatus: '',
+      shipHuokuanStatus: '',
       // 系统设置
       config: {},
       // 费用设置
@@ -797,12 +803,50 @@ export default {
           this.shipStatus = ''
           break
       }
+    },
+    'form.tmsOrderShipInfo.backStatus'(newVal) {
+      // 241 已接收未发放
+      if (newVal === 242) {
+        // shipReceiptNum
+        this.shipHuidanStatus = 'ship-huidanyifafang'
+        // ship-huidanweifafang
+        // ship-huidanweihuishou
+      } else {
+        if (newVal === 241) {
+          this.shipHuidanStatus = 'ship-huidanweifafang'
+        } else if (this.form.tmsOrderShipInfo.shipReceiptNum) {
+          this.shipHuidanStatus = 'ship-huidanweihuishou'
+        } else {
+          this.shipHuidanStatus = ''
+        }
+      }
+    },
+    'form.tmsOrderShipInfo.fundsGoodsStatus'(newVal) {
+      // 268 已到账未发放
+      if (newVal === 269) {
+        this.shipHuokuanStatus = 'ship-huokuanyifafang'
+        // ship-huokuanweifafang
+        // ship-huokuanweihuishou
+      } else {
+        // agencyFund
+        // commissionFee
+        const find = this.form.tmsOrderCargoList.filter(el => {
+          return el.agencyFund > 0
+        })
+        if (newVal === 268) {
+          this.shipHuokuanStatus = 'ship-huokuanweifafang'
+        } else if (find.length) {
+          this.shipHuokuanStatus = 'ship-huokuanweihuishou'
+        } else {
+          this.shipHuokuanStatus = ''
+        }
+      }
     }
   },
   mounted() {
     this.loading = true
 
-    this.initIndex()
+    // this.initIndex()
   },
   methods: {
     // 各个接口
@@ -820,7 +864,7 @@ export default {
       return Promise.all([this.getCargoSetting()]).then(dataArr => {
         // 获取费用设置
         this.feeConfig = dataArr[0]
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -947,7 +991,7 @@ export default {
         case 'printLibkey':
           getPrintLibItems(this.form.tmsOrderShipInfo.id).then(data => {
             CreatePrintPage(data)
-          }).catch((err)=>{
+          }).catch((err) => {
             this.loading = false
             this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })
@@ -955,7 +999,7 @@ export default {
         case 'printShipKey':
           getPrintOrderItems(this.form.tmsOrderShipInfo.id).then(data => {
             CreatePrintPage(data)
-          }).catch((err)=>{
+          }).catch((err) => {
             this.loading = false
             this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
           })

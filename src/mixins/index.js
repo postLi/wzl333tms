@@ -2,10 +2,12 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { eventBus } from '@/eventBus'
 import { keepNumber, keepNumberAndPoint } from '@/utils/'
+import { getToken } from '@/utils/auth'
 
 Vue.mixin({
   data() {
     return {
+      access_token: getToken()
     }
   },
 

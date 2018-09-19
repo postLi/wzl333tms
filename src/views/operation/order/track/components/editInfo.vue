@@ -82,7 +82,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div slot="footer" class="dialog-footer" v-else="isFootEdit">
+    <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -91,7 +91,6 @@
 import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
-import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
 import DetailArtery from './detailArtery'
@@ -172,8 +171,8 @@ export default {
     getSystemTime() { // 获取系统时间
       if (!this.formModel.id) {
         getSystemTime().then(data => {
-            this.formModel.operatorTime = parseTime(data.trim())
-          })
+          this.formModel.operatorTime = parseTime(data.trim())
+        })
           .catch(error => {
             this.$message({ type: 'error', message: '获取系统时间失败' })
           })
@@ -206,7 +205,7 @@ export default {
       const id = this.id
       return getLoadDetail(id).then(data => {
         this.trackDetail = objectMerge2([], data)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
@@ -224,10 +223,10 @@ export default {
         type: 'warning'
       }).then(() => {
         return deleteTrack(item.id).then(data => {
-            this.$message({ type: 'success', message: '删除成功' })
-            this.getDetail()
-            this.resetForm()
-          })
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getDetail()
+          this.resetForm()
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text || '删除失败')
           })
@@ -242,10 +241,10 @@ export default {
       this.formModel.transferId = 0
       this.formModel.operatorTime = parseTime(this.formModel.operatorTime)
       return putUpdateTrack(this.formModel).then(data => {
-          this.$message({ type: 'success', message: '修改成功' })
-          this.getDetail()
-          this.resetForm()
-        })
+        this.$message({ type: 'success', message: '修改成功' })
+        this.getDetail()
+        this.resetForm()
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text)
         })
@@ -254,10 +253,10 @@ export default {
       console.log('添加')
       this.formModel.loadId = this.id
       return postAddTrack(this.formModel).then(data => {
-          this.$message({ type: 'success', message: '添加成功' })
-          this.getDetail()
-          this.resetForm()
-        })
+        this.$message({ type: 'success', message: '添加成功' })
+        this.getDetail()
+        this.resetForm()
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text)
         })

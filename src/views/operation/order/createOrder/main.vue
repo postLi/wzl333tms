@@ -147,7 +147,7 @@
               <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
             </template>
           </el-table-column>
-          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 'auto'" :label-class-name="(shipFieldValue[item.fieldProperty] || (/(cargoName|cargoAmount|cargoWeight|cargoVolume)/.test(item.fieldProperty))) ? 'required' : ''" :label="item.fieldName">
+          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 'auto'" :label-class-name="(shipFieldValue[item.fieldProperty] || (/(cargoName|cargoAmount)/.test(item.fieldProperty))) ? 'required' : ''" :label="item.fieldName">
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo.cargoName : ''">
@@ -592,8 +592,8 @@ export default {
         shipToCityName: true,
         cargoName: true,
         cargoAmount: true,
-        cargoWeight: true,
-        cargoVolume: true,
+        cargoWeight: false,
+        cargoVolume: false,
         shipReceiverName: true,
         shipReceiverMobile: true,
         shipSenderName: true,
@@ -1411,17 +1411,24 @@ export default {
     },
     // 检查运单号是否唯一
     detectOrderNum() {
-      return orderManage.getJudgeShipSn(this.form.tmsOrderShip.shipSn, this.otherinfo.orgid).then(res => {
-        if (res.data >= 1) {
-          // 有重复
-          return true
-        } else {
-          return false
-        }
-      }).catch((err) => {
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+      // 有值才去判断
+      if (!this.form.tmsOrderShip.shipSn) {
+        return new Promise(r => {
+          r(true)
+        })
+      } else {
+        return orderManage.getJudgeShipSn(this.form.tmsOrderShip.shipSn, this.otherinfo.orgid).then(res => {
+          if (res.data >= 1) {
+            // 有重复
+            return true
+          } else {
+            return false
+          }
+        }).catch((err) => {
+          this.loading = false
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
+      }
     },
     /**
      * 初始化各类情况
@@ -2295,7 +2302,39 @@ export default {
       }
       return msg
     },
+    checkcargoVolume(m) {
+      const value = parseInt(this.form.cargoList[0].cargoVolume, 10) || 0
+      let msg = ''
+      if (!value) {
+        msg = '请填写有效的体积'
+      }
+      this.shipFieldValueInfo.cargoVolume = msg
+      if (msg && !m) {
+        this.$message.error(msg)
+        this.$refs['tmsOrdercargoVolume'][1].focus()
+      } else {
+        msg = m
+      }
+      return msg
+    },
     checkcargoWeight(m) {
+      const value = parseInt(this.form.cargoList[0].cargoWeight, 10) || 0
+
+      let msg = ''
+      if (!value) {
+        msg = '请填写有效的重量'
+      }
+      this.shipFieldValueInfo.cargoWeight = msg
+
+      if (msg && !m) {
+        this.$message.error(msg)
+        this.$refs['tmsOrdercargoWeight'][1].focus()
+      } else {
+        msg = m
+      }
+      return msg
+    },
+    /* checkcargoWeight(m) {
       // 不作检测
       return m
       const value = this.form.cargoList[0].cargoWeight
@@ -2315,7 +2354,7 @@ export default {
         msg = m
       }
       return msg
-    },
+    }, */
     checkcargoFee(m) {
       let find = ''
       // 遍历货物选项
@@ -2470,9 +2509,13 @@ export default {
         if (checklist.cargoAmount) {
           msg = this.checkcargoAmount(msg)
         }
-      // 重量 & 体积
+      // 重量
         if (checklist.cargoWeight) {
           msg = this.checkcargoWeight(msg)
+        }
+        //  体积
+        if (checklist.cargoVolume) {
+          msg = this.checkcargoVolume(msg)
         }
       // 其它费用项
         msg = this.checkcargoFee(msg)
@@ -2490,36 +2533,42 @@ export default {
         }
 
       // 检查运单号是否重复
-        if (this.output.ismodify) {
+        if (this.output.ismodify && !this.$route.query.isdash) {
           resolve(!msg)
         } else {
-          this.detectOrderNum().then(isDulip => {
-            if (isDulip) {
-            /**
-             运单号重复
-                ↓
-             是否允许手动输入 → 不允许，自动生成一个新的
-                ↓
-             允许输入，聚焦到运单号框由用户修改
-             */
-              if (this.config.shipNo.manualInput !== '1') {
-                orderManage.getShipSn(this.otherinfo.orgid).then(res => {
-                  this.form.tmsOrderShip.shipSn = res.data
-                }).catch((err) => {
-                  this.loading = false
-                  this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-                })
-                this.$message.error('重复的订单号，已为你重新生成新的运单号~')
-              } else {
-                this.$refs['tmsOrderShipshipSn'].focus()
-                this.$message.error('重复的订单号，请修改~')
-              }
+          if (!this.form.tmsOrderShip.shipSn) {
+            this.$refs['tmsOrderShipshipSn'].focus()
+            this.$message.error('请填写运单号~')
+            resolve(false)
+          } else {
+            this.detectOrderNum().then(isDulip => {
+              if (isDulip) {
+              /**
+               运单号重复
+                  ↓
+              是否允许手动输入 → 不允许，自动生成一个新的
+                  ↓
+              允许输入，聚焦到运单号框由用户修改
+              */
+                if (this.config.shipNo.manualInput !== '1') {
+                  orderManage.getShipSn(this.otherinfo.orgid).then(res => {
+                    this.form.tmsOrderShip.shipSn = res.data
+                  }).catch((err) => {
+                    this.loading = false
+                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                  })
+                  this.$message.error('重复的订单号，已为你重新生成新的运单号~')
+                } else {
+                  this.$refs['tmsOrderShipshipSn'].focus()
+                  this.$message.error('重复的订单号，请修改~')
+                }
 
-              resolve(false)
-            } else {
-              resolve(!msg)
-            }
-          })
+                resolve(false)
+              } else {
+                resolve(!msg)
+              }
+            })
+          }
         }
       })
     },
@@ -2635,9 +2684,17 @@ export default {
               data.tmsOrderShip.id = this.orderData.tmsOrderShip.id
               data.tmsOrderShip.shipStatus = this.orderData.tmsOrderShip.shipStatus
               console.log('change Order:', data)
-              orderManage.putChangeOrder(data).then(res => {
+              // 判断是否从草稿箱过来
+              let pro
+              const isdashed = this.$route.query.isdash
+              if (isdashed) {
+                pro = orderManage.postNewOrder(data)
+              } else {
+                pro = orderManage.putChangeOrder(data)
+              }
+              pro.then(res => {
                 this.loading = false
-                this.$message.success('成功修改运单！')
+                this.$message.success('成功' + (isdashed ? '创建' : '修改') + '运单！')
                 this.eventBus.$emit('saveOrderSuccess')
 
                 if (!this.output.isbatch) {
@@ -2653,7 +2710,7 @@ export default {
                 }
               }).catch(err => {
                 this.loading = false
-                this.$message.error('修改失败，原因：' + err.text)
+                this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
               })
             } else {
               /* this.$message.success('成功创建运单！')

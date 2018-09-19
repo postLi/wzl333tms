@@ -131,6 +131,18 @@
                                   v-number-only:point></el-input>
                       </el-form-item>
                     </li>
+                   <li style="width: 12%;">
+                      <p>封签号</p>
+                      <el-form-item prop="sealNumber">
+                        <el-input :maxlength="10" v-model="formModel.sealNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
+                    <li style="width: 12%;">
+                      <p>油卡号</p>
+                      <el-form-item prop="oilCardNumber">
+                        <el-input :maxlength="10" v-model="formModel.oilCardNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
                   </ul>
                 </el-form>
               </div>
@@ -155,7 +167,7 @@
 
 
                   <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails"
-                            @selection-change="getSelection" height="80%" tooltip-effect="dark" :key="tablekey"
+                            @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
                             style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
@@ -582,9 +594,9 @@
             return scope.row.actualAmount
           }
         }, {
-          label: '实到重量',
+          label: '实到重量(kg)',
           prop: 'actualWeight',
-          width: '100',
+          width: '120',
           expand: true,
           checkfn: (row) => {
             return row.warehouStatus === 1
@@ -595,9 +607,9 @@
             return scope.row.actualWeight
           }
         }, {
-          label: '实到体积',
+          label: '实到体积(m³)',
           prop: 'actualVolume',
-          width: '100',
+          width: '120',
           expand: true,
           checkfn: (row) => {
             return row.warehouStatus === 1
@@ -641,14 +653,14 @@
           width: '100',
           fixed: false
         }, {
-          label: '配载重量',
+          label: '配载重量(kg)',
           prop: 'loadWeight',
-          width: '100',
+          width: '120',
           fixed: false
         }, {
-          label: '配载体积',
+          label: '配载体积(m³)',
           prop: 'loadVolume',
-          width: '100',
+          width: '120',
           fixed: false
         }, {
           label: '出发城市',
@@ -1290,7 +1302,7 @@
         border-left: #d4d4d4;
         .el-form-item {
           margin-right: 35px;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
         }
         .el-form-item:nth-of-type(3) {
           margin-right: 0;
@@ -1537,8 +1549,8 @@
     left: auto;
     top: 50px;
     bottom: auto;
-    min-width: 1000px;
-    max-width: 1000px;
+    min-width: 1100px;
+    max-width: 1100px;
     /*z-index: 1001 !important;*/
     .el-input.is-disabled {
       .el-input__inner {

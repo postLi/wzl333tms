@@ -16,6 +16,7 @@
         <select-type v-model="searchForm.status" type="fee_status" >
         </select-type>
       </el-form-item>
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
       </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -27,12 +28,14 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
+import searchAll from '@/components/searchAll/index'
 
 export default {
   name: 'handaccount-manage-search',
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -45,6 +48,7 @@ export default {
   },
   data() {
     return {
+      searchObjs: {},
       searchForm: {
         orgid: '',
         status: '',
@@ -55,6 +59,13 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.orgid = newVal
+    },
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        this.searchObjs.status = this.searchObjs.status === '' ? null : this.searchObjs.status
+      },
+      deep: true
     }
   },
   mounted() {
@@ -63,6 +74,10 @@ export default {
     this.onSubmit()
   },
   methods: {
+    getDataObj(obj) {
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       searchObj.status = searchObj.status === '' ? null : searchObj.status

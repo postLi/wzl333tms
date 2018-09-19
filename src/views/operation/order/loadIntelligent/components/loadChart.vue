@@ -109,7 +109,6 @@ export default {
     truckInfo: {
       handler(cval, oval) {
         if (cval) {
-          console.log('chart',cval, oval)
         this.baseInfo.totalWeight = Number(cval.weight) || 0
         this.baseInfo.totalVolume = Number(cval.volume) || 0
           this.initChart()
@@ -248,6 +247,7 @@ export default {
   display: flex;
   flex-direction: column;
   border: 1px solid #cdf;
+  border-top: 2px solid #b8cbd5;
   .loadChart_head {
     height: 38px;
     width: 100%;
